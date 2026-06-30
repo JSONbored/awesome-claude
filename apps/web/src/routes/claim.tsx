@@ -83,13 +83,7 @@ function resolveClaimWebsiteUrl(
   entry: (typeof ENTRIES)[number],
   proof: Record<string, string>,
 ): string {
-  const candidates = [
-    entry.sourceUrl,
-    entry.repoUrl,
-    entry.docsUrl,
-    entry.websiteUrl,
-    ...(entry.sourceUrls ?? []),
-  ];
+  const candidates = [entry.sourceUrl, entry.repoUrl, entry.docsUrl, entry.websiteUrl];
   for (const url of candidates) {
     const trimmed = (url ?? "").trim();
     if (/^https:\/\//i.test(trimmed)) return trimmed;
@@ -99,8 +93,9 @@ function resolveClaimWebsiteUrl(
     const normalized = repo
       .replace(/^https?:\/\/github\.com\//i, "")
       .replace(/^github\.com\//i, "")
-      .replace(/^\//, "");
-    if (normalized && !normalized.includes(" ")) {
+      .replace(/^\//, "")
+      .replace(/[?#].*$/, "");
+    if (/^[\w.-]+\/[\w.-]+$/.test(normalized)) {
       return `https://github.com/${normalized}`;
     }
   }
@@ -299,9 +294,7 @@ function ClaimPage() {
                     aria-expanded={matches.length > 0}
                     aria-controls={listboxId}
                     aria-autocomplete="list"
-                    aria-activedescendant={
-                      activeIndex >= 0 ? optionId(activeIndex) : undefined
-                    }
+                    aria-activedescendant={activeIndex >= 0 ? optionId(activeIndex) : undefined}
                     className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-ink placeholder:text-ink-subtle focus:border-ink focus:outline-none"
                   />
                   {matches.length > 0 && (

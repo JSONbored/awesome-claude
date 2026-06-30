@@ -77,18 +77,13 @@ function AdvertisePage() {
         companyName: company,
         listingTitle: `${selectedPlan.name} interest`,
         websiteUrl: website,
-        message: [
-          `Plan: ${selectedPlan.name}`,
-          launch ? `Launch context: ${launch}` : "",
-        ]
+        message: [`Plan: ${selectedPlan.name}`, launch ? `Launch context: ${launch}` : ""]
           .filter(Boolean)
           .join("\n\n"),
       });
       setDone(true);
     } catch {
-      setError(
-        "Sponsorship interest could not be submitted. Check required fields and try again.",
-      );
+      setError("Sponsorship interest could not be submitted. Check required fields and try again.");
     } finally {
       setSubmitting(false);
     }
@@ -129,6 +124,7 @@ function AdvertisePage() {
           <button
             key={p.id}
             type="button"
+            aria-pressed={planId === p.id}
             onClick={() => setPlanId(p.id)}
             className={`flex flex-col rounded-xl border p-6 text-left transition-colors ${
               planId === p.id

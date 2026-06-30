@@ -2,11 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { ShieldCheck } from "lucide-react";
 import type { ReactNode } from "react";
 
-export function CommercialDisclosure({
-  className = "",
-}: {
-  className?: string;
-}) {
+export function CommercialDisclosure({ className = "" }: { className?: string }) {
   return (
     <aside
       className={`rounded-xl border border-border bg-surface p-5 text-sm text-ink-muted ${className}`}
@@ -16,8 +12,12 @@ export function CommercialDisclosure({
         <div className="space-y-2">
           <p className="font-medium text-ink">Paid placement stays separate from free content</p>
           <ul className="ml-4 list-disc space-y-1 text-xs">
-            <li>Free, source-backed directory entries are reviewed the same way regardless of payment.</li>
-            <li>Paid placements are labeled sponsor or featured — they never buy organic ranking.</li>
+            <li>
+              Free, source-backed directory entries are reviewed the same way regardless of payment.
+            </li>
+            <li>
+              Paid placements are labeled sponsor or featured — they never buy organic ranking.
+            </li>
             <li>Trust and source badges reflect registry metadata, not sponsorship.</li>
             <li>
               Commercial interest is waitlist-first: maintainers review fit before any checkout or
