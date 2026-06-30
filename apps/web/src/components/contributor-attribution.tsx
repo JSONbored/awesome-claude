@@ -44,7 +44,7 @@ export function EntryAuthorAttribution({ entry, className }: { entry: Entry; cla
   const submitterContributor = contributorForSubmitter(entry);
   const sameIdentity = authorMatchesSubmitter(entry.author, entry.submittedBy);
   const authorContributor =
-    !entry.submittedBy && entry.author
+    entry.author && !verifiedAuthor && (!entry.submittedBy || !sameIdentity)
       ? findContributorForIdentity(entry.author, entry.authorProfileUrl)
       : undefined;
 
@@ -56,26 +56,24 @@ export function EntryAuthorAttribution({ entry, className }: { entry: Entry; cla
     );
   }
 
-  if (authorContributor && !entry.submittedBy) {
-    return (
-      <span className={className}>
-        by <ContributorProfileLink contributor={authorContributor} label={entry.author} />
-      </span>
-    );
+  const authorLabel = authorContributor ? (
+    <ContributorProfileLink contributor={authorContributor} label={entry.author} />
+  ) : (
+    <span className="text-ink">{entry.author}</span>
+  );
+
+  if (!entry.submittedBy || sameIdentity) {
+    return <span className={className}>by {authorLabel}</span>;
   }
 
   return (
     <span className={className}>
-      by <span className="text-ink">{entry.author}</span>
-      {entry.submittedBy && !sameIdentity && (
-        <>
-          {" · submitted by "}
-          {submitterContributor ? (
-            <ContributorProfileLink contributor={submitterContributor} label={entry.submittedBy} />
-          ) : (
-            <ExternalSubmitterLink entry={entry} />
-          )}
-        </>
+      by {authorLabel}
+      {" · submitted by "}
+      {submitterContributor ? (
+        <ContributorProfileLink contributor={submitterContributor} label={entry.submittedBy} />
+      ) : (
+        <ExternalSubmitterLink entry={entry} />
       )}
     </span>
   );
@@ -89,8 +87,9 @@ export function ProvenanceAuthorAttribution({
   className?: string;
 }) {
   const verifiedAuthor = contributorForVerifiedAuthor(entry.author, entry.submittedBy);
+  const sameIdentity = authorMatchesSubmitter(entry.author, entry.submittedBy);
   const authorContributor =
-    !entry.submittedBy && entry.author
+    entry.author && !verifiedAuthor && (!entry.submittedBy || !sameIdentity)
       ? findContributorForIdentity(entry.author, entry.authorProfileUrl)
       : undefined;
 
@@ -104,7 +103,7 @@ export function ProvenanceAuthorAttribution({
     );
   }
 
-  if (authorContributor && !entry.submittedBy) {
+  if (authorContributor) {
     return (
       <ContributorProfileLink
         contributor={authorContributor}
