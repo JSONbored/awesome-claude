@@ -148,6 +148,7 @@ export interface Entry extends Provenance, BrandInfo, SkillFields {
   seoDescription?: string;
   cardDescription?: string;
   author: string;
+  authorProfileUrl?: string;
   tags: string[];
   keywords?: string[];
   platforms: Platform[];

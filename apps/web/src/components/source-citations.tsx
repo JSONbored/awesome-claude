@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import type { Entry } from "@/types/registry";
-import { findContributorForIdentity } from "@/data/contributors";
 
 type Citation = {
   label: string;
@@ -18,7 +17,6 @@ type Citation = {
   hint?: string;
   Icon: React.ElementType;
   verifiedAt?: string;
-  contributorSlug?: string;
 };
 
 function hostOf(url?: string): string | undefined {
@@ -84,16 +82,11 @@ export function SourceCitations({ entry }: { entry: Entry }) {
     });
   }
   if (entry.submittedBy) {
-    const submitterContributor = findContributorForIdentity(
-      entry.submittedBy,
-      entry.submittedByUrl,
-    );
     cites.push({
       label: `Submitted by ${entry.submittedBy}`,
-      href: submitterContributor ? undefined : entry.submittedByUrl,
+      href: entry.submittedByUrl,
       hint: entry.submittedAt,
       Icon: User,
-      contributorSlug: submitterContributor?.slug,
     });
   }
 
@@ -127,15 +120,7 @@ export function SourceCitations({ entry }: { entry: Entry }) {
           );
           return (
             <li key={c.label}>
-              {c.contributorSlug ? (
-                <Link
-                  to="/contributors/$slug"
-                  params={{ slug: c.contributorSlug }}
-                  className="block rounded-md px-2 transition-colors duration-200 hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60"
-                >
-                  {body}
-                </Link>
-              ) : c.href ? (
+              {c.href ? (
                 <a
                   href={c.href}
                   target="_blank"

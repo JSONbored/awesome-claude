@@ -407,6 +407,7 @@ export function buildEntry(entry: RegistryEntry): Entry {
     seoDescription: entry.seoDescription,
     cardDescription: entry.cardDescription,
     author: entry.author ?? entry.submittedBy ?? entry.brandName ?? "Unknown",
+    authorProfileUrl: entry.authorProfileUrl,
     submittedBy: entry.submittedBy,
     submittedByUrl: entry.submittedByUrl ?? entry.authorProfileUrl,
     submittedAt: entry.submittedAt ?? entry.dateAdded,

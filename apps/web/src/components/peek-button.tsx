@@ -28,7 +28,7 @@ import { useHarnessPref, useCopyPref, type CopyVariant } from "@/lib/dossier-pre
 import { entryDomId } from "@/lib/entry-identity";
 import { cn } from "@/lib/utils";
 import { setHotPeek, clearHotPeek, installPeekShortcut } from "@/lib/peek-hotkey";
-import { EntryAuthorAttribution } from "./contributor-attribution";
+import { EntryAttributionLabel } from "./entry-attribution-label";
 
 export interface PeekHandle {
   open: () => void;
@@ -124,7 +124,7 @@ function PeekBody({ entry, peekId }: { entry: Entry; peekId: string }) {
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2 text-xs text-ink-muted">
-          <EntryAuthorAttribution entry={entry} />
+          <EntryAttributionLabel entry={entry} />
           {typeof entry.repoStats?.stars === "number" && (
             <span className="inline-flex items-center gap-1 tabular-nums" title="Source repo stars">
               <Star className="h-3 w-3" aria-hidden />

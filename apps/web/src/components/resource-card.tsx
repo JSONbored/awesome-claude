@@ -16,7 +16,7 @@ import { EntryBrandMark } from "./entry-brand-mark";
 import { EntryFacets } from "./entry-facets";
 import { PeekButton, setHotPeek, clearHotPeek, type PeekHandle } from "./peek-button";
 import { PeekHint } from "./peek-hint";
-import { EntryAuthorAttribution } from "./contributor-attribution";
+import { EntryAttributionLabel } from "./entry-attribution-label";
 import { useCompareActions, useIsCompared } from "@/lib/compare";
 import { cn } from "@/lib/utils";
 import { trackEvent, entryEventKey, outboundHost } from "@/lib/analytics";
@@ -230,16 +230,16 @@ function ResourceCardInner({
             ))}
           </div>
 
-          <Link
-            to="/entry/$category/$slug"
-            params={{ category: entry.category, slug: entry.slug }}
-            className="flex items-baseline gap-2"
-          >
-            <h3 className="font-display text-[15px] font-semibold tracking-tight text-ink group-hover:underline">
+          <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+            <Link
+              to="/entry/$category/$slug"
+              params={{ category: entry.category, slug: entry.slug }}
+              className="font-display text-[15px] font-semibold tracking-tight text-ink group-hover:underline"
+            >
               {entry.title}
-            </h3>
-            <EntryAuthorAttribution entry={entry} className="text-xs text-ink-subtle" />
-          </Link>
+            </Link>
+            <EntryAttributionLabel entry={entry} />
+          </div>
           <p className="line-clamp-2 max-w-3xl text-sm text-ink-muted">{entry.description}</p>
           <div className="flex flex-wrap items-center gap-2 pt-0.5">
             <EntryFacets entry={entry} density="card" />
