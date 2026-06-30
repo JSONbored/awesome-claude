@@ -16,7 +16,6 @@ import { EntryBrandMark } from "./entry-brand-mark";
 import { EntryFacets } from "./entry-facets";
 import { PeekButton, setHotPeek, clearHotPeek, type PeekHandle } from "./peek-button";
 import { PeekHint } from "./peek-hint";
-import { EntryAttributionLabel } from "./entry-attribution-label";
 import { LazyEntryAuthorAttribution } from "./lazy-linked-attribution";
 import { useCompareActions, useIsCompared } from "@/lib/compare";
 import { cn } from "@/lib/utils";
@@ -110,14 +109,14 @@ function ResourceCardInner({
           <span className="hidden min-w-0 max-w-[40%] truncate text-xs text-ink-muted sm:inline">
             {entry.cardDescription ?? entry.description}
           </span>
-          <span className="hidden md:inline-flex">
-            <EntryAttributionLabel entry={entry} className="truncate text-xs text-ink-subtle" />
-          </span>
           <span className="hidden sm:inline-flex">
             <SourceRepoStars entry={entry} compact />
           </span>
           <TrustBadge level={entry.trust} />
         </Link>
+        <span className="hidden min-w-0 shrink md:inline-flex">
+          <LazyEntryAuthorAttribution entry={entry} className="truncate text-xs text-ink-subtle" />
+        </span>
         <PeekButton
           ref={peekRef}
           entry={entry}
@@ -136,42 +135,44 @@ function ResourceCardInner({
           inCompare ? "border-accent ring-1 ring-accent/40" : "border-border",
         )}
       >
-        <Link
-          to="/entry/$category/$slug"
-          params={{ category: entry.category, slug: entry.slug }}
-          className="flex flex-1 flex-col gap-3 p-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent/60 rounded-lg"
-        >
-          <div className="flex items-start justify-between gap-2">
-            <div className="flex min-w-0 items-center gap-2">
-              <EntryBrandMark entry={entry} size="xs" />
-              <CategoryPill>{entry.category}</CategoryPill>
+        <div className="flex flex-1 flex-col gap-3 p-4">
+          <Link
+            to="/entry/$category/$slug"
+            params={{ category: entry.category, slug: entry.slug }}
+            className="flex flex-1 flex-col gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent/60 rounded-lg"
+          >
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex min-w-0 items-center gap-2">
+                <EntryBrandMark entry={entry} size="xs" />
+                <CategoryPill>{entry.category}</CategoryPill>
+              </div>
+              <div className="flex min-h-4 items-center text-xs text-ink-muted tabular-nums">
+                <SourceRepoStars entry={entry} compact />
+              </div>
             </div>
-            <div className="flex min-h-4 items-center text-xs text-ink-muted tabular-nums">
-              <SourceRepoStars entry={entry} compact />
+            <div>
+              <h3 className="font-display text-base font-semibold leading-tight text-ink">
+                {entry.title}
+              </h3>
+              <p className="mt-1.5 line-clamp-2 text-sm text-ink-muted">
+                {entry.cardDescription ?? entry.description}
+              </p>
             </div>
-          </div>
-          <div>
-            <h3 className="font-display text-base font-semibold leading-tight text-ink">
-              {entry.title}
-            </h3>
-            <p className="mt-1.5 line-clamp-2 text-sm text-ink-muted">
-              {entry.cardDescription ?? entry.description}
-            </p>
-            <EntryAttributionLabel entry={entry} className="mt-2" />
-          </div>
-          <EntryFacets entry={entry} density="card" />
-          <div className="mt-auto flex flex-wrap items-center gap-1.5">
-            <TrustBadge level={entry.trust} />
-            <SourceBadge status={entry.source} />
-            <InstallRiskBadge entry={entry} size="xs" />
-            {entry.dateAdded && (
-              <span className="ml-auto font-mono text-[10px] text-ink-subtle">
-                Added {timeAgo(entry.dateAdded)}
-              </span>
-            )}
-          </div>
-          <NotesPresenceChips entry={entry} />
-        </Link>
+            <EntryFacets entry={entry} density="card" />
+            <div className="mt-auto flex flex-wrap items-center gap-1.5">
+              <TrustBadge level={entry.trust} />
+              <SourceBadge status={entry.source} />
+              <InstallRiskBadge entry={entry} size="xs" />
+              {entry.dateAdded && (
+                <span className="ml-auto font-mono text-[10px] text-ink-subtle">
+                  Added {timeAgo(entry.dateAdded)}
+                </span>
+              )}
+            </div>
+            <NotesPresenceChips entry={entry} />
+          </Link>
+          <LazyEntryAuthorAttribution entry={entry} className="text-xs text-ink-subtle" />
+        </div>
         <div className="pointer-events-none absolute right-2 top-2 z-10 flex items-center gap-1 rounded-md border border-border bg-surface/95 p-0.5 opacity-0 shadow-sm backdrop-blur transition-opacity duration-150 group-hover:opacity-100 focus-within:opacity-100 group-focus-within:opacity-100">
           <div className="pointer-events-auto">
             <PeekButton ref={peekRef} entry={entry} />
