@@ -71,6 +71,8 @@ export function contributorReviewedEntry(contributor: Contributor, entry: Entry)
 }
 
 type MutableContributor = Contributor & {
+  reviewedCount: number;
+  sourceSubmissionCount: number;
   categoryCounts: Map<Category, number>;
 };
 
