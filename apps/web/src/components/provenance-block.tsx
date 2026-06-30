@@ -12,10 +12,7 @@ export function ProvenanceBlock({ entry }: { entry: Entry }) {
     <div className="rounded-xl border border-border bg-surface p-4 text-xs text-ink-muted">
       <div className="eyebrow mb-3">Provenance</div>
       <dl className="grid grid-cols-2 gap-3">
-        <Row
-          label="Author"
-          value={<ProvenanceAuthorAttribution entry={entry} />}
-        />
+        <Row label="Author" value={<ProvenanceAuthorAttribution entry={entry} />} />
         {entry.submittedBy && (
           <Row
             label="Submitted by"

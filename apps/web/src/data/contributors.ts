@@ -83,6 +83,7 @@ function upsertContributor(
   name: string,
   profileUrl: string | undefined,
   entry: Entry,
+  options: { creditSourceSubmission?: boolean } = {},
 ) {
   const slug = contributorSlug(name);
   if (!slug) return;
@@ -103,7 +104,7 @@ function upsertContributor(
     } satisfies MutableContributor);
 
   existing.acceptedCount += 1;
-  if (entry.sourceSubmissionUrl || entry.importPrUrl) {
+  if (options.creditSourceSubmission && (entry.sourceSubmissionUrl || entry.importPrUrl)) {
     existing.sourceSubmissionCount = (existing.sourceSubmissionCount ?? 0) + 1;
   }
   incrementCategory(existing, entry.category);
@@ -117,7 +118,9 @@ export const CONTRIBUTORS: Contributor[] = (() => {
   for (const entry of ENTRIES) {
     const submitter = String(entry.submittedBy || entry.author || "JSONbored").trim();
     if (!submitter) continue;
-    upsertContributor(grouped, submitter, entry.submittedByUrl, entry);
+    upsertContributor(grouped, submitter, entry.submittedByUrl, entry, {
+      creditSourceSubmission: true,
+    });
 
     const author = String(entry.author || "").trim();
     if (
@@ -158,7 +161,9 @@ export function getContributor(slug: string) {
 
 export function findContributorForIdentity(name?: string, profileUrl?: string) {
   if (!name) return undefined;
-  return CONTRIBUTORS.find((contributor) => contributorMatchesIdentity(contributor, name, profileUrl));
+  return CONTRIBUTORS.find((contributor) =>
+    contributorMatchesIdentity(contributor, name, profileUrl),
+  );
 }
 
 export function contributorForVerifiedAuthor(author?: string, submittedBy?: string) {
@@ -176,10 +181,7 @@ export function contributorForSubmitter(entry: Pick<Entry, "submittedBy" | "subm
   return findContributorForIdentity(entry.submittedBy, entry.submittedByUrl);
 }
 
-export function authorMatchesSubmitter(
-  author?: string,
-  submittedBy?: string,
-) {
+export function authorMatchesSubmitter(author?: string, submittedBy?: string) {
   if (!author || !submittedBy) return false;
   const authorSlug = contributorSlug(author);
   const submittedBySlug = contributorSlug(submittedBy);

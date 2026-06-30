@@ -39,13 +39,7 @@ function ExternalSubmitterLink({
   );
 }
 
-export function EntryAuthorAttribution({
-  entry,
-  className,
-}: {
-  entry: Entry;
-  className?: string;
-}) {
+export function EntryAuthorAttribution({ entry, className }: { entry: Entry; className?: string }) {
   const verifiedAuthor = contributorForVerifiedAuthor(entry.author, entry.submittedBy);
   const submitterContributor = contributorForSubmitter(entry);
   const sameIdentity = authorMatchesSubmitter(entry.author, entry.submittedBy);
@@ -102,7 +96,11 @@ export function ProvenanceAuthorAttribution({
 
   if (verifiedAuthor) {
     return (
-      <ContributorProfileLink contributor={verifiedAuthor} label={entry.author} className={className} />
+      <ContributorProfileLink
+        contributor={verifiedAuthor}
+        label={entry.author}
+        className={className}
+      />
     );
   }
 
