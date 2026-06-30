@@ -4,6 +4,7 @@ import { absoluteUrl } from "@/lib/seo";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { CommercialDisclosure } from "@/components/commercial-disclosure";
 import type { JobTier } from "@/types/registry";
 
 export const Route = createFileRoute("/jobs/post")({
@@ -26,25 +27,25 @@ const TIERS: { id: JobTier; label: string; price: string; bullets: string[] }[] 
   {
     id: "free",
     label: "Community",
-    price: "$0",
+    price: "Included",
     bullets: ["Standard listing", "Source-verified", "30-day display"],
   },
   {
     id: "standard",
     label: "Standard",
-    price: "$49",
+    price: "Waitlist",
     bullets: ["Everything in Community", "Pinned for 7 days", "Email digest"],
   },
   {
     id: "featured",
     label: "Featured",
-    price: "$149",
+    price: "Waitlist",
     bullets: ["Top of the list", "Featured badge", "Cross-posted to Raycast extension"],
   },
   {
     id: "sponsored",
     label: "Sponsored",
-    price: "$349",
+    price: "Review fit",
     bullets: ["Maintainer-reviewed copy", "Long-form description", "Featured in Weekly Brief"],
   },
 ];
@@ -124,8 +125,8 @@ function PostJobPage() {
       <div className="eyebrow">Hiring</div>
       <h1 className="mt-2 h-display-1 text-ink text-balance">Post a role</h1>
       <p className="mt-2 text-sm text-ink-muted">
-        All listings are reviewed for source authenticity. Featured and Sponsored tiers also get a
-        copy pass from a maintainer.
+        All listings are reviewed for source authenticity. Featured and Sponsored tiers are
+        waitlist-first — payment and publish steps happen only after maintainer approval.
       </p>
 
       <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -206,6 +207,9 @@ function PostJobPage() {
           </Alert>
         )}
       </form>
+      <div className="mt-6">
+        <CommercialDisclosure />
+      </div>
     </div>
   );
 }

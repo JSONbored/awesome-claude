@@ -1,7 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState, type FormEvent } from "react";
 import { ArrowRight } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { CommercialDisclosure } from "@/components/commercial-disclosure";
 import { absoluteUrl } from "@/lib/seo";
+import { submitListingLead } from "@/lib/listing-lead-client";
 
 export const Route = createFileRoute("/tools/submit")({
   head: () => ({
@@ -27,25 +30,281 @@ function SubmitTool() {
         <div className="eyebrow">Commercial routing</div>
         <h1 className="mt-3 h-display-1 text-ink text-balance">Submit a commercial tool</h1>
         <p className="mt-4 max-w-2xl text-ink-muted">
-          Free, source-backed resources belong in the community directory. Commercial tools,
-          sponsorships, listing claims, and paid review interest should go through the lead flow so
-          the public registry stays useful.
+          Free, source-backed resources belong in the community directory via{" "}
+          <Link to="/submit" className="text-ink underline">
+            /submit
+          </Link>
+          . Use the forms below for commercial listings, paid trust/source review interest, or route
+          sponsorship and claim requests through the dedicated lead flows.
         </p>
-        <div className="mt-8 flex flex-wrap gap-3">
-          <Link
-            to="/advertise"
-            className="inline-flex h-10 items-center gap-1.5 rounded-md bg-ink px-4 text-sm font-medium text-background hover:bg-ink/90"
-          >
-            Advertising interest <ArrowRight className="h-4 w-4" />
-          </Link>
-          <Link
-            to="/claim"
-            className="inline-flex h-10 items-center gap-1.5 rounded-md border border-border bg-background px-4 text-sm font-medium text-ink hover:bg-surface-2"
-          >
-            Claim a listing
-          </Link>
-        </div>
       </section>
+
+      <div className="mt-8 grid gap-8">
+        <CommercialToolListingForm />
+        <PaidReviewInterestForm />
+        <CommercialDisclosure />
+        <section className="rounded-xl border border-border bg-surface p-6">
+          <div className="eyebrow">Other commercial paths</div>
+          <p className="mt-2 text-sm text-ink-muted">
+            Sponsorship slots and listing ownership use separate review queues.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <Link
+              to="/advertise"
+              className="inline-flex h-10 items-center gap-1.5 rounded-md bg-ink px-4 text-sm font-medium text-background hover:bg-ink/90"
+            >
+              Sponsorship waitlist <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              to="/claim"
+              className="inline-flex h-10 items-center gap-1.5 rounded-md border border-border bg-background px-4 text-sm font-medium text-ink hover:bg-surface-2"
+            >
+              Claim a listing
+            </Link>
+          </div>
+        </section>
+      </div>
     </div>
+  );
+}
+
+function CommercialToolListingForm() {
+  const [done, setDone] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+
+  async function onSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (submitting) return;
+    setSubmitting(true);
+    setError("");
+    const form = new FormData(e.currentTarget);
+    try {
+      await submitListingLead({
+        kind: "tool",
+        tierInterest: String(form.get("tierInterest") ?? "featured") as "featured" | "sponsored",
+        contactName: String(form.get("contactName") ?? "").trim(),
+        contactEmail: String(form.get("email") ?? "").trim(),
+        companyName: String(form.get("company") ?? "").trim(),
+        listingTitle: String(form.get("toolName") ?? "").trim(),
+        websiteUrl: String(form.get("website") ?? "").trim(),
+        message: String(form.get("notes") ?? "").trim(),
+      });
+      setDone(true);
+      e.currentTarget.reset();
+    } catch {
+      setError("Tool listing interest could not be submitted. Check required fields and try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <section className="rounded-xl border border-border bg-surface p-6">
+      <div className="eyebrow">Commercial tool listing</div>
+      <h2 className="mt-2 font-display text-xl font-semibold text-ink">Featured listing interest</h2>
+      <p className="mt-2 text-sm text-ink-muted">
+        For paid or commercial Claude tools that need a maintainer-reviewed listing path. This does
+        not replace free community submissions.
+      </p>
+      {done ? (
+        <p className="mt-4 text-sm text-trust-trusted">
+          Interest received — we'll review fit and reply within two business days.
+        </p>
+      ) : (
+        <form onSubmit={onSubmit} className="mt-4 space-y-4">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field name="contactName" label="Your name" required />
+            <Field name="company" label="Company" required />
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field name="email" label="Work email" type="email" required />
+            <Field name="toolName" label="Tool name" required />
+          </div>
+          <Field
+            name="website"
+            label="Product URL"
+            type="url"
+            required
+            placeholder="https://example.com"
+          />
+          <label className="block">
+            <div className="eyebrow mb-1.5">Placement interest</div>
+            <select
+              name="tierInterest"
+              defaultValue="featured"
+              className="h-10 w-full rounded-md border border-border bg-background px-3 text-sm text-ink"
+            >
+              <option value="featured">Featured listing (waitlist)</option>
+              <option value="sponsored">Sponsored placement (waitlist)</option>
+            </select>
+          </label>
+          <TextArea name="notes" label="What should maintainers know?" rows={4} />
+          <button
+            type="submit"
+            disabled={submitting}
+            className="inline-flex h-10 items-center rounded-md bg-ink px-4 text-sm font-medium text-background hover:bg-ink/90 disabled:opacity-50"
+          >
+            {submitting ? "Sending…" : "Submit listing interest"}
+          </button>
+          {error && <p className="text-sm text-trust-blocked">{error}</p>}
+        </form>
+      )}
+    </section>
+  );
+}
+
+function PaidReviewInterestForm() {
+  const [done, setDone] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+
+  async function onSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (submitting) return;
+    setSubmitting(true);
+    setError("");
+    const form = new FormData(e.currentTarget);
+    const entryRef = String(form.get("entryRef") ?? "").trim();
+    const notes = String(form.get("notes") ?? "").trim();
+    try {
+      await submitListingLead({
+        kind: "tool",
+        tierInterest: "standard",
+        contactName: String(form.get("contactName") ?? "").trim(),
+        contactEmail: String(form.get("email") ?? "").trim(),
+        companyName: String(form.get("company") ?? "").trim(),
+        listingTitle: "Paid trust/source review interest",
+        websiteUrl: String(form.get("website") ?? "").trim(),
+        message: [
+          "interest:paid-trust-source-review",
+          entryRef ? `Entry: ${entryRef}` : "",
+          notes,
+        ]
+          .filter(Boolean)
+          .join("\n\n"),
+      });
+      setDone(true);
+      e.currentTarget.reset();
+    } catch {
+      setError("Review interest could not be submitted. Check required fields and try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <section className="rounded-xl border border-border bg-surface p-6">
+      <div className="eyebrow">Paid review</div>
+      <h2 className="mt-2 font-display text-xl font-semibold text-ink">
+        Trust and source review interest
+      </h2>
+      <p className="mt-2 text-sm text-ink-muted">
+        Request a maintainer-led trust or source review for an existing or upcoming listing. This is
+        separate from free community submissions and does not buy ranking.
+      </p>
+      {done ? (
+        <p className="mt-4 text-sm text-trust-trusted">
+          Review interest received — maintainers will confirm scope before any paid step.
+        </p>
+      ) : (
+        <form onSubmit={onSubmit} className="mt-4 space-y-4">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field name="contactName" label="Your name" required />
+            <Field name="company" label="Company or project" required />
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field name="email" label="Work email" type="email" required />
+            <Field
+              name="entryRef"
+              label="Entry reference (optional)"
+              placeholder="category/slug or URL"
+            />
+          </div>
+          <Field
+            name="website"
+            label="Source or product URL"
+            type="url"
+            required
+            placeholder="https://github.com/org/repo"
+          />
+          <TextArea
+            name="notes"
+            label="What should the review cover?"
+            rows={4}
+            placeholder="Trust signals, source reachability, package provenance, or safety notes to verify."
+            required
+          />
+          <button
+            type="submit"
+            disabled={submitting}
+            className="inline-flex h-10 items-center rounded-md border border-border bg-background px-4 text-sm font-medium text-ink hover:bg-surface-2 disabled:opacity-50"
+          >
+            {submitting ? "Sending…" : "Submit review interest"}
+          </button>
+          {error && <p className="text-sm text-trust-blocked">{error}</p>}
+        </form>
+      )}
+    </section>
+  );
+}
+
+function Field({
+  name,
+  label,
+  type = "text",
+  required,
+  placeholder,
+}: {
+  name: string;
+  label: string;
+  type?: string;
+  required?: boolean;
+  placeholder?: string;
+}) {
+  return (
+    <label className="block">
+      <div className="eyebrow mb-1.5">
+        {label}
+        {required && " *"}
+      </div>
+      <input
+        name={name}
+        type={type}
+        required={required}
+        placeholder={placeholder}
+        className="h-10 w-full rounded-md border border-border bg-background px-3 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-accent/40"
+      />
+    </label>
+  );
+}
+
+function TextArea({
+  name,
+  label,
+  rows = 4,
+  placeholder,
+  required,
+}: {
+  name: string;
+  label: string;
+  rows?: number;
+  placeholder?: string;
+  required?: boolean;
+}) {
+  return (
+    <label className="block">
+      <div className="eyebrow mb-1.5">
+        {label}
+        {required && " *"}
+      </div>
+      <textarea
+        name={name}
+        rows={rows}
+        required={required}
+        placeholder={placeholder}
+        className="w-full rounded-md border border-border bg-background p-3 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-accent/40"
+      />
+    </label>
   );
 }

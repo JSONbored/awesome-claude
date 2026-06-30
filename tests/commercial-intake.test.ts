@@ -487,4 +487,37 @@ describe("commercial intake contracts", () => {
     };
     expect(compareToolListings(sponsored, affiliate)).toBeLessThan(0);
   });
+
+  it("keeps commercial intake routes waitlist-first with explicit disclosure", () => {
+    const readRoute = (file: string) =>
+      fs.readFileSync(path.join(repoRoot, "apps/web/src/routes", file), "utf8");
+
+    const advertise = readRoute("advertise.tsx");
+    const toolsSubmit = readRoute("tools.submit.tsx");
+    const jobsPost = readRoute("jobs.post.tsx");
+    const claim = readRoute("claim.tsx");
+
+    for (const source of [advertise, toolsSubmit, jobsPost]) {
+      expect(source).not.toMatch(/price:\s*"\$[0-9]+"/);
+      expect(source).toContain("CommercialDisclosure");
+    }
+
+    expect(advertise).toContain("submitListingLead");
+    expect(advertise).toContain("Join waitlist");
+    expect(advertise).toContain('name="contactName"');
+    expect(advertise).toContain('name="website"');
+    expect(advertise).not.toContain('websiteUrl: ""');
+
+    expect(toolsSubmit).toContain("submitListingLead");
+    expect(toolsSubmit).toContain("interest:paid-trust-source-review");
+    expect(toolsSubmit).toContain('to="/submit"');
+    expect(toolsSubmit).toContain('to="/advertise"');
+    expect(toolsSubmit).toContain('to="/claim"');
+
+    expect(jobsPost).toContain("Waitlist");
+    expect(jobsPost).toContain("waitlist-first");
+
+    expect(claim).toContain("resolveClaimWebsiteUrl");
+    expect(claim).toContain("CommercialDisclosure");
+  });
 });
