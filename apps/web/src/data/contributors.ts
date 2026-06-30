@@ -105,7 +105,7 @@ function upsertContributor(
 
   existing.acceptedCount += 1;
   if (options.creditSourceSubmission && (entry.sourceSubmissionUrl || entry.importPrUrl)) {
-    existing.sourceSubmissionCount = (existing.sourceSubmissionCount ?? 0) + 1;
+    existing.sourceSubmissionCount += 1;
   }
   incrementCategory(existing, entry.category);
   existing.github ||= profileUrl;
@@ -117,7 +117,6 @@ export const CONTRIBUTORS: Contributor[] = (() => {
 
   for (const entry of ENTRIES) {
     const submitter = String(entry.submittedBy || entry.author || "JSONbored").trim();
-    if (!submitter) continue;
     upsertContributor(grouped, submitter, entry.submittedByUrl, entry, {
       creditSourceSubmission: true,
     });
@@ -135,7 +134,7 @@ export const CONTRIBUTORS: Contributor[] = (() => {
   for (const entry of ENTRIES) {
     for (const contributor of grouped.values()) {
       if (contributorReviewedEntry(contributor, entry)) {
-        contributor.reviewedCount = (contributor.reviewedCount ?? 0) + 1;
+        contributor.reviewedCount += 1;
       }
     }
   }

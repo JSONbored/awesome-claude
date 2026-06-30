@@ -53,6 +53,26 @@ vi.mock("@/data/entries", () => ({
       submittedBy: "@at-handle",
       submittedByUrl: "https://github.com/at-handle",
     }),
+    fixture({
+      slug: "submitter-only",
+      author: "",
+      submittedBy: "solo-submitter",
+      submittedByUrl: "https://github.com/solo-submitter",
+    }),
+    fixture({
+      slug: "source-credit-one",
+      author: "credit-submitter",
+      submittedBy: "credit-submitter",
+      importPrUrl: "https://github.com/org/repo/pull/98",
+      submittedByUrl: "https://github.com/credit-submitter",
+    }),
+    fixture({
+      slug: "source-credit-two",
+      author: "credit-submitter",
+      submittedBy: "credit-submitter",
+      sourceSubmissionUrl: "https://github.com/org/repo/pull/99",
+      submittedByUrl: "https://github.com/credit-submitter",
+    }),
   ],
 }));
 
@@ -79,6 +99,8 @@ describe("contributors attribution aggregation", () => {
     );
     expect(getContributor("reviewer")?.reviewedCount).toBe(1);
     expect(getContributor("at-handle")?.handle).toBe("at-handle");
+    expect(getContributor("solo-submitter")?.acceptedCount).toBe(1);
+    expect(getContributor("credit-submitter")?.sourceSubmissionCount).toBe(2);
     expect(
       CONTRIBUTORS.some((contributor) => contributor.slug === "invalid"),
     ).toBe(false);
