@@ -1,7 +1,6 @@
 import {
   buildReportText,
   extractServers,
-  initMcpConfigValidatorLib,
   isRecord,
   sanitizeConfigValue,
   validateServer,
@@ -9,37 +8,6 @@ import {
 } from "@/lib/mcp-config-validator-lib";
 
 export type { McpConfigServerReport, McpConfigValidation } from "@/lib/mcp-config-validator-lib";
-
-const SENSITIVE_ENV_PATTERN =
-  /(api[_-]?key|auth|authorization|bearer|client[_-]?secret|credential|env|password|private[_-]?key|secret|token|x-api-key)/i;
-const PLACEHOLDER_PATTERN = /(\$\{[A-Z0-9_]+\}|YOUR_|REPLACE_|INSERT_|<[^>]+>|\bxxx+\b|\bTODO\b)/i;
-const SECRET_VALUE_PATTERN =
-  /\b(gh[pousr]_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{40,}|glpat-[A-Za-z0-9_-]{20,}|sk-(?:proj-)?[A-Za-z0-9_-]{20,}|xox[baprs]-[A-Za-z0-9-]{20,}|AKIA[0-9A-Z]{16}|AIza[0-9A-Za-z_-]{20,}|Bearer\s+[A-Za-z0-9._~+/=-]{16,})\b/;
-const SHELL_OPERATOR_PATTERN = /(?:&&|\|\||[;|`<>]|\$\()/;
-const SENSITIVE_SPLIT_ARG_KEYS = new Set([
-  "api_key",
-  "apikey",
-  "auth",
-  "authorization",
-  "bearer",
-  "client_secret",
-  "clientsecret",
-  "password",
-  "private_key",
-  "privatekey",
-  "secret",
-  "token",
-  "x_api_key",
-  "xapikey",
-]);
-
-initMcpConfigValidatorLib({
-  SENSITIVE_ENV_PATTERN,
-  PLACEHOLDER_PATTERN,
-  SECRET_VALUE_PATTERN,
-  SHELL_OPERATOR_PATTERN,
-  SENSITIVE_SPLIT_ARG_KEYS,
-});
 
 export function validateMcpConfigText(input: string): McpConfigValidation {
   const errors: string[] = [];

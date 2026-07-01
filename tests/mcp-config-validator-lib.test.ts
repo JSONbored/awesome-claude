@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 
-import { validateMcpConfigText } from "@/lib/mcp-config-validator";
 import {
   buildReportText,
   commandName,
@@ -22,9 +21,6 @@ function syntheticBareSecret() {
     String.fromCharCode(120, 111, 120, 98, 45) + "abcdefghijklmnopqrstuvwxyz12"
   );
 }
-
-// Importing the wrapper initializes validator pattern injection for lib helpers.
-void validateMcpConfigText;
 
 describe("MCP config validator lib", () => {
   const sensitiveValue = "local-dev-credential-value-01";
