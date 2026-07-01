@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  asStringArray,
   buildReportText,
   commandName,
   extractServers,
@@ -91,6 +92,14 @@ describe("MCP config validator lib", () => {
       expect(result.redactedCount).toBe(1);
       expect(result.value).toContain("${AUTHORIZATION}");
     });
+
+    it("ignores empty and plain arg values", () => {
+      expect(redactArgValue("   ")).toEqual({ value: "   ", redactedCount: 0 });
+      expect(redactArgValue("plain-flag")).toEqual({
+        value: "plain-flag",
+        redactedCount: 0,
+      });
+    });
   });
 
   describe("splitArgPlaceholder", () => {
@@ -136,6 +145,30 @@ describe("MCP config validator lib", () => {
         "${EXISTING_TOKEN}",
       ]);
     });
+
+    it("sanitizes string values under args keys directly", () => {
+      expect(sanitizeConfigValue("args", `token=${sensitiveValue}`)).toEqual({
+        value: `token=\${TOKEN}`,
+        redactedCount: 1,
+      });
+    });
+
+    it("redacts nested non-string arg entries", () => {
+      const result = sanitizeConfigValue("args", [
+        "--api-key",
+        { api_key: sensitiveValue },
+      ]);
+      expect(result.redactedCount).toBe(1);
+      expect(result.value).toEqual(["--api-key", { api_key: "${API_KEY}" }]);
+    });
+
+    it("sanitizes non-args arrays recursively", () => {
+      const result = sanitizeConfigValue("headers", [
+        { Authorization: `Bearer ${sensitiveValue}` },
+      ]);
+      expect(result.redactedCount).toBe(1);
+      expect(result.value).toEqual([{ Authorization: "${AUTHORIZATION}" }]);
+    });
   });
 
   describe("package runner helpers", () => {
@@ -151,15 +184,24 @@ describe("MCP config validator lib", () => {
       expect(
         packageFromRunner("docker", ["run", "ghcr.io/example/mcp:1.2.3"]),
       ).toBe("ghcr.io/example/mcp:1.2.3");
+      expect(packageFromRunner("bunx", ["@example/mcp"])).toBe("@example/mcp");
     });
 
     it("labels package runners for unpinned warnings", () => {
       expect(packageRunnerName("pnpm", ["dlx", "@example/mcp"])).toBe(
         "pnpm dlx",
       );
+      expect(packageRunnerName("yarn", ["dlx", "@example/mcp"])).toBe(
+        "yarn dlx",
+      );
       expect(packageRunnerName("npm", ["exec", "@scope/pkg"])).toBe("npm exec");
       expect(packageRunnerName("npx", ["-y", "@example/mcp"])).toBe("npx");
+      expect(packageRunnerName("bunx", ["@example/mcp"])).toBe("bunx");
       expect(packageRunnerName("docker", ["run", "image"])).toBe("");
+      expect(packageFromRunner("yarn", ["dlx", "@example/mcp"])).toBe(
+        "@example/mcp",
+      );
+      expect(packageFromRunner("docker", ["pull", "image"])).toBe("");
     });
   });
 
@@ -214,6 +256,15 @@ describe("MCP config validator lib", () => {
       expect(remote.warnings).not.toContain(
         "Remote MCP URLs should use HTTPS unless they are localhost.",
       );
+
+      for (const url of [
+        "http://localhost:3000/sse",
+        "http://127.0.0.1:3000/sse",
+      ]) {
+        expect(validateServer("loopback", { url }).warnings).not.toContain(
+          "Remote MCP URLs should use HTTPS unless they are localhost.",
+        );
+      }
     });
 
     it("flags invalid names, missing transport, and shell pipelines", () => {
@@ -256,6 +307,58 @@ describe("MCP config validator lib", () => {
         errors: ["Server config must be an object."],
       });
     });
+
+    it("validates args shape and missing runner package operands", () => {
+      expect(
+        validateServer("bad-args", { command: "npx", args: "nope" }),
+      ).toMatchObject({
+        errors: expect.arrayContaining(["args must be an array of strings."]),
+      });
+      expect(
+        validateServer("mixed-args", { command: "npx", args: ["-y", 123] }),
+      ).toMatchObject({
+        errors: expect.arrayContaining(["args must contain only strings."]),
+      });
+      expect(
+        validateServer("bare-npx", { command: "npx", args: ["-y"] }),
+      ).toMatchObject({
+        errors: expect.arrayContaining([
+          "npx server is missing a package name in args.",
+        ]),
+      });
+      expect(
+        validateServer("bad-env", {
+          command: "npx",
+          args: ["-y", "@example/mcp"],
+          env: "not-an-object",
+        }),
+      ).toMatchObject({
+        errors: expect.arrayContaining([
+          "env must be an object of environment variables.",
+        ]),
+      });
+      expect(validateServer("bad-url", { url: "not-a-url" })).toMatchObject({
+        errors: expect.arrayContaining(["url must be a valid URL."]),
+      });
+    });
+
+    it("warns on env secrets, placeholders, and shell-like args", () => {
+      const report = validateServer("stdio", {
+        command: "npx",
+        args: ["-y", "@example/mcp", "value;with-shell"],
+        env: {
+          API_KEY: sensitiveValue,
+          PLACEHOLDER_KEY: "${PLACEHOLDER_KEY}",
+        },
+      });
+      expect(report.warnings).toEqual(
+        expect.arrayContaining([
+          "API_KEY looks secret-like and was redacted from output.",
+          "PLACEHOLDER_KEY is still a placeholder.",
+          expect.stringContaining("Argument contains shell-like syntax:"),
+        ]),
+      );
+    });
   });
 
   describe("buildReportText", () => {
@@ -282,6 +385,26 @@ describe("MCP config validator lib", () => {
       expect(pass).toContain("## github");
       expect(pass).toContain("Package: @example/mcp");
 
+      const remote = buildReportText({
+        ok: true,
+        errors: [],
+        warnings: [],
+        servers: [
+          {
+            name: "remote",
+            transport: "remote",
+            url: "https://example.com/mcp",
+            envKeys: [],
+            errors: [],
+            warnings: [],
+          },
+        ],
+        fixedConfigText: "{}",
+        redactedSecretCount: 0,
+      });
+      expect(remote).toContain("URL: https://example.com/mcp");
+      expect(remote).toContain("Env keys: none");
+
       const blocked = buildReportText({
         ok: false,
         errors: ["demo: url must be a valid URL."],
@@ -301,6 +424,16 @@ describe("MCP config validator lib", () => {
       expect(blocked).toContain("MCP config validation: blocked");
       expect(blocked).toContain("- Error: url must be a valid URL.");
       expect(blocked).toContain("- Warning: TOKEN is still a placeholder.");
+    });
+  });
+
+  describe("asStringArray", () => {
+    it("filters non-string array entries", () => {
+      expect(asStringArray(["ok", 1, null, "also-ok"])).toEqual([
+        "ok",
+        "also-ok",
+      ]);
+      expect(asStringArray("nope")).toEqual([]);
     });
   });
 
