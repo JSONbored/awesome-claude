@@ -220,4 +220,18 @@ describe("buildEntry provenance fields", () => {
 
     expect(entry.submittedByUrl).toBe("https://github.com/example");
   });
+
+  it("does not fall back submittedByUrl to authorProfileUrl for split attribution", () => {
+    const entry = buildEntry(
+      baseEntry({
+        author: "ABMeter",
+        authorProfileUrl: "https://abmeter.ai",
+        submittedBy: "kiannidev",
+      }),
+    );
+
+    expect(entry.authorProfileUrl).toBe("https://abmeter.ai");
+    expect(entry.submittedBy).toBe("kiannidev");
+    expect(entry.submittedByUrl).toBeUndefined();
+  });
 });

@@ -121,7 +121,7 @@ export function ProvenanceAuthorAttribution({
     );
   }
 
-  return <span className="text-ink">{entry.author}</span>;
+  return <span className={className}>{entry.author}</span>;
 }
 
 export function ContributorIdentityLink({

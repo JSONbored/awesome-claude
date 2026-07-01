@@ -1,9 +1,5 @@
+import { authorMatchesSubmitter } from "@/lib/contributor-identity";
 import type { Entry } from "@/types/registry";
-
-function sameIdentity(author: string, submittedBy?: string) {
-  if (!submittedBy) return false;
-  return author.trim().toLowerCase() === submittedBy.trim().toLowerCase();
-}
 
 /** Text-only attribution for compact surfaces that must not import registry data modules. */
 export function EntryAttributionLabel({
@@ -13,7 +9,7 @@ export function EntryAttributionLabel({
   entry: Entry;
   className?: string;
 }) {
-  if (entry.submittedBy && !sameIdentity(entry.author, entry.submittedBy)) {
+  if (entry.submittedBy && !authorMatchesSubmitter(entry.author, entry.submittedBy)) {
     return (
       <span className={className}>
         by <span className="text-ink">{entry.author}</span>

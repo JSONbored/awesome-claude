@@ -1,14 +1,8 @@
 import { ENTRIES } from "@/data/entries";
+import { authorMatchesSubmitter, contributorSlug } from "@/lib/contributor-identity";
 import type { Category, Contributor, Entry } from "@/types/registry";
 
-export function contributorSlug(value: string) {
-  return value
-    .trim()
-    .toLowerCase()
-    .replace(/^@/, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
+export { authorMatchesSubmitter, contributorSlug };
 
 export function githubHandle(profileUrl?: string) {
   if (!profileUrl) return undefined;
@@ -180,11 +174,4 @@ export function contributorForVerifiedAuthor(author?: string, submittedBy?: stri
 export function contributorForSubmitter(entry: Pick<Entry, "submittedBy" | "submittedByUrl">) {
   if (!entry.submittedBy) return undefined;
   return findContributorForIdentity(entry.submittedBy, entry.submittedByUrl);
-}
-
-export function authorMatchesSubmitter(author?: string, submittedBy?: string) {
-  if (!author || !submittedBy) return false;
-  const authorSlug = contributorSlug(author);
-  const submittedBySlug = contributorSlug(submittedBy);
-  return Boolean(authorSlug && authorSlug === submittedBySlug);
 }
