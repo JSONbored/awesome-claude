@@ -1,5 +1,7 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
+import * as serverSanitize from "../apps/web/src/lib/mcp-config-validator-server-sanitize";
+import * as mcpValidatorLib from "../apps/web/src/lib/mcp-config-validator-lib";
 import {
   asStringArray,
   buildReportText,
@@ -16,6 +18,7 @@ import {
   splitArgPlaceholder,
   validateServer,
 } from "../apps/web/src/lib/mcp-config-validator-lib";
+import { getServerSanitization } from "../apps/web/src/lib/mcp-config-validator-server-sanitize";
 
 function syntheticBareSecret() {
   return (
@@ -37,6 +40,11 @@ describe("MCP config validator lib", () => {
       expect(redactEnvValue("API_KEY", "${API_KEY}")).toBe("${API_KEY}");
       expect(redactEnvValue("API_KEY", "")).toBe("");
       expect(redactEnvValue("", syntheticBareSecret())).toBe("${SECRET}");
+    });
+
+    it("stringifies nullish values before matching", () => {
+      expect(redactEnvValue("LOG_LEVEL", undefined)).toBe("");
+      expect(redactEnvValue("API_KEY", null)).toBe("");
     });
   });
 
@@ -69,6 +77,14 @@ describe("MCP config validator lib", () => {
       expect(result.value).toContain("%24%7BOPENAI_API_KEY%7D");
       expect(result.value).not.toContain("${OPENAI_API_KEY}");
     });
+
+    it("redacts query params with empty parameter names", () => {
+      const secret = syntheticBareSecret();
+      const result = redactUrlValue(`https://example.com/mcp?=${secret}`);
+      expect(result.redactedCount).toBe(1);
+      expect(result.value).toContain("${SECRET}");
+      expect(result.value).not.toContain(secret);
+    });
   });
 
   describe("redactArgValue", () => {
@@ -94,10 +110,22 @@ describe("MCP config validator lib", () => {
     });
 
     it("ignores empty and plain arg values", () => {
+      expect(redactArgValue("")).toEqual({ value: "", redactedCount: 0 });
       expect(redactArgValue("   ")).toEqual({ value: "   ", redactedCount: 0 });
       expect(redactArgValue("plain-flag")).toEqual({
         value: "plain-flag",
         redactedCount: 0,
+      });
+      expect(redactArgValue("mode=read")).toEqual({
+        value: "mode=read",
+        redactedCount: 0,
+      });
+    });
+
+    it("uses underscore placeholders for symbolic sensitive arg keys", () => {
+      expect(redactArgValue(`!=${syntheticBareSecret()}`)).toEqual({
+        value: `!=\${_}`,
+        redactedCount: 1,
       });
     });
   });
@@ -185,6 +213,12 @@ describe("MCP config validator lib", () => {
         packageFromRunner("docker", ["run", "ghcr.io/example/mcp:1.2.3"]),
       ).toBe("ghcr.io/example/mcp:1.2.3");
       expect(packageFromRunner("bunx", ["@example/mcp"])).toBe("@example/mcp");
+      expect(packageFromRunner("pnpm", ["install", "@scope/pkg"])).toBe(
+        "install",
+      );
+      expect(packageFromRunner("npm", ["install", "@scope/pkg"])).toBe(
+        "install",
+      );
     });
 
     it("labels package runners for unpinned warnings", () => {
@@ -291,7 +325,23 @@ describe("MCP config validator lib", () => {
         command: "npx",
         args: ["-y", "@modelcontextprotocol/server-github"],
       });
-      expect(report.warnings.join("\n")).toContain("runs unpinned package");
+      expect(report.warnings.join("\n")).toContain(
+        "npx runs unpinned package @modelcontextprotocol/server-github",
+      );
+      expect(report.warnings.join("\n")).toContain(
+        "@modelcontextprotocol/server-github@1.2.3",
+      );
+
+      const urlPackage = validateServer("url-pkg", {
+        command: "npx",
+        args: ["-y", "https://example.com/package.tgz"],
+      });
+      expect(urlPackage.warnings.join("\n")).toContain(
+        "npx runs unpinned package https://example.com/package.tgz",
+      );
+      expect(urlPackage.warnings.join("\n")).toContain(
+        "https://example.com/package.tgz@1.2.3",
+      );
 
       const remote = validateServer("remote", {
         url: "http://example.com:3000/sse",
@@ -299,12 +349,17 @@ describe("MCP config validator lib", () => {
       expect(remote.warnings).toContain(
         "Remote MCP URLs should use HTTPS unless they are localhost.",
       );
+      expect(remote.transport).toBe("remote");
     });
 
     it("rejects non-object server configs", () => {
       expect(validateServer("broken", "stdio")).toMatchObject({
         transport: "unknown",
         errors: ["Server config must be an object."],
+      });
+      expect(validateServer("   ", "stdio")).toMatchObject({
+        name: "   ",
+        transport: "unknown",
       });
     });
 
@@ -349,6 +404,7 @@ describe("MCP config validator lib", () => {
         env: {
           API_KEY: sensitiveValue,
           PLACEHOLDER_KEY: "${PLACEHOLDER_KEY}",
+          EMPTY_SECRET: null,
         },
       });
       expect(report.warnings).toEqual(
@@ -358,6 +414,84 @@ describe("MCP config validator lib", () => {
           expect.stringContaining("Argument contains shell-like syntax:"),
         ]),
       );
+    });
+
+    it("warns on unpinned docker image operands", () => {
+      const report = validateServer("dock", {
+        command: "docker",
+        args: ["run", "ghcr.io/example/mcp:latest"],
+      });
+      expect(report.packageName).toBe("ghcr.io/example/mcp:latest");
+      expect(report.warnings.join("\n")).not.toContain("runs unpinned package");
+    });
+
+    it("uses stdio transport when only command is present", () => {
+      expect(
+        validateServer("stdio-only", {
+          command: "npx",
+          args: ["-y", "@example/mcp"],
+        }),
+      ).toMatchObject({
+        transport: "stdio",
+        command: "npx",
+      });
+
+      expect(
+        validateServer("remote-only", {
+          url: "https://example.com/mcp",
+        }),
+      ).toMatchObject({
+        transport: "remote",
+        command: "",
+      });
+
+      expect(validateServer("unknown-only", {})).toMatchObject({
+        transport: "unknown",
+      });
+
+      expect(
+        validateServer("   ", {
+          command: "npx",
+          args: ["-y", "@example/mcp@1.2.3"],
+        }),
+      ).toMatchObject({
+        name: "   ",
+        transport: "stdio",
+      });
+    });
+
+    it("falls back when sanitized server config is not a record", () => {
+      const spy = vi
+        .spyOn(serverSanitize, "getServerSanitization")
+        .mockReturnValueOnce({
+          sanitizedRawValue: {},
+          sanitizedArgs: [],
+          redactedSecretCount: 0,
+        });
+      const report = validateServer("shell", {
+        command: "npx",
+        args: [";danger"],
+      });
+      expect(report.warnings.join("\n")).toContain(
+        "Argument contains shell-like syntax: ${SECRET}",
+      );
+      spy.mockRestore();
+    });
+  });
+
+  describe("getServerSanitization", () => {
+    it("falls back when sanitized root value is not a record", () => {
+      const spy = vi
+        .spyOn(mcpValidatorLib, "sanitizeConfigValue")
+        .mockReturnValueOnce({ value: [], redactedCount: 2 });
+      expect(
+        getServerSanitization({ command: "npx", args: ["-y", "@example/mcp"] }),
+      ).toEqual({
+        sanitizedRawValue: {},
+        sanitizedArgs: [],
+        redactedSecretCount: 2,
+      });
+      spy.mockRestore();
     });
   });
 

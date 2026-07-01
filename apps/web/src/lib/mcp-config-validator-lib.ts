@@ -1,5 +1,7 @@
 import { isPinnedPackageSpec, parsePackageSpec } from "@heyclaude/registry/package-spec";
 
+import { getServerSanitization } from "./mcp-config-validator-server-sanitize";
+
 const SENSITIVE_ENV_PATTERN =
   /(api[_-]?key|auth|authorization|bearer|client[_-]?secret|credential|env|password|private[_-]?key|secret|token|x-api-key)/i;
 const PLACEHOLDER_PATTERN = /(\$\{[A-Z0-9_]+\}|YOUR_|REPLACE_|INSERT_|<[^>]+>|\bxxx+\b|\bTODO\b)/i;
@@ -159,7 +161,7 @@ export function redactArgValue(value: string) {
     if (SENSITIVE_ENV_PATTERN.test(rawKey) || SECRET_VALUE_PATTERN.test(rawValue)) {
       const placeholder = rawKey.toUpperCase().replace(/[^A-Z0-9_]/g, "_");
       return {
-        value: `${rawKey}=\${${placeholder || "SECRET"}}`,
+        value: `${rawKey}=\${${placeholder}}`,
         redactedCount: 1,
       };
     }
@@ -203,7 +205,7 @@ export function redactArgArray(values: unknown[]): SanitizedValue {
       const placeholder = pendingPlaceholder;
       redactedCount += 1;
       pendingPlaceholder = "";
-      return `\${${placeholder || "SECRET"}}`;
+      return `\${${placeholder}}`;
     }
 
     const sanitized = redactArgValue(item);
@@ -354,14 +356,11 @@ export function validateServer(name: string, raw: unknown) {
   const args = asStringArray(raw.args);
   const env = isRecord(raw.env) ? raw.env : {};
   const envKeys = Object.keys(env).sort();
-  const sanitizedRaw = sanitizeConfigValue("", raw);
-  const sanitizedRawValue = isRecord(sanitizedRaw.value) ? sanitizedRaw.value : {};
-  const sanitizedArgs = asStringArray(sanitizedRawValue.args);
+  const { sanitizedRawValue, sanitizedArgs, redactedSecretCount } = getServerSanitization(raw);
   const sanitized = {
     ...sanitizedRawValue,
     ...(command ? { command } : {}),
   };
-  const redactedSecretCount = sanitizedRaw.redactedCount;
 
   if (!command && !url) {
     errors.push("Server must define command for stdio or url for remote transport.");
