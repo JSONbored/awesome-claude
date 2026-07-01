@@ -1,7 +1,7 @@
 import { isPinnedPackageSpec, parsePackageSpec } from "@heyclaude/registry/package-spec";
 
 import { getServerSanitization } from "./mcp-config-validator-server-sanitize";
-import { SECRET_VALUE_PATTERN } from "./mcp-config-validator";
+import { SECRET_VALUE_PATTERN } from "./mcp-config-validator-constants";
 
 const SENSITIVE_ENV_PATTERN =
   /(api[_-]?key|auth|authorization|bearer|client[_-]?secret|credential|env|password|private[_-]?key|secret|token|x-api-key)/i;
