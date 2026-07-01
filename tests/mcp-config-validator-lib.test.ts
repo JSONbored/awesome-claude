@@ -20,10 +20,8 @@ import {
 } from "../apps/web/src/lib/mcp-config-validator-lib";
 import { getServerSanitization } from "../apps/web/src/lib/mcp-config-validator-server-sanitize";
 
-function syntheticBareSecret() {
-  return (
-    String.fromCharCode(120, 111, 120, 98, 45) + "abcdefghijklmnopqrstuvwxyz12"
-  );
+function syntheticSecretValue() {
+  return String.fromCharCode(115, 107, 45) + "abcdefghijklmnopqrstuvwxyz12";
 }
 
 describe("MCP config validator lib", () => {
@@ -32,14 +30,14 @@ describe("MCP config validator lib", () => {
   describe("redactEnvValue", () => {
     it("redacts secret-like env keys and raw token values", () => {
       expect(redactEnvValue("API_KEY", sensitiveValue)).toBe("${API_KEY}");
-      expect(redactEnvValue("owner", syntheticBareSecret())).toBe("${OWNER}");
+      expect(redactEnvValue("owner", syntheticSecretValue())).toBe("${OWNER}");
       expect(redactEnvValue("LOG_LEVEL", "debug")).toBe("debug");
     });
 
     it("preserves placeholders and empty values", () => {
       expect(redactEnvValue("API_KEY", "${API_KEY}")).toBe("${API_KEY}");
       expect(redactEnvValue("API_KEY", "")).toBe("");
-      expect(redactEnvValue("", syntheticBareSecret())).toBe("${SECRET}");
+      expect(redactEnvValue("", syntheticSecretValue())).toBe("${SECRET}");
     });
 
     it("stringifies nullish values before matching", () => {
@@ -63,7 +61,7 @@ describe("MCP config validator lib", () => {
 
     it("falls back to env redaction for malformed URLs", () => {
       const result = redactUrlValue(
-        `https://bad host/sse?api_key=${syntheticBareSecret()}`,
+        `https://bad host/sse?api_key=${syntheticSecretValue()}`,
       );
       expect(result.redactedCount).toBe(1);
       expect(result.value).toBe("${URL}");
@@ -79,7 +77,7 @@ describe("MCP config validator lib", () => {
     });
 
     it("redacts query params with empty parameter names", () => {
-      const secret = syntheticBareSecret();
+      const secret = syntheticSecretValue();
       const result = redactUrlValue(`https://example.com/mcp?=${secret}`);
       expect(result.redactedCount).toBe(1);
       expect(result.value).toContain("${SECRET}");
@@ -93,7 +91,7 @@ describe("MCP config validator lib", () => {
         value: "token=${TOKEN}",
         redactedCount: 1,
       });
-      expect(redactArgValue(syntheticBareSecret())).toEqual({
+      expect(redactArgValue(syntheticSecretValue())).toEqual({
         value: "${SECRET}",
         redactedCount: 1,
       });
@@ -123,7 +121,7 @@ describe("MCP config validator lib", () => {
     });
 
     it("uses underscore placeholders for symbolic sensitive arg keys", () => {
-      expect(redactArgValue(`!=${syntheticBareSecret()}`)).toEqual({
+      expect(redactArgValue(`!=${syntheticSecretValue()}`)).toEqual({
         value: `!=\${_}`,
         redactedCount: 1,
       });
