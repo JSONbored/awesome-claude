@@ -14,6 +14,7 @@ import {
   redactArgValue,
   redactEnvValue,
   redactUrlValue,
+  resolveRedactionPlaceholder,
   sanitizeConfigValue,
   splitArgPlaceholder,
   validateServer,
@@ -120,11 +121,14 @@ describe("MCP config validator lib", () => {
       });
     });
 
-    it("uses underscore placeholders for symbolic sensitive arg keys", () => {
+    it("falls back to SECRET for symbolic sensitive arg keys", () => {
       expect(redactArgValue(`!=${syntheticSecretValue()}`)).toEqual({
-        value: `!=\${_}`,
+        value: `!=\${SECRET}`,
         redactedCount: 1,
       });
+      expect(resolveRedactionPlaceholder("token")).toBe("TOKEN");
+      expect(resolveRedactionPlaceholder("!")).toBe("SECRET");
+      expect(resolveRedactionPlaceholder("_")).toBe("SECRET");
     });
   });
 

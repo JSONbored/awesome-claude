@@ -149,6 +149,11 @@ export function redactUrlValue(value: string) {
   }
 }
 
+export function resolveRedactionPlaceholder(rawKey: string) {
+  const placeholderKey = rawKey.toUpperCase().replace(/[^A-Z0-9_]/g, "_");
+  return placeholderKey.replace(/^_+$/, "") || "SECRET";
+}
+
 export function redactArgValue(value: string) {
   const normalized = value.trim();
   if (!normalized) return { value, redactedCount: 0 };
@@ -158,7 +163,7 @@ export function redactArgValue(value: string) {
     const rawKey = normalized.slice(0, equalIndex);
     const rawValue = normalized.slice(equalIndex + 1);
     if (SENSITIVE_ENV_PATTERN.test(rawKey) || SECRET_VALUE_PATTERN.test(rawValue)) {
-      const placeholder = rawKey.toUpperCase().replace(/[^A-Z0-9_]/g, "_");
+      const placeholder = resolveRedactionPlaceholder(rawKey);
       return {
         value: `${rawKey}=\${${placeholder}}`,
         redactedCount: 1,
@@ -204,7 +209,7 @@ export function redactArgArray(values: unknown[]): SanitizedValue {
       const placeholder = pendingPlaceholder;
       redactedCount += 1;
       pendingPlaceholder = "";
-      return `\${${placeholder}}`;
+      return `\${${resolveRedactionPlaceholder(placeholder)}}`;
     }
 
     const sanitized = redactArgValue(item);
