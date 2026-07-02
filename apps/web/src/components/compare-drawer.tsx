@@ -21,10 +21,16 @@ import { useCopyPref, useHarnessPref } from "@/lib/dossier-prefs";
 import type { Entry, Harness } from "@/types/registry";
 import { cn } from "@/lib/utils";
 import { brandIdentityLabel } from "@/lib/brand-icons";
+import {
+  COMPARE_DECISION_ROWS,
+  decisionRowDiverges,
+  type CompareSignalValue,
+} from "@/lib/compare-entry-signals";
 
 interface RowDef {
   label: string;
   render: (e: Entry) => React.ReactNode;
+  diverges?: (items: Entry[]) => boolean;
 }
 
 const ROWS: RowDef[] = [
@@ -32,6 +38,15 @@ const ROWS: RowDef[] = [
     label: "Trust",
     render: (e) => <TrustDrilldown entry={e} />,
   },
+  ...COMPARE_DECISION_ROWS.map((row) => ({
+    label: row.label,
+    render: (e: Entry) => {
+      const value = row.resolve(e);
+      if (!value) return <span className="text-xs text-ink-subtle">—</span>;
+      return <CompareSignalCell value={value} />;
+    },
+    diverges: (items: Entry[]) => decisionRowDiverges(row.resolve, items),
+  })),
   {
     label: "Safety",
     render: (e) =>
@@ -140,6 +155,20 @@ const ROWS: RowDef[] = [
     ),
   },
 ];
+
+function CompareSignalCell({ value }: { value: CompareSignalValue }) {
+  return (
+    <span
+      className={cn(
+        "inline-flex flex-col gap-0.5 text-xs",
+        value.tone === "present" ? "text-trust-trusted" : "text-ink-subtle",
+      )}
+    >
+      <span>{value.label}</span>
+      {value.detail ? <span className="text-ink-muted">{value.detail}</span> : null}
+    </span>
+  );
+}
 
 /** Per-entry snippet cell that honors the global copy variant + harness pref. */
 function SnippetCell({ entry }: { entry: Entry }) {
@@ -322,24 +351,44 @@ export function CompareDrawer() {
                   </tr>
                 </thead>
                 <tbody>
-                  {ROWS.map((row, i) => (
-                    <tr key={row.label} className={cn(i % 2 === 0 && "bg-surface-2/30")}>
-                      <th
-                        scope="row"
-                        className="sticky left-0 z-10 w-[140px] border-b border-r border-border bg-inherit p-3 text-left align-top text-xs font-medium text-ink-muted"
+                  {ROWS.map((row, i) => {
+                    const rowDiverges = row.diverges?.(items) ?? false;
+                    return (
+                      <tr
+                        key={row.label}
+                        className={cn(
+                          i % 2 === 0 && "bg-surface-2/30",
+                          rowDiverges && "bg-amber-500/5",
+                        )}
                       >
-                        {row.label}
-                      </th>
-                      {items.map((e) => (
-                        <td
-                          key={`${e.category}/${e.slug}`}
-                          className="min-w-[260px] max-w-[320px] border-b border-r border-border p-3 align-top last:border-r-0"
+                        <th
+                          scope="row"
+                          className={cn(
+                            "sticky left-0 z-10 w-[140px] border-b border-r border-border bg-inherit p-3 text-left align-top text-xs font-medium text-ink-muted",
+                            rowDiverges && "text-amber-800",
+                          )}
                         >
-                          {row.render(e)}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
+                          {row.label}
+                          {rowDiverges ? (
+                            <span className="mt-0.5 block text-[10px] font-normal uppercase tracking-wide text-amber-700">
+                              Differs
+                            </span>
+                          ) : null}
+                        </th>
+                        {items.map((e) => (
+                          <td
+                            key={`${e.category}/${e.slug}`}
+                            className={cn(
+                              "min-w-[260px] max-w-[320px] border-b border-r border-border p-3 align-top last:border-r-0",
+                              rowDiverges && "bg-amber-500/5",
+                            )}
+                          >
+                            {row.render(e)}
+                          </td>
+                        ))}
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
