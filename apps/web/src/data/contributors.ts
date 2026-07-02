@@ -198,5 +198,11 @@ export function contributorForDisplayAuthor(
   if (!entry.submittedBy || authorMatchesSubmitter(entry.author, entry.submittedBy)) {
     return findContributorForIdentity(entry.author, entry.authorProfileUrl);
   }
-  return undefined;
+
+  const submitter = String(entry.submittedBy || entry.author || "JSONbored").trim();
+  if (!shouldRegisterDistinctAuthorProfile(entry, submitter)) {
+    return undefined;
+  }
+
+  return findContributorForIdentity(entry.author, entry.authorProfileUrl);
 }

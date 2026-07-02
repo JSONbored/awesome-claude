@@ -145,7 +145,7 @@ describe("contributors attribution aggregation", () => {
     expect(
       shouldRegisterDistinctAuthorProfile(spoofEntry, "spoof-submitter"),
     ).toBe(false);
-    expect(contributorForDisplayAuthor(splitEntry)).toBeUndefined();
+    expect(contributorForDisplayAuthor(splitEntry)?.slug).toBe("split-author");
     expect(contributorForDisplayAuthor(spoofEntry)).toBeUndefined();
     expect(
       contributorForDisplayAuthor(

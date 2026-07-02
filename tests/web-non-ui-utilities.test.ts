@@ -24,6 +24,7 @@ import {
   CONTRIBUTORS,
   authorMatchesSubmitter,
   contributorAcceptedEntryRole,
+  contributorForDisplayAuthor,
   contributorForSubmitter,
   contributorForVerifiedAuthor,
   contributorMatchesIdentity,
@@ -675,6 +676,7 @@ describe("web non-UI utility coverage", () => {
     );
     expect(contributorAcceptedEntryRole(author!, splitEntry!)).toBe("authored");
     expect(contributorForSubmitter(splitEntry!)).toBe(submitter);
+    expect(contributorForDisplayAuthor(splitEntry!)).toBe(author);
     expect(
       contributorForVerifiedAuthor(splitEntry!.author, splitEntry!.submittedBy),
     ).toBeUndefined();
