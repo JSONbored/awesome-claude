@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import type { Entry } from "@/types/registry";
 import {
   compareActionSignature,
@@ -25,6 +25,10 @@ function entry(overrides: Partial<Entry> = {}): Entry {
 }
 
 describe("compare entry actions", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
   it("always offers dossier navigation and optional install, config, source, and claim CTAs", () => {
     expect(
       resolveCompareEntryActions(entry()).map((action) => action.id),
@@ -55,6 +59,8 @@ describe("compare entry actions", () => {
       ]),
     ).toBe(false);
     expect(compareActionSignature(entry())).toBe("dossier|claim");
+    expect(compareActionsDiverge([entry()])).toBe(false);
+    expect(compareActionsDiverge([])).toBe(false);
   });
 
   it("records compare intent events with entry keys only and degrades safely", async () => {
@@ -63,6 +69,14 @@ describe("compare entry actions", () => {
       .mockResolvedValueOnce({
         ok: true,
         json: async () => ({ stored: true }),
+      })
+      .mockResolvedValueOnce({
+        ok: false,
+        json: async () => ({ stored: false }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ stored: false }),
       })
       .mockRejectedValueOnce(new Error("offline"));
     vi.stubGlobal("fetch", fetchMock);
@@ -82,7 +96,11 @@ describe("compare entry actions", () => {
     await expect(recordCompareIntentEvent("open", entry())).resolves.toBe(
       false,
     );
-
-    vi.unstubAllGlobals();
+    await expect(recordCompareIntentEvent("copy", entry())).resolves.toBe(
+      false,
+    );
+    await expect(recordCompareIntentEvent("open", entry())).resolves.toBe(
+      false,
+    );
   });
 });
