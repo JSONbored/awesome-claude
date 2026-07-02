@@ -1,5 +1,12 @@
 # @heyclaude/mcp Changelog
 
+## [0.7.0](https://github.com/JSONbored/awesome-claude/compare/mcp-v0.6.0...mcp-v0.7.0) (2026-07-02)
+
+
+### Features
+
+* **web:** extract submission preflight lib and finish search alias unification ([#4248](https://github.com/JSONbored/awesome-claude/issues/4248)) ([1f1a240](https://github.com/JSONbored/awesome-claude/commit/1f1a2406beb284ce0499bf097acccd63a6c82d7e))
+
 ## [0.6.0](https://github.com/JSONbored/awesome-claude/compare/mcp-v0.5.3...mcp-v0.6.0) (2026-06-29)
 
 
