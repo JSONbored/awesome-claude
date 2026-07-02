@@ -11,6 +11,13 @@ import { CopyButton } from "@/components/copy-button";
 import { COMPARISON_ROWS as ROWS } from "@/components/comparison-table";
 import { useCompare } from "@/lib/compare";
 import { resolveCompareParam, serializeCompareItems } from "@/lib/compare-selection";
+import {
+  compareActionsDiverge,
+  recordCompareIntentEvent,
+  resolveCompareEntryActions,
+  type CompareAction,
+} from "@/lib/compare-entry-actions";
+import { trackEvent, entryEventKey } from "@/lib/analytics";
 import { sameEntry } from "@/lib/entry-identity";
 import { search } from "@/data/search";
 import { cn } from "@/lib/utils";
@@ -60,6 +67,7 @@ function ComparePage() {
   const items = compare.items;
   const [hoverRow, setHoverRow] = React.useState<number | null>(null);
   const [pickerOpen, setPickerOpen] = React.useState(false);
+  const actionRowDiverges = compareActionsDiverge(items);
 
   const pushIds = (next: Entry[]) => {
     const ids = serializeCompareItems(next);
@@ -212,6 +220,43 @@ function ComparePage() {
             </tr>
           </thead>
           <tbody>
+            <tr
+              className={cn(
+                "transition-colors duration-200 ease-out",
+                actionRowDiverges ? "bg-amber-500/5" : "bg-surface-2/30",
+              )}
+            >
+              <th
+                scope="row"
+                className={cn(
+                  "sticky left-0 z-10 w-[150px] border-b border-r border-border bg-inherit p-3 text-left align-top text-xs font-medium text-ink-muted",
+                  actionRowDiverges && "text-amber-800",
+                )}
+              >
+                Next steps
+                {actionRowDiverges ? (
+                  <span className="mt-0.5 block text-[10px] font-normal uppercase tracking-wide text-amber-700">
+                    Differs
+                  </span>
+                ) : null}
+              </th>
+              {items.map((e) => (
+                <td
+                  key={`actions-${e.category}/${e.slug}`}
+                  className={cn(
+                    "min-w-[260px] max-w-[320px] border-b border-r border-border p-3 align-top",
+                    actionRowDiverges && "bg-amber-500/5",
+                  )}
+                >
+                  <CompareNextActions entry={e} />
+                </td>
+              ))}
+              {items.length < 4 && (
+                <td className="min-w-[220px] border-b border-border p-3 align-top text-xs text-ink-subtle">
+                  —
+                </td>
+              )}
+            </tr>
             {ROWS.map((row, i) => (
               <tr
                 key={row.label}
@@ -252,6 +297,93 @@ function ComparePage() {
       </p>
     </div>
   );
+}
+
+function CompareNextActions({ entry }: { entry: Entry }) {
+  const actions = resolveCompareEntryActions(entry);
+
+  return (
+    <div className="flex flex-wrap gap-1.5">
+      {actions.map((action) => (
+        <CompareActionButton key={action.id} entry={entry} action={action} />
+      ))}
+    </div>
+  );
+}
+
+function CompareActionButton({ entry, action }: { entry: Entry; action: CompareAction }) {
+  const eventKey = entryEventKey(entry.category, entry.slug);
+
+  if (action.kind === "copy" && action.copyValue) {
+    return (
+      <CopyButton
+        value={action.copyValue}
+        label={action.label}
+        event={action.analyticsEvent}
+        eventData={{ entry: eventKey, surface: "compare-page" }}
+        onCopied={() => {
+          if (action.intentType) void recordCompareIntentEvent(action.intentType, entry);
+        }}
+      />
+    );
+  }
+
+  if (action.kind === "link") {
+    if (action.id === "dossier") {
+      return (
+        <Link
+          to="/entry/$category/$slug"
+          params={{ category: entry.category, slug: entry.slug }}
+          onClick={() => {
+            if (action.analyticsEvent) {
+              trackEvent(action.analyticsEvent, { entry: eventKey, surface: "compare-page" });
+            }
+            if (action.intentType) void recordCompareIntentEvent(action.intentType, entry);
+          }}
+          className="inline-flex h-7 items-center rounded-md border border-border bg-surface px-2 text-xs font-medium text-ink hover:bg-surface-2"
+        >
+          {action.label}
+        </Link>
+      );
+    }
+
+    if (action.id === "claim") {
+      return (
+        <Link
+          to="/claim"
+          onClick={() => {
+            if (action.analyticsEvent) {
+              trackEvent(action.analyticsEvent, { entry: eventKey, surface: "compare-page" });
+            }
+          }}
+          className="inline-flex h-7 items-center rounded-md border border-border bg-surface px-2 text-xs font-medium text-ink hover:bg-surface-2"
+        >
+          {action.label}
+        </Link>
+      );
+    }
+
+    if (action.href && action.external) {
+      return (
+        <a
+          href={action.href}
+          target="_blank"
+          rel="noreferrer"
+          onClick={() => {
+            if (action.analyticsEvent) {
+              trackEvent(action.analyticsEvent, { entry: eventKey, surface: "compare-page" });
+            }
+            if (action.intentType) void recordCompareIntentEvent(action.intentType, entry);
+          }}
+          className="inline-flex h-7 items-center rounded-md border border-border bg-surface px-2 text-xs font-medium text-ink hover:bg-surface-2"
+        >
+          {action.label}
+        </a>
+      );
+    }
+  }
+
+  return null;
 }
 
 function Skeleton({ ids }: { ids: string }) {

@@ -15,6 +15,7 @@ export function CopyButton({
   iconOnly = false,
   event,
   eventData,
+  onCopied,
 }: {
   value: string;
   label?: string;
@@ -29,6 +30,8 @@ export function CopyButton({
   event?: string;
   /** Optional umami event data sent alongside `event`. */
   eventData?: Record<string, unknown>;
+  /** Optional hook after a successful clipboard write. */
+  onCopied?: () => void;
 }) {
   const [copied, setCopied] = React.useState(false);
   const reduced = useReducedMotion();
@@ -46,6 +49,7 @@ export function CopyButton({
           await navigator.clipboard.writeText(value);
           setCopied(true);
           if (event) trackEvent(event, eventData);
+          onCopied?.();
           toast.success(toastLabel ?? "Copied to clipboard", {
             description: value.length > 60 ? value.slice(0, 60) + "…" : value,
             duration: 1800,
