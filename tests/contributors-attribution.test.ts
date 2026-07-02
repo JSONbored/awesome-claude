@@ -152,6 +152,40 @@ describe("contributors attribution aggregation", () => {
         fixture({ author: "Author Only", submittedBy: undefined }),
       )?.slug,
     ).toBe("author-only");
+    expect(
+      contributorForDisplayAuthor(
+        fixture({
+          author: "reviewer",
+          submittedBy: "reviewer",
+          submittedByUrl: "https://github.com/reviewer",
+        }),
+      )?.slug,
+    ).toBe("reviewer");
+    expect(
+      contributorForDisplayAuthor(
+        fixture({
+          author: "at-handle",
+          submittedBy: "@at-handle",
+          submittedByUrl: "https://github.com/at-handle",
+        }),
+      )?.slug,
+    ).toBe("at-handle");
+    expect(
+      shouldRegisterDistinctAuthorProfile(
+        { author: "Split Author", submittedBy: "other" },
+        "other",
+      ),
+    ).toBe(false);
+    expect(
+      shouldRegisterDistinctAuthorProfile(
+        {
+          author: "!!!",
+          submittedBy: "other",
+          authorProfileUrl: "https://brand.dev",
+        },
+        "other",
+      ),
+    ).toBe(false);
   });
 
   it("handles contributor identity guardrails", () => {

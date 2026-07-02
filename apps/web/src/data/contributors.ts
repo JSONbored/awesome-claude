@@ -199,7 +199,7 @@ export function contributorForDisplayAuthor(
     return findContributorForIdentity(entry.author, entry.authorProfileUrl);
   }
 
-  const submitter = String(entry.submittedBy || entry.author || "JSONbored").trim();
+  const submitter = String(entry.submittedBy).trim();
   if (!shouldRegisterDistinctAuthorProfile(entry, submitter)) {
     return undefined;
   }
