@@ -6,6 +6,7 @@ import {
   COMPARE_DECISION_ROWS,
   decisionRowDiverges,
   packageTrustCompareSignal,
+  resolveCompareSignal,
   reviewCompareSignal,
   sourceProvenanceCompareSignal,
   submitterCompareSignal,
@@ -90,6 +91,16 @@ describe("compare entry signals", () => {
     });
   });
 
+  it("maps compare signal tones to drawer styling classes", () => {
+    expect(compareSignalToneClass("verified")).toBe("text-trust-trusted");
+    expect(compareSignalToneClass("present")).toBe("text-ink");
+    expect(compareSignalToneClass("missing")).toBe("text-ink-subtle");
+    expect(resolveCompareSignal(undefined)).toEqual({
+      tone: "missing",
+      label: "—",
+    });
+  });
+
   it("maps checksum-only package metadata to a neutral present tone", () => {
     const checksumOnly = packageTrustCompareSignal(
       entry({ trustSignals: { checksumPresent: true } }),
@@ -161,6 +172,32 @@ describe("compare entry signals", () => {
       label: "Source-backed",
     });
     expect(
+      sourceProvenanceCompareSignal(entry({ source: "source-backed" })),
+    ).toEqual({
+      tone: "present",
+      label: "Source-backed",
+    });
+    expect(
+      sourceProvenanceCompareSignal(
+        entry({ trustSignals: { sourceStatus: "available" } }),
+      ),
+    ).toEqual({
+      tone: "present",
+      label: "Source-backed",
+    });
+    expect(
+      sourceProvenanceCompareSignal(
+        entry({
+          importPrUrl: "https://github.com/org/repo/pull/1",
+          sourceSubmissionUrl: "https://github.com/org/repo/issues/1",
+        }),
+      ),
+    ).toEqual({
+      tone: "present",
+      label: "Submission linked",
+      detail: "Import PR",
+    });
+    expect(
       sourceProvenanceCompareSignal(
         entry({ importPrUrl: "https://github.com/org/repo/pull/1" }),
       ),
@@ -210,6 +247,7 @@ describe("compare entry signals", () => {
       ]),
     ).toBe(false);
     expect(compareSignalsDiverge([reviewCompareSignal(entry())])).toBe(false);
+    expect(compareSignalsDiverge([])).toBe(false);
     expect(
       compareSignalsDiverge([
         submitterCompareSignal(entry({ submittedBy: "kiannidev" })),
