@@ -6,6 +6,15 @@ import { CommercialDisclosure } from "@/components/commercial-disclosure";
 import { absoluteUrl } from "@/lib/seo";
 import { submitListingLead } from "@/lib/listing-lead-client";
 
+const TOOL_LISTING_TIERS = ["featured", "sponsored"] as const;
+
+function toolListingTierInterest(raw: FormDataEntryValue | null) {
+  const value = String(raw ?? "featured");
+  return TOOL_LISTING_TIERS.includes(value as (typeof TOOL_LISTING_TIERS)[number])
+    ? (value as (typeof TOOL_LISTING_TIERS)[number])
+    : "featured";
+}
+
 export const Route = createFileRoute("/tools/submit")({
   head: () => ({
     meta: [
@@ -82,7 +91,7 @@ function CommercialToolListingForm() {
     try {
       await submitListingLead({
         kind: "tool",
-        tierInterest: String(form.get("tierInterest") ?? "featured") as "featured" | "sponsored",
+        tierInterest: toolListingTierInterest(form.get("tierInterest")),
         contactName: String(form.get("contactName") ?? "").trim(),
         contactEmail: String(form.get("email") ?? "").trim(),
         companyName: String(form.get("company") ?? "").trim(),
@@ -91,7 +100,6 @@ function CommercialToolListingForm() {
         message: String(form.get("notes") ?? "").trim(),
       });
       setDone(true);
-      e.currentTarget.reset();
     } catch {
       setError(
         "Tool listing interest could not be submitted. Check required fields and try again.",
@@ -185,7 +193,6 @@ function PaidReviewInterestForm() {
           .join("\n\n"),
       });
       setDone(true);
-      e.currentTarget.reset();
     } catch {
       setError("Review interest could not be submitted. Check required fields and try again.");
     } finally {

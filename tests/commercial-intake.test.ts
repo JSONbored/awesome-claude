@@ -513,6 +513,7 @@ describe("commercial intake contracts", () => {
     expect(toolsSubmit).toContain('to="/submit"');
     expect(toolsSubmit).toContain('to="/advertise"');
     expect(toolsSubmit).toContain('to="/claim"');
+    expect(toolsSubmit).not.toContain("currentTarget.reset");
 
     expect(jobsPost).toContain("Waitlist");
     expect(jobsPost).toContain("waitlist-first");
