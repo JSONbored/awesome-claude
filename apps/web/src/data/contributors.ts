@@ -118,11 +118,7 @@ export const CONTRIBUTORS: Contributor[] = (() => {
     });
 
     const author = String(entry.author || "").trim();
-    if (
-      author &&
-      contributorSlug(author) &&
-      contributorSlug(author) !== contributorSlug(submitter)
-    ) {
+    if (shouldRegisterDistinctAuthorProfile(entry, submitter)) {
       upsertContributor(grouped, author, entry.authorProfileUrl, entry);
     }
   }
@@ -174,4 +170,33 @@ export function contributorForVerifiedAuthor(author?: string, submittedBy?: stri
 export function contributorForSubmitter(entry: Pick<Entry, "submittedBy" | "submittedByUrl">) {
   if (!entry.submittedBy) return undefined;
   return findContributorForIdentity(entry.submittedBy, entry.submittedByUrl);
+}
+
+export function shouldRegisterDistinctAuthorProfile(
+  entry: Pick<Entry, "author" | "submittedBy" | "authorProfileUrl">,
+  submitter: string,
+) {
+  const author = String(entry.author || "").trim();
+  const authorSlug = contributorSlug(author);
+  if (!authorSlug || authorSlug === contributorSlug(submitter)) return false;
+  if (!entry.authorProfileUrl) return false;
+  if (
+    entry.submittedBy &&
+    !authorMatchesSubmitter(entry.author, entry.submittedBy) &&
+    githubHandle(entry.authorProfileUrl) === authorSlug
+  ) {
+    return false;
+  }
+  return true;
+}
+
+export function contributorForDisplayAuthor(
+  entry: Pick<Entry, "author" | "submittedBy" | "authorProfileUrl">,
+) {
+  const verifiedAuthor = contributorForVerifiedAuthor(entry.author, entry.submittedBy);
+  if (verifiedAuthor) return verifiedAuthor;
+  if (!entry.submittedBy || authorMatchesSubmitter(entry.author, entry.submittedBy)) {
+    return findContributorForIdentity(entry.author, entry.authorProfileUrl);
+  }
+  return undefined;
 }

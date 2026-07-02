@@ -234,4 +234,17 @@ describe("buildEntry provenance fields", () => {
     expect(entry.submittedBy).toBe("kiannidev");
     expect(entry.submittedByUrl).toBeUndefined();
   });
+
+  it("falls back submittedByUrl for authorless submitter entries with a profile URL", () => {
+    const entry = buildEntry(
+      baseEntry({
+        author: undefined,
+        authorProfileUrl: "https://github.com/example",
+        submittedBy: "example",
+      }),
+    );
+
+    expect(entry.author).toBe("example");
+    expect(entry.submittedByUrl).toBe("https://github.com/example");
+  });
 });

@@ -31,7 +31,7 @@ vi.mock("@/data/entries", () => ({
       slug: "split-authors",
       author: "Split Author",
       submittedBy: "split-submitter",
-      authorProfileUrl: "https://github.com/split-author",
+      authorProfileUrl: "https://split-author.dev",
       sourceSubmissionUrl: "https://github.com/org/repo",
       submittedByUrl: "https://github.com/split-submitter",
     }),
@@ -83,6 +83,12 @@ vi.mock("@/data/entries", () => ({
       author: "",
       submittedBy: "",
     }),
+    fixture({
+      slug: "spoofed-author",
+      author: "Existing Contributor",
+      submittedBy: "spoof-submitter",
+      submittedByUrl: "https://github.com/spoof-submitter",
+    }),
   ],
 }));
 
@@ -90,12 +96,14 @@ import {
   CONTRIBUTORS,
   authorMatchesSubmitter,
   contributorAcceptedEntryRole,
+  contributorForDisplayAuthor,
   contributorForSubmitter,
   contributorForVerifiedAuthor,
   contributorMatchesIdentity,
   contributorSlug,
   findContributorForIdentity,
   getContributor,
+  shouldRegisterDistinctAuthorProfile,
 } from "../apps/web/src/data/contributors";
 
 describe("contributors attribution aggregation", () => {
@@ -105,7 +113,7 @@ describe("contributors attribution aggregation", () => {
       0,
     );
     expect(getContributor("split-author")?.github).toBe(
-      "https://github.com/split-author",
+      "https://split-author.dev",
     );
     expect(getContributor("reviewer")?.reviewedCount).toBe(1);
     expect(getContributor("at-handle")?.handle).toBe("at-handle");
@@ -113,9 +121,37 @@ describe("contributors attribution aggregation", () => {
     expect(getContributor("credit-submitter")?.sourceSubmissionCount).toBe(2);
     expect(getContributor("author-only")?.acceptedCount).toBe(1);
     expect(getContributor("jsonbored")?.acceptedCount).toBe(1);
+    expect(getContributor("existing-contributor")).toBeUndefined();
     expect(
       CONTRIBUTORS.some((contributor) => contributor.slug === "invalid"),
     ).toBe(false);
+  });
+
+  it("blocks spoofed split-author links and github-backed distinct author registration", () => {
+    const splitEntry = fixture({
+      author: "Split Author",
+      submittedBy: "split-submitter",
+      authorProfileUrl: "https://split-author.dev",
+    });
+    const spoofEntry = fixture({
+      author: "Existing Contributor",
+      submittedBy: "spoof-submitter",
+      authorProfileUrl: "https://github.com/existing-contributor",
+    });
+
+    expect(
+      shouldRegisterDistinctAuthorProfile(splitEntry, "split-submitter"),
+    ).toBe(true);
+    expect(
+      shouldRegisterDistinctAuthorProfile(spoofEntry, "spoof-submitter"),
+    ).toBe(false);
+    expect(contributorForDisplayAuthor(splitEntry)).toBeUndefined();
+    expect(contributorForDisplayAuthor(spoofEntry)).toBeUndefined();
+    expect(
+      contributorForDisplayAuthor(
+        fixture({ author: "Author Only", submittedBy: undefined }),
+      )?.slug,
+    ).toBe("author-only");
   });
 
   it("handles contributor identity guardrails", () => {

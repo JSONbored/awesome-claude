@@ -399,9 +399,10 @@ export function buildEntry(entry: RegistryEntry): Entry {
   const reviewedAt =
     entry.reviewedAt ?? entry.trustSignals?.lastVerifiedAt ?? entry.contentUpdatedAt;
   const authorProfileUrl = entry.authorProfileUrl;
+  const author = entry.author ?? entry.submittedBy ?? entry.brandName ?? "Unknown";
   const submittedByUrl =
     entry.submittedByUrl ??
-    (authorMatchesSubmitter(entry.author, entry.submittedBy) ? authorProfileUrl : undefined);
+    (authorMatchesSubmitter(author, entry.submittedBy) ? authorProfileUrl : undefined);
 
   return {
     category,
@@ -411,7 +412,7 @@ export function buildEntry(entry: RegistryEntry): Entry {
     seoTitle: entry.seoTitle,
     seoDescription: entry.seoDescription,
     cardDescription: entry.cardDescription,
-    author: entry.author ?? entry.submittedBy ?? entry.brandName ?? "Unknown",
+    author,
     authorProfileUrl,
     submittedBy: entry.submittedBy,
     submittedByUrl,

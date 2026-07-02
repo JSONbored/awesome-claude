@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import type { Contributor, Entry } from "@/types/registry";
 import {
   authorMatchesSubmitter,
+  contributorForDisplayAuthor,
   contributorForSubmitter,
   contributorForVerifiedAuthor,
   findContributorForIdentity,
@@ -39,14 +40,29 @@ function ExternalSubmitterLink({
   );
 }
 
+function UnverifiedAuthorLabel({
+  entry,
+  className = "text-ink hover:underline",
+}: {
+  entry: Pick<Entry, "author" | "authorProfileUrl">;
+  className?: string;
+}) {
+  if (entry.authorProfileUrl) {
+    return (
+      <a href={entry.authorProfileUrl} target="_blank" rel="noreferrer" className={className}>
+        {entry.author}
+      </a>
+    );
+  }
+
+  return <span className={className.replace("hover:underline", "").trim()}>{entry.author}</span>;
+}
+
 export function EntryAuthorAttribution({ entry, className }: { entry: Entry; className?: string }) {
   const verifiedAuthor = contributorForVerifiedAuthor(entry.author, entry.submittedBy);
   const submitterContributor = contributorForSubmitter(entry);
   const sameIdentity = authorMatchesSubmitter(entry.author, entry.submittedBy);
-  const authorContributor =
-    entry.author && !verifiedAuthor && (!entry.submittedBy || !sameIdentity)
-      ? findContributorForIdentity(entry.author, entry.authorProfileUrl)
-      : undefined;
+  const authorContributor = contributorForDisplayAuthor(entry);
 
   if (verifiedAuthor) {
     return (
@@ -59,7 +75,7 @@ export function EntryAuthorAttribution({ entry, className }: { entry: Entry; cla
   const authorLabel = authorContributor ? (
     <ContributorProfileLink contributor={authorContributor} label={entry.author} />
   ) : (
-    <span className="text-ink">{entry.author}</span>
+    <UnverifiedAuthorLabel entry={entry} />
   );
 
   if (!entry.submittedBy || sameIdentity) {
@@ -87,11 +103,7 @@ export function ProvenanceAuthorAttribution({
   className?: string;
 }) {
   const verifiedAuthor = contributorForVerifiedAuthor(entry.author, entry.submittedBy);
-  const sameIdentity = authorMatchesSubmitter(entry.author, entry.submittedBy);
-  const authorContributor =
-    entry.author && !verifiedAuthor && (!entry.submittedBy || !sameIdentity)
-      ? findContributorForIdentity(entry.author, entry.authorProfileUrl)
-      : undefined;
+  const authorContributor = contributorForDisplayAuthor(entry);
 
   if (verifiedAuthor) {
     return (
@@ -113,15 +125,7 @@ export function ProvenanceAuthorAttribution({
     );
   }
 
-  if (entry.authorProfileUrl) {
-    return (
-      <a href={entry.authorProfileUrl} target="_blank" rel="noreferrer" className={className}>
-        {entry.author}
-      </a>
-    );
-  }
-
-  return <span className={className}>{entry.author}</span>;
+  return <UnverifiedAuthorLabel entry={entry} className={className} />;
 }
 
 export function ContributorIdentityLink({
@@ -144,5 +148,5 @@ export function ContributorIdentityLink({
       </a>
     );
   }
-  return <span className={className.replace("hover:underline", "")}>{name}</span>;
+  return <span className={className.replace("hover:underline", "").trim()}>{name}</span>;
 }
