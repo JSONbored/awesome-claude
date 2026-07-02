@@ -112,9 +112,7 @@ describe("contributors attribution aggregation", () => {
     expect(getContributor("distinct-author")?.sourceSubmissionCount ?? 0).toBe(
       0,
     );
-    expect(getContributor("split-author")?.github).toBe(
-      "https://split-author.dev",
-    );
+    expect(getContributor("split-author")).toBeUndefined();
     expect(getContributor("reviewer")?.reviewedCount).toBe(1);
     expect(getContributor("at-handle")?.handle).toBe("at-handle");
     expect(getContributor("solo-submitter")?.acceptedCount).toBe(1);
@@ -127,7 +125,7 @@ describe("contributors attribution aggregation", () => {
     ).toBe(false);
   });
 
-  it("blocks spoofed split-author links and github-backed distinct author registration", () => {
+  it("blocks unverified split-author links and distinct author registration", () => {
     const splitEntry = fixture({
       author: "Split Author",
       submittedBy: "split-submitter",
@@ -141,12 +139,22 @@ describe("contributors attribution aggregation", () => {
 
     expect(
       shouldRegisterDistinctAuthorProfile(splitEntry, "split-submitter"),
-    ).toBe(true);
+    ).toBe(false);
     expect(
       shouldRegisterDistinctAuthorProfile(spoofEntry, "spoof-submitter"),
     ).toBe(false);
-    expect(contributorForDisplayAuthor(splitEntry)?.slug).toBe("split-author");
+    expect(contributorForDisplayAuthor(splitEntry)).toBeUndefined();
     expect(contributorForDisplayAuthor(spoofEntry)).toBeUndefined();
+    expect(
+      shouldRegisterDistinctAuthorProfile(
+        fixture({
+          author: "Existing Contributor",
+          submittedBy: "spoof-submitter",
+          authorProfileUrl: "https://evil.example/not-controlled",
+        }),
+        "spoof-submitter",
+      ),
+    ).toBe(false);
     expect(
       contributorForDisplayAuthor(
         fixture({ author: "Author Only", submittedBy: undefined }),

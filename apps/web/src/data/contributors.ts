@@ -179,14 +179,10 @@ export function shouldRegisterDistinctAuthorProfile(
   const author = String(entry.author || "").trim();
   const authorSlug = contributorSlug(author);
   if (!authorSlug || authorSlug === contributorSlug(submitter)) return false;
-  if (!entry.authorProfileUrl) return false;
-  if (
-    entry.submittedBy &&
-    !authorMatchesSubmitter(entry.author, entry.submittedBy) &&
-    githubHandle(entry.authorProfileUrl) === authorSlug
-  ) {
+  if (entry.submittedBy && !authorMatchesSubmitter(entry.author, entry.submittedBy)) {
     return false;
   }
+  if (!entry.authorProfileUrl) return false;
   return true;
 }
 
