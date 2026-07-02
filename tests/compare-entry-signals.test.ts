@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
 import {
+  compareSignalToneClass,
   compareSignalsDiverge,
   COMPARE_DECISION_ROWS,
   decisionRowDiverges,
@@ -34,7 +35,7 @@ describe("compare entry signals", () => {
       label: "Not reviewed",
     });
     expect(reviewCompareSignal(entry({ reviewed: true }))).toEqual({
-      tone: "present",
+      tone: "verified",
       label: "Reviewed",
       detail: "Maintainer reviewed",
     });
@@ -43,12 +44,12 @@ describe("compare entry signals", () => {
         entry({ reviewedBy: "maintainer", reviewedAt: "2026-05-01T00:00:00Z" }),
       ),
     ).toEqual({
-      tone: "present",
+      tone: "verified",
       label: "Reviewed",
       detail: "maintainer · 2026-05-01",
     });
     expect(reviewCompareSignal(entry({ reviewedBy: "maintainer" }))).toEqual({
-      tone: "present",
+      tone: "verified",
       label: "Reviewed",
       detail: "maintainer",
     });
@@ -61,7 +62,7 @@ describe("compare entry signals", () => {
     });
     expect(packageTrustCompareSignal(entry({ packageVerified: true }))).toEqual(
       {
-        tone: "present",
+        tone: "verified",
         label: "Package verified",
         detail: undefined,
       },
@@ -74,7 +75,7 @@ describe("compare entry signals", () => {
         }),
       ),
     ).toEqual({
-      tone: "present",
+      tone: "verified",
       label: "Package verified",
       detail: "2026-04-12",
     });
@@ -83,10 +84,26 @@ describe("compare entry signals", () => {
         entry({ trustSignals: { packageVerified: true } }),
       ),
     ).toEqual({
-      tone: "present",
+      tone: "verified",
       label: "Package verified",
       detail: undefined,
     });
+  });
+
+  it("maps checksum-only package metadata to a neutral present tone", () => {
+    const checksumOnly = packageTrustCompareSignal(
+      entry({ trustSignals: { checksumPresent: true } }),
+    );
+    expect(checksumOnly).toEqual({
+      tone: "present",
+      label: "Checksum present",
+    });
+    expect(compareSignalToneClass(checksumOnly.tone)).toBe("text-ink");
+    expect(
+      compareSignalToneClass(
+        packageTrustCompareSignal(entry({ packageVerified: true })).tone,
+      ),
+    ).toBe("text-trust-trusted");
   });
 
   it("surfaces checksum-only metadata without overstating package verification", () => {

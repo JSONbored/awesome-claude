@@ -23,6 +23,7 @@ import { cn } from "@/lib/utils";
 import { brandIdentityLabel } from "@/lib/brand-icons";
 import {
   COMPARE_DECISION_ROWS,
+  compareSignalToneClass,
   decisionRowDiverges,
   type CompareSignalValue,
 } from "@/lib/compare-entry-signals";
@@ -159,10 +160,7 @@ const ROWS: RowDef[] = [
 function CompareSignalCell({ value }: { value: CompareSignalValue }) {
   return (
     <span
-      className={cn(
-        "inline-flex flex-col gap-0.5 text-xs",
-        value.tone === "present" ? "text-trust-trusted" : "text-ink-subtle",
-      )}
+      className={cn("inline-flex flex-col gap-0.5 text-xs", compareSignalToneClass(value.tone))}
     >
       <span>{value.label}</span>
       {value.detail ? <span className="text-ink-muted">{value.detail}</span> : null}

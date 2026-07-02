@@ -1,6 +1,6 @@
 import type { Entry } from "@/types/registry";
 
-export type CompareSignalTone = "present" | "missing";
+export type CompareSignalTone = "verified" | "present" | "missing";
 
 export type CompareSignalValue = {
   tone: CompareSignalTone;
@@ -17,7 +17,7 @@ export function reviewCompareSignal(
         ? `${entry.reviewedBy} · ${String(entry.reviewedAt).slice(0, 10)}`
         : entry.reviewedBy
       : "Maintainer reviewed";
-    return { tone: "present", label: "Reviewed", detail };
+    return { tone: "verified", label: "Reviewed", detail };
   }
   return { tone: "missing", label: "Not reviewed" };
 }
@@ -29,7 +29,7 @@ export function packageTrustCompareSignal(
 
   if (explicitVerification === true) {
     return {
-      tone: "present",
+      tone: "verified",
       label: "Package verified",
       detail: entry.verifiedAt ? String(entry.verifiedAt).slice(0, 10) : undefined,
     };
@@ -79,6 +79,12 @@ export const COMPARE_DECISION_ROWS = [
   { label: "Source provenance", resolve: sourceProvenanceCompareSignal },
   { label: "Submitter", resolve: submitterCompareSignal },
 ] as const;
+
+export function compareSignalToneClass(tone: CompareSignalTone): string {
+  if (tone === "verified") return "text-trust-trusted";
+  if (tone === "present") return "text-ink";
+  return "text-ink-subtle";
+}
 
 export function compareSignalsDiverge(values: Array<CompareSignalValue | undefined>): boolean {
   if (values.length < 2) return false;
