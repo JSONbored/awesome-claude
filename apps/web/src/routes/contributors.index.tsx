@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Github } from "lucide-react";
 import { CONTRIBUTORS } from "@/data/contributors";
+import { contributorCardSummary } from "@/lib/contributor-profile-summary";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import { Monogram } from "@/components/monogram";
@@ -75,7 +76,7 @@ function ContributorsPage() {
             <div className="min-w-0 flex-1">
               <div className="font-display text-xl font-semibold text-ink">{top.name}</div>
               <div className="text-sm text-ink-muted">
-                @{top.handle} · {top.acceptedCount} accepted
+                @{top.handle} · {contributorCardSummary(top)}
               </div>
               {top.bio && <p className="mt-1 text-sm text-ink-muted">{top.bio}</p>}
             </div>
@@ -107,7 +108,7 @@ function ContributorsPage() {
                 {c.name}
               </div>
               <div className="truncate text-xs text-ink-muted">
-                @{c.handle} · {c.acceptedCount} accepted
+                @{c.handle} · {contributorCardSummary(c)}
               </div>
             </div>
             {c.github && (

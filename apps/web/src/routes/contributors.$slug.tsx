@@ -23,6 +23,7 @@ import { Monogram } from "@/components/monogram";
 import { absoluteUrl } from "@/lib/seo";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { ogImageUrl } from "@/lib/og-image";
+import { submitterAttribution } from "@/lib/contributor-profile-summary";
 import type { Category, Contributor, Entry } from "@/types/registry";
 
 export const Route = createFileRoute("/contributors/$slug")({
@@ -303,6 +304,7 @@ function ContributionRow({
   role: ContributionRole;
 }) {
   const RoleIcon = roleIcon[role];
+  const submitter = submitterAttribution(entry);
 
   return (
     <article className="group px-4 py-4 transition-colors duration-200 hover:bg-surface-2 sm:px-6">
@@ -331,21 +333,29 @@ function ContributionRow({
       </div>
 
       <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-subtle">
-        {entry.submittedBy && (
+        {submitter && (
           <span className="inline-flex items-center gap-1">
             <UserRound className="h-3 w-3" aria-hidden />
             submitted by{" "}
-            {entry.submittedByUrl ? (
+            {submitter.kind === "contributor" ? (
+              <Link
+                to="/contributors/$slug"
+                params={{ slug: submitter.slug }}
+                className="text-ink-muted hover:text-ink"
+              >
+                {submitter.label}
+              </Link>
+            ) : submitter.kind === "external" ? (
               <a
-                href={entry.submittedByUrl}
+                href={submitter.href}
                 target="_blank"
                 rel="noreferrer"
                 className="text-ink-muted hover:text-ink"
               >
-                {entry.submittedBy}
+                {submitter.label}
               </a>
             ) : (
-              <span className="text-ink-muted">{entry.submittedBy}</span>
+              <span className="text-ink-muted">{submitter.label}</span>
             )}
           </span>
         )}
