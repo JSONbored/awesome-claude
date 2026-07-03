@@ -1,0 +1,162 @@
+---
+title: Amazon Redshift MCP Server
+slug: aws-redshift-mcp-server
+category: mcp
+description: >-
+  Official AWS Labs MCP server for Amazon Redshift that enables AI assistants
+  to discover Redshift clusters and serverless workgroups, explore database
+  schemas and tables, and execute read-only SQL queries across provisioned and
+  serverless Redshift resources.
+cardDescription: >-
+  Connect Claude to Amazon Redshift to discover clusters and workgroups, browse
+  schemas and tables, and run read-only SQL queries safely via stdio.
+seoTitle: "Amazon Redshift MCP Server — Query & Explore Redshift with Claude"
+seoDescription: >-
+  Connect Claude to the official AWS Labs Amazon Redshift MCP server to
+  discover provisioned clusters and serverless workgroups, explore database
+  metadata, and run safe read-only SQL queries against Redshift over stdio
+  with uvx using your local AWS credentials.
+author: AWS Labs
+authorProfileUrl: "https://github.com/awslabs"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-07-03"
+brandName: AWS Labs
+brandDomain: aws.amazon.com
+repoUrl: "https://github.com/awslabs/mcp"
+documentationUrl: "https://github.com/awslabs/mcp/blob/main/src/redshift-mcp-server/README.md"
+websiteUrl: "https://awslabs.github.io/mcp/"
+packageUrl: "https://pypi.org/project/awslabs.redshift-mcp-server/"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/awslabs/mcp/blob/main/src/redshift-mcp-server/README.md"
+  - "https://github.com/awslabs/mcp"
+  - "https://github.com/awslabs/mcp/blob/main/src/redshift-mcp-server/pyproject.toml"
+  - "https://pypi.org/project/awslabs.redshift-mcp-server/"
+  - "https://github.com/awslabs/mcp/blob/main/LICENSE"
+installable: true
+installCommand: uvx awslabs.redshift-mcp-server@latest
+usageSnippet: >-
+  Configure the server with uvx and your AWS credentials, then ask Claude to
+  list your Redshift clusters and serverless workgroups, explore schemas and
+  tables, or run a SELECT query; all query execution is read-only, single
+  statement, and writes are automatically rejected.
+copySnippet: |-
+  {
+    "awslabs.redshift-mcp-server": {
+      "command": "uvx",
+      "args": [
+        "awslabs.redshift-mcp-server@latest"
+      ],
+      "env": {
+        "AWS_PROFILE": "${AWS_PROFILE}",
+        "AWS_REGION": "us-east-1",
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "awslabs.redshift-mcp-server": {
+        "command": "uvx",
+        "args": [
+          "awslabs.redshift-mcp-server@latest"
+        ],
+        "env": {
+          "AWS_PROFILE": "${AWS_PROFILE}",
+          "AWS_REGION": "us-east-1",
+          "FASTMCP_LOG_LEVEL": "ERROR"
+        },
+        "type": "stdio"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - An AWS account with Amazon Redshift provisioned clusters or serverless workgroups, plus read permissions on the target databases.
+  - Python 3.10 or newer and `uv` / `uvx` installed (Astral) to run the package.
+  - "AWS credentials configured locally (via `aws configure` or `AWS_PROFILE`) scoped to the intended account and region."
+  - Redshift Data API access enabled for the target cluster or workgroup.
+  - An MCP client that supports stdio servers; the server runs locally on the same host as the client.
+safetyNotes:
+  - "Query execution is enforced as read-only: only single-statement SELECT queries are accepted and writes are automatically rejected by the server."
+  - This server uses your local AWS credentials to access Redshift resources; scope the AWS profile to the minimum required permissions and intended cluster.
+  - Redshift query results can contain sensitive business data; avoid including query results in public prompts, screenshots, or issue reports.
+privacyNotes:
+  - Cluster and workgroup metadata, database names, schema and table structures, column names, and query results can be returned through tool calls and exposed to the model.
+  - Keep AWS account identifiers, credentials, and query result data containing PII or business-sensitive information out of public prompts and issues.
+tags:
+  - aws
+  - redshift
+  - database
+  - sql
+  - aws-labs
+keywords:
+  - amazon redshift mcp server
+  - awslabs redshift-mcp-server
+  - redshift mcp claude
+  - redshift sql query mcp
+  - aws data warehouse mcp
+  - mcp server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Amazon Redshift MCP Server is an official [AWS Labs](https://github.com/awslabs/mcp)
+Model Context Protocol server that enables AI assistants to interact with
+Amazon Redshift — both provisioned clusters and serverless workgroups. It
+provides safe, read-only SQL query execution and comprehensive metadata
+exploration tools so Claude can help you understand and query your data
+warehouse directly.
+
+It runs locally over stdio via `uvx` from the published
+`awslabs.redshift-mcp-server` Python package and uses your local AWS
+credentials. All query execution is enforced as read-only; only single SELECT
+statements are accepted and writes are automatically rejected.
+
+## Features
+
+- **Cluster discovery** — automatically discover both provisioned Redshift
+  clusters and serverless workgroups in your AWS account and region.
+- **Metadata exploration** — browse databases, schemas, tables, and columns
+  across discovered resources.
+- **Read-only SQL execution** — run SELECT queries safely; multi-statement
+  and write queries are rejected by the server.
+- **Multi-cluster support** — work with multiple clusters and workgroups
+  simultaneously in a single session.
+
+## Use Cases
+
+- Discover all Redshift clusters and serverless workgroups in an AWS account.
+- Browse the schema and table structure of a Redshift database before writing a query.
+- Run a read-only SELECT query and have Claude explain or summarize the results.
+- Explore data warehouse structure while planning a new ETL pipeline.
+
+## Installation
+
+### Claude Code
+
+1. Install Python 3.10+, `uv`, and configure AWS credentials with Redshift read permissions.
+2. Run `claude mcp add awslabs.redshift-mcp-server -- uvx awslabs.redshift-mcp-server@latest` or add the `configSnippet` above to your MCP settings.
+3. Set `AWS_PROFILE` and `AWS_REGION` to target the intended account and region.
+4. Verify the connection with `claude mcp list`.
+
+### Claude Desktop / Cursor / Kiro / VS Code
+
+Add the `configSnippet` above to your client's MCP configuration file and set
+`AWS_PROFILE`/`AWS_REGION`. The first run downloads the package via `uvx`.
+
+## Source And Trust
+
+This entry is based on the official AWS Labs `awslabs/mcp` repository and the
+published PyPI package (Apache-2.0). The server enforces read-only query
+execution and uses your local AWS credentials; scope the profile to the
+intended account and cluster, and verify the configuration against the linked
+README before using it in automated workflows.
