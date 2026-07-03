@@ -1,0 +1,161 @@
+---
+title: Amazon SageMaker AI MCP Server
+slug: aws-sagemaker-ai-mcp-server
+category: mcp
+description: >-
+  Official AWS Labs MCP server for Amazon SageMaker AI that enables AI
+  assistants to manage SageMaker HyperPod clusters on Amazon EKS and Slurm,
+  including cluster deployment, node management, health checks, and full
+  cluster lifecycle operations.
+cardDescription: >-
+  Connect Claude to Amazon SageMaker AI to manage HyperPod clusters on EKS and
+  Slurm — deploy clusters, control nodes, and handle lifecycle operations.
+seoTitle: "Amazon SageMaker AI MCP Server — Manage HyperPod Clusters with Claude"
+seoDescription: >-
+  Connect Claude to the official AWS Labs SageMaker AI MCP server to manage
+  SageMaker HyperPod clusters on Amazon EKS and Slurm: deploy clusters, manage
+  nodes, run health checks, and automate cluster lifecycle over stdio with uvx.
+author: AWS Labs
+authorProfileUrl: "https://github.com/awslabs"
+submittedBy: jaso0n0818
+submittedByUrl: "https://github.com/jaso0n0818"
+dateAdded: "2026-07-03"
+brandName: AWS Labs
+brandDomain: aws.amazon.com
+repoUrl: "https://github.com/awslabs/mcp"
+documentationUrl: "https://github.com/awslabs/mcp/blob/main/src/sagemaker-ai-mcp-server/README.md"
+websiteUrl: "https://awslabs.github.io/mcp/"
+packageUrl: "https://pypi.org/project/awslabs.sagemaker-ai-mcp-server/"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Cross-platform
+sourceUrls:
+  - "https://github.com/awslabs/mcp/blob/main/src/sagemaker-ai-mcp-server/README.md"
+  - "https://github.com/awslabs/mcp"
+  - "https://github.com/awslabs/mcp/blob/main/src/sagemaker-ai-mcp-server/pyproject.toml"
+  - "https://pypi.org/project/awslabs.sagemaker-ai-mcp-server/"
+  - "https://github.com/awslabs/mcp/blob/main/LICENSE"
+installable: true
+installCommand: uvx awslabs.sagemaker-ai-mcp-server@latest
+usageSnippet: >-
+  Configure the server with uvx and a scoped AWS profile, then ask Claude to
+  list HyperPod clusters, inspect node health, deploy a new cluster, or manage
+  cluster lifecycle on EKS or Slurm; enable write and sensitive-data access
+  flags only when you intend those operations.
+copySnippet: |-
+  {
+    "awslabs.sagemaker-ai-mcp-server": {
+      "command": "uvx",
+      "args": [
+        "awslabs.sagemaker-ai-mcp-server@latest"
+      ],
+      "env": {
+        "AWS_PROFILE": "${AWS_PROFILE}",
+        "AWS_REGION": "us-east-1",
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "awslabs.sagemaker-ai-mcp-server": {
+        "command": "uvx",
+        "args": [
+          "awslabs.sagemaker-ai-mcp-server@latest"
+        ],
+        "env": {
+          "AWS_PROFILE": "${AWS_PROFILE}",
+          "AWS_REGION": "us-east-1",
+          "FASTMCP_LOG_LEVEL": "ERROR"
+        },
+        "type": "stdio"
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - An AWS account with Amazon SageMaker and HyperPod enabled, plus permissions to manage clusters and nodes.
+  - Python 3.10 or newer and `uv` / `uvx` installed (Astral) to run the package.
+  - "AWS credentials configured locally (via `aws configure` or `AWS_PROFILE`) scoped to the intended account and region."
+  - An Amazon EKS cluster or Slurm environment set up as the HyperPod orchestrator.
+  - An MCP client that supports stdio servers; the server runs locally on the same host as the client.
+safetyNotes:
+  - "This server can perform mutating operations on SageMaker HyperPod clusters (deploy, modify, delete) depending on the flags used; scope AWS credentials to the minimum required permissions and only operate on intended environments."
+  - AWS Audit Logs capture SageMaker API calls; confirm log destinations and retention meet your compliance requirements before granting team access.
+  - This server acts on real infrastructure with your AWS credentials; always test configuration changes on non-production clusters first.
+privacyNotes:
+  - Cluster configuration, node identifiers, account and region identifiers, and HyperPod lifecycle state can be returned through tool calls and exposed to the model.
+  - Keep AWS account identifiers, credentials, and cluster topology details out of public prompts, issues, and screenshots.
+tags:
+  - aws
+  - sagemaker
+  - machine-learning
+  - hyperpod
+  - aws-labs
+keywords:
+  - amazon sagemaker ai mcp server
+  - awslabs sagemaker-ai-mcp-server
+  - sagemaker hyperpod mcp claude
+  - sagemaker cluster management mcp
+  - aws ml infrastructure mcp
+  - mcp server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Amazon SageMaker AI MCP Server is an official [AWS Labs](https://github.com/awslabs/mcp)
+Model Context Protocol server that enables AI assistants to manage Amazon
+SageMaker AI resources — currently focusing on
+[SageMaker HyperPod](https://aws.amazon.com/sagemaker/hyperpod/) cluster
+operations on Amazon EKS and Slurm orchestrators.
+
+It runs locally over stdio via `uvx` from the published
+`awslabs.sagemaker-ai-mcp-server` Python package and uses your local AWS
+credentials. Connect Claude to your SageMaker environment to inspect, deploy,
+and manage HyperPod clusters directly from your AI assistant.
+
+## Features
+
+- **Cluster discovery** — list and describe SageMaker HyperPod clusters across
+  provisioned and serverless configurations.
+- **Node management** — inspect node health, list nodes per cluster, and
+  perform node lifecycle operations.
+- **Cluster deployment** — deploy new HyperPod clusters on Amazon EKS or Slurm
+  with specified configuration.
+- **Lifecycle operations** — start, stop, update, and delete HyperPod clusters.
+- **Health monitoring** — check cluster and node health status to identify
+  issues before they escalate.
+
+## Use Cases
+
+- List and inspect all SageMaker HyperPod clusters in an account and region.
+- Check node health and identify unhealthy nodes in a running cluster.
+- Deploy a new HyperPod cluster on Amazon EKS or Slurm for a training workload.
+- Automate cluster lifecycle management in an AI-assisted DevOps workflow.
+
+## Installation
+
+### Claude Code
+
+1. Install Python 3.10+, `uv`, and configure AWS credentials.
+2. Run `claude mcp add awslabs.sagemaker-ai-mcp-server -- uvx awslabs.sagemaker-ai-mcp-server@latest` or add the `configSnippet` above to your MCP settings.
+3. Set `AWS_PROFILE` and `AWS_REGION` to target the intended account.
+4. Verify the connection with `claude mcp list`.
+
+### Claude Desktop / Cursor / Kiro / VS Code
+
+Add the `configSnippet` above to your client's MCP configuration file and set
+`AWS_PROFILE`/`AWS_REGION`. The first run downloads the package via `uvx`.
+
+## Source And Trust
+
+This entry is based on the official AWS Labs `awslabs/mcp` repository and the
+published PyPI package (Apache-2.0). The server performs real operations against
+SageMaker HyperPod infrastructure using your AWS credentials; scope the profile
+to the intended account and region, and verify the configuration against the
+linked README before using it in automated workflows.
