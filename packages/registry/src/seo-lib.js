@@ -1,0 +1,524 @@
+/**
+ * Pure SEO / JSON-LD document builders.
+ *
+ * This module holds the deterministic structured-data layer used for
+ * organization, website, entry, tool, and job posting markup. Nothing here
+ * touches the filesystem or network — given the same inputs the output is
+ * byte-stable.
+ *
+ * The public package surface (`seo.js` / `@heyclaude/registry/seo`) re-exports
+ * everything below so existing imports stay unchanged.
+ */
+import categorySpec from "./category-spec.json" with { type: "json" };
+import {
+  normalizeDisclosure,
+  validateJobPublicExposure,
+} from "./commercial.js";
+
+export function absoluteSiteUrl(siteUrl, path = "/") {
+  return new URL(path || "/", siteUrl).toString();
+}
+
+export function uniqueValues(values = []) {
+  const seen = new Set();
+  return values.filter((value) => {
+    if (!value || seen.has(value)) return false;
+    seen.add(value);
+    return true;
+  });
+}
+
+export function buildOrganizationJsonLd(params = {}) {
+  const siteUrl = params.siteUrl || "https://heyclau.de";
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": `${siteUrl.replace(/\/$/, "")}/#organization`,
+    name: params.name || "HeyClaude",
+    url: siteUrl,
+    ...(params.logo
+      ? {
+          logo: {
+            "@type": "ImageObject",
+            url: absoluteSiteUrl(siteUrl, params.logo),
+          },
+        }
+      : {}),
+    sameAs: uniqueValues([
+      params.githubUrl,
+      params.twitterUrl,
+      params.discordUrl,
+    ]),
+  };
+}
+
+export function buildWebsiteJsonLd(params = {}) {
+  const siteUrl = params.siteUrl || "https://heyclau.de";
+  const normalizedSiteUrl = siteUrl.replace(/\/$/, "");
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${normalizedSiteUrl}/#website`,
+    name: params.name || "HeyClaude",
+    url: siteUrl,
+    description:
+      params.description || "A directory for Claude resources and tools.",
+    publisher: {
+      "@id": `${normalizedSiteUrl}/#organization`,
+    },
+    potentialAction: buildSearchActionJsonLd({ siteUrl: normalizedSiteUrl }),
+  };
+}
+
+export function buildSearchActionJsonLd(params = {}) {
+  const siteUrl = params.siteUrl || "https://heyclau.de";
+  const normalizedSiteUrl = siteUrl.replace(/\/$/, "");
+  return {
+    "@type": "SearchAction",
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: `${normalizedSiteUrl}/browse?q={search_term_string}`,
+    },
+    "query-input": "required name=search_term_string",
+  };
+}
+
+export function buildWebPageJsonLd(params = {}) {
+  const siteUrl = params.siteUrl || "https://heyclau.de";
+  const url = absoluteSiteUrl(siteUrl, params.path || "/");
+  return {
+    "@context": "https://schema.org",
+    "@type": params.type || "WebPage",
+    "@id": `${url}#webpage`,
+    name: params.name,
+    description: params.description,
+    url,
+    isPartOf: {
+      "@id": `${siteUrl.replace(/\/$/, "")}/#website`,
+    },
+    breadcrumb: params.breadcrumbId
+      ? {
+          "@id": params.breadcrumbId,
+        }
+      : undefined,
+  };
+}
+
+export function buildCollectionPageJsonLd(params = {}) {
+  return buildWebPageJsonLd({
+    ...params,
+    type: "CollectionPage",
+  });
+}
+
+export function buildBreadcrumbJsonLd(items = []) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "@id": items.at(-1)?.url ? `${items.at(-1).url}#breadcrumb` : undefined,
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: item.url,
+    })),
+  };
+}
+
+export function buildItemListJsonLd(items = [], params = {}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: params.name,
+    description: params.description,
+    numberOfItems: items.length,
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      url: item.url,
+      name: item.name || item.title,
+    })),
+  };
+}
+
+export function buildEntryJsonLd(entry, params = {}) {
+  const siteUrl = params.siteUrl || "https://heyclau.de";
+  const url = absoluteSiteUrl(
+    siteUrl,
+    `/entry/${entry.category}/${entry.slug}`,
+  );
+  const label =
+    categorySpec.categories?.[entry.category]?.label || entry.category;
+  const codeLikeCategories = new Set([
+    "commands",
+    "hooks",
+    "mcp",
+    "statuslines",
+  ]);
+  const entryType =
+    entry.category === "guides"
+      ? "TechArticle"
+      : codeLikeCategories.has(entry.category)
+        ? "SoftwareSourceCode"
+        : "CreativeWork";
+  const sourceUrls = uniqueValues([
+    entry.documentationUrl,
+    entry.repoUrl,
+    entry.githubUrl,
+    entry.websiteUrl,
+  ]);
+  const additionalProperty = [
+    entry.downloadSha256
+      ? {
+          "@type": "PropertyValue",
+          name: "Package SHA256",
+          value: entry.downloadSha256,
+        }
+      : null,
+    entry.platformCompatibility?.length
+      ? {
+          "@type": "PropertyValue",
+          name: "Platform compatibility",
+          value: entry.platformCompatibility
+            .map((item) => `${item.platform}: ${item.supportLevel}`)
+            .join(", "),
+        }
+      : null,
+  ].filter(Boolean);
+
+  return {
+    "@context": "https://schema.org",
+    "@type": entryType,
+    "@id": `${url}#entry`,
+    name: entry.title,
+    headline: entry.title,
+    description: entry.seoDescription || entry.description,
+    url,
+    datePublished: entry.dateAdded,
+    dateModified:
+      entry.contentUpdatedAt ||
+      entry.repoUpdatedAt ||
+      entry.verifiedAt ||
+      entry.dateAdded,
+    keywords: uniqueValues([
+      ...(entry.keywords || []),
+      ...(entry.tags || []),
+    ]).join(", "),
+    genre: label,
+    author: entry.author
+      ? {
+          "@type": "Person",
+          name: entry.author,
+          url: entry.authorProfileUrl,
+        }
+      : {
+          "@type": "Organization",
+          name: params.siteName || "HeyClaude",
+          url: siteUrl,
+        },
+    isPartOf: {
+      "@id": `${siteUrl.replace(/\/$/, "")}/#website`,
+    },
+    sameAs: uniqueValues([entry.documentationUrl, entry.repoUrl]),
+    isBasedOn: sourceUrls.length ? sourceUrls : undefined,
+    codeRepository:
+      entryType === "SoftwareSourceCode" ? entry.repoUrl : undefined,
+    programmingLanguage:
+      entryType === "SoftwareSourceCode" ? entry.scriptLanguage : undefined,
+    runtimePlatform:
+      entryType === "SoftwareSourceCode" ? "Claude Code" : undefined,
+    additionalProperty: additionalProperty.length
+      ? additionalProperty
+      : undefined,
+  };
+}
+
+export function buildToolSoftwareApplicationJsonLd(tool, params = {}) {
+  const siteUrl = params.siteUrl || "https://heyclau.de";
+  const url = absoluteSiteUrl(siteUrl, `/tools/${tool.slug}`);
+  const disclosure = normalizeDisclosure(tool.disclosure);
+  const pricingModel = String(tool.pricingModel || "")
+    .trim()
+    .toLowerCase();
+  const hasRequiredVisibleFields = Boolean(
+    tool.title &&
+    tool.description &&
+    tool.websiteUrl &&
+    tool.applicationCategory &&
+    tool.operatingSystem &&
+    pricingModel,
+  );
+
+  if (!hasRequiredVisibleFields) {
+    return null;
+  }
+
+  const freeLike = pricingModel === "free" || pricingModel === "open-source";
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "@id": `${url}#software`,
+    name: tool.title,
+    description: tool.seoDescription || tool.description,
+    url: tool.websiteUrl || url,
+    applicationCategory: tool.applicationCategory || "DeveloperApplication",
+    operatingSystem: tool.operatingSystem || "Web",
+    offers: {
+      "@type": "Offer",
+      price: freeLike ? "0" : undefined,
+      priceCurrency: freeLike ? "USD" : undefined,
+      category: pricingModel,
+      availability: "https://schema.org/InStock",
+      url: tool.websiteUrl || url,
+    },
+    isPartOf: {
+      "@id": `${siteUrl.replace(/\/$/, "")}/#website`,
+    },
+    sameAs: uniqueValues([tool.documentationUrl, tool.repoUrl]),
+    additionalProperty: {
+      "@type": "PropertyValue",
+      name: "Disclosure",
+      value: disclosure,
+    },
+  };
+}
+
+export function buildJobPostingJsonLd(job, params = {}) {
+  if (
+    !job?.slug ||
+    !job?.title ||
+    !job?.company ||
+    !job?.description ||
+    !job?.postedAt ||
+    !job?.expiresAt ||
+    !job?.applyUrl
+  ) {
+    return null;
+  }
+  // Only active jobs may be publicly surfaced as JobPosting structured data.
+  // validateJobPublicExposure short-circuits to { ok: true } for any non-active
+  // status (it treats them as "not exposed, no content gate needed"), so the
+  // builder must refuse non-active jobs itself — otherwise closed/expired/
+  // archived/draft roles get a full JobPosting (stale-listing SEO penalty).
+  const status = String(job.status || "active")
+    .trim()
+    .toLowerCase();
+  if (status !== "active") return null;
+  const exposureReport = validateJobPublicExposure({
+    ...job,
+    status: "active",
+  });
+  if (!exposureReport.ok) return null;
+
+  const siteUrl = params.siteUrl || "https://heyclau.de";
+  const url = absoluteSiteUrl(siteUrl, `/jobs/${job.slug}`);
+  const baseSalary = parseJobCompensation(job.compensation);
+  const jobBenefits = Array.isArray(job.benefits)
+    ? job.benefits.filter(Boolean).join("; ")
+    : undefined;
+  const description = buildJobPostingDescription(job);
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "JobPosting",
+    "@id": `${url}#job`,
+    title: job.title,
+    description,
+    datePosted: job.postedAt,
+    validThrough: job.expiresAt,
+    employmentType: job.type,
+    hiringOrganization: {
+      "@type": "Organization",
+      name: job.company,
+      sameAs: job.companyUrl,
+    },
+    jobLocationType: job.isRemote ? "TELECOMMUTE" : undefined,
+    applicantLocationRequirements: job.isWorldwide
+      ? undefined
+      : {
+          "@type": "Country",
+          name: job.location || "United States",
+        },
+    jobLocation: job.isRemote
+      ? undefined
+      : {
+          "@type": "Place",
+          address: {
+            "@type": "PostalAddress",
+            addressLocality: job.location,
+          },
+        },
+    baseSalary,
+    jobBenefits: jobBenefits || undefined,
+    url,
+    directApply: false,
+  };
+}
+
+export function buildJobPostingDescription(job) {
+  const parts = [];
+  const summary = cleanJobDescriptionText(job.description);
+  const details = cleanJobDescriptionText(job.descriptionMd);
+
+  if (summary) parts.push(summary);
+  if (details && details !== summary) parts.push(details);
+  if (Array.isArray(job.responsibilities) && job.responsibilities.length) {
+    parts.push(
+      `Responsibilities: ${job.responsibilities
+        .map(cleanJobDescriptionText)
+        .filter(Boolean)
+        .join(" ")}`,
+    );
+  }
+  if (Array.isArray(job.requirements) && job.requirements.length) {
+    parts.push(
+      `Requirements: ${job.requirements
+        .map(cleanJobDescriptionText)
+        .filter(Boolean)
+        .join(" ")}`,
+    );
+  }
+  if (job.compensation)
+    parts.push(`Salary: ${cleanJobDescriptionText(job.compensation)}.`);
+  if (job.equity) parts.push(`Equity: ${cleanJobDescriptionText(job.equity)}.`);
+  if (job.bonus) parts.push(`Bonus: ${cleanJobDescriptionText(job.bonus)}.`);
+  if (jobBenefitsFromJob(job)) {
+    parts.push(`Benefits: ${jobBenefitsFromJob(job)}.`);
+  }
+
+  return parts.filter(Boolean).join("\n\n").trim();
+}
+
+export function cleanJobDescriptionText(value) {
+  return String(value || "")
+    .replace(/\r\n/g, "\n")
+    .replace(/^\s{0,3}#{1,6}\s+/gm, "")
+    .replace(/^\s*[-*]\s+/gm, "")
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    .replace(/[ \t]+/g, " ")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
+export function jobBenefitsFromJob(job) {
+  return Array.isArray(job.benefits)
+    ? job.benefits.map(cleanJobDescriptionText).filter(Boolean).join("; ")
+    : "";
+}
+
+export function parseJobCompensation(value) {
+  const text = String(value || "").trim();
+  if (!text) return undefined;
+  const currencyBySymbol = {
+    $: "USD",
+    "€": "EUR",
+    "£": "GBP",
+  };
+  const symbol = [...text].find((char) => currencyBySymbol[char]);
+  const currency = currencyBySymbol[symbol];
+  if (!currency) return undefined;
+
+  const amounts = [];
+  let current = "";
+  for (const char of text) {
+    const isNumeric =
+      (char >= "0" && char <= "9") ||
+      char === "," ||
+      char === "." ||
+      char === "k" ||
+      char === "K";
+    if (isNumeric) {
+      current += char;
+      continue;
+    }
+    if (current) {
+      amounts.push(current);
+      current = "";
+    }
+  }
+  if (current) amounts.push(current);
+  if (amounts.length < 2) return undefined;
+
+  const parseAmount = (amount, fallbackSuffix = "") => {
+    const hasK = amount.toLowerCase().endsWith("k");
+    const numericText = hasK ? amount.slice(0, -1) : amount;
+    const numeric = Number(String(numericText).replaceAll(",", ""));
+    if (!Number.isFinite(numeric)) return null;
+    const shouldUseFallbackK =
+      !hasK && fallbackSuffix.toLowerCase() === "k" && numeric < 1000;
+    return Math.round(numeric * (hasK || shouldUseFallbackK ? 1000 : 1));
+  };
+
+  const minHasK = amounts[0].toLowerCase().endsWith("k");
+  const maxHasK = amounts[1].toLowerCase().endsWith("k");
+  // A "k" suffix on either endpoint sets the magnitude for the whole range.
+  const sharedSuffix = minHasK || maxHasK ? "k" : "";
+  const minValue = parseAmount(amounts[0], sharedSuffix);
+  const maxValue = parseAmount(amounts[1], sharedSuffix);
+  // Reject inverted ranges so JSON-LD never advertises minValue > maxValue.
+  if (!minValue || !maxValue || minValue > maxValue) return undefined;
+
+  // Infer the pay period so an hourly/day/week rate isn't advertised as an
+  // annual salary. Defaults to YEAR when the text gives no period hint.
+  const unitText = /per\s*hour|hourly|\/\s*h(ou)?r\b/i.test(text)
+    ? "HOUR"
+    : /per\s*day|daily|\/\s*day\b/i.test(text)
+      ? "DAY"
+      : /per\s*week|weekly|\/\s*wk\b/i.test(text)
+        ? "WEEK"
+        : /per\s*month|monthly|\/\s*mo\b/i.test(text)
+          ? "MONTH"
+          : "YEAR";
+
+  return {
+    "@type": "MonetaryAmount",
+    currency,
+    value: {
+      "@type": "QuantitativeValue",
+      minValue,
+      maxValue,
+      unitText,
+    },
+  };
+}
+
+export function buildEntryJsonLdSnapshot(entry, params = {}) {
+  const siteUrl = params.siteUrl || "https://heyclau.de";
+  const label =
+    categorySpec.categories?.[entry.category]?.label || entry.category;
+  const url = absoluteSiteUrl(
+    siteUrl,
+    `/entry/${entry.category}/${entry.slug}`,
+  );
+  const breadcrumb = buildBreadcrumbJsonLd([
+    { name: "Home", url: siteUrl },
+    {
+      name: label,
+      url: absoluteSiteUrl(
+        siteUrl,
+        `/browse?category=${encodeURIComponent(entry.category)}`,
+      ),
+    },
+    { name: entry.title, url },
+  ]);
+
+  return {
+    key: `${entry.category}:${entry.slug}`,
+    category: entry.category,
+    slug: entry.slug,
+    url,
+    documents: [
+      breadcrumb,
+      buildWebPageJsonLd({
+        siteUrl,
+        path: `/entry/${entry.category}/${entry.slug}`,
+        name: entry.title,
+        description: entry.seoDescription || entry.description,
+        breadcrumbId: `${url}#breadcrumb`,
+      }),
+      buildEntryJsonLd(entry, params),
+    ],
+  };
+}
