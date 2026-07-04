@@ -1,0 +1,368 @@
+/**
+ * Pure registry presentation helpers.
+ *
+ * This module holds the deterministic layer used to format counts, preview
+ * lines, copy payloads, distribution badges, and access summaries for registry
+ * entries. Nothing here touches the filesystem or network — given the same
+ * entry snapshot the output is byte-stable.
+ *
+ * The public package surface (`presentation.js` /
+ * `@heyclaude/registry/presentation`) re-exports everything below so existing
+ * imports stay unchanged.
+ */
+export function compactCount(value) {
+  if (value >= 1000) {
+    return `${(value / 1000).toFixed(value >= 10000 ? 0 : 1)}k`;
+  }
+  return String(value);
+}
+
+export function parseAbbreviatedCount(value) {
+  const text = String(value ?? "")
+    .trim()
+    .toLowerCase();
+  if (!text) return null;
+
+  const match = text.match(/^(\d+(?:\.\d+)?)([kmb])?$/);
+  if (!match) return null;
+
+  const [, numberText, suffix = ""] = match;
+  const numeric = Number.parseFloat(numberText);
+  if (!Number.isFinite(numeric)) return null;
+  const multiplier =
+    suffix === "b"
+      ? 1_000_000_000
+      : suffix === "m"
+        ? 1_000_000
+        : suffix === "k"
+          ? 1_000
+          : 1;
+  return Math.round(numeric * multiplier);
+}
+
+export function firstUsefulLine(value) {
+  if (!value) return "";
+
+  const candidates = value
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .filter((line) => !line.startsWith("```"))
+    .filter((line) => !line.startsWith("#"))
+    .filter((line) => !line.startsWith("//"))
+    .filter((line) => !line.startsWith("/*"))
+    .filter((line) => !line.startsWith("*"))
+    .filter((line) => !line.startsWith("<!--"))
+    .filter((line) => line !== "{")
+    .filter((line) => line !== "}")
+    .filter((line) => line !== "[")
+    .filter((line) => line !== "]");
+
+  return candidates[0] ?? "";
+}
+
+export function extractConfigCommand(value) {
+  const normalized = String(value || "").trim();
+  if (!normalized) return "";
+
+  const commandMatch =
+    normalized.match(/"command"\s*:\s*"([^"]+)"/) ||
+    normalized.match(/['"]command['"]\s*:\s*['"]([^'"]+)['"]/);
+
+  if (commandMatch?.[1]) return commandMatch[1];
+
+  return firstUsefulLine(normalized);
+}
+
+export function buildCollectionSequence(entry) {
+  if (!Array.isArray(entry.items) || entry.items.length === 0) return "";
+  return entry.items
+    .slice(0, 3)
+    .map((item) => `\`${item.slug}\``)
+    .join(" -> ");
+}
+
+export function getPreviewLine(entry) {
+  const firstCodeBlock = entry.codeBlocks?.[0]?.code?.split("\n")?.[0]?.trim();
+
+  switch (entry.category) {
+    case "agents":
+    case "rules": {
+      const line =
+        firstUsefulLine(entry.body) ||
+        firstUsefulLine(entry.copySnippet) ||
+        firstUsefulLine(entry.usageSnippet);
+      return (line || "Copy the full prompt and use it in Claude Code").slice(
+        0,
+        112,
+      );
+    }
+    case "hooks": {
+      const command = extractConfigCommand(entry.configSnippet);
+      if (entry.installCommand) return entry.installCommand.slice(0, 112);
+      if (command) return command.slice(0, 112);
+      if (entry.trigger) return `Claude Code hook: ${entry.trigger}`;
+      break;
+    }
+    case "statuslines": {
+      const command = extractConfigCommand(
+        entry.configSnippet || entry.copySnippet,
+      );
+      if (command) return command.slice(0, 112);
+      if (entry.usageSnippet?.trim())
+        return entry.usageSnippet.trim().slice(0, 112);
+      break;
+    }
+    case "collections": {
+      const sequence = buildCollectionSequence(entry);
+      if (sequence) return `Start with ${sequence}`.slice(0, 112);
+      if (entry.usageSnippet?.trim())
+        return entry.usageSnippet.trim().slice(0, 112);
+      break;
+    }
+    case "skills":
+    case "mcp":
+    case "commands": {
+      if (entry.installCommand) return entry.installCommand.slice(0, 112);
+      if (entry.commandSyntax) return entry.commandSyntax.slice(0, 112);
+      const command = extractConfigCommand(entry.configSnippet);
+      if (command) return command.slice(0, 112);
+      break;
+    }
+    default:
+      break;
+  }
+
+  if (entry.configSnippet) {
+    const line = extractConfigCommand(entry.configSnippet);
+    if (line) return line.slice(0, 112);
+  }
+  if (entry.scriptBody) {
+    const line = firstUsefulLine(entry.scriptBody);
+    if (line) return line.slice(0, 112);
+  }
+  if (entry.usageSnippet) {
+    const line = firstUsefulLine(entry.usageSnippet) || entry.usageSnippet;
+    return line.slice(0, 112);
+  }
+  if (entry.copySnippet) {
+    const line = firstUsefulLine(entry.copySnippet);
+    if (line) return line.slice(0, 112);
+  }
+  if (firstCodeBlock) return firstCodeBlock.slice(0, 112);
+  if (entry.documentationUrl) return "See docs for setup";
+  if (entry.downloadUrl) return "Download the package";
+  if (entry.githubUrl) return "See GitHub for instructions";
+  return "Open this entry on HeyClaude";
+}
+
+export function appendLabeledBlock(lines, label, value) {
+  const normalized = String(value || "").trim();
+  if (!normalized) return;
+  if (lines.length) lines.push("");
+  lines.push(`${label}:`);
+  lines.push(normalized);
+}
+
+export function getCopyText(entry) {
+  const body = String(entry.body || "").trim();
+
+  if (entry.category === "agents" || entry.category === "rules") {
+    return body || entry.copySnippet || entry.usageSnippet || entry.description;
+  }
+
+  if (entry.category === "hooks") {
+    const lines = [];
+    appendLabeledBlock(lines, "Trigger", entry.trigger);
+    appendLabeledBlock(lines, "Install", entry.installCommand);
+    appendLabeledBlock(lines, "Claude config", entry.configSnippet);
+    appendLabeledBlock(
+      lines,
+      "Hook script",
+      entry.scriptBody || entry.copySnippet,
+    );
+    if (body) appendLabeledBlock(lines, "Reference", body);
+    return lines.join("\n");
+  }
+
+  if (entry.category === "mcp") {
+    const lines = [];
+    appendLabeledBlock(
+      lines,
+      "Install",
+      entry.installCommand || entry.commandSyntax,
+    );
+    appendLabeledBlock(lines, "Config", entry.configSnippet);
+    appendLabeledBlock(
+      lines,
+      "Usage",
+      entry.copySnippet || entry.usageSnippet || body,
+    );
+    return (
+      lines.join("\n") || entry.documentationUrl || entry.repoUrl || entry.title
+    );
+  }
+
+  if (entry.category === "skills" || entry.category === "statuslines") {
+    const lines = [];
+    appendLabeledBlock(lines, "Install", entry.installCommand);
+    appendLabeledBlock(lines, "Claude config", entry.configSnippet);
+    appendLabeledBlock(lines, "Usage", entry.usageSnippet);
+    appendLabeledBlock(
+      lines,
+      "Asset",
+      entry.scriptBody || entry.copySnippet || body,
+    );
+    return lines.join("\n");
+  }
+
+  if (entry.category === "commands") {
+    const lines = [];
+    appendLabeledBlock(lines, "Command", entry.commandSyntax);
+    appendLabeledBlock(lines, "Usage", entry.copySnippet || entry.usageSnippet);
+    if (body) appendLabeledBlock(lines, "Reference", body);
+    return lines.join("\n") || entry.description;
+  }
+
+  if (entry.category === "collections") {
+    const lines = [];
+    appendLabeledBlock(lines, "Quick start", entry.usageSnippet);
+    if (Array.isArray(entry.items) && entry.items.length) {
+      appendLabeledBlock(
+        lines,
+        "Included items",
+        entry.items.map((item) => `${item.category}/${item.slug}`).join("\n"),
+      );
+    }
+    if (body) appendLabeledBlock(lines, "Reference", body);
+    return lines.join("\n") || entry.description;
+  }
+
+  if (entry.category === "guides") {
+    return body || entry.copySnippet || entry.usageSnippet || entry.description;
+  }
+
+  if (entry.copySnippet) return entry.copySnippet;
+  if (entry.installCommand) return entry.installCommand;
+  if (entry.usageSnippet) return entry.usageSnippet;
+  const firstCodeBlock = entry.codeBlocks?.[0]?.code?.trim();
+  if (firstCodeBlock) return firstCodeBlock;
+  if (body) return body;
+  if (entry.documentationUrl) return entry.documentationUrl;
+  if (entry.githubUrl) return entry.githubUrl;
+  return `${entry.title}\nhttps://heyclau.de/entry/${entry.category}/${entry.slug}`;
+}
+
+export function getDistributionBadges(entry) {
+  const badges = [
+    {
+      label: "Raycast",
+      title: "Available in the HeyClaude Raycast feed",
+    },
+  ];
+
+  if (entry.downloadUrl) {
+    badges.push({
+      label: entry.category === "skills" ? "ZIP" : "MCPB",
+      title:
+        entry.downloadTrust === "first-party"
+          ? "First-party downloadable package"
+          : "External downloadable package",
+    });
+  }
+
+  if (!entry.downloadUrl && !entry.installCommand && !entry.configSnippet) {
+    badges.push({
+      label: "copy-only",
+      title: "Use this entry by copying the asset text",
+    });
+  }
+
+  if (entry.documentationUrl) {
+    badges.push({
+      label: "docs",
+      title: "Documentation link available",
+    });
+  }
+
+  if (entry.repoUrl || entry.githubUrl) {
+    badges.push({
+      label: "source",
+      title: "Source or repository link available",
+    });
+  }
+
+  if (entry.brandDomain || entry.brandIconUrl) {
+    badges.push({
+      label: "brand",
+      title: "Reviewed brand metadata or logo available",
+    });
+  }
+
+  if (entry.trustSignals?.checksumPresent) {
+    badges.push({
+      label: "checksum",
+      title: "Package checksum available",
+    });
+  }
+
+  if (entry.trustSignals?.adapterGenerated) {
+    badges.push({
+      label: "adapter",
+      title: "Generated platform adapter available",
+    });
+  }
+
+  if (Array.isArray(entry.safetyNotes) && entry.safetyNotes.length) {
+    badges.push({
+      label: "safety notes",
+      title: "Entry includes structured execution or permission safety notes",
+    });
+  }
+
+  if (Array.isArray(entry.privacyNotes) && entry.privacyNotes.length) {
+    badges.push({
+      label: "privacy notes",
+      title: "Entry includes structured data access or privacy notes",
+    });
+  }
+
+  if (entry.reviewedBy || entry.claimStatus === "verified") {
+    badges.push({
+      label: entry.claimStatus === "verified" ? "claimed" : "reviewed",
+      title:
+        entry.claimStatus === "verified"
+          ? "Maintainer claim verified"
+          : "Imported or reviewed by a HeyClaude maintainer",
+    });
+  }
+
+  return badges;
+}
+
+export function getEntryAccessSummary(entry) {
+  const source = entry || {};
+  const hasInstall = Boolean(source.installCommand || source.commandSyntax);
+  const hasConfig = Boolean(source.configSnippet);
+  const hasDownload = Boolean(source.downloadUrl);
+  const hasDocs = Boolean(source.documentationUrl);
+  const hasSource = Boolean(source.repoUrl || source.githubUrl);
+  const hasSafetyNotes =
+    Array.isArray(source.safetyNotes) && source.safetyNotes.length > 0;
+  const hasPrivacyNotes =
+    Array.isArray(source.privacyNotes) && source.privacyNotes.length > 0;
+  const hasPrerequisites =
+    Array.isArray(source.prerequisites) && source.prerequisites.length > 0;
+
+  return {
+    hasInstall,
+    hasConfig,
+    hasDownload,
+    hasDocs,
+    hasSource,
+    hasSafetyNotes,
+    hasPrivacyNotes,
+    hasPrerequisites,
+    copyOnly: !hasInstall && !hasConfig && !hasDownload,
+  };
+}
