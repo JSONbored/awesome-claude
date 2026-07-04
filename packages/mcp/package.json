@@ -1,7 +1,7 @@
 {
   "name": "@heyclaude/mcp",
   "mcpName": "io.github.JSONbored/heyclaude",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "type": "module",
   "description": "Read-only MCP server for the HeyClaude registry.",
   "license": "MIT",

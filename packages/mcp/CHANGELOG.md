@@ -1,5 +1,12 @@
 # @heyclaude/mcp Changelog
 
+## [0.8.0](https://github.com/JSONbored/awesome-claude/compare/mcp-v0.7.0...mcp-v0.8.0) (2026-07-04)
+
+
+### Features
+
+* **mcp:** accept 0.0.0.0 loopback URLs in endpoint normalization ([#4273](https://github.com/JSONbored/awesome-claude/issues/4273)) ([0df3aea](https://github.com/JSONbored/awesome-claude/commit/0df3aea3d08a7b5b33f1038c9d82df69e819e785))
+
 ## [0.7.0](https://github.com/JSONbored/awesome-claude/compare/mcp-v0.6.0...mcp-v0.7.0) (2026-07-02)
 
 
