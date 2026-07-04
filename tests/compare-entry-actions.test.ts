@@ -90,7 +90,7 @@ describe("compare entry actions", () => {
     expect(fetchMock).toHaveBeenCalledWith("/api/intent-events", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ type: "install", entryKey: "skills/demo" }),
+      body: JSON.stringify({ type: "install", entryKey: "skills:demo" }),
     });
 
     await expect(recordCompareIntentEvent("open", entry())).resolves.toBe(

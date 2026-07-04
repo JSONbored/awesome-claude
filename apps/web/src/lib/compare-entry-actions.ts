@@ -1,4 +1,3 @@
-import { entryRef } from "@/lib/entry-identity";
 import type { Entry } from "@/types/registry";
 
 export type CompareActionKind = "link" | "copy";
@@ -97,7 +96,7 @@ export async function recordCompareIntentEvent(
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
         type,
-        entryKey: entryRef(entry),
+        entryKey: `${entry.category}:${entry.slug}`,
       }),
     });
     if (!response.ok) return false;
