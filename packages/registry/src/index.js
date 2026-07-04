@@ -2,6 +2,7 @@ export {
   default as categorySpec,
   categorySpec as registryCategorySpec,
 } from "./category-spec.js";
+export { generatedAtForEntries } from "./artifacts.js";
 export * from "./artifacts.js";
 export * from "./brand-assets.js";
 export * from "./commercial.js";
