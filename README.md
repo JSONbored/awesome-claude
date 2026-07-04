@@ -1592,3 +1592,5 @@ Get a free API key on https://app.zyntra.app/
 </p>
 
 </div>
+
+- **[Context Kit](https://github.com/JDDavenport/context-kit)** — Personal Context Artifacts: 4 Markdown templates + 5 Claude Code skills for giving AI agents deep personal context. MIT-licensed, one-command install.
