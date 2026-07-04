@@ -27,7 +27,9 @@ describe("quality methodology page", () => {
 
   it("defines every /quality anchor used by entry trust drilldowns", () => {
     const ids = qualityRouteIds(qualitySource);
-    const anchors = trustDocAnchors(readRepoFile("apps/web/src/lib/trust.ts"));
+    const anchors = trustDocAnchors(
+      readRepoFile("apps/web/src/lib/trust-lib.ts"),
+    );
 
     expect(anchors.size).toBeGreaterThan(0);
     for (const anchor of anchors) {
