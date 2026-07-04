@@ -1,127 +1,49 @@
 /**
- * Hand-built RSS 2.0 / Atom 1.0 builders. No dependencies — string templates
- * with strict XML escaping. Mirrors the pattern used in the legacy
- * jsonbored/awesome-claude site.
+ * Feed request/IO layer built on top of the pure builders in `feeds-lib.ts`.
  *
- * Feed bodies are deterministic for a given registry snapshot so that an
- * ETag derived from the body bytes is stable across requests. The dispatcher
- * helper `respondFeed` handles `If-None-Match` and emits cache headers.
+ * The deterministic string/data layer (RSS/Atom envelope builders and registry
+ * item selectors) lives in `@/lib/feeds-lib` and is re-exported below so the
+ * public `@/lib/feeds` surface is unchanged for routes. This module adds the
+ * parts that need the platform runtime: SHA-1 ETag hashing, conditional-GET
+ * responses, live growth-surface trending, and feed-health aggregation.
+ *
+ * Feed bodies are deterministic for a given registry snapshot so that an ETag
+ * derived from the body bytes is stable across requests. The dispatcher helper
+ * `respondFeed` handles `If-None-Match` and emits cache headers.
  */
-import { ENTRIES } from "@/data/entries";
-import { filterSearchEntries, normalizeSearchQuery } from "@/data/search";
-import { CHANGELOG, RELEASE_NOTES } from "@/data/changelog";
 import { getGrowthSurfaces } from "@/lib/growth-surfaces";
 import { ifNoneMatchMatches } from "@/lib/http-cache";
+import { CATEGORIES } from "@/types/registry";
+
 import {
-  CATEGORIES,
-  type Category,
-  type Platform,
-  type SourceStatus,
-  type TrustLevel,
-} from "@/types/registry";
+  buildAtom,
+  buildRss,
+  categoryItems,
+  changelogStreamItems,
+  type FeedItem,
+  latestPubDate,
+  SITE_NAME,
+  SITE_TAGLINE,
+  siteWideItems,
+} from "@/lib/feeds-lib";
 
-export const SITE_NAME = "HeyClaude";
-export const SITE_TAGLINE =
-  "Directory for Claude Code, MCP servers, agents, skills, hooks, and rules.";
-
-export interface FeedItem {
-  title: string;
-  link: string;
-  guid: string;
-  pubDate: string; // ISO 8601
-  description: string;
-  category?: string;
-}
-
-function esc(value: string): string {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&apos;");
-}
-
-function rfc822(iso: string): string {
-  return new Date(iso).toUTCString();
-}
-
-function latestPubDate(items: FeedItem[], fallback = "2025-01-01T00:00:00.000Z"): string {
-  if (items.length === 0) return fallback;
-  return items.reduce((acc, i) => (i.pubDate > acc ? i.pubDate : acc), items[0].pubDate);
-}
-
-export function buildRss(opts: {
-  title: string;
-  description: string;
-  link: string;
-  selfLink: string;
-  items: FeedItem[];
-  /** Stable build timestamp. Defaults to newest item's pubDate so the body is deterministic. */
-  lastBuilt?: string;
-}): string {
-  const items = opts.items
-    .map(
-      (i) => `    <item>
-      <title>${esc(i.title)}</title>
-      <link>${esc(i.link)}</link>
-      <guid isPermaLink="false">${esc(i.guid)}</guid>
-      <pubDate>${rfc822(i.pubDate)}</pubDate>${i.category ? `\n      <category>${esc(i.category)}</category>` : ""}
-      <description>${esc(i.description)}</description>
-    </item>`,
-    )
-    .join("\n");
-
-  const built = opts.lastBuilt ?? latestPubDate(opts.items);
-
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>${esc(opts.title)}</title>
-    <link>${esc(opts.link)}</link>
-    <description>${esc(opts.description)}</description>
-    <language>en-US</language>
-    <lastBuildDate>${rfc822(built)}</lastBuildDate>
-    <atom:link href="${esc(opts.selfLink)}" rel="self" type="application/rss+xml"/>
-${items}
-  </channel>
-</rss>`;
-}
-
-export function buildAtom(opts: {
-  title: string;
-  description: string;
-  link: string;
-  selfLink: string;
-  items: FeedItem[];
-  lastBuilt?: string;
-}): string {
-  const entries = opts.items
-    .map(
-      (i) => `  <entry>
-    <title>${esc(i.title)}</title>
-    <link href="${esc(i.link)}" rel="alternate"/>
-    <id>${esc(i.guid)}</id>
-    <updated>${new Date(i.pubDate).toISOString()}</updated>
-    <author><name>${esc(SITE_NAME)}</name></author>
-    <summary>${esc(i.description)}</summary>
-  </entry>`,
-    )
-    .join("\n");
-
-  const built = opts.lastBuilt ?? latestPubDate(opts.items);
-
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
-  <title>${esc(opts.title)}</title>
-  <link href="${esc(opts.link)}" rel="alternate"/>
-  <link href="${esc(opts.selfLink)}" rel="self"/>
-  <id>${esc(opts.link)}</id>
-  <updated>${new Date(built).toISOString()}</updated>
-  <subtitle>${esc(opts.description)}</subtitle>
-${entries}
-</feed>`;
-}
+export {
+  applySavedSearch,
+  buildAtom,
+  buildRss,
+  categoryItems,
+  changelogStreamItems,
+  esc,
+  FEED_CATEGORIES,
+  type FeedItem,
+  latestPubDate,
+  origin,
+  rfc822,
+  type SavedSearchQuery,
+  SITE_NAME,
+  SITE_TAGLINE,
+  siteWideItems,
+} from "@/lib/feeds-lib";
 
 /* --------- ETag + response helpers -------- */
 
@@ -163,59 +85,7 @@ export async function respondFeed(
   return new Response(body, { headers });
 }
 
-/* --------- Source-of-truth item builders -------- */
-
-export function origin(request: Request): string {
-  const u = new URL(request.url);
-  return `${u.protocol}//${u.host}`;
-}
-
-export function siteWideItems(): FeedItem[] {
-  const changes: FeedItem[] = CHANGELOG.map((c) => ({
-    title: `${c.kind === "added" ? "Added" : c.kind === "updated" ? "Updated" : "Removed"} ${c.title}`,
-    link: c.category && c.ref ? `/entry/${c.ref}` : "/changelog",
-    guid: `change:${c.ref}:${c.hash ?? c.date}`,
-    pubDate: c.date,
-    description: `${c.ref} ${c.kind} in the HeyClaude registry.`,
-    category: c.category ?? undefined,
-  }));
-
-  const notes: FeedItem[] = RELEASE_NOTES.map((n) => ({
-    title: n.title,
-    link: n.href ?? "/changelog",
-    guid: `note:${n.stream}:${n.date}:${n.title}`,
-    pubDate: n.date,
-    description: n.body,
-    category: n.stream,
-  }));
-
-  return [...changes, ...notes].sort((a, b) => (a.pubDate < b.pubDate ? 1 : -1)).slice(0, 100);
-}
-
-export function categoryItems(category: Category): FeedItem[] {
-  return ENTRIES.filter((e) => e.category === category)
-    .sort((a, b) => (a.dateAdded < b.dateAdded ? 1 : -1))
-    .slice(0, 100)
-    .map((e) => ({
-      title: e.title,
-      link: `/entry/${e.category}/${e.slug}`,
-      guid: `entry:${e.category}/${e.slug}`,
-      pubDate: e.dateAdded,
-      description: e.cardDescription ?? e.description,
-      category: e.category,
-    }));
-}
-
-export function changelogStreamItems(stream: "release" | "policy" | "security"): FeedItem[] {
-  return RELEASE_NOTES.filter((n) => n.stream === stream).map((n) => ({
-    title: n.title,
-    link: n.href ?? "/changelog",
-    guid: `note:${stream}:${n.date}:${n.title}`,
-    pubDate: n.date,
-    description: n.body,
-    category: stream,
-  }));
-}
+/* --------- Live trending (growth surfaces) -------- */
 
 export async function trendingItems(): Promise<FeedItem[]> {
   const surfaces = await getGrowthSurfaces();
@@ -230,41 +100,6 @@ export async function trendingItems(): Promise<FeedItem[]> {
     description: entry.description,
     category: entry.category,
   }));
-}
-
-export const FEED_CATEGORIES = CATEGORIES.map((c) => c.id);
-
-/* --------- Saved-search materialization (URL-encoded) -------- */
-
-export interface SavedSearchQuery {
-  q?: string;
-  category?: string;
-  trust?: string;
-  source?: string;
-  platform?: string;
-}
-
-export function applySavedSearch(q: SavedSearchQuery): FeedItem[] {
-  return filterSearchEntries(
-    {
-      q: q.q ? normalizeSearchQuery(q.q) : q.q,
-      categories: q.category ? [q.category as Category] : undefined,
-      trust: q.trust ? [q.trust as TrustLevel] : undefined,
-      source: q.source ? [q.source as SourceStatus] : undefined,
-      platforms: q.platform ? [q.platform as Platform] : undefined,
-    },
-    ENTRIES,
-  )
-    .sort((a, b) => (a.dateAdded < b.dateAdded ? 1 : -1))
-    .slice(0, 50)
-    .map((e) => ({
-      title: e.title,
-      link: `/entry/${e.category}/${e.slug}`,
-      guid: `entry:${e.category}/${e.slug}`,
-      pubDate: e.dateAdded,
-      description: e.cardDescription ?? e.description,
-      category: e.category,
-    }));
 }
 
 /* --------- Health metadata --------- */
