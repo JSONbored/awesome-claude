@@ -18,7 +18,8 @@
 export const REMOVE_PATTERN = /\brm\s+-[a-z]*r[a-z]*f|\brm\s+-[a-z]*f[a-z]*r/i;
 export const CHMOD_PATTERN = /\bchmod\s+(?:-R\s+)?0?777\b/i;
 export const MKFS_PATTERN = /\bmkfs(?:\.\w+)?\b/i;
-export const FORK_BOMB_PATTERN = /:\s*\(\s*\)\s*\{\s*:\s*\|\s*:\s*&\s*\}\s*;\s*:/;
+export const FORK_BOMB_PATTERN =
+  /:\s*\(\s*\)\s*\{\s*:\s*\|\s*:\s*&\s*\}\s*;\s*:/;
 export const INLINE_EVAL_PATTERN = /\beval\s+["'`]?\$\(/i;
 
 // Sudo options that take a separate value token (`-u root`, `--user root`).

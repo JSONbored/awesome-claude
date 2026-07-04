@@ -291,24 +291,15 @@ describe("segmentHasDecodeFlag", () => {
 
     const decodeLong = "base64 --decode payload";
     expect(
-      segmentHasDecodeFlag(
-        decodeLong,
-        lower(decodeLong),
-        0,
-        decodeLong.length,
-      ),
+      segmentHasDecodeFlag(decodeLong, lower(decodeLong), 0, decodeLong.length),
     ).toBe(true);
   });
 
   it("returns false when decode flags are absent", () => {
     const line = "base64 payload";
-    expect(segmentHasDecodeFlag(line, lower(line), 0, line.length)).toBe(
-      false,
-    );
+    expect(segmentHasDecodeFlag(line, lower(line), 0, line.length)).toBe(false);
     const echo = "echo payload";
-    expect(segmentHasDecodeFlag(echo, lower(echo), 0, echo.length)).toBe(
-      false,
-    );
+    expect(segmentHasDecodeFlag(echo, lower(echo), 0, echo.length)).toBe(false);
     const otherFlags = "base64 -w 0 payload";
     expect(
       segmentHasDecodeFlag(otherFlags, lower(otherFlags), 0, otherFlags.length),
@@ -373,9 +364,9 @@ describe("hasBase64DecodedShell", () => {
       false,
     );
     const repeatedBase64 = `${"base64 -d payload ".repeat(3)}| node`;
-    expect(
-      hasBase64DecodedShell(repeatedBase64, lower(repeatedBase64)),
-    ).toBe(false);
+    expect(hasBase64DecodedShell(repeatedBase64, lower(repeatedBase64))).toBe(
+      false,
+    );
   });
 
   it("resets decode state at command barriers", () => {
