@@ -731,6 +731,8 @@ function frontmatterProvenance(data = {}) {
         ? importPrNumber
         : null,
     importPrUrl: normalizeText(data.importPrUrl),
+    reviewedBy: normalizeText(data.reviewedBy),
+    reviewedAt: normalizeText(data.reviewedAt),
   };
 }
 
@@ -741,6 +743,20 @@ function submitterProvenanceChanged(entry) {
     normalizeText(current.submittedBy) !== normalizeText(base.submittedBy) ||
     normalizeText(current.submittedByUrl) !== normalizeText(base.submittedByUrl)
   );
+}
+
+function reviewProvenanceChanged(entry) {
+  const current = entry.provenance || {};
+  const base = entry.baseProvenance || {};
+  return (
+    normalizeText(current.reviewedBy) !== normalizeText(base.reviewedBy) ||
+    normalizeText(current.reviewedAt) !== normalizeText(base.reviewedAt)
+  );
+}
+
+function hasReviewProvenance(entry) {
+  const provenance = entry.provenance || {};
+  return Boolean(provenance.reviewedBy || provenance.reviewedAt);
 }
 
 function isNewDirectContentEntry(entry) {
@@ -1142,7 +1158,28 @@ function validatePrProvenance(report, entries, prAuthor, sourceType) {
   if (sourceType !== "external_direct") return;
 
   for (const entry of entries) {
-    if (!isNewDirectContentEntry(entry)) {
+    const isNewEntry = isNewDirectContentEntry(entry);
+    if (isNewEntry && hasReviewProvenance(entry)) {
+      addProvenanceFinding(
+        report,
+        "error",
+        `direct_pr_review_provenance_${entry.filename}`,
+        "Direct contributor PRs cannot set maintainer review provenance",
+        `${entry.filename}: leave reviewedBy/reviewedAt unset; maintainers add review metadata after verification.`,
+      );
+    }
+
+    if (!isNewEntry) {
+      if (reviewProvenanceChanged(entry)) {
+        addProvenanceFinding(
+          report,
+          "error",
+          `direct_pr_review_provenance_change_${entry.filename}`,
+          "Direct contributor PRs cannot change maintainer review provenance",
+          `${entry.filename}: leave existing reviewedBy/reviewedAt unchanged; maintainers handle review metadata separately.`,
+        );
+      }
+
       if (submitterProvenanceChanged(entry)) {
         addProvenanceFinding(
           report,

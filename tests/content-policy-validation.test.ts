@@ -711,6 +711,81 @@ Example body.
     );
   });
 
+  it("fails external content PRs that set maintainer review provenance", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: Example MCP
+category: mcp
+description: Example forged review provenance fixture.
+sourceUrl: https://github.com/example/example-mcp
+reviewedBy: trusted-maintainer
+reviewedAt: 2026-05-01T00:00:00Z
+submittedBy: contributor
+submittedByUrl: https://github.com/contributor
+---
+
+Example body.
+`;
+
+    const result = runContentPolicy(tmpDir, content, "external_direct", [
+      {
+        filename: "content/mcp/example-mcp.mdx",
+        status: "added",
+        content,
+      },
+    ]);
+
+    expect(result.status).not.toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.failures).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("direct_pr_review_provenance"),
+      ]),
+    );
+  });
+
+  it("fails external content PRs that change existing maintainer review provenance", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const baseContent = `---
+title: Example MCP
+category: mcp
+description: Example existing review provenance fixture.
+sourceUrl: https://github.com/example/example-mcp
+reviewedBy: trusted-maintainer
+reviewedAt: 2026-04-01T00:00:00Z
+submittedBy: contributor
+submittedByUrl: https://github.com/contributor
+---
+
+Example body.
+`;
+    const content = baseContent.replace(
+      "reviewedAt: 2026-04-01T00:00:00Z",
+      "reviewedAt: 2026-05-01T00:00:00Z",
+    );
+
+    const result = runContentPolicy(tmpDir, content, "external_direct", [
+      {
+        filename: "content/mcp/example-mcp.mdx",
+        status: "modified",
+        content,
+        baseContent,
+      },
+    ]);
+
+    expect(result.status).not.toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.failures).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("direct_pr_review_provenance_change"),
+      ]),
+    );
+  });
+
   it("fails external content PRs that set packageVerified", () => {
     const tmpDir = fs.mkdtempSync(
       path.join(os.tmpdir(), "heyclaude-content-policy-"),
