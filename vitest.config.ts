@@ -58,6 +58,7 @@ export default defineConfig({
         "apps/web/src/lib/content.server.ts",
         "apps/web/src/lib/contributors.ts",
         "apps/web/src/lib/data-reports.ts",
+        "apps/web/src/lib/platform-pages.ts",
         "apps/web/src/lib/api-security.ts",
         "apps/web/src/lib/detail-assembly.ts",
         "apps/web/src/lib/dossier-prefs.ts",
