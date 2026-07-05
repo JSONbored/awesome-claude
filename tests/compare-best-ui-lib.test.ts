@@ -5,6 +5,7 @@ import {
   compareBestInteractiveLinkLabel,
   compareBestInteractiveSearch,
   compareBestShowCompareSection,
+  compareBestUiState,
 } from "@/lib/compare-best-ui-lib";
 
 function entry(overrides: Partial<Entry> = {}): Entry {
@@ -79,5 +80,38 @@ describe("compare best ui lib", () => {
       "1 trust signal differ across this comparison (Review status).",
       "Next steps differ across picks — use the actions in the table below to copy install commands and source links per resource.",
     ]);
+  });
+
+  it("bundles best-list page presentation state for headers and interactive links", () => {
+    expect(
+      compareBestUiState([
+        entry({ category: "skills", slug: "alpha" }),
+        entry({ category: "hooks", slug: "beta" }),
+      ]),
+    ).toEqual({
+      showCompareSection: true,
+      bannerTexts: [],
+      interactiveSearch: { ids: "skills/alpha,hooks/beta" },
+      interactiveLinkLabel: "Open in the interactive comparison tool",
+    });
+    expect(
+      compareBestUiState([
+        entry(),
+        entry({
+          slug: "mixed",
+          reviewedBy: "maintainer",
+          reviewedAt: "2026-01-02",
+          installCommand: "npm i fixture",
+        }),
+      ]),
+    ).toEqual({
+      showCompareSection: true,
+      bannerTexts: [
+        "1 trust signal differ across this comparison (Review status).",
+        "Next steps differ across picks — use the actions in the table below to copy install commands and source links per resource.",
+      ],
+      interactiveSearch: { ids: "mcp/fixture,mcp/mixed" },
+      interactiveLinkLabel: "Open in the interactive comparison tool",
+    });
   });
 });

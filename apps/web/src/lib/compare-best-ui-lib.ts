@@ -20,3 +20,19 @@ export function compareBestInteractiveLinkLabel(entryCount: number): string {
 export function compareBestShowCompareSection(entries: Entry[]): boolean {
   return shouldShowBestCompareSection(entries);
 }
+
+export type CompareBestUiState = {
+  showCompareSection: boolean;
+  bannerTexts: string[];
+  interactiveSearch: { ids: string } | null;
+  interactiveLinkLabel: string;
+};
+
+export function compareBestUiState(entries: Entry[]): CompareBestUiState {
+  return {
+    showCompareSection: shouldShowBestCompareSection(entries),
+    bannerTexts: compareBestBannerTexts(entries),
+    interactiveSearch: compareInteractiveSearch(entries),
+    interactiveLinkLabel: compareInteractiveLinkLabel(entries.length),
+  };
+}

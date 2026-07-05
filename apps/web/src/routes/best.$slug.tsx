@@ -5,11 +5,7 @@ import { BEST_LISTS, ENTRIES, type BestList, type BestPick } from "@/data/entrie
 import type { Entry } from "@/types/registry";
 import { ResourceCard } from "@/components/resource-card";
 import { ComparisonTable } from "@/components/comparison-table";
-import {
-  compareBestHeaderBannerTexts,
-  compareBestInteractiveLinkLabel,
-  compareBestInteractiveSearch,
-} from "@/lib/compare-best-ui-lib";
+import { compareBestUiState } from "@/lib/compare-best-ui-lib";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { getBestListEditorial } from "@/data/best-list-editorial";
@@ -97,14 +93,7 @@ function BestDetail() {
     .filter((p): p is Resolved => p !== null);
 
   const compareEntries = useMemo(() => resolved.slice(0, 5).map((p) => p.entry), [resolved]);
-  const compareBannerTexts = useMemo(
-    () => compareBestHeaderBannerTexts(compareEntries),
-    [compareEntries],
-  );
-  const interactiveCompareSearch = useMemo(
-    () => compareBestInteractiveSearch(compareEntries),
-    [compareEntries],
-  );
+  const compareUi = useMemo(() => compareBestUiState(compareEntries), [compareEntries]);
 
   return (
     <PageContainer className="py-12">
@@ -152,16 +141,16 @@ function BestDetail() {
         </>
       )}
 
-      {resolved.length >= 2 && (
+      {compareUi.showCompareSection && (
         <section className="mt-10">
           <h2 className="h-display-2 text-ink">Compared at a glance</h2>
           <p className="mt-2 max-w-3xl text-sm text-ink-muted">
             The top {Math.min(resolved.length, 5)} picks side by side on trust, install, platform
             support, and disclosed notes — full rationale for each below.
           </p>
-          {compareBannerTexts.length > 0 ? (
+          {compareUi.bannerTexts.length > 0 ? (
             <div className="mt-4 space-y-1.5">
-              {compareBannerTexts.map((text) => (
+              {compareUi.bannerTexts.map((text) => (
                 <p key={text} className="text-sm text-ink-muted">
                   {text}
                 </p>
@@ -171,14 +160,14 @@ function BestDetail() {
           <div className="mt-5">
             <ComparisonTable entries={compareEntries} showNextActions />
           </div>
-          {interactiveCompareSearch ? (
+          {compareUi.interactiveSearch ? (
             <Link
               to="/compare"
-              search={interactiveCompareSearch}
+              search={compareUi.interactiveSearch}
               className="mt-4 inline-flex items-center gap-1.5 text-sm text-ink-muted hover:text-ink"
             >
               <ArrowLeft className="h-4 w-4" />
-              {compareBestInteractiveLinkLabel(compareEntries.length)}
+              {compareUi.interactiveLinkLabel}
             </Link>
           ) : null}
         </section>
