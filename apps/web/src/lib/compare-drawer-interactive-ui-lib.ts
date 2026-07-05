@@ -2,7 +2,7 @@ import type { Entry } from "@/types/registry";
 import type { CompareDrawerActionCell } from "@/lib/compare-drawer-actions-ui-lib";
 import { compareDrawerActionsInteractiveUiState } from "@/lib/compare-drawer-actions-interactive-ui-lib";
 import { compareDrawerEmptyInteractiveUiState } from "@/lib/compare-drawer-empty-interactive-ui-lib";
-import { compareDrawerSignalsInteractiveUiState } from "@/lib/compare-drawer-signals-interactive-ui-lib";
+import { compareDrawerPresentationUiInteractiveUiState } from "@/lib/compare-drawer-presentation-ui-interactive-ui-lib";
 import {
   compareDrawerUiInteractiveUiState,
   type CompareDrawerUiState,
@@ -19,14 +19,14 @@ export type CompareDrawerInteractiveUiState = {
 
 export function compareDrawerInteractiveUiState(items: Entry[]): CompareDrawerInteractiveUiState {
   const emptyUi = compareDrawerEmptyInteractiveUiState(items);
-  const signals = compareDrawerSignalsInteractiveUiState(items);
+  const presentation = compareDrawerPresentationUiInteractiveUiState(items);
   const actions = compareDrawerActionsInteractiveUiState(items);
   return {
     drawerUi: compareDrawerUiInteractiveUiState(items),
     emptyHint: emptyUi.emptyHint,
     shareUrl: emptyUi.shareUrl,
-    divergingDecisionLabels: signals.divergingDecisionLabels,
-    actionRowDiverges: actions.actionRowDiverges,
+    divergingDecisionLabels: presentation.divergingDecisionLabels,
+    actionRowDiverges: presentation.actionRowDiverges,
     actionCells: actions.actionCells,
   };
 }
