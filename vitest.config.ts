@@ -52,6 +52,7 @@ export default defineConfig({
         "apps/web/src/data/comparisons.ts",
         "apps/web/src/data/tools.ts",
         "apps/web/src/lib/api/example.functions.ts",
+        "apps/web/src/lib/api-logs.ts",
         "apps/web/src/lib/client-logs.ts",
         "apps/web/src/lib/community-signals.ts",
         "apps/web/src/lib/compare-entry-actions.ts",
