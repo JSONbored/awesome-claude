@@ -23,11 +23,7 @@ import {
   compareDrawerEntryActions,
   type CompareAction,
 } from "@/lib/compare-drawer-actions-ui-lib";
-import {
-  compareDrawerEmptyStateHint,
-  compareDrawerShareUrl,
-  compareDrawerUiState,
-} from "@/lib/compare-drawer-ui-lib";
+import { compareDrawerInteractiveUiState } from "@/lib/compare-drawer-interactive-ui-lib";
 import { recordCompareIntentEvent } from "@/lib/compare-entry-actions";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
 import type { Entry, Harness } from "@/types/registry";
@@ -320,7 +316,8 @@ function SnippetCell({ entry }: { entry: Entry }) {
 
 export function CompareDrawer() {
   const { items, open, setOpen, toggle, clear, hydrate } = useCompare();
-  const { actionRowDiverges, bannerTexts, fullViewSearch } = compareDrawerUiState(items);
+  const { drawerUi, emptyHint, shareUrl } = compareDrawerInteractiveUiState(items);
+  const { actionRowDiverges, bannerTexts, fullViewSearch } = drawerUi;
 
   const onClear = () => {
     const snapshot = items.map((e) => `${e.category}/${e.slug}`).join(",");
@@ -398,7 +395,7 @@ export function CompareDrawer() {
                 </Link>
               ) : null}
               <CopyButton
-                value={compareDrawerShareUrl(items)}
+                value={shareUrl}
                 label="Copy compare link"
                 disabled={items.length === 0}
               />
@@ -415,7 +412,7 @@ export function CompareDrawer() {
 
         {items.length === 0 ? (
           <div className="flex h-[60vh] items-center justify-center px-6 text-sm text-ink-muted">
-            {compareDrawerEmptyStateHint()}
+            {emptyHint}
           </div>
         ) : (
           <div className="h-[calc(88vh-57px)] overflow-auto">
