@@ -1,5 +1,6 @@
 import type { EntryIdentity } from "@/lib/entry-identity";
 import { serializeCompareItems } from "@/lib/compare-selection";
+import { compareShareOrigin } from "@/lib/compare-share-origin";
 
 export function comparePageSharePath(idsParam: string): string {
   const ids = idsParam.trim();
@@ -12,4 +13,8 @@ export function comparePageShareUrl(idsParam: string, origin = ""): string {
 
 export function comparePageShareUrlFromEntries(entries: EntryIdentity[], origin = ""): string {
   return comparePageShareUrl(serializeCompareItems(entries), origin);
+}
+
+export function comparePageShareUrlForWindow(entries: EntryIdentity[]): string {
+  return comparePageShareUrlFromEntries(entries, compareShareOrigin());
 }

@@ -18,7 +18,7 @@ import {
   type CompareAction,
 } from "@/lib/compare-entry-actions";
 import { comparePageBannerTexts } from "@/lib/compare-page-summary";
-import { comparePageShareUrlFromEntries } from "@/lib/compare-share-link";
+import { comparePageShareUrlForWindow } from "@/lib/compare-share-link";
 import {
   compareFeaturedInteractiveLinkLabel,
   compareFeaturedInteractiveSearch,
@@ -102,10 +102,7 @@ function ComparePage() {
     setPickerOpen(false);
   };
 
-  const copyShare = () => {
-    const origin = typeof window !== "undefined" ? window.location.origin : "";
-    return comparePageShareUrlFromEntries(items, origin);
-  };
+  const copyShare = () => comparePageShareUrlForWindow(items);
 
   if (items.length === 0) {
     const resolvedFromUrl = resolveIds(sp.ids);

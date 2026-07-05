@@ -1,5 +1,6 @@
 import type { EntryIdentity } from "@/lib/entry-identity";
 import { serializeCompareItems } from "@/lib/compare-selection";
+import { compareShareOrigin } from "@/lib/compare-share-origin";
 
 export function compareBrowseSharePath(idsParam: string): string {
   const ids = idsParam.trim();
@@ -12,4 +13,8 @@ export function compareBrowseShareUrl(idsParam: string, origin = ""): string {
 
 export function compareBrowseShareUrlFromEntries(entries: EntryIdentity[], origin = ""): string {
   return compareBrowseShareUrl(serializeCompareItems(entries), origin);
+}
+
+export function compareBrowseShareUrlForWindow(entries: EntryIdentity[]): string {
+  return compareBrowseShareUrlFromEntries(entries, compareShareOrigin());
 }

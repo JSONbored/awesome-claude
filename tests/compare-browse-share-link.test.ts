@@ -3,6 +3,7 @@ import type { Entry } from "@/types/registry";
 import {
   compareBrowseSharePath,
   compareBrowseShareUrl,
+  compareBrowseShareUrlForWindow,
   compareBrowseShareUrlFromEntries,
 } from "@/lib/compare-browse-share-link";
 
@@ -56,5 +57,14 @@ describe("compare browse share link", () => {
     expect(compareBrowseShareUrlFromEntries([], "https://heyclaude.dev")).toBe(
       "https://heyclaude.dev/browse",
     );
+  });
+
+  it("builds window-backed browse share URLs without an explicit origin", () => {
+    expect(
+      compareBrowseShareUrlForWindow([
+        entry({ category: "skills", slug: "alpha" }),
+      ]),
+    ).toBe("/browse?compare=skills%2Falpha");
+    expect(compareBrowseShareUrlForWindow([])).toBe("/browse");
   });
 });

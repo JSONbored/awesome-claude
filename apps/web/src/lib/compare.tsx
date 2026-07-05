@@ -1,5 +1,6 @@
 import * as React from "react";
 import { compareBrowseShareUrl } from "@/lib/compare-browse-share-link";
+import { compareShareOrigin } from "@/lib/compare-share-origin";
 import {
   hasCompareItem,
   resolveCompareParam,
@@ -86,8 +87,7 @@ function createCompareStore(): CompareStore {
     serialize: () => serializeCompareItems(state.items),
     getShareUrl: () => {
       const sig = serializeCompareItems(state.items);
-      const origin = typeof window !== "undefined" ? window.location.origin : "";
-      return compareBrowseShareUrl(sig, origin);
+      return compareBrowseShareUrl(sig, compareShareOrigin());
     },
   };
 
