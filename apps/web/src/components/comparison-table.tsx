@@ -15,14 +15,10 @@ import { brandIdentityLabel } from "@/lib/brand-icons";
 import {
   comparisonDecisionRows,
   displayCompareSignal,
-  divergingDecisionRowLabels,
   signalToneClassForDisplay,
 } from "@/lib/compare-table-decision-rows";
-import {
-  COMPARE_TABLE_SURFACE,
-  compareTableActionsDiverge,
-  shouldRenderCompareTableActions,
-} from "@/lib/compare-table-actions";
+import { COMPARE_TABLE_SURFACE } from "@/lib/compare-table-actions";
+import { compareTablePresentationState } from "@/lib/compare-table-ui-lib";
 import {
   recordCompareIntentEvent,
   resolveCompareEntryActions,
@@ -296,9 +292,8 @@ export function ComparisonTable({
   entries: Entry[];
   showNextActions?: boolean;
 }) {
-  const divergingLabels = new Set(divergingDecisionRowLabels(entries));
-  const renderNextActions = shouldRenderCompareTableActions(entries, showNextActions);
-  const actionRowDiverges = renderNextActions && compareTableActionsDiverge(entries);
+  const { divergingDecisionLabels, renderNextActions, actionRowDiverges } =
+    compareTablePresentationState(entries, showNextActions);
 
   return (
     <div className="overflow-auto rounded-xl border border-border">
@@ -375,7 +370,7 @@ export function ComparisonTable({
             </tr>
           ) : null}
           {COMPARISON_ROWS.map((row, i) => {
-            const rowDiverges = divergingLabels.has(row.label);
+            const rowDiverges = divergingDecisionLabels.has(row.label);
             return (
               <tr
                 key={row.label}
