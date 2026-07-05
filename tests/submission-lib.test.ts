@@ -1295,6 +1295,23 @@ describe("validateSubmission shared guardrails", () => {
     expect(result.errors).toContain("github_url must be a valid https URL");
   });
 
+  it("rejects https URLs with embedded userinfo credentials", () => {
+    const result = validateSubmission({
+      title: "Add MCP Server: Demo",
+      body: buildValidBody({
+        ...validMcpFields,
+        github_url: "https://github.com@evil.example.com/owner/repo",
+        docs_url: "https://token@example.com/docs",
+      }),
+    });
+    expect(result.errors).toEqual(
+      expect.arrayContaining([
+        "github_url must be a valid https URL",
+        "docs_url must be a valid https URL",
+      ]),
+    );
+  });
+
   it("accepts Not applicable disclosure notes with specific reasons", () => {
     const result = validateSubmission({
       title: "Add MCP Server: Demo",

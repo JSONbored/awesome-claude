@@ -23,6 +23,26 @@ const AFFILIATE_PARAMS = new Set([
   "via",
 ]);
 
+/**
+ * Return true when a URL uses HTTPS without embedded userinfo credentials.
+ * Empty values are treated as valid so optional submission fields stay optional.
+ *
+ * @param {unknown} value
+ * @returns {boolean}
+ */
+export function isPublicHttpsUrl(value) {
+  const text = String(value ?? "").trim();
+  if (!text) return true;
+  try {
+    const url = new URL(text);
+    return (
+      url.protocol === "https:" && url.username === "" && url.password === ""
+    );
+  } catch {
+    return false;
+  }
+}
+
 const ANALYTICS_PARAMS = new Set([
   "_hsenc",
   "_hsmi",

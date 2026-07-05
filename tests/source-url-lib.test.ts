@@ -4,6 +4,7 @@ import {
   canonicalizeSourceUrl,
   hasAffiliateParam,
   isAffiliateParam,
+  isPublicHttpsUrl,
   isTrackingParam,
   stripTrackingParams,
 } from "../packages/registry/src/source-url-lib.js";
@@ -39,6 +40,27 @@ const ANALYTICS_PARAMS = [
   "twclid",
   "yclid",
 ];
+
+describe("isPublicHttpsUrl", () => {
+  it("accepts clean https URLs and optional empty values", () => {
+    expect(isPublicHttpsUrl("")).toBe(true);
+    expect(isPublicHttpsUrl("https://github.com/example/repo")).toBe(true);
+  });
+
+  it("rejects http URLs and embedded userinfo credentials", () => {
+    expect(isPublicHttpsUrl("http://example.com/repo")).toBe(false);
+    expect(
+      isPublicHttpsUrl("https://github.com@evil.example.com/owner/repo"),
+    ).toBe(false);
+    expect(isPublicHttpsUrl("https://token@github.com/owner/repo")).toBe(false);
+    expect(isPublicHttpsUrl("https://user:pass@github.com/owner/repo")).toBe(
+      false,
+    );
+    expect(
+      isPublicHttpsUrl("https://user%40name:pass@github.com/owner/repo"),
+    ).toBe(false);
+  });
+});
 
 describe("isAffiliateParam", () => {
   it.each(AFFILIATE_PARAMS)("treats %s as an affiliate param", (name) => {

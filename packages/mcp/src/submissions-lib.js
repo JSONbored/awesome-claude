@@ -78,7 +78,10 @@ function isHttpsUrl(value) {
   const trimmed = normalizeText(value);
   if (!trimmed) return true;
   try {
-    return new URL(trimmed).protocol === "https:";
+    const url = new URL(trimmed);
+    return (
+      url.protocol === "https:" && url.username === "" && url.password === ""
+    );
   } catch {
     return false;
   }

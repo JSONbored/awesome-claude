@@ -92,6 +92,19 @@ export function normalizePricingModel(value) {
   return "";
 }
 
+function isPublicLeadHttpsUrl(value) {
+  const text = String(value || "").trim();
+  if (!text) return false;
+  try {
+    const url = new URL(text);
+    return (
+      url.protocol === "https:" && url.username === "" && url.password === ""
+    );
+  } catch {
+    return false;
+  }
+}
+
 export function validateListingLeadPayload(payload = {}) {
   const errors = [];
   const kind = normalizeLeadKind(payload.kind);
@@ -127,11 +140,11 @@ export function validateListingLeadPayload(payload = {}) {
   if (!listingTitle) errors.push("listingTitle is required");
   if (
     (kind === "tool" || kind === "claim") &&
-    !/^https:\/\//i.test(websiteUrl)
+    !isPublicLeadHttpsUrl(websiteUrl)
   ) {
     errors.push(`${kind} leads require an https websiteUrl`);
   }
-  if (kind === "job" && !/^https:\/\//i.test(applyUrl)) {
+  if (kind === "job" && !isPublicLeadHttpsUrl(applyUrl)) {
     errors.push("job leads require an https applyUrl");
   }
 

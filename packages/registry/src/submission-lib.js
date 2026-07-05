@@ -10,7 +10,7 @@
  */
 import categorySpec from "./category-spec.json" with { type: "json" };
 import { normalizeBrandDomain } from "./brand-assets.js";
-import { hasAffiliateParam } from "./source-url.js";
+import { hasAffiliateParam, isPublicHttpsUrl } from "./source-url.js";
 import {
   looksLikeToolAppListing,
   missingToolListingReviewFields,
@@ -620,14 +620,7 @@ export function isLikelyAffiliateUrl(value) {
 }
 
 function isHttpsUrl(value) {
-  const normalized = normalizeValue(value);
-  if (!normalized) return true;
-  try {
-    const url = new URL(normalized);
-    return url.protocol === "https:";
-  } catch {
-    return false;
-  }
+  return isPublicHttpsUrl(normalizeValue(value));
 }
 
 function urlPathname(value) {

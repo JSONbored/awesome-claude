@@ -226,6 +226,13 @@ describe("validateListingLeadPayload", () => {
         websiteUrl: "http://insecure.example",
       }).errors,
     ).toContain("claim leads require an https websiteUrl");
+    expect(
+      validateListingLeadPayload({
+        ...base,
+        kind: "claim",
+        websiteUrl: "https://token@example.com/proof",
+      }).errors,
+    ).toContain("claim leads require an https websiteUrl");
   });
 
   it("requires an https applyUrl for job leads", () => {

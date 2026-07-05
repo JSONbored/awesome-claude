@@ -284,7 +284,10 @@ function isHttpsUrl(value) {
   const text = normalizeText(value);
   if (!text) return false;
   try {
-    return new URL(text).protocol === "https:";
+    const url = new URL(text);
+    return (
+      url.protocol === "https:" && url.username === "" && url.password === ""
+    );
   } catch {
     return false;
   }
@@ -292,7 +295,9 @@ function isHttpsUrl(value) {
 
 function hostname(value) {
   try {
-    return new URL(normalizeText(value)).hostname.replace(/^www\./, "");
+    const url = new URL(normalizeText(value));
+    if (url.username || url.password) return "";
+    return url.hostname.replace(/^www\./, "");
   } catch {
     return "";
   }
@@ -301,7 +306,14 @@ function hostname(value) {
 function githubRepoFromUrl(value) {
   try {
     const url = new URL(normalizeText(value));
-    if (url.protocol !== "https:" || url.hostname !== "github.com") return "";
+    if (
+      url.protocol !== "https:" ||
+      url.hostname !== "github.com" ||
+      url.username ||
+      url.password
+    ) {
+      return "";
+    }
     const [owner, repo] = url.pathname.split("/").filter(Boolean);
     return owner && repo ? `${owner}/${repo}` : "";
   } catch {
@@ -312,7 +324,14 @@ function githubRepoFromUrl(value) {
 function githubLoginFromUrl(value) {
   try {
     const url = new URL(normalizeText(value));
-    if (url.protocol !== "https:" || url.hostname !== "github.com") return "";
+    if (
+      url.protocol !== "https:" ||
+      url.hostname !== "github.com" ||
+      url.username ||
+      url.password
+    ) {
+      return "";
+    }
     const [login] = url.pathname.split("/").filter(Boolean);
     return login || "";
   } catch {
