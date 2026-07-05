@@ -81,6 +81,7 @@ export default defineConfig({
         "apps/web/src/lib/og-render.server.ts",
         "apps/web/src/lib/peek-hotkey.ts",
         "apps/web/src/lib/site.ts",
+        "apps/web/src/lib/tags.ts",
         "apps/web/src/lib/tools.ts",
         "apps/web/src/lib/utils.ts",
         "apps/submission-gate/src/index.ts",
