@@ -3,6 +3,7 @@ import type { Entry } from "@/types/registry";
 import {
   BROWSE_COMPARE_MIN_ITEMS,
   browseCompareHintText,
+  browseCompareCtaState,
   browseCompareOpenSearch,
   browseCompareSummary,
   shouldShowBrowseCompareHint,
@@ -115,6 +116,7 @@ describe("compare browse summary", () => {
 
   it("builds interactive compare search params for browse selections", () => {
     expect(browseCompareOpenSearch([entry()])).toBeNull();
+    expect(browseCompareCtaState([entry()])).toBeNull();
     expect(
       browseCompareOpenSearch([
         entry({ category: "skills", slug: "alpha" }),
@@ -130,5 +132,17 @@ describe("compare browse summary", () => {
         entry({ slug: "five" }),
       ]),
     ).toEqual({ ids: "mcp/one,mcp/two,mcp/three,mcp/four" });
+    expect(
+      browseCompareCtaState([
+        entry({ slug: "one" }),
+        entry({ slug: "two" }),
+        entry({ slug: "three" }),
+        entry({ slug: "four" }),
+        entry({ slug: "five" }),
+      ]),
+    ).toEqual({
+      search: { ids: "mcp/one,mcp/two,mcp/three,mcp/four" },
+      selectedCount: 4,
+    });
   });
 });

@@ -33,3 +33,12 @@ export function browseCompareOpenSearch(items: Entry[]): { ids: string } | null 
   if (!shouldShowBrowseCompareHint(items)) return null;
   return compareFullViewSearch(items);
 }
+
+export function browseCompareCtaState(
+  items: Entry[],
+): { search: { ids: string }; selectedCount: number } | null {
+  const search = browseCompareOpenSearch(items);
+  if (!search) return null;
+  const selectedCount = search.ids.split(",").filter((id) => id.length > 0).length;
+  return { search, selectedCount };
+}

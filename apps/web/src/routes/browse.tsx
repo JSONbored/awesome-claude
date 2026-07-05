@@ -37,7 +37,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { useCompare } from "@/lib/compare";
-import { browseCompareHintText, browseCompareOpenSearch } from "@/lib/compare-browse-summary";
+import { browseCompareHintText, browseCompareCtaState } from "@/lib/compare-browse-summary";
 import { useRecents, type SavedSearch } from "@/lib/recents";
 import { entryByRef } from "@/data/entries";
 import { SavedSearchManager } from "@/components/saved-search-manager";
@@ -315,10 +315,7 @@ function Browse() {
   }, [compareSig]);
 
   const compareHint = useMemo(() => browseCompareHintText(compare.items), [compare.items]);
-  const browseCompareSearch = useMemo(
-    () => browseCompareOpenSearch(compare.items),
-    [compare.items],
-  );
+  const browseCompareCta = useMemo(() => browseCompareCtaState(compare.items), [compare.items]);
 
   const activeCount =
     Number(!!sp.q) +
@@ -640,7 +637,7 @@ function Browse() {
                     </>
                   )}
                 </span>
-                {browseCompareSearch ? (
+                {browseCompareCta ? (
                   <div className="inline-flex flex-col items-end gap-1">
                     {compareHint ? (
                       <span className="max-w-xs text-right text-[11px] text-ink-muted">
@@ -649,10 +646,11 @@ function Browse() {
                     ) : null}
                     <Link
                       to="/compare"
-                      search={browseCompareSearch}
+                      search={browseCompareCta.search}
                       className="inline-flex items-center gap-1.5 rounded-full border border-accent bg-accent/10 px-2.5 py-1 text-[11px] font-medium text-ink hover:bg-accent/15"
                     >
-                      <span className="font-mono">{compare.items.length}</span> selected · Compare →
+                      <span className="font-mono">{browseCompareCta.selectedCount}</span> selected ·
+                      Compare →
                     </Link>
                   </div>
                 ) : null}
