@@ -43,20 +43,21 @@ import { categoryLabels, categoryUsageHints, siteConfig } from "@/lib/site";
 import { tagSlug } from "@/lib/tags";
 // (HoverChevrons removed — related uses static grid)
 import { ShareMenu } from "@/components/share-menu";
-import { DossierTOC, type TocItem } from "@/components/dossier-toc";
+import type { TocItem } from "@/components/dossier-toc";
+import { EntryDetailRail } from "@/components/entry-detail-rail";
 import { EntryFacets } from "@/components/entry-facets";
 import { HarnessBadge } from "@/components/harness-badge";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { SourceCitations } from "@/components/source-citations";
 import { CitationFacts } from "@/components/citation-facts";
-import { ProvenanceBlock } from "@/components/provenance-block";
 import { StickyMetaBar } from "@/components/sticky-meta-bar";
 import { EntryDetailCommandCenter } from "@/components/entry-detail-command-center";
 import { EntryDetailMobileActionBar } from "@/components/entry-detail-mobile-action-bar";
 import { EntrySignalsPanel } from "@/components/entry-signals-panel";
 import { EntryBrandMark } from "@/components/entry-brand-mark";
 import { PLATFORM_SUPPORT_LABEL, type Entry } from "@/types/registry";
+import { buildEntryTocItems } from "@/lib/entry-detail-sidebar-lib";
 import { installRiskLevel, INSTALL_RISK_LABEL, INSTALL_RISK_DETAIL } from "@/lib/trust";
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { toast } from "sonner";
@@ -303,34 +304,29 @@ function Dossier() {
   const risk = installRiskLevel(entry);
   const hasSchema = hasSchemaDetails(entry);
 
-  const tocItems = useMemo<TocItem[]>(() => {
-    const items: TocItem[] = [];
-    if (risk !== "low") items.push({ id: "risk-callout", label: "Install risk" });
-    items.push({ id: "citation-facts", label: "Citation facts" });
-    if (entry.safetyNotes) items.push({ id: "safety", label: "Safety notes" });
-    if (entry.privacyNotes) items.push({ id: "privacy", label: "Privacy notes" });
-    if (entry.prerequisites && entry.prerequisites.length > 0)
-      items.push({ id: "prerequisites", label: "Prerequisites" });
-    if (hasSchema) items.push({ id: "schema", label: "Schema details" });
-    items.push({ id: "about", label: "About this resource" });
-    items.push({ id: "citations", label: "Source citations" });
-    items.push({ id: "badge", label: "Add a badge" });
-    if (alternatives.length > 0) items.push({ id: "compare", label: "How it compares" });
-    if (rel.length > 0) items.push({ id: "related", label: "Related" });
-    if (guides.length > 0) items.push({ id: "guides", label: "Related guides" });
-    items.push({ id: "signals", label: "Signals" });
-    return items;
-  }, [
-    risk,
-    entry.safetyNotes,
-    entry.privacyNotes,
-    entry.prerequisites,
-    hasSchema,
-    alternatives.length,
-    rel.length,
-    guides.length,
-  ]);
-
+  const tocItems = useMemo<TocItem[]>(
+    () =>
+      buildEntryTocItems({
+        risk,
+        hasSafetyNotes: Boolean(entry.safetyNotes),
+        hasPrivacyNotes: Boolean(entry.privacyNotes),
+        hasPrerequisites: Boolean(entry.prerequisites?.length),
+        hasSchema,
+        hasAlternatives: alternatives.length > 0,
+        hasRelated: rel.length > 0,
+        hasGuides: guides.length > 0,
+      }),
+    [
+      risk,
+      entry.safetyNotes,
+      entry.privacyNotes,
+      entry.prerequisites,
+      hasSchema,
+      alternatives.length,
+      rel.length,
+      guides.length,
+    ],
+  );
   const entryUrl = `/entry/${entry.category}/${entry.slug}`;
 
   return (
@@ -744,17 +740,7 @@ function Dossier() {
           />
         </div>
 
-        <aside className="space-y-6">
-          <div className="hidden lg:block lg:sticky lg:top-20">
-            <DossierTOC items={tocItems} />
-          </div>
-          <ProvenanceBlock entry={entry} />
-          <div className="rounded-xl border border-border bg-surface p-4 text-xs text-ink-muted">
-            HeyClaude reviews metadata, provenance, and surface-level safety. We don't scan for
-            malware. Always read the source before installing tools that touch your filesystem,
-            network, or credentials.
-          </div>
-        </aside>
+        <EntryDetailRail entry={entry} tocItems={tocItems} />
       </div>
       <EntryDetailMobileActionBar entry={entry} copyPayload={tabPayload} />
       <div className="h-14 lg:hidden" aria-hidden />
