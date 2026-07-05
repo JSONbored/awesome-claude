@@ -22,11 +22,7 @@ import {
   comparePageSelectionHint,
   comparePageShareUrl,
 } from "@/lib/compare-page-ui-lib";
-import {
-  compareFeaturedInteractiveLinkLabel,
-  compareFeaturedInteractiveSearch,
-  resolveComparisonRefs,
-} from "@/lib/compare-featured-link";
+import { comparePagePopularComparisonLinks } from "@/lib/compare-page-featured-ui-lib";
 import { compareEmptyStateDescription, compareInvalidUrlHint } from "@/lib/compare-empty-guidance";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
 import { sameEntry } from "@/lib/entry-identity";
@@ -81,6 +77,10 @@ function ComparePage() {
   const actionRowDiverges = compareActionsDiverge(items);
   const bannerTexts = comparePageHeaderBannerTexts(items);
   const singleItemHint = comparePageSelectionHint(items.length);
+  const popularComparisonLinks = React.useMemo(
+    () => comparePagePopularComparisonLinks(COMPARISONS, ENTRIES),
+    [],
+  );
 
   const pushIds = (next: Entry[]) => {
     const ids = serializeCompareItems(next);
@@ -128,33 +128,29 @@ function ComparePage() {
           <div className="mt-6">
             <div className="eyebrow mb-2">Popular comparisons</div>
             <div className="flex flex-wrap justify-center gap-2">
-              {COMPARISONS.map((c) => {
-                const resolvedCount = resolveComparisonRefs(c.refs, ENTRIES).length;
-                const interactiveSearch = compareFeaturedInteractiveSearch(c.refs, ENTRIES);
-                return (
-                  <div
-                    key={c.slug}
-                    className="inline-flex flex-wrap items-center justify-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5"
+              {popularComparisonLinks.map((comparison) => (
+                <div
+                  key={comparison.slug}
+                  className="inline-flex flex-wrap items-center justify-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5"
+                >
+                  <Link
+                    to="/compare/$slug"
+                    params={{ slug: comparison.slug }}
+                    className="text-xs text-ink-muted hover:text-ink"
                   >
+                    {comparison.heading}
+                  </Link>
+                  {comparison.interactiveSearch ? (
                     <Link
-                      to="/compare/$slug"
-                      params={{ slug: c.slug }}
-                      className="text-xs text-ink-muted hover:text-ink"
+                      to="/compare"
+                      search={comparison.interactiveSearch}
+                      className="text-[10px] text-ink-subtle hover:text-ink"
                     >
-                      {c.heading}
+                      {comparison.interactiveLabel}
                     </Link>
-                    {interactiveSearch ? (
-                      <Link
-                        to="/compare"
-                        search={interactiveSearch}
-                        className="text-[10px] text-ink-subtle hover:text-ink"
-                      >
-                        {compareFeaturedInteractiveLinkLabel(resolvedCount)}
-                      </Link>
-                    ) : null}
-                  </div>
-                );
-              })}
+                  ) : null}
+                </div>
+              ))}
             </div>
           </div>
         </div>
