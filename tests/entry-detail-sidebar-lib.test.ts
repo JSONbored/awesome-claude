@@ -26,10 +26,16 @@ function sampleEntry(overrides: Partial<Entry> = {}): Entry {
 describe("entry-detail-sidebar-lib", () => {
   it("builds readiness rows from entry trust signals", () => {
     const rows = entryReadinessRows(
-      sampleEntry({ trust: "trusted", safetyNotes: "Keep secrets local.", reviewed: true }),
+      sampleEntry({
+        trust: "trusted",
+        safetyNotes: "Keep secrets local.",
+        reviewed: true,
+      }),
     );
     expect(rows.find((row) => row.label === "Trust")?.ok).toBe(true);
-    expect(rows.find((row) => row.label === "Safety notes")?.value).toBe("Present");
+    expect(rows.find((row) => row.label === "Safety notes")?.value).toBe(
+      "Present",
+    );
     expect(rows.find((row) => row.label === "Reviewed")?.ok).toBe(true);
   });
 
@@ -40,7 +46,11 @@ describe("entry-detail-sidebar-lib", () => {
         sourceUrl: "https://github.com/org/repo",
       }),
     );
-    expect(links.map((link) => link.id)).toEqual(["docs", "source", "registry-json"]);
+    expect(links.map((link) => link.id)).toEqual([
+      "docs",
+      "source",
+      "registry-json",
+    ]);
   });
 
   it("orders dossier TOC items with optional risk and schema sections", () => {

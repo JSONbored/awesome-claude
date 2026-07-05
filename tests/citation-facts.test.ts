@@ -124,11 +124,16 @@ describe("entry page wiring", () => {
     path.join(repoRoot, "apps/web/src/routes/entry.$category.$slug.tsx"),
     "utf8",
   );
+  const sidebarLib = fs.readFileSync(
+    path.join(repoRoot, "apps/web/src/lib/entry-detail-sidebar-lib.ts"),
+    "utf8",
+  );
 
   it("renders the consolidated CitationFacts block in its own section", () => {
     expect(src).toContain("CitationFacts");
     expect(src).toContain('id="citation-facts"');
-    expect(src).toContain('label: "Citation facts"');
+    expect(src).toContain("buildEntryTocItems");
+    expect(sidebarLib).toContain('label: "Citation facts"');
   });
 
   it("exposes the per-entry LLMS endpoint both as a visible link and a head alternate", () => {

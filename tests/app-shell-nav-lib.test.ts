@@ -22,8 +22,10 @@ describe("app-shell-nav-lib", () => {
       "api-mcp",
       "community",
     ]);
-    expect(flattenShellMobileNav().some((link) => link.to === "/integrations/mcp-server")).toBe(
-      true,
-    );
+    expect(
+      flattenShellMobileNav().some(
+        (link) => link.to === "/integrations/mcp-server",
+      ),
+    ).toBe(true);
   });
 });
