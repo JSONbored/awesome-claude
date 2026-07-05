@@ -88,6 +88,12 @@ export function parseGitHubRepoUrl(value) {
     }
     const ownerRepo = ownerRepoFromPath(url.pathname);
     if (!ownerRepo) return null;
+    if (
+      (url.protocol === "http:" || url.protocol === "https:") &&
+      (url.username || url.password)
+    ) {
+      return null;
+    }
     parsed = { host: normalizeHost(url.hostname), ...ownerRepo };
   }
 

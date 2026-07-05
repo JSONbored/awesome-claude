@@ -183,6 +183,19 @@ describe("canonicalizeSourceUrl", () => {
     ).toBe("https://example.com/docs?a=1&b=2");
   });
 
+  it("strips embedded userinfo so duplicate keys ignore credential noise", () => {
+    const canonical = "https://github.com/example/demo";
+    expect(canonicalizeSourceUrl("https://token@github.com/example/demo")).toBe(
+      canonical,
+    );
+    expect(
+      canonicalizeSourceUrl("https://user:pass@github.com/example/demo"),
+    ).toBe(canonical);
+    expect(
+      canonicalizeSourceUrl("https://github.com@evil.example.com/example/demo"),
+    ).not.toBe(canonical);
+  });
+
   it("sorts query params lexicographically", () => {
     expect(canonicalizeSourceUrl("https://example.com/docs?z=9&m=1&a=2")).toBe(
       "https://example.com/docs?a=2&m=1&z=9",

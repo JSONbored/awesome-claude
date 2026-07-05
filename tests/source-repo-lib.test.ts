@@ -424,6 +424,13 @@ describe("parseGitHubRepoUrl duplicate equivalence classes", () => {
 
 describe("parseGitHubRepoUrl enterprise and typo rejection", () => {
   it.each([
+    "https://token@github.com/OpenAI/whisper",
+    "https://user:pass@github.com/OpenAI/whisper",
+  ])("rejects https URLs with embedded userinfo: %s", (input) => {
+    expect(parseGitHubRepoUrl(input)).toBeNull();
+  });
+
+  it.each([
     "github.com/OpenAI/whisper",
     "www.github.com/OpenAI/whisper",
     "https://github.com",

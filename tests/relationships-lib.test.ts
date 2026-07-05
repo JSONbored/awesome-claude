@@ -101,6 +101,9 @@ describe("normalizeUrl", () => {
     expect(normalizeUrl("https://github.com/Acme/Widget.git")).toBe(
       "https://github.com/acme/widget",
     );
+    expect(normalizeUrl("https://token@github.com/acme/widget")).toBe(
+      "https://github.com/acme/widget",
+    );
   });
 
   it("sorts remaining query params for stability", () => {

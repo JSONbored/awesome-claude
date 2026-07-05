@@ -122,6 +122,8 @@ export function canonicalizeSourceUrl(value) {
   if (!stripped) return "";
   try {
     const url = new URL(stripped);
+    url.username = "";
+    url.password = "";
     url.hash = "";
     url.protocol = url.protocol.toLowerCase();
     url.hostname = url.hostname.replace(/^www\./i, "").toLowerCase();

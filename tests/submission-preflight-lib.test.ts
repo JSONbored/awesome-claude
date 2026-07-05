@@ -152,6 +152,11 @@ describe("submission preflight duplicate detection", () => {
       }),
     ).toEqual(["https://github.com/example/demo"]);
     expect(
+      submittedSourceUrls({
+        github_url: "https://token@github.com/example/demo",
+      }),
+    ).toEqual(["https://github.com/example/demo"]);
+    expect(
       submittedSourceValues({ website_url: "https://example.com" }),
     ).toEqual([
       undefined,

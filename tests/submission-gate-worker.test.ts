@@ -2653,6 +2653,38 @@ sourceUrls:
     });
   });
 
+  it("detects duplicate submissions when source URLs differ only by embedded userinfo", () => {
+    const existing = extractContentDuplicateSignals({
+      filePath: "content/mcp/userinfo-dedupe.mdx",
+      content: `---
+title: Userinfo Dedupe MCP
+slug: userinfo-dedupe
+category: mcp
+description: MCP server for duplicate canonicalization tests.
+repoUrl: https://github.com/acme/userinfo-dedupe
+---
+`,
+    });
+    const candidate = extractContentDuplicateSignals({
+      filePath: "content/mcp/userinfo-dedupe-copy.mdx",
+      content: `---
+title: Userinfo Dedupe Copy
+slug: userinfo-dedupe-copy
+category: mcp
+description: MCP server for duplicate canonicalization tests.
+repoUrl: https://token@github.com/acme/userinfo-dedupe
+---
+`,
+    });
+
+    expect(candidate.urls).toContain("https://github.com/acme/userinfo-dedupe");
+    expect(findContentDuplicateMatch(candidate, [existing])).toMatchObject({
+      reasons: expect.arrayContaining([
+        expect.stringContaining("same canonical source URL"),
+      ]),
+    });
+  });
+
   it("detects neutral duplicate submissions from canonical source URLs", () => {
     const existing = extractContentDuplicateSignals({
       filePath: "content/tools/ccusage.mdx",

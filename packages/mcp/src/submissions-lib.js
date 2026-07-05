@@ -805,6 +805,8 @@ function normalizeSubmissionUrlForMatch(value) {
     return "";
   }
   url.protocol = url.protocol.toLowerCase();
+  url.username = "";
+  url.password = "";
   url.hostname = url.hostname.toLowerCase().replace(/^www\./, "");
   url.hash = "";
   const droppedKeys = [];

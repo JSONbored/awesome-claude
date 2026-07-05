@@ -185,6 +185,8 @@ function normalizeUrl(value: unknown) {
   try {
     const parsed = new URL(raw);
     if (!["http:", "https:"].includes(parsed.protocol)) return "";
+    parsed.username = "";
+    parsed.password = "";
     parsed.protocol = "https:";
     parsed.hostname = normalizeHostname(parsed.hostname);
     parsed.hash = "";

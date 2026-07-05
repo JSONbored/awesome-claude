@@ -88,6 +88,8 @@ export function normalizeUrl(value) {
 
   try {
     const url = new URL(text);
+    url.username = "";
+    url.password = "";
     url.hash = "";
     for (const key of [...url.searchParams.keys()]) {
       if (
