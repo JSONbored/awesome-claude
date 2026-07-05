@@ -61,6 +61,11 @@ describe("compare page interactive ui lib", () => {
           },
         ],
       },
+      actionRowDiverges: false,
+      actionCells: [
+        expect.objectContaining({ entryKey: "skills:alpha" }),
+        expect.objectContaining({ entryKey: "hooks:beta" }),
+      ],
     });
   });
 
@@ -76,13 +81,16 @@ describe("compare page interactive ui lib", () => {
   });
 
   it("highlights diverging next actions in bundled page state", () => {
-    expect(
-      comparePageInteractiveUiState(
-        [entry({ installCommand: "npm i fixture" }), entry({ slug: "other" })],
-        "",
-        [],
-        catalog,
-      ).pageUi.actionRowDiverges,
-    ).toBe(true);
+    const state = comparePageInteractiveUiState(
+      [entry({ installCommand: "npm i fixture" }), entry({ slug: "other" })],
+      "",
+      [],
+      catalog,
+    );
+    expect(state.actionRowDiverges).toBe(true);
+    expect(state.actionCells).toHaveLength(2);
+    expect(state.actionCells[0]).toEqual(
+      expect.objectContaining({ entryKey: "mcp:fixture" }),
+    );
   });
 });

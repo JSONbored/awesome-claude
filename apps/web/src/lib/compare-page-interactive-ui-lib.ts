@@ -1,5 +1,7 @@
 import type { Entry } from "@/types/registry";
 import type { EntryIdentity } from "@/lib/entry-identity";
+import type { ComparePageActionCell } from "@/lib/compare-page-actions-ui-lib";
+import { comparePageActionsInteractiveUiState } from "@/lib/compare-page-actions-interactive-ui-lib";
 import {
   comparePageEmptyInteractiveUiState,
   type ComparePageEmptyUiState,
@@ -12,6 +14,8 @@ import {
 export type ComparePageInteractiveUiState = {
   pageUi: ComparePageUiState;
   emptyUi: ComparePageEmptyUiState;
+  actionRowDiverges: boolean;
+  actionCells: ComparePageActionCell[];
 };
 
 export function comparePageInteractiveUiState(
@@ -20,8 +24,11 @@ export function comparePageInteractiveUiState(
   comparisons: ReadonlyArray<{ slug: string; heading: string; refs: string[] }>,
   catalog: EntryIdentity[],
 ): ComparePageInteractiveUiState {
+  const actions = comparePageActionsInteractiveUiState(items);
   return {
     pageUi: comparePageUiInteractiveUiState(items),
     emptyUi: comparePageEmptyInteractiveUiState(ids, comparisons, catalog),
+    actionRowDiverges: actions.actionRowDiverges,
+    actionCells: actions.actionCells,
   };
 }
