@@ -37,7 +37,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { useCompare } from "@/lib/compare";
-import { browseCompareUiState } from "@/lib/compare-browse-summary";
+import { browseCompareUiState } from "@/lib/compare-browse-ui-lib";
 import { useRecents, type SavedSearch } from "@/lib/recents";
 import { entryByRef } from "@/data/entries";
 import { SavedSearchManager } from "@/components/saved-search-manager";

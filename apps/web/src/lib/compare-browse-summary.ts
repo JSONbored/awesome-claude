@@ -1,6 +1,6 @@
 import type { Entry } from "@/types/registry";
+import { COMPARE_INTERACTIVE_MAX } from "@/lib/compare-interactive-link";
 import { compareSurfaceSummary } from "@/lib/compare-surface-summary-lib";
-import { COMPARE_INTERACTIVE_MAX, compareFullViewSearch } from "@/lib/compare-interactive-link";
 
 export const BROWSE_COMPARE_MIN_ITEMS = 2;
 
@@ -37,21 +37,4 @@ export function browseCompareHintText(items: Entry[]): string | null {
     parts.push("next steps differ");
   }
   return `${parts.join(" · ")} — open compare for details.`;
-}
-
-export function browseCompareUiState(items: Entry[]): {
-  search: { ids: string };
-  selectedCount: number;
-  hint: string | null;
-  overflowHint: string | null;
-} | null {
-  if (!shouldShowBrowseCompareHint(items)) return null;
-  const capped = browseCompareSelectedEntries(items);
-  const search = compareFullViewSearch(capped)!;
-  return {
-    search,
-    selectedCount: capped.length,
-    hint: browseCompareHintText(items),
-    overflowHint: browseCompareOverflowHint(items.length, capped.length),
-  };
 }
