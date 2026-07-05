@@ -7,6 +7,7 @@ import {
   platformFeedSlug,
   SITE_URL,
 } from "./platforms.js";
+import { publicUrlHostname } from "./public-url-lib.js";
 import {
   DEFAULT_REMOTE_MCP_URL,
   normalizeEndpointUrl,
@@ -338,15 +339,7 @@ function entryUpdatedAt(entry) {
 }
 
 function sourceHost(value) {
-  const text = String(value || "").trim();
-  if (!text) return "";
-  try {
-    const url = new URL(text);
-    if (url.username || url.password) return "";
-    return url.hostname.toLowerCase().replace(/^www\./, "");
-  } catch {
-    return "";
-  }
+  return publicUrlHostname(String(value || "").trim());
 }
 
 function entrySourceHosts(entry) {

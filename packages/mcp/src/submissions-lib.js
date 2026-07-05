@@ -11,7 +11,7 @@
 import {
   isPublicGitHubProfileUrl,
   isPublicHttpsUrl,
-} from "../../registry/src/source-url-lib.js";
+} from "./public-url-lib.js";
 
 export const SUBMISSION_SITE_URL = "https://heyclau.de/submit";
 
