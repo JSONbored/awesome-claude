@@ -17,7 +17,7 @@ import {
   resolveCompareEntryActions,
   type CompareAction,
 } from "@/lib/compare-entry-actions";
-import { compareDecisionSummary } from "@/lib/compare-table-decision-rows";
+import { comparePageBannerTexts } from "@/lib/compare-page-summary";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
 import { sameEntry } from "@/lib/entry-identity";
 import { search } from "@/data/search";
@@ -69,7 +69,7 @@ function ComparePage() {
   const [hoverRow, setHoverRow] = React.useState<number | null>(null);
   const [pickerOpen, setPickerOpen] = React.useState(false);
   const actionRowDiverges = compareActionsDiverge(items);
-  const decisionSummary = compareDecisionSummary(items);
+  const bannerTexts = comparePageBannerTexts(items);
 
   const pushIds = (next: Entry[]) => {
     const ids = serializeCompareItems(next);
@@ -147,12 +147,14 @@ function ComparePage() {
           <h1 className="mt-1 h-display-2 text-ink text-balance">
             {items.length} {items.length === 1 ? "resource" : "resources"} side by side
           </h1>
-          {decisionSummary.divergingCount > 0 ? (
-            <p className="mt-2 text-sm text-ink-muted">
-              {decisionSummary.divergingCount} trust signal
-              {decisionSummary.divergingCount === 1 ? "" : "s"} differ across this comparison (
-              {decisionSummary.divergingLabels.join(", ")}).
-            </p>
+          {bannerTexts.length > 0 ? (
+            <div className="mt-2 space-y-1.5">
+              {bannerTexts.map((text) => (
+                <p key={text} className="text-sm text-ink-muted">
+                  {text}
+                </p>
+              ))}
+            </div>
           ) : null}
         </div>
         <div className="flex items-center gap-2">
