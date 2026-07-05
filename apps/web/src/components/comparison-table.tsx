@@ -17,13 +17,13 @@ import {
   displayCompareSignal,
   signalToneClassForDisplay,
 } from "@/lib/compare-table-signals-ui-lib";
-import { COMPARE_TABLE_SURFACE } from "@/lib/compare-table-actions";
-import { compareTablePresentationState } from "@/lib/compare-table-ui-lib";
 import {
-  recordCompareIntentEvent,
-  resolveCompareEntryActions,
+  COMPARE_TABLE_SURFACE,
+  compareTableEntryActions,
   type CompareAction,
-} from "@/lib/compare-entry-actions";
+} from "@/lib/compare-table-actions-ui-lib";
+import { compareTablePresentationState } from "@/lib/compare-table-ui-lib";
+import { recordCompareIntentEvent } from "@/lib/compare-entry-actions";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import type { Entry } from "@/types/registry";
@@ -54,7 +54,7 @@ function CompareSignalCell({
 }
 
 function TableCompareActions({ entry }: { entry: Entry }) {
-  const actions = resolveCompareEntryActions(entry);
+  const actions = compareTableEntryActions(entry);
 
   return (
     <div className="flex flex-wrap gap-1.5">
