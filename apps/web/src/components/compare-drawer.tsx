@@ -21,7 +21,7 @@ import { useCopyPref, useHarnessPref } from "@/lib/dossier-prefs";
 import { COMPARE_DRAWER_SURFACE, compareDrawerActionsDiverge } from "@/lib/compare-drawer-actions";
 import { compareDrawerBannerTexts } from "@/lib/compare-drawer-summary";
 import { compareDrawerEmptyHint } from "@/lib/compare-empty-guidance";
-import { compareFullViewSearch } from "@/lib/compare-interactive-link";
+import { compareDrawerFullViewSearch, compareDrawerShareUrl } from "@/lib/compare-drawer-ui-lib";
 import {
   recordCompareIntentEvent,
   resolveCompareEntryActions,
@@ -317,10 +317,10 @@ function SnippetCell({ entry }: { entry: Entry }) {
 }
 
 export function CompareDrawer() {
-  const { items, open, setOpen, toggle, clear, hydrate, getShareUrl } = useCompare();
+  const { items, open, setOpen, toggle, clear, hydrate } = useCompare();
   const actionRowDiverges = compareDrawerActionsDiverge(items);
   const bannerTexts = compareDrawerBannerTexts(items);
-  const fullViewSearch = compareFullViewSearch(items);
+  const fullViewSearch = compareDrawerFullViewSearch(items);
 
   const onClear = () => {
     const snapshot = items.map((e) => `${e.category}/${e.slug}`).join(",");
@@ -398,7 +398,7 @@ export function CompareDrawer() {
                 </Link>
               ) : null}
               <CopyButton
-                value={getShareUrl()}
+                value={compareDrawerShareUrl(items)}
                 label="Copy compare link"
                 disabled={items.length === 0}
               />
