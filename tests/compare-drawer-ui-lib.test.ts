@@ -5,6 +5,7 @@ import {
   compareDrawerFullViewSearch,
   compareDrawerHeaderBannerTexts,
   compareDrawerShareUrl,
+  compareDrawerUiState,
 } from "@/lib/compare-drawer-ui-lib";
 
 function entry(overrides: Partial<Entry> = {}): Entry {
@@ -83,5 +84,26 @@ describe("compare drawer ui lib", () => {
       "1 trust signal differ across this comparison (Review status).",
       "Next steps differ across this comparison — review install, source, and claim actions per entry.",
     ]);
+  });
+
+  it("bundles drawer presentation state for banners, actions, and full-view links", () => {
+    expect(compareDrawerUiState([])).toEqual({
+      actionRowDiverges: false,
+      bannerTexts: [],
+      fullViewSearch: null,
+    });
+    expect(
+      compareDrawerUiState([
+        entry({ reviewedBy: "maintainer", reviewedAt: "2026-01-02" }),
+        entry({ slug: "other", installCommand: "npm i fixture" }),
+      ]),
+    ).toEqual({
+      actionRowDiverges: true,
+      bannerTexts: [
+        "1 trust signal differ across this comparison (Review status).",
+        "Next steps differ across this comparison — review install, source, and claim actions per entry.",
+      ],
+      fullViewSearch: { ids: "mcp/fixture,mcp/other" },
+    });
   });
 });

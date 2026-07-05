@@ -18,12 +18,11 @@ import { CopyButton } from "./copy-button";
 import { CopySegmented, variantsForEntry } from "./copy-segmented";
 import { EntryBrandMark } from "./entry-brand-mark";
 import { useCopyPref, useHarnessPref } from "@/lib/dossier-prefs";
-import { COMPARE_DRAWER_SURFACE, compareDrawerActionsDiverge } from "@/lib/compare-drawer-actions";
+import { COMPARE_DRAWER_SURFACE } from "@/lib/compare-drawer-actions";
 import {
   compareDrawerEmptyStateHint,
-  compareDrawerFullViewSearch,
-  compareDrawerHeaderBannerTexts,
   compareDrawerShareUrl,
+  compareDrawerUiState,
 } from "@/lib/compare-drawer-ui-lib";
 import {
   recordCompareIntentEvent,
@@ -321,9 +320,7 @@ function SnippetCell({ entry }: { entry: Entry }) {
 
 export function CompareDrawer() {
   const { items, open, setOpen, toggle, clear, hydrate } = useCompare();
-  const actionRowDiverges = compareDrawerActionsDiverge(items);
-  const bannerTexts = compareDrawerHeaderBannerTexts(items);
-  const fullViewSearch = compareDrawerFullViewSearch(items);
+  const { actionRowDiverges, bannerTexts, fullViewSearch } = compareDrawerUiState(items);
 
   const onClear = () => {
     const snapshot = items.map((e) => `${e.category}/${e.slug}`).join(",");
