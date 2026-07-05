@@ -78,6 +78,7 @@ export default defineConfig({
         "apps/web/src/lib/og-fonts.ts",
         "apps/web/src/lib/og-image.ts",
         "apps/web/src/lib/job-admin.ts",
+        "apps/web/src/lib/jobs-utils.ts",
         "apps/web/src/lib/og-render.server.ts",
         "apps/web/src/lib/peek-hotkey.ts",
         "apps/web/src/lib/site.ts",
