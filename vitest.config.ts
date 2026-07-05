@@ -69,6 +69,7 @@ export default defineConfig({
         "apps/web/src/lib/index.ts",
         "apps/web/src/lib/llms.ts",
         "apps/web/src/lib/motion.ts",
+        "apps/web/src/lib/mcp-stats.ts",
         "apps/web/src/lib/og-fonts.ts",
         "apps/web/src/lib/og-image.ts",
         "apps/web/src/lib/og-render.server.ts",
