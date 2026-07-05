@@ -18,6 +18,17 @@ import { CopyButton } from "./copy-button";
 import { CopySegmented, variantsForEntry } from "./copy-segmented";
 import { EntryBrandMark } from "./entry-brand-mark";
 import { useCopyPref, useHarnessPref } from "@/lib/dossier-prefs";
+import {
+  COMPARE_DRAWER_SURFACE,
+  compareDrawerActionSummary,
+  compareDrawerActionsDiverge,
+} from "@/lib/compare-drawer-actions";
+import {
+  recordCompareIntentEvent,
+  resolveCompareEntryActions,
+  type CompareAction,
+} from "@/lib/compare-entry-actions";
+import { trackEvent, entryEventKey } from "@/lib/analytics";
 import type { Entry, Harness } from "@/types/registry";
 import { cn } from "@/lib/utils";
 import { brandIdentityLabel } from "@/lib/brand-icons";
@@ -168,6 +179,102 @@ function CompareSignalCell({ value }: { value: CompareSignalValue }) {
   );
 }
 
+function DrawerCompareActions({ entry }: { entry: Entry }) {
+  const actions = resolveCompareEntryActions(entry);
+
+  return (
+    <div className="flex flex-wrap gap-1.5">
+      {actions.map((action) => (
+        <DrawerActionButton key={action.id} entry={entry} action={action} />
+      ))}
+    </div>
+  );
+}
+
+function DrawerActionButton({ entry, action }: { entry: Entry; action: CompareAction }) {
+  const eventKey = entryEventKey(entry.category, entry.slug);
+
+  if (action.kind === "copy" && action.copyValue) {
+    return (
+      <CopyButton
+        value={action.copyValue}
+        label={action.label}
+        event={action.analyticsEvent}
+        eventData={{ entry: eventKey, surface: COMPARE_DRAWER_SURFACE }}
+        onCopied={() => {
+          if (action.intentType) void recordCompareIntentEvent(action.intentType, entry);
+        }}
+      />
+    );
+  }
+
+  if (action.kind === "link") {
+    if (action.id === "dossier") {
+      return (
+        <Link
+          to="/entry/$category/$slug"
+          params={{ category: entry.category, slug: entry.slug }}
+          onClick={() => {
+            if (action.analyticsEvent) {
+              trackEvent(action.analyticsEvent, {
+                entry: eventKey,
+                surface: COMPARE_DRAWER_SURFACE,
+              });
+            }
+            if (action.intentType) void recordCompareIntentEvent(action.intentType, entry);
+          }}
+          className="inline-flex h-7 items-center rounded-md border border-border bg-surface px-2 text-xs font-medium text-ink hover:bg-surface-2"
+        >
+          {action.label}
+        </Link>
+      );
+    }
+
+    if (action.id === "claim") {
+      return (
+        <Link
+          to="/claim"
+          onClick={() => {
+            if (action.analyticsEvent) {
+              trackEvent(action.analyticsEvent, {
+                entry: eventKey,
+                surface: COMPARE_DRAWER_SURFACE,
+              });
+            }
+          }}
+          className="inline-flex h-7 items-center rounded-md border border-border bg-surface px-2 text-xs font-medium text-ink hover:bg-surface-2"
+        >
+          {action.label}
+        </Link>
+      );
+    }
+
+    if (action.href && action.external) {
+      return (
+        <a
+          href={action.href}
+          target="_blank"
+          rel="noreferrer"
+          onClick={() => {
+            if (action.analyticsEvent) {
+              trackEvent(action.analyticsEvent, {
+                entry: eventKey,
+                surface: COMPARE_DRAWER_SURFACE,
+              });
+            }
+            if (action.intentType) void recordCompareIntentEvent(action.intentType, entry);
+          }}
+          className="inline-flex h-7 items-center rounded-md border border-border bg-surface px-2 text-xs font-medium text-ink hover:bg-surface-2"
+        >
+          {action.label}
+        </a>
+      );
+    }
+  }
+
+  return null;
+}
+
 /** Per-entry snippet cell that honors the global copy variant + harness pref. */
 function SnippetCell({ entry }: { entry: Entry }) {
   const harnessAvailable = React.useMemo<Harness[]>(
@@ -212,6 +319,8 @@ function SnippetCell({ entry }: { entry: Entry }) {
 
 export function CompareDrawer() {
   const { items, open, setOpen, toggle, clear, hydrate, getShareUrl } = useCompare();
+  const actionRowDiverges = compareDrawerActionsDiverge(items);
+  const actionSummary = compareDrawerActionSummary(items);
 
   const onClear = () => {
     const snapshot = items.map((e) => `${e.category}/${e.slug}`).join(",");
@@ -245,6 +354,12 @@ export function CompareDrawer() {
             <SheetDescription className="sr-only">
               Side-by-side comparison of the selected resources.
             </SheetDescription>
+            {actionSummary.diverges ? (
+              <p className="w-full text-xs text-amber-800">
+                Next steps differ across this comparison — review install, source, and claim actions
+                per entry.
+              </p>
+            ) : null}
             <div className="flex flex-wrap items-center gap-2">
               {items.length > 0 && (
                 <div className="hidden items-center gap-1.5 sm:flex">
@@ -349,6 +464,38 @@ export function CompareDrawer() {
                   </tr>
                 </thead>
                 <tbody>
+                  <tr
+                    className={cn(
+                      "transition-colors duration-200 ease-out",
+                      actionRowDiverges ? "bg-amber-500/5" : "bg-surface-2/30",
+                    )}
+                  >
+                    <th
+                      scope="row"
+                      className={cn(
+                        "sticky left-0 z-10 w-[140px] border-b border-r border-border bg-inherit p-3 text-left align-top text-xs font-medium text-ink-muted",
+                        actionRowDiverges && "text-amber-800",
+                      )}
+                    >
+                      Next steps
+                      {actionRowDiverges ? (
+                        <span className="mt-0.5 block text-[10px] font-normal uppercase tracking-wide text-amber-700">
+                          Differs
+                        </span>
+                      ) : null}
+                    </th>
+                    {items.map((e) => (
+                      <td
+                        key={`actions-${e.category}/${e.slug}`}
+                        className={cn(
+                          "min-w-[260px] max-w-[320px] border-b border-r border-border p-3 align-top last:border-r-0",
+                          actionRowDiverges && "bg-amber-500/5",
+                        )}
+                      >
+                        <DrawerCompareActions entry={e} />
+                      </td>
+                    ))}
+                  </tr>
                   {ROWS.map((row, i) => {
                     const rowDiverges = row.diverges?.(items) ?? false;
                     return (
