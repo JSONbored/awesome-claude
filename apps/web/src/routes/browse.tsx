@@ -37,6 +37,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { useCompare } from "@/lib/compare";
+import { browseCompareHintText } from "@/lib/compare-browse-summary";
 import { useRecents, type SavedSearch } from "@/lib/recents";
 import { entryByRef } from "@/data/entries";
 import { SavedSearchManager } from "@/components/saved-search-manager";
@@ -312,6 +313,8 @@ function Browse() {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [compareSig]);
+
+  const compareHint = useMemo(() => browseCompareHintText(compare.items), [compare.items]);
 
   const activeCount =
     Number(!!sp.q) +
@@ -634,13 +637,22 @@ function Browse() {
                   )}
                 </span>
                 {compare.items.length >= 2 && (
-                  <Link
-                    to="/compare"
-                    search={{ ids: compare.items.map((e) => `${e.category}/${e.slug}`).join(",") }}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-accent bg-accent/10 px-2.5 py-1 text-[11px] font-medium text-ink hover:bg-accent/15"
-                  >
-                    <span className="font-mono">{compare.items.length}</span> selected · Compare →
-                  </Link>
+                  <div className="inline-flex flex-col items-end gap-1">
+                    {compareHint ? (
+                      <span className="max-w-xs text-right text-[11px] text-ink-muted">
+                        {compareHint}
+                      </span>
+                    ) : null}
+                    <Link
+                      to="/compare"
+                      search={{
+                        ids: compare.items.map((e) => `${e.category}/${e.slug}`).join(","),
+                      }}
+                      className="inline-flex items-center gap-1.5 rounded-full border border-accent bg-accent/10 px-2.5 py-1 text-[11px] font-medium text-ink hover:bg-accent/15"
+                    >
+                      <span className="font-mono">{compare.items.length}</span> selected · Compare →
+                    </Link>
+                  </div>
                 )}
               </div>
               <div className="flex items-center gap-2">
