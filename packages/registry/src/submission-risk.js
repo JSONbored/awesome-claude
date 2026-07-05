@@ -5,7 +5,12 @@ import {
   TOOLS_LISTING_FLOW_URL,
 } from "./submission-classification.js";
 import { parseSafeFrontmatter } from "./frontmatter.js";
-import { isPublicHttpsUrl, publicUrlHostname } from "./source-url-lib.js";
+import {
+  isPublicGitHubProfileUrl,
+  isPublicHttpUrl,
+  isPublicHttpsUrl,
+  publicUrlHostname,
+} from "./source-url-lib.js";
 
 export const SUBMISSION_RISK_SCHEMA_VERSION = 1;
 export const SUBMISSION_RISK_COMMENT_MARKER = "<!-- submission-risk-report -->";
@@ -94,8 +99,7 @@ function isLoopbackHttpUrl(value) {
     const url = new URL(value.trim());
     return (
       url.protocol === "http:" &&
-      url.username === "" &&
-      url.password === "" &&
+      isPublicHttpUrl(value) &&
       LOOPBACK_HTTP_HOSTNAMES.has(url.hostname)
     );
   } catch {
@@ -288,12 +292,7 @@ function hostname(value) {
 function githubRepoFromUrl(value) {
   try {
     const url = new URL(normalizeText(value));
-    if (
-      url.protocol !== "https:" ||
-      url.hostname !== "github.com" ||
-      url.username ||
-      url.password
-    ) {
+    if (!isPublicHttpsUrl(value) || url.hostname !== "github.com") {
       return "";
     }
     const [owner, repo] = url.pathname.split("/").filter(Boolean);
@@ -304,16 +303,11 @@ function githubRepoFromUrl(value) {
 }
 
 function githubLoginFromUrl(value) {
+  if (!isPublicGitHubProfileUrl(value)) {
+    return "";
+  }
   try {
     const url = new URL(normalizeText(value));
-    if (
-      url.protocol !== "https:" ||
-      url.hostname !== "github.com" ||
-      url.username ||
-      url.password
-    ) {
-      return "";
-    }
     const [login] = url.pathname.split("/").filter(Boolean);
     return login || "";
   } catch {

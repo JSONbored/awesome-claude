@@ -10,6 +10,8 @@
  * existing imports stay unchanged.
  */
 
+import { hasEmbeddedUrlUserinfo, isPublicHttpsUrl } from "./source-url-lib.js";
+
 export const MCP_INSTALL_TARGET_IDS = [
   "claude-code",
   "codex",
@@ -64,8 +66,8 @@ function isLoopbackHostname(hostname) {
 function isSafeRemoteMcpUrl(value) {
   try {
     const url = new URL(String(value).trim());
-    if (url.username || url.password) return false;
-    if (url.protocol === "https:") return true;
+    if (hasEmbeddedUrlUserinfo(value)) return false;
+    if (isPublicHttpsUrl(value)) return true;
     return url.protocol === "http:" && isLoopbackHostname(url.hostname);
   } catch {
     return false;

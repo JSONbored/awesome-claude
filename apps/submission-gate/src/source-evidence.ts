@@ -1,5 +1,6 @@
 import { LABELS } from "./constants";
 import { parseSimpleFrontmatter } from "./duplicates";
+import { hasEmbeddedUrlUserinfo } from "../../../packages/registry/src/source-url-lib.js";
 import type { GateDecision, GateDecisionEvidence } from "./review";
 
 export type SubmittedSourceUrl = {
@@ -232,7 +233,7 @@ function validateFetchableSourceUrl(url: string) {
       error: "Source URL must use http or https.",
     };
   }
-  if (parsed.username || parsed.password) {
+  if (hasEmbeddedUrlUserinfo(parsed.href)) {
     return {
       ok: false as const,
       outcome: "invalid_url",

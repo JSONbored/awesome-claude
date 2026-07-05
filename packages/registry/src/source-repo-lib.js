@@ -9,6 +9,8 @@
  * re-exports everything below so existing imports stay unchanged.
  */
 
+import { hasEmbeddedUrlUserinfo } from "./source-url-lib.js";
+
 const GITHUB_HOST = "github.com";
 
 // GitHub usernames/orgs: alphanumeric with single internal hyphens.
@@ -90,7 +92,7 @@ export function parseGitHubRepoUrl(value) {
     if (!ownerRepo) return null;
     if (
       (url.protocol === "http:" || url.protocol === "https:") &&
-      (url.username || url.password)
+      hasEmbeddedUrlUserinfo(raw)
     ) {
       return null;
     }
