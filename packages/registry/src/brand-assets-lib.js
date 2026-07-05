@@ -286,6 +286,7 @@ export function isAllowedBrandAssetUrl(value) {
   try {
     const parsed = new URL(raw);
     if (parsed.protocol !== "https:") return false;
+    if (parsed.username || parsed.password) return false;
     const host = parsed.hostname.toLowerCase();
     return (
       host === "cdn.brandfetch.io" ||
