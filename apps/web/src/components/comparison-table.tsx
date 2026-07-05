@@ -22,7 +22,7 @@ import {
   compareTableActionsForEntry,
   compareTableActionsInteractiveUiState,
 } from "@/lib/compare-table-actions-interactive-ui-lib";
-import { compareTableInteractiveUiState } from "@/lib/compare-table-interactive-ui-lib";
+import { compareTableSignalsInteractiveUiState } from "@/lib/compare-table-signals-interactive-ui-lib";
 import { recordCompareIntentEvent } from "@/lib/compare-entry-actions";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
@@ -298,7 +298,7 @@ export function ComparisonTable({
   entries: Entry[];
   showNextActions?: boolean;
 }) {
-  const { divergingDecisionLabels } = compareTableInteractiveUiState(entries, showNextActions);
+  const { divergingDecisionLabels } = compareTableSignalsInteractiveUiState(entries);
   const tableActionsUi = compareTableActionsInteractiveUiState(entries, showNextActions);
   const { renderNextActions, actionRowDiverges } = tableActionsUi;
 
