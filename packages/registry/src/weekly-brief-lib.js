@@ -41,6 +41,7 @@ export function httpUrl(value) {
   if (!normalized) return "";
   try {
     const url = new URL(normalized);
+    if (url.username || url.password) return "";
     return url.protocol === "https:" || url.protocol === "http:"
       ? url.href
       : "";

@@ -98,6 +98,11 @@ describe("url and date helpers", () => {
     expect(httpUrl("")).toBe("");
   });
 
+  it("rejects http(s) urls with embedded userinfo credentials", () => {
+    expect(httpUrl("https://token@github.com/owner/repo")).toBe("");
+    expect(httpUrl("http://user:pass@127.0.0.1/docs")).toBe("");
+  });
+
   it("normalizes site bases and entry urls", () => {
     expect(siteUrlBase("https://example.com/")).toBe("https://example.com");
     expect(siteUrlBase("bad")).toBe(SITE_URL);
