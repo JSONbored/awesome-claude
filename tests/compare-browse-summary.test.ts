@@ -3,6 +3,7 @@ import type { Entry } from "@/types/registry";
 import {
   BROWSE_COMPARE_MIN_ITEMS,
   browseCompareHintText,
+  browseCompareOpenSearch,
   browseCompareSummary,
   shouldShowBrowseCompareHint,
 } from "@/lib/compare-browse-summary";
@@ -110,5 +111,24 @@ describe("compare browse summary", () => {
     ).toBe(
       "1 trust signal differ · next steps differ — open compare for details.",
     );
+  });
+
+  it("builds interactive compare search params for browse selections", () => {
+    expect(browseCompareOpenSearch([entry()])).toBeNull();
+    expect(
+      browseCompareOpenSearch([
+        entry({ category: "skills", slug: "alpha" }),
+        entry({ category: "hooks", slug: "beta" }),
+      ]),
+    ).toEqual({ ids: "skills/alpha,hooks/beta" });
+    expect(
+      browseCompareOpenSearch([
+        entry({ slug: "one" }),
+        entry({ slug: "two" }),
+        entry({ slug: "three" }),
+        entry({ slug: "four" }),
+        entry({ slug: "five" }),
+      ]),
+    ).toEqual({ ids: "mcp/one,mcp/two,mcp/three,mcp/four" });
   });
 });
