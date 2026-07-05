@@ -12,11 +12,11 @@ import { COMPARISON_ROWS as ROWS } from "@/components/comparison-table";
 import { useCompare } from "@/lib/compare";
 import { resolveCompareParam, serializeCompareItems } from "@/lib/compare-selection";
 import { recordCompareIntentEvent } from "@/lib/compare-entry-actions";
+import { COMPARE_PAGE_SURFACE, type CompareAction } from "@/lib/compare-page-actions-ui-lib";
 import {
-  COMPARE_PAGE_SURFACE,
-  comparePageEntryActions,
-  type CompareAction,
-} from "@/lib/compare-page-actions-ui-lib";
+  comparePageActionsForEntry,
+  comparePageActionsInteractiveUiState,
+} from "@/lib/compare-page-actions-interactive-ui-lib";
 import { comparePageInteractiveUiState } from "@/lib/compare-page-interactive-ui-lib";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
 import { sameEntry } from "@/lib/entry-identity";
@@ -72,6 +72,7 @@ function ComparePage() {
     () => comparePageInteractiveUiState(items, sp.ids, COMPARISONS, ENTRIES),
     [items, sp.ids],
   );
+  const pageActionsUi = React.useMemo(() => comparePageActionsInteractiveUiState(items), [items]);
   const pageUi = interactiveUi.pageUi;
   const emptyUi = interactiveUi.emptyUi;
 
@@ -251,18 +252,18 @@ function ComparePage() {
             <tr
               className={cn(
                 "transition-colors duration-200 ease-out",
-                pageUi.actionRowDiverges ? "bg-amber-500/5" : "bg-surface-2/30",
+                pageActionsUi.actionRowDiverges ? "bg-amber-500/5" : "bg-surface-2/30",
               )}
             >
               <th
                 scope="row"
                 className={cn(
                   "sticky left-0 z-10 w-[150px] border-b border-r border-border bg-inherit p-3 text-left align-top text-xs font-medium text-ink-muted",
-                  pageUi.actionRowDiverges && "text-amber-800",
+                  pageActionsUi.actionRowDiverges && "text-amber-800",
                 )}
               >
                 Next steps
-                {pageUi.actionRowDiverges ? (
+                {pageActionsUi.actionRowDiverges ? (
                   <span className="mt-0.5 block text-[10px] font-normal uppercase tracking-wide text-amber-700">
                     Differs
                   </span>
@@ -273,10 +274,10 @@ function ComparePage() {
                   key={`actions-${e.category}/${e.slug}`}
                   className={cn(
                     "min-w-[260px] max-w-[320px] border-b border-r border-border p-3 align-top",
-                    pageUi.actionRowDiverges && "bg-amber-500/5",
+                    pageActionsUi.actionRowDiverges && "bg-amber-500/5",
                   )}
                 >
-                  <CompareNextActions entry={e} />
+                  <CompareNextActions entry={e} actionCells={pageActionsUi.actionCells} />
                 </td>
               ))}
               {items.length < 4 && (
@@ -347,8 +348,14 @@ function ComparePage() {
   );
 }
 
-function CompareNextActions({ entry }: { entry: Entry }) {
-  const actions = comparePageEntryActions(entry);
+function CompareNextActions({
+  entry,
+  actionCells,
+}: {
+  entry: Entry;
+  actionCells: ReturnType<typeof comparePageActionsInteractiveUiState>["actionCells"];
+}) {
+  const actions = comparePageActionsForEntry(entry, actionCells);
 
   return (
     <div className="flex flex-wrap gap-1.5">
