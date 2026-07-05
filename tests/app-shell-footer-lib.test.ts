@@ -13,7 +13,9 @@ describe("app-shell-footer-lib", () => {
       "api-mcp",
       "community",
     ]);
-    const contribution = SHELL_FOOTER_COLUMNS.find((column) => column.id === "contribution");
+    const contribution = SHELL_FOOTER_COLUMNS.find(
+      (column) => column.id === "contribution",
+    );
     expect(contribution?.links.map((link) => link.to)).toEqual([
       "/submit",
       "/claim",
