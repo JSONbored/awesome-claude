@@ -40,7 +40,7 @@ import { CopyButton } from "@/components/copy-button";
 import { ResourceCard } from "@/components/resource-card";
 import { ComparisonTable } from "@/components/comparison-table";
 import { compareEntryFeaturedUiState } from "@/lib/compare-entry-featured-ui-lib";
-import { compareDossierUiState } from "@/lib/compare-dossier-ui-lib";
+import { compareDossierInteractiveUiState } from "@/lib/compare-dossier-interactive-ui-lib";
 import { buildEntryJsonLd } from "@heyclaude/registry";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl, clampDescription } from "@/lib/seo";
@@ -224,7 +224,7 @@ function Dossier() {
     return pool.slice(0, 3);
   }, [relGroups, rel]);
   const dossierCompareUi = useMemo(
-    () => compareDossierUiState(entry, alternatives),
+    () => compareDossierInteractiveUiState(entry, alternatives),
     [entry, alternatives],
   );
   // Deterministic "how do I use this" next-step links — guides sharing a tag,
