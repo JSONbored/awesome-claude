@@ -7,8 +7,14 @@
 export {
   canonicalizeSourceUrl,
   hasAffiliateParam,
+  hasEmbeddedUrlUserinfo,
   isAffiliateParam,
+  isPublicGitHubHostUrl,
+  isPublicGitHubProfileUrl,
+  isPublicHttpUrl,
   isPublicHttpsUrl,
   isTrackingParam,
+  publicHttpUrlHref,
+  publicUrlHostname,
   stripTrackingParams,
 } from "./source-url-lib.js";

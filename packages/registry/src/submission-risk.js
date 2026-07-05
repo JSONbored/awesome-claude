@@ -5,6 +5,7 @@ import {
   TOOLS_LISTING_FLOW_URL,
 } from "./submission-classification.js";
 import { parseSafeFrontmatter } from "./frontmatter.js";
+import { isPublicHttpsUrl, publicUrlHostname } from "./source-url-lib.js";
 
 export const SUBMISSION_RISK_SCHEMA_VERSION = 1;
 export const SUBMISSION_RISK_COMMENT_MARKER = "<!-- submission-risk-report -->";
@@ -280,27 +281,8 @@ function draftUrl(draft = {}) {
   return normalizeText(draft.html_url || draft.url);
 }
 
-function isHttpsUrl(value) {
-  const text = normalizeText(value);
-  if (!text) return false;
-  try {
-    const url = new URL(text);
-    return (
-      url.protocol === "https:" && url.username === "" && url.password === ""
-    );
-  } catch {
-    return false;
-  }
-}
-
 function hostname(value) {
-  try {
-    const url = new URL(normalizeText(value));
-    if (url.username || url.password) return "";
-    return url.hostname.replace(/^www\./, "");
-  } catch {
-    return "";
-  }
+  return publicUrlHostname(normalizeText(value));
 }
 
 function githubRepoFromUrl(value) {
@@ -869,7 +851,7 @@ function addSourceSignals(report, fields, text) {
   }
 
   for (const url of sourceFields) {
-    if (!isHttpsUrl(url)) {
+    if (!isPublicHttpsUrl(url)) {
       addFlag(
         report,
         "medium",

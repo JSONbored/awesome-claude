@@ -169,6 +169,11 @@ describe("colors and asset urls", () => {
     ).toBe(true);
     expect(isAllowedBrandAssetUrl("https://heyclau.de/logo.png")).toBe(true);
     expect(isAllowedBrandAssetUrl("https://evil.example/icon.png")).toBe(false);
+    expect(
+      isAllowedBrandAssetUrl(
+        "https://token@cdn.brandfetch.io/domain/x/icon.png",
+      ),
+    ).toBe(false);
     expect(isAllowedBrandAssetUrl("not a url")).toBe(false);
   });
 });

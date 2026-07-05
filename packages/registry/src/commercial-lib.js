@@ -10,6 +10,8 @@
  * The public package surface (`commercial.js` / `@heyclaude/registry/commercial`)
  * re-exports everything below so existing imports stay unchanged.
  */
+import { isPublicHttpsUrl } from "./source-url-lib.js";
+
 export const LISTING_LEAD_KINDS = ["job", "tool", "claim"];
 export const COMMERCIAL_TIERS = ["free", "standard", "featured", "sponsored"];
 export const PAID_JOB_TIERS = ["standard", "featured", "sponsored"];
@@ -95,14 +97,7 @@ export function normalizePricingModel(value) {
 function isPublicLeadHttpsUrl(value) {
   const text = String(value || "").trim();
   if (!text) return false;
-  try {
-    const url = new URL(text);
-    return (
-      url.protocol === "https:" && url.username === "" && url.password === ""
-    );
-  } catch {
-    return false;
-  }
+  return isPublicHttpsUrl(text);
 }
 
 export function validateListingLeadPayload(payload = {}) {

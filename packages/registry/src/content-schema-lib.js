@@ -9,6 +9,7 @@
  * re-exports everything below so existing imports stay unchanged.
  */
 import categorySpec from "./category-spec.json" with { type: "json" };
+import { isPublicHttpUrl, isPublicHttpsUrl } from "./source-url-lib.js";
 import {
   BRAND_ASSET_SOURCES,
   isAllowedBrandAssetUrl,
@@ -150,34 +151,6 @@ function keywordKey(value) {
     .replace(/[^a-z0-9+#.]+/g, "-")
     .replace(/^-+|-+$/g, "")
     .replace(/-{2,}/g, "-");
-}
-
-function isHttpsUrl(value) {
-  const normalized = String(value || "").trim();
-  if (!normalized) return true;
-  try {
-    const url = new URL(normalized);
-    return (
-      url.protocol === "https:" && url.username === "" && url.password === ""
-    );
-  } catch {
-    return false;
-  }
-}
-
-function isHttpUrl(value) {
-  const normalized = String(value || "").trim();
-  if (!normalized) return true;
-  try {
-    const url = new URL(normalized);
-    return (
-      (url.protocol === "https:" || url.protocol === "http:") &&
-      url.username === "" &&
-      url.password === ""
-    );
-  } catch {
-    return false;
-  }
 }
 
 function isIsoDateOrDateTime(value) {
@@ -833,14 +806,14 @@ export function validateEntry(category, data, inferred = {}) {
     "repositoryUrl",
     "websiteUrl",
   ]) {
-    if (!isHttpUrl(merged[field])) {
+    if (!isPublicHttpUrl(merged[field])) {
       semanticErrors.push(`${field} must use http or https`);
     }
   }
 
   if (Array.isArray(merged.sourceUrls)) {
     for (const sourceUrl of merged.sourceUrls) {
-      if (!isHttpUrl(sourceUrl)) {
+      if (!isPublicHttpUrl(sourceUrl)) {
         semanticErrors.push("sourceUrls must use http or https");
         break;
       }
@@ -849,7 +822,7 @@ export function validateEntry(category, data, inferred = {}) {
 
   if (Array.isArray(merged.retrievalSources)) {
     for (const retrievalSource of merged.retrievalSources) {
-      if (!isHttpsUrl(retrievalSource)) {
+      if (!isPublicHttpsUrl(retrievalSource)) {
         semanticErrors.push("retrievalSources must use https URLs");
         break;
       }
@@ -862,7 +835,7 @@ export function validateEntry(category, data, inferred = {}) {
     "importPrUrl",
     "claimedByUrl",
   ]) {
-    if (!isHttpsUrl(merged[field])) {
+    if (!isPublicHttpsUrl(merged[field])) {
       semanticErrors.push(`${field} must use https`);
     }
   }
@@ -936,10 +909,10 @@ export function validateEntry(category, data, inferred = {}) {
       .trim()
       .toLowerCase();
 
-    if (websiteUrl && !isHttpsUrl(websiteUrl)) {
+    if (websiteUrl && !isPublicHttpsUrl(websiteUrl)) {
       semanticErrors.push("websiteUrl must use https");
     }
-    if (affiliateUrl && !isHttpsUrl(affiliateUrl)) {
+    if (affiliateUrl && !isPublicHttpsUrl(affiliateUrl)) {
       semanticErrors.push("affiliateUrl must use https");
     }
     if (

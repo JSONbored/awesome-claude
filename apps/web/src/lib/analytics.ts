@@ -26,7 +26,9 @@ export function entryEventKey(category: string, slug: string): string {
 /** Hostname of an outbound URL, for grouping source clicks (no full URL / PII). */
 export function outboundHost(url: string): string {
   try {
-    return new URL(url).hostname.replace(/^www\./, "");
+    const parsed = new URL(url);
+    if (parsed.username || parsed.password) return "unknown";
+    return parsed.hostname.replace(/^www\./, "");
   } catch {
     return "unknown";
   }

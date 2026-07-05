@@ -10,7 +10,12 @@
  */
 import categorySpec from "./category-spec.json" with { type: "json" };
 import { normalizeBrandDomain } from "./brand-assets.js";
-import { hasAffiliateParam, isPublicHttpsUrl } from "./source-url.js";
+import {
+  hasAffiliateParam,
+  isPublicGitHubProfileUrl,
+  isPublicHttpsUrl,
+  publicUrlHostname,
+} from "./source-url.js";
 import {
   looksLikeToolAppListing,
   missingToolListingReviewFields,
@@ -634,21 +639,15 @@ function urlPathname(value) {
 }
 
 function urlHostname(value) {
-  const normalized = normalizeValue(value);
-  if (!normalized) return "";
-  try {
-    return new URL(normalized).hostname.replace(/^www\./, "").toLowerCase();
-  } catch {
-    return "";
-  }
+  return publicUrlHostname(normalizeValue(value));
 }
 
 function isGitHubSourcePath(value) {
   const normalized = normalizeValue(value);
-  if (!normalized) return false;
+  if (!normalized || !isPublicHttpsUrl(normalized)) return false;
   try {
     const url = new URL(normalized);
-    if (url.protocol !== "https:" || url.hostname !== "github.com") {
+    if (url.hostname !== "github.com") {
       return false;
     }
     const [, , pathType] = url.pathname.split("/").filter(Boolean);
@@ -700,18 +699,7 @@ function isValidPublicContact(value) {
   const normalized = normalizeValue(value);
   if (!normalized) return true;
   if (/^https?:\/\//i.test(normalized)) {
-    try {
-      const url = new URL(normalized);
-      return (
-        url.protocol === "https:" &&
-        url.username === "" &&
-        url.password === "" &&
-        url.hostname === "github.com" &&
-        url.pathname.split("/").filter(Boolean).length === 1
-      );
-    } catch {
-      return false;
-    }
+    return isPublicGitHubProfileUrl(normalized);
   }
   if (normalized.includes("@")) {
     const parts = normalized.split("@");

@@ -10,6 +10,7 @@
  * re-exports everything below so existing imports stay unchanged.
  */
 import { generatedAtForEntries, SITE_URL, truncateText } from "./artifacts.js";
+import { publicHttpUrlHref } from "./source-url-lib.js";
 
 export const WEEKLY_BRIEF_SCHEMA_VERSION = 1;
 
@@ -37,17 +38,7 @@ export function keyFor(entry) {
 }
 
 export function httpUrl(value) {
-  const normalized = text(value);
-  if (!normalized) return "";
-  try {
-    const url = new URL(normalized);
-    if (url.username || url.password) return "";
-    return url.protocol === "https:" || url.protocol === "http:"
-      ? url.href
-      : "";
-  } catch {
-    return "";
-  }
+  return publicHttpUrlHref(value);
 }
 
 export function siteUrlBase(siteUrl) {

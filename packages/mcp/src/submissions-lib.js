@@ -8,6 +8,11 @@
  * The public surface (`submissions.js`) re-exports everything below so
  * existing MCP imports stay unchanged.
  */
+import {
+  isPublicGitHubProfileUrl,
+  isPublicHttpsUrl,
+} from "../../registry/src/source-url-lib.js";
+
 export const SUBMISSION_SITE_URL = "https://heyclau.de/submit";
 
 function normalizeText(value) {
@@ -75,16 +80,7 @@ function isCanonicalDomain(value) {
 }
 
 function isHttpsUrl(value) {
-  const trimmed = normalizeText(value);
-  if (!trimmed) return true;
-  try {
-    const url = new URL(trimmed);
-    return (
-      url.protocol === "https:" && url.username === "" && url.password === ""
-    );
-  } catch {
-    return false;
-  }
+  return isPublicHttpsUrl(normalizeText(value));
 }
 
 const TRACKING_QUERY_KEYS = new Set([
@@ -123,18 +119,7 @@ function isPublicContact(value) {
   const contact = normalizeText(value);
   if (!contact) return true;
   if (/^https?:\/\//i.test(contact)) {
-    try {
-      const url = new URL(contact);
-      return (
-        url.protocol === "https:" &&
-        url.username === "" &&
-        url.password === "" &&
-        url.hostname === "github.com" &&
-        url.pathname.split("/").filter(Boolean).length === 1
-      );
-    } catch {
-      return false;
-    }
+    return isPublicGitHubProfileUrl(contact);
   }
   if (isEmailLike(contact)) return true;
   if (isGitHubHandle(contact)) return true;

@@ -341,7 +341,9 @@ function sourceHost(value) {
   const text = String(value || "").trim();
   if (!text) return "";
   try {
-    return new URL(text).hostname.toLowerCase().replace(/^www\./, "");
+    const url = new URL(text);
+    if (url.username || url.password) return "";
+    return url.hostname.toLowerCase().replace(/^www\./, "");
   } catch {
     return "";
   }

@@ -23,26 +23,6 @@ const AFFILIATE_PARAMS = new Set([
   "via",
 ]);
 
-/**
- * Return true when a URL uses HTTPS without embedded userinfo credentials.
- * Empty values are treated as valid so optional submission fields stay optional.
- *
- * @param {unknown} value
- * @returns {boolean}
- */
-export function isPublicHttpsUrl(value) {
-  const text = String(value ?? "").trim();
-  if (!text) return true;
-  try {
-    const url = new URL(text);
-    return (
-      url.protocol === "https:" && url.username === "" && url.password === ""
-    );
-  } catch {
-    return false;
-  }
-}
-
 const ANALYTICS_PARAMS = new Set([
   "_hsenc",
   "_hsmi",
@@ -60,6 +40,121 @@ const ANALYTICS_PARAMS = new Set([
   "twclid",
   "yclid",
 ]);
+
+function parseUrl(value) {
+  const text = String(value ?? "").trim();
+  if (!text) return null;
+  try {
+    return new URL(text);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Return true when a URL embeds credentials in the userinfo component.
+ *
+ * @param {unknown} value
+ * @returns {boolean}
+ */
+export function hasEmbeddedUrlUserinfo(value) {
+  const url = parseUrl(value);
+  if (!url) return false;
+  return Boolean(url.username || url.password);
+}
+
+/**
+ * Return true when a URL uses HTTPS without embedded userinfo credentials.
+ * Empty values are treated as valid so optional submission fields stay optional.
+ *
+ * @param {unknown} value
+ * @returns {boolean}
+ */
+export function isPublicHttpsUrl(value) {
+  const text = String(value ?? "").trim();
+  if (!text) return true;
+  const url = parseUrl(value);
+  if (!url) return false;
+  return (
+    url.protocol === "https:" && url.username === "" && url.password === ""
+  );
+}
+
+/**
+ * Return true when a URL uses HTTP or HTTPS without embedded userinfo.
+ * Empty values are treated as valid so optional fields stay optional.
+ *
+ * @param {unknown} value
+ * @returns {boolean}
+ */
+export function isPublicHttpUrl(value) {
+  const text = String(value ?? "").trim();
+  if (!text) return true;
+  const url = parseUrl(value);
+  if (!url) return false;
+  return (
+    (url.protocol === "https:" || url.protocol === "http:") &&
+    url.username === "" &&
+    url.password === ""
+  );
+}
+
+/**
+ * Return the normalized hostname for a URL, or "" when invalid or credential-bearing.
+ *
+ * @param {unknown} value
+ * @returns {string}
+ */
+export function publicUrlHostname(value) {
+  const url = parseUrl(value);
+  if (!url || url.username || url.password) return "";
+  return url.hostname.replace(/^www\./i, "").toLowerCase();
+}
+
+/**
+ * Return the canonical href for a public HTTP(S) URL, or "" when invalid.
+ *
+ * @param {unknown} value
+ * @returns {string}
+ */
+export function publicHttpUrlHref(value) {
+  const text = String(value ?? "").trim();
+  if (!text) return "";
+  const url = parseUrl(value);
+  if (!url || url.username || url.password) return "";
+  if (url.protocol !== "https:" && url.protocol !== "http:") return "";
+  return url.href;
+}
+
+/**
+ * Return true for a single-segment GitHub profile URL without embedded userinfo.
+ *
+ * @param {unknown} value
+ * @returns {boolean}
+ */
+export function isPublicGitHubProfileUrl(value) {
+  const url = parseUrl(value);
+  if (!url) return false;
+  return (
+    url.protocol === "https:" &&
+    url.username === "" &&
+    url.password === "" &&
+    url.hostname === "github.com" &&
+    url.pathname.split("/").filter(Boolean).length === 1
+  );
+}
+
+/**
+ * Return true when a URL resolves to github.com or a *.github.com host.
+ *
+ * @param {unknown} value
+ * @returns {boolean}
+ */
+export function isPublicGitHubHostUrl(value) {
+  const hostname = publicUrlHostname(value);
+  if (!hostname) return false;
+  return hostname === "github.com" || hostname.endsWith(".github.com");
+}
 
 function normalizeParamName(name) {
   return String(name ?? "")

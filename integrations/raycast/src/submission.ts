@@ -44,6 +44,7 @@ export function normalizeDomain(value?: string) {
     const url = new URL(
       trimmed.includes("://") ? trimmed : `https://${trimmed}`,
     );
+    if (url.username || url.password) return "";
     return url.hostname.replace(/^www\./i, "").toLowerCase();
   } catch {
     return trimmed.toLowerCase();

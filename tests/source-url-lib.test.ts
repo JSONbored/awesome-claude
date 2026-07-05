@@ -3,9 +3,15 @@ import { describe, expect, it } from "vitest";
 import {
   canonicalizeSourceUrl,
   hasAffiliateParam,
+  hasEmbeddedUrlUserinfo,
   isAffiliateParam,
+  isPublicGitHubHostUrl,
+  isPublicGitHubProfileUrl,
+  isPublicHttpUrl,
   isPublicHttpsUrl,
   isTrackingParam,
+  publicHttpUrlHref,
+  publicUrlHostname,
   stripTrackingParams,
 } from "../packages/registry/src/source-url-lib.js";
 
@@ -59,6 +65,54 @@ describe("isPublicHttpsUrl", () => {
     expect(
       isPublicHttpsUrl("https://user%40name:pass@github.com/owner/repo"),
     ).toBe(false);
+  });
+});
+
+describe("public URL userinfo helpers", () => {
+  it("detects embedded userinfo across common credential shapes", () => {
+    expect(hasEmbeddedUrlUserinfo("https://token@github.com/owner/repo")).toBe(
+      true,
+    );
+    expect(hasEmbeddedUrlUserinfo("https://user:pass@example.com/docs")).toBe(
+      true,
+    );
+    expect(hasEmbeddedUrlUserinfo("https://github.com/owner/repo")).toBe(false);
+    expect(hasEmbeddedUrlUserinfo("not a url")).toBe(false);
+  });
+
+  it("validates public http and https URLs without userinfo", () => {
+    expect(isPublicHttpUrl("http://example.com/docs")).toBe(true);
+    expect(isPublicHttpUrl("https://example.com/docs")).toBe(true);
+    expect(isPublicHttpUrl("https://token@example.com/docs")).toBe(false);
+    expect(isPublicHttpUrl("ftp://example.com/docs")).toBe(false);
+    expect(isPublicHttpUrl("")).toBe(true);
+  });
+
+  it("extracts hostnames and hrefs only from credential-free URLs", () => {
+    expect(publicUrlHostname("https://www.Example.com/path")).toBe(
+      "example.com",
+    );
+    expect(publicUrlHostname("https://token@example.com/path")).toBe("");
+    expect(publicHttpUrlHref("https://example.com/path")).toBe(
+      "https://example.com/path",
+    );
+    expect(publicHttpUrlHref("https://token@example.com/path")).toBe("");
+    expect(publicHttpUrlHref("ftp://example.com/path")).toBe("");
+  });
+
+  it("validates GitHub profile and host URLs without userinfo", () => {
+    expect(isPublicGitHubProfileUrl("https://github.com/octocat")).toBe(true);
+    expect(isPublicGitHubProfileUrl("https://token@github.com/octocat")).toBe(
+      false,
+    );
+    expect(isPublicGitHubProfileUrl("https://github.com/octocat/repo")).toBe(
+      false,
+    );
+    expect(isPublicGitHubHostUrl("https://github.com/octocat/repo")).toBe(true);
+    expect(isPublicGitHubHostUrl("https://token@github.com/octocat/repo")).toBe(
+      false,
+    );
+    expect(isPublicGitHubHostUrl("https://gist.github.com/octocat")).toBe(true);
   });
 });
 

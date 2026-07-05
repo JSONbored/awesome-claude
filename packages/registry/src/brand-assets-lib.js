@@ -10,6 +10,8 @@
  * `@heyclaude/registry/brand-assets`) re-exports everything below so existing
  * imports stay unchanged.
  */
+import { isPublicHttpsUrl } from "./source-url-lib.js";
+
 export const BRAND_ASSET_SOURCES = [
   "brandfetch",
   "manual",
@@ -285,7 +287,7 @@ export function isAllowedBrandAssetUrl(value) {
 
   try {
     const parsed = new URL(raw);
-    if (parsed.protocol !== "https:") return false;
+    if (!isPublicHttpsUrl(raw)) return false;
     const host = parsed.hostname.toLowerCase();
     return (
       host === "cdn.brandfetch.io" ||

@@ -18,6 +18,11 @@ describe("normalizeDomain", () => {
     expect(normalizeDomain("Example.COM")).toBe("example.com");
   });
 
+  it("rejects URL-form brand domains with embedded userinfo", () => {
+    expect(normalizeDomain("https://token@asana.com")).toBe("");
+    expect(isValidDomain("https://token@asana.com")).toBe(false);
+  });
+
   it("returns an empty string for empty or missing input", () => {
     // The parameter is declared `value?: string`, so a missing/blank value is
     // a supported call shape that normalizes to "".

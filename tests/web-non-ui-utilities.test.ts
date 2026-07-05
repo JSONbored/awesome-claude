@@ -804,6 +804,9 @@ describe("web non-UI utility coverage", () => {
     expect(outboundHost("https://www.example.com/path?q=secret")).toBe(
       "example.com",
     );
+    expect(outboundHost("https://token@example.com/path?q=secret")).toBe(
+      "unknown",
+    );
     expect(outboundHost("not a url")).toBe("unknown");
     vi.stubGlobal("window", {
       location: {
