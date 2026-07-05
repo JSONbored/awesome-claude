@@ -16,7 +16,7 @@ import {
   comparisonDecisionRows,
   displayCompareSignal,
   signalToneClassForDisplay,
-} from "@/lib/compare-table-decision-rows";
+} from "@/lib/compare-table-signals-ui-lib";
 import { COMPARE_TABLE_SURFACE } from "@/lib/compare-table-actions";
 import { compareTablePresentationState } from "@/lib/compare-table-ui-lib";
 import {
