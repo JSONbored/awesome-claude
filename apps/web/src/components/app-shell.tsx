@@ -16,17 +16,12 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet";
 import { CATEGORIES } from "@/types/registry";
-
-const NAV = [
-  { to: "/browse", label: "Browse" },
-  { to: "/trending", label: "Trending" },
-  { to: "/best", label: "Best" },
-  { to: "/tags", label: "Tags" },
-  { to: "/for", label: "Platforms" },
-  { to: "/ecosystem", label: "Ecosystem" },
-  { to: "/jobs", label: "Jobs" },
-  { to: "/quality", label: "Quality" },
-] as const;
+import {
+  SHELL_MOBILE_NAV_SECTIONS,
+  SHELL_PRIMARY_NAV,
+  shellNavItemActive,
+} from "@/lib/app-shell-nav-lib";
+import { footerColumnSpanClass, SHELL_FOOTER_COLUMNS } from "@/lib/app-shell-footer-lib";
 
 export function TopBar() {
   const { theme, toggle } = useTheme();
@@ -57,6 +52,8 @@ export function TopBar() {
           type="button"
           onClick={() => setMobileNavOpen(true)}
           aria-label="Open menu"
+          aria-expanded={mobileNavOpen}
+          aria-controls="mobile-primary-nav"
           className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-surface text-ink-muted hover:text-ink md:hidden"
         >
           <Menu className="h-4 w-4" />
@@ -71,9 +68,9 @@ export function TopBar() {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-1 md:flex">
-          {NAV.map((item) => {
-            const active = pathname.startsWith(item.to);
+        <nav aria-label="Primary" className="hidden items-center gap-1 md:flex">
+          {SHELL_PRIMARY_NAV.map((item) => {
+            const active = shellNavItemActive(pathname, item.to);
             return (
               <Link
                 key={item.to}
@@ -134,28 +131,37 @@ export function TopBar() {
         <SheetContent side="left" className="w-72">
           <SheetHeader>
             <SheetTitle className="font-display text-base font-semibold text-ink">Menu</SheetTitle>
-            <SheetDescription className="sr-only">Primary site navigation links.</SheetDescription>
+            <SheetDescription className="sr-only">
+              Primary site navigation grouped by product area.
+            </SheetDescription>
           </SheetHeader>
-          <nav className="mt-6 flex flex-col gap-1">
-            {NAV.map((item) => {
-              const active = pathname.startsWith(item.to);
-              return (
-                <Link
-                  key={item.to}
-                  to={item.to}
-                  onClick={() => setMobileNavOpen(false)}
-                  aria-current={active ? "page" : undefined}
-                  className={cn(
-                    "rounded-md px-3 py-2 text-sm transition-colors duration-200 ease-out",
-                    active
-                      ? "bg-surface-2 text-ink"
-                      : "text-ink-muted hover:bg-surface-2 hover:text-ink",
-                  )}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
+          <nav id="mobile-primary-nav" aria-label="Primary" className="mt-6 flex flex-col gap-6">
+            {SHELL_MOBILE_NAV_SECTIONS.map((section) => (
+              <div key={section.id}>
+                <div className="eyebrow mb-2">{section.label}</div>
+                <div className="flex flex-col gap-1">
+                  {section.links.map((item) => {
+                    const active = shellNavItemActive(pathname, item.to);
+                    return (
+                      <Link
+                        key={item.to}
+                        to={item.to}
+                        onClick={() => setMobileNavOpen(false)}
+                        aria-current={active ? "page" : undefined}
+                        className={cn(
+                          "rounded-md px-3 py-2 text-sm transition-colors duration-200 ease-out",
+                          active
+                            ? "bg-surface-2 text-ink"
+                            : "text-ink-muted hover:bg-surface-2 hover:text-ink",
+                        )}
+                      >
+                        {item.label}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </nav>
         </SheetContent>
       </Sheet>
@@ -190,46 +196,9 @@ export function Footer() {
             <FeedChip href="/llms.txt" label="llms.txt" />
           </div>
         </div>
-        <FooterCol
-          title="Product"
-          links={[
-            { to: "/browse", label: "Browse" },
-            { to: "/trending", label: "Trending" },
-            { to: "/tags", label: "Tags" },
-            { to: "/for", label: "Platforms" },
-            { to: "/best", label: "Best lists" },
-            { to: "/compare", label: "Compare" },
-            { to: "/quality", label: "Quality" },
-            { to: "/state-of-claude-tooling", label: "State of tooling" },
-            { to: "/changelog", label: "Changelog" },
-            { to: "/brief", label: "Weekly Brief" },
-          ]}
-          span={3}
-        />
-        <FooterCol
-          title="Integrations"
-          links={[
-            { to: "/integrations", label: "All integrations" },
-            { to: "/integrations/mcp-server", label: "MCP server" },
-            { to: "/ecosystem", label: "Ecosystem" },
-            { to: "/api-docs", label: "API docs" },
-            { to: "/feeds", label: "Feeds" },
-            { to: "/subscriptions", label: "Subscriptions" },
-          ]}
-          span={3}
-        />
-        <FooterCol
-          title="Resources"
-          links={[
-            { to: "/submit", label: "Submit a resource" },
-            { to: "/claim", label: "Claim a listing" },
-            { to: "/contributors", label: "Contributors" },
-            { to: "/validators", label: "Review coverage" },
-            { to: "/advertise", label: "Advertise" },
-            { to: "/about", label: "About" },
-          ]}
-          span={3}
-        />
+        {SHELL_FOOTER_COLUMNS.map((column) => (
+          <FooterCol key={column.id} title={column.title} links={column.links} span={column.span} />
+        ))}
       </div>
       <div className="border-t border-border">
         <div className="mx-auto max-w-page px-4 py-4 sm:px-6">
@@ -251,7 +220,7 @@ export function Footer() {
       <div className="border-t border-border">
         <div className="mx-auto flex max-w-page flex-col items-start gap-3 px-4 py-5 text-xs text-ink-subtle sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <span>© {new Date().getFullYear()} HeyClaude · heyclau.de</span>
-          <nav className="flex flex-wrap items-center gap-x-3 gap-y-1">
+          <nav aria-label="Legal" className="flex flex-wrap items-center gap-x-3 gap-y-1">
             <Link to="/legal" className="hover:text-ink">
               Legal
             </Link>
@@ -306,11 +275,10 @@ function FooterCol({
 }: {
   title: string;
   links: { to: string; label: string }[];
-  span?: number;
+  span?: 2 | 3 | 4;
 }) {
-  const spanClass = span === 3 ? "md:col-span-3" : span === 4 ? "md:col-span-4" : "md:col-span-2";
   return (
-    <div className={spanClass}>
+    <div className={footerColumnSpanClass(span)}>
       <div className="eyebrow mb-3">{title}</div>
       <ul className="flex flex-col gap-2">
         {links.map((l) => (
