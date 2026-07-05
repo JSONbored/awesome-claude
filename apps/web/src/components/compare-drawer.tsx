@@ -19,10 +19,7 @@ import { CopySegmented, variantsForEntry } from "./copy-segmented";
 import { EntryBrandMark } from "./entry-brand-mark";
 import { useCopyPref, useHarnessPref } from "@/lib/dossier-prefs";
 import { COMPARE_DRAWER_SURFACE, type CompareAction } from "@/lib/compare-drawer-actions-ui-lib";
-import {
-  compareDrawerActionsForEntry,
-  compareDrawerActionsInteractiveUiState,
-} from "@/lib/compare-drawer-actions-interactive-ui-lib";
+import { compareDrawerActionsForEntry } from "@/lib/compare-drawer-actions-interactive-ui-lib";
 import { compareDrawerInteractiveUiState } from "@/lib/compare-drawer-interactive-ui-lib";
 import { recordCompareIntentEvent } from "@/lib/compare-entry-actions";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
@@ -34,7 +31,6 @@ import {
   compareSignalToneClass,
   type CompareSignalValue,
 } from "@/lib/compare-drawer-signals-ui-lib";
-import { compareDrawerSignalsInteractiveUiState } from "@/lib/compare-drawer-signals-interactive-ui-lib";
 
 interface RowDef {
   label: string;
@@ -179,7 +175,7 @@ function DrawerCompareActions({
   actionCells,
 }: {
   entry: Entry;
-  actionCells: ReturnType<typeof compareDrawerActionsInteractiveUiState>["actionCells"];
+  actionCells: ReturnType<typeof compareDrawerInteractiveUiState>["actionCells"];
 }) {
   const actions = compareDrawerActionsForEntry(entry, actionCells);
 
@@ -320,10 +316,8 @@ function SnippetCell({ entry }: { entry: Entry }) {
 
 export function CompareDrawer() {
   const { items, open, setOpen, toggle, clear, hydrate } = useCompare();
-  const drawerActionsUi = compareDrawerActionsInteractiveUiState(items);
-  const drawerSignalsUi = compareDrawerSignalsInteractiveUiState(items);
-  const { drawerUi, emptyHint, shareUrl } = compareDrawerInteractiveUiState(items);
-  const { actionRowDiverges } = drawerActionsUi;
+  const { drawerUi, emptyHint, shareUrl, divergingDecisionLabels, actionRowDiverges, actionCells } =
+    compareDrawerInteractiveUiState(items);
   const { bannerTexts, fullViewSearch } = drawerUi;
 
   const onClear = () => {
@@ -499,12 +493,12 @@ export function CompareDrawer() {
                           actionRowDiverges && "bg-amber-500/5",
                         )}
                       >
-                        <DrawerCompareActions entry={e} actionCells={drawerActionsUi.actionCells} />
+                        <DrawerCompareActions entry={e} actionCells={actionCells} />
                       </td>
                     ))}
                   </tr>
                   {ROWS.map((row, i) => {
-                    const rowDiverges = drawerSignalsUi.divergingDecisionLabels.has(row.label);
+                    const rowDiverges = divergingDecisionLabels.has(row.label);
                     return (
                       <tr
                         key={row.label}

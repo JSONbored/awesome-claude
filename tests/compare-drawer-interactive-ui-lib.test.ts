@@ -29,6 +29,9 @@ describe("compare drawer interactive ui lib", () => {
       },
       emptyHint: expect.stringContaining("Compare"),
       shareUrl: "/browse",
+      divergingDecisionLabels: new Set(),
+      actionRowDiverges: false,
+      actionCells: [],
     });
   });
 
@@ -43,14 +46,19 @@ describe("compare drawer interactive ui lib", () => {
     expect(state.shareUrl).toBe(
       "/browse?compare=skills%2Falpha%2Chooks%2Fbeta",
     );
+    expect(state.actionCells).toHaveLength(2);
+    expect(state.actionCells[0]).toEqual(
+      expect.objectContaining({ entryKey: "skills:alpha" }),
+    );
   });
 
-  it("highlights diverging next actions in bundled drawer state", () => {
-    expect(
-      compareDrawerInteractiveUiState([
-        entry({ installCommand: "npm i fixture" }),
-        entry({ slug: "other" }),
-      ]).drawerUi.actionRowDiverges,
-    ).toBe(true);
+  it("highlights diverging decision rows and next actions", () => {
+    const state = compareDrawerInteractiveUiState([
+      entry({ reviewedBy: "maintainer", reviewedAt: "2026-01-02" }),
+      entry({ slug: "other", installCommand: "npm i fixture" }),
+    ]);
+    expect(state.divergingDecisionLabels).toEqual(new Set(["Review status"]));
+    expect(state.actionRowDiverges).toBe(true);
+    expect(state.actionCells).toHaveLength(2);
   });
 });
