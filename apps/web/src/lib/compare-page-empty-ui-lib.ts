@@ -3,7 +3,7 @@ import {
   comparePageInvalidUrlHint,
 } from "@/lib/compare-page-ui-lib";
 import type { ComparePagePopularComparisonLink } from "@/lib/compare-page-featured-ui-lib";
-import { comparePageFeaturedInteractiveUiState } from "@/lib/compare-page-featured-interactive-ui-lib";
+import { comparePagePopularComparisonLinks } from "@/lib/compare-page-featured-ui-lib";
 import type { EntryIdentity } from "@/lib/entry-identity";
 
 export type ComparePageEmptyUiState = {
@@ -20,6 +20,6 @@ export function comparePageEmptyUiState(
   return {
     description: comparePageEmptyStateDescription(),
     invalidUrlHint: comparePageInvalidUrlHint(ids, 0),
-    popularComparisonLinks: comparePageFeaturedInteractiveUiState(comparisons, catalog),
+    popularComparisonLinks: comparePagePopularComparisonLinks(comparisons, catalog),
   };
 }
