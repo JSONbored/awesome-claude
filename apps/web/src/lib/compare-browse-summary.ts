@@ -1,5 +1,6 @@
 import type { Entry } from "@/types/registry";
 import { compareCuratedSummary } from "@/lib/compare-curated-summary";
+import { compareFullViewSearch } from "@/lib/compare-interactive-link";
 
 export const BROWSE_COMPARE_MIN_ITEMS = 2;
 
@@ -26,4 +27,9 @@ export function browseCompareHintText(items: Entry[]): string | null {
     parts.push("next steps differ");
   }
   return `${parts.join(" · ")} — open compare for details.`;
+}
+
+export function browseCompareOpenSearch(items: Entry[]): { ids: string } | null {
+  if (!shouldShowBrowseCompareHint(items)) return null;
+  return compareFullViewSearch(items);
 }
