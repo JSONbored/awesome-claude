@@ -5,11 +5,11 @@ import { BEST_LISTS, ENTRIES, type BestList, type BestPick } from "@/data/entrie
 import type { Entry } from "@/types/registry";
 import { ResourceCard } from "@/components/resource-card";
 import { ComparisonTable } from "@/components/comparison-table";
-import { compareBestBannerTexts } from "@/lib/compare-best-summary";
 import {
-  compareInteractiveLinkLabel,
-  compareInteractiveSearch,
-} from "@/lib/compare-interactive-link";
+  compareBestHeaderBannerTexts,
+  compareBestInteractiveLinkLabel,
+  compareBestInteractiveSearch,
+} from "@/lib/compare-best-ui-lib";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { getBestListEditorial } from "@/data/best-list-editorial";
@@ -98,11 +98,11 @@ function BestDetail() {
 
   const compareEntries = useMemo(() => resolved.slice(0, 5).map((p) => p.entry), [resolved]);
   const compareBannerTexts = useMemo(
-    () => compareBestBannerTexts(compareEntries),
+    () => compareBestHeaderBannerTexts(compareEntries),
     [compareEntries],
   );
   const interactiveCompareSearch = useMemo(
-    () => compareInteractiveSearch(compareEntries),
+    () => compareBestInteractiveSearch(compareEntries),
     [compareEntries],
   );
 
@@ -178,7 +178,7 @@ function BestDetail() {
               className="mt-4 inline-flex items-center gap-1.5 text-sm text-ink-muted hover:text-ink"
             >
               <ArrowLeft className="h-4 w-4" />
-              {compareInteractiveLinkLabel(compareEntries.length)}
+              {compareBestInteractiveLinkLabel(compareEntries.length)}
             </Link>
           ) : null}
         </section>
