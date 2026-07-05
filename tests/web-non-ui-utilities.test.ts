@@ -925,6 +925,7 @@ describe("web non-UI utility coverage", () => {
     ).toBe(true);
     expect(contributorSlug(" @Example User! ")).toBe("example-user");
     expect(githubHandle("https://github.com/JSONbored")).toBe("JSONbored");
+    expect(githubHandle("https://token@github.com/victim")).toBeUndefined();
     expect(githubHandle("https://example.com/JSONbored")).toBeUndefined();
     expect(githubHandle("not a url")).toBeUndefined();
 

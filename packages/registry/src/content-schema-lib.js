@@ -170,7 +170,11 @@ function isHttpUrl(value) {
   if (!normalized) return true;
   try {
     const url = new URL(normalized);
-    return url.protocol === "https:" || url.protocol === "http:";
+    return (
+      (url.protocol === "https:" || url.protocol === "http:") &&
+      url.username === "" &&
+      url.password === ""
+    );
   } catch {
     return false;
   }

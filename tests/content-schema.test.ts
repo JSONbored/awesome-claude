@@ -300,6 +300,25 @@ describe("inferStructuredFields", () => {
     expect(result.missingRecommended).not.toContain("downloadUrl");
   });
 
+  it("rejects http and https URLs with embedded userinfo", () => {
+    const result = validateEntry("mcp", {
+      slug: "userinfo-urls",
+      title: "Userinfo URLs",
+      description: "Reject credential-bearing profile and repo URLs.",
+      author: "JSONbored",
+      dateAdded: "2026-01-01",
+      authorProfileUrl: "https://token@github.com/victim",
+      repoUrl: "http://user:pass@example.com/repo",
+    });
+
+    expect(result.semanticErrors).toEqual(
+      expect.arrayContaining([
+        "authorProfileUrl must use http or https",
+        "repoUrl must use http or https",
+      ]),
+    );
+  });
+
   it("orders frontmatter while dropping empty values and appending unknown keys", () => {
     expect(
       orderFrontmatter({

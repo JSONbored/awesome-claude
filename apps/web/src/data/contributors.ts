@@ -8,6 +8,7 @@ export function githubHandle(profileUrl?: string) {
   if (!profileUrl) return undefined;
   try {
     const url = new URL(profileUrl);
+    if (url.username || url.password) return undefined;
     if (url.hostname !== "github.com") return undefined;
     return url.pathname.split("/").filter(Boolean)[0];
   } catch {
