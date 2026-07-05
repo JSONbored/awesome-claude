@@ -11,11 +11,12 @@ import { CopyButton } from "@/components/copy-button";
 import { COMPARISON_ROWS as ROWS } from "@/components/comparison-table";
 import { useCompare } from "@/lib/compare";
 import { resolveCompareParam, serializeCompareItems } from "@/lib/compare-selection";
+import { recordCompareIntentEvent } from "@/lib/compare-entry-actions";
 import {
-  recordCompareIntentEvent,
-  resolveCompareEntryActions,
+  COMPARE_PAGE_SURFACE,
+  comparePageEntryActions,
   type CompareAction,
-} from "@/lib/compare-entry-actions";
+} from "@/lib/compare-page-actions-ui-lib";
 import { comparePageUiState } from "@/lib/compare-page-ui-lib";
 import { comparePageEmptyUiState } from "@/lib/compare-page-empty-ui-lib";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
@@ -347,7 +348,7 @@ function ComparePage() {
 }
 
 function CompareNextActions({ entry }: { entry: Entry }) {
-  const actions = resolveCompareEntryActions(entry);
+  const actions = comparePageEntryActions(entry);
 
   return (
     <div className="flex flex-wrap gap-1.5">
@@ -367,7 +368,7 @@ function CompareActionButton({ entry, action }: { entry: Entry; action: CompareA
         value={action.copyValue}
         label={action.label}
         event={action.analyticsEvent}
-        eventData={{ entry: eventKey, surface: "compare-page" }}
+        eventData={{ entry: eventKey, surface: COMPARE_PAGE_SURFACE }}
         onCopied={() => {
           if (action.intentType) void recordCompareIntentEvent(action.intentType, entry);
         }}
@@ -383,7 +384,7 @@ function CompareActionButton({ entry, action }: { entry: Entry; action: CompareA
           params={{ category: entry.category, slug: entry.slug }}
           onClick={() => {
             if (action.analyticsEvent) {
-              trackEvent(action.analyticsEvent, { entry: eventKey, surface: "compare-page" });
+              trackEvent(action.analyticsEvent, { entry: eventKey, surface: COMPARE_PAGE_SURFACE });
             }
             if (action.intentType) void recordCompareIntentEvent(action.intentType, entry);
           }}
@@ -400,7 +401,7 @@ function CompareActionButton({ entry, action }: { entry: Entry; action: CompareA
           to="/claim"
           onClick={() => {
             if (action.analyticsEvent) {
-              trackEvent(action.analyticsEvent, { entry: eventKey, surface: "compare-page" });
+              trackEvent(action.analyticsEvent, { entry: eventKey, surface: COMPARE_PAGE_SURFACE });
             }
           }}
           className="inline-flex h-7 items-center rounded-md border border-border bg-surface px-2 text-xs font-medium text-ink hover:bg-surface-2"
@@ -418,7 +419,7 @@ function CompareActionButton({ entry, action }: { entry: Entry; action: CompareA
           rel="noreferrer"
           onClick={() => {
             if (action.analyticsEvent) {
-              trackEvent(action.analyticsEvent, { entry: eventKey, surface: "compare-page" });
+              trackEvent(action.analyticsEvent, { entry: eventKey, surface: COMPARE_PAGE_SURFACE });
             }
             if (action.intentType) void recordCompareIntentEvent(action.intentType, entry);
           }}
