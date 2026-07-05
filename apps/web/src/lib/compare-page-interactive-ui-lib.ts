@@ -4,7 +4,10 @@ import {
   comparePageEmptyInteractiveUiState,
   type ComparePageEmptyUiState,
 } from "@/lib/compare-page-empty-interactive-ui-lib";
-import { comparePageUiState, type ComparePageUiState } from "@/lib/compare-page-ui-lib";
+import {
+  comparePageUiInteractiveUiState,
+  type ComparePageUiState,
+} from "@/lib/compare-page-ui-interactive-ui-lib";
 
 export type ComparePageInteractiveUiState = {
   pageUi: ComparePageUiState;
@@ -18,7 +21,7 @@ export function comparePageInteractiveUiState(
   catalog: EntryIdentity[],
 ): ComparePageInteractiveUiState {
   return {
-    pageUi: comparePageUiState(items),
+    pageUi: comparePageUiInteractiveUiState(items),
     emptyUi: comparePageEmptyInteractiveUiState(ids, comparisons, catalog),
   };
 }
