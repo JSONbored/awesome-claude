@@ -1,21 +1,43 @@
+/**
+ * Community signals surface.
+ *
+ * Pure normalization helpers live in `community-signals-lib.ts`. This module
+ * re-exports that surface and keeps async D1 query helpers here so existing
+ * `@/lib/community-signals` imports stay unchanged.
+ */
+export type {
+  CommunitySignalCounts,
+  CommunitySignalTarget,
+  CommunitySignalType,
+  CommunityTargetKind,
+} from "@/lib/community-signals-lib";
+export {
+  COMMUNITY_SIGNAL_TYPES,
+  COMMUNITY_TARGET_KINDS,
+  ZERO_COMMUNITY_SIGNAL_COUNTS,
+  communitySignalTargetId,
+  entryCommunityTarget,
+  getFallbackCommunitySignalCounts,
+  isExpectedUnavailableCommunitySignalError,
+  normalizeCommunityClientId,
+  normalizeCommunitySignalTarget,
+  normalizeCommunitySignalType,
+  normalizeCommunityTargetKey,
+  normalizeCommunityTargetKind,
+} from "@/lib/community-signals-lib";
+
 import { getSiteDb, type D1DatabaseLike } from "@/lib/db";
 import { chunk, targetPairConditions } from "@/lib/d1-batch";
-
-export const COMMUNITY_SIGNAL_TYPES = ["used", "works", "broken"] as const;
-export const COMMUNITY_TARGET_KINDS = ["entry", "tool"] as const;
-export const ZERO_COMMUNITY_SIGNAL_COUNTS = {
-  used: 0,
-  works: 0,
-  broken: 0,
-};
-
-export type CommunitySignalType = (typeof COMMUNITY_SIGNAL_TYPES)[number];
-export type CommunityTargetKind = (typeof COMMUNITY_TARGET_KINDS)[number];
-export type CommunitySignalCounts = Record<CommunitySignalType, number>;
-export type CommunitySignalTarget = {
-  targetKind: CommunityTargetKind;
-  targetKey: string;
-};
+import {
+  COMMUNITY_SIGNAL_TYPES,
+  ZERO_COMMUNITY_SIGNAL_COUNTS,
+  type CommunitySignalTarget,
+  type CommunitySignalType,
+  type CommunityTargetKind,
+  communitySignalTargetId,
+  getFallbackCommunitySignalCounts,
+  isExpectedUnavailableCommunitySignalError,
+} from "@/lib/community-signals-lib";
 
 type SignalRow = {
   target_kind: CommunityTargetKind;
@@ -24,107 +46,19 @@ type SignalRow = {
   count: number;
 };
 
-export function normalizeCommunityTargetKind(
-  value: string | null | undefined,
-): CommunityTargetKind | null {
-  return value && (COMMUNITY_TARGET_KINDS as readonly string[]).includes(value)
-    ? (value as CommunityTargetKind)
-    : null;
-}
-
-export function normalizeCommunitySignalType(
-  value: string | null | undefined,
-): CommunitySignalType | null {
-  return value && (COMMUNITY_SIGNAL_TYPES as readonly string[]).includes(value)
-    ? (value as CommunitySignalType)
-    : null;
-}
-
-export function normalizeCommunityTargetKey(
-  value: string | null | undefined,
-): string | null {
-  const normalized = (value || "").trim().toLowerCase();
-  return /^(entry|tool):[a-z0-9][a-z0-9-]*(\/[a-z0-9][a-z0-9-]*)?$/.test(
-    normalized,
-  )
-    ? normalized
-    : null;
-}
-
-export function normalizeCommunitySignalTarget(
-  targetKindValue: string | null | undefined,
-  targetKeyValue: string | null | undefined,
-): CommunitySignalTarget | null {
-  const targetKind = normalizeCommunityTargetKind(targetKindValue);
-  const targetKey = normalizeCommunityTargetKey(targetKeyValue);
-  if (!targetKind || !targetKey) return null;
-
-  const isEntryTarget =
-    targetKind === "entry" &&
-    /^entry:[a-z0-9][a-z0-9-]*\/[a-z0-9][a-z0-9-]*$/.test(targetKey);
-  const isToolTarget =
-    targetKind === "tool" && /^tool:[a-z0-9][a-z0-9-]*$/.test(targetKey);
-
-  return isEntryTarget || isToolTarget ? { targetKind, targetKey } : null;
-}
-
-export function normalizeCommunityClientId(
-  value: string | null | undefined,
-): string | null {
-  const normalized = (value || "").trim();
-  return /^[a-zA-Z0-9_-]{16,96}$/.test(normalized) ? normalized : null;
-}
-
-export function communitySignalTargetId(target: CommunitySignalTarget) {
-  return target.targetKey;
-}
-
-export function entryCommunityTarget(category: string, slug: string) {
-  return `entry:${category}/${slug}`;
-}
-
-export function getFallbackCommunitySignalCounts(
-  targets: CommunitySignalTarget[],
-) {
-  const counts: Record<string, CommunitySignalCounts> = {};
-  for (const target of targets) {
-    counts[communitySignalTargetId(target)] = {
-      ...ZERO_COMMUNITY_SIGNAL_COUNTS,
-    };
-  }
-  return counts;
-}
-
-export function isExpectedUnavailableCommunitySignalError(error: unknown) {
-  const message = error instanceof Error ? error.message : String(error ?? "");
-  return (
-    message.includes("no such table: community_signals") ||
-    message.includes("SITE_DB")
-  );
-}
-
 export async function queryCommunitySignalCounts(
   db: D1DatabaseLike,
   targets: CommunitySignalTarget[],
 ) {
   const uniqueTargets = [
-    ...new Map(
-      targets.map((target) => [communitySignalTargetId(target), target]),
-    ).values(),
+    ...new Map(targets.map((target) => [communitySignalTargetId(target), target])).values(),
   ];
   const counts = getFallbackCommunitySignalCounts(uniqueTargets);
   if (!uniqueTargets.length) return counts;
 
   for (const batch of chunk(uniqueTargets)) {
-    const where = targetPairConditions(
-      batch.length,
-      "target_kind",
-      "target_key",
-    );
-    const values = batch.flatMap((target) => [
-      target.targetKind,
-      target.targetKey,
-    ]);
+    const where = targetPairConditions(batch.length, "target_kind", "target_key");
+    const values = batch.flatMap((target) => [target.targetKind, target.targetKey]);
     const { results } = await db
       .prepare(
         `SELECT target_kind, target_key, signal_type, COUNT(*) AS count
@@ -146,9 +80,7 @@ export async function queryCommunitySignalCounts(
   return counts;
 }
 
-export async function safeCommunitySignalCounts(
-  targets: CommunitySignalTarget[],
-) {
+export async function safeCommunitySignalCounts(targets: CommunitySignalTarget[]) {
   try {
     const db = getSiteDb();
     if (!db) {
