@@ -1,5 +1,5 @@
 import type { Entry } from "@/types/registry";
-import { compareDrawerEmptyStateHint, compareDrawerShareUrl } from "@/lib/compare-drawer-ui-lib";
+import { compareDrawerEmptyInteractiveUiState } from "@/lib/compare-drawer-empty-interactive-ui-lib";
 import {
   compareDrawerUiInteractiveUiState,
   type CompareDrawerUiState,
@@ -12,9 +12,10 @@ export type CompareDrawerInteractiveUiState = {
 };
 
 export function compareDrawerInteractiveUiState(items: Entry[]): CompareDrawerInteractiveUiState {
+  const emptyUi = compareDrawerEmptyInteractiveUiState(items);
   return {
     drawerUi: compareDrawerUiInteractiveUiState(items),
-    emptyHint: compareDrawerEmptyStateHint(),
-    shareUrl: compareDrawerShareUrl(items),
+    emptyHint: emptyUi.emptyHint,
+    shareUrl: emptyUi.shareUrl,
   };
 }
