@@ -6,6 +6,7 @@ import {
   compareCuratedInteractiveLinkLabel,
   compareCuratedInteractiveSearch,
   compareCuratedResolvedEntries,
+  compareCuratedUiState,
 } from "@/lib/compare-curated-ui-lib";
 
 function entry(overrides: Partial<Entry> = {}): Entry {
@@ -107,5 +108,48 @@ describe("compare curated ui lib", () => {
       "1 trust signal differ across this comparison (Review status).",
       "Next steps differ across entries — open the interactive comparison to copy install commands and source links per resource.",
     ]);
+  });
+
+  it("bundles curated page presentation state for headers and interactive links", () => {
+    expect(
+      compareCuratedUiState(["skills/alpha", "hooks/beta"], catalog),
+    ).toEqual({
+      entries: [catalog[0], catalog[1]],
+      bannerTexts: [],
+      interactiveSearch: { ids: "skills/alpha,hooks/beta" },
+      interactiveLinkLabel: "Open in the interactive comparison tool",
+    });
+    expect(
+      compareCuratedUiState(
+        ["skills/alpha", "hooks/beta"],
+        [
+          catalog[0],
+          entry({
+            category: "hooks",
+            slug: "beta",
+            reviewedBy: "maintainer",
+            reviewedAt: "2026-01-02",
+            installCommand: "npm i fixture",
+          }),
+        ],
+      ),
+    ).toEqual({
+      entries: [
+        catalog[0],
+        entry({
+          category: "hooks",
+          slug: "beta",
+          reviewedBy: "maintainer",
+          reviewedAt: "2026-01-02",
+          installCommand: "npm i fixture",
+        }),
+      ],
+      bannerTexts: [
+        "1 trust signal differ across this comparison (Review status).",
+        "Next steps differ across entries — open the interactive comparison to copy install commands and source links per resource.",
+      ],
+      interactiveSearch: { ids: "skills/alpha,hooks/beta" },
+      interactiveLinkLabel: "Open in the interactive comparison tool",
+    });
   });
 });

@@ -10,10 +10,8 @@ import { ogImageUrl } from "@/lib/og-image";
 import { getComparison } from "@/data/comparisons";
 import {
   compareCuratedHasRenderableEntries,
-  compareCuratedHeaderBannerTexts,
-  compareCuratedInteractiveLinkLabel,
-  compareCuratedInteractiveSearch,
   compareCuratedResolvedEntries,
+  compareCuratedUiState,
 } from "@/lib/compare-curated-ui-lib";
 
 export const Route = createFileRoute("/compare/$slug")({
@@ -93,9 +91,10 @@ function ComparisonPage() {
   const { slug } = Route.useParams();
   const comparison = getComparison(slug);
   if (!comparison) return null;
-  const entries = compareCuratedResolvedEntries(comparison.refs, ENTRIES);
-  const bannerTexts = compareCuratedHeaderBannerTexts(entries);
-  const interactiveSearch = compareCuratedInteractiveSearch(entries);
+  const { entries, bannerTexts, interactiveSearch, interactiveLinkLabel } = compareCuratedUiState(
+    comparison.refs,
+    ENTRIES,
+  );
 
   return (
     <div className="mx-auto max-w-page px-4 py-10 sm:px-6">
@@ -126,7 +125,7 @@ function ComparisonPage() {
             search={interactiveSearch}
             className="mt-4 inline-flex items-center gap-1.5 text-sm text-ink-muted hover:text-ink"
           >
-            <ArrowLeft className="h-4 w-4" /> {compareCuratedInteractiveLinkLabel(entries.length)}
+            <ArrowLeft className="h-4 w-4" /> {interactiveLinkLabel}
           </Link>
         ) : null}
       </header>
