@@ -1,4 +1,10 @@
 import { COMPARE_INTERACTIVE_MAX, COMPARE_INTERACTIVE_MIN } from "@/lib/compare-interactive-link";
+import type { EntryIdentity } from "@/lib/entry-identity";
+import { parseEntryRef } from "@/lib/entry-identity";
+import {
+  compareInteractiveLinkLabel,
+  compareInteractiveSearch,
+} from "@/lib/compare-interactive-link";
 
 export function compareEmptyStateDescription(): string {
   return `Add ${COMPARE_INTERACTIVE_MIN}–${COMPARE_INTERACTIVE_MAX} resources from the directory to see them side by side.`;
@@ -16,4 +22,31 @@ export function compareInvalidUrlHint(idsParam: string, resolvedCount: number): 
 
 export function compareDrawerEmptyHint(): string {
   return "Add resources to compare by tapping the Compare button on any card.";
+}
+
+export function resolveCuratedPickRefs(refs: string[], catalog: EntryIdentity[]): EntryIdentity[] {
+  const out: EntryIdentity[] = [];
+  for (const ref of refs) {
+    const identity = parseEntryRef(ref);
+    if (!identity) continue;
+    const entry = catalog.find(
+      (candidate) => candidate.category === identity.category && candidate.slug === identity.slug,
+    );
+    if (entry) out.push(entry);
+  }
+  return out;
+}
+
+export function compareCuratedPickInteractiveSearch(
+  refs: string[],
+  catalog: EntryIdentity[],
+): { ids: string } | null {
+  return compareInteractiveSearch(resolveCuratedPickRefs(refs, catalog));
+}
+
+export function compareCuratedPickInteractiveLabel(resolvedCount: number): string {
+  if (resolvedCount <= 2) {
+    return "Open interactively";
+  }
+  return compareInteractiveLinkLabel(resolvedCount);
 }
