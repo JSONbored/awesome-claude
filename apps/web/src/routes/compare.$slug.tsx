@@ -9,6 +9,7 @@ import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
 import { getComparison } from "@/data/comparisons";
+import { compareCuratedBannerTexts } from "@/lib/compare-curated-summary";
 
 function resolveRefs(refs: string[]): Entry[] {
   const out: Entry[] = [];
@@ -96,6 +97,7 @@ function ComparisonPage() {
   const comparison = getComparison(slug);
   if (!comparison) return null;
   const entries = resolveRefs(comparison.refs);
+  const bannerTexts = compareCuratedBannerTexts(entries);
 
   return (
     <div className="mx-auto max-w-page px-4 py-10 sm:px-6">
@@ -111,6 +113,15 @@ function ComparisonPage() {
         <div className="eyebrow">{entries.length} compared</div>
         <h1 className="mt-2 h-display-1 text-ink text-balance">{comparison.heading}</h1>
         <p className="mt-4 text-pretty text-base text-ink-muted sm:text-lg">{comparison.intro}</p>
+        {bannerTexts.length > 0 ? (
+          <div className="mt-4 space-y-1.5">
+            {bannerTexts.map((text) => (
+              <p key={text} className="text-sm text-ink-muted">
+                {text}
+              </p>
+            ))}
+          </div>
+        ) : null}
         <Link
           to="/compare"
           search={{ ids: entries.map((e) => `${e.category}/${e.slug}`).join(",") }}
