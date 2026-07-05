@@ -1,5 +1,5 @@
 import type { Entry } from "@/types/registry";
-import { compareCuratedSummary } from "@/lib/compare-curated-summary";
+import { compareSurfaceSummary } from "@/lib/compare-surface-summary-lib";
 import { COMPARE_INTERACTIVE_MAX, compareFullViewSearch } from "@/lib/compare-interactive-link";
 
 export const BROWSE_COMPARE_MIN_ITEMS = 2;
@@ -13,7 +13,7 @@ export function browseCompareSelectedEntries(items: Entry[]): Entry[] {
 }
 
 export function browseCompareSummary(items: Entry[]) {
-  return compareCuratedSummary(items);
+  return compareSurfaceSummary(items);
 }
 
 export function browseCompareOverflowHint(totalCount: number, openCount: number): string | null {

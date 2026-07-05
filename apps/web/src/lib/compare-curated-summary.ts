@@ -1,6 +1,9 @@
 import type { Entry } from "@/types/registry";
-import { compareActionsDiverge } from "@/lib/compare-entry-actions";
 import { compareDecisionSummary } from "@/lib/compare-table-decision-rows";
+import {
+  compareSurfaceBannerTexts,
+  compareSurfaceSummary,
+} from "@/lib/compare-surface-summary-lib";
 
 export type CompareDecisionSummary = ReturnType<typeof compareDecisionSummary>;
 
@@ -12,14 +15,7 @@ export type CompareCuratedSummary = {
 };
 
 export function compareCuratedSummary(entries: Entry[]): CompareCuratedSummary {
-  const decision = compareDecisionSummary(entries);
-  const actionsDiverge = compareActionsDiverge(entries);
-  return {
-    comparedCount: entries.length,
-    decision,
-    actionsDiverge,
-    hasAnyDivergence: decision.divergingCount > 0 || actionsDiverge,
-  };
+  return compareSurfaceSummary(entries);
 }
 
 export function compareCuratedDecisionBannerText(decision: CompareDecisionSummary): string | null {
@@ -34,11 +30,6 @@ export function compareCuratedActionBannerText(actionsDiverge: boolean): string 
 }
 
 export function compareCuratedBannerTexts(entries: Entry[]): string[] {
-  const summary = compareCuratedSummary(entries);
-  const messages: string[] = [];
-  const decisionText = compareCuratedDecisionBannerText(summary.decision);
-  const actionText = compareCuratedActionBannerText(summary.actionsDiverge);
-  if (decisionText) messages.push(decisionText);
-  if (actionText) messages.push(actionText);
-  return messages;
+  const summary = compareSurfaceSummary(entries);
+  return compareSurfaceBannerTexts(entries, compareCuratedActionBannerText(summary.actionsDiverge));
 }

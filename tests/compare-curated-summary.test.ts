@@ -6,6 +6,7 @@ import {
   compareCuratedDecisionBannerText,
   compareCuratedSummary,
 } from "@/lib/compare-curated-summary";
+import { compareSurfaceSummary } from "@/lib/compare-surface-summary-lib";
 
 function entry(overrides: Partial<Entry> = {}): Entry {
   return {
@@ -109,5 +110,32 @@ describe("compare curated summary", () => {
       "Next steps differ across entries — open the interactive comparison to copy install commands and source links per resource.",
     ]);
     expect(compareCuratedBannerTexts([entry()])).toEqual([]);
+    expect(
+      compareCuratedBannerTexts([
+        entry(),
+        entry({
+          slug: "mixed",
+          reviewedBy: "maintainer",
+          reviewedAt: "2026-01-02",
+          installCommand: "npm i fixture",
+        }),
+      ]),
+    ).toEqual([
+      "1 trust signal differ across this comparison (Review status).",
+      "Next steps differ across entries — open the interactive comparison to copy install commands and source links per resource.",
+    ]);
+  });
+
+  it("delegates curated summaries through compare-surface-summary-lib", () => {
+    const entries = [
+      entry(),
+      entry({
+        reviewedBy: "maintainer",
+        reviewedAt: "2026-01-02",
+      }),
+    ];
+    expect(compareCuratedSummary(entries)).toEqual(
+      compareSurfaceSummary(entries),
+    );
   });
 });

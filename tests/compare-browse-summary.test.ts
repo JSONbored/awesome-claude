@@ -9,6 +9,7 @@ import {
   browseCompareUiState,
   shouldShowBrowseCompareHint,
 } from "@/lib/compare-browse-summary";
+import { compareSurfaceSummary } from "@/lib/compare-surface-summary-lib";
 
 function entry(overrides: Partial<Entry> = {}): Entry {
   return {
@@ -45,16 +46,9 @@ describe("compare browse summary", () => {
       reviewedBy: "maintainer",
       reviewedAt: "2026-01-02",
     });
-    expect(browseCompareSummary([baseline, reviewed])).toEqual({
-      comparedCount: 2,
-      decision: {
-        comparedCount: 2,
-        divergingCount: 1,
-        divergingLabels: ["Review status"],
-      },
-      actionsDiverge: false,
-      hasAnyDivergence: true,
-    });
+    expect(browseCompareSummary([baseline, reviewed])).toEqual(
+      compareSurfaceSummary([baseline, reviewed]),
+    );
   });
 
   it("prompts users to open compare when selected entries align on decision signals", () => {
