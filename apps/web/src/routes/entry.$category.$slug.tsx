@@ -38,6 +38,7 @@ import { WatchButton } from "@/components/watch-button";
 import { CopyButton } from "@/components/copy-button";
 import { ResourceCard } from "@/components/resource-card";
 import { ComparisonTable } from "@/components/comparison-table";
+import { compareDossierBannerTexts } from "@/lib/compare-dossier-summary";
 import { buildEntryJsonLd } from "@heyclaude/registry";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl, clampDescription } from "@/lib/seo";
@@ -220,6 +221,10 @@ function Dossier() {
     const pool = altGroup && altGroup.entries.length > 0 ? altGroup.entries : rel;
     return pool.slice(0, 3);
   }, [relGroups, rel]);
+  const compareBannerTexts = useMemo(
+    () => compareDossierBannerTexts(entry, alternatives),
+    [entry, alternatives],
+  );
   // Deterministic "how do I use this" next-step links — guides sharing a tag,
   // minus any guide already shown in the related grid (no duplicate links).
   const guides = useMemo(() => {
@@ -655,7 +660,16 @@ function Dossier() {
                 on trust, install, platform support, and disclosed safety notes — all from reviewed
                 registry metadata.
               </p>
-              <ComparisonTable entries={[entry, ...alternatives]} />
+              {compareBannerTexts.length > 0 ? (
+                <div className="mb-4 space-y-1.5">
+                  {compareBannerTexts.map((text) => (
+                    <p key={text} className="text-sm text-ink-muted">
+                      {text}
+                    </p>
+                  ))}
+                </div>
+              ) : null}
+              <ComparisonTable entries={[entry, ...alternatives]} showNextActions />
             </DossierSection>
           )}
 
