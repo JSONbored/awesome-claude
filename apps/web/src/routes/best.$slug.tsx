@@ -1,11 +1,15 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { PageContainer } from "@/components/page-container";
-import { CalendarDays, User } from "lucide-react";
+import { CalendarDays, User, ArrowLeft } from "lucide-react";
 import { BEST_LISTS, ENTRIES, type BestList, type BestPick } from "@/data/entries";
 import type { Entry } from "@/types/registry";
 import { ResourceCard } from "@/components/resource-card";
 import { ComparisonTable } from "@/components/comparison-table";
 import { compareBestBannerTexts } from "@/lib/compare-best-summary";
+import {
+  compareInteractiveLinkLabel,
+  compareInteractiveSearch,
+} from "@/lib/compare-interactive-link";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { getBestListEditorial } from "@/data/best-list-editorial";
@@ -97,6 +101,10 @@ function BestDetail() {
     () => compareBestBannerTexts(compareEntries),
     [compareEntries],
   );
+  const interactiveCompareSearch = useMemo(
+    () => compareInteractiveSearch(compareEntries),
+    [compareEntries],
+  );
 
   return (
     <PageContainer className="py-12">
@@ -163,6 +171,16 @@ function BestDetail() {
           <div className="mt-5">
             <ComparisonTable entries={compareEntries} showNextActions />
           </div>
+          {interactiveCompareSearch ? (
+            <Link
+              to="/compare"
+              search={interactiveCompareSearch}
+              className="mt-4 inline-flex items-center gap-1.5 text-sm text-ink-muted hover:text-ink"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              {compareInteractiveLinkLabel(compareEntries.length)}
+            </Link>
+          ) : null}
         </section>
       )}
 
