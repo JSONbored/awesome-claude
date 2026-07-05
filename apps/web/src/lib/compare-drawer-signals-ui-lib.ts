@@ -9,6 +9,15 @@ import {
 export type { CompareSignalValue };
 export { compareSignalToneClass };
 
+export type CompareDrawerDecisionRow = {
+  label: string;
+  resolve: (entry: Entry) => CompareSignalValue | undefined;
+};
+
+export function compareDrawerDecisionRows(): readonly CompareDrawerDecisionRow[] {
+  return COMPARE_DECISION_ROWS;
+}
+
 export function compareDrawerDecisionRowDiverges(
   resolve: (entry: Entry) => CompareSignalValue | undefined,
   items: Entry[],

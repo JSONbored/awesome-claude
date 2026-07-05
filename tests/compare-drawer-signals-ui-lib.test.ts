@@ -3,6 +3,7 @@ import type { Entry } from "@/types/registry";
 import { reviewCompareSignal } from "@/lib/compare-entry-signals";
 import {
   compareDrawerDecisionRowDiverges,
+  compareDrawerDecisionRows,
   compareDrawerDivergingDecisionLabels,
   compareSignalToneClass,
 } from "@/lib/compare-drawer-signals-ui-lib";
@@ -48,6 +49,12 @@ describe("compare drawer signals ui lib", () => {
         entry({ reviewedBy: "maintainer", reviewedAt: "2026-01-02" }),
       ]),
     ).toEqual(["Review status"]);
+  });
+
+  it("exposes drawer decision row definitions for signal cells", () => {
+    const rows = compareDrawerDecisionRows();
+    expect(rows.length).toBeGreaterThan(0);
+    expect(rows.map((row) => row.label)).toContain("Review status");
   });
 
   it("re-exports compare signal tone classes for drawer cells", () => {

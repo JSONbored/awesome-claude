@@ -35,10 +35,10 @@ import { cn } from "@/lib/utils";
 import { brandIdentityLabel } from "@/lib/brand-icons";
 import {
   compareDrawerDecisionRowDiverges,
+  compareDrawerDecisionRows,
   compareSignalToneClass,
   type CompareSignalValue,
 } from "@/lib/compare-drawer-signals-ui-lib";
-import { COMPARE_DECISION_ROWS } from "@/lib/compare-entry-signals";
 
 interface RowDef {
   label: string;
@@ -51,7 +51,7 @@ const ROWS: RowDef[] = [
     label: "Trust",
     render: (e) => <TrustDrilldown entry={e} />,
   },
-  ...COMPARE_DECISION_ROWS.map((row) => ({
+  ...compareDrawerDecisionRows().map((row) => ({
     label: row.label,
     render: (e: Entry) => {
       const value = row.resolve(e);
