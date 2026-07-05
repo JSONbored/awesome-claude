@@ -19,9 +19,12 @@ import { CopySegmented, variantsForEntry } from "./copy-segmented";
 import { EntryBrandMark } from "./entry-brand-mark";
 import { useCopyPref, useHarnessPref } from "@/lib/dossier-prefs";
 import { COMPARE_DRAWER_SURFACE, compareDrawerActionsDiverge } from "@/lib/compare-drawer-actions";
-import { compareDrawerBannerTexts } from "@/lib/compare-drawer-summary";
-import { compareDrawerEmptyHint } from "@/lib/compare-empty-guidance";
-import { compareDrawerFullViewSearch, compareDrawerShareUrl } from "@/lib/compare-drawer-ui-lib";
+import {
+  compareDrawerEmptyStateHint,
+  compareDrawerFullViewSearch,
+  compareDrawerHeaderBannerTexts,
+  compareDrawerShareUrl,
+} from "@/lib/compare-drawer-ui-lib";
 import {
   recordCompareIntentEvent,
   resolveCompareEntryActions,
@@ -319,7 +322,7 @@ function SnippetCell({ entry }: { entry: Entry }) {
 export function CompareDrawer() {
   const { items, open, setOpen, toggle, clear, hydrate } = useCompare();
   const actionRowDiverges = compareDrawerActionsDiverge(items);
-  const bannerTexts = compareDrawerBannerTexts(items);
+  const bannerTexts = compareDrawerHeaderBannerTexts(items);
   const fullViewSearch = compareDrawerFullViewSearch(items);
 
   const onClear = () => {
@@ -415,7 +418,7 @@ export function CompareDrawer() {
 
         {items.length === 0 ? (
           <div className="flex h-[60vh] items-center justify-center px-6 text-sm text-ink-muted">
-            {compareDrawerEmptyHint()}
+            {compareDrawerEmptyStateHint()}
           </div>
         ) : (
           <div className="h-[calc(88vh-57px)] overflow-auto">

@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
 import {
+  compareDrawerEmptyStateHint,
   compareDrawerFullViewSearch,
+  compareDrawerHeaderBannerTexts,
   compareDrawerShareUrl,
 } from "@/lib/compare-drawer-ui-lib";
 
@@ -47,5 +49,39 @@ describe("compare drawer ui lib", () => {
         entry({ slug: "five" }),
       ]),
     ).toEqual({ ids: "mcp/one,mcp/two,mcp/three,mcp/four" });
+  });
+
+  it("returns drawer header banner messages from drawer summaries", () => {
+    const reviewed = entry({
+      slug: "reviewed",
+      reviewedBy: "maintainer",
+      reviewedAt: "2026-01-02",
+    });
+    expect(compareDrawerHeaderBannerTexts([entry(), reviewed])).toEqual([
+      "1 trust signal differ across this comparison (Review status).",
+    ]);
+  });
+
+  it("guides empty drawer readers to add resources from cards", () => {
+    expect(compareDrawerEmptyStateHint()).toBe(
+      "Add resources to compare by tapping the Compare button on any card.",
+    );
+  });
+
+  it("returns combined trust and action banner messages for drawer headers", () => {
+    expect(
+      compareDrawerHeaderBannerTexts([
+        entry(),
+        entry({
+          slug: "mixed",
+          reviewedBy: "maintainer",
+          reviewedAt: "2026-01-02",
+          installCommand: "npm i fixture",
+        }),
+      ]),
+    ).toEqual([
+      "1 trust signal differ across this comparison (Review status).",
+      "Next steps differ across this comparison — review install, source, and claim actions per entry.",
+    ]);
   });
 });
