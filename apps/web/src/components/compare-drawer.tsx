@@ -18,11 +18,11 @@ import { CopyButton } from "./copy-button";
 import { CopySegmented, variantsForEntry } from "./copy-segmented";
 import { EntryBrandMark } from "./entry-brand-mark";
 import { useCopyPref, useHarnessPref } from "@/lib/dossier-prefs";
+import { COMPARE_DRAWER_SURFACE, type CompareAction } from "@/lib/compare-drawer-actions-ui-lib";
 import {
-  COMPARE_DRAWER_SURFACE,
-  compareDrawerEntryActions,
-  type CompareAction,
-} from "@/lib/compare-drawer-actions-ui-lib";
+  compareDrawerActionsForEntry,
+  compareDrawerActionsInteractiveUiState,
+} from "@/lib/compare-drawer-actions-interactive-ui-lib";
 import { compareDrawerInteractiveUiState } from "@/lib/compare-drawer-interactive-ui-lib";
 import { recordCompareIntentEvent } from "@/lib/compare-entry-actions";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
@@ -176,8 +176,14 @@ function CompareSignalCell({ value }: { value: CompareSignalValue }) {
   );
 }
 
-function DrawerCompareActions({ entry }: { entry: Entry }) {
-  const actions = compareDrawerEntryActions(entry);
+function DrawerCompareActions({
+  entry,
+  actionCells,
+}: {
+  entry: Entry;
+  actionCells: ReturnType<typeof compareDrawerActionsInteractiveUiState>["actionCells"];
+}) {
+  const actions = compareDrawerActionsForEntry(entry, actionCells);
 
   return (
     <div className="flex flex-wrap gap-1.5">
@@ -316,8 +322,10 @@ function SnippetCell({ entry }: { entry: Entry }) {
 
 export function CompareDrawer() {
   const { items, open, setOpen, toggle, clear, hydrate } = useCompare();
+  const drawerActionsUi = compareDrawerActionsInteractiveUiState(items);
   const { drawerUi, emptyHint, shareUrl } = compareDrawerInteractiveUiState(items);
-  const { actionRowDiverges, bannerTexts, fullViewSearch } = drawerUi;
+  const { actionRowDiverges } = drawerActionsUi;
+  const { bannerTexts, fullViewSearch } = drawerUi;
 
   const onClear = () => {
     const snapshot = items.map((e) => `${e.category}/${e.slug}`).join(",");
@@ -492,7 +500,7 @@ export function CompareDrawer() {
                           actionRowDiverges && "bg-amber-500/5",
                         )}
                       >
-                        <DrawerCompareActions entry={e} />
+                        <DrawerCompareActions entry={e} actionCells={drawerActionsUi.actionCells} />
                       </td>
                     ))}
                   </tr>
