@@ -3,7 +3,10 @@ import type { Entry } from "@/types/registry";
 import {
   BROWSE_COMPARE_MIN_ITEMS,
   browseCompareHintText,
+  browseCompareOverflowHint,
+  browseCompareSelectedEntries,
   browseCompareSummary,
+  browseCompareUiState,
   shouldShowBrowseCompareHint,
 } from "@/lib/compare-browse-summary";
 
@@ -110,5 +113,34 @@ describe("compare browse summary", () => {
     ).toBe(
       "1 trust signal differ · next steps differ — open compare for details.",
     );
+  });
+
+  it("caps browse compare hints and links to the interactive compare limit", () => {
+    const five = [
+      entry({ slug: "one" }),
+      entry({ slug: "two" }),
+      entry({ slug: "three" }),
+      entry({ slug: "four" }),
+      entry({
+        slug: "five",
+        reviewedBy: "maintainer",
+        reviewedAt: "2026-01-02",
+      }),
+    ];
+    expect(browseCompareSelectedEntries(five)).toHaveLength(4);
+    expect(browseCompareOverflowHint(5, 4)).toBe(
+      "Opening 4 of 5 selected in compare.",
+    );
+    expect(browseCompareOverflowHint(2, 2)).toBeNull();
+    expect(browseCompareHintText(five)).toBe(
+      "Open compare to review trust and next steps side by side.",
+    );
+    expect(browseCompareUiState(five)).toEqual({
+      search: { ids: "mcp/one,mcp/two,mcp/three,mcp/four" },
+      selectedCount: 4,
+      hint: "Open compare to review trust and next steps side by side.",
+      overflowHint: "Opening 4 of 5 selected in compare.",
+    });
+    expect(browseCompareUiState([entry()])).toBeNull();
   });
 });
