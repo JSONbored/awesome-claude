@@ -57,6 +57,7 @@ export default defineConfig({
         "apps/web/src/lib/content-section-parsing.ts",
         "apps/web/src/lib/content.server.ts",
         "apps/web/src/lib/contributors.ts",
+        "apps/web/src/lib/api-security.ts",
         "apps/web/src/lib/detail-assembly.ts",
         "apps/web/src/lib/dossier-prefs.ts",
         "apps/web/src/lib/error-capture.ts",
