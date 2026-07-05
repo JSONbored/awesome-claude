@@ -6,6 +6,8 @@
  * The public surface (`endpoint-url.js`) re-exports everything below so
  * existing imports stay unchanged.
  */
+import { hasEmbeddedUrlUserinfo } from "./public-url-lib.js";
+
 export const DEFAULT_REMOTE_MCP_URL = "https://heyclau.de/api/mcp";
 export const DEFAULT_REQUEST_TIMEOUT_MS = 30000;
 
@@ -20,6 +22,11 @@ const localHosts = new Set([
 export function normalizeEndpointUrl(value = DEFAULT_REMOTE_MCP_URL) {
   const raw = String(value || "").trim();
   if (!raw) throw new Error("MCP endpoint URL is required.");
+  if (hasEmbeddedUrlUserinfo(raw)) {
+    throw new Error(
+      "MCP endpoint URL must not embed credentials in userinfo.",
+    );
+  }
 
   const url = new URL(raw);
   if (url.protocol !== "https:" && !localHosts.has(url.hostname)) {

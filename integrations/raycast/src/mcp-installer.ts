@@ -11,6 +11,7 @@ import os from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 import { isRecord } from "./utils";
+import { hasEmbeddedUrlUserinfo, isPublicHttpsUrl } from "./public-url-lib";
 import type { RaycastDetail, RaycastEntry } from "./feed";
 
 const execFileAsync = promisify(execFile);
@@ -359,8 +360,8 @@ function isLoopbackHostname(hostname: string) {
 function isSafeRemoteMcpUrl(value: string) {
   try {
     const url = new URL(value.trim());
-    if (url.username || url.password) return false;
-    if (url.protocol === "https:") return true;
+    if (hasEmbeddedUrlUserinfo(value)) return false;
+    if (isPublicHttpsUrl(value)) return true;
     return url.protocol === "http:" && isLoopbackHostname(url.hostname);
   } catch {
     return false;

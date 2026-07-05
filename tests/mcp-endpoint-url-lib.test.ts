@@ -42,6 +42,9 @@ describe("endpoint-url-lib endpoint normalization", () => {
     expect(() => normalizeEndpointUrl("http://example.com")).toThrow(
       /HTTPS outside localhost/i,
     );
+    expect(() =>
+      normalizeEndpointUrl("https://token@example.com/api/mcp"),
+    ).toThrow(/must not embed credentials/i);
   });
 });
 

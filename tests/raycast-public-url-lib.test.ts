@@ -2,32 +2,20 @@ import { describe, expect, it } from "vitest";
 
 import {
   hasEmbeddedUrlUserinfo,
-  isPublicGitHubProfileUrl,
   isPublicHttpsUrl,
   publicUrlHostname,
-} from "../packages/mcp/src/public-url-lib.js";
+} from "../integrations/raycast/src/public-url-lib";
 
-describe("MCP public URL helpers", () => {
+describe("Raycast public URL helpers", () => {
   it("detects embedded userinfo credentials", () => {
     expect(hasEmbeddedUrlUserinfo("https://token@example.com/docs")).toBe(true);
     expect(hasEmbeddedUrlUserinfo("https://example.com/docs")).toBe(false);
   });
 
   it("validates public https URLs without userinfo", () => {
-    expect(isPublicHttpsUrl("")).toBe(true);
     expect(isPublicHttpsUrl("https://example.com/docs")).toBe(true);
     expect(isPublicHttpsUrl("http://example.com/docs")).toBe(false);
     expect(isPublicHttpsUrl("https://token@example.com/docs")).toBe(false);
-  });
-
-  it("validates GitHub profile URLs without userinfo", () => {
-    expect(isPublicGitHubProfileUrl("https://github.com/octocat")).toBe(true);
-    expect(isPublicGitHubProfileUrl("https://token@github.com/octocat")).toBe(
-      false,
-    );
-    expect(isPublicGitHubProfileUrl("https://github.com/octocat/repo")).toBe(
-      false,
-    );
   });
 
   it("extracts hostnames only from credential-free URLs", () => {

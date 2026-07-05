@@ -15,6 +15,12 @@ function parseUrl(value) {
   }
 }
 
+export function hasEmbeddedUrlUserinfo(value) {
+  const url = parseUrl(value);
+  if (!url) return false;
+  return Boolean(url.username || url.password);
+}
+
 export function isPublicHttpsUrl(value) {
   const text = String(value ?? "").trim();
   if (!text) return true;

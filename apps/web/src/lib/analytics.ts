@@ -7,6 +7,8 @@
 // (no emails, no raw form fields, queries truncated). This keeps the umami
 // dashboard accurate and quiet rather than noisy.
 
+import { publicUrlHostname } from "@heyclaude/registry/source-url";
+
 type UmamiTracker = {
   track?: (event: string, data?: Record<string, unknown>) => void;
 };
@@ -25,11 +27,6 @@ export function entryEventKey(category: string, slug: string): string {
 
 /** Hostname of an outbound URL, for grouping source clicks (no full URL / PII). */
 export function outboundHost(url: string): string {
-  try {
-    const parsed = new URL(url);
-    if (parsed.username || parsed.password) return "unknown";
-    return parsed.hostname.replace(/^www\./, "");
-  } catch {
-    return "unknown";
-  }
+  const hostname = publicUrlHostname(url);
+  return hostname || "unknown";
 }

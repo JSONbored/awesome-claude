@@ -1,4 +1,9 @@
 import { type SubmissionDraft } from "./feed";
+import {
+  hasEmbeddedUrlUserinfo,
+  isPublicHttpsUrl,
+  publicUrlHostname,
+} from "./public-url-lib";
 
 export type SubmissionFormValues = {
   category: string;
@@ -44,24 +49,15 @@ export function normalizeDomain(value?: string) {
     const url = new URL(
       trimmed.includes("://") ? trimmed : `https://${trimmed}`,
     );
-    if (url.username || url.password) return "";
-    return url.hostname.replace(/^www\./i, "").toLowerCase();
+    if (hasEmbeddedUrlUserinfo(url.href)) return "";
+    return publicUrlHostname(url.href);
   } catch {
     return trimmed.toLowerCase();
   }
 }
 
 export function isValidHttpsUrl(value?: string) {
-  const trimmed = String(value || "").trim();
-  if (!trimmed) return false;
-  try {
-    const url = new URL(trimmed);
-    return (
-      url.protocol === "https:" && url.username === "" && url.password === ""
-    );
-  } catch {
-    return false;
-  }
+  return isPublicHttpsUrl(value);
 }
 
 export function isValidDomain(value?: string) {
