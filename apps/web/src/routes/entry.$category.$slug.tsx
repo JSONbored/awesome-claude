@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import { getEntry, related, relatedGroups, relatedGuides } from "@/data/search";
 import { getEntryRedirectTarget } from "@/lib/entry-redirects";
-import { BEST_LISTS } from "@/data/entries";
+import { BEST_LISTS, ENTRIES } from "@/data/entries";
 import { COMPARISONS } from "@/data/comparisons";
 import { EntryAuthorAttribution } from "@/components/contributor-attribution";
 import { findContributorForIdentity } from "@/data/contributors";
@@ -44,6 +44,11 @@ import {
   compareDossierInteractiveSearch,
 } from "@/lib/compare-dossier-summary";
 import { compareInteractiveLinkLabel } from "@/lib/compare-interactive-link";
+import {
+  compareFeaturedInteractiveLinkLabel,
+  compareFeaturedInteractiveSearch,
+  resolveComparisonRefs,
+} from "@/lib/compare-featured-link";
 import { buildEntryJsonLd } from "@heyclaude/registry";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl, clampDescription } from "@/lib/seo";
@@ -247,6 +252,18 @@ function Dossier() {
   const entryRef = `${entry.category}/${entry.slug}`;
   const comparedIn = COMPARISONS.filter((c) => c.refs.includes(entryRef));
   const featuredIn = BEST_LISTS.filter((l) => l.picks.some((p) => p.ref === entryRef));
+  const featuredCompareLinks = useMemo(
+    () =>
+      comparedIn.map((comparison) => {
+        const resolved = resolveComparisonRefs(comparison.refs, ENTRIES);
+        return {
+          slug: comparison.slug,
+          search: compareFeaturedInteractiveSearch(comparison.refs, ENTRIES),
+          label: compareFeaturedInteractiveLinkLabel(resolved.length),
+        };
+      }),
+    [comparedIn],
+  );
   const recents = useRecents();
   useEffect(() => {
     recents.pushEntry({ category: entry.category, slug: entry.slug, title: entry.title });
@@ -753,17 +770,32 @@ function Dossier() {
                     </Link>
                   </li>
                 ))}
-                {comparedIn.map((c) => (
-                  <li key={`cmp-${c.slug}`}>
-                    <Link
-                      to="/compare/$slug"
-                      params={{ slug: c.slug }}
-                      className="story-link text-ink"
+                {comparedIn.map((c) => {
+                  const featuredLink = featuredCompareLinks.find((link) => link.slug === c.slug);
+                  return (
+                    <li
+                      key={`cmp-${c.slug}`}
+                      className="flex flex-wrap items-baseline gap-x-2 gap-y-1"
                     >
-                      Comparison: {c.title}
-                    </Link>
-                  </li>
-                ))}
+                      <Link
+                        to="/compare/$slug"
+                        params={{ slug: c.slug }}
+                        className="story-link text-ink"
+                      >
+                        Comparison: {c.title}
+                      </Link>
+                      {featuredLink?.search ? (
+                        <Link
+                          to="/compare"
+                          search={featuredLink.search}
+                          className="text-xs text-ink-muted hover:text-ink"
+                        >
+                          {featuredLink.label}
+                        </Link>
+                      ) : null}
+                    </li>
+                  );
+                })}
               </ul>
             </DossierSection>
           )}
