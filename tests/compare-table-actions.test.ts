@@ -8,6 +8,7 @@ import {
   compareTableSharedActionIds,
   shouldRenderCompareTableActions,
 } from "@/lib/compare-table-actions";
+import { compareSurfaceActionSummary } from "@/lib/compare-surface-actions-lib";
 
 function entry(overrides: Partial<Entry> = {}): Entry {
   return {
@@ -99,5 +100,8 @@ describe("compare table actions", () => {
       sharedActionIds: ["dossier", "claim"],
       uniqueSignatures: 2,
     });
+    expect(compareTableActionSummary([baseline, withInstall])).toEqual(
+      compareSurfaceActionSummary([baseline, withInstall]),
+    );
   });
 });
