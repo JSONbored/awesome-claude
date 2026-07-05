@@ -34,11 +34,11 @@ import type { Entry, Harness } from "@/types/registry";
 import { cn } from "@/lib/utils";
 import { brandIdentityLabel } from "@/lib/brand-icons";
 import {
-  COMPARE_DECISION_ROWS,
+  compareDrawerDecisionRowDiverges,
   compareSignalToneClass,
-  decisionRowDiverges,
   type CompareSignalValue,
-} from "@/lib/compare-entry-signals";
+} from "@/lib/compare-drawer-signals-ui-lib";
+import { COMPARE_DECISION_ROWS } from "@/lib/compare-entry-signals";
 
 interface RowDef {
   label: string;
@@ -58,7 +58,7 @@ const ROWS: RowDef[] = [
       if (!value) return <span className="text-xs text-ink-subtle">—</span>;
       return <CompareSignalCell value={value} />;
     },
-    diverges: (items: Entry[]) => decisionRowDiverges(row.resolve, items),
+    diverges: (items: Entry[]) => compareDrawerDecisionRowDiverges(row.resolve, items),
   })),
   {
     label: "Safety",
