@@ -22,7 +22,7 @@ import {
   compareTableEntryActions,
   type CompareAction,
 } from "@/lib/compare-table-actions-ui-lib";
-import { compareTablePresentationState } from "@/lib/compare-table-ui-lib";
+import { compareTableInteractiveUiState } from "@/lib/compare-table-interactive-ui-lib";
 import { recordCompareIntentEvent } from "@/lib/compare-entry-actions";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
@@ -293,7 +293,7 @@ export function ComparisonTable({
   showNextActions?: boolean;
 }) {
   const { divergingDecisionLabels, renderNextActions, actionRowDiverges } =
-    compareTablePresentationState(entries, showNextActions);
+    compareTableInteractiveUiState(entries, showNextActions);
 
   return (
     <div className="overflow-auto rounded-xl border border-border">
