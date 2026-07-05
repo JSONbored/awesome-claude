@@ -1,3 +1,10 @@
+export function hasEmbeddedUrlUserinfo(value: unknown): boolean;
+export function isPublicHttpsUrl(value: unknown): boolean;
+export function isPublicHttpUrl(value: unknown): boolean;
+export function publicUrlHostname(value: unknown): string;
+export function publicHttpUrlHref(value: unknown): string;
+export function isPublicGitHubProfileUrl(value: unknown): boolean;
+export function isPublicGitHubHostUrl(value: unknown): boolean;
 export function isAffiliateParam(name: unknown): boolean;
 export function isTrackingParam(name: unknown): boolean;
 export function hasAffiliateParam(value: unknown): boolean;
