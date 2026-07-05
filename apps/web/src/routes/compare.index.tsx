@@ -17,6 +17,7 @@ import {
   resolveCompareEntryActions,
   type CompareAction,
 } from "@/lib/compare-entry-actions";
+import { compareDecisionSummary } from "@/lib/compare-table-decision-rows";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
 import { sameEntry } from "@/lib/entry-identity";
 import { search } from "@/data/search";
@@ -68,6 +69,7 @@ function ComparePage() {
   const [hoverRow, setHoverRow] = React.useState<number | null>(null);
   const [pickerOpen, setPickerOpen] = React.useState(false);
   const actionRowDiverges = compareActionsDiverge(items);
+  const decisionSummary = compareDecisionSummary(items);
 
   const pushIds = (next: Entry[]) => {
     const ids = serializeCompareItems(next);
@@ -145,6 +147,13 @@ function ComparePage() {
           <h1 className="mt-1 h-display-2 text-ink text-balance">
             {items.length} {items.length === 1 ? "resource" : "resources"} side by side
           </h1>
+          {decisionSummary.divergingCount > 0 ? (
+            <p className="mt-2 text-sm text-ink-muted">
+              {decisionSummary.divergingCount} trust signal
+              {decisionSummary.divergingCount === 1 ? "" : "s"} differ across this comparison (
+              {decisionSummary.divergingLabels.join(", ")}).
+            </p>
+          ) : null}
         </div>
         <div className="flex items-center gap-2">
           <CopyButton value={copyShare()} label="Copy share link" />
@@ -257,26 +266,45 @@ function ComparePage() {
                 </td>
               )}
             </tr>
-            {ROWS.map((row, i) => (
+            {ROWS.map((row, i) => {
+              const rowDiverges = row.diverges?.(items) ?? false;
+              return (
               <tr
                 key={row.label}
                 onMouseEnter={() => setHoverRow(i)}
                 onMouseLeave={() => setHoverRow(null)}
                 className={cn(
                   "transition-colors duration-200 ease-out",
-                  hoverRow === i ? "bg-accent/5" : i % 2 === 0 ? "bg-surface-2/30" : "",
+                  rowDiverges
+                    ? "bg-amber-500/5"
+                    : hoverRow === i
+                      ? "bg-accent/5"
+                      : i % 2 === 0
+                        ? "bg-surface-2/30"
+                        : "",
                 )}
               >
                 <th
                   scope="row"
-                  className="sticky left-0 z-10 w-[150px] border-b border-r border-border bg-inherit p-3 text-left align-top text-xs font-medium text-ink-muted"
+                  className={cn(
+                    "sticky left-0 z-10 w-[150px] border-b border-r border-border bg-inherit p-3 text-left align-top text-xs font-medium text-ink-muted",
+                    rowDiverges && "text-amber-800",
+                  )}
                 >
                   {row.label}
+                  {rowDiverges ? (
+                    <span className="mt-0.5 block text-[10px] font-normal uppercase tracking-wide text-amber-700">
+                      Differs
+                    </span>
+                  ) : null}
                 </th>
                 {items.map((e) => (
                   <td
                     key={`${e.category}/${e.slug}`}
-                    className="min-w-[260px] max-w-[320px] border-b border-r border-border p-3 align-top"
+                    className={cn(
+                      "min-w-[260px] max-w-[320px] border-b border-r border-border p-3 align-top",
+                      rowDiverges && "bg-amber-500/5",
+                    )}
                   >
                     {row.render(e)}
                   </td>
@@ -287,7 +315,8 @@ function ComparePage() {
                   </td>
                 )}
               </tr>
-            ))}
+              );
+            })}
           </tbody>
         </table>
       </div>
