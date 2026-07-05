@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
 import {
+  compareCuratedHasRenderableEntries,
   compareCuratedHeaderBannerTexts,
   compareCuratedInteractiveLinkLabel,
   compareCuratedInteractiveSearch,
+  compareCuratedResolvedEntries,
 } from "@/lib/compare-curated-ui-lib";
 
 function entry(overrides: Partial<Entry> = {}): Entry {
@@ -23,7 +25,42 @@ function entry(overrides: Partial<Entry> = {}): Entry {
   } as Entry;
 }
 
+const catalog = [
+  entry({ category: "skills", slug: "alpha" }),
+  entry({ category: "hooks", slug: "beta" }),
+  entry({ category: "mcp", slug: "gamma" }),
+];
+
 describe("compare curated ui lib", () => {
+  it("resolves curated comparison refs against the entry catalog", () => {
+    expect(compareCuratedResolvedEntries([], catalog)).toEqual([]);
+    expect(
+      compareCuratedResolvedEntries(["skills/alpha", "hooks/beta"], catalog),
+    ).toEqual([catalog[0], catalog[1]]);
+    expect(
+      compareCuratedResolvedEntries(["skills/alpha", "missing/slug"], catalog),
+    ).toEqual([catalog[0]]);
+  });
+
+  it("requires at least two resolved entries for curated pages", () => {
+    expect(compareCuratedHasRenderableEntries([], catalog)).toBe(false);
+    expect(compareCuratedHasRenderableEntries(["skills/alpha"], catalog)).toBe(
+      false,
+    );
+    expect(
+      compareCuratedHasRenderableEntries(
+        ["skills/alpha", "hooks/beta"],
+        catalog,
+      ),
+    ).toBe(true);
+    expect(
+      compareCuratedHasRenderableEntries(
+        ["skills/alpha", "missing/slug"],
+        catalog,
+      ),
+    ).toBe(false);
+  });
+
   it("returns curated comparison header banner messages", () => {
     const reviewed = entry({
       slug: "reviewed",

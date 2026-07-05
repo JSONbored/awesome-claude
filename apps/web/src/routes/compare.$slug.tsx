@@ -1,7 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { ENTRIES } from "@/data/entries";
-import type { Entry } from "@/types/registry";
 import { ComparisonTable } from "@/components/comparison-table";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
@@ -10,31 +9,25 @@ import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
 import { getComparison } from "@/data/comparisons";
 import {
+  compareCuratedHasRenderableEntries,
   compareCuratedHeaderBannerTexts,
   compareCuratedInteractiveLinkLabel,
   compareCuratedInteractiveSearch,
+  compareCuratedResolvedEntries,
 } from "@/lib/compare-curated-ui-lib";
-
-function resolveRefs(refs: string[]): Entry[] {
-  const out: Entry[] = [];
-  for (const ref of refs) {
-    const [category, slug] = ref.split("/");
-    const entry = ENTRIES.find((e) => e.category === category && e.slug === slug);
-    if (entry) out.push(entry);
-  }
-  return out;
-}
 
 export const Route = createFileRoute("/compare/$slug")({
   loader: ({ params }) => {
     const comparison = getComparison(params.slug);
-    if (!comparison || resolveRefs(comparison.refs).length < 2) throw notFound();
+    if (!comparison || !compareCuratedHasRenderableEntries(comparison.refs, ENTRIES)) {
+      throw notFound();
+    }
     return {};
   },
   head: ({ params }) => {
     const comparison = getComparison(params.slug);
     if (!comparison) return { meta: [] };
-    const entries = resolveRefs(comparison.refs);
+    const entries = compareCuratedResolvedEntries(comparison.refs, ENTRIES);
     const url = absoluteUrl(`/compare/${comparison.slug}`);
     const ogImage = ogImageUrl({
       title: comparison.heading,
@@ -100,7 +93,7 @@ function ComparisonPage() {
   const { slug } = Route.useParams();
   const comparison = getComparison(slug);
   if (!comparison) return null;
-  const entries = resolveRefs(comparison.refs);
+  const entries = compareCuratedResolvedEntries(comparison.refs, ENTRIES);
   const bannerTexts = compareCuratedHeaderBannerTexts(entries);
   const interactiveSearch = compareCuratedInteractiveSearch(entries);
 
