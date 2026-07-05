@@ -44,10 +44,10 @@ import {
   compareBestListInteractiveSearch,
 } from "@/lib/compare-best-summary";
 import {
-  compareDossierBannerTexts,
-  compareDossierInteractiveSearch,
-} from "@/lib/compare-dossier-summary";
-import { compareInteractiveLinkLabel } from "@/lib/compare-interactive-link";
+  compareDossierHeaderBannerTexts,
+  compareDossierInteractiveCompareSearch,
+  compareDossierInteractiveLinkLabel,
+} from "@/lib/compare-dossier-ui-lib";
 import {
   compareFeaturedInteractiveLinkLabel,
   compareFeaturedInteractiveSearch,
@@ -236,11 +236,11 @@ function Dossier() {
     return pool.slice(0, 3);
   }, [relGroups, rel]);
   const compareBannerTexts = useMemo(
-    () => compareDossierBannerTexts(entry, alternatives),
+    () => compareDossierHeaderBannerTexts(entry, alternatives),
     [entry, alternatives],
   );
   const dossierCompareSearch = useMemo(
-    () => compareDossierInteractiveSearch(entry, alternatives),
+    () => compareDossierInteractiveCompareSearch(entry, alternatives),
     [entry, alternatives],
   );
   // Deterministic "how do I use this" next-step links — guides sharing a tag,
@@ -716,7 +716,7 @@ function Dossier() {
                   className="mt-4 inline-flex items-center gap-1.5 text-sm text-ink-muted hover:text-ink"
                 >
                   <ArrowLeft className="h-4 w-4" />
-                  {compareInteractiveLinkLabel(alternatives.length + 1)}
+                  {compareDossierInteractiveLinkLabel(alternatives.length + 1)}
                 </Link>
               ) : null}
             </DossierSection>
