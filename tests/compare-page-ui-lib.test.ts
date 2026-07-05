@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
 import {
+  comparePageActionsDiverge,
+  comparePageEmptyStateDescription,
   comparePageHeaderBannerTexts,
+  comparePageInvalidUrlHint,
   comparePageSelectionHint,
   comparePageShareUrl,
 } from "@/lib/compare-page-ui-lib";
@@ -51,5 +54,29 @@ describe("compare page ui lib", () => {
       "Add one more resource to unlock trust and next-step comparisons across the full table.",
     );
     expect(comparePageSelectionHint(2)).toBeNull();
+  });
+
+  it("detects when interactive compare columns expose different next actions", () => {
+    expect(comparePageActionsDiverge([])).toBe(false);
+    expect(
+      comparePageActionsDiverge([
+        entry({ installCommand: "npm i fixture" }),
+        entry({ slug: "other" }),
+      ]),
+    ).toBe(true);
+    expect(
+      comparePageActionsDiverge([
+        entry({ installCommand: "npm i fixture" }),
+        entry({ slug: "other", installCommand: "pnpm add fixture" }),
+      ]),
+    ).toBe(false);
+  });
+
+  it("returns empty-state copy and invalid URL hints for the compare page", () => {
+    expect(comparePageEmptyStateDescription()).toContain("directory");
+    expect(comparePageInvalidUrlHint("", 0)).toBeNull();
+    expect(comparePageInvalidUrlHint("skills/missing", 0)).toContain(
+      "could not be resolved",
+    );
   });
 });

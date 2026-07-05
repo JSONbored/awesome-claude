@@ -12,18 +12,19 @@ import { COMPARISON_ROWS as ROWS } from "@/components/comparison-table";
 import { useCompare } from "@/lib/compare";
 import { resolveCompareParam, serializeCompareItems } from "@/lib/compare-selection";
 import {
-  compareActionsDiverge,
   recordCompareIntentEvent,
   resolveCompareEntryActions,
   type CompareAction,
 } from "@/lib/compare-entry-actions";
 import {
+  comparePageActionsDiverge,
+  comparePageEmptyStateDescription,
   comparePageHeaderBannerTexts,
+  comparePageInvalidUrlHint,
   comparePageSelectionHint,
   comparePageShareUrl,
 } from "@/lib/compare-page-ui-lib";
 import { comparePagePopularComparisonLinks } from "@/lib/compare-page-featured-ui-lib";
-import { compareEmptyStateDescription, compareInvalidUrlHint } from "@/lib/compare-empty-guidance";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
 import { sameEntry } from "@/lib/entry-identity";
 import { search } from "@/data/search";
@@ -74,7 +75,7 @@ function ComparePage() {
   const items = compare.items;
   const [hoverRow, setHoverRow] = React.useState<number | null>(null);
   const [pickerOpen, setPickerOpen] = React.useState(false);
-  const actionRowDiverges = compareActionsDiverge(items);
+  const actionRowDiverges = comparePageActionsDiverge(items);
   const bannerTexts = comparePageHeaderBannerTexts(items);
   const singleItemHint = comparePageSelectionHint(items.length);
   const popularComparisonLinks = React.useMemo(
@@ -109,13 +110,13 @@ function ComparePage() {
       // Render directly from URL while context hydrates.
       return <Skeleton ids={sp.ids} />;
     }
-    const invalidUrlHint = compareInvalidUrlHint(sp.ids, 0);
+    const invalidUrlHint = comparePageInvalidUrlHint(sp.ids, 0);
     return (
       <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
         <div className="rounded-xl border border-dashed border-border bg-surface p-10 text-center">
           <div className="eyebrow">Comparison</div>
           <h1 className="mt-2 h-display-2 text-ink text-balance">Nothing to compare yet</h1>
-          <p className="mt-2 text-sm text-ink-muted">{compareEmptyStateDescription()}</p>
+          <p className="mt-2 text-sm text-ink-muted">{comparePageEmptyStateDescription()}</p>
           {invalidUrlHint ? <p className="mt-2 text-sm text-amber-800">{invalidUrlHint}</p> : null}
           <div className="mt-5 flex justify-center gap-2">
             <Link
