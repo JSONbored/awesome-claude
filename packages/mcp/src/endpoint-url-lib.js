@@ -23,9 +23,7 @@ export function normalizeEndpointUrl(value = DEFAULT_REMOTE_MCP_URL) {
   const raw = String(value || "").trim();
   if (!raw) throw new Error("MCP endpoint URL is required.");
   if (hasEmbeddedUrlUserinfo(raw)) {
-    throw new Error(
-      "MCP endpoint URL must not embed credentials in userinfo.",
-    );
+    throw new Error("MCP endpoint URL must not embed credentials in userinfo.");
   }
 
   const url = new URL(raw);
