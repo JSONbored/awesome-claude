@@ -25,17 +25,20 @@ describe("compare table interactive ui lib", () => {
       divergingDecisionLabels: new Set(),
       renderNextActions: false,
       actionRowDiverges: false,
+      actionCells: [expect.objectContaining({ entryKey: "mcp:fixture" })],
     });
   });
 
-  it("surfaces next-action rows for multi-entry tables when enabled", () => {
-    expect(
-      compareTableInteractiveUiState([entry(), entry({ slug: "other" })], true),
-    ).toEqual({
-      divergingDecisionLabels: new Set(),
-      renderNextActions: true,
-      actionRowDiverges: false,
-    });
+  it("bundles per-column action cells for multi-entry tables", () => {
+    const state = compareTableInteractiveUiState(
+      [entry(), entry({ slug: "other" })],
+      true,
+    );
+    expect(state.renderNextActions).toBe(true);
+    expect(state.actionCells).toHaveLength(2);
+    expect(state.actionCells[0]).toEqual(
+      expect.objectContaining({ entryKey: "mcp:fixture" }),
+    );
   });
 
   it("respects the showNextActions toggle for multi-entry tables", () => {
@@ -48,6 +51,7 @@ describe("compare table interactive ui lib", () => {
       divergingDecisionLabels: new Set(),
       renderNextActions: false,
       actionRowDiverges: false,
+      actionCells: expect.any(Array),
     });
   });
 
@@ -62,5 +66,6 @@ describe("compare table interactive ui lib", () => {
     expect(state.divergingDecisionLabels).toEqual(new Set(["Review status"]));
     expect(state.renderNextActions).toBe(true);
     expect(state.actionRowDiverges).toBe(true);
+    expect(state.actionCells).toHaveLength(2);
   });
 });

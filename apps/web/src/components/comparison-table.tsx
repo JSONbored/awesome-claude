@@ -18,11 +18,8 @@ import {
   signalToneClassForDisplay,
 } from "@/lib/compare-table-signals-ui-lib";
 import { COMPARE_TABLE_SURFACE, type CompareAction } from "@/lib/compare-table-actions-ui-lib";
-import {
-  compareTableActionsForEntry,
-  compareTableActionsInteractiveUiState,
-} from "@/lib/compare-table-actions-interactive-ui-lib";
-import { compareTableSignalsInteractiveUiState } from "@/lib/compare-table-signals-interactive-ui-lib";
+import { compareTableActionsForEntry } from "@/lib/compare-table-actions-interactive-ui-lib";
+import { compareTableInteractiveUiState } from "@/lib/compare-table-interactive-ui-lib";
 import { recordCompareIntentEvent } from "@/lib/compare-entry-actions";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
@@ -58,7 +55,7 @@ function TableCompareActions({
   actionCells,
 }: {
   entry: Entry;
-  actionCells: ReturnType<typeof compareTableActionsInteractiveUiState>["actionCells"];
+  actionCells: ReturnType<typeof compareTableInteractiveUiState>["actionCells"];
 }) {
   const actions = compareTableActionsForEntry(entry, actionCells);
 
@@ -298,9 +295,8 @@ export function ComparisonTable({
   entries: Entry[];
   showNextActions?: boolean;
 }) {
-  const { divergingDecisionLabels } = compareTableSignalsInteractiveUiState(entries);
-  const tableActionsUi = compareTableActionsInteractiveUiState(entries, showNextActions);
-  const { renderNextActions, actionRowDiverges } = tableActionsUi;
+  const { divergingDecisionLabels, renderNextActions, actionRowDiverges, actionCells } =
+    compareTableInteractiveUiState(entries, showNextActions);
 
   return (
     <div className="overflow-auto rounded-xl border border-border">
@@ -371,7 +367,7 @@ export function ComparisonTable({
                     actionRowDiverges && "bg-amber-500/5",
                   )}
                 >
-                  <TableCompareActions entry={e} actionCells={tableActionsUi.actionCells} />
+                  <TableCompareActions entry={e} actionCells={actionCells} />
                 </td>
               ))}
             </tr>
