@@ -34,6 +34,11 @@ describe("isValidHttpsUrl", () => {
     expect(isValidHttpsUrl("not a url")).toBe(false);
     expect(isValidHttpsUrl("")).toBe(false);
   });
+
+  it("rejects https URLs with embedded userinfo credentials", () => {
+    expect(isValidHttpsUrl("https://token@github.com/owner/repo")).toBe(false);
+    expect(isValidHttpsUrl("https://user:pass@example.com/docs")).toBe(false);
+  });
 });
 
 describe("isValidDomain", () => {
