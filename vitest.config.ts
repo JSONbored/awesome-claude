@@ -56,6 +56,7 @@ export default defineConfig({
         "apps/web/src/lib/community-signals.ts",
         "apps/web/src/lib/compare-entry-actions.ts",
         "apps/web/src/lib/compare-entry-signals.ts",
+        "apps/web/src/lib/compare-selection.ts",
         "apps/web/src/lib/content-section-parsing.ts",
         "apps/web/src/lib/content-section-variant.ts",
         "apps/web/src/lib/content.server.ts",
