@@ -17,11 +17,11 @@ import {
   displayCompareSignal,
   signalToneClassForDisplay,
 } from "@/lib/compare-table-signals-ui-lib";
+import { COMPARE_TABLE_SURFACE, type CompareAction } from "@/lib/compare-table-actions-ui-lib";
 import {
-  COMPARE_TABLE_SURFACE,
-  compareTableEntryActions,
-  type CompareAction,
-} from "@/lib/compare-table-actions-ui-lib";
+  compareTableActionsForEntry,
+  compareTableActionsInteractiveUiState,
+} from "@/lib/compare-table-actions-interactive-ui-lib";
 import { compareTableInteractiveUiState } from "@/lib/compare-table-interactive-ui-lib";
 import { recordCompareIntentEvent } from "@/lib/compare-entry-actions";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
@@ -53,8 +53,14 @@ function CompareSignalCell({
   );
 }
 
-function TableCompareActions({ entry }: { entry: Entry }) {
-  const actions = compareTableEntryActions(entry);
+function TableCompareActions({
+  entry,
+  actionCells,
+}: {
+  entry: Entry;
+  actionCells: ReturnType<typeof compareTableActionsInteractiveUiState>["actionCells"];
+}) {
+  const actions = compareTableActionsForEntry(entry, actionCells);
 
   return (
     <div className="flex flex-wrap gap-1.5">
@@ -292,8 +298,9 @@ export function ComparisonTable({
   entries: Entry[];
   showNextActions?: boolean;
 }) {
-  const { divergingDecisionLabels, renderNextActions, actionRowDiverges } =
-    compareTableInteractiveUiState(entries, showNextActions);
+  const { divergingDecisionLabels } = compareTableInteractiveUiState(entries, showNextActions);
+  const tableActionsUi = compareTableActionsInteractiveUiState(entries, showNextActions);
+  const { renderNextActions, actionRowDiverges } = tableActionsUi;
 
   return (
     <div className="overflow-auto rounded-xl border border-border">
@@ -364,7 +371,7 @@ export function ComparisonTable({
                     actionRowDiverges && "bg-amber-500/5",
                   )}
                 >
-                  <TableCompareActions entry={e} />
+                  <TableCompareActions entry={e} actionCells={tableActionsUi.actionCells} />
                 </td>
               ))}
             </tr>
