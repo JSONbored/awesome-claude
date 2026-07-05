@@ -5,7 +5,7 @@ import { BEST_LISTS, ENTRIES, type BestList, type BestPick } from "@/data/entrie
 import type { Entry } from "@/types/registry";
 import { ResourceCard } from "@/components/resource-card";
 import { ComparisonTable } from "@/components/comparison-table";
-import { compareBestUiState } from "@/lib/compare-best-ui-lib";
+import { compareBestInteractiveUiState } from "@/lib/compare-best-interactive-ui-lib";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { getBestListEditorial } from "@/data/best-list-editorial";
@@ -93,7 +93,7 @@ function BestDetail() {
     .filter((p): p is Resolved => p !== null);
 
   const compareEntries = useMemo(() => resolved.slice(0, 5).map((p) => p.entry), [resolved]);
-  const compareUi = useMemo(() => compareBestUiState(compareEntries), [compareEntries]);
+  const compareUi = useMemo(() => compareBestInteractiveUiState(compareEntries), [compareEntries]);
 
   return (
     <PageContainer className="py-12">
