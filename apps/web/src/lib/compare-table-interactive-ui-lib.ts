@@ -1,8 +1,8 @@
 import type { Entry } from "@/types/registry";
 import {
-  compareTablePresentationState,
+  compareTableUiInteractiveUiState,
   type CompareTablePresentationState,
-} from "@/lib/compare-table-ui-lib";
+} from "@/lib/compare-table-ui-interactive-ui-lib";
 
 export type CompareTableInteractiveUiState = CompareTablePresentationState;
 
@@ -10,5 +10,5 @@ export function compareTableInteractiveUiState(
   entries: Entry[],
   showNextActions: boolean,
 ): CompareTableInteractiveUiState {
-  return compareTablePresentationState(entries, showNextActions);
+  return compareTableUiInteractiveUiState(entries, showNextActions);
 }
