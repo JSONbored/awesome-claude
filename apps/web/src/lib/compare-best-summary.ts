@@ -6,27 +6,21 @@ import {
   resolveComparisonRefs,
 } from "@/lib/compare-featured-link";
 import {
-  compareCuratedDecisionBannerText,
-  compareCuratedSummary,
-  type CompareDecisionSummary,
-} from "@/lib/compare-curated-summary";
-import { compareDecisionSummary } from "@/lib/compare-table-decision-rows";
+  compareSurfaceBannerTexts,
+  compareSurfaceDecisionBannerText,
+  compareSurfaceSummary,
+} from "@/lib/compare-surface-summary-lib";
 
 export type BestListPickRef = {
   ref: string;
 };
 
-export function compareBestSummary(entries: Entry[]): {
-  comparedCount: number;
-  decision: CompareDecisionSummary;
-  actionsDiverge: boolean;
-  hasAnyDivergence: boolean;
-} {
-  return compareCuratedSummary(entries);
+export function compareBestSummary(entries: Entry[]) {
+  return compareSurfaceSummary(entries);
 }
 
 export function compareBestDecisionBannerText(entries: Entry[]): string | null {
-  return compareCuratedDecisionBannerText(compareDecisionSummary(entries));
+  return compareSurfaceDecisionBannerText(entries);
 }
 
 export function compareBestActionBannerText(actionsDiverge: boolean): string | null {
@@ -40,13 +34,8 @@ export function shouldShowBestCompareSection(entries: Entry[]): boolean {
 
 export function compareBestBannerTexts(entries: Entry[]): string[] {
   if (!shouldShowBestCompareSection(entries)) return [];
-  const summary = compareBestSummary(entries);
-  const messages: string[] = [];
-  const decisionText = compareBestDecisionBannerText(entries);
-  const actionText = compareBestActionBannerText(summary.actionsDiverge);
-  if (decisionText) messages.push(decisionText);
-  if (actionText) messages.push(actionText);
-  return messages;
+  const summary = compareSurfaceSummary(entries);
+  return compareSurfaceBannerTexts(entries, compareBestActionBannerText(summary.actionsDiverge));
 }
 
 export function compareBestListPickRefs(picks: BestListPickRef[]): string[] {
