@@ -157,7 +157,11 @@ function isHttpsUrl(value) {
   if (!normalized) return true;
   try {
     const url = new URL(normalized);
-    return url.protocol === "https:";
+    return (
+      url.protocol === "https:" &&
+      url.username === "" &&
+      url.password === ""
+    );
   } catch {
     return false;
   }

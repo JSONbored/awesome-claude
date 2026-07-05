@@ -8,6 +8,7 @@ export {
   canonicalizeSourceUrl,
   hasAffiliateParam,
   isAffiliateParam,
+  isPublicHttpsUrl,
   isTrackingParam,
   stripTrackingParams,
 } from "./source-url-lib.js";
