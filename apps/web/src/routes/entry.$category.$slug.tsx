@@ -3,13 +3,9 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import {
   ArrowUpRight,
-  BookOpen,
-  ExternalLink,
-  GitBranch,
   ShieldCheck,
   AlertTriangle,
   ListChecks,
-  Code2,
   Sparkles,
   Star,
   FileText,
@@ -48,18 +44,25 @@ import { categoryLabels, categoryUsageHints, siteConfig } from "@/lib/site";
 import { tagSlug } from "@/lib/tags";
 // (HoverChevrons removed — related uses static grid)
 import { ShareMenu } from "@/components/share-menu";
-import { DossierTOC, type TocItem } from "@/components/dossier-toc";
+import type { TocItem } from "@/components/dossier-toc";
+import { EntryDetailQuickLinks } from "@/components/entry-detail-quick-links";
+import { EntryDetailRail } from "@/components/entry-detail-rail";
+import { EntryDetailReadinessPanel } from "@/components/entry-detail-readiness";
 import { EntryFacets } from "@/components/entry-facets";
 import { HarnessBadge } from "@/components/harness-badge";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { SourceCitations } from "@/components/source-citations";
 import { CitationFacts } from "@/components/citation-facts";
-import { ProvenanceBlock } from "@/components/provenance-block";
 import { StickyMetaBar } from "@/components/sticky-meta-bar";
 import { EntrySignalsPanel } from "@/components/entry-signals-panel";
 import { EntryBrandMark } from "@/components/entry-brand-mark";
-import { TRUST_LABEL, PLATFORM_SUPPORT_LABEL, type Entry } from "@/types/registry";
+import { PLATFORM_SUPPORT_LABEL, type Entry } from "@/types/registry";
+import {
+  buildEntryTocItems,
+  entryQuickLinks,
+  entryReadinessRows,
+} from "@/lib/entry-detail-sidebar-lib";
 import { installRiskLevel, INSTALL_RISK_LABEL, INSTALL_RISK_DETAIL } from "@/lib/trust";
 import { useEffect, useMemo, useState } from "react";
 import { useRecents } from "@/lib/recents";
@@ -266,33 +269,31 @@ function Dossier() {
   const risk = installRiskLevel(entry);
   const hasSchema = hasSchemaDetails(entry);
 
-  const tocItems = useMemo<TocItem[]>(() => {
-    const items: TocItem[] = [];
-    if (risk !== "low") items.push({ id: "risk-callout", label: "Install risk" });
-    items.push({ id: "citation-facts", label: "Citation facts" });
-    if (entry.safetyNotes) items.push({ id: "safety", label: "Safety notes" });
-    if (entry.privacyNotes) items.push({ id: "privacy", label: "Privacy notes" });
-    if (entry.prerequisites && entry.prerequisites.length > 0)
-      items.push({ id: "prerequisites", label: "Prerequisites" });
-    if (hasSchema) items.push({ id: "schema", label: "Schema details" });
-    items.push({ id: "about", label: "About this resource" });
-    items.push({ id: "citations", label: "Source citations" });
-    items.push({ id: "badge", label: "Add a badge" });
-    if (alternatives.length > 0) items.push({ id: "compare", label: "How it compares" });
-    if (rel.length > 0) items.push({ id: "related", label: "Related" });
-    if (guides.length > 0) items.push({ id: "guides", label: "Related guides" });
-    items.push({ id: "signals", label: "Signals" });
-    return items;
-  }, [
-    risk,
-    entry.safetyNotes,
-    entry.privacyNotes,
-    entry.prerequisites,
-    hasSchema,
-    alternatives.length,
-    rel.length,
-    guides.length,
-  ]);
+  const tocItems = useMemo<TocItem[]>(
+    () =>
+      buildEntryTocItems({
+        risk,
+        hasSafetyNotes: Boolean(entry.safetyNotes),
+        hasPrivacyNotes: Boolean(entry.privacyNotes),
+        hasPrerequisites: Boolean(entry.prerequisites?.length),
+        hasSchema,
+        hasAlternatives: alternatives.length > 0,
+        hasRelated: rel.length > 0,
+        hasGuides: guides.length > 0,
+      }),
+    [
+      risk,
+      entry.safetyNotes,
+      entry.privacyNotes,
+      entry.prerequisites,
+      hasSchema,
+      alternatives.length,
+      rel.length,
+      guides.length,
+    ],
+  );
+  const readinessRows = useMemo(() => entryReadinessRows(entry), [entry]);
+  const quickLinks = useMemo(() => entryQuickLinks(entry), [entry]);
 
   const entryUrl = `/entry/${entry.category}/${entry.slug}`;
 
@@ -450,59 +451,10 @@ function Dossier() {
               )}
             </div>
 
-            <div className="border-t border-border px-4 py-3">
-              <div className="eyebrow mb-2">Readiness</div>
-              <ul className="space-y-1.5 text-xs">
-                <Readiness
-                  label="Trust"
-                  value={TRUST_LABEL[entry.trust]}
-                  ok={entry.trust === "trusted"}
-                />
-                <Readiness label="Source" value={entry.source} ok={entry.source !== "unverified"} />
-                <Readiness
-                  label="Safety notes"
-                  value={entry.safetyNotes ? "Present" : "Missing"}
-                  ok={!!entry.safetyNotes}
-                />
-                <Readiness
-                  label="Reviewed"
-                  value={entry.reviewed ? "Yes" : "No"}
-                  ok={!!entry.reviewed}
-                />
-              </ul>
-            </div>
+            <EntryDetailReadinessPanel rows={readinessRows} />
           </div>
 
-          <div className="mt-3 flex flex-col gap-1.5 text-xs">
-            {entry.docsUrl && (
-              <a
-                href={entry.docsUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-1.5 text-ink-muted hover:text-ink"
-              >
-                <BookOpen className="h-3.5 w-3.5" /> Documentation{" "}
-                <ExternalLink className="h-3 w-3" />
-              </a>
-            )}
-            {entry.sourceUrl && (
-              <a
-                href={entry.sourceUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-1.5 text-ink-muted hover:text-ink"
-              >
-                <GitBranch className="h-3.5 w-3.5" /> Source repository{" "}
-                <ExternalLink className="h-3 w-3" />
-              </a>
-            )}
-            <Link
-              to="/browse"
-              className="inline-flex items-center gap-1.5 text-ink-muted hover:text-ink"
-            >
-              <Code2 className="h-3.5 w-3.5" /> Registry JSON · LLM text
-            </Link>
-          </div>
+          <EntryDetailQuickLinks links={quickLinks} />
         </aside>
       </header>
       <div id="dossier-header-sentinel" aria-hidden className="h-px w-full" />
@@ -811,17 +763,7 @@ function Dossier() {
           />
         </div>
 
-        <aside className="space-y-6">
-          <div className="hidden lg:block lg:sticky lg:top-20">
-            <DossierTOC items={tocItems} />
-          </div>
-          <ProvenanceBlock entry={entry} />
-          <div className="rounded-xl border border-border bg-surface p-4 text-xs text-ink-muted">
-            HeyClaude reviews metadata, provenance, and surface-level safety. We don't scan for
-            malware. Always read the source before installing tools that touch your filesystem,
-            network, or credentials.
-          </div>
-        </aside>
+        <EntryDetailRail entry={entry} tocItems={tocItems} />
       </div>
     </div>
   );
@@ -1220,18 +1162,5 @@ function DossierSection({
       </div>
       <div className="prose-editorial text-sm">{children}</div>
     </section>
-  );
-}
-
-function Readiness({ label, value, ok }: { label: string; value: string; ok: boolean }) {
-  return (
-    <li className="flex items-center justify-between">
-      <span className="text-ink-muted">{label}</span>
-      <span
-        className={cn("font-medium capitalize", ok ? "text-trust-trusted" : "text-trust-review")}
-      >
-        {value}
-      </span>
-    </li>
   );
 }
