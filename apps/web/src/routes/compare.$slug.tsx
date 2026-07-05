@@ -9,15 +9,15 @@ import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
 import { getComparison } from "@/data/comparisons";
 import {
-  compareCuratedHasRenderableEntries,
-  compareCuratedResolvedEntries,
-  compareCuratedUiState,
-} from "@/lib/compare-curated-ui-lib";
+  compareCuratedInteractivePageRenderable,
+  compareCuratedInteractiveUiState,
+} from "@/lib/compare-curated-interactive-ui-lib";
+import { compareCuratedResolvedEntries } from "@/lib/compare-curated-ui-lib";
 
 export const Route = createFileRoute("/compare/$slug")({
   loader: ({ params }) => {
     const comparison = getComparison(params.slug);
-    if (!comparison || !compareCuratedHasRenderableEntries(comparison.refs, ENTRIES)) {
+    if (!comparison || !compareCuratedInteractivePageRenderable(comparison.refs, ENTRIES)) {
       throw notFound();
     }
     return {};
@@ -91,10 +91,8 @@ function ComparisonPage() {
   const { slug } = Route.useParams();
   const comparison = getComparison(slug);
   if (!comparison) return null;
-  const { entries, bannerTexts, interactiveSearch, interactiveLinkLabel } = compareCuratedUiState(
-    comparison.refs,
-    ENTRIES,
-  );
+  const { entries, bannerTexts, interactiveSearch, interactiveLinkLabel } =
+    compareCuratedInteractiveUiState(comparison.refs, ENTRIES);
 
   return (
     <div className="mx-auto max-w-page px-4 py-10 sm:px-6">
