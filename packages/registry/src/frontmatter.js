@@ -1,33 +1,12 @@
-import matter from "gray-matter";
-
-export const UNSAFE_FRONTMATTER_LANGUAGE_ERROR =
-  "Executable JavaScript frontmatter is not allowed in registry content";
-
-export const SAFE_MATTER_OPTIONS = {
-  engines: {
-    javascript() {
-      throw new Error(UNSAFE_FRONTMATTER_LANGUAGE_ERROR);
-    },
-  },
-};
-
-export function parseSafeFrontmatter(value, options = {}) {
-  const content = String(value ?? "").replace(/^\uFEFF/, "");
-  try {
-    const parsed = matter(content, SAFE_MATTER_OPTIONS);
-    return {
-      data: parsed.data || {},
-      content: parsed.content || "",
-      excerpt: parsed.excerpt,
-      language: parsed.language,
-      matter: parsed.matter,
-    };
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    if (message === UNSAFE_FRONTMATTER_LANGUAGE_ERROR) throw error;
-    if (options.fallbackOnError) {
-      return { data: {}, content, error };
-    }
-    throw error;
-  }
-}
+/**
+ * Safe frontmatter parsing surface.
+ *
+ * Pure frontmatter helpers live in `frontmatter-lib.js`. This module re-exports
+ * that surface so existing `@heyclaude/registry/frontmatter` imports stay
+ * unchanged.
+ */
+export {
+  SAFE_MATTER_OPTIONS,
+  UNSAFE_FRONTMATTER_LANGUAGE_ERROR,
+  parseSafeFrontmatter,
+} from "./frontmatter-lib.js";

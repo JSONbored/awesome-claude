@@ -77,6 +77,7 @@ export default defineConfig({
         "apps/web/src/lib/mcp-stats.ts",
         "apps/web/src/lib/og-fonts.ts",
         "apps/web/src/lib/og-image.ts",
+        "apps/web/src/lib/job-admin.ts",
         "apps/web/src/lib/og-render.server.ts",
         "apps/web/src/lib/peek-hotkey.ts",
         "apps/web/src/lib/site.ts",
