@@ -30,16 +30,15 @@ import type { Entry, Harness } from "@/types/registry";
 import { cn } from "@/lib/utils";
 import { brandIdentityLabel } from "@/lib/brand-icons";
 import {
-  compareDrawerDecisionRowDiverges,
   compareDrawerDecisionRows,
   compareSignalToneClass,
   type CompareSignalValue,
 } from "@/lib/compare-drawer-signals-ui-lib";
+import { compareDrawerSignalsInteractiveUiState } from "@/lib/compare-drawer-signals-interactive-ui-lib";
 
 interface RowDef {
   label: string;
   render: (e: Entry) => React.ReactNode;
-  diverges?: (items: Entry[]) => boolean;
 }
 
 const ROWS: RowDef[] = [
@@ -54,7 +53,6 @@ const ROWS: RowDef[] = [
       if (!value) return <span className="text-xs text-ink-subtle">—</span>;
       return <CompareSignalCell value={value} />;
     },
-    diverges: (items: Entry[]) => compareDrawerDecisionRowDiverges(row.resolve, items),
   })),
   {
     label: "Safety",
@@ -323,6 +321,7 @@ function SnippetCell({ entry }: { entry: Entry }) {
 export function CompareDrawer() {
   const { items, open, setOpen, toggle, clear, hydrate } = useCompare();
   const drawerActionsUi = compareDrawerActionsInteractiveUiState(items);
+  const drawerSignalsUi = compareDrawerSignalsInteractiveUiState(items);
   const { drawerUi, emptyHint, shareUrl } = compareDrawerInteractiveUiState(items);
   const { actionRowDiverges } = drawerActionsUi;
   const { bannerTexts, fullViewSearch } = drawerUi;
@@ -505,7 +504,7 @@ export function CompareDrawer() {
                     ))}
                   </tr>
                   {ROWS.map((row, i) => {
-                    const rowDiverges = row.diverges?.(items) ?? false;
+                    const rowDiverges = drawerSignalsUi.divergingDecisionLabels.has(row.label);
                     return (
                       <tr
                         key={row.label}
