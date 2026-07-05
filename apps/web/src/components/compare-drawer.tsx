@@ -18,17 +18,17 @@ import { CopyButton } from "./copy-button";
 import { CopySegmented, variantsForEntry } from "./copy-segmented";
 import { EntryBrandMark } from "./entry-brand-mark";
 import { useCopyPref, useHarnessPref } from "@/lib/dossier-prefs";
-import { COMPARE_DRAWER_SURFACE } from "@/lib/compare-drawer-actions";
+import {
+  COMPARE_DRAWER_SURFACE,
+  compareDrawerEntryActions,
+  type CompareAction,
+} from "@/lib/compare-drawer-actions-ui-lib";
 import {
   compareDrawerEmptyStateHint,
   compareDrawerShareUrl,
   compareDrawerUiState,
 } from "@/lib/compare-drawer-ui-lib";
-import {
-  recordCompareIntentEvent,
-  resolveCompareEntryActions,
-  type CompareAction,
-} from "@/lib/compare-entry-actions";
+import { recordCompareIntentEvent } from "@/lib/compare-entry-actions";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
 import type { Entry, Harness } from "@/types/registry";
 import { cn } from "@/lib/utils";
@@ -181,7 +181,7 @@ function CompareSignalCell({ value }: { value: CompareSignalValue }) {
 }
 
 function DrawerCompareActions({ entry }: { entry: Entry }) {
-  const actions = resolveCompareEntryActions(entry);
+  const actions = compareDrawerEntryActions(entry);
 
   return (
     <div className="flex flex-wrap gap-1.5">
