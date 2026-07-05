@@ -106,6 +106,19 @@ describe("compare dossier summary", () => {
     ).toEqual([
       "Next steps differ across entries — use the actions in the table below to copy install commands and source links per resource.",
     ]);
+    expect(
+      compareDossierBannerTexts(primary, [
+        entry({
+          slug: "mixed",
+          reviewedBy: "maintainer",
+          reviewedAt: "2026-01-02",
+          installCommand: "npm i fixture",
+        }),
+      ]),
+    ).toEqual([
+      "1 trust signal differ across this comparison (Review status).",
+      "Next steps differ across entries — use the actions in the table below to copy install commands and source links per resource.",
+    ]);
   });
 
   it("builds interactive compare search params for dossier alternatives", () => {
