@@ -359,6 +359,7 @@ function isLoopbackHostname(hostname: string) {
 function isSafeRemoteMcpUrl(value: string) {
   try {
     const url = new URL(value.trim());
+    if (url.username || url.password) return false;
     if (url.protocol === "https:") return true;
     return url.protocol === "http:" && isLoopbackHostname(url.hostname);
   } catch {
