@@ -17,8 +17,7 @@ import {
   comparePageEntryActions,
   type CompareAction,
 } from "@/lib/compare-page-actions-ui-lib";
-import { comparePageUiState } from "@/lib/compare-page-ui-lib";
-import { comparePageEmptyUiState } from "@/lib/compare-page-empty-ui-lib";
+import { comparePageInteractiveUiState } from "@/lib/compare-page-interactive-ui-lib";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
 import { sameEntry } from "@/lib/entry-identity";
 import { search } from "@/data/search";
@@ -69,11 +68,12 @@ function ComparePage() {
   const items = compare.items;
   const [hoverRow, setHoverRow] = React.useState<number | null>(null);
   const [pickerOpen, setPickerOpen] = React.useState(false);
-  const pageUi = comparePageUiState(items);
-  const emptyUi = React.useMemo(
-    () => comparePageEmptyUiState(sp.ids, COMPARISONS, ENTRIES),
-    [sp.ids],
+  const interactiveUi = React.useMemo(
+    () => comparePageInteractiveUiState(items, sp.ids, COMPARISONS, ENTRIES),
+    [items, sp.ids],
   );
+  const pageUi = interactiveUi.pageUi;
+  const emptyUi = interactiveUi.emptyUi;
 
   const pushIds = (next: Entry[]) => {
     const ids = serializeCompareItems(next);
