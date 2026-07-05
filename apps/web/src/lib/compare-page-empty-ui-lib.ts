@@ -2,10 +2,8 @@ import {
   comparePageEmptyStateDescription,
   comparePageInvalidUrlHint,
 } from "@/lib/compare-page-ui-lib";
-import {
-  comparePagePopularComparisonLinks,
-  type ComparePagePopularComparisonLink,
-} from "@/lib/compare-page-featured-ui-lib";
+import type { ComparePagePopularComparisonLink } from "@/lib/compare-page-featured-ui-lib";
+import { comparePageFeaturedInteractiveUiState } from "@/lib/compare-page-featured-interactive-ui-lib";
 import type { EntryIdentity } from "@/lib/entry-identity";
 
 export type ComparePageEmptyUiState = {
@@ -22,6 +20,6 @@ export function comparePageEmptyUiState(
   return {
     description: comparePageEmptyStateDescription(),
     invalidUrlHint: comparePageInvalidUrlHint(ids, 0),
-    popularComparisonLinks: comparePagePopularComparisonLinks(comparisons, catalog),
+    popularComparisonLinks: comparePageFeaturedInteractiveUiState(comparisons, catalog),
   };
 }
