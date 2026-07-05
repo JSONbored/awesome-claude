@@ -20,12 +20,14 @@ import {
 import { comparePageBannerTexts } from "@/lib/compare-page-summary";
 import { comparePageShareUrlFromEntries } from "@/lib/compare-share-link";
 import {
-  compareCuratedPickInteractiveLabel,
-  compareCuratedPickInteractiveSearch,
+  compareFeaturedInteractiveLinkLabel,
+  compareFeaturedInteractiveSearch,
+  resolveComparisonRefs,
+} from "@/lib/compare-featured-link";
+import {
   compareEmptyStateDescription,
   compareInvalidUrlHint,
   compareSingleItemHintText,
-  resolveCuratedPickRefs,
 } from "@/lib/compare-empty-guidance";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
 import { sameEntry } from "@/lib/entry-identity";
@@ -131,8 +133,8 @@ function ComparePage() {
             <div className="eyebrow mb-2">Popular comparisons</div>
             <div className="flex flex-wrap justify-center gap-2">
               {COMPARISONS.map((c) => {
-                const resolvedCount = resolveCuratedPickRefs(c.refs, ENTRIES).length;
-                const interactiveSearch = compareCuratedPickInteractiveSearch(c.refs, ENTRIES);
+                const resolvedCount = resolveComparisonRefs(c.refs, ENTRIES).length;
+                const interactiveSearch = compareFeaturedInteractiveSearch(c.refs, ENTRIES);
                 return (
                   <div
                     key={c.slug}
@@ -151,7 +153,7 @@ function ComparePage() {
                         search={interactiveSearch}
                         className="text-[10px] text-ink-subtle hover:text-ink"
                       >
-                        {compareCuratedPickInteractiveLabel(resolvedCount)}
+                        {compareFeaturedInteractiveLinkLabel(resolvedCount)}
                       </Link>
                     ) : null}
                   </div>
