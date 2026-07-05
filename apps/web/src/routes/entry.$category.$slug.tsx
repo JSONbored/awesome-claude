@@ -40,19 +40,14 @@ import { CopyButton } from "@/components/copy-button";
 import { ResourceCard } from "@/components/resource-card";
 import { ComparisonTable } from "@/components/comparison-table";
 import {
-  compareBestListInteractiveLinkLabel,
-  compareBestListInteractiveSearch,
-} from "@/lib/compare-best-summary";
+  compareEntryFeaturedBestListLinks,
+  compareEntryFeaturedComparisonLinks,
+} from "@/lib/compare-entry-featured-ui-lib";
 import {
   compareDossierHeaderBannerTexts,
   compareDossierInteractiveCompareSearch,
   compareDossierInteractiveLinkLabel,
 } from "@/lib/compare-dossier-ui-lib";
-import {
-  compareFeaturedInteractiveLinkLabel,
-  compareFeaturedInteractiveSearch,
-  resolveComparisonRefs,
-} from "@/lib/compare-featured-link";
 import { buildEntryJsonLd } from "@heyclaude/registry";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl, clampDescription } from "@/lib/seo";
@@ -257,24 +252,11 @@ function Dossier() {
   const comparedIn = COMPARISONS.filter((c) => c.refs.includes(entryRef));
   const featuredIn = BEST_LISTS.filter((l) => l.picks.some((p) => p.ref === entryRef));
   const featuredCompareLinks = useMemo(
-    () =>
-      comparedIn.map((comparison) => {
-        const resolved = resolveComparisonRefs(comparison.refs, ENTRIES);
-        return {
-          slug: comparison.slug,
-          search: compareFeaturedInteractiveSearch(comparison.refs, ENTRIES),
-          label: compareFeaturedInteractiveLinkLabel(resolved.length),
-        };
-      }),
+    () => compareEntryFeaturedComparisonLinks(comparedIn, ENTRIES),
     [comparedIn],
   );
   const featuredBestListLinks = useMemo(
-    () =>
-      featuredIn.map((list) => ({
-        slug: list.slug,
-        search: compareBestListInteractiveSearch(list.picks, ENTRIES),
-        label: compareBestListInteractiveLinkLabel(list.picks, ENTRIES),
-      })),
+    () => compareEntryFeaturedBestListLinks(featuredIn, ENTRIES),
     [featuredIn],
   );
   const recents = useRecents();
