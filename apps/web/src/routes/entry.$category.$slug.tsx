@@ -19,6 +19,7 @@ import {
   Layers,
   BadgeCheck,
   Globe2,
+  ArrowLeft,
 } from "lucide-react";
 import { getEntry, related, relatedGroups, relatedGuides } from "@/data/search";
 import { getEntryRedirectTarget } from "@/lib/entry-redirects";
@@ -38,7 +39,11 @@ import { WatchButton } from "@/components/watch-button";
 import { CopyButton } from "@/components/copy-button";
 import { ResourceCard } from "@/components/resource-card";
 import { ComparisonTable } from "@/components/comparison-table";
-import { compareDossierBannerTexts } from "@/lib/compare-dossier-summary";
+import {
+  compareDossierBannerTexts,
+  compareDossierInteractiveSearch,
+} from "@/lib/compare-dossier-summary";
+import { compareInteractiveLinkLabel } from "@/lib/compare-interactive-link";
 import { buildEntryJsonLd } from "@heyclaude/registry";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl, clampDescription } from "@/lib/seo";
@@ -223,6 +228,10 @@ function Dossier() {
   }, [relGroups, rel]);
   const compareBannerTexts = useMemo(
     () => compareDossierBannerTexts(entry, alternatives),
+    [entry, alternatives],
+  );
+  const dossierCompareSearch = useMemo(
+    () => compareDossierInteractiveSearch(entry, alternatives),
     [entry, alternatives],
   );
   // Deterministic "how do I use this" next-step links — guides sharing a tag,
@@ -670,6 +679,16 @@ function Dossier() {
                 </div>
               ) : null}
               <ComparisonTable entries={[entry, ...alternatives]} showNextActions />
+              {dossierCompareSearch ? (
+                <Link
+                  to="/compare"
+                  search={dossierCompareSearch}
+                  className="mt-4 inline-flex items-center gap-1.5 text-sm text-ink-muted hover:text-ink"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  {compareInteractiveLinkLabel(alternatives.length + 1)}
+                </Link>
+              ) : null}
             </DossierSection>
           )}
 

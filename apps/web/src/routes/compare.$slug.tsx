@@ -10,6 +10,10 @@ import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
 import { getComparison } from "@/data/comparisons";
 import { compareCuratedBannerTexts } from "@/lib/compare-curated-summary";
+import {
+  compareInteractiveLinkLabel,
+  compareInteractiveSearch,
+} from "@/lib/compare-interactive-link";
 
 function resolveRefs(refs: string[]): Entry[] {
   const out: Entry[] = [];
@@ -98,6 +102,7 @@ function ComparisonPage() {
   if (!comparison) return null;
   const entries = resolveRefs(comparison.refs);
   const bannerTexts = compareCuratedBannerTexts(entries);
+  const interactiveSearch = compareInteractiveSearch(entries);
 
   return (
     <div className="mx-auto max-w-page px-4 py-10 sm:px-6">
@@ -122,13 +127,15 @@ function ComparisonPage() {
             ))}
           </div>
         ) : null}
-        <Link
-          to="/compare"
-          search={{ ids: entries.map((e) => `${e.category}/${e.slug}`).join(",") }}
-          className="mt-4 inline-flex items-center gap-1.5 text-sm text-ink-muted hover:text-ink"
-        >
-          <ArrowLeft className="h-4 w-4" /> Open in the interactive comparison tool
-        </Link>
+        {interactiveSearch ? (
+          <Link
+            to="/compare"
+            search={interactiveSearch}
+            className="mt-4 inline-flex items-center gap-1.5 text-sm text-ink-muted hover:text-ink"
+          >
+            <ArrowLeft className="h-4 w-4" /> {compareInteractiveLinkLabel(entries.length)}
+          </Link>
+        ) : null}
       </header>
 
       <div className="mt-8">

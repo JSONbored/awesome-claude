@@ -5,6 +5,7 @@ import {
   compareDossierBannerTexts,
   compareDossierDecisionBannerText,
   compareDossierEntries,
+  compareDossierInteractiveSearch,
   compareDossierSummary,
 } from "@/lib/compare-dossier-summary";
 
@@ -105,5 +106,24 @@ describe("compare dossier summary", () => {
     ).toEqual([
       "Next steps differ across entries — use the actions in the table below to copy install commands and source links per resource.",
     ]);
+  });
+
+  it("builds interactive compare search params for dossier alternatives", () => {
+    const primary = entry({ category: "skills", slug: "primary" });
+    expect(compareDossierInteractiveSearch(primary, [])).toBeNull();
+    expect(
+      compareDossierInteractiveSearch(primary, [
+        entry({ category: "hooks", slug: "alt" }),
+      ]),
+    ).toEqual({ ids: "skills/primary,hooks/alt" });
+    expect(
+      compareDossierInteractiveSearch(primary, [
+        entry({ slug: "two" }),
+        entry({ slug: "three" }),
+        entry({ slug: "four" }),
+      ]),
+    ).toEqual({
+      ids: "skills/primary,mcp/two,mcp/three,mcp/four",
+    });
   });
 });

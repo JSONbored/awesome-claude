@@ -4,6 +4,7 @@ import {
   compareCuratedDecisionBannerText,
   type CompareDecisionSummary,
 } from "@/lib/compare-curated-summary";
+import { compareInteractiveSearch } from "@/lib/compare-interactive-link";
 import { compareDecisionSummary } from "@/lib/compare-table-decision-rows";
 
 export function compareDossierEntries(entry: Entry, alternatives: Entry[]): Entry[] {
@@ -52,4 +53,11 @@ export function compareDossierBannerTexts(entry: Entry, alternatives: Entry[]): 
   if (decisionText) messages.push(decisionText);
   if (actionText) messages.push(actionText);
   return messages;
+}
+
+export function compareDossierInteractiveSearch(
+  entry: Entry,
+  alternatives: Entry[],
+): { ids: string } | null {
+  return compareInteractiveSearch(compareDossierEntries(entry, alternatives));
 }
