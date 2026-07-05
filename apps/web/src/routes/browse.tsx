@@ -37,7 +37,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { useCompare } from "@/lib/compare";
-import { browseCompareUiState } from "@/lib/compare-browse-ui-lib";
+import { browseCompareInteractiveUiState } from "@/lib/compare-browse-interactive-ui-lib";
 import { useRecents, type SavedSearch } from "@/lib/recents";
 import { entryByRef } from "@/data/entries";
 import { SavedSearchManager } from "@/components/saved-search-manager";
@@ -314,7 +314,10 @@ function Browse() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [compareSig]);
 
-  const browseCompareUi = useMemo(() => browseCompareUiState(compare.items), [compare.items]);
+  const browseCompareUi = useMemo(
+    () => browseCompareInteractiveUiState(compare.items),
+    [compare.items],
+  );
 
   const activeCount =
     Number(!!sp.q) +
