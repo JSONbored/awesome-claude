@@ -83,7 +83,10 @@ describe("compare table decision rows", () => {
       label: "—",
     });
     expect(
-      signalToneClassForDisplay({ tone: "verified", label: "Package verified" }),
+      signalToneClassForDisplay({
+        tone: "verified",
+        label: "Package verified",
+      }),
     ).toBe("text-trust-trusted");
     expect(
       signalToneClassForDisplay({ tone: "present", label: "Checksum present" }),

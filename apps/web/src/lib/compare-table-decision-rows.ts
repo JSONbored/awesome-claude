@@ -45,14 +45,10 @@ export function compareDecisionSummary(entries: Entry[]): {
   };
 }
 
-export function displayCompareSignal(
-  value: CompareSignalValue | undefined,
-): CompareSignalValue {
+export function displayCompareSignal(value: CompareSignalValue | undefined): CompareSignalValue {
   return resolveCompareSignal(value);
 }
 
-export function signalToneClassForDisplay(
-  value: CompareSignalValue | undefined,
-): string {
+export function signalToneClassForDisplay(value: CompareSignalValue | undefined): string {
   return compareSignalToneClass(displayCompareSignal(value).tone);
 }

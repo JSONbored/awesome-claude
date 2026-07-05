@@ -28,7 +28,10 @@ export interface RowDef {
   diverges?: (entries: Entry[]) => boolean;
 }
 
-function CompareSignalCell({ entry, resolve }: {
+function CompareSignalCell({
+  entry,
+  resolve,
+}: {
   entry: Entry;
   resolve: (entry: Entry) => ReturnType<typeof displayCompareSignal> | undefined;
 }) {
@@ -36,12 +39,7 @@ function CompareSignalCell({ entry, resolve }: {
   if (!raw) return <span className="text-xs text-ink-subtle">—</span>;
   const value = displayCompareSignal(raw);
   return (
-    <span
-      className={cn(
-        "inline-flex flex-col gap-0.5 text-xs",
-        signalToneClassForDisplay(raw),
-      )}
-    >
+    <span className={cn("inline-flex flex-col gap-0.5 text-xs", signalToneClassForDisplay(raw))}>
       <span>{value.label}</span>
       {value.detail ? <span className="text-ink-muted">{value.detail}</span> : null}
     </span>
@@ -230,39 +228,36 @@ export function ComparisonTable({ entries }: { entries: Entry[] }) {
           {COMPARISON_ROWS.map((row, i) => {
             const rowDiverges = divergingLabels.has(row.label);
             return (
-            <tr
-              key={row.label}
-              className={cn(
-                i % 2 === 0 && "bg-surface-2/30",
-                rowDiverges && "bg-amber-500/5",
-              )}
-            >
-              <th
-                scope="row"
-                className={cn(
-                  "sticky left-0 z-10 w-[150px] border-b border-r border-border bg-inherit p-3 text-left align-top text-xs font-medium text-ink-muted",
-                  rowDiverges && "text-amber-800",
-                )}
+              <tr
+                key={row.label}
+                className={cn(i % 2 === 0 && "bg-surface-2/30", rowDiverges && "bg-amber-500/5")}
               >
-                {row.label}
-                {rowDiverges ? (
-                  <span className="mt-0.5 block text-[10px] font-normal uppercase tracking-wide text-amber-700">
-                    Differs
-                  </span>
-                ) : null}
-              </th>
-              {entries.map((e) => (
-                <td
-                  key={`${e.category}/${e.slug}`}
+                <th
+                  scope="row"
                   className={cn(
-                    "min-w-[260px] max-w-[320px] border-b border-r border-border p-3 align-top",
-                    rowDiverges && "bg-amber-500/5",
+                    "sticky left-0 z-10 w-[150px] border-b border-r border-border bg-inherit p-3 text-left align-top text-xs font-medium text-ink-muted",
+                    rowDiverges && "text-amber-800",
                   )}
                 >
-                  {row.render(e)}
-                </td>
-              ))}
-            </tr>
+                  {row.label}
+                  {rowDiverges ? (
+                    <span className="mt-0.5 block text-[10px] font-normal uppercase tracking-wide text-amber-700">
+                      Differs
+                    </span>
+                  ) : null}
+                </th>
+                {entries.map((e) => (
+                  <td
+                    key={`${e.category}/${e.slug}`}
+                    className={cn(
+                      "min-w-[260px] max-w-[320px] border-b border-r border-border p-3 align-top",
+                      rowDiverges && "bg-amber-500/5",
+                    )}
+                  >
+                    {row.render(e)}
+                  </td>
+                ))}
+              </tr>
             );
           })}
         </tbody>

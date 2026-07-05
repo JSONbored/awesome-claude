@@ -269,52 +269,52 @@ function ComparePage() {
             {ROWS.map((row, i) => {
               const rowDiverges = row.diverges?.(items) ?? false;
               return (
-              <tr
-                key={row.label}
-                onMouseEnter={() => setHoverRow(i)}
-                onMouseLeave={() => setHoverRow(null)}
-                className={cn(
-                  "transition-colors duration-200 ease-out",
-                  rowDiverges
-                    ? "bg-amber-500/5"
-                    : hoverRow === i
-                      ? "bg-accent/5"
-                      : i % 2 === 0
-                        ? "bg-surface-2/30"
-                        : "",
-                )}
-              >
-                <th
-                  scope="row"
+                <tr
+                  key={row.label}
+                  onMouseEnter={() => setHoverRow(i)}
+                  onMouseLeave={() => setHoverRow(null)}
                   className={cn(
-                    "sticky left-0 z-10 w-[150px] border-b border-r border-border bg-inherit p-3 text-left align-top text-xs font-medium text-ink-muted",
-                    rowDiverges && "text-amber-800",
+                    "transition-colors duration-200 ease-out",
+                    rowDiverges
+                      ? "bg-amber-500/5"
+                      : hoverRow === i
+                        ? "bg-accent/5"
+                        : i % 2 === 0
+                          ? "bg-surface-2/30"
+                          : "",
                   )}
                 >
-                  {row.label}
-                  {rowDiverges ? (
-                    <span className="mt-0.5 block text-[10px] font-normal uppercase tracking-wide text-amber-700">
-                      Differs
-                    </span>
-                  ) : null}
-                </th>
-                {items.map((e) => (
-                  <td
-                    key={`${e.category}/${e.slug}`}
+                  <th
+                    scope="row"
                     className={cn(
-                      "min-w-[260px] max-w-[320px] border-b border-r border-border p-3 align-top",
-                      rowDiverges && "bg-amber-500/5",
+                      "sticky left-0 z-10 w-[150px] border-b border-r border-border bg-inherit p-3 text-left align-top text-xs font-medium text-ink-muted",
+                      rowDiverges && "text-amber-800",
                     )}
                   >
-                    {row.render(e)}
-                  </td>
-                ))}
-                {items.length < 4 && (
-                  <td className="min-w-[220px] border-b border-border p-3 align-top text-xs text-ink-subtle">
-                    —
-                  </td>
-                )}
-              </tr>
+                    {row.label}
+                    {rowDiverges ? (
+                      <span className="mt-0.5 block text-[10px] font-normal uppercase tracking-wide text-amber-700">
+                        Differs
+                      </span>
+                    ) : null}
+                  </th>
+                  {items.map((e) => (
+                    <td
+                      key={`${e.category}/${e.slug}`}
+                      className={cn(
+                        "min-w-[260px] max-w-[320px] border-b border-r border-border p-3 align-top",
+                        rowDiverges && "bg-amber-500/5",
+                      )}
+                    >
+                      {row.render(e)}
+                    </td>
+                  ))}
+                  {items.length < 4 && (
+                    <td className="min-w-[220px] border-b border-border p-3 align-top text-xs text-ink-subtle">
+                      —
+                    </td>
+                  )}
+                </tr>
               );
             })}
           </tbody>
