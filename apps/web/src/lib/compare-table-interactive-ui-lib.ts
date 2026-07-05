@@ -1,7 +1,7 @@
 import type { Entry } from "@/types/registry";
 import type { CompareTableActionCell } from "@/lib/compare-table-actions-ui-lib";
 import { compareTableActionsInteractiveUiState } from "@/lib/compare-table-actions-interactive-ui-lib";
-import { compareTableSignalsInteractiveUiState } from "@/lib/compare-table-signals-interactive-ui-lib";
+import { compareTableUiInteractiveUiState } from "@/lib/compare-table-ui-interactive-ui-lib";
 
 export type CompareTableInteractiveUiState = {
   divergingDecisionLabels: Set<string>;
@@ -14,12 +14,10 @@ export function compareTableInteractiveUiState(
   entries: Entry[],
   showNextActions: boolean,
 ): CompareTableInteractiveUiState {
-  const signals = compareTableSignalsInteractiveUiState(entries);
+  const tableUi = compareTableUiInteractiveUiState(entries, showNextActions);
   const actions = compareTableActionsInteractiveUiState(entries, showNextActions);
   return {
-    divergingDecisionLabels: signals.divergingDecisionLabels,
-    renderNextActions: actions.renderNextActions,
-    actionRowDiverges: actions.actionRowDiverges,
+    ...tableUi,
     actionCells: actions.actionCells,
   };
 }
