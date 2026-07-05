@@ -936,10 +936,10 @@ export function validateEntry(category, data, inferred = {}) {
       .trim()
       .toLowerCase();
 
-    if (websiteUrl && !/^https:\/\//i.test(websiteUrl)) {
+    if (websiteUrl && !isHttpsUrl(websiteUrl)) {
       semanticErrors.push("websiteUrl must use https");
     }
-    if (affiliateUrl && !/^https:\/\//i.test(affiliateUrl)) {
+    if (affiliateUrl && !isHttpsUrl(affiliateUrl)) {
       semanticErrors.push("affiliateUrl must use https");
     }
     if (

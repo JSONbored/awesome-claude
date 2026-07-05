@@ -969,6 +969,15 @@ describe("validateEntry", () => {
     });
     expect(result.semanticErrors).toContain("affiliateUrl must use https");
   });
+
+  it("rejects affiliateUrl values with embedded userinfo credentials", () => {
+    const result = validateEntry("tools", {
+      ...VALID_TOOL,
+      affiliateUrl: "https://token@example.com/affiliate",
+      disclosure: "affiliate",
+    });
+    expect(result.semanticErrors).toContain("affiliateUrl must use https");
+  });
 });
 
 describe("orderFrontmatter", () => {
