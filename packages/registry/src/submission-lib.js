@@ -699,6 +699,20 @@ function isUsefulDisclosureNote(value) {
 function isValidPublicContact(value) {
   const normalized = normalizeValue(value);
   if (!normalized) return true;
+  if (/^https?:\/\//i.test(normalized)) {
+    try {
+      const url = new URL(normalized);
+      return (
+        url.protocol === "https:" &&
+        url.username === "" &&
+        url.password === "" &&
+        url.hostname === "github.com" &&
+        url.pathname.split("/").filter(Boolean).length === 1
+      );
+    } catch {
+      return false;
+    }
+  }
   if (normalized.includes("@")) {
     const parts = normalized.split("@");
     const [local, domain] = parts;
@@ -731,16 +745,7 @@ function isValidPublicContact(value) {
     return true;
   }
 
-  try {
-    const url = new URL(normalized);
-    return (
-      url.protocol === "https:" &&
-      url.hostname === "github.com" &&
-      url.pathname.split("/").filter(Boolean).length === 1
-    );
-  } catch {
-    return false;
-  }
+  return false;
 }
 
 const TOOL_PRICING_MODELS = new Set([

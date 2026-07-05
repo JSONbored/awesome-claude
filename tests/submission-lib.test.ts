@@ -1192,6 +1192,21 @@ describe("validateSubmission shared guardrails", () => {
     );
   });
 
+  it("rejects GitHub profile contact URLs with embedded userinfo", () => {
+    const result = validateSubmission({
+      title: "Add MCP Server: Demo",
+      body: buildValidBody({
+        ...validMcpFields,
+        contact_email: "https://token@github.com/victim",
+      }),
+    });
+    expect(result.errors).toEqual(
+      expect.arrayContaining([
+        "Invalid public contact: use a GitHub handle, GitHub profile URL, or email",
+      ]),
+    );
+  });
+
   it("auto-normalizes slug to kebab-case during parsing", () => {
     const result = validateSubmission({
       title: "Add MCP Server: Demo",

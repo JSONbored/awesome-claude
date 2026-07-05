@@ -122,18 +122,23 @@ function isLikelyAffiliateUrl(value) {
 function isPublicContact(value) {
   const contact = normalizeText(value);
   if (!contact) return true;
+  if (/^https?:\/\//i.test(contact)) {
+    try {
+      const url = new URL(contact);
+      return (
+        url.protocol === "https:" &&
+        url.username === "" &&
+        url.password === "" &&
+        url.hostname === "github.com" &&
+        url.pathname.split("/").filter(Boolean).length === 1
+      );
+    } catch {
+      return false;
+    }
+  }
   if (isEmailLike(contact)) return true;
   if (isGitHubHandle(contact)) return true;
-  try {
-    const url = new URL(contact);
-    return (
-      url.protocol === "https:" &&
-      url.hostname === "github.com" &&
-      url.pathname.split("/").filter(Boolean).length === 1
-    );
-  } catch {
-    return false;
-  }
+  return false;
 }
 
 function isEmailLike(value) {

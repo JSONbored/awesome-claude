@@ -153,6 +153,18 @@ describe("submissions-lib spec validation", () => {
     );
   });
 
+  it("rejects GitHub profile contact URLs with embedded userinfo", () => {
+    const result = validateSubmissionDraftFromSpec(submissionSpec, {
+      fields: {
+        ...validMcpFields,
+        contact_email: "https://token@github.com/victim",
+      },
+    });
+    expect(result.errors.join("\n")).toContain(
+      "Invalid public contact: use a GitHub handle, GitHub profile URL, or email.",
+    );
+  });
+
   it("requires collections items and guide content", () => {
     expect(
       validateSubmissionDraftFromSpec(submissionSpec, {
