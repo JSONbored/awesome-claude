@@ -178,7 +178,10 @@ function sourceRole(item: SubmittedSourceUrl): SourceEvidenceRole {
 
 function withSourceDefaults(
   item: SubmittedSourceUrl,
-  values: Omit<SourceEvidenceItem, keyof SubmittedSourceUrl | "role" | "blocking">,
+  values: Omit<
+    SourceEvidenceItem,
+    keyof SubmittedSourceUrl | "role" | "blocking"
+  >,
 ): SourceEvidenceItem {
   return {
     ...item,
@@ -227,6 +230,13 @@ function validateFetchableSourceUrl(url: string) {
       ok: false as const,
       outcome: "invalid_url",
       error: "Source URL must use http or https.",
+    };
+  }
+  if (parsed.username || parsed.password) {
+    return {
+      ok: false as const,
+      outcome: "invalid_url",
+      error: "Source URL must not embed credentials in userinfo.",
     };
   }
   if (!sourceHostIsTrusted(parsed.hostname)) {
@@ -421,11 +431,13 @@ export async function checkSubmittedSourceEvidence(
     checkedUrls.push(await checkOneSourceUrl(item, fetchImpl));
   }
   for (const item of extracted.slice(MAX_SOURCE_EVIDENCE_URLS)) {
-    checkedUrls.push(withSourceDefaults(item, {
-      status: "hard_failure",
-      outcome: "too_many_source_urls",
-      error: `Only ${MAX_SOURCE_EVIDENCE_URLS} source URLs can be checked automatically.`,
-    }));
+    checkedUrls.push(
+      withSourceDefaults(item, {
+        status: "hard_failure",
+        outcome: "too_many_source_urls",
+        error: `Only ${MAX_SOURCE_EVIDENCE_URLS} source URLs can be checked automatically.`,
+      }),
+    );
   }
   const urls = downgradeInconclusiveSourceWarnings(checkedUrls);
   const blockingUrls = urls.filter((item) => item.blocking);
@@ -437,9 +449,7 @@ export async function checkSubmittedSourceEvidence(
   return {
     status,
     urls,
-    warnings: urls.filter(
-      (item) => !item.blocking && item.status !== "passed",
-    ),
+    warnings: urls.filter((item) => !item.blocking && item.status !== "passed"),
     hash: await sha256Hex(sourceEvidenceHashInput(urls)),
   };
 }

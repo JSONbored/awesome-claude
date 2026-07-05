@@ -1071,6 +1071,27 @@ websiteUrl: "https://attacker.example/redirect"
     ]);
   });
 
+  it("rejects source URLs with embedded userinfo before fetching", async () => {
+    const fetchImpl = vi.fn<typeof fetch>();
+    const report = await checkSubmittedSourceEvidence(
+      `---
+title: Userinfo Source Fixture
+repoUrl: "https://token@github.com/example/project"
+---
+`,
+      fetchImpl,
+    );
+
+    expect(fetchImpl).not.toHaveBeenCalled();
+    expect(report.status).toBe("failed");
+    expect(report.urls[0]).toMatchObject({
+      field: "repoUrl",
+      status: "hard_failure",
+      outcome: "invalid_url",
+      error: "Source URL must not embed credentials in userinfo.",
+    });
+  });
+
   it("validates redirect targets before following source evidence URLs", async () => {
     const fetchImpl = vi.fn<typeof fetch>().mockResolvedValue(
       new Response(null, {
@@ -1105,6 +1126,33 @@ documentationUrl: "https://github.com/example/redirect"
       status: "hard_failure",
       outcome: "source_host_not_checked",
       finalUrl: "http://127.0.0.1/internal-secret",
+    });
+  });
+
+  it("rejects redirect targets that embed userinfo credentials", async () => {
+    const fetchImpl = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(null, {
+        status: 302,
+        headers: { location: "https://user:pass@github.com/example/project" },
+      }),
+    );
+
+    const report = await checkSubmittedSourceEvidence(
+      `---
+title: Redirect Userinfo Fixture
+documentationUrl: "https://github.com/example/redirect"
+---
+`,
+      fetchImpl,
+    );
+
+    expect(fetchImpl).toHaveBeenCalledTimes(2);
+    expect(report.status).toBe("failed");
+    expect(report.urls[0]).toMatchObject({
+      field: "documentationUrl",
+      status: "hard_failure",
+      outcome: "invalid_url",
+      finalUrl: "https://user:pass@github.com/example/project",
     });
   });
 
