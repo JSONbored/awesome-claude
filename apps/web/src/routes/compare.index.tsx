@@ -17,18 +17,17 @@ import {
   resolveCompareEntryActions,
   type CompareAction,
 } from "@/lib/compare-entry-actions";
-import { comparePageBannerTexts } from "@/lib/compare-page-summary";
-import { comparePageShareUrlForWindow } from "@/lib/compare-share-link";
+import {
+  comparePageHeaderBannerTexts,
+  comparePageSelectionHint,
+  comparePageShareUrl,
+} from "@/lib/compare-page-ui-lib";
 import {
   compareFeaturedInteractiveLinkLabel,
   compareFeaturedInteractiveSearch,
   resolveComparisonRefs,
 } from "@/lib/compare-featured-link";
-import {
-  compareEmptyStateDescription,
-  compareInvalidUrlHint,
-  compareSingleItemHintText,
-} from "@/lib/compare-empty-guidance";
+import { compareEmptyStateDescription, compareInvalidUrlHint } from "@/lib/compare-empty-guidance";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
 import { sameEntry } from "@/lib/entry-identity";
 import { search } from "@/data/search";
@@ -80,8 +79,8 @@ function ComparePage() {
   const [hoverRow, setHoverRow] = React.useState<number | null>(null);
   const [pickerOpen, setPickerOpen] = React.useState(false);
   const actionRowDiverges = compareActionsDiverge(items);
-  const bannerTexts = comparePageBannerTexts(items);
-  const singleItemHint = compareSingleItemHintText(items.length);
+  const bannerTexts = comparePageHeaderBannerTexts(items);
+  const singleItemHint = comparePageSelectionHint(items.length);
 
   const pushIds = (next: Entry[]) => {
     const ids = serializeCompareItems(next);
@@ -102,7 +101,7 @@ function ComparePage() {
     setPickerOpen(false);
   };
 
-  const copyShare = () => comparePageShareUrlForWindow(items);
+  const copyShare = () => comparePageShareUrl(items);
 
   if (items.length === 0) {
     const resolvedFromUrl = resolveIds(sp.ids);
