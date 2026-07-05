@@ -5,6 +5,7 @@ import {
   compareDossierInteractiveCompareSearch,
   compareDossierInteractiveLinkLabel,
   compareDossierShowCompareSection,
+  compareDossierUiState,
 } from "@/lib/compare-dossier-ui-lib";
 
 function entry(overrides: Partial<Entry> = {}): Entry {
@@ -78,5 +79,37 @@ describe("compare dossier ui lib", () => {
       "1 trust signal differ across this comparison (Review status).",
       "Next steps differ across entries — use the actions in the table below to copy install commands and source links per resource.",
     ]);
+  });
+
+  it("bundles dossier compare presentation state for headers and interactive links", () => {
+    const primary = entry({ category: "skills", slug: "primary" });
+    expect(
+      compareDossierUiState(primary, [
+        entry({ category: "hooks", slug: "alt" }),
+      ]),
+    ).toEqual({
+      showCompareSection: true,
+      bannerTexts: [],
+      interactiveSearch: { ids: "skills/primary,hooks/alt" },
+      interactiveLinkLabel: "Open in the interactive comparison tool",
+    });
+    expect(
+      compareDossierUiState(primary, [
+        entry({
+          slug: "mixed",
+          reviewedBy: "maintainer",
+          reviewedAt: "2026-01-02",
+          installCommand: "npm i fixture",
+        }),
+      ]),
+    ).toEqual({
+      showCompareSection: true,
+      bannerTexts: [
+        "1 trust signal differ across this comparison (Review status).",
+        "Next steps differ across entries — use the actions in the table below to copy install commands and source links per resource.",
+      ],
+      interactiveSearch: { ids: "skills/primary,mcp/mixed" },
+      interactiveLinkLabel: "Open in the interactive comparison tool",
+    });
   });
 });

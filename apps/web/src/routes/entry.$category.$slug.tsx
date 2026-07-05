@@ -43,11 +43,7 @@ import {
   compareEntryFeaturedBestListLinks,
   compareEntryFeaturedComparisonLinks,
 } from "@/lib/compare-entry-featured-ui-lib";
-import {
-  compareDossierHeaderBannerTexts,
-  compareDossierInteractiveCompareSearch,
-  compareDossierInteractiveLinkLabel,
-} from "@/lib/compare-dossier-ui-lib";
+import { compareDossierUiState } from "@/lib/compare-dossier-ui-lib";
 import { buildEntryJsonLd } from "@heyclaude/registry";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl, clampDescription } from "@/lib/seo";
@@ -230,12 +226,8 @@ function Dossier() {
     const pool = altGroup && altGroup.entries.length > 0 ? altGroup.entries : rel;
     return pool.slice(0, 3);
   }, [relGroups, rel]);
-  const compareBannerTexts = useMemo(
-    () => compareDossierHeaderBannerTexts(entry, alternatives),
-    [entry, alternatives],
-  );
-  const dossierCompareSearch = useMemo(
-    () => compareDossierInteractiveCompareSearch(entry, alternatives),
+  const dossierCompareUi = useMemo(
+    () => compareDossierUiState(entry, alternatives),
     [entry, alternatives],
   );
   // Deterministic "how do I use this" next-step links — guides sharing a tag,
@@ -671,7 +663,7 @@ function Dossier() {
 
           <BadgeSection category={entry.category} slug={entry.slug} title={entry.title} />
 
-          {alternatives.length > 0 && (
+          {dossierCompareUi.showCompareSection && (
             <DossierSection id="compare" title="How it compares">
               <p className="mb-4 text-sm text-ink-muted">
                 {entry.title} side by side with{" "}
@@ -681,9 +673,9 @@ function Dossier() {
                 on trust, install, platform support, and disclosed safety notes — all from reviewed
                 registry metadata.
               </p>
-              {compareBannerTexts.length > 0 ? (
+              {dossierCompareUi.bannerTexts.length > 0 ? (
                 <div className="mb-4 space-y-1.5">
-                  {compareBannerTexts.map((text) => (
+                  {dossierCompareUi.bannerTexts.map((text) => (
                     <p key={text} className="text-sm text-ink-muted">
                       {text}
                     </p>
@@ -691,14 +683,14 @@ function Dossier() {
                 </div>
               ) : null}
               <ComparisonTable entries={[entry, ...alternatives]} showNextActions />
-              {dossierCompareSearch ? (
+              {dossierCompareUi.interactiveSearch ? (
                 <Link
                   to="/compare"
-                  search={dossierCompareSearch}
+                  search={dossierCompareUi.interactiveSearch}
                   className="mt-4 inline-flex items-center gap-1.5 text-sm text-ink-muted hover:text-ink"
                 >
                   <ArrowLeft className="h-4 w-4" />
-                  {compareDossierInteractiveLinkLabel(alternatives.length + 1)}
+                  {dossierCompareUi.interactiveLinkLabel}
                 </Link>
               ) : null}
             </DossierSection>

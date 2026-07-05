@@ -23,3 +23,20 @@ export function compareDossierInteractiveLinkLabel(comparedCount: number): strin
 export function compareDossierShowCompareSection(alternatives: Entry[]): boolean {
   return alternatives.length > 0;
 }
+
+export type CompareDossierUiState = {
+  showCompareSection: boolean;
+  bannerTexts: string[];
+  interactiveSearch: { ids: string } | null;
+  interactiveLinkLabel: string;
+};
+
+export function compareDossierUiState(entry: Entry, alternatives: Entry[]): CompareDossierUiState {
+  const comparedCount = alternatives.length + 1;
+  return {
+    showCompareSection: alternatives.length > 0,
+    bannerTexts: compareDossierBannerTexts(entry, alternatives),
+    interactiveSearch: compareDossierInteractiveSearch(entry, alternatives),
+    interactiveLinkLabel: compareInteractiveLinkLabel(comparedCount),
+  };
+}
