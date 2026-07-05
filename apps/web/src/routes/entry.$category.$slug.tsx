@@ -40,6 +40,10 @@ import { CopyButton } from "@/components/copy-button";
 import { ResourceCard } from "@/components/resource-card";
 import { ComparisonTable } from "@/components/comparison-table";
 import {
+  compareBestListInteractiveLinkLabel,
+  compareBestListInteractiveSearch,
+} from "@/lib/compare-best-summary";
+import {
   compareDossierBannerTexts,
   compareDossierInteractiveSearch,
 } from "@/lib/compare-dossier-summary";
@@ -263,6 +267,15 @@ function Dossier() {
         };
       }),
     [comparedIn],
+  );
+  const featuredBestListLinks = useMemo(
+    () =>
+      featuredIn.map((list) => ({
+        slug: list.slug,
+        search: compareBestListInteractiveSearch(list.picks, ENTRIES),
+        label: compareBestListInteractiveLinkLabel(list.picks, ENTRIES),
+      })),
+    [featuredIn],
   );
   const recents = useRecents();
   useEffect(() => {
@@ -759,17 +772,32 @@ function Dossier() {
           {(featuredIn.length > 0 || comparedIn.length > 0) && (
             <DossierSection id="featured-in" title="Featured in">
               <ul className="flex flex-col gap-2 text-sm">
-                {featuredIn.map((l) => (
-                  <li key={`best-${l.slug}`}>
-                    <Link
-                      to="/best/$slug"
-                      params={{ slug: l.slug }}
-                      className="story-link text-ink"
+                {featuredIn.map((l) => {
+                  const bestListLink = featuredBestListLinks.find((link) => link.slug === l.slug);
+                  return (
+                    <li
+                      key={`best-${l.slug}`}
+                      className="flex flex-wrap items-baseline gap-x-2 gap-y-1"
                     >
-                      Best list: {l.title}
-                    </Link>
-                  </li>
-                ))}
+                      <Link
+                        to="/best/$slug"
+                        params={{ slug: l.slug }}
+                        className="story-link text-ink"
+                      >
+                        Best list: {l.title}
+                      </Link>
+                      {bestListLink?.search ? (
+                        <Link
+                          to="/compare"
+                          search={bestListLink.search}
+                          className="text-xs text-ink-muted hover:text-ink"
+                        >
+                          {bestListLink.label}
+                        </Link>
+                      ) : null}
+                    </li>
+                  );
+                })}
                 {comparedIn.map((c) => {
                   const featuredLink = featuredCompareLinks.find((link) => link.slug === c.slug);
                   return (

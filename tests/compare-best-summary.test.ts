@@ -4,6 +4,8 @@ import {
   compareBestActionBannerText,
   compareBestBannerTexts,
   compareBestDecisionBannerText,
+  compareBestListInteractiveLinkLabel,
+  compareBestListInteractiveSearch,
   compareBestSummary,
   shouldShowBestCompareSection,
 } from "@/lib/compare-best-summary";
@@ -98,5 +100,27 @@ describe("compare best summary", () => {
     ).toEqual([
       "Next steps differ across picks — use the actions in the table below to copy install commands and source links per resource.",
     ]);
+  });
+
+  it("builds interactive compare links for best-list picks", () => {
+    const catalog = [
+      entry({ category: "skills", slug: "alpha" }),
+      entry({ category: "hooks", slug: "beta" }),
+    ];
+    expect(
+      compareBestListInteractiveSearch([{ ref: "skills/alpha" }], catalog),
+    ).toBeNull();
+    expect(
+      compareBestListInteractiveSearch(
+        [{ ref: "skills/alpha" }, { ref: "hooks/beta" }],
+        catalog,
+      ),
+    ).toEqual({ ids: "skills/alpha,hooks/beta" });
+    expect(
+      compareBestListInteractiveLinkLabel(
+        [{ ref: "skills/alpha" }, { ref: "hooks/beta" }],
+        catalog,
+      ),
+    ).toBe("Open interactively");
   });
 });
