@@ -18,11 +18,8 @@ import { CopyButton } from "./copy-button";
 import { CopySegmented, variantsForEntry } from "./copy-segmented";
 import { EntryBrandMark } from "./entry-brand-mark";
 import { useCopyPref, useHarnessPref } from "@/lib/dossier-prefs";
-import {
-  COMPARE_DRAWER_SURFACE,
-  compareDrawerActionSummary,
-  compareDrawerActionsDiverge,
-} from "@/lib/compare-drawer-actions";
+import { COMPARE_DRAWER_SURFACE, compareDrawerActionsDiverge } from "@/lib/compare-drawer-actions";
+import { compareDrawerBannerTexts } from "@/lib/compare-drawer-summary";
 import {
   recordCompareIntentEvent,
   resolveCompareEntryActions,
@@ -320,7 +317,7 @@ function SnippetCell({ entry }: { entry: Entry }) {
 export function CompareDrawer() {
   const { items, open, setOpen, toggle, clear, hydrate, getShareUrl } = useCompare();
   const actionRowDiverges = compareDrawerActionsDiverge(items);
-  const actionSummary = compareDrawerActionSummary(items);
+  const bannerTexts = compareDrawerBannerTexts(items);
 
   const onClear = () => {
     const snapshot = items.map((e) => `${e.category}/${e.slug}`).join(",");
@@ -354,11 +351,14 @@ export function CompareDrawer() {
             <SheetDescription className="sr-only">
               Side-by-side comparison of the selected resources.
             </SheetDescription>
-            {actionSummary.diverges ? (
-              <p className="w-full text-xs text-amber-800">
-                Next steps differ across this comparison — review install, source, and claim actions
-                per entry.
-              </p>
+            {bannerTexts.length > 0 ? (
+              <div className="w-full space-y-1">
+                {bannerTexts.map((text) => (
+                  <p key={text} className="text-xs text-amber-800">
+                    {text}
+                  </p>
+                ))}
+              </div>
             ) : null}
             <div className="flex flex-wrap items-center gap-2">
               {items.length > 0 && (
