@@ -1,9 +1,9 @@
 import type { Entry } from "@/types/registry";
 import type { EntryIdentity } from "@/lib/entry-identity";
 import {
-  comparePageEmptyUiState,
+  comparePageEmptyInteractiveUiState,
   type ComparePageEmptyUiState,
-} from "@/lib/compare-page-empty-ui-lib";
+} from "@/lib/compare-page-empty-interactive-ui-lib";
 import { comparePageUiState, type ComparePageUiState } from "@/lib/compare-page-ui-lib";
 
 export type ComparePageInteractiveUiState = {
@@ -19,6 +19,6 @@ export function comparePageInteractiveUiState(
 ): ComparePageInteractiveUiState {
   return {
     pageUi: comparePageUiState(items),
-    emptyUi: comparePageEmptyUiState(ids, comparisons, catalog),
+    emptyUi: comparePageEmptyInteractiveUiState(ids, comparisons, catalog),
   };
 }
