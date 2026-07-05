@@ -31,3 +31,19 @@ export function comparePageEmptyStateDescription(): string {
 export function comparePageInvalidUrlHint(ids: string, resolvedCount: number): string | null {
   return compareInvalidUrlHint(ids, resolvedCount);
 }
+
+export type ComparePageUiState = {
+  actionRowDiverges: boolean;
+  bannerTexts: string[];
+  singleItemHint: string | null;
+  shareUrl: string;
+};
+
+export function comparePageUiState(items: Entry[]): ComparePageUiState {
+  return {
+    actionRowDiverges: compareActionsDiverge(items),
+    bannerTexts: comparePageBannerTexts(items),
+    singleItemHint: compareSingleItemHintText(items.length),
+    shareUrl: comparePageShareUrlForWindow(items),
+  };
+}

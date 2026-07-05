@@ -7,6 +7,7 @@ import {
   comparePageInvalidUrlHint,
   comparePageSelectionHint,
   comparePageShareUrl,
+  comparePageUiState,
 } from "@/lib/compare-page-ui-lib";
 
 function entry(overrides: Partial<Entry> = {}): Entry {
@@ -78,5 +79,45 @@ describe("compare page ui lib", () => {
     expect(comparePageInvalidUrlHint("skills/missing", 0)).toContain(
       "could not be resolved",
     );
+  });
+
+  it("bundles interactive compare page presentation state", () => {
+    expect(
+      comparePageUiState([
+        entry({ category: "skills", slug: "alpha" }),
+        entry({ category: "hooks", slug: "beta" }),
+      ]),
+    ).toEqual({
+      actionRowDiverges: false,
+      bannerTexts: [],
+      singleItemHint: null,
+      shareUrl: "/compare?ids=skills%2Falpha%2Chooks%2Fbeta",
+    });
+    expect(
+      comparePageUiState([
+        entry(),
+        entry({
+          slug: "mixed",
+          reviewedBy: "maintainer",
+          reviewedAt: "2026-01-02",
+          installCommand: "npm i fixture",
+        }),
+      ]),
+    ).toEqual({
+      actionRowDiverges: true,
+      bannerTexts: [
+        "1 trust signal differ across this comparison (Review status).",
+        "Next steps differ across this comparison — review install, source, and claim actions in the table below.",
+      ],
+      singleItemHint: null,
+      shareUrl: "/compare?ids=mcp%2Ffixture%2Cmcp%2Fmixed",
+    });
+    expect(comparePageUiState([entry()])).toEqual({
+      actionRowDiverges: false,
+      bannerTexts: [],
+      singleItemHint:
+        "Add one more resource to unlock trust and next-step comparisons across the full table.",
+      shareUrl: "/compare?ids=mcp%2Ffixture",
+    });
   });
 });

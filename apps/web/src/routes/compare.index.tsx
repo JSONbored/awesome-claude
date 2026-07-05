@@ -17,12 +17,9 @@ import {
   type CompareAction,
 } from "@/lib/compare-entry-actions";
 import {
-  comparePageActionsDiverge,
   comparePageEmptyStateDescription,
-  comparePageHeaderBannerTexts,
   comparePageInvalidUrlHint,
-  comparePageSelectionHint,
-  comparePageShareUrl,
+  comparePageUiState,
 } from "@/lib/compare-page-ui-lib";
 import { comparePagePopularComparisonLinks } from "@/lib/compare-page-featured-ui-lib";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
@@ -75,9 +72,7 @@ function ComparePage() {
   const items = compare.items;
   const [hoverRow, setHoverRow] = React.useState<number | null>(null);
   const [pickerOpen, setPickerOpen] = React.useState(false);
-  const actionRowDiverges = comparePageActionsDiverge(items);
-  const bannerTexts = comparePageHeaderBannerTexts(items);
-  const singleItemHint = comparePageSelectionHint(items.length);
+  const pageUi = comparePageUiState(items);
   const popularComparisonLinks = React.useMemo(
     () => comparePagePopularComparisonLinks(COMPARISONS, ENTRIES),
     [],
@@ -102,7 +97,7 @@ function ComparePage() {
     setPickerOpen(false);
   };
 
-  const copyShare = () => comparePageShareUrl(items);
+  const copyShare = () => pageUi.shareUrl;
 
   if (items.length === 0) {
     const resolvedFromUrl = resolveIds(sp.ids);
@@ -168,16 +163,18 @@ function ComparePage() {
           <h1 className="mt-1 h-display-2 text-ink text-balance">
             {items.length} {items.length === 1 ? "resource" : "resources"} side by side
           </h1>
-          {bannerTexts.length > 0 ? (
+          {pageUi.bannerTexts.length > 0 ? (
             <div className="mt-2 space-y-1.5">
-              {bannerTexts.map((text) => (
+              {pageUi.bannerTexts.map((text) => (
                 <p key={text} className="text-sm text-ink-muted">
                   {text}
                 </p>
               ))}
             </div>
           ) : null}
-          {singleItemHint ? <p className="mt-2 text-sm text-ink-muted">{singleItemHint}</p> : null}
+          {pageUi.singleItemHint ? (
+            <p className="mt-2 text-sm text-ink-muted">{pageUi.singleItemHint}</p>
+          ) : null}
         </div>
         <div className="flex items-center gap-2">
           <CopyButton value={copyShare()} label="Copy share link" />
@@ -256,18 +253,18 @@ function ComparePage() {
             <tr
               className={cn(
                 "transition-colors duration-200 ease-out",
-                actionRowDiverges ? "bg-amber-500/5" : "bg-surface-2/30",
+                pageUi.actionRowDiverges ? "bg-amber-500/5" : "bg-surface-2/30",
               )}
             >
               <th
                 scope="row"
                 className={cn(
                   "sticky left-0 z-10 w-[150px] border-b border-r border-border bg-inherit p-3 text-left align-top text-xs font-medium text-ink-muted",
-                  actionRowDiverges && "text-amber-800",
+                  pageUi.actionRowDiverges && "text-amber-800",
                 )}
               >
                 Next steps
-                {actionRowDiverges ? (
+                {pageUi.actionRowDiverges ? (
                   <span className="mt-0.5 block text-[10px] font-normal uppercase tracking-wide text-amber-700">
                     Differs
                   </span>
@@ -278,7 +275,7 @@ function ComparePage() {
                   key={`actions-${e.category}/${e.slug}`}
                   className={cn(
                     "min-w-[260px] max-w-[320px] border-b border-r border-border p-3 align-top",
-                    actionRowDiverges && "bg-amber-500/5",
+                    pageUi.actionRowDiverges && "bg-amber-500/5",
                   )}
                 >
                   <CompareNextActions entry={e} />
