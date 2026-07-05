@@ -39,7 +39,7 @@ import { WatchButton } from "@/components/watch-button";
 import { CopyButton } from "@/components/copy-button";
 import { ResourceCard } from "@/components/resource-card";
 import { ComparisonTable } from "@/components/comparison-table";
-import { compareEntryFeaturedUiState } from "@/lib/compare-entry-featured-ui-lib";
+import { compareEntryFeaturedInteractiveUiState } from "@/lib/compare-entry-featured-interactive-ui-lib";
 import { compareDossierInteractiveUiState } from "@/lib/compare-dossier-interactive-ui-lib";
 import { buildEntryJsonLd } from "@heyclaude/registry";
 import { stringifyJsonLd } from "@/lib/json-ld";
@@ -241,7 +241,7 @@ function Dossier() {
   const comparedIn = COMPARISONS.filter((c) => c.refs.includes(entryRef));
   const featuredIn = BEST_LISTS.filter((l) => l.picks.some((p) => p.ref === entryRef));
   const featuredUi = useMemo(
-    () => compareEntryFeaturedUiState(comparedIn, featuredIn, ENTRIES),
+    () => compareEntryFeaturedInteractiveUiState(comparedIn, featuredIn, ENTRIES),
     [comparedIn, featuredIn],
   );
   const recents = useRecents();
