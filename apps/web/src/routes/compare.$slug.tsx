@@ -132,7 +132,7 @@ function ComparisonPage() {
       </header>
 
       <div className="mt-8">
-        <ComparisonTable entries={entries} />
+        <ComparisonTable entries={entries} showNextActions />
       </div>
 
       <NewsletterInline

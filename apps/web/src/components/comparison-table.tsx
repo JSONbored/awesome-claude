@@ -18,6 +18,17 @@ import {
   divergingDecisionRowLabels,
   signalToneClassForDisplay,
 } from "@/lib/compare-table-decision-rows";
+import {
+  COMPARE_TABLE_SURFACE,
+  compareTableActionsDiverge,
+  shouldRenderCompareTableActions,
+} from "@/lib/compare-table-actions";
+import {
+  recordCompareIntentEvent,
+  resolveCompareEntryActions,
+  type CompareAction,
+} from "@/lib/compare-entry-actions";
+import { trackEvent, entryEventKey } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import type { Entry } from "@/types/registry";
 import { EntryBrandMark } from "./entry-brand-mark";
@@ -44,6 +55,102 @@ function CompareSignalCell({
       {value.detail ? <span className="text-ink-muted">{value.detail}</span> : null}
     </span>
   );
+}
+
+function TableCompareActions({ entry }: { entry: Entry }) {
+  const actions = resolveCompareEntryActions(entry);
+
+  return (
+    <div className="flex flex-wrap gap-1.5">
+      {actions.map((action) => (
+        <TableActionButton key={action.id} entry={entry} action={action} />
+      ))}
+    </div>
+  );
+}
+
+function TableActionButton({ entry, action }: { entry: Entry; action: CompareAction }) {
+  const eventKey = entryEventKey(entry.category, entry.slug);
+
+  if (action.kind === "copy" && action.copyValue) {
+    return (
+      <CopyButton
+        value={action.copyValue}
+        label={action.label}
+        event={action.analyticsEvent}
+        eventData={{ entry: eventKey, surface: COMPARE_TABLE_SURFACE }}
+        onCopied={() => {
+          if (action.intentType) void recordCompareIntentEvent(action.intentType, entry);
+        }}
+      />
+    );
+  }
+
+  if (action.kind === "link") {
+    if (action.id === "dossier") {
+      return (
+        <Link
+          to="/entry/$category/$slug"
+          params={{ category: entry.category, slug: entry.slug }}
+          onClick={() => {
+            if (action.analyticsEvent) {
+              trackEvent(action.analyticsEvent, {
+                entry: eventKey,
+                surface: COMPARE_TABLE_SURFACE,
+              });
+            }
+            if (action.intentType) void recordCompareIntentEvent(action.intentType, entry);
+          }}
+          className="inline-flex h-7 items-center rounded-md border border-border bg-surface px-2 text-xs font-medium text-ink hover:bg-surface-2"
+        >
+          {action.label}
+        </Link>
+      );
+    }
+
+    if (action.id === "claim") {
+      return (
+        <Link
+          to="/claim"
+          onClick={() => {
+            if (action.analyticsEvent) {
+              trackEvent(action.analyticsEvent, {
+                entry: eventKey,
+                surface: COMPARE_TABLE_SURFACE,
+              });
+            }
+          }}
+          className="inline-flex h-7 items-center rounded-md border border-border bg-surface px-2 text-xs font-medium text-ink hover:bg-surface-2"
+        >
+          {action.label}
+        </Link>
+      );
+    }
+
+    if (action.href && action.external) {
+      return (
+        <a
+          href={action.href}
+          target="_blank"
+          rel="noreferrer"
+          onClick={() => {
+            if (action.analyticsEvent) {
+              trackEvent(action.analyticsEvent, {
+                entry: eventKey,
+                surface: COMPARE_TABLE_SURFACE,
+              });
+            }
+            if (action.intentType) void recordCompareIntentEvent(action.intentType, entry);
+          }}
+          className="inline-flex h-7 items-center rounded-md border border-border bg-surface px-2 text-xs font-medium text-ink hover:bg-surface-2"
+        >
+          {action.label}
+        </a>
+      );
+    }
+  }
+
+  return null;
 }
 
 const DECISION_COMPARISON_ROWS: RowDef[] = comparisonDecisionRows().map((row) => ({
@@ -182,8 +289,16 @@ export const COMPARISON_ROWS: RowDef[] = [
 ];
 
 /** Static side-by-side comparison table (no add/remove controls) for curated comparison pages. */
-export function ComparisonTable({ entries }: { entries: Entry[] }) {
+export function ComparisonTable({
+  entries,
+  showNextActions = false,
+}: {
+  entries: Entry[];
+  showNextActions?: boolean;
+}) {
   const divergingLabels = new Set(divergingDecisionRowLabels(entries));
+  const renderNextActions = shouldRenderCompareTableActions(entries, showNextActions);
+  const actionRowDiverges = renderNextActions && compareTableActionsDiverge(entries);
 
   return (
     <div className="overflow-auto rounded-xl border border-border">
@@ -225,6 +340,40 @@ export function ComparisonTable({ entries }: { entries: Entry[] }) {
           </tr>
         </thead>
         <tbody>
+          {renderNextActions ? (
+            <tr
+              className={cn(
+                "transition-colors duration-200 ease-out",
+                actionRowDiverges ? "bg-amber-500/5" : "bg-surface-2/30",
+              )}
+            >
+              <th
+                scope="row"
+                className={cn(
+                  "sticky left-0 z-10 w-[150px] border-b border-r border-border bg-inherit p-3 text-left align-top text-xs font-medium text-ink-muted",
+                  actionRowDiverges && "text-amber-800",
+                )}
+              >
+                Next steps
+                {actionRowDiverges ? (
+                  <span className="mt-0.5 block text-[10px] font-normal uppercase tracking-wide text-amber-700">
+                    Differs
+                  </span>
+                ) : null}
+              </th>
+              {entries.map((e) => (
+                <td
+                  key={`actions-${e.category}/${e.slug}`}
+                  className={cn(
+                    "min-w-[260px] max-w-[320px] border-b border-r border-border p-3 align-top",
+                    actionRowDiverges && "bg-amber-500/5",
+                  )}
+                >
+                  <TableCompareActions entry={e} />
+                </td>
+              ))}
+            </tr>
+          ) : null}
           {COMPARISON_ROWS.map((row, i) => {
             const rowDiverges = divergingLabels.has(row.label);
             return (
