@@ -18,6 +18,7 @@ import {
   type CompareAction,
 } from "@/lib/compare-entry-actions";
 import { comparePageBannerTexts } from "@/lib/compare-page-summary";
+import { comparePageShareUrlFromEntries } from "@/lib/compare-share-link";
 import {
   compareCuratedPickInteractiveLabel,
   compareCuratedPickInteractiveSearch,
@@ -100,9 +101,8 @@ function ComparePage() {
   };
 
   const copyShare = () => {
-    const sig = serializeCompareItems(items);
     const origin = typeof window !== "undefined" ? window.location.origin : "";
-    return sig ? `${origin}/compare?ids=${encodeURIComponent(sig)}` : `${origin}/compare`;
+    return comparePageShareUrlFromEntries(items, origin);
   };
 
   if (items.length === 0) {
