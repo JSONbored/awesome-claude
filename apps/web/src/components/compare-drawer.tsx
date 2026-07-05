@@ -20,6 +20,8 @@ import { EntryBrandMark } from "./entry-brand-mark";
 import { useCopyPref, useHarnessPref } from "@/lib/dossier-prefs";
 import { COMPARE_DRAWER_SURFACE, compareDrawerActionsDiverge } from "@/lib/compare-drawer-actions";
 import { compareDrawerBannerTexts } from "@/lib/compare-drawer-summary";
+import { compareDrawerEmptyHint } from "@/lib/compare-empty-guidance";
+import { compareFullViewSearch } from "@/lib/compare-interactive-link";
 import {
   recordCompareIntentEvent,
   resolveCompareEntryActions,
@@ -318,6 +320,7 @@ export function CompareDrawer() {
   const { items, open, setOpen, toggle, clear, hydrate, getShareUrl } = useCompare();
   const actionRowDiverges = compareDrawerActionsDiverge(items);
   const bannerTexts = compareDrawerBannerTexts(items);
+  const fullViewSearch = compareFullViewSearch(items);
 
   const onClear = () => {
     const snapshot = items.map((e) => `${e.category}/${e.slug}`).join(",");
@@ -384,16 +387,16 @@ export function CompareDrawer() {
                   />
                 </div>
               )}
-              {items.length > 0 && (
+              {fullViewSearch ? (
                 <Link
                   to="/compare"
-                  search={{ ids: items.map((e) => `${e.category}/${e.slug}`).join(",") }}
+                  search={fullViewSearch}
                   onClick={() => setOpen(false)}
                   className="inline-flex h-8 items-center gap-1 rounded-md border border-border bg-surface px-2.5 text-xs text-ink hover:bg-surface-2"
                 >
                   Open full view <ArrowRight className="h-3 w-3" />
                 </Link>
-              )}
+              ) : null}
               <CopyButton
                 value={getShareUrl()}
                 label="Copy compare link"
@@ -412,7 +415,7 @@ export function CompareDrawer() {
 
         {items.length === 0 ? (
           <div className="flex h-[60vh] items-center justify-center px-6 text-sm text-ink-muted">
-            Add resources to compare by tapping the Compare button on any card.
+            {compareDrawerEmptyHint()}
           </div>
         ) : (
           <div className="h-[calc(88vh-57px)] overflow-auto">

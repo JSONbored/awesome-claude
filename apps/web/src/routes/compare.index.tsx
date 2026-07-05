@@ -18,6 +18,11 @@ import {
   type CompareAction,
 } from "@/lib/compare-entry-actions";
 import { comparePageBannerTexts } from "@/lib/compare-page-summary";
+import {
+  compareEmptyStateDescription,
+  compareInvalidUrlHint,
+  compareSingleItemHintText,
+} from "@/lib/compare-empty-guidance";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
 import { sameEntry } from "@/lib/entry-identity";
 import { search } from "@/data/search";
@@ -70,6 +75,7 @@ function ComparePage() {
   const [pickerOpen, setPickerOpen] = React.useState(false);
   const actionRowDiverges = compareActionsDiverge(items);
   const bannerTexts = comparePageBannerTexts(items);
+  const singleItemHint = compareSingleItemHintText(items.length);
 
   const pushIds = (next: Entry[]) => {
     const ids = serializeCompareItems(next);
@@ -102,14 +108,14 @@ function ComparePage() {
       // Render directly from URL while context hydrates.
       return <Skeleton ids={sp.ids} />;
     }
+    const invalidUrlHint = compareInvalidUrlHint(sp.ids, 0);
     return (
       <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
         <div className="rounded-xl border border-dashed border-border bg-surface p-10 text-center">
           <div className="eyebrow">Comparison</div>
           <h1 className="mt-2 h-display-2 text-ink text-balance">Nothing to compare yet</h1>
-          <p className="mt-2 text-sm text-ink-muted">
-            Add 2–4 resources from the directory to see them side by side.
-          </p>
+          <p className="mt-2 text-sm text-ink-muted">{compareEmptyStateDescription()}</p>
+          {invalidUrlHint ? <p className="mt-2 text-sm text-amber-800">{invalidUrlHint}</p> : null}
           <div className="mt-5 flex justify-center gap-2">
             <Link
               to="/browse"
@@ -156,6 +162,7 @@ function ComparePage() {
               ))}
             </div>
           ) : null}
+          {singleItemHint ? <p className="mt-2 text-sm text-ink-muted">{singleItemHint}</p> : null}
         </div>
         <div className="flex items-center gap-2">
           <CopyButton value={copyShare()} label="Copy share link" />

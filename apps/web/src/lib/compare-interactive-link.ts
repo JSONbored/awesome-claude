@@ -18,6 +18,12 @@ export function compareInteractiveSearch(entries: EntryIdentity[]): { ids: strin
   return { ids: serializeCompareItems(slice) };
 }
 
+export function compareFullViewSearch(entries: EntryIdentity[]): { ids: string } | null {
+  if (entries.length === 0) return null;
+  const slice = entries.slice(0, COMPARE_INTERACTIVE_MAX);
+  return { ids: serializeCompareItems(slice) };
+}
+
 export function compareInteractiveLinkLabel(entryCount: number): string {
   const count = compareInteractiveEntryCount(entryCount);
   if (count === COMPARE_INTERACTIVE_MIN) {

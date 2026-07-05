@@ -7,6 +7,7 @@ import {
   compareInteractiveEntryCount,
   compareInteractiveLinkLabel,
   compareInteractiveSearch,
+  compareFullViewSearch,
 } from "@/lib/compare-interactive-link";
 
 function entry(overrides: Partial<Entry> = {}): Entry {
@@ -91,5 +92,19 @@ describe("compare interactive link", () => {
     expect(compareInteractiveLinkLabel(5)).toBe(
       "Open 4 picks in the interactive comparison tool",
     );
+  });
+
+  it("builds full-view compare links for one or more entries", () => {
+    expect(compareFullViewSearch([])).toBeNull();
+    expect(compareFullViewSearch([entry()])).toEqual({ ids: "mcp/fixture" });
+    expect(
+      compareFullViewSearch([
+        entry({ slug: "one" }),
+        entry({ slug: "two" }),
+        entry({ slug: "three" }),
+        entry({ slug: "four" }),
+        entry({ slug: "five" }),
+      ]),
+    ).toEqual({ ids: "mcp/one,mcp/two,mcp/three,mcp/four" });
   });
 });
