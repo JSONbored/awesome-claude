@@ -16,12 +16,8 @@ import {
   resolveCompareEntryActions,
   type CompareAction,
 } from "@/lib/compare-entry-actions";
-import {
-  comparePageEmptyStateDescription,
-  comparePageInvalidUrlHint,
-  comparePageUiState,
-} from "@/lib/compare-page-ui-lib";
-import { comparePagePopularComparisonLinks } from "@/lib/compare-page-featured-ui-lib";
+import { comparePageUiState } from "@/lib/compare-page-ui-lib";
+import { comparePageEmptyUiState } from "@/lib/compare-page-empty-ui-lib";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
 import { sameEntry } from "@/lib/entry-identity";
 import { search } from "@/data/search";
@@ -73,9 +69,9 @@ function ComparePage() {
   const [hoverRow, setHoverRow] = React.useState<number | null>(null);
   const [pickerOpen, setPickerOpen] = React.useState(false);
   const pageUi = comparePageUiState(items);
-  const popularComparisonLinks = React.useMemo(
-    () => comparePagePopularComparisonLinks(COMPARISONS, ENTRIES),
-    [],
+  const emptyUi = React.useMemo(
+    () => comparePageEmptyUiState(sp.ids, COMPARISONS, ENTRIES),
+    [sp.ids],
   );
 
   const pushIds = (next: Entry[]) => {
@@ -105,14 +101,15 @@ function ComparePage() {
       // Render directly from URL while context hydrates.
       return <Skeleton ids={sp.ids} />;
     }
-    const invalidUrlHint = comparePageInvalidUrlHint(sp.ids, 0);
     return (
       <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
         <div className="rounded-xl border border-dashed border-border bg-surface p-10 text-center">
           <div className="eyebrow">Comparison</div>
           <h1 className="mt-2 h-display-2 text-ink text-balance">Nothing to compare yet</h1>
-          <p className="mt-2 text-sm text-ink-muted">{comparePageEmptyStateDescription()}</p>
-          {invalidUrlHint ? <p className="mt-2 text-sm text-amber-800">{invalidUrlHint}</p> : null}
+          <p className="mt-2 text-sm text-ink-muted">{emptyUi.description}</p>
+          {emptyUi.invalidUrlHint ? (
+            <p className="mt-2 text-sm text-amber-800">{emptyUi.invalidUrlHint}</p>
+          ) : null}
           <div className="mt-5 flex justify-center gap-2">
             <Link
               to="/browse"
@@ -124,7 +121,7 @@ function ComparePage() {
           <div className="mt-6">
             <div className="eyebrow mb-2">Popular comparisons</div>
             <div className="flex flex-wrap justify-center gap-2">
-              {popularComparisonLinks.map((comparison) => (
+              {emptyUi.popularComparisonLinks.map((comparison) => (
                 <div
                   key={comparison.slug}
                   className="inline-flex flex-wrap items-center justify-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5"
