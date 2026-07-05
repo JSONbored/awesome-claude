@@ -5,6 +5,7 @@ import { BEST_LISTS, ENTRIES, type BestList, type BestPick } from "@/data/entrie
 import type { Entry } from "@/types/registry";
 import { ResourceCard } from "@/components/resource-card";
 import { ComparisonTable } from "@/components/comparison-table";
+import { compareBestBannerTexts } from "@/lib/compare-best-summary";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { getBestListEditorial } from "@/data/best-list-editorial";
@@ -12,6 +13,7 @@ import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
 import { breadcrumbScript } from "@/lib/seo-jsonld";
+import { useMemo } from "react";
 
 export const Route = createFileRoute("/best/$slug")({
   loader: ({ params }) => {
@@ -90,6 +92,12 @@ function BestDetail() {
     })
     .filter((p): p is Resolved => p !== null);
 
+  const compareEntries = useMemo(() => resolved.slice(0, 5).map((p) => p.entry), [resolved]);
+  const compareBannerTexts = useMemo(
+    () => compareBestBannerTexts(compareEntries),
+    [compareEntries],
+  );
+
   return (
     <PageContainer className="py-12">
       <Breadcrumbs home items={[{ label: "Best lists", to: "/best" }, { label: list.title }]} />
@@ -143,8 +151,17 @@ function BestDetail() {
             The top {Math.min(resolved.length, 5)} picks side by side on trust, install, platform
             support, and disclosed notes — full rationale for each below.
           </p>
+          {compareBannerTexts.length > 0 ? (
+            <div className="mt-4 space-y-1.5">
+              {compareBannerTexts.map((text) => (
+                <p key={text} className="text-sm text-ink-muted">
+                  {text}
+                </p>
+              ))}
+            </div>
+          ) : null}
           <div className="mt-5">
-            <ComparisonTable entries={resolved.slice(0, 5).map((p) => p.entry)} />
+            <ComparisonTable entries={compareEntries} showNextActions />
           </div>
         </section>
       )}
