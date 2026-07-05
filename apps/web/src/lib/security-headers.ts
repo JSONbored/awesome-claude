@@ -1,13 +1,15 @@
+/**
+ * Security-header surface.
+ *
+ * The pure helpers (origin parsing, non-prod host check, edge-cache policy) live
+ * in `security-headers-lib.ts`. This module keeps the site-config / env-bound CSP
+ * header set and re-exports the pure helpers so existing `@/lib/security-headers`
+ * imports stay unchanged.
+ */
+import { isNonProdHost, urlOrigin } from "@/lib/security-headers-lib";
 import { siteConfig } from "./site";
 
-export function urlOrigin(value: string) {
-  if (!value) return "";
-  try {
-    return new URL(value).origin;
-  } catch {
-    return "";
-  }
-}
+export { applyEdgeCacheHeaders, urlOrigin } from "@/lib/security-headers-lib";
 
 const scriptSrc = [
   // Keep scripts constrained to same-origin application bundles. The legacy
@@ -59,18 +61,6 @@ const SECURITY_HEADERS = {
   "x-frame-options": "DENY",
 } as const;
 
-// Non-production hosts (preview/staging) must not be indexed — otherwise Google treats
-// e.g. dev.heyclau.de as duplicate content competing with the canonical production site.
-function isNonProdHost(hostname: string) {
-  return (
-    hostname.startsWith("dev.") ||
-    hostname === "localhost" ||
-    hostname.endsWith(".localhost") ||
-    hostname.includes("staging") ||
-    hostname.endsWith(".workers.dev")
-  );
-}
-
 // RFC 8288 Link header advertising agent-discovery resources from every HTML page.
 const AGENT_LINK_HEADER = [
   `<${siteConfig.url}/.well-known/api-catalog>; rel="api-catalog"`,
@@ -97,21 +87,6 @@ export function applySecurityHeaders(headers: Headers, request?: Request) {
       // Malformed request URL — leave indexing headers untouched.
     }
   }
-  return headers;
-}
-
-// SSR HTML that no route opted out of is safe to cache at the edge so repeat hits
-// skip re-rendering. Personalized/dynamic routes already set their own `Cache-Control`
-// (typically `no-store`), which is preserved; a `Set-Cookie` (session/personalization)
-// also disables caching as a backstop. CDN-only (`s-maxage`) — no browser `max-age`, so
-// a deploy invalidates immediately for users.
-const HTML_CACHE_CONTROL = "public, s-maxage=300, stale-while-revalidate=86400";
-
-export function applyEdgeCacheHeaders(headers: Headers, status: number, method: string) {
-  if (method !== "GET" || status !== 200) return headers;
-  if (headers.has("cache-control") || headers.has("set-cookie")) return headers;
-  if (!(headers.get("content-type") ?? "").includes("text/html")) return headers;
-  headers.set("cache-control", HTML_CACHE_CONTROL);
   return headers;
 }
 
