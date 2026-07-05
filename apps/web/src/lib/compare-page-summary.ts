@@ -1,19 +1,19 @@
 import type { Entry } from "@/types/registry";
-import { compareActionsDiverge } from "@/lib/compare-entry-actions";
 import {
-  compareCuratedDecisionBannerText,
-  type CompareDecisionSummary,
-} from "@/lib/compare-curated-summary";
-import { compareDecisionSummary } from "@/lib/compare-table-decision-rows";
+  compareSurfaceBannerTexts,
+  compareSurfaceDecisionBannerText,
+  compareSurfaceDecisionSummary,
+  compareSurfaceSummary,
+} from "@/lib/compare-surface-summary-lib";
 
 export const COMPARE_PAGE_SURFACE = "compare-page";
 
-export function comparePageDecisionSummary(entries: Entry[]): CompareDecisionSummary {
-  return compareDecisionSummary(entries);
+export function comparePageDecisionSummary(entries: Entry[]) {
+  return compareSurfaceDecisionSummary(entries);
 }
 
 export function comparePageDecisionBannerText(entries: Entry[]): string | null {
-  return compareCuratedDecisionBannerText(compareDecisionSummary(entries));
+  return compareSurfaceDecisionBannerText(entries);
 }
 
 export function comparePageActionBannerText(actionsDiverge: boolean): string | null {
@@ -21,28 +21,11 @@ export function comparePageActionBannerText(actionsDiverge: boolean): string | n
   return "Next steps differ across this comparison — review install, source, and claim actions in the table below.";
 }
 
-export function comparePageSummary(entries: Entry[]): {
-  comparedCount: number;
-  decision: CompareDecisionSummary;
-  actionsDiverge: boolean;
-  hasAnyDivergence: boolean;
-} {
-  const decision = compareDecisionSummary(entries);
-  const actionsDiverge = compareActionsDiverge(entries);
-  return {
-    comparedCount: entries.length,
-    decision,
-    actionsDiverge,
-    hasAnyDivergence: decision.divergingCount > 0 || actionsDiverge,
-  };
+export function comparePageSummary(entries: Entry[]) {
+  return compareSurfaceSummary(entries);
 }
 
 export function comparePageBannerTexts(entries: Entry[]): string[] {
-  const summary = comparePageSummary(entries);
-  const messages: string[] = [];
-  const decisionText = comparePageDecisionBannerText(entries);
-  const actionText = comparePageActionBannerText(summary.actionsDiverge);
-  if (decisionText) messages.push(decisionText);
-  if (actionText) messages.push(actionText);
-  return messages;
+  const summary = compareSurfaceSummary(entries);
+  return compareSurfaceBannerTexts(entries, comparePageActionBannerText(summary.actionsDiverge));
 }
