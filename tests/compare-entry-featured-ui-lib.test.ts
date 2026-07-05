@@ -3,6 +3,7 @@ import type { Entry } from "@/types/registry";
 import {
   compareEntryFeaturedBestListLinks,
   compareEntryFeaturedComparisonLinks,
+  compareEntryFeaturedUiState,
 } from "@/lib/compare-entry-featured-ui-lib";
 
 function entry(overrides: Partial<Entry> = {}): Entry {
@@ -114,5 +115,41 @@ describe("compare entry featured ui lib", () => {
         label: "Open 3 picks in the interactive comparison tool",
       },
     ]);
+  });
+
+  it("bundles entry dossier featured comparison and best-list links", () => {
+    expect(
+      compareEntryFeaturedUiState(
+        [{ slug: "pair", refs: ["skills/alpha", "hooks/beta"] }],
+        [
+          {
+            slug: "top-picks",
+            picks: [{ ref: "skills/alpha" }, { ref: "hooks/beta" }],
+          },
+        ],
+        catalog,
+      ),
+    ).toEqual({
+      comparisonLinks: [
+        {
+          slug: "pair",
+          search: { ids: "skills/alpha,hooks/beta" },
+          label: "Open interactively",
+        },
+      ],
+      bestListLinks: [
+        {
+          slug: "top-picks",
+          search: { ids: "skills/alpha,hooks/beta" },
+          label: "Open interactively",
+        },
+      ],
+      hasFeaturedLinks: true,
+    });
+    expect(compareEntryFeaturedUiState([], [], catalog)).toEqual({
+      comparisonLinks: [],
+      bestListLinks: [],
+      hasFeaturedLinks: false,
+    });
   });
 });

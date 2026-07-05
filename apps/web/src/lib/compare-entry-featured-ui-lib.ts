@@ -46,3 +46,23 @@ export function compareEntryFeaturedBestListLinks(
     label: compareBestListInteractiveLinkLabel(list.picks, catalog),
   }));
 }
+
+export type CompareEntryFeaturedUiState = {
+  comparisonLinks: CompareEntryFeaturedComparisonLink[];
+  bestListLinks: CompareEntryFeaturedBestListLink[];
+  hasFeaturedLinks: boolean;
+};
+
+export function compareEntryFeaturedUiState(
+  comparisons: ReadonlyArray<{ slug: string; refs: string[] }>,
+  lists: ReadonlyArray<{ slug: string; picks: BestListPickRef[] }>,
+  catalog: EntryIdentity[],
+): CompareEntryFeaturedUiState {
+  const comparisonLinks = compareEntryFeaturedComparisonLinks(comparisons, catalog);
+  const bestListLinks = compareEntryFeaturedBestListLinks(lists, catalog);
+  return {
+    comparisonLinks,
+    bestListLinks,
+    hasFeaturedLinks: comparisonLinks.length > 0 || bestListLinks.length > 0,
+  };
+}

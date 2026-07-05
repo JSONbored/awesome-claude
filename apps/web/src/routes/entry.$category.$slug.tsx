@@ -39,10 +39,7 @@ import { WatchButton } from "@/components/watch-button";
 import { CopyButton } from "@/components/copy-button";
 import { ResourceCard } from "@/components/resource-card";
 import { ComparisonTable } from "@/components/comparison-table";
-import {
-  compareEntryFeaturedBestListLinks,
-  compareEntryFeaturedComparisonLinks,
-} from "@/lib/compare-entry-featured-ui-lib";
+import { compareEntryFeaturedUiState } from "@/lib/compare-entry-featured-ui-lib";
 import { compareDossierUiState } from "@/lib/compare-dossier-ui-lib";
 import { buildEntryJsonLd } from "@heyclaude/registry";
 import { stringifyJsonLd } from "@/lib/json-ld";
@@ -243,13 +240,9 @@ function Dossier() {
   const entryRef = `${entry.category}/${entry.slug}`;
   const comparedIn = COMPARISONS.filter((c) => c.refs.includes(entryRef));
   const featuredIn = BEST_LISTS.filter((l) => l.picks.some((p) => p.ref === entryRef));
-  const featuredCompareLinks = useMemo(
-    () => compareEntryFeaturedComparisonLinks(comparedIn, ENTRIES),
-    [comparedIn],
-  );
-  const featuredBestListLinks = useMemo(
-    () => compareEntryFeaturedBestListLinks(featuredIn, ENTRIES),
-    [featuredIn],
+  const featuredUi = useMemo(
+    () => compareEntryFeaturedUiState(comparedIn, featuredIn, ENTRIES),
+    [comparedIn, featuredIn],
   );
   const recents = useRecents();
   useEffect(() => {
@@ -743,11 +736,13 @@ function Dossier() {
             </DossierSection>
           )}
 
-          {(featuredIn.length > 0 || comparedIn.length > 0) && (
+          {featuredUi.hasFeaturedLinks && (
             <DossierSection id="featured-in" title="Featured in">
               <ul className="flex flex-col gap-2 text-sm">
                 {featuredIn.map((l) => {
-                  const bestListLink = featuredBestListLinks.find((link) => link.slug === l.slug);
+                  const bestListLink = featuredUi.bestListLinks.find(
+                    (link) => link.slug === l.slug,
+                  );
                   return (
                     <li
                       key={`best-${l.slug}`}
@@ -773,7 +768,9 @@ function Dossier() {
                   );
                 })}
                 {comparedIn.map((c) => {
-                  const featuredLink = featuredCompareLinks.find((link) => link.slug === c.slug);
+                  const featuredLink = featuredUi.comparisonLinks.find(
+                    (link) => link.slug === c.slug,
+                  );
                   return (
                     <li
                       key={`cmp-${c.slug}`}
