@@ -54,6 +54,7 @@ export default defineConfig({
         "apps/web/src/lib/api/example.functions.ts",
         "apps/web/src/lib/client-logs.ts",
         "apps/web/src/lib/community-signals.ts",
+        "apps/web/src/lib/compare-entry-signals.ts",
         "apps/web/src/lib/content-section-parsing.ts",
         "apps/web/src/lib/content.server.ts",
         "apps/web/src/lib/contributors.ts",
