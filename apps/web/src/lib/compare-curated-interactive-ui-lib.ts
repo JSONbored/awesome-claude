@@ -23,5 +23,5 @@ export function compareCuratedInteractivePageRenderable(
   refs: string[],
   catalog: EntryIdentity[],
 ): boolean {
-  return compareCuratedInteractiveUiState(refs, catalog).renderable;
+  return compareCuratedHasRenderableEntries(refs, catalog);
 }

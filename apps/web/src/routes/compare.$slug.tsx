@@ -8,13 +8,16 @@ import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
 import { getComparison } from "@/data/comparisons";
-import { compareCuratedInteractiveUiState } from "@/lib/compare-curated-interactive-ui-lib";
+import {
+  compareCuratedInteractivePageRenderable,
+  compareCuratedInteractiveUiState,
+} from "@/lib/compare-curated-interactive-ui-lib";
 import { compareCuratedResolvedEntries } from "@/lib/compare-curated-ui-lib";
 
 export const Route = createFileRoute("/compare/$slug")({
   loader: ({ params }) => {
     const comparison = getComparison(params.slug);
-    if (!comparison || !compareCuratedInteractiveUiState(comparison.refs, ENTRIES).renderable) {
+    if (!comparison || !compareCuratedInteractivePageRenderable(comparison.refs, ENTRIES)) {
       throw notFound();
     }
     return {};
