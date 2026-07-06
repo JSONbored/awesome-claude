@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
 import {
+  compareContextInteractiveSelectionParam,
+  compareContextInteractiveShareUrl,
   compareContextInteractiveUiState,
   compareContextSelectionChanged,
 } from "@/lib/compare-context-interactive-ui-lib";
@@ -56,5 +58,15 @@ describe("compare context interactive ui lib", () => {
     expect(compareContextSelectionChanged([alpha], [alpha])).toBe(false);
     expect(compareContextSelectionChanged([alpha, beta], [alpha])).toBe(true);
     expect(compareContextSelectionChanged([], [])).toBe(false);
+  });
+
+  it("delegates serialize and share URL from bundled compare context state", () => {
+    const items = [entry({ category: "skills", slug: "alpha" })];
+    expect(compareContextInteractiveSelectionParam(items)).toBe("skills/alpha");
+    expect(compareContextInteractiveShareUrl(items)).toBe(
+      "/browse?compare=skills%2Falpha",
+    );
+    expect(compareContextInteractiveSelectionParam([])).toBe("");
+    expect(compareContextInteractiveShareUrl([])).toBe("/browse");
   });
 });

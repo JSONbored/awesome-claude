@@ -20,3 +20,11 @@ export function compareContextSelectionChanged(next: Entry[], current: Entry[]):
     compareContextInteractiveUiState(current).selectionParam
   );
 }
+
+export function compareContextInteractiveSelectionParam(items: Entry[]): string {
+  return compareContextInteractiveUiState(items).selectionParam;
+}
+
+export function compareContextInteractiveShareUrl(items: Entry[]): string {
+  return compareContextInteractiveUiState(items).shareUrl;
+}

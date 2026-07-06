@@ -1,6 +1,7 @@
 import * as React from "react";
 import {
-  compareContextInteractiveUiState,
+  compareContextInteractiveSelectionParam,
+  compareContextInteractiveShareUrl,
   compareContextSelectionChanged,
 } from "@/lib/compare-context-interactive-ui-lib";
 import { hasCompareItem, resolveCompareParam, toggleCompareItem } from "@/lib/compare-selection";
@@ -81,8 +82,8 @@ function createCompareStore(): CompareStore {
         }
       });
     },
-    serialize: () => compareContextInteractiveUiState(state.items).selectionParam,
-    getShareUrl: () => compareContextInteractiveUiState(state.items).shareUrl,
+    serialize: () => compareContextInteractiveSelectionParam(state.items),
+    getShareUrl: () => compareContextInteractiveShareUrl(state.items),
   };
 
   return {
