@@ -38,7 +38,6 @@ describe("submission source evidence", () => {
       "repoUrl: https://github.com/example/repo",
       "documentationUrl: https://docs.github.com/example/repo",
       "downloadUrl: https://registry.npmjs.org/example",
-      "websiteUrl: https://example.com/outside-allowlist",
       "---",
       "",
       "Body.",

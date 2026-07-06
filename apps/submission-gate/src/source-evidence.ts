@@ -340,9 +340,8 @@ async function checkOneSourceUrl(
 ): Promise<SourceEvidenceItem> {
   const validation = validateFetchableSourceUrl(item.url);
   if (!validation.ok) {
-    const invalidProtocol = validation.outcome === "invalid_url";
     return withSourceDefaults(item, {
-      status: invalidProtocol ? "hard_failure" : "passed",
+      status: "hard_failure",
       outcome: validation.outcome,
       error: validation.error,
     });

@@ -869,7 +869,7 @@ packageUrl: "https://www.npmjs.com/package/rate-limited"
       `---
 title: Docker Hub Warning Fixture
 repoUrl: "https://github.com/example/project"
-documentationUrl: "https://example.com/docs"
+documentationUrl: "https://docs.github.com/en"
 packageUrl: "https://hub.docker.com/r/example/project"
 ---
 `,
@@ -1056,16 +1056,16 @@ websiteUrl: "https://attacker.example/redirect"
     );
 
     expect(fetchImpl).not.toHaveBeenCalled();
-    expect(report.status).toBe("passed");
+    expect(report.status).toBe("failed");
     expect(report.urls).toEqual([
       expect.objectContaining({
         field: "documentationUrl",
-        status: "passed",
+        status: "hard_failure",
         outcome: "source_host_not_checked",
       }),
       expect.objectContaining({
         field: "websiteUrl",
-        status: "passed",
+        status: "hard_failure",
         outcome: "source_host_not_checked",
       }),
     ]);
