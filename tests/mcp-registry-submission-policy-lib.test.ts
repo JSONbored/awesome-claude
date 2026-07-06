@@ -16,7 +16,9 @@ describe("registry-submission-policy-lib buildSubmissionPolicyEnvelope", () => {
     expect(SUBMISSION_POLICY_ENVELOPE).toEqual(buildSubmissionPolicyEnvelope());
   });
   it("requires maintainer review", () => {
-    expect(buildSubmissionPolicyEnvelope().reviewModel.maintainerReviewRequired).toBe(true);
+    expect(
+      buildSubmissionPolicyEnvelope().reviewModel.maintainerReviewRequired,
+    ).toBe(true);
     expect(buildSubmissionPolicyEnvelope().reviewModel.prFirst).toBe(true);
   });
   it("disallows community zip/mcpb hosting", () => {
@@ -26,23 +28,28 @@ describe("registry-submission-policy-lib buildSubmissionPolicyEnvelope", () => {
     expect(policy.maintainerBuiltDownloadsOnly).toBe(true);
   });
   it("submissionGuidance includes keyword 0", () => {
-    const guidance = buildSubmissionPolicyEnvelope().submissionGuidance.join(" ");
+    const guidance =
+      buildSubmissionPolicyEnvelope().submissionGuidance.join(" ");
     expect(guidance).toContain("source-backed");
   });
   it("submissionGuidance includes keyword 1", () => {
-    const guidance = buildSubmissionPolicyEnvelope().submissionGuidance.join(" ");
+    const guidance =
+      buildSubmissionPolicyEnvelope().submissionGuidance.join(" ");
     expect(guidance).toContain("ZIP/MCPB");
   });
   it("submissionGuidance includes keyword 2", () => {
-    const guidance = buildSubmissionPolicyEnvelope().submissionGuidance.join(" ");
+    const guidance =
+      buildSubmissionPolicyEnvelope().submissionGuidance.join(" ");
     expect(guidance).toContain("safety_notes");
   });
   it("submissionGuidance includes keyword 3", () => {
-    const guidance = buildSubmissionPolicyEnvelope().submissionGuidance.join(" ");
+    const guidance =
+      buildSubmissionPolicyEnvelope().submissionGuidance.join(" ");
     expect(guidance).toContain("privacy_notes");
   });
   it("submissionGuidance includes keyword 4", () => {
-    const guidance = buildSubmissionPolicyEnvelope().submissionGuidance.join(" ");
+    const guidance =
+      buildSubmissionPolicyEnvelope().submissionGuidance.join(" ");
     expect(guidance).toContain("Commercial");
   });
   it("buildSubmissionPolicyEnvelope stable shape 0", () => {

@@ -2972,7 +2972,9 @@ function clientSetupLibTests() {
   const lines = [];
   lines.push(`import { describe, expect, it } from "vitest";`);
   lines.push(``);
-  lines.push(`import { DEFAULT_REMOTE_MCP_URL } from "../packages/mcp/src/endpoint-url.js";`);
+  lines.push(
+    `import { DEFAULT_REMOTE_MCP_URL } from "../packages/mcp/src/endpoint-url.js";`,
+  );
   lines.push(`import {`);
   lines.push(`  CLIENT_SETUP_NOTES,`);
   lines.push(`  CLIENT_SETUP_SNIPPETS,`);
@@ -2981,7 +2983,9 @@ function clientSetupLibTests() {
   lines.push(`} from "../packages/mcp/src/registry-client-setup-lib.js";`);
   lines.push(``);
 
-  lines.push(`describe("registry-client-setup-lib CLIENT_SETUP_NOTES", () => {`);
+  lines.push(
+    `describe("registry-client-setup-lib CLIENT_SETUP_NOTES", () => {`,
+  );
   lines.push(`  it("exports three setup notes", () => {`);
   lines.push(`    expect(CLIENT_SETUP_NOTES).toHaveLength(3);`);
   lines.push(`    expect(CLIENT_SETUP_NOTES[0]).toContain("read-only");`);
@@ -2990,14 +2994,22 @@ function clientSetupLibTests() {
   lines.push(`  });`);
   for (let i = 0; i < 20; i++) {
     lines.push(`  it("CLIENT_SETUP_NOTES note ${i} is non-empty", () => {`);
-    lines.push(`    expect(CLIENT_SETUP_NOTES[${i % 3}].length).toBeGreaterThan(10);`);
+    lines.push(
+      `    expect(CLIENT_SETUP_NOTES[${i % 3}].length).toBeGreaterThan(10);`,
+    );
     lines.push(`  });`);
   }
   lines.push(`});`);
   lines.push(``);
 
   const DEFAULT_ENDPOINT = "https://heyclau.de/api/mcp";
-  const clients = ["codex", "claude-desktop", "cursor", "windsurf", "remote-http"];
+  const clients = [
+    "codex",
+    "claude-desktop",
+    "cursor",
+    "windsurf",
+    "remote-http",
+  ];
   const endpoints = [
     DEFAULT_ENDPOINT,
     "https://heyclau.de/mcp",
@@ -3007,31 +3019,53 @@ function clientSetupLibTests() {
     "http://127.0.0.1:3000/mcp",
   ];
 
-  lines.push(`describe("registry-client-setup-lib buildClientSetupSnippets", () => {`);
+  lines.push(
+    `describe("registry-client-setup-lib buildClientSetupSnippets", () => {`,
+  );
   lines.push(`  it("returns all five client keys", () => {`);
-  lines.push(`    const snippets = buildClientSetupSnippets("${DEFAULT_ENDPOINT}");`);
-  lines.push(`    expect(Object.keys(snippets).sort()).toEqual(${JSON.stringify([...clients].sort())});`);
+  lines.push(
+    `    const snippets = buildClientSetupSnippets("${DEFAULT_ENDPOINT}");`,
+  );
+  lines.push(
+    `    expect(Object.keys(snippets).sort()).toEqual(${JSON.stringify([...clients].sort())});`,
+  );
   lines.push(`  });`);
-  lines.push(`  it("CLIENT_SETUP_SNIPPETS alias matches buildClientSetupSnippets", () => {`);
+  lines.push(
+    `  it("CLIENT_SETUP_SNIPPETS alias matches buildClientSetupSnippets", () => {`,
+  );
   lines.push(`    const url = "${DEFAULT_ENDPOINT}";`);
-  lines.push(`    expect(CLIENT_SETUP_SNIPPETS(url)).toEqual(buildClientSetupSnippets(url));`);
+  lines.push(
+    `    expect(CLIENT_SETUP_SNIPPETS(url)).toEqual(buildClientSetupSnippets(url));`,
+  );
   lines.push(`  });`);
 
   for (const client of clients) {
     for (let i = 0; i < 40; i++) {
       const endpoint = endpoints[i % endpoints.length];
-      lines.push(`  it("buildClientSetupSnippets ${client} variant ${i}", () => {`);
-      lines.push(`    const snippets = buildClientSetupSnippets(${JSON.stringify(endpoint)});`);
+      lines.push(
+        `  it("buildClientSetupSnippets ${client} variant ${i}", () => {`,
+      );
+      lines.push(
+        `    const snippets = buildClientSetupSnippets(${JSON.stringify(endpoint)});`,
+      );
       lines.push(`    expect(snippets["${client}"]).toBeDefined();`);
       lines.push(`    expect(snippets["${client}"].label).toBeTruthy();`);
       if (client === "cursor") {
-        lines.push(`    expect(snippets.cursor.config.mcpServers.heyclaude.url).toBe(${JSON.stringify(endpoint)});`);
+        lines.push(
+          `    expect(snippets.cursor.config.mcpServers.heyclaude.url).toBe(${JSON.stringify(endpoint)});`,
+        );
       } else if (client === "windsurf") {
-        lines.push(`    expect(snippets.windsurf.config.mcpServers.heyclaude.serverUrl).toBe(${JSON.stringify(endpoint)});`);
+        lines.push(
+          `    expect(snippets.windsurf.config.mcpServers.heyclaude.serverUrl).toBe(${JSON.stringify(endpoint)});`,
+        );
       } else if (client === "remote-http") {
-        lines.push(`    expect(snippets["remote-http"].endpointUrl).toBe(${JSON.stringify(endpoint)});`);
+        lines.push(
+          `    expect(snippets["remote-http"].endpointUrl).toBe(${JSON.stringify(endpoint)});`,
+        );
       } else {
-        lines.push(`    expect(snippets["${client}"].config.mcpServers.heyclaude.command).toBe("npx");`);
+        lines.push(
+          `    expect(snippets["${client}"].config.mcpServers.heyclaude.command).toBe("npx");`,
+        );
       }
       lines.push(`  });`);
     }
@@ -3041,17 +3075,29 @@ function clientSetupLibTests() {
     const endpoint = `https://host-${i}.example.com/mcp`;
     lines.push(`  it("buildClientSetupSnippets endpoint matrix ${i}", () => {`);
     lines.push(`    const snippets = buildClientSetupSnippets("${endpoint}");`);
-    lines.push(`    expect(snippets.cursor.config.mcpServers.heyclaude.url).toBe("${endpoint}");`);
-    lines.push(`    expect(snippets.windsurf.config.mcpServers.heyclaude.serverUrl).toBe("${endpoint}");`);
-    lines.push(`    expect(snippets["remote-http"].endpointUrl).toBe("${endpoint}");`);
+    lines.push(
+      `    expect(snippets.cursor.config.mcpServers.heyclaude.url).toBe("${endpoint}");`,
+    );
+    lines.push(
+      `    expect(snippets.windsurf.config.mcpServers.heyclaude.serverUrl).toBe("${endpoint}");`,
+    );
+    lines.push(
+      `    expect(snippets["remote-http"].endpointUrl).toBe("${endpoint}");`,
+    );
     lines.push(`  });`);
   }
   lines.push(`});`);
   lines.push(``);
 
-  lines.push(`describe("registry-client-setup-lib buildClientSetupResponse", () => {`);
-  lines.push(`  it("returns ok envelope with all snippets when client omitted", () => {`);
-  lines.push(`    const response = buildClientSetupResponse({ endpointUrl: "${DEFAULT_ENDPOINT}" });`);
+  lines.push(
+    `describe("registry-client-setup-lib buildClientSetupResponse", () => {`,
+  );
+  lines.push(
+    `  it("returns ok envelope with all snippets when client omitted", () => {`,
+  );
+  lines.push(
+    `    const response = buildClientSetupResponse({ endpointUrl: "${DEFAULT_ENDPOINT}" });`,
+  );
   lines.push(`    expect(response.ok).toBe(true);`);
   lines.push(`    expect(response.apiKeyRequired).toBe(false);`);
   lines.push(`    expect(response.selectedClient).toBe("");`);
@@ -3062,11 +3108,19 @@ function clientSetupLibTests() {
   for (const client of clients) {
     for (let i = 0; i < 35; i++) {
       const endpoint = endpoints[i % endpoints.length];
-      lines.push(`  it("buildClientSetupResponse selected ${client} ${i}", () => {`);
-      lines.push(`    const response = buildClientSetupResponse({ endpointUrl: ${JSON.stringify(endpoint)}, client: "${client}" });`);
+      lines.push(
+        `  it("buildClientSetupResponse selected ${client} ${i}", () => {`,
+      );
+      lines.push(
+        `    const response = buildClientSetupResponse({ endpointUrl: ${JSON.stringify(endpoint)}, client: "${client}" });`,
+      );
       lines.push(`    expect(response.selectedClient).toBe("${client}");`);
-      lines.push(`    expect(Object.keys(response.snippets)).toEqual(["${client}"]);`);
-      lines.push(`    expect(response.endpointUrl).toBe(${JSON.stringify(endpoint)});`);
+      lines.push(
+        `    expect(Object.keys(response.snippets)).toEqual(["${client}"]);`,
+      );
+      lines.push(
+        `    expect(response.endpointUrl).toBe(${JSON.stringify(endpoint)});`,
+      );
       lines.push(`  });`);
     }
   }
@@ -3074,7 +3128,9 @@ function clientSetupLibTests() {
   for (let i = 0; i < 80; i++) {
     lines.push(`  it("buildClientSetupResponse churn ${i}", () => {`);
     lines.push(`    const endpoint = "https://endpoint-${i}.heyclau.de/mcp";`);
-    lines.push(`    const response = buildClientSetupResponse({ endpointUrl: endpoint, client: ${JSON.stringify(clients[i % clients.length])} });`);
+    lines.push(
+      `    const response = buildClientSetupResponse({ endpointUrl: endpoint, client: ${JSON.stringify(clients[i % clients.length])} });`,
+    );
     lines.push(`    expect(response.ok).toBe(true);`);
     lines.push(`    expect(response.notes).toBe(CLIENT_SETUP_NOTES);`);
     lines.push(`  });`);
@@ -3088,28 +3144,40 @@ function submissionPolicyLibTests() {
   const lines = [];
   lines.push(`import { describe, expect, it } from "vitest";`);
   lines.push(``);
-  lines.push(`import { MCP_PUBLIC_POLICY } from "../packages/mcp/src/registry-tools-lib.js";`);
+  lines.push(
+    `import { MCP_PUBLIC_POLICY } from "../packages/mcp/src/registry-tools-lib.js";`,
+  );
   lines.push(`import {`);
   lines.push(`  SUBMISSION_POLICY_ENVELOPE,`);
   lines.push(`  buildSubmissionPolicyEnvelope,`);
   lines.push(`} from "../packages/mcp/src/registry-submission-policy-lib.js";`);
   lines.push(``);
 
-  lines.push(`describe("registry-submission-policy-lib buildSubmissionPolicyEnvelope", () => {`);
+  lines.push(
+    `describe("registry-submission-policy-lib buildSubmissionPolicyEnvelope", () => {`,
+  );
   lines.push(`  it("returns ok envelope with public policy", () => {`);
   lines.push(`    const envelope = buildSubmissionPolicyEnvelope();`);
   lines.push(`    expect(envelope.ok).toBe(true);`);
   lines.push(`    expect(envelope.publicPolicy).toEqual(MCP_PUBLIC_POLICY);`);
   lines.push(`  });`);
   lines.push(`  it("SUBMISSION_POLICY_ENVELOPE matches builder", () => {`);
-  lines.push(`    expect(SUBMISSION_POLICY_ENVELOPE).toEqual(buildSubmissionPolicyEnvelope());`);
+  lines.push(
+    `    expect(SUBMISSION_POLICY_ENVELOPE).toEqual(buildSubmissionPolicyEnvelope());`,
+  );
   lines.push(`  });`);
   lines.push(`  it("requires maintainer review", () => {`);
-  lines.push(`    expect(buildSubmissionPolicyEnvelope().reviewModel.maintainerReviewRequired).toBe(true);`);
-  lines.push(`    expect(buildSubmissionPolicyEnvelope().reviewModel.prFirst).toBe(true);`);
+  lines.push(
+    `    expect(buildSubmissionPolicyEnvelope().reviewModel.maintainerReviewRequired).toBe(true);`,
+  );
+  lines.push(
+    `    expect(buildSubmissionPolicyEnvelope().reviewModel.prFirst).toBe(true);`,
+  );
   lines.push(`  });`);
   lines.push(`  it("disallows community zip/mcpb hosting", () => {`);
-  lines.push(`    const policy = buildSubmissionPolicyEnvelope().artifactPolicy;`);
+  lines.push(
+    `    const policy = buildSubmissionPolicyEnvelope().artifactPolicy;`,
+  );
   lines.push(`    expect(policy.communityZipHostingAllowed).toBe(false);`);
   lines.push(`    expect(policy.communityMcpbHostingAllowed).toBe(false);`);
   lines.push(`    expect(policy.maintainerBuiltDownloadsOnly).toBe(true);`);
@@ -3124,16 +3192,26 @@ function submissionPolicyLibTests() {
   ];
   for (let i = 0; i < guidanceKeywords.length; i++) {
     lines.push(`  it("submissionGuidance includes keyword ${i}", () => {`);
-    lines.push(`    const guidance = buildSubmissionPolicyEnvelope().submissionGuidance.join(" ");`);
-    lines.push(`    expect(guidance).toContain(${JSON.stringify(guidanceKeywords[i])});`);
+    lines.push(
+      `    const guidance = buildSubmissionPolicyEnvelope().submissionGuidance.join(" ");`,
+    );
+    lines.push(
+      `    expect(guidance).toContain(${JSON.stringify(guidanceKeywords[i])});`,
+    );
     lines.push(`  });`);
   }
 
   for (let i = 0; i < 200; i++) {
-    lines.push(`  it("buildSubmissionPolicyEnvelope stable shape ${i}", () => {`);
+    lines.push(
+      `  it("buildSubmissionPolicyEnvelope stable shape ${i}", () => {`,
+    );
     lines.push(`    const envelope = buildSubmissionPolicyEnvelope();`);
-    lines.push(`    expect(envelope.reviewModel.autoMerge).toBe("content_only_private_gate");`);
-    lines.push(`    expect(envelope.reviewModel.autoMergeRequires).toHaveLength(4);`);
+    lines.push(
+      `    expect(envelope.reviewModel.autoMerge).toBe("content_only_private_gate");`,
+    );
+    lines.push(
+      `    expect(envelope.reviewModel.autoMergeRequires).toHaveLength(4);`,
+    );
     lines.push(`    expect(envelope.submissionGuidance).toHaveLength(5);`);
     lines.push(`    expect(envelope.publicPolicy.readOnly).toBe(true);`);
     lines.push(`  });`);
@@ -3171,7 +3249,9 @@ function searchDelegateLibTests() {
 
   lines.push(`describe("registry-search-delegate-lib searchTokens", () => {`);
   lines.push(`  it("tokenizes query strings", () => {`);
-  lines.push(`    expect(searchTokens("browser bridge")).toEqual(["browser", "bridge"]);`);
+  lines.push(
+    `    expect(searchTokens("browser bridge")).toEqual(["browser", "bridge"]);`,
+  );
   lines.push(`  });`);
   for (let i = 0; i < 80; i++) {
     lines.push(`  it("searchTokens matrix ${i}", () => {`);
@@ -3183,7 +3263,9 @@ function searchDelegateLibTests() {
   lines.push(`});`);
   lines.push(``);
 
-  lines.push(`describe("registry-search-delegate-lib entrySearchText", () => {`);
+  lines.push(
+    `describe("registry-search-delegate-lib entrySearchText", () => {`,
+  );
   lines.push(`  it("normalizes searchable text", () => {`);
   lines.push(`    const text = entrySearchText(makeEntry());`);
   lines.push(`    expect(text).toContain("browser bridge");`);
@@ -3191,7 +3273,9 @@ function searchDelegateLibTests() {
   for (const category of CATEGORIES) {
     for (let i = 0; i < 8; i++) {
       lines.push(`  it("entrySearchText ${category} ${i}", () => {`);
-      lines.push(`    const text = entrySearchText(makeEntry({ category: "${category}", slug: "${category}-${i}", title: "${category} Title ${i}" }));`);
+      lines.push(
+        `    const text = entrySearchText(makeEntry({ category: "${category}", slug: "${category}-${i}", title: "${category} Title ${i}" }));`,
+      );
       lines.push(`    expect(text).toContain("${category}");`);
       lines.push(`  });`);
     }
@@ -3199,27 +3283,43 @@ function searchDelegateLibTests() {
   lines.push(`});`);
   lines.push(``);
 
-  lines.push(`describe("registry-search-delegate-lib entryMatchesQuery", () => {`);
+  lines.push(
+    `describe("registry-search-delegate-lib entryMatchesQuery", () => {`,
+  );
   lines.push(`  it("matches title tokens", () => {`);
-  lines.push(`    expect(entryMatchesQuery(makeEntry(), "browser")).toBe(true);`);
-  lines.push(`    expect(entryMatchesQuery(makeEntry(), "nonexistent-xyz")).toBe(false);`);
+  lines.push(
+    `    expect(entryMatchesQuery(makeEntry(), "browser")).toBe(true);`,
+  );
+  lines.push(
+    `    expect(entryMatchesQuery(makeEntry(), "nonexistent-xyz")).toBe(false);`,
+  );
   lines.push(`  });`);
   for (let i = 0; i < 100; i++) {
     lines.push(`  it("entryMatchesQuery churn ${i}", () => {`);
-    lines.push(`    const entry = makeEntry({ title: "Demo Entry ${i}", description: "desc ${i}" });`);
+    lines.push(
+      `    const entry = makeEntry({ title: "Demo Entry ${i}", description: "desc ${i}" });`,
+    );
     lines.push(`    expect(entryMatchesQuery(entry, "demo")).toBe(true);`);
-    lines.push(`    expect(entryMatchesQuery(entry, "missing-${i}-token")).toBe(false);`);
+    lines.push(
+      `    expect(entryMatchesQuery(entry, "missing-${i}-token")).toBe(false);`,
+    );
     lines.push(`  });`);
   }
   lines.push(`});`);
   lines.push(``);
 
-  lines.push(`describe("registry-search-delegate-lib entryMatchesPlatform", () => {`);
+  lines.push(
+    `describe("registry-search-delegate-lib entryMatchesPlatform", () => {`,
+  );
   for (const platform of PLATFORMS) {
     for (let i = 0; i < 6; i++) {
       lines.push(`  it("entryMatchesPlatform ${platform} ${i}", () => {`);
-      lines.push(`    const entry = makeEntry({ platforms: ["${platform}"] });`);
-      lines.push(`    expect(entryMatchesPlatform(entry, "${platform}")).toBe(true);`);
+      lines.push(
+        `    const entry = makeEntry({ platforms: ["${platform}"] });`,
+      );
+      lines.push(
+        `    expect(entryMatchesPlatform(entry, "${platform}")).toBe(true);`,
+      );
       lines.push(`    expect(entryMatchesPlatform(entry, "")).toBe(true);`);
       lines.push(`  });`);
     }
@@ -3227,22 +3327,30 @@ function searchDelegateLibTests() {
   lines.push(`});`);
   lines.push(``);
 
-  lines.push(`describe("registry-search-delegate-lib rankSearchEntries", () => {`);
+  lines.push(
+    `describe("registry-search-delegate-lib rankSearchEntries", () => {`,
+  );
   lines.push(`  it("ranks matching entries above non-matching", () => {`);
   lines.push(`    const entries = [`);
   lines.push(`      makeEntry({ slug: "a", title: "Alpha" }),`);
   lines.push(`      makeEntry({ slug: "b", title: "Browser Bridge Exact" }),`);
   lines.push(`    ];`);
-  lines.push(`    const ranked = rankSearchEntries(entries, "browser bridge");`);
+  lines.push(
+    `    const ranked = rankSearchEntries(entries, "browser bridge");`,
+  );
   lines.push(`    expect(ranked[0].entry.slug).toBe("b");`);
   lines.push(`  });`);
   for (let i = 0; i < 60; i++) {
     lines.push(`  it("rankSearchEntries matrix ${i}", () => {`);
     lines.push(`    const entries = [`);
     lines.push(`      makeEntry({ slug: "low-${i}", title: "Other" }),`);
-    lines.push(`      makeEntry({ slug: "high-${i}", title: "Target Query ${i}" }),`);
+    lines.push(
+      `      makeEntry({ slug: "high-${i}", title: "Target Query ${i}" }),`,
+    );
     lines.push(`    ];`);
-    lines.push(`    const ranked = rankSearchEntries(entries, "target query");`);
+    lines.push(
+      `    const ranked = rankSearchEntries(entries, "target query");`,
+    );
     lines.push(`    expect(ranked[0].entry.slug).toBe("high-${i}");`);
     lines.push(`  });`);
   }
@@ -3268,11 +3376,15 @@ function ogRenderLibTests() {
   lines.push(`describe("og-render-lib constants", () => {`);
   lines.push(`  it("exports grid and github data URIs", () => {`);
   lines.push(`    expect(GRID_BG_DATA_URI).toContain("data:image/svg+xml,");`);
-  lines.push(`    expect(GITHUB_ICON_DATA_URI).toContain("data:image/svg+xml,");`);
+  lines.push(
+    `    expect(GITHUB_ICON_DATA_URI).toContain("data:image/svg+xml,");`,
+  );
   lines.push(`  });`);
   for (let i = 0; i < 30; i++) {
     lines.push(`  it("GRID_BG_DATA_URI variant ${i}", () => {`);
-    lines.push(`    expect(GRID_BG_DATA_URI.startsWith("data:image/svg+xml,")).toBe(true);`);
+    lines.push(
+      `    expect(GRID_BG_DATA_URI.startsWith("data:image/svg+xml,")).toBe(true);`,
+    );
     lines.push(`    expect(GRID_BG_DATA_URI.length).toBeGreaterThan(100);`);
     lines.push(`  });`);
   }
@@ -3286,8 +3398,12 @@ function ogRenderLibTests() {
   lines.push(`  });`);
   for (let i = 0; i < 80; i++) {
     lines.push(`  it("escForSatori matrix ${i}", () => {`);
-    lines.push(`    expect(escForSatori(\`value-${i}<tag>\`)).not.toContain("<");`);
-    lines.push(`    expect(escForSatori(\`value-${i}<tag>\`)).not.toContain(">");`);
+    lines.push(
+      `    expect(escForSatori(\`value-${i}<tag>\`)).not.toContain("<");`,
+    );
+    lines.push(
+      `    expect(escForSatori(\`value-${i}<tag>\`)).not.toContain(">");`,
+    );
     lines.push(`  });`);
   }
   lines.push(`});`);
@@ -3295,13 +3411,21 @@ function ogRenderLibTests() {
 
   lines.push(`describe("og-render-lib withAlpha", () => {`);
   lines.push(`  it("expands hex to rgba", () => {`);
-  lines.push(`    expect(withAlpha("#fff", 1)).toBe("rgba(255, 255, 255, 1)");`);
-  lines.push(`    expect(withAlpha("#7cd17c", 0.85)).toBe("rgba(124, 209, 124, 0.85)");`);
+  lines.push(
+    `    expect(withAlpha("#fff", 1)).toBe("rgba(255, 255, 255, 1)");`,
+  );
+  lines.push(
+    `    expect(withAlpha("#7cd17c", 0.85)).toBe("rgba(124, 209, 124, 0.85)");`,
+  );
   lines.push(`  });`);
   for (let i = 0; i < 50; i++) {
     lines.push(`  it("withAlpha generated ${i}", () => {`);
-    lines.push(`    const hex = "#${(i * 17).toString(16).padStart(6, "0").slice(0, 6)}";`);
-    lines.push(`    expect(withAlpha(hex, 0.5)).toMatch(/^rgba\\(\\d+, \\d+, \\d+, 0\\.5\\)$/);`);
+    lines.push(
+      `    const hex = "#${(i * 17).toString(16).padStart(6, "0").slice(0, 6)}";`,
+    );
+    lines.push(
+      `    expect(withAlpha(hex, 0.5)).toMatch(/^rgba\\(\\d+, \\d+, \\d+, 0\\.5\\)$/);`,
+    );
     lines.push(`  });`);
   }
   lines.push(`});`);
@@ -3333,9 +3457,13 @@ function ogRenderLibTests() {
 
   for (let i = 0; i < 100; i++) {
     lines.push(`  it("buildOgCardHtml churn ${i}", () => {`);
-    lines.push(`    const html = buildOgCardHtml({ title: "Title ${i}", description: "Desc ${i}" });`);
+    lines.push(
+      `    const html = buildOgCardHtml({ title: "Title ${i}", description: "Desc ${i}" });`,
+    );
     lines.push(`    expect(html).toContain("Title ${i}");`);
-    lines.push(`    expect(html).toContain("github.com/JSONbored/awesome-claude");`);
+    lines.push(
+      `    expect(html).toContain("github.com/JSONbored/awesome-claude");`,
+    );
     lines.push(`  });`);
   }
   lines.push(`});`);
@@ -3366,10 +3494,16 @@ function dossierPrefsLibTests() {
   lines.push(`  return {`);
   lines.push(`    get length() { return map.size; },`);
   lines.push(`    clear() { map.clear(); },`);
-  lines.push(`    getItem(key: string) { return map.has(key) ? map.get(key)! : null; },`);
-  lines.push(`    key(index: number) { return [...map.keys()][index] ?? null; },`);
+  lines.push(
+    `    getItem(key: string) { return map.has(key) ? map.get(key)! : null; },`,
+  );
+  lines.push(
+    `    key(index: number) { return [...map.keys()][index] ?? null; },`,
+  );
   lines.push(`    removeItem(key: string) { map.delete(key); },`);
-  lines.push(`    setItem(key: string, value: string) { map.set(key, value); },`);
+  lines.push(
+    `    setItem(key: string, value: string) { map.set(key, value); },`,
+  );
   lines.push(`  };`);
   lines.push(`}`);
   lines.push(``);
@@ -3385,8 +3519,12 @@ function dossierPrefsLibTests() {
     for (let i = 0; i < 10; i++) {
       const slug = `${category}-slug-${i}`;
       lines.push(`  it("scrollStorageKey ${category}/${slug}", () => {`);
-      lines.push(`    expect(scrollStorageKey("${category}", "${slug}")).toBe(\`\${SCROLL_KEY_PREFIX}${category}/${slug}\`);`);
-      lines.push(`    expect(harnessStorageKey("${category}", "${slug}")).toBe(\`\${HARNESS_KEY_PREFIX}${category}/${slug}\`);`);
+      lines.push(
+        `    expect(scrollStorageKey("${category}", "${slug}")).toBe(\`\${SCROLL_KEY_PREFIX}${category}/${slug}\`);`,
+      );
+      lines.push(
+        `    expect(harnessStorageKey("${category}", "${slug}")).toBe(\`\${HARNESS_KEY_PREFIX}${category}/${slug}\`);`,
+      );
       lines.push(`  });`);
     }
   }
@@ -3402,7 +3540,9 @@ function dossierPrefsLibTests() {
   const invalid = ["", "other", "INSTALL", null, undefined, 1, {}, []];
   for (let i = 0; i < invalid.length; i++) {
     lines.push(`  it("isCopyVariant rejects invalid ${i}", () => {`);
-    lines.push(`    expect(isCopyVariant(${JSON.stringify(invalid[i])})).toBe(false);`);
+    lines.push(
+      `    expect(isCopyVariant(${JSON.stringify(invalid[i])})).toBe(false);`,
+    );
     lines.push(`  });`);
   }
   for (let i = 0; i < 80; i++) {
@@ -3425,7 +3565,9 @@ function dossierPrefsLibTests() {
   for (let i = -10; i <= 200; i++) {
     const expected = Number.isFinite(i) && i > 0 ? i : "null";
     lines.push(`  it("parseScrollPosition value ${i}", () => {`);
-    lines.push(`    expect(parseScrollPosition(${JSON.stringify(String(i))})).toBe(${expected});`);
+    lines.push(
+      `    expect(parseScrollPosition(${JSON.stringify(String(i))})).toBe(${expected});`,
+    );
     lines.push(`  });`);
   }
   lines.push(`});`);
@@ -3452,7 +3594,9 @@ function dossierPrefsLibTests() {
 
   for (let i = 0; i < 120; i++) {
     lines.push(`  it("persistence matrix ${i}", () => {`);
-    lines.push(`    const storage = createDossierPrefsStorage(local, session);`);
+    lines.push(
+      `    const storage = createDossierPrefsStorage(local, session);`,
+    );
     lines.push(`    const key = "hc:test-${i}";`);
     lines.push(`    writePersistent(key, "value-${i}", storage);`);
     lines.push(`    expect(readPersistent(key, storage)).toBe("value-${i}");`);
@@ -3487,7 +3631,9 @@ function contentQueryLibTests() {
   for (const category of CATEGORIES) {
     for (let i = 0; i < 10; i++) {
       lines.push(`  it("entryDetailCacheKey ${category} ${i}", () => {`);
-      lines.push(`    expect(entryDetailCacheKey("${category}", "${category}-slug-${i}")).toBe("${category}:${category}-slug-${i}");`);
+      lines.push(
+        `    expect(entryDetailCacheKey("${category}", "${category}-slug-${i}")).toBe("${category}:${category}-slug-${i}");`,
+      );
       lines.push(`  });`);
     }
   }
@@ -3504,7 +3650,9 @@ function contentQueryLibTests() {
   for (let i = 0; i < 100; i++) {
     lines.push(`  it("pruneEntryDetailCache matrix ${i}", () => {`);
     lines.push(`    const map = new Map<string, number>();`);
-    lines.push(`    for (let j = 0; j <= ${i % 5}; j++) map.set(\`key-\${j}\`, j);`);
+    lines.push(
+      `    for (let j = 0; j <= ${i % 5}; j++) map.set(\`key-\${j}\`, j);`,
+    );
     lines.push(`    const sizeBefore = map.size;`);
     lines.push(`    pruneEntryDetailCache(map, Math.max(1, sizeBefore));`);
     lines.push(`    expect(map.size).toBeLessThanOrEqual(sizeBefore);`);
@@ -3515,19 +3663,31 @@ function contentQueryLibTests() {
 
   lines.push(`describe("content-query-lib buildCategorySummaries", () => {`);
   lines.push(`  const labels = { mcp: "MCP", skills: "Skills" };`);
-  lines.push(`  const descriptions = { mcp: "MCP desc", skills: "Skills desc" };`);
+  lines.push(
+    `  const descriptions = { mcp: "MCP desc", skills: "Skills desc" };`,
+  );
   lines.push(`  it("filters empty categories", () => {`);
-  lines.push(`    const entries = [{ category: "mcp", slug: "a", title: "A", dateAdded: "2026-01-01" }];`);
-  lines.push(`    const summaries = buildCategorySummaries(entries, ["mcp", "skills"], labels, descriptions);`);
+  lines.push(
+    `    const entries = [{ category: "mcp", slug: "a", title: "A", dateAdded: "2026-01-01" }];`,
+  );
+  lines.push(
+    `    const summaries = buildCategorySummaries(entries, ["mcp", "skills"], labels, descriptions);`,
+  );
   lines.push(`    expect(summaries).toHaveLength(1);`);
   lines.push(`    expect(summaries[0].category).toBe("mcp");`);
   lines.push(`  });`);
 
   for (const category of CATEGORIES) {
     for (let i = 0; i < 8; i++) {
-      lines.push(`  it("buildCategorySummaries ${category} count ${i}", () => {`);
-      lines.push(`    const entries = Array.from({ length: ${i + 1} }, (_, idx) => ({ category: "${category}", slug: "slug-" + idx, title: "T", dateAdded: "2026-01-01" }));`);
-      lines.push(`    const summaries = buildCategorySummaries(entries, ["${category}"], { "${category}": "${category}" }, { "${category}": "desc" });`);
+      lines.push(
+        `  it("buildCategorySummaries ${category} count ${i}", () => {`,
+      );
+      lines.push(
+        `    const entries = Array.from({ length: ${i + 1} }, (_, idx) => ({ category: "${category}", slug: "slug-" + idx, title: "T", dateAdded: "2026-01-01" }));`,
+      );
+      lines.push(
+        `    const summaries = buildCategorySummaries(entries, ["${category}"], { "${category}": "${category}" }, { "${category}": "desc" });`,
+      );
       lines.push(`    expect(summaries[0]?.count).toBe(${i + 1});`);
       lines.push(`  });`);
     }
@@ -3535,19 +3695,33 @@ function contentQueryLibTests() {
   lines.push(`});`);
   lines.push(``);
 
-  lines.push(`describe("content-query-lib sortRecentDirectoryEntries", () => {`);
+  lines.push(
+    `describe("content-query-lib sortRecentDirectoryEntries", () => {`,
+  );
   lines.push(`  it("sorts by dateAdded descending", () => {`);
   lines.push(`    const entries = [`);
-  lines.push(`      { category: "mcp", slug: "a", title: "A", dateAdded: "2026-01-01" },`);
-  lines.push(`      { category: "mcp", slug: "b", title: "B", dateAdded: "2026-06-01" },`);
+  lines.push(
+    `      { category: "mcp", slug: "a", title: "A", dateAdded: "2026-01-01" },`,
+  );
+  lines.push(
+    `      { category: "mcp", slug: "b", title: "B", dateAdded: "2026-06-01" },`,
+  );
   lines.push(`    ];`);
-  lines.push(`    expect(sortRecentDirectoryEntries(entries)[0].slug).toBe("b");`);
+  lines.push(
+    `    expect(sortRecentDirectoryEntries(entries)[0].slug).toBe("b");`,
+  );
   lines.push(`  });`);
   for (let i = 0; i < 80; i++) {
     lines.push(`  it("sortRecentDirectoryEntries limit ${i}", () => {`);
-    lines.push(`    const entries = Array.from({ length: 20 }, (_, idx) => ({ category: "mcp", slug: "s-" + idx, title: "T", dateAdded: "2026-0" + ((idx % 9) + 1).toString().padStart(2, "0") + "-01" }));`);
-    lines.push(`    const sorted = sortRecentDirectoryEntries(entries, ${(i % 12) + 1});`);
-    lines.push(`    expect(sorted.length).toBeLessThanOrEqual(${(i % 12) + 1});`);
+    lines.push(
+      `    const entries = Array.from({ length: 20 }, (_, idx) => ({ category: "mcp", slug: "s-" + idx, title: "T", dateAdded: "2026-0" + ((idx % 9) + 1).toString().padStart(2, "0") + "-01" }));`,
+    );
+    lines.push(
+      `    const sorted = sortRecentDirectoryEntries(entries, ${(i % 12) + 1});`,
+    );
+    lines.push(
+      `    expect(sorted.length).toBeLessThanOrEqual(${(i % 12) + 1});`,
+    );
     lines.push(`  });`);
   }
   lines.push(`});`);
@@ -3570,34 +3744,50 @@ function sourceRepoSignalsFetchLibTests() {
 
   lines.push(`describe("source-repo-signals-fetch-lib URL builders", () => {`);
   lines.push(`  it("builds GitHub API URL", () => {`);
-  lines.push(`    expect(buildGitHubRepoApiUrl("openai", "whisper")).toBe("https://api.github.com/repos/openai/whisper");`);
+  lines.push(
+    `    expect(buildGitHubRepoApiUrl("openai", "whisper")).toBe("https://api.github.com/repos/openai/whisper");`,
+  );
   lines.push(`  });`);
   lines.push(`  it("builds shields stars URL", () => {`);
-  lines.push(`    expect(buildShieldsStarsUrl("openai", "whisper")).toBe("https://img.shields.io/github/stars/openai/whisper.json");`);
+  lines.push(
+    `    expect(buildShieldsStarsUrl("openai", "whisper")).toBe("https://img.shields.io/github/stars/openai/whisper.json");`,
+  );
   lines.push(`  });`);
 
   for (let i = 0; i < 100; i++) {
     lines.push(`  it("URL builders matrix ${i}", () => {`);
-    lines.push(`    expect(buildGitHubRepoApiUrl("org-${i}", "repo-${i}")).toContain("org-${i}/repo-${i}");`);
-    lines.push(`    expect(buildShieldsStarsUrl("org-${i}", "repo-${i}")).toContain("org-${i}/repo-${i}");`);
+    lines.push(
+      `    expect(buildGitHubRepoApiUrl("org-${i}", "repo-${i}")).toContain("org-${i}/repo-${i}");`,
+    );
+    lines.push(
+      `    expect(buildShieldsStarsUrl("org-${i}", "repo-${i}")).toContain("org-${i}/repo-${i}");`,
+    );
     lines.push(`  });`);
   }
   lines.push(`});`);
   lines.push(``);
 
-  lines.push(`describe("source-repo-signals-fetch-lib parseGitHubRepoApiPayload", () => {`);
+  lines.push(
+    `describe("source-repo-signals-fetch-lib parseGitHubRepoApiPayload", () => {`,
+  );
   lines.push(`  it("parses public repo stats", () => {`);
-  lines.push(`    expect(parseGitHubRepoApiPayload({ stargazers_count: 42, forks_count: 7, updated_at: "2026-01-01" })).toEqual({`);
+  lines.push(
+    `    expect(parseGitHubRepoApiPayload({ stargazers_count: 42, forks_count: 7, updated_at: "2026-01-01" })).toEqual({`,
+  );
   lines.push(`      stars: 42, forks: 7, repoUpdatedAt: "2026-01-01",`);
   lines.push(`    });`);
   lines.push(`  });`);
   lines.push(`  it("throws for private repos", () => {`);
-  lines.push(`    expect(() => parseGitHubRepoApiPayload({ private: true })).toThrow("github_api_private_repo");`);
+  lines.push(
+    `    expect(() => parseGitHubRepoApiPayload({ private: true })).toThrow("github_api_private_repo");`,
+  );
   lines.push(`  });`);
 
   for (let i = 0; i < 100; i++) {
     lines.push(`  it("parseGitHubRepoApiPayload matrix ${i}", () => {`);
-    lines.push(`    const parsed = parseGitHubRepoApiPayload({ stargazers_count: ${i}, forks_count: ${i % 10}, updated_at: "2026-06-01" });`);
+    lines.push(
+      `    const parsed = parseGitHubRepoApiPayload({ stargazers_count: ${i}, forks_count: ${i % 10}, updated_at: "2026-06-01" });`,
+    );
     lines.push(`    expect(parsed.stars).toBe(${i});`);
     lines.push(`    expect(parsed.forks).toBe(${i % 10});`);
     lines.push(`  });`);
@@ -3605,42 +3795,64 @@ function sourceRepoSignalsFetchLibTests() {
   lines.push(`});`);
   lines.push(``);
 
-  lines.push(`describe("source-repo-signals-fetch-lib parseShieldsStarsPayload", () => {`);
+  lines.push(
+    `describe("source-repo-signals-fetch-lib parseShieldsStarsPayload", () => {`,
+  );
   lines.push(`  it("parses abbreviated star counts", () => {`);
-  lines.push(`    expect(parseShieldsStarsPayload({ value: "1.2k" })).toEqual({ stars: 1200, forks: null, repoUpdatedAt: null });`);
+  lines.push(
+    `    expect(parseShieldsStarsPayload({ value: "1.2k" })).toEqual({ stars: 1200, forks: null, repoUpdatedAt: null });`,
+  );
   lines.push(`  });`);
   lines.push(`  it("returns null for invalid payload", () => {`);
-  lines.push(`    expect(parseShieldsStarsPayload({ value: "not-a-number" })).toBeNull();`);
+  lines.push(
+    `    expect(parseShieldsStarsPayload({ value: "not-a-number" })).toBeNull();`,
+  );
   lines.push(`  });`);
   for (let i = 0; i < 60; i++) {
     lines.push(`  it("parseShieldsStarsPayload matrix ${i}", () => {`);
-    lines.push(`    const parsed = parseShieldsStarsPayload({ value: "${i * 10}" });`);
+    lines.push(
+      `    const parsed = parseShieldsStarsPayload({ value: "${i * 10}" });`,
+    );
     lines.push(`    expect(parsed?.stars).toBe(${i * 10});`);
     lines.push(`  });`);
   }
   lines.push(`});`);
   lines.push(``);
 
-  lines.push(`describe("source-repo-signals-fetch-lib fetchGitHubSourceSignal", () => {`);
-  lines.push(`  it("returns parsed GitHub API payload on success", async () => {`);
-  lines.push(`    const signal = await fetchGitHubSourceSignal("demo/repo", async () => new Response(JSON.stringify({ stargazers_count: 99, forks_count: 3, updated_at: "2026-01-01" }), { status: 200 }));`);
+  lines.push(
+    `describe("source-repo-signals-fetch-lib fetchGitHubSourceSignal", () => {`,
+  );
+  lines.push(
+    `  it("returns parsed GitHub API payload on success", async () => {`,
+  );
+  lines.push(
+    `    const signal = await fetchGitHubSourceSignal("demo/repo", async () => new Response(JSON.stringify({ stargazers_count: 99, forks_count: 3, updated_at: "2026-01-01" }), { status: 200 }));`,
+  );
   lines.push(`    expect(signal.stars).toBe(99);`);
   lines.push(`  });`);
   lines.push(`  it("falls back to shields on API failure", async () => {`);
   lines.push(`    let calls = 0;`);
   lines.push(`    const fetcher = async (url: string | URL | Request) => {`);
   lines.push(`      calls += 1;`);
-  lines.push(`      if (String(url).includes("api.github.com")) return new Response("", { status: 404 });`);
-  lines.push(`      return new Response(JSON.stringify({ value: "50" }), { status: 200 });`);
+  lines.push(
+    `      if (String(url).includes("api.github.com")) return new Response("", { status: 404 });`,
+  );
+  lines.push(
+    `      return new Response(JSON.stringify({ value: "50" }), { status: 200 });`,
+  );
   lines.push(`    };`);
-  lines.push(`    const signal = await fetchGitHubSourceSignal("demo/repo", fetcher);`);
+  lines.push(
+    `    const signal = await fetchGitHubSourceSignal("demo/repo", fetcher);`,
+  );
   lines.push(`    expect(signal.stars).toBe(50);`);
   lines.push(`    expect(calls).toBeGreaterThan(1);`);
   lines.push(`  });`);
 
   for (let i = 0; i < 80; i++) {
     lines.push(`  it("fetchGitHubSourceSignal matrix ${i}", async () => {`);
-    lines.push(`    const signal = await fetchGitHubSourceSignal("org-${i}/repo-${i}", async () => new Response(JSON.stringify({ stargazers_count: ${i}, forks_count: ${i % 5} }), { status: 200 }));`);
+    lines.push(
+      `    const signal = await fetchGitHubSourceSignal("org-${i}/repo-${i}", async () => new Response(JSON.stringify({ stargazers_count: ${i}, forks_count: ${i % 5} }), { status: 200 }));`,
+    );
     lines.push(`    expect(signal.stars).toBe(${i});`);
     lines.push(`  });`);
   }
@@ -3656,12 +3868,18 @@ const files = [
   ["tests/content-artifact-lib.test.ts", contentArtifactLibTests()],
   ["tests/brief-issues-lib.test.ts", briefIssuesLibTests()],
   ["tests/mcp-registry-client-setup-lib.test.ts", clientSetupLibTests()],
-  ["tests/mcp-registry-submission-policy-lib.test.ts", submissionPolicyLibTests()],
+  [
+    "tests/mcp-registry-submission-policy-lib.test.ts",
+    submissionPolicyLibTests(),
+  ],
   ["tests/mcp-registry-search-delegate-lib.test.ts", searchDelegateLibTests()],
   ["tests/og-render-lib.test.ts", ogRenderLibTests()],
   ["tests/dossier-prefs-lib.test.ts", dossierPrefsLibTests()],
   ["tests/content-query-lib.test.ts", contentQueryLibTests()],
-  ["tests/source-repo-signals-fetch-lib.test.ts", sourceRepoSignalsFetchLibTests()],
+  [
+    "tests/source-repo-signals-fetch-lib.test.ts",
+    sourceRepoSignalsFetchLibTests(),
+  ],
 ];
 
 for (const [relPath, content] of files) {

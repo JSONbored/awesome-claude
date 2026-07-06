@@ -28,10 +28,7 @@ export function parseShieldsStarsPayload(payload: { value?: string; message?: st
   return { stars, forks: null, repoUpdatedAt: null };
 }
 
-async function fetchShieldsStars(
-  repo: { owner: string; repo: string },
-  fetcher: Fetcher,
-) {
+async function fetchShieldsStars(repo: { owner: string; repo: string }, fetcher: Fetcher) {
   try {
     const response = await fetcher(buildShieldsStarsUrl(repo.owner, repo.repo), {
       signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),

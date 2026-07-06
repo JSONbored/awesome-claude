@@ -432,323 +432,675 @@ describe("registry-search-delegate-lib entrySearchText", () => {
     expect(text).toContain("browser bridge");
   });
   it("entrySearchText agents 0", () => {
-    const text = entrySearchText(makeEntry({ category: "agents", slug: "agents-0", title: "agents Title 0" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "agents",
+        slug: "agents-0",
+        title: "agents Title 0",
+      }),
+    );
     expect(text).toContain("agents");
   });
   it("entrySearchText agents 1", () => {
-    const text = entrySearchText(makeEntry({ category: "agents", slug: "agents-1", title: "agents Title 1" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "agents",
+        slug: "agents-1",
+        title: "agents Title 1",
+      }),
+    );
     expect(text).toContain("agents");
   });
   it("entrySearchText agents 2", () => {
-    const text = entrySearchText(makeEntry({ category: "agents", slug: "agents-2", title: "agents Title 2" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "agents",
+        slug: "agents-2",
+        title: "agents Title 2",
+      }),
+    );
     expect(text).toContain("agents");
   });
   it("entrySearchText agents 3", () => {
-    const text = entrySearchText(makeEntry({ category: "agents", slug: "agents-3", title: "agents Title 3" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "agents",
+        slug: "agents-3",
+        title: "agents Title 3",
+      }),
+    );
     expect(text).toContain("agents");
   });
   it("entrySearchText agents 4", () => {
-    const text = entrySearchText(makeEntry({ category: "agents", slug: "agents-4", title: "agents Title 4" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "agents",
+        slug: "agents-4",
+        title: "agents Title 4",
+      }),
+    );
     expect(text).toContain("agents");
   });
   it("entrySearchText agents 5", () => {
-    const text = entrySearchText(makeEntry({ category: "agents", slug: "agents-5", title: "agents Title 5" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "agents",
+        slug: "agents-5",
+        title: "agents Title 5",
+      }),
+    );
     expect(text).toContain("agents");
   });
   it("entrySearchText agents 6", () => {
-    const text = entrySearchText(makeEntry({ category: "agents", slug: "agents-6", title: "agents Title 6" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "agents",
+        slug: "agents-6",
+        title: "agents Title 6",
+      }),
+    );
     expect(text).toContain("agents");
   });
   it("entrySearchText agents 7", () => {
-    const text = entrySearchText(makeEntry({ category: "agents", slug: "agents-7", title: "agents Title 7" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "agents",
+        slug: "agents-7",
+        title: "agents Title 7",
+      }),
+    );
     expect(text).toContain("agents");
   });
   it("entrySearchText mcp 0", () => {
-    const text = entrySearchText(makeEntry({ category: "mcp", slug: "mcp-0", title: "mcp Title 0" }));
+    const text = entrySearchText(
+      makeEntry({ category: "mcp", slug: "mcp-0", title: "mcp Title 0" }),
+    );
     expect(text).toContain("mcp");
   });
   it("entrySearchText mcp 1", () => {
-    const text = entrySearchText(makeEntry({ category: "mcp", slug: "mcp-1", title: "mcp Title 1" }));
+    const text = entrySearchText(
+      makeEntry({ category: "mcp", slug: "mcp-1", title: "mcp Title 1" }),
+    );
     expect(text).toContain("mcp");
   });
   it("entrySearchText mcp 2", () => {
-    const text = entrySearchText(makeEntry({ category: "mcp", slug: "mcp-2", title: "mcp Title 2" }));
+    const text = entrySearchText(
+      makeEntry({ category: "mcp", slug: "mcp-2", title: "mcp Title 2" }),
+    );
     expect(text).toContain("mcp");
   });
   it("entrySearchText mcp 3", () => {
-    const text = entrySearchText(makeEntry({ category: "mcp", slug: "mcp-3", title: "mcp Title 3" }));
+    const text = entrySearchText(
+      makeEntry({ category: "mcp", slug: "mcp-3", title: "mcp Title 3" }),
+    );
     expect(text).toContain("mcp");
   });
   it("entrySearchText mcp 4", () => {
-    const text = entrySearchText(makeEntry({ category: "mcp", slug: "mcp-4", title: "mcp Title 4" }));
+    const text = entrySearchText(
+      makeEntry({ category: "mcp", slug: "mcp-4", title: "mcp Title 4" }),
+    );
     expect(text).toContain("mcp");
   });
   it("entrySearchText mcp 5", () => {
-    const text = entrySearchText(makeEntry({ category: "mcp", slug: "mcp-5", title: "mcp Title 5" }));
+    const text = entrySearchText(
+      makeEntry({ category: "mcp", slug: "mcp-5", title: "mcp Title 5" }),
+    );
     expect(text).toContain("mcp");
   });
   it("entrySearchText mcp 6", () => {
-    const text = entrySearchText(makeEntry({ category: "mcp", slug: "mcp-6", title: "mcp Title 6" }));
+    const text = entrySearchText(
+      makeEntry({ category: "mcp", slug: "mcp-6", title: "mcp Title 6" }),
+    );
     expect(text).toContain("mcp");
   });
   it("entrySearchText mcp 7", () => {
-    const text = entrySearchText(makeEntry({ category: "mcp", slug: "mcp-7", title: "mcp Title 7" }));
+    const text = entrySearchText(
+      makeEntry({ category: "mcp", slug: "mcp-7", title: "mcp Title 7" }),
+    );
     expect(text).toContain("mcp");
   });
   it("entrySearchText tools 0", () => {
-    const text = entrySearchText(makeEntry({ category: "tools", slug: "tools-0", title: "tools Title 0" }));
+    const text = entrySearchText(
+      makeEntry({ category: "tools", slug: "tools-0", title: "tools Title 0" }),
+    );
     expect(text).toContain("tools");
   });
   it("entrySearchText tools 1", () => {
-    const text = entrySearchText(makeEntry({ category: "tools", slug: "tools-1", title: "tools Title 1" }));
+    const text = entrySearchText(
+      makeEntry({ category: "tools", slug: "tools-1", title: "tools Title 1" }),
+    );
     expect(text).toContain("tools");
   });
   it("entrySearchText tools 2", () => {
-    const text = entrySearchText(makeEntry({ category: "tools", slug: "tools-2", title: "tools Title 2" }));
+    const text = entrySearchText(
+      makeEntry({ category: "tools", slug: "tools-2", title: "tools Title 2" }),
+    );
     expect(text).toContain("tools");
   });
   it("entrySearchText tools 3", () => {
-    const text = entrySearchText(makeEntry({ category: "tools", slug: "tools-3", title: "tools Title 3" }));
+    const text = entrySearchText(
+      makeEntry({ category: "tools", slug: "tools-3", title: "tools Title 3" }),
+    );
     expect(text).toContain("tools");
   });
   it("entrySearchText tools 4", () => {
-    const text = entrySearchText(makeEntry({ category: "tools", slug: "tools-4", title: "tools Title 4" }));
+    const text = entrySearchText(
+      makeEntry({ category: "tools", slug: "tools-4", title: "tools Title 4" }),
+    );
     expect(text).toContain("tools");
   });
   it("entrySearchText tools 5", () => {
-    const text = entrySearchText(makeEntry({ category: "tools", slug: "tools-5", title: "tools Title 5" }));
+    const text = entrySearchText(
+      makeEntry({ category: "tools", slug: "tools-5", title: "tools Title 5" }),
+    );
     expect(text).toContain("tools");
   });
   it("entrySearchText tools 6", () => {
-    const text = entrySearchText(makeEntry({ category: "tools", slug: "tools-6", title: "tools Title 6" }));
+    const text = entrySearchText(
+      makeEntry({ category: "tools", slug: "tools-6", title: "tools Title 6" }),
+    );
     expect(text).toContain("tools");
   });
   it("entrySearchText tools 7", () => {
-    const text = entrySearchText(makeEntry({ category: "tools", slug: "tools-7", title: "tools Title 7" }));
+    const text = entrySearchText(
+      makeEntry({ category: "tools", slug: "tools-7", title: "tools Title 7" }),
+    );
     expect(text).toContain("tools");
   });
   it("entrySearchText skills 0", () => {
-    const text = entrySearchText(makeEntry({ category: "skills", slug: "skills-0", title: "skills Title 0" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "skills",
+        slug: "skills-0",
+        title: "skills Title 0",
+      }),
+    );
     expect(text).toContain("skills");
   });
   it("entrySearchText skills 1", () => {
-    const text = entrySearchText(makeEntry({ category: "skills", slug: "skills-1", title: "skills Title 1" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "skills",
+        slug: "skills-1",
+        title: "skills Title 1",
+      }),
+    );
     expect(text).toContain("skills");
   });
   it("entrySearchText skills 2", () => {
-    const text = entrySearchText(makeEntry({ category: "skills", slug: "skills-2", title: "skills Title 2" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "skills",
+        slug: "skills-2",
+        title: "skills Title 2",
+      }),
+    );
     expect(text).toContain("skills");
   });
   it("entrySearchText skills 3", () => {
-    const text = entrySearchText(makeEntry({ category: "skills", slug: "skills-3", title: "skills Title 3" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "skills",
+        slug: "skills-3",
+        title: "skills Title 3",
+      }),
+    );
     expect(text).toContain("skills");
   });
   it("entrySearchText skills 4", () => {
-    const text = entrySearchText(makeEntry({ category: "skills", slug: "skills-4", title: "skills Title 4" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "skills",
+        slug: "skills-4",
+        title: "skills Title 4",
+      }),
+    );
     expect(text).toContain("skills");
   });
   it("entrySearchText skills 5", () => {
-    const text = entrySearchText(makeEntry({ category: "skills", slug: "skills-5", title: "skills Title 5" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "skills",
+        slug: "skills-5",
+        title: "skills Title 5",
+      }),
+    );
     expect(text).toContain("skills");
   });
   it("entrySearchText skills 6", () => {
-    const text = entrySearchText(makeEntry({ category: "skills", slug: "skills-6", title: "skills Title 6" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "skills",
+        slug: "skills-6",
+        title: "skills Title 6",
+      }),
+    );
     expect(text).toContain("skills");
   });
   it("entrySearchText skills 7", () => {
-    const text = entrySearchText(makeEntry({ category: "skills", slug: "skills-7", title: "skills Title 7" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "skills",
+        slug: "skills-7",
+        title: "skills Title 7",
+      }),
+    );
     expect(text).toContain("skills");
   });
   it("entrySearchText rules 0", () => {
-    const text = entrySearchText(makeEntry({ category: "rules", slug: "rules-0", title: "rules Title 0" }));
+    const text = entrySearchText(
+      makeEntry({ category: "rules", slug: "rules-0", title: "rules Title 0" }),
+    );
     expect(text).toContain("rules");
   });
   it("entrySearchText rules 1", () => {
-    const text = entrySearchText(makeEntry({ category: "rules", slug: "rules-1", title: "rules Title 1" }));
+    const text = entrySearchText(
+      makeEntry({ category: "rules", slug: "rules-1", title: "rules Title 1" }),
+    );
     expect(text).toContain("rules");
   });
   it("entrySearchText rules 2", () => {
-    const text = entrySearchText(makeEntry({ category: "rules", slug: "rules-2", title: "rules Title 2" }));
+    const text = entrySearchText(
+      makeEntry({ category: "rules", slug: "rules-2", title: "rules Title 2" }),
+    );
     expect(text).toContain("rules");
   });
   it("entrySearchText rules 3", () => {
-    const text = entrySearchText(makeEntry({ category: "rules", slug: "rules-3", title: "rules Title 3" }));
+    const text = entrySearchText(
+      makeEntry({ category: "rules", slug: "rules-3", title: "rules Title 3" }),
+    );
     expect(text).toContain("rules");
   });
   it("entrySearchText rules 4", () => {
-    const text = entrySearchText(makeEntry({ category: "rules", slug: "rules-4", title: "rules Title 4" }));
+    const text = entrySearchText(
+      makeEntry({ category: "rules", slug: "rules-4", title: "rules Title 4" }),
+    );
     expect(text).toContain("rules");
   });
   it("entrySearchText rules 5", () => {
-    const text = entrySearchText(makeEntry({ category: "rules", slug: "rules-5", title: "rules Title 5" }));
+    const text = entrySearchText(
+      makeEntry({ category: "rules", slug: "rules-5", title: "rules Title 5" }),
+    );
     expect(text).toContain("rules");
   });
   it("entrySearchText rules 6", () => {
-    const text = entrySearchText(makeEntry({ category: "rules", slug: "rules-6", title: "rules Title 6" }));
+    const text = entrySearchText(
+      makeEntry({ category: "rules", slug: "rules-6", title: "rules Title 6" }),
+    );
     expect(text).toContain("rules");
   });
   it("entrySearchText rules 7", () => {
-    const text = entrySearchText(makeEntry({ category: "rules", slug: "rules-7", title: "rules Title 7" }));
+    const text = entrySearchText(
+      makeEntry({ category: "rules", slug: "rules-7", title: "rules Title 7" }),
+    );
     expect(text).toContain("rules");
   });
   it("entrySearchText commands 0", () => {
-    const text = entrySearchText(makeEntry({ category: "commands", slug: "commands-0", title: "commands Title 0" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "commands",
+        slug: "commands-0",
+        title: "commands Title 0",
+      }),
+    );
     expect(text).toContain("commands");
   });
   it("entrySearchText commands 1", () => {
-    const text = entrySearchText(makeEntry({ category: "commands", slug: "commands-1", title: "commands Title 1" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "commands",
+        slug: "commands-1",
+        title: "commands Title 1",
+      }),
+    );
     expect(text).toContain("commands");
   });
   it("entrySearchText commands 2", () => {
-    const text = entrySearchText(makeEntry({ category: "commands", slug: "commands-2", title: "commands Title 2" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "commands",
+        slug: "commands-2",
+        title: "commands Title 2",
+      }),
+    );
     expect(text).toContain("commands");
   });
   it("entrySearchText commands 3", () => {
-    const text = entrySearchText(makeEntry({ category: "commands", slug: "commands-3", title: "commands Title 3" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "commands",
+        slug: "commands-3",
+        title: "commands Title 3",
+      }),
+    );
     expect(text).toContain("commands");
   });
   it("entrySearchText commands 4", () => {
-    const text = entrySearchText(makeEntry({ category: "commands", slug: "commands-4", title: "commands Title 4" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "commands",
+        slug: "commands-4",
+        title: "commands Title 4",
+      }),
+    );
     expect(text).toContain("commands");
   });
   it("entrySearchText commands 5", () => {
-    const text = entrySearchText(makeEntry({ category: "commands", slug: "commands-5", title: "commands Title 5" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "commands",
+        slug: "commands-5",
+        title: "commands Title 5",
+      }),
+    );
     expect(text).toContain("commands");
   });
   it("entrySearchText commands 6", () => {
-    const text = entrySearchText(makeEntry({ category: "commands", slug: "commands-6", title: "commands Title 6" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "commands",
+        slug: "commands-6",
+        title: "commands Title 6",
+      }),
+    );
     expect(text).toContain("commands");
   });
   it("entrySearchText commands 7", () => {
-    const text = entrySearchText(makeEntry({ category: "commands", slug: "commands-7", title: "commands Title 7" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "commands",
+        slug: "commands-7",
+        title: "commands Title 7",
+      }),
+    );
     expect(text).toContain("commands");
   });
   it("entrySearchText hooks 0", () => {
-    const text = entrySearchText(makeEntry({ category: "hooks", slug: "hooks-0", title: "hooks Title 0" }));
+    const text = entrySearchText(
+      makeEntry({ category: "hooks", slug: "hooks-0", title: "hooks Title 0" }),
+    );
     expect(text).toContain("hooks");
   });
   it("entrySearchText hooks 1", () => {
-    const text = entrySearchText(makeEntry({ category: "hooks", slug: "hooks-1", title: "hooks Title 1" }));
+    const text = entrySearchText(
+      makeEntry({ category: "hooks", slug: "hooks-1", title: "hooks Title 1" }),
+    );
     expect(text).toContain("hooks");
   });
   it("entrySearchText hooks 2", () => {
-    const text = entrySearchText(makeEntry({ category: "hooks", slug: "hooks-2", title: "hooks Title 2" }));
+    const text = entrySearchText(
+      makeEntry({ category: "hooks", slug: "hooks-2", title: "hooks Title 2" }),
+    );
     expect(text).toContain("hooks");
   });
   it("entrySearchText hooks 3", () => {
-    const text = entrySearchText(makeEntry({ category: "hooks", slug: "hooks-3", title: "hooks Title 3" }));
+    const text = entrySearchText(
+      makeEntry({ category: "hooks", slug: "hooks-3", title: "hooks Title 3" }),
+    );
     expect(text).toContain("hooks");
   });
   it("entrySearchText hooks 4", () => {
-    const text = entrySearchText(makeEntry({ category: "hooks", slug: "hooks-4", title: "hooks Title 4" }));
+    const text = entrySearchText(
+      makeEntry({ category: "hooks", slug: "hooks-4", title: "hooks Title 4" }),
+    );
     expect(text).toContain("hooks");
   });
   it("entrySearchText hooks 5", () => {
-    const text = entrySearchText(makeEntry({ category: "hooks", slug: "hooks-5", title: "hooks Title 5" }));
+    const text = entrySearchText(
+      makeEntry({ category: "hooks", slug: "hooks-5", title: "hooks Title 5" }),
+    );
     expect(text).toContain("hooks");
   });
   it("entrySearchText hooks 6", () => {
-    const text = entrySearchText(makeEntry({ category: "hooks", slug: "hooks-6", title: "hooks Title 6" }));
+    const text = entrySearchText(
+      makeEntry({ category: "hooks", slug: "hooks-6", title: "hooks Title 6" }),
+    );
     expect(text).toContain("hooks");
   });
   it("entrySearchText hooks 7", () => {
-    const text = entrySearchText(makeEntry({ category: "hooks", slug: "hooks-7", title: "hooks Title 7" }));
+    const text = entrySearchText(
+      makeEntry({ category: "hooks", slug: "hooks-7", title: "hooks Title 7" }),
+    );
     expect(text).toContain("hooks");
   });
   it("entrySearchText guides 0", () => {
-    const text = entrySearchText(makeEntry({ category: "guides", slug: "guides-0", title: "guides Title 0" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "guides",
+        slug: "guides-0",
+        title: "guides Title 0",
+      }),
+    );
     expect(text).toContain("guides");
   });
   it("entrySearchText guides 1", () => {
-    const text = entrySearchText(makeEntry({ category: "guides", slug: "guides-1", title: "guides Title 1" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "guides",
+        slug: "guides-1",
+        title: "guides Title 1",
+      }),
+    );
     expect(text).toContain("guides");
   });
   it("entrySearchText guides 2", () => {
-    const text = entrySearchText(makeEntry({ category: "guides", slug: "guides-2", title: "guides Title 2" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "guides",
+        slug: "guides-2",
+        title: "guides Title 2",
+      }),
+    );
     expect(text).toContain("guides");
   });
   it("entrySearchText guides 3", () => {
-    const text = entrySearchText(makeEntry({ category: "guides", slug: "guides-3", title: "guides Title 3" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "guides",
+        slug: "guides-3",
+        title: "guides Title 3",
+      }),
+    );
     expect(text).toContain("guides");
   });
   it("entrySearchText guides 4", () => {
-    const text = entrySearchText(makeEntry({ category: "guides", slug: "guides-4", title: "guides Title 4" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "guides",
+        slug: "guides-4",
+        title: "guides Title 4",
+      }),
+    );
     expect(text).toContain("guides");
   });
   it("entrySearchText guides 5", () => {
-    const text = entrySearchText(makeEntry({ category: "guides", slug: "guides-5", title: "guides Title 5" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "guides",
+        slug: "guides-5",
+        title: "guides Title 5",
+      }),
+    );
     expect(text).toContain("guides");
   });
   it("entrySearchText guides 6", () => {
-    const text = entrySearchText(makeEntry({ category: "guides", slug: "guides-6", title: "guides Title 6" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "guides",
+        slug: "guides-6",
+        title: "guides Title 6",
+      }),
+    );
     expect(text).toContain("guides");
   });
   it("entrySearchText guides 7", () => {
-    const text = entrySearchText(makeEntry({ category: "guides", slug: "guides-7", title: "guides Title 7" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "guides",
+        slug: "guides-7",
+        title: "guides Title 7",
+      }),
+    );
     expect(text).toContain("guides");
   });
   it("entrySearchText collections 0", () => {
-    const text = entrySearchText(makeEntry({ category: "collections", slug: "collections-0", title: "collections Title 0" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "collections",
+        slug: "collections-0",
+        title: "collections Title 0",
+      }),
+    );
     expect(text).toContain("collections");
   });
   it("entrySearchText collections 1", () => {
-    const text = entrySearchText(makeEntry({ category: "collections", slug: "collections-1", title: "collections Title 1" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "collections",
+        slug: "collections-1",
+        title: "collections Title 1",
+      }),
+    );
     expect(text).toContain("collections");
   });
   it("entrySearchText collections 2", () => {
-    const text = entrySearchText(makeEntry({ category: "collections", slug: "collections-2", title: "collections Title 2" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "collections",
+        slug: "collections-2",
+        title: "collections Title 2",
+      }),
+    );
     expect(text).toContain("collections");
   });
   it("entrySearchText collections 3", () => {
-    const text = entrySearchText(makeEntry({ category: "collections", slug: "collections-3", title: "collections Title 3" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "collections",
+        slug: "collections-3",
+        title: "collections Title 3",
+      }),
+    );
     expect(text).toContain("collections");
   });
   it("entrySearchText collections 4", () => {
-    const text = entrySearchText(makeEntry({ category: "collections", slug: "collections-4", title: "collections Title 4" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "collections",
+        slug: "collections-4",
+        title: "collections Title 4",
+      }),
+    );
     expect(text).toContain("collections");
   });
   it("entrySearchText collections 5", () => {
-    const text = entrySearchText(makeEntry({ category: "collections", slug: "collections-5", title: "collections Title 5" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "collections",
+        slug: "collections-5",
+        title: "collections Title 5",
+      }),
+    );
     expect(text).toContain("collections");
   });
   it("entrySearchText collections 6", () => {
-    const text = entrySearchText(makeEntry({ category: "collections", slug: "collections-6", title: "collections Title 6" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "collections",
+        slug: "collections-6",
+        title: "collections Title 6",
+      }),
+    );
     expect(text).toContain("collections");
   });
   it("entrySearchText collections 7", () => {
-    const text = entrySearchText(makeEntry({ category: "collections", slug: "collections-7", title: "collections Title 7" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "collections",
+        slug: "collections-7",
+        title: "collections Title 7",
+      }),
+    );
     expect(text).toContain("collections");
   });
   it("entrySearchText statuslines 0", () => {
-    const text = entrySearchText(makeEntry({ category: "statuslines", slug: "statuslines-0", title: "statuslines Title 0" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "statuslines",
+        slug: "statuslines-0",
+        title: "statuslines Title 0",
+      }),
+    );
     expect(text).toContain("statuslines");
   });
   it("entrySearchText statuslines 1", () => {
-    const text = entrySearchText(makeEntry({ category: "statuslines", slug: "statuslines-1", title: "statuslines Title 1" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "statuslines",
+        slug: "statuslines-1",
+        title: "statuslines Title 1",
+      }),
+    );
     expect(text).toContain("statuslines");
   });
   it("entrySearchText statuslines 2", () => {
-    const text = entrySearchText(makeEntry({ category: "statuslines", slug: "statuslines-2", title: "statuslines Title 2" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "statuslines",
+        slug: "statuslines-2",
+        title: "statuslines Title 2",
+      }),
+    );
     expect(text).toContain("statuslines");
   });
   it("entrySearchText statuslines 3", () => {
-    const text = entrySearchText(makeEntry({ category: "statuslines", slug: "statuslines-3", title: "statuslines Title 3" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "statuslines",
+        slug: "statuslines-3",
+        title: "statuslines Title 3",
+      }),
+    );
     expect(text).toContain("statuslines");
   });
   it("entrySearchText statuslines 4", () => {
-    const text = entrySearchText(makeEntry({ category: "statuslines", slug: "statuslines-4", title: "statuslines Title 4" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "statuslines",
+        slug: "statuslines-4",
+        title: "statuslines Title 4",
+      }),
+    );
     expect(text).toContain("statuslines");
   });
   it("entrySearchText statuslines 5", () => {
-    const text = entrySearchText(makeEntry({ category: "statuslines", slug: "statuslines-5", title: "statuslines Title 5" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "statuslines",
+        slug: "statuslines-5",
+        title: "statuslines Title 5",
+      }),
+    );
     expect(text).toContain("statuslines");
   });
   it("entrySearchText statuslines 6", () => {
-    const text = entrySearchText(makeEntry({ category: "statuslines", slug: "statuslines-6", title: "statuslines Title 6" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "statuslines",
+        slug: "statuslines-6",
+        title: "statuslines Title 6",
+      }),
+    );
     expect(text).toContain("statuslines");
   });
   it("entrySearchText statuslines 7", () => {
-    const text = entrySearchText(makeEntry({ category: "statuslines", slug: "statuslines-7", title: "statuslines Title 7" }));
+    const text = entrySearchText(
+      makeEntry({
+        category: "statuslines",
+        slug: "statuslines-7",
+        title: "statuslines Title 7",
+      }),
+    );
     expect(text).toContain("statuslines");
   });
 });

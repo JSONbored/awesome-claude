@@ -16,12 +16,24 @@ import {
 function makeMemoryStorage(): Storage {
   const map = new Map<string, string>();
   return {
-    get length() { return map.size; },
-    clear() { map.clear(); },
-    getItem(key: string) { return map.has(key) ? map.get(key)! : null; },
-    key(index: number) { return [...map.keys()][index] ?? null; },
-    removeItem(key: string) { map.delete(key); },
-    setItem(key: string, value: string) { map.set(key, value); },
+    get length() {
+      return map.size;
+    },
+    clear() {
+      map.clear();
+    },
+    getItem(key: string) {
+      return map.has(key) ? map.get(key)! : null;
+    },
+    key(index: number) {
+      return [...map.keys()][index] ?? null;
+    },
+    removeItem(key: string) {
+      map.delete(key);
+    },
+    setItem(key: string, value: string) {
+      map.set(key, value);
+    },
   };
 }
 
@@ -32,404 +44,804 @@ describe("dossier-prefs-lib keys", () => {
     expect(HARNESS_KEY_PREFIX).toBe("hc:dossier-harness:");
   });
   it("scrollStorageKey agents/agents-slug-0", () => {
-    expect(scrollStorageKey("agents", "agents-slug-0")).toBe(`${SCROLL_KEY_PREFIX}agents/agents-slug-0`);
-    expect(harnessStorageKey("agents", "agents-slug-0")).toBe(`${HARNESS_KEY_PREFIX}agents/agents-slug-0`);
+    expect(scrollStorageKey("agents", "agents-slug-0")).toBe(
+      `${SCROLL_KEY_PREFIX}agents/agents-slug-0`,
+    );
+    expect(harnessStorageKey("agents", "agents-slug-0")).toBe(
+      `${HARNESS_KEY_PREFIX}agents/agents-slug-0`,
+    );
   });
   it("scrollStorageKey agents/agents-slug-1", () => {
-    expect(scrollStorageKey("agents", "agents-slug-1")).toBe(`${SCROLL_KEY_PREFIX}agents/agents-slug-1`);
-    expect(harnessStorageKey("agents", "agents-slug-1")).toBe(`${HARNESS_KEY_PREFIX}agents/agents-slug-1`);
+    expect(scrollStorageKey("agents", "agents-slug-1")).toBe(
+      `${SCROLL_KEY_PREFIX}agents/agents-slug-1`,
+    );
+    expect(harnessStorageKey("agents", "agents-slug-1")).toBe(
+      `${HARNESS_KEY_PREFIX}agents/agents-slug-1`,
+    );
   });
   it("scrollStorageKey agents/agents-slug-2", () => {
-    expect(scrollStorageKey("agents", "agents-slug-2")).toBe(`${SCROLL_KEY_PREFIX}agents/agents-slug-2`);
-    expect(harnessStorageKey("agents", "agents-slug-2")).toBe(`${HARNESS_KEY_PREFIX}agents/agents-slug-2`);
+    expect(scrollStorageKey("agents", "agents-slug-2")).toBe(
+      `${SCROLL_KEY_PREFIX}agents/agents-slug-2`,
+    );
+    expect(harnessStorageKey("agents", "agents-slug-2")).toBe(
+      `${HARNESS_KEY_PREFIX}agents/agents-slug-2`,
+    );
   });
   it("scrollStorageKey agents/agents-slug-3", () => {
-    expect(scrollStorageKey("agents", "agents-slug-3")).toBe(`${SCROLL_KEY_PREFIX}agents/agents-slug-3`);
-    expect(harnessStorageKey("agents", "agents-slug-3")).toBe(`${HARNESS_KEY_PREFIX}agents/agents-slug-3`);
+    expect(scrollStorageKey("agents", "agents-slug-3")).toBe(
+      `${SCROLL_KEY_PREFIX}agents/agents-slug-3`,
+    );
+    expect(harnessStorageKey("agents", "agents-slug-3")).toBe(
+      `${HARNESS_KEY_PREFIX}agents/agents-slug-3`,
+    );
   });
   it("scrollStorageKey agents/agents-slug-4", () => {
-    expect(scrollStorageKey("agents", "agents-slug-4")).toBe(`${SCROLL_KEY_PREFIX}agents/agents-slug-4`);
-    expect(harnessStorageKey("agents", "agents-slug-4")).toBe(`${HARNESS_KEY_PREFIX}agents/agents-slug-4`);
+    expect(scrollStorageKey("agents", "agents-slug-4")).toBe(
+      `${SCROLL_KEY_PREFIX}agents/agents-slug-4`,
+    );
+    expect(harnessStorageKey("agents", "agents-slug-4")).toBe(
+      `${HARNESS_KEY_PREFIX}agents/agents-slug-4`,
+    );
   });
   it("scrollStorageKey agents/agents-slug-5", () => {
-    expect(scrollStorageKey("agents", "agents-slug-5")).toBe(`${SCROLL_KEY_PREFIX}agents/agents-slug-5`);
-    expect(harnessStorageKey("agents", "agents-slug-5")).toBe(`${HARNESS_KEY_PREFIX}agents/agents-slug-5`);
+    expect(scrollStorageKey("agents", "agents-slug-5")).toBe(
+      `${SCROLL_KEY_PREFIX}agents/agents-slug-5`,
+    );
+    expect(harnessStorageKey("agents", "agents-slug-5")).toBe(
+      `${HARNESS_KEY_PREFIX}agents/agents-slug-5`,
+    );
   });
   it("scrollStorageKey agents/agents-slug-6", () => {
-    expect(scrollStorageKey("agents", "agents-slug-6")).toBe(`${SCROLL_KEY_PREFIX}agents/agents-slug-6`);
-    expect(harnessStorageKey("agents", "agents-slug-6")).toBe(`${HARNESS_KEY_PREFIX}agents/agents-slug-6`);
+    expect(scrollStorageKey("agents", "agents-slug-6")).toBe(
+      `${SCROLL_KEY_PREFIX}agents/agents-slug-6`,
+    );
+    expect(harnessStorageKey("agents", "agents-slug-6")).toBe(
+      `${HARNESS_KEY_PREFIX}agents/agents-slug-6`,
+    );
   });
   it("scrollStorageKey agents/agents-slug-7", () => {
-    expect(scrollStorageKey("agents", "agents-slug-7")).toBe(`${SCROLL_KEY_PREFIX}agents/agents-slug-7`);
-    expect(harnessStorageKey("agents", "agents-slug-7")).toBe(`${HARNESS_KEY_PREFIX}agents/agents-slug-7`);
+    expect(scrollStorageKey("agents", "agents-slug-7")).toBe(
+      `${SCROLL_KEY_PREFIX}agents/agents-slug-7`,
+    );
+    expect(harnessStorageKey("agents", "agents-slug-7")).toBe(
+      `${HARNESS_KEY_PREFIX}agents/agents-slug-7`,
+    );
   });
   it("scrollStorageKey agents/agents-slug-8", () => {
-    expect(scrollStorageKey("agents", "agents-slug-8")).toBe(`${SCROLL_KEY_PREFIX}agents/agents-slug-8`);
-    expect(harnessStorageKey("agents", "agents-slug-8")).toBe(`${HARNESS_KEY_PREFIX}agents/agents-slug-8`);
+    expect(scrollStorageKey("agents", "agents-slug-8")).toBe(
+      `${SCROLL_KEY_PREFIX}agents/agents-slug-8`,
+    );
+    expect(harnessStorageKey("agents", "agents-slug-8")).toBe(
+      `${HARNESS_KEY_PREFIX}agents/agents-slug-8`,
+    );
   });
   it("scrollStorageKey agents/agents-slug-9", () => {
-    expect(scrollStorageKey("agents", "agents-slug-9")).toBe(`${SCROLL_KEY_PREFIX}agents/agents-slug-9`);
-    expect(harnessStorageKey("agents", "agents-slug-9")).toBe(`${HARNESS_KEY_PREFIX}agents/agents-slug-9`);
+    expect(scrollStorageKey("agents", "agents-slug-9")).toBe(
+      `${SCROLL_KEY_PREFIX}agents/agents-slug-9`,
+    );
+    expect(harnessStorageKey("agents", "agents-slug-9")).toBe(
+      `${HARNESS_KEY_PREFIX}agents/agents-slug-9`,
+    );
   });
   it("scrollStorageKey mcp/mcp-slug-0", () => {
-    expect(scrollStorageKey("mcp", "mcp-slug-0")).toBe(`${SCROLL_KEY_PREFIX}mcp/mcp-slug-0`);
-    expect(harnessStorageKey("mcp", "mcp-slug-0")).toBe(`${HARNESS_KEY_PREFIX}mcp/mcp-slug-0`);
+    expect(scrollStorageKey("mcp", "mcp-slug-0")).toBe(
+      `${SCROLL_KEY_PREFIX}mcp/mcp-slug-0`,
+    );
+    expect(harnessStorageKey("mcp", "mcp-slug-0")).toBe(
+      `${HARNESS_KEY_PREFIX}mcp/mcp-slug-0`,
+    );
   });
   it("scrollStorageKey mcp/mcp-slug-1", () => {
-    expect(scrollStorageKey("mcp", "mcp-slug-1")).toBe(`${SCROLL_KEY_PREFIX}mcp/mcp-slug-1`);
-    expect(harnessStorageKey("mcp", "mcp-slug-1")).toBe(`${HARNESS_KEY_PREFIX}mcp/mcp-slug-1`);
+    expect(scrollStorageKey("mcp", "mcp-slug-1")).toBe(
+      `${SCROLL_KEY_PREFIX}mcp/mcp-slug-1`,
+    );
+    expect(harnessStorageKey("mcp", "mcp-slug-1")).toBe(
+      `${HARNESS_KEY_PREFIX}mcp/mcp-slug-1`,
+    );
   });
   it("scrollStorageKey mcp/mcp-slug-2", () => {
-    expect(scrollStorageKey("mcp", "mcp-slug-2")).toBe(`${SCROLL_KEY_PREFIX}mcp/mcp-slug-2`);
-    expect(harnessStorageKey("mcp", "mcp-slug-2")).toBe(`${HARNESS_KEY_PREFIX}mcp/mcp-slug-2`);
+    expect(scrollStorageKey("mcp", "mcp-slug-2")).toBe(
+      `${SCROLL_KEY_PREFIX}mcp/mcp-slug-2`,
+    );
+    expect(harnessStorageKey("mcp", "mcp-slug-2")).toBe(
+      `${HARNESS_KEY_PREFIX}mcp/mcp-slug-2`,
+    );
   });
   it("scrollStorageKey mcp/mcp-slug-3", () => {
-    expect(scrollStorageKey("mcp", "mcp-slug-3")).toBe(`${SCROLL_KEY_PREFIX}mcp/mcp-slug-3`);
-    expect(harnessStorageKey("mcp", "mcp-slug-3")).toBe(`${HARNESS_KEY_PREFIX}mcp/mcp-slug-3`);
+    expect(scrollStorageKey("mcp", "mcp-slug-3")).toBe(
+      `${SCROLL_KEY_PREFIX}mcp/mcp-slug-3`,
+    );
+    expect(harnessStorageKey("mcp", "mcp-slug-3")).toBe(
+      `${HARNESS_KEY_PREFIX}mcp/mcp-slug-3`,
+    );
   });
   it("scrollStorageKey mcp/mcp-slug-4", () => {
-    expect(scrollStorageKey("mcp", "mcp-slug-4")).toBe(`${SCROLL_KEY_PREFIX}mcp/mcp-slug-4`);
-    expect(harnessStorageKey("mcp", "mcp-slug-4")).toBe(`${HARNESS_KEY_PREFIX}mcp/mcp-slug-4`);
+    expect(scrollStorageKey("mcp", "mcp-slug-4")).toBe(
+      `${SCROLL_KEY_PREFIX}mcp/mcp-slug-4`,
+    );
+    expect(harnessStorageKey("mcp", "mcp-slug-4")).toBe(
+      `${HARNESS_KEY_PREFIX}mcp/mcp-slug-4`,
+    );
   });
   it("scrollStorageKey mcp/mcp-slug-5", () => {
-    expect(scrollStorageKey("mcp", "mcp-slug-5")).toBe(`${SCROLL_KEY_PREFIX}mcp/mcp-slug-5`);
-    expect(harnessStorageKey("mcp", "mcp-slug-5")).toBe(`${HARNESS_KEY_PREFIX}mcp/mcp-slug-5`);
+    expect(scrollStorageKey("mcp", "mcp-slug-5")).toBe(
+      `${SCROLL_KEY_PREFIX}mcp/mcp-slug-5`,
+    );
+    expect(harnessStorageKey("mcp", "mcp-slug-5")).toBe(
+      `${HARNESS_KEY_PREFIX}mcp/mcp-slug-5`,
+    );
   });
   it("scrollStorageKey mcp/mcp-slug-6", () => {
-    expect(scrollStorageKey("mcp", "mcp-slug-6")).toBe(`${SCROLL_KEY_PREFIX}mcp/mcp-slug-6`);
-    expect(harnessStorageKey("mcp", "mcp-slug-6")).toBe(`${HARNESS_KEY_PREFIX}mcp/mcp-slug-6`);
+    expect(scrollStorageKey("mcp", "mcp-slug-6")).toBe(
+      `${SCROLL_KEY_PREFIX}mcp/mcp-slug-6`,
+    );
+    expect(harnessStorageKey("mcp", "mcp-slug-6")).toBe(
+      `${HARNESS_KEY_PREFIX}mcp/mcp-slug-6`,
+    );
   });
   it("scrollStorageKey mcp/mcp-slug-7", () => {
-    expect(scrollStorageKey("mcp", "mcp-slug-7")).toBe(`${SCROLL_KEY_PREFIX}mcp/mcp-slug-7`);
-    expect(harnessStorageKey("mcp", "mcp-slug-7")).toBe(`${HARNESS_KEY_PREFIX}mcp/mcp-slug-7`);
+    expect(scrollStorageKey("mcp", "mcp-slug-7")).toBe(
+      `${SCROLL_KEY_PREFIX}mcp/mcp-slug-7`,
+    );
+    expect(harnessStorageKey("mcp", "mcp-slug-7")).toBe(
+      `${HARNESS_KEY_PREFIX}mcp/mcp-slug-7`,
+    );
   });
   it("scrollStorageKey mcp/mcp-slug-8", () => {
-    expect(scrollStorageKey("mcp", "mcp-slug-8")).toBe(`${SCROLL_KEY_PREFIX}mcp/mcp-slug-8`);
-    expect(harnessStorageKey("mcp", "mcp-slug-8")).toBe(`${HARNESS_KEY_PREFIX}mcp/mcp-slug-8`);
+    expect(scrollStorageKey("mcp", "mcp-slug-8")).toBe(
+      `${SCROLL_KEY_PREFIX}mcp/mcp-slug-8`,
+    );
+    expect(harnessStorageKey("mcp", "mcp-slug-8")).toBe(
+      `${HARNESS_KEY_PREFIX}mcp/mcp-slug-8`,
+    );
   });
   it("scrollStorageKey mcp/mcp-slug-9", () => {
-    expect(scrollStorageKey("mcp", "mcp-slug-9")).toBe(`${SCROLL_KEY_PREFIX}mcp/mcp-slug-9`);
-    expect(harnessStorageKey("mcp", "mcp-slug-9")).toBe(`${HARNESS_KEY_PREFIX}mcp/mcp-slug-9`);
+    expect(scrollStorageKey("mcp", "mcp-slug-9")).toBe(
+      `${SCROLL_KEY_PREFIX}mcp/mcp-slug-9`,
+    );
+    expect(harnessStorageKey("mcp", "mcp-slug-9")).toBe(
+      `${HARNESS_KEY_PREFIX}mcp/mcp-slug-9`,
+    );
   });
   it("scrollStorageKey tools/tools-slug-0", () => {
-    expect(scrollStorageKey("tools", "tools-slug-0")).toBe(`${SCROLL_KEY_PREFIX}tools/tools-slug-0`);
-    expect(harnessStorageKey("tools", "tools-slug-0")).toBe(`${HARNESS_KEY_PREFIX}tools/tools-slug-0`);
+    expect(scrollStorageKey("tools", "tools-slug-0")).toBe(
+      `${SCROLL_KEY_PREFIX}tools/tools-slug-0`,
+    );
+    expect(harnessStorageKey("tools", "tools-slug-0")).toBe(
+      `${HARNESS_KEY_PREFIX}tools/tools-slug-0`,
+    );
   });
   it("scrollStorageKey tools/tools-slug-1", () => {
-    expect(scrollStorageKey("tools", "tools-slug-1")).toBe(`${SCROLL_KEY_PREFIX}tools/tools-slug-1`);
-    expect(harnessStorageKey("tools", "tools-slug-1")).toBe(`${HARNESS_KEY_PREFIX}tools/tools-slug-1`);
+    expect(scrollStorageKey("tools", "tools-slug-1")).toBe(
+      `${SCROLL_KEY_PREFIX}tools/tools-slug-1`,
+    );
+    expect(harnessStorageKey("tools", "tools-slug-1")).toBe(
+      `${HARNESS_KEY_PREFIX}tools/tools-slug-1`,
+    );
   });
   it("scrollStorageKey tools/tools-slug-2", () => {
-    expect(scrollStorageKey("tools", "tools-slug-2")).toBe(`${SCROLL_KEY_PREFIX}tools/tools-slug-2`);
-    expect(harnessStorageKey("tools", "tools-slug-2")).toBe(`${HARNESS_KEY_PREFIX}tools/tools-slug-2`);
+    expect(scrollStorageKey("tools", "tools-slug-2")).toBe(
+      `${SCROLL_KEY_PREFIX}tools/tools-slug-2`,
+    );
+    expect(harnessStorageKey("tools", "tools-slug-2")).toBe(
+      `${HARNESS_KEY_PREFIX}tools/tools-slug-2`,
+    );
   });
   it("scrollStorageKey tools/tools-slug-3", () => {
-    expect(scrollStorageKey("tools", "tools-slug-3")).toBe(`${SCROLL_KEY_PREFIX}tools/tools-slug-3`);
-    expect(harnessStorageKey("tools", "tools-slug-3")).toBe(`${HARNESS_KEY_PREFIX}tools/tools-slug-3`);
+    expect(scrollStorageKey("tools", "tools-slug-3")).toBe(
+      `${SCROLL_KEY_PREFIX}tools/tools-slug-3`,
+    );
+    expect(harnessStorageKey("tools", "tools-slug-3")).toBe(
+      `${HARNESS_KEY_PREFIX}tools/tools-slug-3`,
+    );
   });
   it("scrollStorageKey tools/tools-slug-4", () => {
-    expect(scrollStorageKey("tools", "tools-slug-4")).toBe(`${SCROLL_KEY_PREFIX}tools/tools-slug-4`);
-    expect(harnessStorageKey("tools", "tools-slug-4")).toBe(`${HARNESS_KEY_PREFIX}tools/tools-slug-4`);
+    expect(scrollStorageKey("tools", "tools-slug-4")).toBe(
+      `${SCROLL_KEY_PREFIX}tools/tools-slug-4`,
+    );
+    expect(harnessStorageKey("tools", "tools-slug-4")).toBe(
+      `${HARNESS_KEY_PREFIX}tools/tools-slug-4`,
+    );
   });
   it("scrollStorageKey tools/tools-slug-5", () => {
-    expect(scrollStorageKey("tools", "tools-slug-5")).toBe(`${SCROLL_KEY_PREFIX}tools/tools-slug-5`);
-    expect(harnessStorageKey("tools", "tools-slug-5")).toBe(`${HARNESS_KEY_PREFIX}tools/tools-slug-5`);
+    expect(scrollStorageKey("tools", "tools-slug-5")).toBe(
+      `${SCROLL_KEY_PREFIX}tools/tools-slug-5`,
+    );
+    expect(harnessStorageKey("tools", "tools-slug-5")).toBe(
+      `${HARNESS_KEY_PREFIX}tools/tools-slug-5`,
+    );
   });
   it("scrollStorageKey tools/tools-slug-6", () => {
-    expect(scrollStorageKey("tools", "tools-slug-6")).toBe(`${SCROLL_KEY_PREFIX}tools/tools-slug-6`);
-    expect(harnessStorageKey("tools", "tools-slug-6")).toBe(`${HARNESS_KEY_PREFIX}tools/tools-slug-6`);
+    expect(scrollStorageKey("tools", "tools-slug-6")).toBe(
+      `${SCROLL_KEY_PREFIX}tools/tools-slug-6`,
+    );
+    expect(harnessStorageKey("tools", "tools-slug-6")).toBe(
+      `${HARNESS_KEY_PREFIX}tools/tools-slug-6`,
+    );
   });
   it("scrollStorageKey tools/tools-slug-7", () => {
-    expect(scrollStorageKey("tools", "tools-slug-7")).toBe(`${SCROLL_KEY_PREFIX}tools/tools-slug-7`);
-    expect(harnessStorageKey("tools", "tools-slug-7")).toBe(`${HARNESS_KEY_PREFIX}tools/tools-slug-7`);
+    expect(scrollStorageKey("tools", "tools-slug-7")).toBe(
+      `${SCROLL_KEY_PREFIX}tools/tools-slug-7`,
+    );
+    expect(harnessStorageKey("tools", "tools-slug-7")).toBe(
+      `${HARNESS_KEY_PREFIX}tools/tools-slug-7`,
+    );
   });
   it("scrollStorageKey tools/tools-slug-8", () => {
-    expect(scrollStorageKey("tools", "tools-slug-8")).toBe(`${SCROLL_KEY_PREFIX}tools/tools-slug-8`);
-    expect(harnessStorageKey("tools", "tools-slug-8")).toBe(`${HARNESS_KEY_PREFIX}tools/tools-slug-8`);
+    expect(scrollStorageKey("tools", "tools-slug-8")).toBe(
+      `${SCROLL_KEY_PREFIX}tools/tools-slug-8`,
+    );
+    expect(harnessStorageKey("tools", "tools-slug-8")).toBe(
+      `${HARNESS_KEY_PREFIX}tools/tools-slug-8`,
+    );
   });
   it("scrollStorageKey tools/tools-slug-9", () => {
-    expect(scrollStorageKey("tools", "tools-slug-9")).toBe(`${SCROLL_KEY_PREFIX}tools/tools-slug-9`);
-    expect(harnessStorageKey("tools", "tools-slug-9")).toBe(`${HARNESS_KEY_PREFIX}tools/tools-slug-9`);
+    expect(scrollStorageKey("tools", "tools-slug-9")).toBe(
+      `${SCROLL_KEY_PREFIX}tools/tools-slug-9`,
+    );
+    expect(harnessStorageKey("tools", "tools-slug-9")).toBe(
+      `${HARNESS_KEY_PREFIX}tools/tools-slug-9`,
+    );
   });
   it("scrollStorageKey skills/skills-slug-0", () => {
-    expect(scrollStorageKey("skills", "skills-slug-0")).toBe(`${SCROLL_KEY_PREFIX}skills/skills-slug-0`);
-    expect(harnessStorageKey("skills", "skills-slug-0")).toBe(`${HARNESS_KEY_PREFIX}skills/skills-slug-0`);
+    expect(scrollStorageKey("skills", "skills-slug-0")).toBe(
+      `${SCROLL_KEY_PREFIX}skills/skills-slug-0`,
+    );
+    expect(harnessStorageKey("skills", "skills-slug-0")).toBe(
+      `${HARNESS_KEY_PREFIX}skills/skills-slug-0`,
+    );
   });
   it("scrollStorageKey skills/skills-slug-1", () => {
-    expect(scrollStorageKey("skills", "skills-slug-1")).toBe(`${SCROLL_KEY_PREFIX}skills/skills-slug-1`);
-    expect(harnessStorageKey("skills", "skills-slug-1")).toBe(`${HARNESS_KEY_PREFIX}skills/skills-slug-1`);
+    expect(scrollStorageKey("skills", "skills-slug-1")).toBe(
+      `${SCROLL_KEY_PREFIX}skills/skills-slug-1`,
+    );
+    expect(harnessStorageKey("skills", "skills-slug-1")).toBe(
+      `${HARNESS_KEY_PREFIX}skills/skills-slug-1`,
+    );
   });
   it("scrollStorageKey skills/skills-slug-2", () => {
-    expect(scrollStorageKey("skills", "skills-slug-2")).toBe(`${SCROLL_KEY_PREFIX}skills/skills-slug-2`);
-    expect(harnessStorageKey("skills", "skills-slug-2")).toBe(`${HARNESS_KEY_PREFIX}skills/skills-slug-2`);
+    expect(scrollStorageKey("skills", "skills-slug-2")).toBe(
+      `${SCROLL_KEY_PREFIX}skills/skills-slug-2`,
+    );
+    expect(harnessStorageKey("skills", "skills-slug-2")).toBe(
+      `${HARNESS_KEY_PREFIX}skills/skills-slug-2`,
+    );
   });
   it("scrollStorageKey skills/skills-slug-3", () => {
-    expect(scrollStorageKey("skills", "skills-slug-3")).toBe(`${SCROLL_KEY_PREFIX}skills/skills-slug-3`);
-    expect(harnessStorageKey("skills", "skills-slug-3")).toBe(`${HARNESS_KEY_PREFIX}skills/skills-slug-3`);
+    expect(scrollStorageKey("skills", "skills-slug-3")).toBe(
+      `${SCROLL_KEY_PREFIX}skills/skills-slug-3`,
+    );
+    expect(harnessStorageKey("skills", "skills-slug-3")).toBe(
+      `${HARNESS_KEY_PREFIX}skills/skills-slug-3`,
+    );
   });
   it("scrollStorageKey skills/skills-slug-4", () => {
-    expect(scrollStorageKey("skills", "skills-slug-4")).toBe(`${SCROLL_KEY_PREFIX}skills/skills-slug-4`);
-    expect(harnessStorageKey("skills", "skills-slug-4")).toBe(`${HARNESS_KEY_PREFIX}skills/skills-slug-4`);
+    expect(scrollStorageKey("skills", "skills-slug-4")).toBe(
+      `${SCROLL_KEY_PREFIX}skills/skills-slug-4`,
+    );
+    expect(harnessStorageKey("skills", "skills-slug-4")).toBe(
+      `${HARNESS_KEY_PREFIX}skills/skills-slug-4`,
+    );
   });
   it("scrollStorageKey skills/skills-slug-5", () => {
-    expect(scrollStorageKey("skills", "skills-slug-5")).toBe(`${SCROLL_KEY_PREFIX}skills/skills-slug-5`);
-    expect(harnessStorageKey("skills", "skills-slug-5")).toBe(`${HARNESS_KEY_PREFIX}skills/skills-slug-5`);
+    expect(scrollStorageKey("skills", "skills-slug-5")).toBe(
+      `${SCROLL_KEY_PREFIX}skills/skills-slug-5`,
+    );
+    expect(harnessStorageKey("skills", "skills-slug-5")).toBe(
+      `${HARNESS_KEY_PREFIX}skills/skills-slug-5`,
+    );
   });
   it("scrollStorageKey skills/skills-slug-6", () => {
-    expect(scrollStorageKey("skills", "skills-slug-6")).toBe(`${SCROLL_KEY_PREFIX}skills/skills-slug-6`);
-    expect(harnessStorageKey("skills", "skills-slug-6")).toBe(`${HARNESS_KEY_PREFIX}skills/skills-slug-6`);
+    expect(scrollStorageKey("skills", "skills-slug-6")).toBe(
+      `${SCROLL_KEY_PREFIX}skills/skills-slug-6`,
+    );
+    expect(harnessStorageKey("skills", "skills-slug-6")).toBe(
+      `${HARNESS_KEY_PREFIX}skills/skills-slug-6`,
+    );
   });
   it("scrollStorageKey skills/skills-slug-7", () => {
-    expect(scrollStorageKey("skills", "skills-slug-7")).toBe(`${SCROLL_KEY_PREFIX}skills/skills-slug-7`);
-    expect(harnessStorageKey("skills", "skills-slug-7")).toBe(`${HARNESS_KEY_PREFIX}skills/skills-slug-7`);
+    expect(scrollStorageKey("skills", "skills-slug-7")).toBe(
+      `${SCROLL_KEY_PREFIX}skills/skills-slug-7`,
+    );
+    expect(harnessStorageKey("skills", "skills-slug-7")).toBe(
+      `${HARNESS_KEY_PREFIX}skills/skills-slug-7`,
+    );
   });
   it("scrollStorageKey skills/skills-slug-8", () => {
-    expect(scrollStorageKey("skills", "skills-slug-8")).toBe(`${SCROLL_KEY_PREFIX}skills/skills-slug-8`);
-    expect(harnessStorageKey("skills", "skills-slug-8")).toBe(`${HARNESS_KEY_PREFIX}skills/skills-slug-8`);
+    expect(scrollStorageKey("skills", "skills-slug-8")).toBe(
+      `${SCROLL_KEY_PREFIX}skills/skills-slug-8`,
+    );
+    expect(harnessStorageKey("skills", "skills-slug-8")).toBe(
+      `${HARNESS_KEY_PREFIX}skills/skills-slug-8`,
+    );
   });
   it("scrollStorageKey skills/skills-slug-9", () => {
-    expect(scrollStorageKey("skills", "skills-slug-9")).toBe(`${SCROLL_KEY_PREFIX}skills/skills-slug-9`);
-    expect(harnessStorageKey("skills", "skills-slug-9")).toBe(`${HARNESS_KEY_PREFIX}skills/skills-slug-9`);
+    expect(scrollStorageKey("skills", "skills-slug-9")).toBe(
+      `${SCROLL_KEY_PREFIX}skills/skills-slug-9`,
+    );
+    expect(harnessStorageKey("skills", "skills-slug-9")).toBe(
+      `${HARNESS_KEY_PREFIX}skills/skills-slug-9`,
+    );
   });
   it("scrollStorageKey rules/rules-slug-0", () => {
-    expect(scrollStorageKey("rules", "rules-slug-0")).toBe(`${SCROLL_KEY_PREFIX}rules/rules-slug-0`);
-    expect(harnessStorageKey("rules", "rules-slug-0")).toBe(`${HARNESS_KEY_PREFIX}rules/rules-slug-0`);
+    expect(scrollStorageKey("rules", "rules-slug-0")).toBe(
+      `${SCROLL_KEY_PREFIX}rules/rules-slug-0`,
+    );
+    expect(harnessStorageKey("rules", "rules-slug-0")).toBe(
+      `${HARNESS_KEY_PREFIX}rules/rules-slug-0`,
+    );
   });
   it("scrollStorageKey rules/rules-slug-1", () => {
-    expect(scrollStorageKey("rules", "rules-slug-1")).toBe(`${SCROLL_KEY_PREFIX}rules/rules-slug-1`);
-    expect(harnessStorageKey("rules", "rules-slug-1")).toBe(`${HARNESS_KEY_PREFIX}rules/rules-slug-1`);
+    expect(scrollStorageKey("rules", "rules-slug-1")).toBe(
+      `${SCROLL_KEY_PREFIX}rules/rules-slug-1`,
+    );
+    expect(harnessStorageKey("rules", "rules-slug-1")).toBe(
+      `${HARNESS_KEY_PREFIX}rules/rules-slug-1`,
+    );
   });
   it("scrollStorageKey rules/rules-slug-2", () => {
-    expect(scrollStorageKey("rules", "rules-slug-2")).toBe(`${SCROLL_KEY_PREFIX}rules/rules-slug-2`);
-    expect(harnessStorageKey("rules", "rules-slug-2")).toBe(`${HARNESS_KEY_PREFIX}rules/rules-slug-2`);
+    expect(scrollStorageKey("rules", "rules-slug-2")).toBe(
+      `${SCROLL_KEY_PREFIX}rules/rules-slug-2`,
+    );
+    expect(harnessStorageKey("rules", "rules-slug-2")).toBe(
+      `${HARNESS_KEY_PREFIX}rules/rules-slug-2`,
+    );
   });
   it("scrollStorageKey rules/rules-slug-3", () => {
-    expect(scrollStorageKey("rules", "rules-slug-3")).toBe(`${SCROLL_KEY_PREFIX}rules/rules-slug-3`);
-    expect(harnessStorageKey("rules", "rules-slug-3")).toBe(`${HARNESS_KEY_PREFIX}rules/rules-slug-3`);
+    expect(scrollStorageKey("rules", "rules-slug-3")).toBe(
+      `${SCROLL_KEY_PREFIX}rules/rules-slug-3`,
+    );
+    expect(harnessStorageKey("rules", "rules-slug-3")).toBe(
+      `${HARNESS_KEY_PREFIX}rules/rules-slug-3`,
+    );
   });
   it("scrollStorageKey rules/rules-slug-4", () => {
-    expect(scrollStorageKey("rules", "rules-slug-4")).toBe(`${SCROLL_KEY_PREFIX}rules/rules-slug-4`);
-    expect(harnessStorageKey("rules", "rules-slug-4")).toBe(`${HARNESS_KEY_PREFIX}rules/rules-slug-4`);
+    expect(scrollStorageKey("rules", "rules-slug-4")).toBe(
+      `${SCROLL_KEY_PREFIX}rules/rules-slug-4`,
+    );
+    expect(harnessStorageKey("rules", "rules-slug-4")).toBe(
+      `${HARNESS_KEY_PREFIX}rules/rules-slug-4`,
+    );
   });
   it("scrollStorageKey rules/rules-slug-5", () => {
-    expect(scrollStorageKey("rules", "rules-slug-5")).toBe(`${SCROLL_KEY_PREFIX}rules/rules-slug-5`);
-    expect(harnessStorageKey("rules", "rules-slug-5")).toBe(`${HARNESS_KEY_PREFIX}rules/rules-slug-5`);
+    expect(scrollStorageKey("rules", "rules-slug-5")).toBe(
+      `${SCROLL_KEY_PREFIX}rules/rules-slug-5`,
+    );
+    expect(harnessStorageKey("rules", "rules-slug-5")).toBe(
+      `${HARNESS_KEY_PREFIX}rules/rules-slug-5`,
+    );
   });
   it("scrollStorageKey rules/rules-slug-6", () => {
-    expect(scrollStorageKey("rules", "rules-slug-6")).toBe(`${SCROLL_KEY_PREFIX}rules/rules-slug-6`);
-    expect(harnessStorageKey("rules", "rules-slug-6")).toBe(`${HARNESS_KEY_PREFIX}rules/rules-slug-6`);
+    expect(scrollStorageKey("rules", "rules-slug-6")).toBe(
+      `${SCROLL_KEY_PREFIX}rules/rules-slug-6`,
+    );
+    expect(harnessStorageKey("rules", "rules-slug-6")).toBe(
+      `${HARNESS_KEY_PREFIX}rules/rules-slug-6`,
+    );
   });
   it("scrollStorageKey rules/rules-slug-7", () => {
-    expect(scrollStorageKey("rules", "rules-slug-7")).toBe(`${SCROLL_KEY_PREFIX}rules/rules-slug-7`);
-    expect(harnessStorageKey("rules", "rules-slug-7")).toBe(`${HARNESS_KEY_PREFIX}rules/rules-slug-7`);
+    expect(scrollStorageKey("rules", "rules-slug-7")).toBe(
+      `${SCROLL_KEY_PREFIX}rules/rules-slug-7`,
+    );
+    expect(harnessStorageKey("rules", "rules-slug-7")).toBe(
+      `${HARNESS_KEY_PREFIX}rules/rules-slug-7`,
+    );
   });
   it("scrollStorageKey rules/rules-slug-8", () => {
-    expect(scrollStorageKey("rules", "rules-slug-8")).toBe(`${SCROLL_KEY_PREFIX}rules/rules-slug-8`);
-    expect(harnessStorageKey("rules", "rules-slug-8")).toBe(`${HARNESS_KEY_PREFIX}rules/rules-slug-8`);
+    expect(scrollStorageKey("rules", "rules-slug-8")).toBe(
+      `${SCROLL_KEY_PREFIX}rules/rules-slug-8`,
+    );
+    expect(harnessStorageKey("rules", "rules-slug-8")).toBe(
+      `${HARNESS_KEY_PREFIX}rules/rules-slug-8`,
+    );
   });
   it("scrollStorageKey rules/rules-slug-9", () => {
-    expect(scrollStorageKey("rules", "rules-slug-9")).toBe(`${SCROLL_KEY_PREFIX}rules/rules-slug-9`);
-    expect(harnessStorageKey("rules", "rules-slug-9")).toBe(`${HARNESS_KEY_PREFIX}rules/rules-slug-9`);
+    expect(scrollStorageKey("rules", "rules-slug-9")).toBe(
+      `${SCROLL_KEY_PREFIX}rules/rules-slug-9`,
+    );
+    expect(harnessStorageKey("rules", "rules-slug-9")).toBe(
+      `${HARNESS_KEY_PREFIX}rules/rules-slug-9`,
+    );
   });
   it("scrollStorageKey commands/commands-slug-0", () => {
-    expect(scrollStorageKey("commands", "commands-slug-0")).toBe(`${SCROLL_KEY_PREFIX}commands/commands-slug-0`);
-    expect(harnessStorageKey("commands", "commands-slug-0")).toBe(`${HARNESS_KEY_PREFIX}commands/commands-slug-0`);
+    expect(scrollStorageKey("commands", "commands-slug-0")).toBe(
+      `${SCROLL_KEY_PREFIX}commands/commands-slug-0`,
+    );
+    expect(harnessStorageKey("commands", "commands-slug-0")).toBe(
+      `${HARNESS_KEY_PREFIX}commands/commands-slug-0`,
+    );
   });
   it("scrollStorageKey commands/commands-slug-1", () => {
-    expect(scrollStorageKey("commands", "commands-slug-1")).toBe(`${SCROLL_KEY_PREFIX}commands/commands-slug-1`);
-    expect(harnessStorageKey("commands", "commands-slug-1")).toBe(`${HARNESS_KEY_PREFIX}commands/commands-slug-1`);
+    expect(scrollStorageKey("commands", "commands-slug-1")).toBe(
+      `${SCROLL_KEY_PREFIX}commands/commands-slug-1`,
+    );
+    expect(harnessStorageKey("commands", "commands-slug-1")).toBe(
+      `${HARNESS_KEY_PREFIX}commands/commands-slug-1`,
+    );
   });
   it("scrollStorageKey commands/commands-slug-2", () => {
-    expect(scrollStorageKey("commands", "commands-slug-2")).toBe(`${SCROLL_KEY_PREFIX}commands/commands-slug-2`);
-    expect(harnessStorageKey("commands", "commands-slug-2")).toBe(`${HARNESS_KEY_PREFIX}commands/commands-slug-2`);
+    expect(scrollStorageKey("commands", "commands-slug-2")).toBe(
+      `${SCROLL_KEY_PREFIX}commands/commands-slug-2`,
+    );
+    expect(harnessStorageKey("commands", "commands-slug-2")).toBe(
+      `${HARNESS_KEY_PREFIX}commands/commands-slug-2`,
+    );
   });
   it("scrollStorageKey commands/commands-slug-3", () => {
-    expect(scrollStorageKey("commands", "commands-slug-3")).toBe(`${SCROLL_KEY_PREFIX}commands/commands-slug-3`);
-    expect(harnessStorageKey("commands", "commands-slug-3")).toBe(`${HARNESS_KEY_PREFIX}commands/commands-slug-3`);
+    expect(scrollStorageKey("commands", "commands-slug-3")).toBe(
+      `${SCROLL_KEY_PREFIX}commands/commands-slug-3`,
+    );
+    expect(harnessStorageKey("commands", "commands-slug-3")).toBe(
+      `${HARNESS_KEY_PREFIX}commands/commands-slug-3`,
+    );
   });
   it("scrollStorageKey commands/commands-slug-4", () => {
-    expect(scrollStorageKey("commands", "commands-slug-4")).toBe(`${SCROLL_KEY_PREFIX}commands/commands-slug-4`);
-    expect(harnessStorageKey("commands", "commands-slug-4")).toBe(`${HARNESS_KEY_PREFIX}commands/commands-slug-4`);
+    expect(scrollStorageKey("commands", "commands-slug-4")).toBe(
+      `${SCROLL_KEY_PREFIX}commands/commands-slug-4`,
+    );
+    expect(harnessStorageKey("commands", "commands-slug-4")).toBe(
+      `${HARNESS_KEY_PREFIX}commands/commands-slug-4`,
+    );
   });
   it("scrollStorageKey commands/commands-slug-5", () => {
-    expect(scrollStorageKey("commands", "commands-slug-5")).toBe(`${SCROLL_KEY_PREFIX}commands/commands-slug-5`);
-    expect(harnessStorageKey("commands", "commands-slug-5")).toBe(`${HARNESS_KEY_PREFIX}commands/commands-slug-5`);
+    expect(scrollStorageKey("commands", "commands-slug-5")).toBe(
+      `${SCROLL_KEY_PREFIX}commands/commands-slug-5`,
+    );
+    expect(harnessStorageKey("commands", "commands-slug-5")).toBe(
+      `${HARNESS_KEY_PREFIX}commands/commands-slug-5`,
+    );
   });
   it("scrollStorageKey commands/commands-slug-6", () => {
-    expect(scrollStorageKey("commands", "commands-slug-6")).toBe(`${SCROLL_KEY_PREFIX}commands/commands-slug-6`);
-    expect(harnessStorageKey("commands", "commands-slug-6")).toBe(`${HARNESS_KEY_PREFIX}commands/commands-slug-6`);
+    expect(scrollStorageKey("commands", "commands-slug-6")).toBe(
+      `${SCROLL_KEY_PREFIX}commands/commands-slug-6`,
+    );
+    expect(harnessStorageKey("commands", "commands-slug-6")).toBe(
+      `${HARNESS_KEY_PREFIX}commands/commands-slug-6`,
+    );
   });
   it("scrollStorageKey commands/commands-slug-7", () => {
-    expect(scrollStorageKey("commands", "commands-slug-7")).toBe(`${SCROLL_KEY_PREFIX}commands/commands-slug-7`);
-    expect(harnessStorageKey("commands", "commands-slug-7")).toBe(`${HARNESS_KEY_PREFIX}commands/commands-slug-7`);
+    expect(scrollStorageKey("commands", "commands-slug-7")).toBe(
+      `${SCROLL_KEY_PREFIX}commands/commands-slug-7`,
+    );
+    expect(harnessStorageKey("commands", "commands-slug-7")).toBe(
+      `${HARNESS_KEY_PREFIX}commands/commands-slug-7`,
+    );
   });
   it("scrollStorageKey commands/commands-slug-8", () => {
-    expect(scrollStorageKey("commands", "commands-slug-8")).toBe(`${SCROLL_KEY_PREFIX}commands/commands-slug-8`);
-    expect(harnessStorageKey("commands", "commands-slug-8")).toBe(`${HARNESS_KEY_PREFIX}commands/commands-slug-8`);
+    expect(scrollStorageKey("commands", "commands-slug-8")).toBe(
+      `${SCROLL_KEY_PREFIX}commands/commands-slug-8`,
+    );
+    expect(harnessStorageKey("commands", "commands-slug-8")).toBe(
+      `${HARNESS_KEY_PREFIX}commands/commands-slug-8`,
+    );
   });
   it("scrollStorageKey commands/commands-slug-9", () => {
-    expect(scrollStorageKey("commands", "commands-slug-9")).toBe(`${SCROLL_KEY_PREFIX}commands/commands-slug-9`);
-    expect(harnessStorageKey("commands", "commands-slug-9")).toBe(`${HARNESS_KEY_PREFIX}commands/commands-slug-9`);
+    expect(scrollStorageKey("commands", "commands-slug-9")).toBe(
+      `${SCROLL_KEY_PREFIX}commands/commands-slug-9`,
+    );
+    expect(harnessStorageKey("commands", "commands-slug-9")).toBe(
+      `${HARNESS_KEY_PREFIX}commands/commands-slug-9`,
+    );
   });
   it("scrollStorageKey hooks/hooks-slug-0", () => {
-    expect(scrollStorageKey("hooks", "hooks-slug-0")).toBe(`${SCROLL_KEY_PREFIX}hooks/hooks-slug-0`);
-    expect(harnessStorageKey("hooks", "hooks-slug-0")).toBe(`${HARNESS_KEY_PREFIX}hooks/hooks-slug-0`);
+    expect(scrollStorageKey("hooks", "hooks-slug-0")).toBe(
+      `${SCROLL_KEY_PREFIX}hooks/hooks-slug-0`,
+    );
+    expect(harnessStorageKey("hooks", "hooks-slug-0")).toBe(
+      `${HARNESS_KEY_PREFIX}hooks/hooks-slug-0`,
+    );
   });
   it("scrollStorageKey hooks/hooks-slug-1", () => {
-    expect(scrollStorageKey("hooks", "hooks-slug-1")).toBe(`${SCROLL_KEY_PREFIX}hooks/hooks-slug-1`);
-    expect(harnessStorageKey("hooks", "hooks-slug-1")).toBe(`${HARNESS_KEY_PREFIX}hooks/hooks-slug-1`);
+    expect(scrollStorageKey("hooks", "hooks-slug-1")).toBe(
+      `${SCROLL_KEY_PREFIX}hooks/hooks-slug-1`,
+    );
+    expect(harnessStorageKey("hooks", "hooks-slug-1")).toBe(
+      `${HARNESS_KEY_PREFIX}hooks/hooks-slug-1`,
+    );
   });
   it("scrollStorageKey hooks/hooks-slug-2", () => {
-    expect(scrollStorageKey("hooks", "hooks-slug-2")).toBe(`${SCROLL_KEY_PREFIX}hooks/hooks-slug-2`);
-    expect(harnessStorageKey("hooks", "hooks-slug-2")).toBe(`${HARNESS_KEY_PREFIX}hooks/hooks-slug-2`);
+    expect(scrollStorageKey("hooks", "hooks-slug-2")).toBe(
+      `${SCROLL_KEY_PREFIX}hooks/hooks-slug-2`,
+    );
+    expect(harnessStorageKey("hooks", "hooks-slug-2")).toBe(
+      `${HARNESS_KEY_PREFIX}hooks/hooks-slug-2`,
+    );
   });
   it("scrollStorageKey hooks/hooks-slug-3", () => {
-    expect(scrollStorageKey("hooks", "hooks-slug-3")).toBe(`${SCROLL_KEY_PREFIX}hooks/hooks-slug-3`);
-    expect(harnessStorageKey("hooks", "hooks-slug-3")).toBe(`${HARNESS_KEY_PREFIX}hooks/hooks-slug-3`);
+    expect(scrollStorageKey("hooks", "hooks-slug-3")).toBe(
+      `${SCROLL_KEY_PREFIX}hooks/hooks-slug-3`,
+    );
+    expect(harnessStorageKey("hooks", "hooks-slug-3")).toBe(
+      `${HARNESS_KEY_PREFIX}hooks/hooks-slug-3`,
+    );
   });
   it("scrollStorageKey hooks/hooks-slug-4", () => {
-    expect(scrollStorageKey("hooks", "hooks-slug-4")).toBe(`${SCROLL_KEY_PREFIX}hooks/hooks-slug-4`);
-    expect(harnessStorageKey("hooks", "hooks-slug-4")).toBe(`${HARNESS_KEY_PREFIX}hooks/hooks-slug-4`);
+    expect(scrollStorageKey("hooks", "hooks-slug-4")).toBe(
+      `${SCROLL_KEY_PREFIX}hooks/hooks-slug-4`,
+    );
+    expect(harnessStorageKey("hooks", "hooks-slug-4")).toBe(
+      `${HARNESS_KEY_PREFIX}hooks/hooks-slug-4`,
+    );
   });
   it("scrollStorageKey hooks/hooks-slug-5", () => {
-    expect(scrollStorageKey("hooks", "hooks-slug-5")).toBe(`${SCROLL_KEY_PREFIX}hooks/hooks-slug-5`);
-    expect(harnessStorageKey("hooks", "hooks-slug-5")).toBe(`${HARNESS_KEY_PREFIX}hooks/hooks-slug-5`);
+    expect(scrollStorageKey("hooks", "hooks-slug-5")).toBe(
+      `${SCROLL_KEY_PREFIX}hooks/hooks-slug-5`,
+    );
+    expect(harnessStorageKey("hooks", "hooks-slug-5")).toBe(
+      `${HARNESS_KEY_PREFIX}hooks/hooks-slug-5`,
+    );
   });
   it("scrollStorageKey hooks/hooks-slug-6", () => {
-    expect(scrollStorageKey("hooks", "hooks-slug-6")).toBe(`${SCROLL_KEY_PREFIX}hooks/hooks-slug-6`);
-    expect(harnessStorageKey("hooks", "hooks-slug-6")).toBe(`${HARNESS_KEY_PREFIX}hooks/hooks-slug-6`);
+    expect(scrollStorageKey("hooks", "hooks-slug-6")).toBe(
+      `${SCROLL_KEY_PREFIX}hooks/hooks-slug-6`,
+    );
+    expect(harnessStorageKey("hooks", "hooks-slug-6")).toBe(
+      `${HARNESS_KEY_PREFIX}hooks/hooks-slug-6`,
+    );
   });
   it("scrollStorageKey hooks/hooks-slug-7", () => {
-    expect(scrollStorageKey("hooks", "hooks-slug-7")).toBe(`${SCROLL_KEY_PREFIX}hooks/hooks-slug-7`);
-    expect(harnessStorageKey("hooks", "hooks-slug-7")).toBe(`${HARNESS_KEY_PREFIX}hooks/hooks-slug-7`);
+    expect(scrollStorageKey("hooks", "hooks-slug-7")).toBe(
+      `${SCROLL_KEY_PREFIX}hooks/hooks-slug-7`,
+    );
+    expect(harnessStorageKey("hooks", "hooks-slug-7")).toBe(
+      `${HARNESS_KEY_PREFIX}hooks/hooks-slug-7`,
+    );
   });
   it("scrollStorageKey hooks/hooks-slug-8", () => {
-    expect(scrollStorageKey("hooks", "hooks-slug-8")).toBe(`${SCROLL_KEY_PREFIX}hooks/hooks-slug-8`);
-    expect(harnessStorageKey("hooks", "hooks-slug-8")).toBe(`${HARNESS_KEY_PREFIX}hooks/hooks-slug-8`);
+    expect(scrollStorageKey("hooks", "hooks-slug-8")).toBe(
+      `${SCROLL_KEY_PREFIX}hooks/hooks-slug-8`,
+    );
+    expect(harnessStorageKey("hooks", "hooks-slug-8")).toBe(
+      `${HARNESS_KEY_PREFIX}hooks/hooks-slug-8`,
+    );
   });
   it("scrollStorageKey hooks/hooks-slug-9", () => {
-    expect(scrollStorageKey("hooks", "hooks-slug-9")).toBe(`${SCROLL_KEY_PREFIX}hooks/hooks-slug-9`);
-    expect(harnessStorageKey("hooks", "hooks-slug-9")).toBe(`${HARNESS_KEY_PREFIX}hooks/hooks-slug-9`);
+    expect(scrollStorageKey("hooks", "hooks-slug-9")).toBe(
+      `${SCROLL_KEY_PREFIX}hooks/hooks-slug-9`,
+    );
+    expect(harnessStorageKey("hooks", "hooks-slug-9")).toBe(
+      `${HARNESS_KEY_PREFIX}hooks/hooks-slug-9`,
+    );
   });
   it("scrollStorageKey guides/guides-slug-0", () => {
-    expect(scrollStorageKey("guides", "guides-slug-0")).toBe(`${SCROLL_KEY_PREFIX}guides/guides-slug-0`);
-    expect(harnessStorageKey("guides", "guides-slug-0")).toBe(`${HARNESS_KEY_PREFIX}guides/guides-slug-0`);
+    expect(scrollStorageKey("guides", "guides-slug-0")).toBe(
+      `${SCROLL_KEY_PREFIX}guides/guides-slug-0`,
+    );
+    expect(harnessStorageKey("guides", "guides-slug-0")).toBe(
+      `${HARNESS_KEY_PREFIX}guides/guides-slug-0`,
+    );
   });
   it("scrollStorageKey guides/guides-slug-1", () => {
-    expect(scrollStorageKey("guides", "guides-slug-1")).toBe(`${SCROLL_KEY_PREFIX}guides/guides-slug-1`);
-    expect(harnessStorageKey("guides", "guides-slug-1")).toBe(`${HARNESS_KEY_PREFIX}guides/guides-slug-1`);
+    expect(scrollStorageKey("guides", "guides-slug-1")).toBe(
+      `${SCROLL_KEY_PREFIX}guides/guides-slug-1`,
+    );
+    expect(harnessStorageKey("guides", "guides-slug-1")).toBe(
+      `${HARNESS_KEY_PREFIX}guides/guides-slug-1`,
+    );
   });
   it("scrollStorageKey guides/guides-slug-2", () => {
-    expect(scrollStorageKey("guides", "guides-slug-2")).toBe(`${SCROLL_KEY_PREFIX}guides/guides-slug-2`);
-    expect(harnessStorageKey("guides", "guides-slug-2")).toBe(`${HARNESS_KEY_PREFIX}guides/guides-slug-2`);
+    expect(scrollStorageKey("guides", "guides-slug-2")).toBe(
+      `${SCROLL_KEY_PREFIX}guides/guides-slug-2`,
+    );
+    expect(harnessStorageKey("guides", "guides-slug-2")).toBe(
+      `${HARNESS_KEY_PREFIX}guides/guides-slug-2`,
+    );
   });
   it("scrollStorageKey guides/guides-slug-3", () => {
-    expect(scrollStorageKey("guides", "guides-slug-3")).toBe(`${SCROLL_KEY_PREFIX}guides/guides-slug-3`);
-    expect(harnessStorageKey("guides", "guides-slug-3")).toBe(`${HARNESS_KEY_PREFIX}guides/guides-slug-3`);
+    expect(scrollStorageKey("guides", "guides-slug-3")).toBe(
+      `${SCROLL_KEY_PREFIX}guides/guides-slug-3`,
+    );
+    expect(harnessStorageKey("guides", "guides-slug-3")).toBe(
+      `${HARNESS_KEY_PREFIX}guides/guides-slug-3`,
+    );
   });
   it("scrollStorageKey guides/guides-slug-4", () => {
-    expect(scrollStorageKey("guides", "guides-slug-4")).toBe(`${SCROLL_KEY_PREFIX}guides/guides-slug-4`);
-    expect(harnessStorageKey("guides", "guides-slug-4")).toBe(`${HARNESS_KEY_PREFIX}guides/guides-slug-4`);
+    expect(scrollStorageKey("guides", "guides-slug-4")).toBe(
+      `${SCROLL_KEY_PREFIX}guides/guides-slug-4`,
+    );
+    expect(harnessStorageKey("guides", "guides-slug-4")).toBe(
+      `${HARNESS_KEY_PREFIX}guides/guides-slug-4`,
+    );
   });
   it("scrollStorageKey guides/guides-slug-5", () => {
-    expect(scrollStorageKey("guides", "guides-slug-5")).toBe(`${SCROLL_KEY_PREFIX}guides/guides-slug-5`);
-    expect(harnessStorageKey("guides", "guides-slug-5")).toBe(`${HARNESS_KEY_PREFIX}guides/guides-slug-5`);
+    expect(scrollStorageKey("guides", "guides-slug-5")).toBe(
+      `${SCROLL_KEY_PREFIX}guides/guides-slug-5`,
+    );
+    expect(harnessStorageKey("guides", "guides-slug-5")).toBe(
+      `${HARNESS_KEY_PREFIX}guides/guides-slug-5`,
+    );
   });
   it("scrollStorageKey guides/guides-slug-6", () => {
-    expect(scrollStorageKey("guides", "guides-slug-6")).toBe(`${SCROLL_KEY_PREFIX}guides/guides-slug-6`);
-    expect(harnessStorageKey("guides", "guides-slug-6")).toBe(`${HARNESS_KEY_PREFIX}guides/guides-slug-6`);
+    expect(scrollStorageKey("guides", "guides-slug-6")).toBe(
+      `${SCROLL_KEY_PREFIX}guides/guides-slug-6`,
+    );
+    expect(harnessStorageKey("guides", "guides-slug-6")).toBe(
+      `${HARNESS_KEY_PREFIX}guides/guides-slug-6`,
+    );
   });
   it("scrollStorageKey guides/guides-slug-7", () => {
-    expect(scrollStorageKey("guides", "guides-slug-7")).toBe(`${SCROLL_KEY_PREFIX}guides/guides-slug-7`);
-    expect(harnessStorageKey("guides", "guides-slug-7")).toBe(`${HARNESS_KEY_PREFIX}guides/guides-slug-7`);
+    expect(scrollStorageKey("guides", "guides-slug-7")).toBe(
+      `${SCROLL_KEY_PREFIX}guides/guides-slug-7`,
+    );
+    expect(harnessStorageKey("guides", "guides-slug-7")).toBe(
+      `${HARNESS_KEY_PREFIX}guides/guides-slug-7`,
+    );
   });
   it("scrollStorageKey guides/guides-slug-8", () => {
-    expect(scrollStorageKey("guides", "guides-slug-8")).toBe(`${SCROLL_KEY_PREFIX}guides/guides-slug-8`);
-    expect(harnessStorageKey("guides", "guides-slug-8")).toBe(`${HARNESS_KEY_PREFIX}guides/guides-slug-8`);
+    expect(scrollStorageKey("guides", "guides-slug-8")).toBe(
+      `${SCROLL_KEY_PREFIX}guides/guides-slug-8`,
+    );
+    expect(harnessStorageKey("guides", "guides-slug-8")).toBe(
+      `${HARNESS_KEY_PREFIX}guides/guides-slug-8`,
+    );
   });
   it("scrollStorageKey guides/guides-slug-9", () => {
-    expect(scrollStorageKey("guides", "guides-slug-9")).toBe(`${SCROLL_KEY_PREFIX}guides/guides-slug-9`);
-    expect(harnessStorageKey("guides", "guides-slug-9")).toBe(`${HARNESS_KEY_PREFIX}guides/guides-slug-9`);
+    expect(scrollStorageKey("guides", "guides-slug-9")).toBe(
+      `${SCROLL_KEY_PREFIX}guides/guides-slug-9`,
+    );
+    expect(harnessStorageKey("guides", "guides-slug-9")).toBe(
+      `${HARNESS_KEY_PREFIX}guides/guides-slug-9`,
+    );
   });
   it("scrollStorageKey collections/collections-slug-0", () => {
-    expect(scrollStorageKey("collections", "collections-slug-0")).toBe(`${SCROLL_KEY_PREFIX}collections/collections-slug-0`);
-    expect(harnessStorageKey("collections", "collections-slug-0")).toBe(`${HARNESS_KEY_PREFIX}collections/collections-slug-0`);
+    expect(scrollStorageKey("collections", "collections-slug-0")).toBe(
+      `${SCROLL_KEY_PREFIX}collections/collections-slug-0`,
+    );
+    expect(harnessStorageKey("collections", "collections-slug-0")).toBe(
+      `${HARNESS_KEY_PREFIX}collections/collections-slug-0`,
+    );
   });
   it("scrollStorageKey collections/collections-slug-1", () => {
-    expect(scrollStorageKey("collections", "collections-slug-1")).toBe(`${SCROLL_KEY_PREFIX}collections/collections-slug-1`);
-    expect(harnessStorageKey("collections", "collections-slug-1")).toBe(`${HARNESS_KEY_PREFIX}collections/collections-slug-1`);
+    expect(scrollStorageKey("collections", "collections-slug-1")).toBe(
+      `${SCROLL_KEY_PREFIX}collections/collections-slug-1`,
+    );
+    expect(harnessStorageKey("collections", "collections-slug-1")).toBe(
+      `${HARNESS_KEY_PREFIX}collections/collections-slug-1`,
+    );
   });
   it("scrollStorageKey collections/collections-slug-2", () => {
-    expect(scrollStorageKey("collections", "collections-slug-2")).toBe(`${SCROLL_KEY_PREFIX}collections/collections-slug-2`);
-    expect(harnessStorageKey("collections", "collections-slug-2")).toBe(`${HARNESS_KEY_PREFIX}collections/collections-slug-2`);
+    expect(scrollStorageKey("collections", "collections-slug-2")).toBe(
+      `${SCROLL_KEY_PREFIX}collections/collections-slug-2`,
+    );
+    expect(harnessStorageKey("collections", "collections-slug-2")).toBe(
+      `${HARNESS_KEY_PREFIX}collections/collections-slug-2`,
+    );
   });
   it("scrollStorageKey collections/collections-slug-3", () => {
-    expect(scrollStorageKey("collections", "collections-slug-3")).toBe(`${SCROLL_KEY_PREFIX}collections/collections-slug-3`);
-    expect(harnessStorageKey("collections", "collections-slug-3")).toBe(`${HARNESS_KEY_PREFIX}collections/collections-slug-3`);
+    expect(scrollStorageKey("collections", "collections-slug-3")).toBe(
+      `${SCROLL_KEY_PREFIX}collections/collections-slug-3`,
+    );
+    expect(harnessStorageKey("collections", "collections-slug-3")).toBe(
+      `${HARNESS_KEY_PREFIX}collections/collections-slug-3`,
+    );
   });
   it("scrollStorageKey collections/collections-slug-4", () => {
-    expect(scrollStorageKey("collections", "collections-slug-4")).toBe(`${SCROLL_KEY_PREFIX}collections/collections-slug-4`);
-    expect(harnessStorageKey("collections", "collections-slug-4")).toBe(`${HARNESS_KEY_PREFIX}collections/collections-slug-4`);
+    expect(scrollStorageKey("collections", "collections-slug-4")).toBe(
+      `${SCROLL_KEY_PREFIX}collections/collections-slug-4`,
+    );
+    expect(harnessStorageKey("collections", "collections-slug-4")).toBe(
+      `${HARNESS_KEY_PREFIX}collections/collections-slug-4`,
+    );
   });
   it("scrollStorageKey collections/collections-slug-5", () => {
-    expect(scrollStorageKey("collections", "collections-slug-5")).toBe(`${SCROLL_KEY_PREFIX}collections/collections-slug-5`);
-    expect(harnessStorageKey("collections", "collections-slug-5")).toBe(`${HARNESS_KEY_PREFIX}collections/collections-slug-5`);
+    expect(scrollStorageKey("collections", "collections-slug-5")).toBe(
+      `${SCROLL_KEY_PREFIX}collections/collections-slug-5`,
+    );
+    expect(harnessStorageKey("collections", "collections-slug-5")).toBe(
+      `${HARNESS_KEY_PREFIX}collections/collections-slug-5`,
+    );
   });
   it("scrollStorageKey collections/collections-slug-6", () => {
-    expect(scrollStorageKey("collections", "collections-slug-6")).toBe(`${SCROLL_KEY_PREFIX}collections/collections-slug-6`);
-    expect(harnessStorageKey("collections", "collections-slug-6")).toBe(`${HARNESS_KEY_PREFIX}collections/collections-slug-6`);
+    expect(scrollStorageKey("collections", "collections-slug-6")).toBe(
+      `${SCROLL_KEY_PREFIX}collections/collections-slug-6`,
+    );
+    expect(harnessStorageKey("collections", "collections-slug-6")).toBe(
+      `${HARNESS_KEY_PREFIX}collections/collections-slug-6`,
+    );
   });
   it("scrollStorageKey collections/collections-slug-7", () => {
-    expect(scrollStorageKey("collections", "collections-slug-7")).toBe(`${SCROLL_KEY_PREFIX}collections/collections-slug-7`);
-    expect(harnessStorageKey("collections", "collections-slug-7")).toBe(`${HARNESS_KEY_PREFIX}collections/collections-slug-7`);
+    expect(scrollStorageKey("collections", "collections-slug-7")).toBe(
+      `${SCROLL_KEY_PREFIX}collections/collections-slug-7`,
+    );
+    expect(harnessStorageKey("collections", "collections-slug-7")).toBe(
+      `${HARNESS_KEY_PREFIX}collections/collections-slug-7`,
+    );
   });
   it("scrollStorageKey collections/collections-slug-8", () => {
-    expect(scrollStorageKey("collections", "collections-slug-8")).toBe(`${SCROLL_KEY_PREFIX}collections/collections-slug-8`);
-    expect(harnessStorageKey("collections", "collections-slug-8")).toBe(`${HARNESS_KEY_PREFIX}collections/collections-slug-8`);
+    expect(scrollStorageKey("collections", "collections-slug-8")).toBe(
+      `${SCROLL_KEY_PREFIX}collections/collections-slug-8`,
+    );
+    expect(harnessStorageKey("collections", "collections-slug-8")).toBe(
+      `${HARNESS_KEY_PREFIX}collections/collections-slug-8`,
+    );
   });
   it("scrollStorageKey collections/collections-slug-9", () => {
-    expect(scrollStorageKey("collections", "collections-slug-9")).toBe(`${SCROLL_KEY_PREFIX}collections/collections-slug-9`);
-    expect(harnessStorageKey("collections", "collections-slug-9")).toBe(`${HARNESS_KEY_PREFIX}collections/collections-slug-9`);
+    expect(scrollStorageKey("collections", "collections-slug-9")).toBe(
+      `${SCROLL_KEY_PREFIX}collections/collections-slug-9`,
+    );
+    expect(harnessStorageKey("collections", "collections-slug-9")).toBe(
+      `${HARNESS_KEY_PREFIX}collections/collections-slug-9`,
+    );
   });
   it("scrollStorageKey statuslines/statuslines-slug-0", () => {
-    expect(scrollStorageKey("statuslines", "statuslines-slug-0")).toBe(`${SCROLL_KEY_PREFIX}statuslines/statuslines-slug-0`);
-    expect(harnessStorageKey("statuslines", "statuslines-slug-0")).toBe(`${HARNESS_KEY_PREFIX}statuslines/statuslines-slug-0`);
+    expect(scrollStorageKey("statuslines", "statuslines-slug-0")).toBe(
+      `${SCROLL_KEY_PREFIX}statuslines/statuslines-slug-0`,
+    );
+    expect(harnessStorageKey("statuslines", "statuslines-slug-0")).toBe(
+      `${HARNESS_KEY_PREFIX}statuslines/statuslines-slug-0`,
+    );
   });
   it("scrollStorageKey statuslines/statuslines-slug-1", () => {
-    expect(scrollStorageKey("statuslines", "statuslines-slug-1")).toBe(`${SCROLL_KEY_PREFIX}statuslines/statuslines-slug-1`);
-    expect(harnessStorageKey("statuslines", "statuslines-slug-1")).toBe(`${HARNESS_KEY_PREFIX}statuslines/statuslines-slug-1`);
+    expect(scrollStorageKey("statuslines", "statuslines-slug-1")).toBe(
+      `${SCROLL_KEY_PREFIX}statuslines/statuslines-slug-1`,
+    );
+    expect(harnessStorageKey("statuslines", "statuslines-slug-1")).toBe(
+      `${HARNESS_KEY_PREFIX}statuslines/statuslines-slug-1`,
+    );
   });
   it("scrollStorageKey statuslines/statuslines-slug-2", () => {
-    expect(scrollStorageKey("statuslines", "statuslines-slug-2")).toBe(`${SCROLL_KEY_PREFIX}statuslines/statuslines-slug-2`);
-    expect(harnessStorageKey("statuslines", "statuslines-slug-2")).toBe(`${HARNESS_KEY_PREFIX}statuslines/statuslines-slug-2`);
+    expect(scrollStorageKey("statuslines", "statuslines-slug-2")).toBe(
+      `${SCROLL_KEY_PREFIX}statuslines/statuslines-slug-2`,
+    );
+    expect(harnessStorageKey("statuslines", "statuslines-slug-2")).toBe(
+      `${HARNESS_KEY_PREFIX}statuslines/statuslines-slug-2`,
+    );
   });
   it("scrollStorageKey statuslines/statuslines-slug-3", () => {
-    expect(scrollStorageKey("statuslines", "statuslines-slug-3")).toBe(`${SCROLL_KEY_PREFIX}statuslines/statuslines-slug-3`);
-    expect(harnessStorageKey("statuslines", "statuslines-slug-3")).toBe(`${HARNESS_KEY_PREFIX}statuslines/statuslines-slug-3`);
+    expect(scrollStorageKey("statuslines", "statuslines-slug-3")).toBe(
+      `${SCROLL_KEY_PREFIX}statuslines/statuslines-slug-3`,
+    );
+    expect(harnessStorageKey("statuslines", "statuslines-slug-3")).toBe(
+      `${HARNESS_KEY_PREFIX}statuslines/statuslines-slug-3`,
+    );
   });
   it("scrollStorageKey statuslines/statuslines-slug-4", () => {
-    expect(scrollStorageKey("statuslines", "statuslines-slug-4")).toBe(`${SCROLL_KEY_PREFIX}statuslines/statuslines-slug-4`);
-    expect(harnessStorageKey("statuslines", "statuslines-slug-4")).toBe(`${HARNESS_KEY_PREFIX}statuslines/statuslines-slug-4`);
+    expect(scrollStorageKey("statuslines", "statuslines-slug-4")).toBe(
+      `${SCROLL_KEY_PREFIX}statuslines/statuslines-slug-4`,
+    );
+    expect(harnessStorageKey("statuslines", "statuslines-slug-4")).toBe(
+      `${HARNESS_KEY_PREFIX}statuslines/statuslines-slug-4`,
+    );
   });
   it("scrollStorageKey statuslines/statuslines-slug-5", () => {
-    expect(scrollStorageKey("statuslines", "statuslines-slug-5")).toBe(`${SCROLL_KEY_PREFIX}statuslines/statuslines-slug-5`);
-    expect(harnessStorageKey("statuslines", "statuslines-slug-5")).toBe(`${HARNESS_KEY_PREFIX}statuslines/statuslines-slug-5`);
+    expect(scrollStorageKey("statuslines", "statuslines-slug-5")).toBe(
+      `${SCROLL_KEY_PREFIX}statuslines/statuslines-slug-5`,
+    );
+    expect(harnessStorageKey("statuslines", "statuslines-slug-5")).toBe(
+      `${HARNESS_KEY_PREFIX}statuslines/statuslines-slug-5`,
+    );
   });
   it("scrollStorageKey statuslines/statuslines-slug-6", () => {
-    expect(scrollStorageKey("statuslines", "statuslines-slug-6")).toBe(`${SCROLL_KEY_PREFIX}statuslines/statuslines-slug-6`);
-    expect(harnessStorageKey("statuslines", "statuslines-slug-6")).toBe(`${HARNESS_KEY_PREFIX}statuslines/statuslines-slug-6`);
+    expect(scrollStorageKey("statuslines", "statuslines-slug-6")).toBe(
+      `${SCROLL_KEY_PREFIX}statuslines/statuslines-slug-6`,
+    );
+    expect(harnessStorageKey("statuslines", "statuslines-slug-6")).toBe(
+      `${HARNESS_KEY_PREFIX}statuslines/statuslines-slug-6`,
+    );
   });
   it("scrollStorageKey statuslines/statuslines-slug-7", () => {
-    expect(scrollStorageKey("statuslines", "statuslines-slug-7")).toBe(`${SCROLL_KEY_PREFIX}statuslines/statuslines-slug-7`);
-    expect(harnessStorageKey("statuslines", "statuslines-slug-7")).toBe(`${HARNESS_KEY_PREFIX}statuslines/statuslines-slug-7`);
+    expect(scrollStorageKey("statuslines", "statuslines-slug-7")).toBe(
+      `${SCROLL_KEY_PREFIX}statuslines/statuslines-slug-7`,
+    );
+    expect(harnessStorageKey("statuslines", "statuslines-slug-7")).toBe(
+      `${HARNESS_KEY_PREFIX}statuslines/statuslines-slug-7`,
+    );
   });
   it("scrollStorageKey statuslines/statuslines-slug-8", () => {
-    expect(scrollStorageKey("statuslines", "statuslines-slug-8")).toBe(`${SCROLL_KEY_PREFIX}statuslines/statuslines-slug-8`);
-    expect(harnessStorageKey("statuslines", "statuslines-slug-8")).toBe(`${HARNESS_KEY_PREFIX}statuslines/statuslines-slug-8`);
+    expect(scrollStorageKey("statuslines", "statuslines-slug-8")).toBe(
+      `${SCROLL_KEY_PREFIX}statuslines/statuslines-slug-8`,
+    );
+    expect(harnessStorageKey("statuslines", "statuslines-slug-8")).toBe(
+      `${HARNESS_KEY_PREFIX}statuslines/statuslines-slug-8`,
+    );
   });
   it("scrollStorageKey statuslines/statuslines-slug-9", () => {
-    expect(scrollStorageKey("statuslines", "statuslines-slug-9")).toBe(`${SCROLL_KEY_PREFIX}statuslines/statuslines-slug-9`);
-    expect(harnessStorageKey("statuslines", "statuslines-slug-9")).toBe(`${HARNESS_KEY_PREFIX}statuslines/statuslines-slug-9`);
+    expect(scrollStorageKey("statuslines", "statuslines-slug-9")).toBe(
+      `${SCROLL_KEY_PREFIX}statuslines/statuslines-slug-9`,
+    );
+    expect(harnessStorageKey("statuslines", "statuslines-slug-9")).toBe(
+      `${HARNESS_KEY_PREFIX}statuslines/statuslines-slug-9`,
+    );
   });
 });
 
