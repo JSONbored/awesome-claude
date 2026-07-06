@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
-import { compareBestInteractiveUiState } from "@/lib/compare-best-interactive-ui-lib";
+import {
+  compareBestInteractiveShowCompareSection,
+  compareBestInteractiveUiState,
+} from "@/lib/compare-best-interactive-ui-lib";
 
 function entry(overrides: Partial<Entry> = {}): Entry {
   return {
@@ -27,6 +30,7 @@ describe("compare best interactive ui lib", () => {
       interactiveSearch: null,
       interactiveLinkLabel: "Open 1 picks in the interactive comparison tool",
     });
+    expect(compareBestInteractiveShowCompareSection([entry()])).toBe(false);
   });
 
   it("bundles best-list page presentation state for headers and interactive links", () => {
@@ -41,6 +45,12 @@ describe("compare best interactive ui lib", () => {
       interactiveSearch: { ids: "skills/alpha,hooks/beta" },
       interactiveLinkLabel: "Open in the interactive comparison tool",
     });
+    expect(
+      compareBestInteractiveShowCompareSection([
+        entry({ category: "skills", slug: "alpha" }),
+        entry({ category: "hooks", slug: "beta" }),
+      ]),
+    ).toBe(true);
   });
 
   it("surfaces divergence banners for multi-entry best lists", () => {
