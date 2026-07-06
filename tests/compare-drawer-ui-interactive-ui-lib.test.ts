@@ -25,6 +25,7 @@ describe("compare drawer ui interactive ui lib", () => {
       actionRowDiverges: false,
       bannerTexts: [],
       fullViewSearch: null,
+      divergingDecisionLabels: new Set(),
     });
   });
 
@@ -38,15 +39,16 @@ describe("compare drawer ui interactive ui lib", () => {
       actionRowDiverges: false,
       bannerTexts: [],
       fullViewSearch: { ids: "skills/alpha,hooks/beta" },
+      divergingDecisionLabels: new Set(),
     });
   });
 
-  it("highlights diverging next actions in bundled drawer presentation state", () => {
-    expect(
-      compareDrawerUiInteractiveUiState([
-        entry({ installCommand: "npm i fixture" }),
-        entry({ slug: "other" }),
-      ]).actionRowDiverges,
-    ).toBe(true);
+  it("highlights diverging decision rows and next actions", () => {
+    const state = compareDrawerUiInteractiveUiState([
+      entry({ reviewedBy: "maintainer", reviewedAt: "2026-01-02" }),
+      entry({ slug: "other", installCommand: "npm i fixture" }),
+    ]);
+    expect(state.divergingDecisionLabels).toEqual(new Set(["Review status"]));
+    expect(state.actionRowDiverges).toBe(true);
   });
 });

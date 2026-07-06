@@ -3,7 +3,9 @@ import { compareDrawerPresentationState } from "@/lib/compare-drawer-presentatio
 import { compareDrawerUiState, type CompareDrawerUiState } from "@/lib/compare-drawer-ui-lib";
 
 export type { CompareDrawerUiState };
-export type CompareDrawerUiInteractiveUiState = CompareDrawerUiState;
+export type CompareDrawerUiInteractiveUiState = CompareDrawerUiState & {
+  divergingDecisionLabels: Set<string>;
+};
 
 export function compareDrawerUiInteractiveUiState(
   items: Entry[],
@@ -13,5 +15,6 @@ export function compareDrawerUiInteractiveUiState(
   return {
     ...drawerUi,
     actionRowDiverges: presentation.actionRowDiverges,
+    divergingDecisionLabels: presentation.divergingDecisionLabels,
   };
 }
