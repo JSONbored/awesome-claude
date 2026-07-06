@@ -7,7 +7,6 @@ import {
   platformFeedSlug,
   SITE_URL,
 } from "./platforms.js";
-import { publicUrlHostname } from "./public-url-lib.js";
 import {
   DEFAULT_REMOTE_MCP_URL,
   normalizeEndpointUrl,
@@ -30,9 +29,6 @@ import {
   validateSubmissionDraftFromSpec,
 } from "./submissions.js";
 import {
-  entryClaimStatusValue,
-  entryPackageTrustValue,
-  entrySourceStatusValue,
   matchesRegistryPlatform,
   matchesRegistryQuery,
   normalizedRegistrySearchText,
@@ -46,14 +42,6 @@ const safePathPartPattern = /^[a-z0-9-]+$/;
 const jsonMimeType = "application/json";
 const DISCOVERY_RESOURCE_LIMIT = 25;
 const DISCOVERY_FETCH_TIMEOUT_MS = 5000;
-
-function entryCanonicalUrl(entry) {
-  return (
-    entry.canonicalUrl ||
-    entry.url ||
-    `${SITE_URL}/entry/${entry.category}/${entry.slug}`
-  );
-}
 
 import {
   LOCAL_DRAFT_TOOL_NAMES,
@@ -89,7 +77,6 @@ import {
   intersection,
   normalizeDateFloor,
   parsedTrustArgs,
-  unique,
 } from "./registry-collection-lib.js";
 import {
   entryMatchesTag,
@@ -101,6 +88,29 @@ import {
   contentAsset,
   entryInstallComplexity,
 } from "./registry-asset-lib.js";
+import {
+  TRUST_SIGNAL_KEYS,
+  entryCanonicalUrl,
+  entryTrustSignalCoverage,
+  entryTrustSummary,
+  sourceSummary,
+} from "./registry-trust-lib.js";
+import {
+  selectDiverseRankedEntries,
+  toolboxCategoryMix,
+  toolboxCaveats,
+  toolboxFitReasons,
+  toolboxInstall,
+  toolboxNextActions,
+  toolboxTrustSummary,
+} from "./registry-toolbox-lib.js";
+import {
+  entryUpdatedAt,
+  scoreRelatedEntry,
+  toEntrySummary,
+  toSearchResult,
+  unwrapEntries,
+} from "./registry-projection-lib.js";
 
 export {
   LOCAL_DRAFT_TOOL_NAMES,
@@ -187,13 +197,6 @@ async function readJsonArtifact(relativePath, options = {}) {
   return parsed;
 }
 
-function unwrapEntries(payload) {
-  if (!payload || !Array.isArray(payload.entries)) {
-    throw new Error("Expected registry artifact envelope with entries array.");
-  }
-  return payload.entries;
-}
-
 function entryMatchesQuery(entry, query) {
   return matchesRegistryQuery(entry, query);
 }
@@ -212,217 +215,6 @@ function rankSearchEntries(entries, query) {
 
 function entryMatchesPlatform(entry, platform) {
   return matchesRegistryPlatform(entry, platform);
-}
-
-function entryPackageTrust(entry) {
-  return entryPackageTrustValue(entry);
-}
-
-function entryClaimStatus(entry) {
-  return entryClaimStatusValue(entry);
-}
-
-function entrySourceStatus(entry) {
-  return entrySourceStatusValue(entry);
-}
-
-function toSearchResult(entry, ranking = null) {
-  return {
-    key: `${entry.category}:${entry.slug}`,
-    category: entry.category,
-    slug: entry.slug,
-    title: entry.title,
-    description: entry.description,
-    tags: entry.tags || [],
-    platforms: entry.platforms || [],
-    brandName: entry.brandName || "",
-    brandDomain: entry.brandDomain || "",
-    submittedBy: entry.submittedBy || "",
-    claimStatus: entry.claimStatus || "",
-    downloadTrust: entry.downloadTrust || null,
-    safetyNotes: notes(entry.safetyNotes),
-    privacyNotes: notes(entry.privacyNotes),
-    url: entry.url || entryCanonicalUrl(entry),
-    canonicalUrl: entryCanonicalUrl(entry),
-    searchScore: ranking?.score ?? 0,
-    searchReasons: ranking?.reasons ?? [],
-    trust: entryTrustSummary(entry),
-  };
-}
-
-function toEntrySummary(entry) {
-  return {
-    ...toSearchResult(entry),
-    dateAdded: entry.dateAdded || "",
-    repoUpdatedAt: entry.repoUpdatedAt || null,
-    verificationStatus: entry.verificationStatus || "",
-    installable: Boolean(entry.installable),
-    safetyNotes: notes(entry.safetyNotes),
-    privacyNotes: notes(entry.privacyNotes),
-    supportLevels: entry.supportLevels || [],
-  };
-}
-
-function entryUpdatedAt(entry) {
-  return String(
-    entry.repoUpdatedAt || entry.updatedAt || entry.dateAdded || "",
-  );
-}
-
-function sourceHost(value) {
-  return publicUrlHostname(String(value || "").trim());
-}
-
-function entrySourceHosts(entry) {
-  return [
-    entry.documentationUrl,
-    entry.repoUrl,
-    entry.url,
-    entry.canonicalUrl,
-    entry.llmsUrl,
-    entry.apiUrl,
-  ]
-    .map(sourceHost)
-    .filter(Boolean);
-}
-
-function sourceSummary(entry) {
-  return {
-    repoUrl: entry.repoUrl || entry.githubUrl || "",
-    documentationUrl: entry.documentationUrl || "",
-    downloadUrl: entry.downloadUrl || "",
-    sourceHosts: unique(entrySourceHosts(entry)),
-    githubStars:
-      typeof entry.githubStars === "number" ? entry.githubStars : null,
-    githubForks:
-      typeof entry.githubForks === "number" ? entry.githubForks : null,
-    repoUpdatedAt: entry.repoUpdatedAt || null,
-    downloadTrust: entry.downloadTrust || null,
-  };
-}
-
-function entryTrustRecommendations(entry) {
-  const recommendations = [];
-  const safetyNotes = notes(entry.safetyNotes);
-  const privacyNotes = notes(entry.privacyNotes);
-  const packageTrust = entryPackageTrust(entry);
-  const source = sourceSummary(entry);
-
-  if (!source.repoUrl && !source.documentationUrl) {
-    recommendations.push(
-      "Verify a canonical source before relying on this entry.",
-    );
-  }
-  if (packageTrust === "external") {
-    recommendations.push(
-      "Review the upstream package source and checksum before installing.",
-    );
-  }
-  if (entry.downloadUrl && packageTrust !== "first-party") {
-    recommendations.push(
-      "Treat the download as external unless maintainers have rebuilt and verified it.",
-    );
-  }
-  if (!safetyNotes.length) {
-    recommendations.push(
-      "No structured safety notes are present; inspect commands and permissions manually.",
-    );
-  }
-  if (!privacyNotes.length) {
-    recommendations.push(
-      "No structured privacy notes are present; review file, credential, telemetry, and network behavior manually.",
-    );
-  }
-  return unique(recommendations).slice(0, 6);
-}
-
-function entryTrustSummary(entry) {
-  const safetyNotes = notes(entry.safetyNotes);
-  const privacyNotes = notes(entry.privacyNotes);
-  const source = sourceSummary(entry);
-  const packageTrust = entryPackageTrust(entry);
-  const claimStatus = entryClaimStatus(entry);
-  return {
-    source: {
-      status: entrySourceStatus(entry),
-      repoUrl: source.repoUrl,
-      documentationUrl: source.documentationUrl,
-      sourceHosts: source.sourceHosts,
-      githubStars: source.githubStars,
-      githubForks: source.githubForks,
-      repoUpdatedAt: source.repoUpdatedAt,
-    },
-    package: {
-      downloadUrl: source.downloadUrl,
-      downloadTrust: packageTrust,
-      packageVerified: Boolean(
-        entry.packageVerified || entry.trustSignals?.packageVerified,
-      ),
-      checksum:
-        entry.checksum ||
-        entry.packageChecksum ||
-        entry.downloadSha256 ||
-        entry.skillPackage?.sha256 ||
-        "",
-    },
-    disclosures: {
-      safetyNotes,
-      privacyNotes,
-      hasSafetyNotes: safetyNotes.length > 0,
-      hasPrivacyNotes: privacyNotes.length > 0,
-    },
-    review: {
-      claimStatus,
-      reviewedBy: entry.reviewedBy || "",
-      reviewedAt: entry.reviewedAt || "",
-      submittedBy: entry.submittedBy || "",
-      sourceSubmissionUrl: entry.sourceSubmissionUrl || "",
-    },
-    recommendations: entryTrustRecommendations(entry),
-  };
-}
-
-// Deterministic, disclosure-only trust signals. Each signal reflects whether a
-// piece of trust metadata is present, NOT whether the entry is safe. Coverage
-// is metadata completeness, never a safety verdict or install approval.
-const TRUST_SIGNAL_KEYS = [
-  "source-available",
-  "repo-url",
-  "documentation-url",
-  "trusted-package",
-  "package-checksum",
-  "safety-notes",
-  "privacy-notes",
-  "review-provenance",
-];
-
-function entryTrustSignalCoverage(entry) {
-  const trust = entryTrustSummary(entry);
-  const present = [];
-  if (trust.source.status === "available") present.push("source-available");
-  if (trust.source.repoUrl) present.push("repo-url");
-  if (trust.source.documentationUrl) present.push("documentation-url");
-  if (
-    trust.package.downloadTrust === "first-party" ||
-    trust.package.packageVerified
-  ) {
-    present.push("trusted-package");
-  }
-  if (trust.package.checksum) present.push("package-checksum");
-  if (trust.disclosures.hasSafetyNotes) present.push("safety-notes");
-  if (trust.disclosures.hasPrivacyNotes) present.push("privacy-notes");
-  if (trust.review.reviewedBy || trust.review.claimStatus === "verified") {
-    present.push("review-provenance");
-  }
-  const presentSet = new Set(present);
-  const presentOrdered = TRUST_SIGNAL_KEYS.filter((key) => presentSet.has(key));
-  const missing = TRUST_SIGNAL_KEYS.filter((key) => !presentSet.has(key));
-  return {
-    score: presentOrdered.length,
-    max: TRUST_SIGNAL_KEYS.length,
-    present: presentOrdered,
-    missing,
-  };
 }
 
 async function readEntry(category, slug, options = {}) {
@@ -470,182 +262,6 @@ export async function searchRegistry(args = {}, options = {}) {
     tag: tag || "",
     filters: trustFilters,
     entries,
-  };
-}
-
-function selectDiverseRankedEntries(ranked, limit) {
-  const selected = [];
-  const byCategory = new Map();
-
-  for (const item of ranked) {
-    const category = item.entry.category || "";
-    const current = byCategory.get(category) || 0;
-    if (current >= 2) continue;
-    selected.push(item);
-    byCategory.set(category, current + 1);
-    if (selected.length >= limit) return selected;
-  }
-
-  for (const item of ranked) {
-    if (selected.includes(item)) continue;
-    selected.push(item);
-    if (selected.length >= limit) return selected;
-  }
-
-  return selected;
-}
-
-function toolboxFitReasons(entry, ranking) {
-  const reasons = [...(ranking.reasons || []).slice(0, 4)];
-  if (entry.category) {
-    reasons.push(`${entry.category} workflow surface`);
-  }
-  if (entrySourceStatus(entry) === "available") {
-    reasons.push("source-backed metadata");
-  }
-  if (
-    entryPackageTrust(entry) === "first-party" ||
-    entry.packageVerified ||
-    entry.trustSignals?.packageVerified
-  ) {
-    reasons.push("first-party or verified package signal");
-  }
-  if (notes(entry.safetyNotes).length && notes(entry.privacyNotes).length) {
-    reasons.push("safety and privacy notes present");
-  } else if (notes(entry.safetyNotes).length) {
-    reasons.push("safety notes present");
-  } else if (notes(entry.privacyNotes).length) {
-    reasons.push("privacy notes present");
-  }
-  if (entry.installCommand || entry.downloadUrl || entry.configSnippet) {
-    reasons.push("actionable setup surface");
-  }
-  if ((entry.platforms || []).length) {
-    reasons.push(
-      `platform compatibility: ${(entry.platforms || []).slice(0, 3).join(", ")}`,
-    );
-  }
-  if ((entry.supportLevels || []).length) {
-    reasons.push("support levels documented");
-  }
-  if (entry.claimStatus === "verified" || entry.reviewedBy) {
-    reasons.push("review/provenance metadata");
-  }
-  return unique(reasons).slice(0, 8);
-}
-
-function toolboxCaveats(entry) {
-  const caveats = [];
-  const packageTrust = entryPackageTrust(entry);
-  const safetyNotes = notes(entry.safetyNotes);
-  const privacyNotes = notes(entry.privacyNotes);
-  if (entrySourceStatus(entry) !== "available") {
-    caveats.push("Source metadata is missing or incomplete.");
-  }
-  if (packageTrust === "external") {
-    caveats.push("Package/download is external; verify upstream before use.");
-  }
-  if (entry.downloadUrl && !entryTrustSummary(entry).package.checksum) {
-    caveats.push("Download checksum metadata is not present.");
-  }
-  if (!safetyNotes.length) {
-    caveats.push("No structured safety notes are present.");
-  }
-  if (!privacyNotes.length) {
-    caveats.push("No structured privacy notes are present.");
-  }
-  if (
-    ["mcp", "hooks", "commands", "skills", "statuslines"].includes(
-      entry.category,
-    )
-  ) {
-    caveats.push(
-      "Risk-bearing workflow surface; inspect commands, permissions, and data access before use.",
-    );
-  }
-  return unique(caveats).slice(0, 5);
-}
-
-function toolboxNextActions(entry) {
-  return [
-    `Inspect entry.detail with category=${entry.category} and slug=${entry.slug}.`,
-    `Run entry.trust with category=${entry.category} and slug=${entry.slug}; this is still metadata review only.`,
-    "Use entry.compare with nearby candidates before recommending a final stack.",
-    `Use entry.asset with category=${entry.category} and slug=${entry.slug} only after trust review.`,
-  ];
-}
-
-const TOOLBOX_CONFIG_SNIPPET_INLINE_LIMIT = 600;
-
-// Distills the ready-to-run install surface for a toolbox entry from its full
-// payload so the planner returns copy-pasteable commands instead of pointing at
-// more tool calls. Large config snippets are summarized rather than inlined to
-// preserve the lean response contract (callers use entry.asset for them).
-function toolboxInstall(entry) {
-  if (!entry) return null;
-  const installCommand = String(
-    entry.installCommand || entry.commandSyntax || "",
-  ).trim();
-  const configSnippet = String(entry.configSnippet || "").trim();
-  const downloadUrl = String(entry.downloadUrl || "").trim();
-  const usageSnippet = String(entry.usageSnippet || "").trim();
-
-  const install = {
-    installable: Boolean(entry.installable),
-    primaryAssetType: categoryPrimaryAsset(entry)?.type || "",
-  };
-  if (installCommand) install.installCommand = installCommand;
-  if (downloadUrl) install.downloadUrl = downloadUrl;
-  if (usageSnippet) install.usageSnippet = usageSnippet;
-  if (configSnippet) {
-    if (configSnippet.length <= TOOLBOX_CONFIG_SNIPPET_INLINE_LIMIT) {
-      install.configSnippet = configSnippet;
-    } else {
-      install.configSnippetChars = configSnippet.length;
-      install.configHint =
-        "Config snippet is large; call entry.asset for the full snippet.";
-    }
-  }
-  if (!installCommand && !downloadUrl && !configSnippet && !usageSnippet) {
-    install.note =
-      "No install command published; use the source or canonical URL.";
-  }
-  return install;
-}
-
-function toolboxCategoryMix(entries) {
-  const counts = new Map();
-  for (const entry of entries) {
-    const category = entry.category || "unknown";
-    counts.set(category, (counts.get(category) || 0) + 1);
-  }
-  return [...counts]
-    .map(([category, count]) => ({ category, count }))
-    .sort((left, right) => left.category.localeCompare(right.category));
-}
-
-function toolboxTrustSummary(entries) {
-  return {
-    sourceBacked: entries.filter(
-      (entry) => entry.trust?.source?.status === "available",
-    ).length,
-    firstPartyOrVerifiedPackages: entries.filter(
-      (entry) =>
-        entry.trust?.package?.downloadTrust === "first-party" ||
-        entry.trust?.package?.packageVerified,
-    ).length,
-    entriesWithSafetyNotes: entries.filter(
-      (entry) => entry.trust?.disclosures?.hasSafetyNotes,
-    ).length,
-    entriesWithPrivacyNotes: entries.filter(
-      (entry) => entry.trust?.disclosures?.hasPrivacyNotes,
-    ).length,
-    externalPackages: entries.filter(
-      (entry) => entry.trust?.package?.downloadTrust === "external",
-    ).length,
-    missingSource: entries.filter(
-      (entry) => entry.trust?.source?.status !== "available",
-    ).length,
   };
 }
 
@@ -900,45 +516,6 @@ export async function getRecentUpdates(args = {}, options = {}) {
     since,
     count: entries.length,
     entries,
-  };
-}
-
-function scoreRelatedEntry(target, candidate) {
-  if (
-    target.category === candidate.category &&
-    target.slug === candidate.slug
-  ) {
-    return null;
-  }
-
-  const sharedTags = intersection(target.tags, candidate.tags);
-  const sharedKeywords = intersection(target.keywords, candidate.keywords);
-  const sharedPlatforms = intersection(
-    target.platforms,
-    candidate.platforms,
-    (value) => String(value || ""),
-  );
-  const sharedHosts = intersection(
-    entrySourceHosts(target),
-    entrySourceHosts(candidate),
-    (value) => String(value || ""),
-  );
-  const score =
-    (target.category === candidate.category ? 4 : 0) +
-    sharedTags.length * 3 +
-    Math.min(sharedKeywords.length, 6) +
-    sharedPlatforms.length +
-    sharedHosts.length * 2;
-
-  if (score <= 0) return null;
-  return {
-    score,
-    reasons: [
-      ...(target.category === candidate.category ? ["same_category"] : []),
-      ...sharedTags.map((tag) => `tag:${tag}`),
-      ...sharedPlatforms.map((platform) => `platform:${platform}`),
-      ...sharedHosts.map((host) => `source:${host}`),
-    ],
   };
 }
 
