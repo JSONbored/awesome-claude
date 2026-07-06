@@ -48,6 +48,10 @@ describe("compare dossier interactive ui lib", () => {
     expect(
       compareDossierInteractiveShowCompareSection(primary, alternatives),
     ).toBe(true);
+    const bundled = compareDossierInteractiveUiState(primary, alternatives);
+    expect(bundled.showCompareSection).toBe(
+      compareDossierInteractiveShowCompareSection(primary, alternatives),
+    );
   });
 
   it("surfaces divergence banners for dossier alternatives", () => {

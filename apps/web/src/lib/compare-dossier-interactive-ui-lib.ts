@@ -14,7 +14,7 @@ export function compareDossierInteractiveUiState(
   const ui = compareDossierUiState(entry, alternatives);
   return {
     ...ui,
-    showCompareSection: compareDossierShowCompareSection(alternatives),
+    showCompareSection: compareDossierInteractiveShowCompareSection(entry, alternatives),
   };
 }
 
