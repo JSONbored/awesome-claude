@@ -426,6 +426,8 @@ describe("parseGitHubRepoUrl enterprise and typo rejection", () => {
   it.each([
     "https://token@github.com/OpenAI/whisper",
     "https://user:pass@github.com/OpenAI/whisper",
+    "git+https:user:pass@github.com/OpenAI/whisper",
+    "git+https:/user@github.com/OpenAI/whisper",
   ])("rejects https URLs with embedded userinfo: %s", (input) => {
     expect(parseGitHubRepoUrl(input)).toBeNull();
   });

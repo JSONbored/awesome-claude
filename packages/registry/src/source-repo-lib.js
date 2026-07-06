@@ -81,10 +81,11 @@ export function parseGitHubRepoUrl(value) {
 
   if (!parsed) {
     let url;
+    const parseableUrl = raw.replace(/^git\+/i, "");
     try {
       // Drop a "git+" prefix so "git+https://..." parses; "git://" and "ssh://"
       // are already valid URL schemes that keep their host and path.
-      url = new URL(raw.replace(/^git\+/i, ""));
+      url = new URL(parseableUrl);
     } catch {
       return null;
     }
@@ -92,7 +93,7 @@ export function parseGitHubRepoUrl(value) {
     if (!ownerRepo) return null;
     if (
       (url.protocol === "http:" || url.protocol === "https:") &&
-      hasEmbeddedUrlUserinfo(raw)
+      hasEmbeddedUrlUserinfo(parseableUrl)
     ) {
       return null;
     }
