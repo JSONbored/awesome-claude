@@ -50,6 +50,8 @@ describe("compare browse interactive ui lib", () => {
       showHint: true,
     });
     expect(browseCompareInteractiveUiShowsHint(five)).toBe(true);
+    const bundled = browseCompareInteractiveUiState(five);
+    expect(bundled?.showHint).toBe(browseCompareInteractiveUiShowsHint(five));
   });
 
   it("surfaces divergence hints in browse compare CTA state", () => {

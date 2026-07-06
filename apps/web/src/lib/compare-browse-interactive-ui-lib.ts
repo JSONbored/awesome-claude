@@ -14,7 +14,7 @@ export function browseCompareInteractiveUiState(
   if (!shouldShowBrowseCompareHint(items)) return null;
   return {
     ...browseCompareUiState(items)!,
-    showHint: true,
+    showHint: browseCompareInteractiveUiShowsHint(items),
   };
 }
 
