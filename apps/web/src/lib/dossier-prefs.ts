@@ -8,77 +8,23 @@
  */
 import * as React from "react";
 
-export type CopyVariant = "install" | "config" | "full";
+import {
+  COPY_KEY,
+  type CopyVariant,
+  defaultSessionStorage,
+  harnessStorageKey,
+  isCopyVariant,
+  parseScrollPosition,
+  readPersistent,
+  scrollStorageKey,
+  writePersistent,
+} from "@/lib/dossier-prefs-lib";
 
-const COPY_KEY = "hc:dossier-copy-pref";
-const SCROLL_KEY_PREFIX = "hc:dossier-scroll:";
-const HARNESS_KEY_PREFIX = "hc:dossier-harness:";
-
-function safeSession(): Storage | null {
-  if (typeof window === "undefined") return null;
-  try {
-    return window.sessionStorage;
-  } catch {
-    return null;
-  }
-}
-
-function safeLocal(): Storage | null {
-  if (typeof window === "undefined") return null;
-  try {
-    return window.localStorage;
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Read from localStorage, falling back to (and migrating from) sessionStorage
- * for users who set the pref before persistence was added.
- */
-function readPersistent(key: string): string | null {
-  const l = safeLocal();
-  if (l) {
-    try {
-      const v = l.getItem(key);
-      if (v != null) return v;
-    } catch {
-      /* noop */
-    }
-  }
-  const s = safeSession();
-  if (s) {
-    try {
-      const v = s.getItem(key);
-      if (v != null && l) {
-        try {
-          l.setItem(key, v);
-        } catch {
-          /* noop */
-        }
-      }
-      return v;
-    } catch {
-      /* noop */
-    }
-  }
-  return null;
-}
-
-function writePersistent(key: string, value: string) {
-  const l = safeLocal();
-  if (!l) return;
-  try {
-    l.setItem(key, value);
-  } catch {
-    /* noop */
-  }
-}
+export type { CopyVariant } from "@/lib/dossier-prefs-lib";
 
 export function readCopyPref(): CopyVariant | null {
   const v = readPersistent(COPY_KEY);
-  if (v === "install" || v === "config" || v === "full") return v;
-  return null;
+  return isCopyVariant(v) ? v : null;
 }
 
 export function writeCopyPref(v: CopyVariant) {
@@ -95,12 +41,11 @@ export function useCopyPref(): [CopyVariant | null, (v: CopyVariant) => void] {
   React.useEffect(() => {
     const onCustom = (e: Event) => {
       const detail = (e as CustomEvent<CopyVariant>).detail;
-      if (detail === "install" || detail === "config" || detail === "full") setPref(detail);
+      if (isCopyVariant(detail)) setPref(detail);
     };
     const onStorage = (e: StorageEvent) => {
       if (e.key !== COPY_KEY) return;
-      const v = e.newValue;
-      if (v === "install" || v === "config" || v === "full") setPref(v);
+      if (isCopyVariant(e.newValue)) setPref(e.newValue);
     };
     window.addEventListener("hc:copy-pref", onCustom as EventListener);
     window.addEventListener("storage", onStorage);
@@ -112,51 +57,45 @@ export function useCopyPref(): [CopyVariant | null, (v: CopyVariant) => void] {
   return [pref, writeCopyPref];
 }
 
-const scrollKey = (category: string, slug: string) => `${SCROLL_KEY_PREFIX}${category}/${slug}`;
-
 export function readScrollPos(category: string, slug: string): number | null {
-  const s = safeSession();
+  const s = defaultSessionStorage();
   if (!s) return null;
   try {
-    const v = s.getItem(scrollKey(category, slug));
-    if (!v) return null;
-    const n = Number(v);
-    return Number.isFinite(n) && n > 0 ? n : null;
+    return parseScrollPosition(s.getItem(scrollStorageKey(category, slug)));
   } catch {
     return null;
   }
 }
 
 export function writeScrollPos(category: string, slug: string, y: number) {
-  const s = safeSession();
+  const s = defaultSessionStorage();
   if (!s) return;
   try {
-    if (y <= 0) s.removeItem(scrollKey(category, slug));
-    else s.setItem(scrollKey(category, slug), String(Math.round(y)));
+    const key = scrollStorageKey(category, slug);
+    if (y <= 0) s.removeItem(key);
+    else s.setItem(key, String(Math.round(y)));
   } catch {
     /* noop */
   }
 }
 
 export function clearScrollPos(category: string, slug: string) {
-  const s = safeSession();
+  const s = defaultSessionStorage();
   if (!s) return;
   try {
-    s.removeItem(scrollKey(category, slug));
+    s.removeItem(scrollStorageKey(category, slug));
   } catch {
     /* noop */
   }
 }
 
 /** Per-entry selected harness variant (persisted across tabs + refresh). */
-const harnessKey = (category: string, slug: string) => `${HARNESS_KEY_PREFIX}${category}/${slug}`;
-
 export function useHarnessPref(
   category: string,
   slug: string,
   available: string[],
 ): [string | null, (h: string) => void] {
-  const key = harnessKey(category, slug);
+  const key = harnessStorageKey(category, slug);
   const availableSig = available.join("|");
   const [val, setVal] = React.useState<string | null>(null);
 

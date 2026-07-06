@@ -22,123 +22,51 @@ describe("content-artifact-lib normalizeEntryDetailPayload", () => {
   it("merges trustSignals when entry lacks them", () => {
     const entry = { category: "mcp", slug: "demo", title: "Demo" };
     const trustSignals = { sourceStatus: "available" as const };
-    expect(normalizeEntryDetailPayload({ entry, trustSignals })).toEqual({
-      ...entry,
-      trustSignals,
-    });
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })).toEqual({ ...entry, trustSignals });
   });
   it("preserves entry trustSignals when already present", () => {
-    const entry = {
-      category: "mcp",
-      slug: "demo",
-      trustSignals: { sourceStatus: "missing" as const },
-    };
-    expect(
-      normalizeEntryDetailPayload({
-        entry,
-        trustSignals: { sourceStatus: "available" as const },
-      }),
-    ).toEqual(entry);
+    const entry = { category: "mcp", slug: "demo", trustSignals: { sourceStatus: "missing" as const } };
+    expect(normalizeEntryDetailPayload({ entry, trustSignals: { sourceStatus: "available" as const } })).toEqual(entry);
   });
   it("normalizeEntryDetailPayload agents/agents-detail-0", () => {
-    const entry = {
-      category: "agents",
-      slug: "agents-detail-0",
-      title: "Title 0",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "agents-detail-0",
-    );
+    const entry = { category: "agents", slug: "agents-detail-0", title: "Title 0" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("agents-detail-0");
   });
   it("normalizeEntryDetailPayload agents/agents-detail-1", () => {
-    const entry = {
-      category: "agents",
-      slug: "agents-detail-1",
-      title: "Title 1",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "agents-detail-1",
-    );
+    const entry = { category: "agents", slug: "agents-detail-1", title: "Title 1" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("agents-detail-1");
   });
   it("normalizeEntryDetailPayload agents/agents-detail-2", () => {
-    const entry = {
-      category: "agents",
-      slug: "agents-detail-2",
-      title: "Title 2",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "agents-detail-2",
-    );
+    const entry = { category: "agents", slug: "agents-detail-2", title: "Title 2" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("agents-detail-2");
   });
   it("normalizeEntryDetailPayload agents/agents-detail-3", () => {
-    const entry = {
-      category: "agents",
-      slug: "agents-detail-3",
-      title: "Title 3",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "agents-detail-3",
-    );
+    const entry = { category: "agents", slug: "agents-detail-3", title: "Title 3" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("agents-detail-3");
   });
   it("normalizeEntryDetailPayload agents/agents-detail-4", () => {
-    const entry = {
-      category: "agents",
-      slug: "agents-detail-4",
-      title: "Title 4",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "agents-detail-4",
-    );
+    const entry = { category: "agents", slug: "agents-detail-4", title: "Title 4" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("agents-detail-4");
   });
   it("normalizeEntryDetailPayload agents/agents-detail-5", () => {
-    const entry = {
-      category: "agents",
-      slug: "agents-detail-5",
-      title: "Title 5",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "agents-detail-5",
-    );
+    const entry = { category: "agents", slug: "agents-detail-5", title: "Title 5" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("agents-detail-5");
   });
   it("normalizeEntryDetailPayload agents/agents-detail-6", () => {
-    const entry = {
-      category: "agents",
-      slug: "agents-detail-6",
-      title: "Title 6",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "agents-detail-6",
-    );
+    const entry = { category: "agents", slug: "agents-detail-6", title: "Title 6" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("agents-detail-6");
   });
   it("normalizeEntryDetailPayload agents/agents-detail-7", () => {
-    const entry = {
-      category: "agents",
-      slug: "agents-detail-7",
-      title: "Title 7",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "agents-detail-7",
-    );
+    const entry = { category: "agents", slug: "agents-detail-7", title: "Title 7" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("agents-detail-7");
   });
   it("normalizeEntryDetailPayload agents/agents-detail-8", () => {
-    const entry = {
-      category: "agents",
-      slug: "agents-detail-8",
-      title: "Title 8",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "agents-detail-8",
-    );
+    const entry = { category: "agents", slug: "agents-detail-8", title: "Title 8" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("agents-detail-8");
   });
   it("normalizeEntryDetailPayload agents/agents-detail-9", () => {
-    const entry = {
-      category: "agents",
-      slug: "agents-detail-9",
-      title: "Title 9",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "agents-detail-9",
-    );
+    const entry = { category: "agents", slug: "agents-detail-9", title: "Title 9" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("agents-detail-9");
   });
   it("normalizeEntryDetailPayload mcp/mcp-detail-0", () => {
     const entry = { category: "mcp", slug: "mcp-detail-0", title: "Title 0" };
@@ -181,1574 +109,911 @@ describe("content-artifact-lib normalizeEntryDetailPayload", () => {
     expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("mcp-detail-9");
   });
   it("normalizeEntryDetailPayload tools/tools-detail-0", () => {
-    const entry = {
-      category: "tools",
-      slug: "tools-detail-0",
-      title: "Title 0",
-    };
+    const entry = { category: "tools", slug: "tools-detail-0", title: "Title 0" };
     expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("tools-detail-0");
   });
   it("normalizeEntryDetailPayload tools/tools-detail-1", () => {
-    const entry = {
-      category: "tools",
-      slug: "tools-detail-1",
-      title: "Title 1",
-    };
+    const entry = { category: "tools", slug: "tools-detail-1", title: "Title 1" };
     expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("tools-detail-1");
   });
   it("normalizeEntryDetailPayload tools/tools-detail-2", () => {
-    const entry = {
-      category: "tools",
-      slug: "tools-detail-2",
-      title: "Title 2",
-    };
+    const entry = { category: "tools", slug: "tools-detail-2", title: "Title 2" };
     expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("tools-detail-2");
   });
   it("normalizeEntryDetailPayload tools/tools-detail-3", () => {
-    const entry = {
-      category: "tools",
-      slug: "tools-detail-3",
-      title: "Title 3",
-    };
+    const entry = { category: "tools", slug: "tools-detail-3", title: "Title 3" };
     expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("tools-detail-3");
   });
   it("normalizeEntryDetailPayload tools/tools-detail-4", () => {
-    const entry = {
-      category: "tools",
-      slug: "tools-detail-4",
-      title: "Title 4",
-    };
+    const entry = { category: "tools", slug: "tools-detail-4", title: "Title 4" };
     expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("tools-detail-4");
   });
   it("normalizeEntryDetailPayload tools/tools-detail-5", () => {
-    const entry = {
-      category: "tools",
-      slug: "tools-detail-5",
-      title: "Title 5",
-    };
+    const entry = { category: "tools", slug: "tools-detail-5", title: "Title 5" };
     expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("tools-detail-5");
   });
   it("normalizeEntryDetailPayload tools/tools-detail-6", () => {
-    const entry = {
-      category: "tools",
-      slug: "tools-detail-6",
-      title: "Title 6",
-    };
+    const entry = { category: "tools", slug: "tools-detail-6", title: "Title 6" };
     expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("tools-detail-6");
   });
   it("normalizeEntryDetailPayload tools/tools-detail-7", () => {
-    const entry = {
-      category: "tools",
-      slug: "tools-detail-7",
-      title: "Title 7",
-    };
+    const entry = { category: "tools", slug: "tools-detail-7", title: "Title 7" };
     expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("tools-detail-7");
   });
   it("normalizeEntryDetailPayload tools/tools-detail-8", () => {
-    const entry = {
-      category: "tools",
-      slug: "tools-detail-8",
-      title: "Title 8",
-    };
+    const entry = { category: "tools", slug: "tools-detail-8", title: "Title 8" };
     expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("tools-detail-8");
   });
   it("normalizeEntryDetailPayload tools/tools-detail-9", () => {
-    const entry = {
-      category: "tools",
-      slug: "tools-detail-9",
-      title: "Title 9",
-    };
+    const entry = { category: "tools", slug: "tools-detail-9", title: "Title 9" };
     expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("tools-detail-9");
   });
   it("normalizeEntryDetailPayload skills/skills-detail-0", () => {
-    const entry = {
-      category: "skills",
-      slug: "skills-detail-0",
-      title: "Title 0",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "skills-detail-0",
-    );
+    const entry = { category: "skills", slug: "skills-detail-0", title: "Title 0" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("skills-detail-0");
   });
   it("normalizeEntryDetailPayload skills/skills-detail-1", () => {
-    const entry = {
-      category: "skills",
-      slug: "skills-detail-1",
-      title: "Title 1",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "skills-detail-1",
-    );
+    const entry = { category: "skills", slug: "skills-detail-1", title: "Title 1" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("skills-detail-1");
   });
   it("normalizeEntryDetailPayload skills/skills-detail-2", () => {
-    const entry = {
-      category: "skills",
-      slug: "skills-detail-2",
-      title: "Title 2",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "skills-detail-2",
-    );
+    const entry = { category: "skills", slug: "skills-detail-2", title: "Title 2" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("skills-detail-2");
   });
   it("normalizeEntryDetailPayload skills/skills-detail-3", () => {
-    const entry = {
-      category: "skills",
-      slug: "skills-detail-3",
-      title: "Title 3",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "skills-detail-3",
-    );
+    const entry = { category: "skills", slug: "skills-detail-3", title: "Title 3" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("skills-detail-3");
   });
   it("normalizeEntryDetailPayload skills/skills-detail-4", () => {
-    const entry = {
-      category: "skills",
-      slug: "skills-detail-4",
-      title: "Title 4",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "skills-detail-4",
-    );
+    const entry = { category: "skills", slug: "skills-detail-4", title: "Title 4" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("skills-detail-4");
   });
   it("normalizeEntryDetailPayload skills/skills-detail-5", () => {
-    const entry = {
-      category: "skills",
-      slug: "skills-detail-5",
-      title: "Title 5",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "skills-detail-5",
-    );
+    const entry = { category: "skills", slug: "skills-detail-5", title: "Title 5" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("skills-detail-5");
   });
   it("normalizeEntryDetailPayload skills/skills-detail-6", () => {
-    const entry = {
-      category: "skills",
-      slug: "skills-detail-6",
-      title: "Title 6",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "skills-detail-6",
-    );
+    const entry = { category: "skills", slug: "skills-detail-6", title: "Title 6" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("skills-detail-6");
   });
   it("normalizeEntryDetailPayload skills/skills-detail-7", () => {
-    const entry = {
-      category: "skills",
-      slug: "skills-detail-7",
-      title: "Title 7",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "skills-detail-7",
-    );
+    const entry = { category: "skills", slug: "skills-detail-7", title: "Title 7" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("skills-detail-7");
   });
   it("normalizeEntryDetailPayload skills/skills-detail-8", () => {
-    const entry = {
-      category: "skills",
-      slug: "skills-detail-8",
-      title: "Title 8",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "skills-detail-8",
-    );
+    const entry = { category: "skills", slug: "skills-detail-8", title: "Title 8" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("skills-detail-8");
   });
   it("normalizeEntryDetailPayload skills/skills-detail-9", () => {
-    const entry = {
-      category: "skills",
-      slug: "skills-detail-9",
-      title: "Title 9",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "skills-detail-9",
-    );
+    const entry = { category: "skills", slug: "skills-detail-9", title: "Title 9" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("skills-detail-9");
   });
   it("normalizeEntryDetailPayload rules/rules-detail-0", () => {
-    const entry = {
-      category: "rules",
-      slug: "rules-detail-0",
-      title: "Title 0",
-    };
+    const entry = { category: "rules", slug: "rules-detail-0", title: "Title 0" };
     expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("rules-detail-0");
   });
   it("normalizeEntryDetailPayload rules/rules-detail-1", () => {
-    const entry = {
-      category: "rules",
-      slug: "rules-detail-1",
-      title: "Title 1",
-    };
+    const entry = { category: "rules", slug: "rules-detail-1", title: "Title 1" };
     expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("rules-detail-1");
   });
   it("normalizeEntryDetailPayload rules/rules-detail-2", () => {
-    const entry = {
-      category: "rules",
-      slug: "rules-detail-2",
-      title: "Title 2",
-    };
+    const entry = { category: "rules", slug: "rules-detail-2", title: "Title 2" };
     expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("rules-detail-2");
   });
   it("normalizeEntryDetailPayload rules/rules-detail-3", () => {
-    const entry = {
-      category: "rules",
-      slug: "rules-detail-3",
-      title: "Title 3",
-    };
+    const entry = { category: "rules", slug: "rules-detail-3", title: "Title 3" };
     expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("rules-detail-3");
   });
   it("normalizeEntryDetailPayload rules/rules-detail-4", () => {
-    const entry = {
-      category: "rules",
-      slug: "rules-detail-4",
-      title: "Title 4",
-    };
+    const entry = { category: "rules", slug: "rules-detail-4", title: "Title 4" };
     expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("rules-detail-4");
   });
   it("normalizeEntryDetailPayload rules/rules-detail-5", () => {
-    const entry = {
-      category: "rules",
-      slug: "rules-detail-5",
-      title: "Title 5",
-    };
+    const entry = { category: "rules", slug: "rules-detail-5", title: "Title 5" };
     expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("rules-detail-5");
   });
   it("normalizeEntryDetailPayload rules/rules-detail-6", () => {
-    const entry = {
-      category: "rules",
-      slug: "rules-detail-6",
-      title: "Title 6",
-    };
+    const entry = { category: "rules", slug: "rules-detail-6", title: "Title 6" };
     expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("rules-detail-6");
   });
   it("normalizeEntryDetailPayload rules/rules-detail-7", () => {
-    const entry = {
-      category: "rules",
-      slug: "rules-detail-7",
-      title: "Title 7",
-    };
+    const entry = { category: "rules", slug: "rules-detail-7", title: "Title 7" };
     expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("rules-detail-7");
   });
   it("normalizeEntryDetailPayload rules/rules-detail-8", () => {
-    const entry = {
-      category: "rules",
-      slug: "rules-detail-8",
-      title: "Title 8",
-    };
+    const entry = { category: "rules", slug: "rules-detail-8", title: "Title 8" };
     expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("rules-detail-8");
   });
   it("normalizeEntryDetailPayload rules/rules-detail-9", () => {
-    const entry = {
-      category: "rules",
-      slug: "rules-detail-9",
-      title: "Title 9",
-    };
+    const entry = { category: "rules", slug: "rules-detail-9", title: "Title 9" };
     expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("rules-detail-9");
   });
   it("normalizeEntryDetailPayload commands/commands-detail-0", () => {
-    const entry = {
-      category: "commands",
-      slug: "commands-detail-0",
-      title: "Title 0",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "commands-detail-0",
-    );
+    const entry = { category: "commands", slug: "commands-detail-0", title: "Title 0" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("commands-detail-0");
   });
   it("normalizeEntryDetailPayload commands/commands-detail-1", () => {
-    const entry = {
-      category: "commands",
-      slug: "commands-detail-1",
-      title: "Title 1",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "commands-detail-1",
-    );
+    const entry = { category: "commands", slug: "commands-detail-1", title: "Title 1" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("commands-detail-1");
   });
   it("normalizeEntryDetailPayload commands/commands-detail-2", () => {
-    const entry = {
-      category: "commands",
-      slug: "commands-detail-2",
-      title: "Title 2",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "commands-detail-2",
-    );
+    const entry = { category: "commands", slug: "commands-detail-2", title: "Title 2" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("commands-detail-2");
   });
   it("normalizeEntryDetailPayload commands/commands-detail-3", () => {
-    const entry = {
-      category: "commands",
-      slug: "commands-detail-3",
-      title: "Title 3",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "commands-detail-3",
-    );
+    const entry = { category: "commands", slug: "commands-detail-3", title: "Title 3" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("commands-detail-3");
   });
   it("normalizeEntryDetailPayload commands/commands-detail-4", () => {
-    const entry = {
-      category: "commands",
-      slug: "commands-detail-4",
-      title: "Title 4",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "commands-detail-4",
-    );
+    const entry = { category: "commands", slug: "commands-detail-4", title: "Title 4" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("commands-detail-4");
   });
   it("normalizeEntryDetailPayload commands/commands-detail-5", () => {
-    const entry = {
-      category: "commands",
-      slug: "commands-detail-5",
-      title: "Title 5",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "commands-detail-5",
-    );
+    const entry = { category: "commands", slug: "commands-detail-5", title: "Title 5" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("commands-detail-5");
   });
   it("normalizeEntryDetailPayload commands/commands-detail-6", () => {
-    const entry = {
-      category: "commands",
-      slug: "commands-detail-6",
-      title: "Title 6",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "commands-detail-6",
-    );
+    const entry = { category: "commands", slug: "commands-detail-6", title: "Title 6" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("commands-detail-6");
   });
   it("normalizeEntryDetailPayload commands/commands-detail-7", () => {
-    const entry = {
-      category: "commands",
-      slug: "commands-detail-7",
-      title: "Title 7",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "commands-detail-7",
-    );
+    const entry = { category: "commands", slug: "commands-detail-7", title: "Title 7" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("commands-detail-7");
   });
   it("normalizeEntryDetailPayload commands/commands-detail-8", () => {
-    const entry = {
-      category: "commands",
-      slug: "commands-detail-8",
-      title: "Title 8",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "commands-detail-8",
-    );
+    const entry = { category: "commands", slug: "commands-detail-8", title: "Title 8" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("commands-detail-8");
   });
   it("normalizeEntryDetailPayload commands/commands-detail-9", () => {
-    const entry = {
-      category: "commands",
-      slug: "commands-detail-9",
-      title: "Title 9",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "commands-detail-9",
-    );
+    const entry = { category: "commands", slug: "commands-detail-9", title: "Title 9" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("commands-detail-9");
   });
   it("normalizeEntryDetailPayload hooks/hooks-detail-0", () => {
-    const entry = {
-      category: "hooks",
-      slug: "hooks-detail-0",
-      title: "Title 0",
-    };
+    const entry = { category: "hooks", slug: "hooks-detail-0", title: "Title 0" };
     expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("hooks-detail-0");
   });
   it("normalizeEntryDetailPayload hooks/hooks-detail-1", () => {
-    const entry = {
-      category: "hooks",
-      slug: "hooks-detail-1",
-      title: "Title 1",
-    };
+    const entry = { category: "hooks", slug: "hooks-detail-1", title: "Title 1" };
     expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("hooks-detail-1");
   });
   it("normalizeEntryDetailPayload hooks/hooks-detail-2", () => {
-    const entry = {
-      category: "hooks",
-      slug: "hooks-detail-2",
-      title: "Title 2",
-    };
+    const entry = { category: "hooks", slug: "hooks-detail-2", title: "Title 2" };
     expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("hooks-detail-2");
   });
   it("normalizeEntryDetailPayload hooks/hooks-detail-3", () => {
-    const entry = {
-      category: "hooks",
-      slug: "hooks-detail-3",
-      title: "Title 3",
-    };
+    const entry = { category: "hooks", slug: "hooks-detail-3", title: "Title 3" };
     expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("hooks-detail-3");
   });
   it("normalizeEntryDetailPayload hooks/hooks-detail-4", () => {
-    const entry = {
-      category: "hooks",
-      slug: "hooks-detail-4",
-      title: "Title 4",
-    };
+    const entry = { category: "hooks", slug: "hooks-detail-4", title: "Title 4" };
     expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("hooks-detail-4");
   });
   it("normalizeEntryDetailPayload hooks/hooks-detail-5", () => {
-    const entry = {
-      category: "hooks",
-      slug: "hooks-detail-5",
-      title: "Title 5",
-    };
+    const entry = { category: "hooks", slug: "hooks-detail-5", title: "Title 5" };
     expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("hooks-detail-5");
   });
   it("normalizeEntryDetailPayload hooks/hooks-detail-6", () => {
-    const entry = {
-      category: "hooks",
-      slug: "hooks-detail-6",
-      title: "Title 6",
-    };
+    const entry = { category: "hooks", slug: "hooks-detail-6", title: "Title 6" };
     expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("hooks-detail-6");
   });
   it("normalizeEntryDetailPayload hooks/hooks-detail-7", () => {
-    const entry = {
-      category: "hooks",
-      slug: "hooks-detail-7",
-      title: "Title 7",
-    };
+    const entry = { category: "hooks", slug: "hooks-detail-7", title: "Title 7" };
     expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("hooks-detail-7");
   });
   it("normalizeEntryDetailPayload hooks/hooks-detail-8", () => {
-    const entry = {
-      category: "hooks",
-      slug: "hooks-detail-8",
-      title: "Title 8",
-    };
+    const entry = { category: "hooks", slug: "hooks-detail-8", title: "Title 8" };
     expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("hooks-detail-8");
   });
   it("normalizeEntryDetailPayload hooks/hooks-detail-9", () => {
-    const entry = {
-      category: "hooks",
-      slug: "hooks-detail-9",
-      title: "Title 9",
-    };
+    const entry = { category: "hooks", slug: "hooks-detail-9", title: "Title 9" };
     expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("hooks-detail-9");
   });
   it("normalizeEntryDetailPayload guides/guides-detail-0", () => {
-    const entry = {
-      category: "guides",
-      slug: "guides-detail-0",
-      title: "Title 0",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "guides-detail-0",
-    );
+    const entry = { category: "guides", slug: "guides-detail-0", title: "Title 0" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("guides-detail-0");
   });
   it("normalizeEntryDetailPayload guides/guides-detail-1", () => {
-    const entry = {
-      category: "guides",
-      slug: "guides-detail-1",
-      title: "Title 1",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "guides-detail-1",
-    );
+    const entry = { category: "guides", slug: "guides-detail-1", title: "Title 1" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("guides-detail-1");
   });
   it("normalizeEntryDetailPayload guides/guides-detail-2", () => {
-    const entry = {
-      category: "guides",
-      slug: "guides-detail-2",
-      title: "Title 2",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "guides-detail-2",
-    );
+    const entry = { category: "guides", slug: "guides-detail-2", title: "Title 2" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("guides-detail-2");
   });
   it("normalizeEntryDetailPayload guides/guides-detail-3", () => {
-    const entry = {
-      category: "guides",
-      slug: "guides-detail-3",
-      title: "Title 3",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "guides-detail-3",
-    );
+    const entry = { category: "guides", slug: "guides-detail-3", title: "Title 3" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("guides-detail-3");
   });
   it("normalizeEntryDetailPayload guides/guides-detail-4", () => {
-    const entry = {
-      category: "guides",
-      slug: "guides-detail-4",
-      title: "Title 4",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "guides-detail-4",
-    );
+    const entry = { category: "guides", slug: "guides-detail-4", title: "Title 4" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("guides-detail-4");
   });
   it("normalizeEntryDetailPayload guides/guides-detail-5", () => {
-    const entry = {
-      category: "guides",
-      slug: "guides-detail-5",
-      title: "Title 5",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "guides-detail-5",
-    );
+    const entry = { category: "guides", slug: "guides-detail-5", title: "Title 5" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("guides-detail-5");
   });
   it("normalizeEntryDetailPayload guides/guides-detail-6", () => {
-    const entry = {
-      category: "guides",
-      slug: "guides-detail-6",
-      title: "Title 6",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "guides-detail-6",
-    );
+    const entry = { category: "guides", slug: "guides-detail-6", title: "Title 6" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("guides-detail-6");
   });
   it("normalizeEntryDetailPayload guides/guides-detail-7", () => {
-    const entry = {
-      category: "guides",
-      slug: "guides-detail-7",
-      title: "Title 7",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "guides-detail-7",
-    );
+    const entry = { category: "guides", slug: "guides-detail-7", title: "Title 7" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("guides-detail-7");
   });
   it("normalizeEntryDetailPayload guides/guides-detail-8", () => {
-    const entry = {
-      category: "guides",
-      slug: "guides-detail-8",
-      title: "Title 8",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "guides-detail-8",
-    );
+    const entry = { category: "guides", slug: "guides-detail-8", title: "Title 8" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("guides-detail-8");
   });
   it("normalizeEntryDetailPayload guides/guides-detail-9", () => {
-    const entry = {
-      category: "guides",
-      slug: "guides-detail-9",
-      title: "Title 9",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "guides-detail-9",
-    );
+    const entry = { category: "guides", slug: "guides-detail-9", title: "Title 9" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("guides-detail-9");
   });
   it("normalizeEntryDetailPayload collections/collections-detail-0", () => {
-    const entry = {
-      category: "collections",
-      slug: "collections-detail-0",
-      title: "Title 0",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "collections-detail-0",
-    );
+    const entry = { category: "collections", slug: "collections-detail-0", title: "Title 0" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("collections-detail-0");
   });
   it("normalizeEntryDetailPayload collections/collections-detail-1", () => {
-    const entry = {
-      category: "collections",
-      slug: "collections-detail-1",
-      title: "Title 1",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "collections-detail-1",
-    );
+    const entry = { category: "collections", slug: "collections-detail-1", title: "Title 1" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("collections-detail-1");
   });
   it("normalizeEntryDetailPayload collections/collections-detail-2", () => {
-    const entry = {
-      category: "collections",
-      slug: "collections-detail-2",
-      title: "Title 2",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "collections-detail-2",
-    );
+    const entry = { category: "collections", slug: "collections-detail-2", title: "Title 2" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("collections-detail-2");
   });
   it("normalizeEntryDetailPayload collections/collections-detail-3", () => {
-    const entry = {
-      category: "collections",
-      slug: "collections-detail-3",
-      title: "Title 3",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "collections-detail-3",
-    );
+    const entry = { category: "collections", slug: "collections-detail-3", title: "Title 3" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("collections-detail-3");
   });
   it("normalizeEntryDetailPayload collections/collections-detail-4", () => {
-    const entry = {
-      category: "collections",
-      slug: "collections-detail-4",
-      title: "Title 4",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "collections-detail-4",
-    );
+    const entry = { category: "collections", slug: "collections-detail-4", title: "Title 4" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("collections-detail-4");
   });
   it("normalizeEntryDetailPayload collections/collections-detail-5", () => {
-    const entry = {
-      category: "collections",
-      slug: "collections-detail-5",
-      title: "Title 5",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "collections-detail-5",
-    );
+    const entry = { category: "collections", slug: "collections-detail-5", title: "Title 5" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("collections-detail-5");
   });
   it("normalizeEntryDetailPayload collections/collections-detail-6", () => {
-    const entry = {
-      category: "collections",
-      slug: "collections-detail-6",
-      title: "Title 6",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "collections-detail-6",
-    );
+    const entry = { category: "collections", slug: "collections-detail-6", title: "Title 6" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("collections-detail-6");
   });
   it("normalizeEntryDetailPayload collections/collections-detail-7", () => {
-    const entry = {
-      category: "collections",
-      slug: "collections-detail-7",
-      title: "Title 7",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "collections-detail-7",
-    );
+    const entry = { category: "collections", slug: "collections-detail-7", title: "Title 7" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("collections-detail-7");
   });
   it("normalizeEntryDetailPayload collections/collections-detail-8", () => {
-    const entry = {
-      category: "collections",
-      slug: "collections-detail-8",
-      title: "Title 8",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "collections-detail-8",
-    );
+    const entry = { category: "collections", slug: "collections-detail-8", title: "Title 8" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("collections-detail-8");
   });
   it("normalizeEntryDetailPayload collections/collections-detail-9", () => {
-    const entry = {
-      category: "collections",
-      slug: "collections-detail-9",
-      title: "Title 9",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "collections-detail-9",
-    );
+    const entry = { category: "collections", slug: "collections-detail-9", title: "Title 9" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("collections-detail-9");
   });
   it("normalizeEntryDetailPayload statuslines/statuslines-detail-0", () => {
-    const entry = {
-      category: "statuslines",
-      slug: "statuslines-detail-0",
-      title: "Title 0",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "statuslines-detail-0",
-    );
+    const entry = { category: "statuslines", slug: "statuslines-detail-0", title: "Title 0" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("statuslines-detail-0");
   });
   it("normalizeEntryDetailPayload statuslines/statuslines-detail-1", () => {
-    const entry = {
-      category: "statuslines",
-      slug: "statuslines-detail-1",
-      title: "Title 1",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "statuslines-detail-1",
-    );
+    const entry = { category: "statuslines", slug: "statuslines-detail-1", title: "Title 1" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("statuslines-detail-1");
   });
   it("normalizeEntryDetailPayload statuslines/statuslines-detail-2", () => {
-    const entry = {
-      category: "statuslines",
-      slug: "statuslines-detail-2",
-      title: "Title 2",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "statuslines-detail-2",
-    );
+    const entry = { category: "statuslines", slug: "statuslines-detail-2", title: "Title 2" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("statuslines-detail-2");
   });
   it("normalizeEntryDetailPayload statuslines/statuslines-detail-3", () => {
-    const entry = {
-      category: "statuslines",
-      slug: "statuslines-detail-3",
-      title: "Title 3",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "statuslines-detail-3",
-    );
+    const entry = { category: "statuslines", slug: "statuslines-detail-3", title: "Title 3" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("statuslines-detail-3");
   });
   it("normalizeEntryDetailPayload statuslines/statuslines-detail-4", () => {
-    const entry = {
-      category: "statuslines",
-      slug: "statuslines-detail-4",
-      title: "Title 4",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "statuslines-detail-4",
-    );
+    const entry = { category: "statuslines", slug: "statuslines-detail-4", title: "Title 4" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("statuslines-detail-4");
   });
   it("normalizeEntryDetailPayload statuslines/statuslines-detail-5", () => {
-    const entry = {
-      category: "statuslines",
-      slug: "statuslines-detail-5",
-      title: "Title 5",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "statuslines-detail-5",
-    );
+    const entry = { category: "statuslines", slug: "statuslines-detail-5", title: "Title 5" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("statuslines-detail-5");
   });
   it("normalizeEntryDetailPayload statuslines/statuslines-detail-6", () => {
-    const entry = {
-      category: "statuslines",
-      slug: "statuslines-detail-6",
-      title: "Title 6",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "statuslines-detail-6",
-    );
+    const entry = { category: "statuslines", slug: "statuslines-detail-6", title: "Title 6" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("statuslines-detail-6");
   });
   it("normalizeEntryDetailPayload statuslines/statuslines-detail-7", () => {
-    const entry = {
-      category: "statuslines",
-      slug: "statuslines-detail-7",
-      title: "Title 7",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "statuslines-detail-7",
-    );
+    const entry = { category: "statuslines", slug: "statuslines-detail-7", title: "Title 7" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("statuslines-detail-7");
   });
   it("normalizeEntryDetailPayload statuslines/statuslines-detail-8", () => {
-    const entry = {
-      category: "statuslines",
-      slug: "statuslines-detail-8",
-      title: "Title 8",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "statuslines-detail-8",
-    );
+    const entry = { category: "statuslines", slug: "statuslines-detail-8", title: "Title 8" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("statuslines-detail-8");
   });
   it("normalizeEntryDetailPayload statuslines/statuslines-detail-9", () => {
-    const entry = {
-      category: "statuslines",
-      slug: "statuslines-detail-9",
-      title: "Title 9",
-    };
-    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe(
-      "statuslines-detail-9",
-    );
+    const entry = { category: "statuslines", slug: "statuslines-detail-9", title: "Title 9" };
+    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("statuslines-detail-9");
   });
   it("normalizeEntryDetailPayload trust merge 0", () => {
     const entry = { category: "skills", slug: "skill-0", title: "Skill 0" };
     const trustSignals = { sourceStatus: "available" as const, score: 0 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 1", () => {
     const entry = { category: "skills", slug: "skill-1", title: "Skill 1" };
     const trustSignals = { sourceStatus: "available" as const, score: 1 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 2", () => {
     const entry = { category: "skills", slug: "skill-2", title: "Skill 2" };
     const trustSignals = { sourceStatus: "available" as const, score: 2 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 3", () => {
     const entry = { category: "skills", slug: "skill-3", title: "Skill 3" };
     const trustSignals = { sourceStatus: "available" as const, score: 3 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 4", () => {
     const entry = { category: "skills", slug: "skill-4", title: "Skill 4" };
     const trustSignals = { sourceStatus: "available" as const, score: 4 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 5", () => {
     const entry = { category: "skills", slug: "skill-5", title: "Skill 5" };
     const trustSignals = { sourceStatus: "available" as const, score: 5 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 6", () => {
     const entry = { category: "skills", slug: "skill-6", title: "Skill 6" };
     const trustSignals = { sourceStatus: "available" as const, score: 6 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 7", () => {
     const entry = { category: "skills", slug: "skill-7", title: "Skill 7" };
     const trustSignals = { sourceStatus: "available" as const, score: 7 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 8", () => {
     const entry = { category: "skills", slug: "skill-8", title: "Skill 8" };
     const trustSignals = { sourceStatus: "available" as const, score: 8 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 9", () => {
     const entry = { category: "skills", slug: "skill-9", title: "Skill 9" };
     const trustSignals = { sourceStatus: "available" as const, score: 9 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 10", () => {
     const entry = { category: "skills", slug: "skill-10", title: "Skill 10" };
     const trustSignals = { sourceStatus: "available" as const, score: 10 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 11", () => {
     const entry = { category: "skills", slug: "skill-11", title: "Skill 11" };
     const trustSignals = { sourceStatus: "available" as const, score: 11 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 12", () => {
     const entry = { category: "skills", slug: "skill-12", title: "Skill 12" };
     const trustSignals = { sourceStatus: "available" as const, score: 12 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 13", () => {
     const entry = { category: "skills", slug: "skill-13", title: "Skill 13" };
     const trustSignals = { sourceStatus: "available" as const, score: 13 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 14", () => {
     const entry = { category: "skills", slug: "skill-14", title: "Skill 14" };
     const trustSignals = { sourceStatus: "available" as const, score: 14 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 15", () => {
     const entry = { category: "skills", slug: "skill-15", title: "Skill 15" };
     const trustSignals = { sourceStatus: "available" as const, score: 15 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 16", () => {
     const entry = { category: "skills", slug: "skill-16", title: "Skill 16" };
     const trustSignals = { sourceStatus: "available" as const, score: 16 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 17", () => {
     const entry = { category: "skills", slug: "skill-17", title: "Skill 17" };
     const trustSignals = { sourceStatus: "available" as const, score: 17 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 18", () => {
     const entry = { category: "skills", slug: "skill-18", title: "Skill 18" };
     const trustSignals = { sourceStatus: "available" as const, score: 18 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 19", () => {
     const entry = { category: "skills", slug: "skill-19", title: "Skill 19" };
     const trustSignals = { sourceStatus: "available" as const, score: 19 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 20", () => {
     const entry = { category: "skills", slug: "skill-20", title: "Skill 20" };
     const trustSignals = { sourceStatus: "available" as const, score: 20 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 21", () => {
     const entry = { category: "skills", slug: "skill-21", title: "Skill 21" };
     const trustSignals = { sourceStatus: "available" as const, score: 21 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 22", () => {
     const entry = { category: "skills", slug: "skill-22", title: "Skill 22" };
     const trustSignals = { sourceStatus: "available" as const, score: 22 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 23", () => {
     const entry = { category: "skills", slug: "skill-23", title: "Skill 23" };
     const trustSignals = { sourceStatus: "available" as const, score: 23 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 24", () => {
     const entry = { category: "skills", slug: "skill-24", title: "Skill 24" };
     const trustSignals = { sourceStatus: "available" as const, score: 24 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 25", () => {
     const entry = { category: "skills", slug: "skill-25", title: "Skill 25" };
     const trustSignals = { sourceStatus: "available" as const, score: 25 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 26", () => {
     const entry = { category: "skills", slug: "skill-26", title: "Skill 26" };
     const trustSignals = { sourceStatus: "available" as const, score: 26 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 27", () => {
     const entry = { category: "skills", slug: "skill-27", title: "Skill 27" };
     const trustSignals = { sourceStatus: "available" as const, score: 27 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 28", () => {
     const entry = { category: "skills", slug: "skill-28", title: "Skill 28" };
     const trustSignals = { sourceStatus: "available" as const, score: 28 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 29", () => {
     const entry = { category: "skills", slug: "skill-29", title: "Skill 29" };
     const trustSignals = { sourceStatus: "available" as const, score: 29 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 30", () => {
     const entry = { category: "skills", slug: "skill-30", title: "Skill 30" };
     const trustSignals = { sourceStatus: "available" as const, score: 30 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 31", () => {
     const entry = { category: "skills", slug: "skill-31", title: "Skill 31" };
     const trustSignals = { sourceStatus: "available" as const, score: 31 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 32", () => {
     const entry = { category: "skills", slug: "skill-32", title: "Skill 32" };
     const trustSignals = { sourceStatus: "available" as const, score: 32 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 33", () => {
     const entry = { category: "skills", slug: "skill-33", title: "Skill 33" };
     const trustSignals = { sourceStatus: "available" as const, score: 33 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 34", () => {
     const entry = { category: "skills", slug: "skill-34", title: "Skill 34" };
     const trustSignals = { sourceStatus: "available" as const, score: 34 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 35", () => {
     const entry = { category: "skills", slug: "skill-35", title: "Skill 35" };
     const trustSignals = { sourceStatus: "available" as const, score: 35 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 36", () => {
     const entry = { category: "skills", slug: "skill-36", title: "Skill 36" };
     const trustSignals = { sourceStatus: "available" as const, score: 36 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 37", () => {
     const entry = { category: "skills", slug: "skill-37", title: "Skill 37" };
     const trustSignals = { sourceStatus: "available" as const, score: 37 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 38", () => {
     const entry = { category: "skills", slug: "skill-38", title: "Skill 38" };
     const trustSignals = { sourceStatus: "available" as const, score: 38 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 39", () => {
     const entry = { category: "skills", slug: "skill-39", title: "Skill 39" };
     const trustSignals = { sourceStatus: "available" as const, score: 39 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 40", () => {
     const entry = { category: "skills", slug: "skill-40", title: "Skill 40" };
     const trustSignals = { sourceStatus: "available" as const, score: 40 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 41", () => {
     const entry = { category: "skills", slug: "skill-41", title: "Skill 41" };
     const trustSignals = { sourceStatus: "available" as const, score: 41 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 42", () => {
     const entry = { category: "skills", slug: "skill-42", title: "Skill 42" };
     const trustSignals = { sourceStatus: "available" as const, score: 42 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 43", () => {
     const entry = { category: "skills", slug: "skill-43", title: "Skill 43" };
     const trustSignals = { sourceStatus: "available" as const, score: 43 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 44", () => {
     const entry = { category: "skills", slug: "skill-44", title: "Skill 44" };
     const trustSignals = { sourceStatus: "available" as const, score: 44 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 45", () => {
     const entry = { category: "skills", slug: "skill-45", title: "Skill 45" };
     const trustSignals = { sourceStatus: "available" as const, score: 45 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 46", () => {
     const entry = { category: "skills", slug: "skill-46", title: "Skill 46" };
     const trustSignals = { sourceStatus: "available" as const, score: 46 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 47", () => {
     const entry = { category: "skills", slug: "skill-47", title: "Skill 47" };
     const trustSignals = { sourceStatus: "available" as const, score: 47 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 48", () => {
     const entry = { category: "skills", slug: "skill-48", title: "Skill 48" };
     const trustSignals = { sourceStatus: "available" as const, score: 48 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
   it("normalizeEntryDetailPayload trust merge 49", () => {
     const entry = { category: "skills", slug: "skill-49", title: "Skill 49" };
     const trustSignals = { sourceStatus: "available" as const, score: 49 };
-    expect(
-      normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals,
-    ).toEqual(trustSignals);
+    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);
   });
 });
 
 describe("content-artifact-lib localDataFilePaths", () => {
   it("returns cwd-relative public/data paths", () => {
     const paths = localDataFilePaths("search-index.json");
-    expect(paths[0]).toBe(
-      path.join(process.cwd(), "public", "data", "search-index.json"),
-    );
-    expect(paths).toContain(
-      path.join(
-        process.cwd(),
-        "apps",
-        "web",
-        "public",
-        "data",
-        "search-index.json",
-      ),
-    );
+    expect(paths[0]).toBe(path.join(process.cwd(), "public", "data", "search-index.json"));
+    expect(paths).toContain(path.join(process.cwd(), "apps", "web", "public", "data", "search-index.json"));
   });
   it("localDataFilePaths 0", () => {
     const paths = localDataFilePaths("search-index.json");
-    expect(paths.every((value) => value.endsWith("search-index.json"))).toBe(
-      true,
-    );
+    expect(paths.every((value) => value.endsWith("search-index.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 1", () => {
     const paths = localDataFilePaths("directory-index.json");
-    expect(paths.every((value) => value.endsWith("directory-index.json"))).toBe(
-      true,
-    );
+    expect(paths.every((value) => value.endsWith("directory-index.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 2", () => {
     const paths = localDataFilePaths("registry-manifest.json");
-    expect(
-      paths.every((value) => value.endsWith("registry-manifest.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("registry-manifest.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 3", () => {
     const paths = localDataFilePaths("registry-changelog.json");
-    expect(
-      paths.every((value) => value.endsWith("registry-changelog.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("registry-changelog.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 4", () => {
     const paths = localDataFilePaths("content-quality-report.json");
-    expect(
-      paths.every((value) => value.endsWith("content-quality-report.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("content-quality-report.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 5", () => {
     const paths = localDataFilePaths("registry-trust-report.json");
-    expect(
-      paths.every((value) => value.endsWith("registry-trust-report.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("registry-trust-report.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 6", () => {
     const paths = localDataFilePaths("entries/agents/demo-0.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/agents/demo-0.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/agents/demo-0.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 7", () => {
     const paths = localDataFilePaths("entries/agents/demo-1.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/agents/demo-1.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/agents/demo-1.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 8", () => {
     const paths = localDataFilePaths("entries/agents/demo-2.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/agents/demo-2.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/agents/demo-2.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 9", () => {
     const paths = localDataFilePaths("entries/agents/demo-3.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/agents/demo-3.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/agents/demo-3.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 10", () => {
     const paths = localDataFilePaths("entries/agents/demo-4.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/agents/demo-4.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/agents/demo-4.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 11", () => {
     const paths = localDataFilePaths("entries/agents/demo-5.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/agents/demo-5.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/agents/demo-5.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 12", () => {
     const paths = localDataFilePaths("entries/mcp/demo-0.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/mcp/demo-0.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/mcp/demo-0.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 13", () => {
     const paths = localDataFilePaths("entries/mcp/demo-1.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/mcp/demo-1.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/mcp/demo-1.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 14", () => {
     const paths = localDataFilePaths("entries/mcp/demo-2.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/mcp/demo-2.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/mcp/demo-2.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 15", () => {
     const paths = localDataFilePaths("entries/mcp/demo-3.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/mcp/demo-3.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/mcp/demo-3.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 16", () => {
     const paths = localDataFilePaths("entries/mcp/demo-4.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/mcp/demo-4.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/mcp/demo-4.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 17", () => {
     const paths = localDataFilePaths("entries/mcp/demo-5.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/mcp/demo-5.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/mcp/demo-5.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 18", () => {
     const paths = localDataFilePaths("entries/tools/demo-0.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/tools/demo-0.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/tools/demo-0.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 19", () => {
     const paths = localDataFilePaths("entries/tools/demo-1.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/tools/demo-1.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/tools/demo-1.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 20", () => {
     const paths = localDataFilePaths("entries/tools/demo-2.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/tools/demo-2.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/tools/demo-2.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 21", () => {
     const paths = localDataFilePaths("entries/tools/demo-3.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/tools/demo-3.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/tools/demo-3.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 22", () => {
     const paths = localDataFilePaths("entries/tools/demo-4.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/tools/demo-4.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/tools/demo-4.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 23", () => {
     const paths = localDataFilePaths("entries/tools/demo-5.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/tools/demo-5.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/tools/demo-5.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 24", () => {
     const paths = localDataFilePaths("entries/skills/demo-0.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/skills/demo-0.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/skills/demo-0.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 25", () => {
     const paths = localDataFilePaths("entries/skills/demo-1.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/skills/demo-1.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/skills/demo-1.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 26", () => {
     const paths = localDataFilePaths("entries/skills/demo-2.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/skills/demo-2.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/skills/demo-2.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 27", () => {
     const paths = localDataFilePaths("entries/skills/demo-3.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/skills/demo-3.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/skills/demo-3.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 28", () => {
     const paths = localDataFilePaths("entries/skills/demo-4.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/skills/demo-4.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/skills/demo-4.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 29", () => {
     const paths = localDataFilePaths("entries/skills/demo-5.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/skills/demo-5.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/skills/demo-5.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 30", () => {
     const paths = localDataFilePaths("entries/rules/demo-0.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/rules/demo-0.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/rules/demo-0.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 31", () => {
     const paths = localDataFilePaths("entries/rules/demo-1.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/rules/demo-1.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/rules/demo-1.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 32", () => {
     const paths = localDataFilePaths("entries/rules/demo-2.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/rules/demo-2.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/rules/demo-2.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 33", () => {
     const paths = localDataFilePaths("entries/rules/demo-3.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/rules/demo-3.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/rules/demo-3.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 34", () => {
     const paths = localDataFilePaths("entries/rules/demo-4.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/rules/demo-4.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/rules/demo-4.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 35", () => {
     const paths = localDataFilePaths("entries/rules/demo-5.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/rules/demo-5.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/rules/demo-5.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 36", () => {
     const paths = localDataFilePaths("entries/commands/demo-0.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/commands/demo-0.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/commands/demo-0.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 37", () => {
     const paths = localDataFilePaths("entries/commands/demo-1.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/commands/demo-1.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/commands/demo-1.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 38", () => {
     const paths = localDataFilePaths("entries/commands/demo-2.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/commands/demo-2.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/commands/demo-2.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 39", () => {
     const paths = localDataFilePaths("entries/commands/demo-3.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/commands/demo-3.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/commands/demo-3.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 40", () => {
     const paths = localDataFilePaths("entries/commands/demo-4.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/commands/demo-4.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/commands/demo-4.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 41", () => {
     const paths = localDataFilePaths("entries/commands/demo-5.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/commands/demo-5.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/commands/demo-5.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 42", () => {
     const paths = localDataFilePaths("entries/hooks/demo-0.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/hooks/demo-0.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/hooks/demo-0.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 43", () => {
     const paths = localDataFilePaths("entries/hooks/demo-1.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/hooks/demo-1.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/hooks/demo-1.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 44", () => {
     const paths = localDataFilePaths("entries/hooks/demo-2.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/hooks/demo-2.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/hooks/demo-2.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 45", () => {
     const paths = localDataFilePaths("entries/hooks/demo-3.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/hooks/demo-3.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/hooks/demo-3.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 46", () => {
     const paths = localDataFilePaths("entries/hooks/demo-4.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/hooks/demo-4.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/hooks/demo-4.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 47", () => {
     const paths = localDataFilePaths("entries/hooks/demo-5.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/hooks/demo-5.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/hooks/demo-5.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 48", () => {
     const paths = localDataFilePaths("entries/guides/demo-0.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/guides/demo-0.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/guides/demo-0.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 49", () => {
     const paths = localDataFilePaths("entries/guides/demo-1.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/guides/demo-1.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/guides/demo-1.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 50", () => {
     const paths = localDataFilePaths("entries/guides/demo-2.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/guides/demo-2.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/guides/demo-2.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 51", () => {
     const paths = localDataFilePaths("entries/guides/demo-3.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/guides/demo-3.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/guides/demo-3.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 52", () => {
     const paths = localDataFilePaths("entries/guides/demo-4.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/guides/demo-4.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/guides/demo-4.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 53", () => {
     const paths = localDataFilePaths("entries/guides/demo-5.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/guides/demo-5.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/guides/demo-5.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 54", () => {
     const paths = localDataFilePaths("entries/collections/demo-0.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/collections/demo-0.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/collections/demo-0.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 55", () => {
     const paths = localDataFilePaths("entries/collections/demo-1.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/collections/demo-1.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/collections/demo-1.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 56", () => {
     const paths = localDataFilePaths("entries/collections/demo-2.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/collections/demo-2.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/collections/demo-2.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 57", () => {
     const paths = localDataFilePaths("entries/collections/demo-3.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/collections/demo-3.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/collections/demo-3.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 58", () => {
     const paths = localDataFilePaths("entries/collections/demo-4.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/collections/demo-4.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/collections/demo-4.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 59", () => {
     const paths = localDataFilePaths("entries/collections/demo-5.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/collections/demo-5.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/collections/demo-5.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 60", () => {
     const paths = localDataFilePaths("entries/statuslines/demo-0.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/statuslines/demo-0.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/statuslines/demo-0.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 61", () => {
     const paths = localDataFilePaths("entries/statuslines/demo-1.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/statuslines/demo-1.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/statuslines/demo-1.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 62", () => {
     const paths = localDataFilePaths("entries/statuslines/demo-2.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/statuslines/demo-2.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/statuslines/demo-2.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 63", () => {
     const paths = localDataFilePaths("entries/statuslines/demo-3.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/statuslines/demo-3.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/statuslines/demo-3.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 64", () => {
     const paths = localDataFilePaths("entries/statuslines/demo-4.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/statuslines/demo-4.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/statuslines/demo-4.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths 65", () => {
     const paths = localDataFilePaths("entries/statuslines/demo-5.json");
-    expect(
-      paths.every((value) => value.endsWith("entries/statuslines/demo-5.json")),
-    ).toBe(true);
+    expect(paths.every((value) => value.endsWith("entries/statuslines/demo-5.json"))).toBe(true);
     expect(new Set(paths).size).toBe(paths.length);
   });
   it("localDataFilePaths generated 0", () => {
@@ -2638,8 +1903,8 @@ describe("content-artifact-lib isSafeContentPathPart", () => {
   it("isSafeContentPathPart rejects quote'test", () => {
     expect(isSafeContentPathPart("quote'test")).toBe(false);
   });
-  it('isSafeContentPathPart rejects quote"test', () => {
-    expect(isSafeContentPathPart('quote"test')).toBe(false);
+  it("isSafeContentPathPart rejects quote\"test", () => {
+    expect(isSafeContentPathPart("quote\"test")).toBe(false);
   });
   it("isSafeContentPathPart rejects back\\slash", () => {
     expect(isSafeContentPathPart("back\\slash")).toBe(false);
@@ -2825,21 +2090,13 @@ describe("content-artifact-lib isSafeContentPathPart", () => {
     expect(isSafeContentPathPart("pkg@1.0.0-build.1+sha.1+meta.1")).toBe(false);
   });
   it("isSafeContentPathPart rejects pkg@1.0.0-build.1+sha.1+meta.1+extra.1", () => {
-    expect(
-      isSafeContentPathPart("pkg@1.0.0-build.1+sha.1+meta.1+extra.1"),
-    ).toBe(false);
+    expect(isSafeContentPathPart("pkg@1.0.0-build.1+sha.1+meta.1+extra.1")).toBe(false);
   });
   it("isSafeContentPathPart rejects pkg@1.0.0-build.1+sha.1+meta.1+extra.1+m", () => {
-    expect(
-      isSafeContentPathPart("pkg@1.0.0-build.1+sha.1+meta.1+extra.1+more.1"),
-    ).toBe(false);
+    expect(isSafeContentPathPart("pkg@1.0.0-build.1+sha.1+meta.1+extra.1+more.1")).toBe(false);
   });
   it("isSafeContentPathPart rejects pkg@1.0.0-build.1+sha.1+meta.1+extra.1+m", () => {
-    expect(
-      isSafeContentPathPart(
-        "pkg@1.0.0-build.1+sha.1+meta.1+extra.1+more.1+final.1",
-      ),
-    ).toBe(false);
+    expect(isSafeContentPathPart("pkg@1.0.0-build.1+sha.1+meta.1+extra.1+more.1+final.1")).toBe(false);
   });
   it("isSafeContentPathPart rejects windows\\device\\con", () => {
     expect(isSafeContentPathPart("windows\\device\\con")).toBe(false);
@@ -3311,14 +2568,10 @@ describe("content-artifact-lib isSafeContentPathPart", () => {
 
 describe("content-artifact-lib normalizeRegistryEntries", () => {
   it("returns entries array from envelope", () => {
-    expect(normalizeRegistryEntries({ entries: [{ slug: "demo" }] })).toEqual([
-      { slug: "demo" },
-    ]);
+    expect(normalizeRegistryEntries({ entries: [{ slug: "demo" }] })).toEqual([{ slug: "demo" }]);
   });
   it("throws when entries missing", () => {
-    expect(() => normalizeRegistryEntries({} as never)).toThrow(
-      /Invalid registry artifact/,
-    );
+    expect(() => normalizeRegistryEntries({} as never)).toThrow(/Invalid registry artifact/);
   });
   it("normalizeRegistryEntries agents 0", () => {
     const entries = [{ category: "agents", slug: "agents-entry-0" }];
@@ -3721,243 +2974,163 @@ describe("content-artifact-lib normalizeRegistryEntries", () => {
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 0", () => {
-    const entries = Array.from({ length: 1 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 1 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 1", () => {
-    const entries = Array.from({ length: 2 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 2 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 2", () => {
-    const entries = Array.from({ length: 3 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 3 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 3", () => {
-    const entries = Array.from({ length: 4 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 4 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 4", () => {
-    const entries = Array.from({ length: 5 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 5 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 5", () => {
-    const entries = Array.from({ length: 1 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 1 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 6", () => {
-    const entries = Array.from({ length: 2 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 2 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 7", () => {
-    const entries = Array.from({ length: 3 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 3 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 8", () => {
-    const entries = Array.from({ length: 4 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 4 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 9", () => {
-    const entries = Array.from({ length: 5 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 5 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 10", () => {
-    const entries = Array.from({ length: 1 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 1 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 11", () => {
-    const entries = Array.from({ length: 2 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 2 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 12", () => {
-    const entries = Array.from({ length: 3 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 3 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 13", () => {
-    const entries = Array.from({ length: 4 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 4 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 14", () => {
-    const entries = Array.from({ length: 5 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 5 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 15", () => {
-    const entries = Array.from({ length: 1 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 1 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 16", () => {
-    const entries = Array.from({ length: 2 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 2 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 17", () => {
-    const entries = Array.from({ length: 3 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 3 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 18", () => {
-    const entries = Array.from({ length: 4 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 4 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 19", () => {
-    const entries = Array.from({ length: 5 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 5 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 20", () => {
-    const entries = Array.from({ length: 1 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 1 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 21", () => {
-    const entries = Array.from({ length: 2 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 2 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 22", () => {
-    const entries = Array.from({ length: 3 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 3 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 23", () => {
-    const entries = Array.from({ length: 4 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 4 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 24", () => {
-    const entries = Array.from({ length: 5 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 5 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 25", () => {
-    const entries = Array.from({ length: 1 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 1 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 26", () => {
-    const entries = Array.from({ length: 2 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 2 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 27", () => {
-    const entries = Array.from({ length: 3 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 3 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 28", () => {
-    const entries = Array.from({ length: 4 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 4 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 29", () => {
-    const entries = Array.from({ length: 5 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 5 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 30", () => {
-    const entries = Array.from({ length: 1 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 1 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 31", () => {
-    const entries = Array.from({ length: 2 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 2 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 32", () => {
-    const entries = Array.from({ length: 3 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 3 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 33", () => {
-    const entries = Array.from({ length: 4 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 4 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 34", () => {
-    const entries = Array.from({ length: 5 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 5 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 35", () => {
-    const entries = Array.from({ length: 1 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 1 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 36", () => {
-    const entries = Array.from({ length: 2 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 2 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 37", () => {
-    const entries = Array.from({ length: 3 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 3 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 38", () => {
-    const entries = Array.from({ length: 4 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 4 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
   it("normalizeRegistryEntries batch 39", () => {
-    const entries = Array.from({ length: 5 }, (_, index) => ({
-      slug: "entry-" + index,
-    }));
+    const entries = Array.from({ length: 5 }, (_, index) => ({ slug: "entry-" + index }));
     expect(normalizeRegistryEntries({ entries })).toEqual(entries);
   });
 });

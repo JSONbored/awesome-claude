@@ -24,12 +24,12 @@ import {
   validateSubmissionDraftFromSpec,
 } from "./submissions.js";
 import {
-  matchesRegistryPlatform,
-  matchesRegistryQuery,
-  normalizedRegistrySearchText,
-  rankRegistrySearchEntries,
-  tokenizeRegistrySearchQuery,
-} from "./search-ranking.js";
+  entryMatchesPlatform,
+  entryMatchesQuery,
+  entrySearchText,
+  rankSearchEntries,
+  searchTokens,
+} from "./registry-search-delegate-lib.js";
 
 export * from "./schemas.js";
 
@@ -114,6 +114,8 @@ import {
   toJobEntry,
   toTrendingEntry,
 } from "./registry-discovery-projection-lib.js";
+import { buildClientSetupResponse } from "./registry-client-setup-lib.js";
+import { buildSubmissionPolicyEnvelope } from "./registry-submission-policy-lib.js";
 
 export {
   LOCAL_DRAFT_TOOL_NAMES,
@@ -125,26 +127,6 @@ export {
 export { PROMPT_DEFINITIONS, getRegistryPrompt, listRegistryPrompts };
 
 export { RESOURCE_TEMPLATES, listRegistryResourceTemplates };
-
-function entryMatchesQuery(entry, query) {
-  return matchesRegistryQuery(entry, query);
-}
-
-function searchTokens(query) {
-  return tokenizeRegistrySearchQuery(query);
-}
-
-function entrySearchText(entry) {
-  return normalizedRegistrySearchText(entry);
-}
-
-function rankSearchEntries(entries, query) {
-  return rankRegistrySearchEntries(entries, query);
-}
-
-function entryMatchesPlatform(entry, platform) {
-  return matchesRegistryPlatform(entry, platform);
-}
 
 export async function searchRegistry(args = {}, options = {}) {
   const query = normalizeText(args.query);
@@ -754,71 +736,10 @@ export async function getClientSetup(args = {}) {
   } catch (error) {
     return invalid(error?.message || "Invalid endpoint URL.");
   }
-  const snippets = {
-    codex: {
-      label: "Codex stdio bridge",
-      config: {
-        mcpServers: {
-          heyclaude: {
-            command: "npx",
-            args: ["-y", "@heyclaude/mcp"],
-          },
-        },
-      },
-    },
-    "claude-desktop": {
-      label: "Claude Desktop stdio bridge",
-      config: {
-        mcpServers: {
-          heyclaude: {
-            command: "npx",
-            args: ["-y", "@heyclaude/mcp"],
-          },
-        },
-      },
-    },
-    cursor: {
-      label: "Cursor remote MCP",
-      config: {
-        mcpServers: {
-          heyclaude: {
-            url: endpointUrl,
-          },
-        },
-      },
-    },
-    windsurf: {
-      label: "Windsurf remote MCP",
-      config: {
-        mcpServers: {
-          heyclaude: {
-            serverUrl: endpointUrl,
-          },
-        },
-      },
-    },
-    "remote-http": {
-      label: "Streamable HTTP endpoint",
-      endpointUrl,
-      headers: {
-        accept: "application/json, text/event-stream",
-        "content-type": "application/json",
-      },
-    },
-  };
-  const client = args.client || "";
-  return {
-    ok: true,
+  return buildClientSetupResponse({
     endpointUrl,
-    apiKeyRequired: false,
-    selectedClient: client,
-    snippets: client ? { [client]: snippets[client] } : snippets,
-    notes: [
-      "The public endpoint is read-only and does not need an API key.",
-      "Submission tools prepare maintainer-reviewed PR-first drafts; they do not open GitHub issues.",
-      "Use --url only when testing a custom preview or deployment.",
-    ],
-  };
+    client: args.client || "",
+  });
 }
 
 /**
@@ -1244,36 +1165,7 @@ export async function reviewSubmissionDraft(args = {}, options = {}) {
 }
 
 export async function getSubmissionPolicy() {
-  return {
-    ok: true,
-    publicPolicy: MCP_PUBLIC_POLICY,
-    reviewModel: {
-      prFirst: true,
-      maintainerReviewRequired: true,
-      autoMerge: "content_only_private_gate",
-      autoMergeRequires: [
-        "single content file only",
-        "validate-content",
-        "Superagent Security Scan",
-        "private maintainer-agent review",
-      ],
-      mutatingAutomationOwner: "private submission gate",
-    },
-    artifactPolicy: {
-      communityHostedArchivesAllowed: false,
-      communityZipHostingAllowed: false,
-      communityMcpbHostingAllowed: false,
-      maintainerBuiltDownloadsOnly: true,
-      firstPartyDownloadsRequireVerification: true,
-    },
-    submissionGuidance: [
-      "Use source-backed or copyable-content submissions for community content.",
-      "Do not request public HeyClaude /downloads hosting for community ZIP/MCPB artifacts.",
-      "Add safety_notes when a submission runs code, writes externally, uses permissions, or starts background workers.",
-      "Add privacy_notes when a submission reads local files, logs, credentials, telemetry, or third-party user data.",
-      "Commercial, affiliate, sponsored, or paid product listings go through maintainer review and disclosure, not the free content queue.",
-    ],
-  };
+  return buildSubmissionPolicyEnvelope();
 }
 
 export async function explainEntryTrust(args = {}, options = {}) {

@@ -1,20 +1,17 @@
-import { parseAbbreviatedCount } from "@heyclaude/registry/presentation";
-
 import { getEnvString } from "@/lib/cloudflare-env.server";
 import { chunk, inPlaceholders } from "@/lib/d1-batch";
 import { getSiteDb, type D1DatabaseLike } from "@/lib/db";
 import {
   applySourceRepoSignal,
   collectSourceRepos,
-  GITHUB_API_VERSION,
   normalizeSourceRepoSignalRow,
   parseGitHubRepoUrl,
   refreshLimit,
-  REQUEST_TIMEOUT_MS,
   shouldRefreshSourceRepoSignal,
   type SourceRepoSignal,
   type SourceRepoSignalState,
 } from "@/lib/source-repo-signals-lib";
+import { fetchGitHubSourceSignal } from "@/lib/source-repo-signals-fetch-lib";
 
 export type { SourceRepoSignal, SourceRepoSignalState };
 export {
@@ -22,8 +19,7 @@ export {
   collectSourceRepos,
   parseGitHubRepoUrl,
 } from "@/lib/source-repo-signals-lib";
-
-type Fetcher = typeof fetch;
+export { fetchGitHubSourceSignal } from "@/lib/source-repo-signals-fetch-lib";
 
 type EntryWithRepoStats = {
   repoUrl?: string | null;
@@ -104,55 +100,6 @@ export async function applySourceRepoSignalToEntry<T extends EntryWithRepoStats>
   if (!entry) return entry;
   const [withSignal] = await applySourceRepoSignals([entry]);
   return withSignal ?? entry;
-}
-
-async function fetchShieldsStars(repo: { owner: string; repo: string }, fetcher: Fetcher) {
-  try {
-    const response = await fetcher(
-      `https://img.shields.io/github/stars/${repo.owner}/${repo.repo}.json`,
-      { signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS) },
-    );
-    if (!response.ok) return null;
-    const payload = (await response.json()) as { value?: string; message?: string };
-    const stars = parseAbbreviatedCount(payload.value ?? payload.message);
-    if (stars === null) return null;
-    return { stars, forks: null, repoUpdatedAt: null };
-  } catch {
-    return null;
-  }
-}
-
-export async function fetchGitHubSourceSignal(repoKey: string, fetcher: Fetcher = fetch) {
-  const [owner, repo] = repoKey.split("/");
-  if (!owner || !repo) throw new Error(`invalid_repo:${repoKey}`);
-
-  const headers: HeadersInit = {
-    accept: "application/vnd.github+json",
-    "user-agent": "heyclau.de-source-signals",
-    "x-github-api-version": GITHUB_API_VERSION,
-  };
-  // Registry entries control repo URLs, so do not attach the Worker GitHub
-  // token here. A broadly scoped token could otherwise turn this public signal
-  // refresh into an oracle for private repositories the token can access.
-  const response = await fetcher(`https://api.github.com/repos/${owner}/${repo}`, {
-    headers,
-    signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
-  });
-
-  if (!response.ok) {
-    const fallback = await fetchShieldsStars({ owner, repo }, fetcher);
-    if (fallback) return fallback;
-    throw new Error(`github_api_${response.status}`);
-  }
-
-  const data = (await response.json()) as Record<string, unknown>;
-  if (data.private === true) throw new Error("github_api_private_repo");
-
-  return {
-    stars: typeof data.stargazers_count === "number" ? data.stargazers_count : null,
-    forks: typeof data.forks_count === "number" ? data.forks_count : null,
-    repoUpdatedAt: typeof data.updated_at === "string" ? data.updated_at : null,
-  };
 }
 
 export async function upsertSourceRepoSignalSuccess(

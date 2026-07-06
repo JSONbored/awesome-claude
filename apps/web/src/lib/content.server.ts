@@ -19,6 +19,13 @@ import {
   normalizeEntryDetailPayload,
   normalizeRegistryEntries,
 } from "@/lib/content-artifact-lib";
+import {
+  buildCategorySummaries,
+  entryDetailCacheKey,
+  MAX_ENTRY_DETAIL_CACHE_SIZE,
+  pruneEntryDetailCache,
+  sortRecentDirectoryEntries,
+} from "@/lib/content-query-lib";
 import { categoryDescriptions, categoryLabels, siteConfig } from "@/lib/site";
 import {
   applySourceRepoSignalToEntry,
@@ -32,7 +39,6 @@ export {
   normalizeRegistryEntries,
 } from "@/lib/content-artifact-lib";
 
-const MAX_ENTRY_DETAIL_CACHE_SIZE = 512;
 let directoryIndexPromise: Promise<DirectoryEntry[]> | null = null;
 const entryDetailPromises = new Map<string, Promise<ContentEntry | null>>();
 
@@ -124,7 +130,7 @@ async function loadEntryDetail(category: string, slug: string) {
     return null;
   }
 
-  const key = `${category}:${slug}`;
+  const key = entryDetailCacheKey(category, slug);
   let promise = entryDetailPromises.get(key);
   if (!promise) {
     promise = loadJsonDataFile<EntryDetailPayload>(`entries/${category}/${slug}.json`)
@@ -137,10 +143,7 @@ async function loadEntryDetail(category: string, slug: string) {
         entryDetailPromises.delete(key);
         return null;
       });
-    if (entryDetailPromises.size >= MAX_ENTRY_DETAIL_CACHE_SIZE) {
-      const oldestKey = entryDetailPromises.keys().next().value;
-      if (oldestKey) entryDetailPromises.delete(oldestKey);
-    }
+    pruneEntryDetailCache(entryDetailPromises, MAX_ENTRY_DETAIL_CACHE_SIZE);
     entryDetailPromises.set(key, promise);
   }
 
@@ -246,23 +249,15 @@ export async function getDirectoryEntriesByCategory(category: string) {
 
 export const getCategorySummaries = cache(async (): Promise<CategorySummary[]> => {
   const entries = await loadDirectoryIndex();
-  return siteConfig.categoryOrder
-    .map((category) => {
-      const count = entries.filter((entry) => entry.category === category).length;
-      return {
-        category,
-        label: categoryLabels[category],
-        count,
-        description: categoryDescriptions[category],
-      };
-    })
-    .filter((entry) => entry.count > 0);
+  return buildCategorySummaries(
+    entries,
+    siteConfig.categoryOrder,
+    categoryLabels,
+    categoryDescriptions,
+  );
 });
 
 export async function getRecentEntries() {
   const entries = await getDirectoryEntries();
-  return [...entries]
-    .filter((entry) => entry.dateAdded)
-    .sort((left, right) => String(right.dateAdded).localeCompare(String(left.dateAdded)))
-    .slice(0, 12);
+  return sortRecentDirectoryEntries(entries);
 }
