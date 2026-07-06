@@ -3,6 +3,7 @@ import type { Entry } from "@/types/registry";
 import {
   compareEntryFeaturedBestListLinks,
   compareEntryFeaturedComparisonLinks,
+  compareEntryFeaturedShowsFeaturedLinks,
   compareEntryFeaturedUiState,
 } from "@/lib/compare-entry-featured-ui-lib";
 
@@ -118,18 +119,16 @@ describe("compare entry featured ui lib", () => {
   });
 
   it("bundles entry dossier featured comparison and best-list links", () => {
-    expect(
-      compareEntryFeaturedUiState(
-        [{ slug: "pair", refs: ["skills/alpha", "hooks/beta"] }],
-        [
-          {
-            slug: "top-picks",
-            picks: [{ ref: "skills/alpha" }, { ref: "hooks/beta" }],
-          },
-        ],
-        catalog,
-      ),
-    ).toEqual({
+    const comparisons = [
+      { slug: "pair", refs: ["skills/alpha", "hooks/beta"] },
+    ];
+    const lists = [
+      {
+        slug: "top-picks",
+        picks: [{ ref: "skills/alpha" }, { ref: "hooks/beta" }],
+      },
+    ];
+    expect(compareEntryFeaturedUiState(comparisons, lists, catalog)).toEqual({
       comparisonLinks: [
         {
           slug: "pair",
@@ -146,6 +145,10 @@ describe("compare entry featured ui lib", () => {
       ],
       hasFeaturedLinks: true,
     });
+    const bundled = compareEntryFeaturedUiState(comparisons, lists, catalog);
+    expect(bundled.hasFeaturedLinks).toBe(
+      compareEntryFeaturedShowsFeaturedLinks(comparisons, lists, catalog),
+    );
     expect(compareEntryFeaturedUiState([], [], catalog)).toEqual({
       comparisonLinks: [],
       bestListLinks: [],
