@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
-import { compareContextInteractiveUiState } from "@/lib/compare-context-interactive-ui-lib";
+import {
+  compareContextInteractiveUiState,
+  compareContextSelectionChanged,
+} from "@/lib/compare-context-interactive-ui-lib";
 
 function entry(overrides: Partial<Entry> = {}): Entry {
   return {
@@ -44,5 +47,14 @@ describe("compare context interactive ui lib", () => {
       selectionParam: "mcp/fixture",
       shareUrl: "/browse?compare=mcp%2Ffixture",
     });
+  });
+
+  it("detects when hydrated selection differs from live tray selection", () => {
+    const alpha = entry({ category: "skills", slug: "alpha" });
+    const beta = entry({ category: "hooks", slug: "beta" });
+    expect(compareContextSelectionChanged([alpha], [])).toBe(true);
+    expect(compareContextSelectionChanged([alpha], [alpha])).toBe(false);
+    expect(compareContextSelectionChanged([alpha, beta], [alpha])).toBe(true);
+    expect(compareContextSelectionChanged([], [])).toBe(false);
   });
 });

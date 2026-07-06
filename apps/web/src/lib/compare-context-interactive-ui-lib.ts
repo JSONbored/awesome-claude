@@ -12,3 +12,11 @@ export function compareContextInteractiveUiState(items: Entry[]): CompareContext
     shareUrl: compareContextShareUrl(items),
   };
 }
+
+/** True when hydrated selection differs from the live compare tray selection. */
+export function compareContextSelectionChanged(next: Entry[], current: Entry[]): boolean {
+  return (
+    compareContextInteractiveUiState(next).selectionParam !==
+    compareContextInteractiveUiState(current).selectionParam
+  );
+}
