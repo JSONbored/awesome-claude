@@ -19,14 +19,15 @@ export type CompareDrawerInteractiveUiState = {
 
 export function compareDrawerInteractiveUiState(items: Entry[]): CompareDrawerInteractiveUiState {
   const emptyUi = compareDrawerEmptyInteractiveUiState(items);
+  const drawerUi = compareDrawerUiInteractiveUiState(items);
   const presentation = compareDrawerPresentationUiInteractiveUiState(items);
   const actions = compareDrawerActionsInteractiveUiState(items);
   return {
-    drawerUi: compareDrawerUiInteractiveUiState(items),
+    drawerUi,
     emptyHint: emptyUi.emptyHint,
     shareUrl: emptyUi.shareUrl,
     divergingDecisionLabels: presentation.divergingDecisionLabels,
-    actionRowDiverges: presentation.actionRowDiverges,
+    actionRowDiverges: drawerUi.actionRowDiverges,
     actionCells: actions.actionCells,
   };
 }
