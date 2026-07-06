@@ -19,5 +19,5 @@ export function browseCompareInteractiveUiState(
 }
 
 export function browseCompareInteractiveUiShowsHint(items: Entry[]): boolean {
-  return browseCompareInteractiveUiState(items)?.showHint ?? false;
+  return shouldShowBrowseCompareHint(items);
 }
