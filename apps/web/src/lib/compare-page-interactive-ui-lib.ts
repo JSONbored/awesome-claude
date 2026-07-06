@@ -6,7 +6,6 @@ import {
   comparePageEmptyInteractiveUiState,
   type ComparePageEmptyUiState,
 } from "@/lib/compare-page-empty-interactive-ui-lib";
-import { comparePagePresentationUiInteractiveUiState } from "@/lib/compare-page-presentation-ui-interactive-ui-lib";
 import {
   comparePageUiInteractiveUiState,
   type ComparePageUiState,
@@ -25,12 +24,12 @@ export function comparePageInteractiveUiState(
   comparisons: ReadonlyArray<{ slug: string; heading: string; refs: string[] }>,
   catalog: EntryIdentity[],
 ): ComparePageInteractiveUiState {
-  const presentation = comparePagePresentationUiInteractiveUiState(items);
+  const pageUi = comparePageUiInteractiveUiState(items);
   const actions = comparePageActionsInteractiveUiState(items);
   return {
-    pageUi: comparePageUiInteractiveUiState(items),
+    pageUi,
     emptyUi: comparePageEmptyInteractiveUiState(ids, comparisons, catalog),
-    actionRowDiverges: presentation.actionRowDiverges,
+    actionRowDiverges: pageUi.actionRowDiverges,
     actionCells: actions.actionCells,
   };
 }
