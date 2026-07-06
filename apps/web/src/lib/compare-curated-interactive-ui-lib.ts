@@ -15,7 +15,7 @@ export function compareCuratedInteractiveUiState(
 ): CompareCuratedInteractiveUiState {
   return {
     ...compareCuratedUiState(refs, catalog),
-    renderable: compareCuratedHasRenderableEntries(refs, catalog),
+    renderable: compareCuratedInteractivePageRenderable(refs, catalog),
   };
 }
 

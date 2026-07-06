@@ -91,8 +91,9 @@ function ComparisonPage() {
   const { slug } = Route.useParams();
   const comparison = getComparison(slug);
   if (!comparison) return null;
-  const { entries, bannerTexts, interactiveSearch, interactiveLinkLabel } =
-    compareCuratedInteractiveUiState(comparison.refs, ENTRIES);
+  const curatedUi = compareCuratedInteractiveUiState(comparison.refs, ENTRIES);
+  if (!curatedUi.renderable) return null;
+  const { entries, bannerTexts, interactiveSearch, interactiveLinkLabel } = curatedUi;
 
   return (
     <div className="mx-auto max-w-page px-4 py-10 sm:px-6">

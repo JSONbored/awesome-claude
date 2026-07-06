@@ -46,6 +46,16 @@ describe("compare curated interactive ui lib", () => {
         catalog,
       ),
     ).toBe(true);
+    const bundled = compareCuratedInteractiveUiState(
+      ["skills/alpha", "hooks/beta"],
+      catalog,
+    );
+    expect(bundled.renderable).toBe(
+      compareCuratedInteractivePageRenderable(
+        ["skills/alpha", "hooks/beta"],
+        catalog,
+      ),
+    );
   });
 
   it("bundles curated compare page presentation state", () => {
