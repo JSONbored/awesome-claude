@@ -229,6 +229,7 @@ function Dossier() {
     dossierUi: dossierCompareUi,
     featuredUi,
     hasFeaturedLinks,
+    showDossierCompareSection,
   } = useMemo(
     () => compareEntryInteractiveUiState(entry, alternatives, comparedIn, featuredIn, ENTRIES),
     [entry, alternatives, comparedIn, featuredIn],
@@ -655,7 +656,7 @@ function Dossier() {
 
           <BadgeSection category={entry.category} slug={entry.slug} title={entry.title} />
 
-          {dossierCompareUi.showCompareSection && (
+          {showDossierCompareSection && (
             <DossierSection id="compare" title="How it compares">
               <p className="mb-4 text-sm text-ink-muted">
                 {entry.title} side by side with{" "}

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
 import {
+  compareEntryInteractiveShowsDossierCompareSection,
   compareEntryInteractiveShowsFeaturedLinks,
   compareEntryInteractiveUiState,
 } from "@/lib/compare-entry-interactive-ui-lib";
@@ -69,6 +70,7 @@ describe("compare entry interactive ui lib", () => {
         hasFeaturedLinks: true,
       },
       hasFeaturedLinks: true,
+      showDossierCompareSection: true,
     });
     expect(
       compareEntryInteractiveShowsFeaturedLinks(
@@ -81,6 +83,11 @@ describe("compare entry interactive ui lib", () => {
         ],
         catalog,
       ),
+    ).toBe(true);
+    expect(
+      compareEntryInteractiveShowsDossierCompareSection(primary, [
+        entry({ category: "hooks", slug: "alt" }),
+      ]),
     ).toBe(true);
   });
 
@@ -101,8 +108,12 @@ describe("compare entry interactive ui lib", () => {
         hasFeaturedLinks: false,
       },
       hasFeaturedLinks: false,
+      showDossierCompareSection: false,
     });
     expect(compareEntryInteractiveShowsFeaturedLinks([], [], catalog)).toBe(
+      false,
+    );
+    expect(compareEntryInteractiveShowsDossierCompareSection(primary, [])).toBe(
       false,
     );
   });
@@ -140,5 +151,6 @@ describe("compare entry interactive ui lib", () => {
       "Open 3 picks in the interactive comparison tool",
     );
     expect(state.hasFeaturedLinks).toBe(true);
+    expect(state.showDossierCompareSection).toBe(true);
   });
 });

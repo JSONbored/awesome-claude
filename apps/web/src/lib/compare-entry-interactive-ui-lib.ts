@@ -14,6 +14,7 @@ export type CompareEntryInteractiveUiState = {
   dossierUi: CompareDossierInteractiveUiState;
   featuredUi: CompareEntryFeaturedInteractiveUiState;
   hasFeaturedLinks: boolean;
+  showDossierCompareSection: boolean;
 };
 
 export function compareEntryInteractiveUiState(
@@ -23,11 +24,13 @@ export function compareEntryInteractiveUiState(
   lists: ReadonlyArray<{ slug: string; picks: BestListPickRef[] }>,
   catalog: EntryIdentity[],
 ): CompareEntryInteractiveUiState {
+  const dossierUi = compareDossierInteractiveUiState(entry, alternatives);
   const featuredUi = compareEntryFeaturedInteractiveUiState(comparisons, lists, catalog);
   return {
-    dossierUi: compareDossierInteractiveUiState(entry, alternatives),
+    dossierUi,
     featuredUi,
     hasFeaturedLinks: featuredUi.hasFeaturedLinks,
+    showDossierCompareSection: dossierUi.showCompareSection,
   };
 }
 
@@ -37,4 +40,11 @@ export function compareEntryInteractiveShowsFeaturedLinks(
   catalog: EntryIdentity[],
 ): boolean {
   return compareEntryFeaturedInteractiveUiState(comparisons, lists, catalog).hasFeaturedLinks;
+}
+
+export function compareEntryInteractiveShowsDossierCompareSection(
+  entry: Entry,
+  alternatives: Entry[],
+): boolean {
+  return compareDossierInteractiveUiState(entry, alternatives).showCompareSection;
 }
