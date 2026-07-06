@@ -41,7 +41,7 @@ export type ComparePageUiState = {
 
 export function comparePageUiState(items: Entry[]): ComparePageUiState {
   return {
-    actionRowDiverges: compareActionsDiverge(items),
+    actionRowDiverges: comparePageActionsDiverge(items),
     bannerTexts: comparePageBannerTexts(items),
     singleItemHint: compareSingleItemHintText(items.length),
     shareUrl: comparePageShareUrlForWindow(items),

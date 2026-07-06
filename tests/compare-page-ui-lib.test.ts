@@ -82,17 +82,18 @@ describe("compare page ui lib", () => {
   });
 
   it("bundles interactive compare page presentation state", () => {
-    expect(
-      comparePageUiState([
-        entry({ category: "skills", slug: "alpha" }),
-        entry({ category: "hooks", slug: "beta" }),
-      ]),
-    ).toEqual({
+    const entries = [
+      entry({ category: "skills", slug: "alpha" }),
+      entry({ category: "hooks", slug: "beta" }),
+    ];
+    expect(comparePageUiState(entries)).toEqual({
       actionRowDiverges: false,
       bannerTexts: [],
       singleItemHint: null,
       shareUrl: "/compare?ids=skills%2Falpha%2Chooks%2Fbeta",
     });
+    const bundled = comparePageUiState(entries);
+    expect(bundled.actionRowDiverges).toBe(comparePageActionsDiverge(entries));
     expect(
       comparePageUiState([
         entry(),
