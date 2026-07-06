@@ -1,5 +1,39 @@
 # @heyclaude/mcp Changelog
 
+## [0.9.0](https://github.com/JSONbored/awesome-claude/compare/mcp-v0.8.0...mcp-v0.9.0) (2026-07-06)
+
+
+### Features
+
+* **mcp,web:** extract discovery projection, artifact path, llms, and votes libs ([#4510](https://github.com/JSONbored/awesome-claude/issues/4510)) ([9c8507a](https://github.com/JSONbored/awesome-claude/commit/9c8507afdf49cbee00f866fe8a6973f6a9c5db8c))
+* **mcp:** extract CLI option parsing into cli-options-lib ([#4420](https://github.com/JSONbored/awesome-claude/issues/4420)) ([6d89af3](https://github.com/JSONbored/awesome-claude/commit/6d89af37097325397dd48836365ae040031a619c))
+* **mcp:** extract endpoint URL helpers into endpoint-url-lib ([#4426](https://github.com/JSONbored/awesome-claude/issues/4426)) ([c3aaf0e](https://github.com/JSONbored/awesome-claude/commit/c3aaf0e30647eadcd204a2f130d08df33fa58993))
+* **mcp:** extract MCP server wiring into server-lib ([#4435](https://github.com/JSONbored/awesome-claude/issues/4435)) ([c415c94](https://github.com/JSONbored/awesome-claude/commit/c415c947d643d92873173fc3ae561d422d9c622e))
+* **mcp:** extract platform helpers into platforms-lib ([#4423](https://github.com/JSONbored/awesome-claude/issues/4423)) ([042f1d4](https://github.com/JSONbored/awesome-claude/commit/042f1d40d78282d10a5f68cc4094471a74d56d8d))
+* **mcp:** extract registry asset helpers into registry-asset-lib ([#4475](https://github.com/JSONbored/awesome-claude/issues/4475)) ([2c0ca7c](https://github.com/JSONbored/awesome-claude/commit/2c0ca7c2b56a08d98f082332c827b25a8d44a1a4))
+* **mcp:** extract registry body excerpt helpers into registry-excerpt-lib ([#4473](https://github.com/JSONbored/awesome-claude/issues/4473)) ([50ba198](https://github.com/JSONbored/awesome-claude/commit/50ba198a48a911b79814339c9fab0744ecd8cf6c))
+* **mcp:** extract registry collection helpers into registry-collection-lib ([#4452](https://github.com/JSONbored/awesome-claude/issues/4452)) ([95c6046](https://github.com/JSONbored/awesome-claude/commit/95c60468b26c5cea6d9511bdffb4e13243d0a900))
+* **mcp:** extract registry filter helpers into registry-filter-lib ([#4472](https://github.com/JSONbored/awesome-claude/issues/4472)) ([adb54ba](https://github.com/JSONbored/awesome-claude/commit/adb54bad83a78e30a0cad08d6d063a18e64417fe))
+* **mcp:** extract registry normalization into registry-normalize-lib ([#4437](https://github.com/JSONbored/awesome-claude/issues/4437)) ([6688fdc](https://github.com/JSONbored/awesome-claude/commit/6688fdc59c3e45cfa6ad92652c579013eacdeb25))
+* **mcp:** extract registry prompt helpers into registry-prompts-lib ([#4417](https://github.com/JSONbored/awesome-claude/issues/4417)) ([f7bf7d4](https://github.com/JSONbored/awesome-claude/commit/f7bf7d452d6b8d10fb1550619898578e8fa711ec))
+* **mcp:** extract registry resource metadata into resource-metadata-lib ([#4448](https://github.com/JSONbored/awesome-claude/issues/4448)) ([3c70c5f](https://github.com/JSONbored/awesome-claude/commit/3c70c5f807bfc2a6f0ffaca0d471a33b7c9280a5))
+* **mcp:** extract registry response helpers into registry-response-lib ([#4444](https://github.com/JSONbored/awesome-claude/issues/4444)) ([107c184](https://github.com/JSONbored/awesome-claude/commit/107c184934b0248d991700e9e8b82f559d32f07d))
+* **mcp:** extract registry tool metadata into registry-tools-lib ([#4416](https://github.com/JSONbored/awesome-claude/issues/4416)) ([a3aaaec](https://github.com/JSONbored/awesome-claude/commit/a3aaaec1485bef8633cb1fcf75ec5f0ad225c25e))
+* **mcp:** extract registry trust, toolbox, and projection libs ([#4507](https://github.com/JSONbored/awesome-claude/issues/4507)) ([a47f6ba](https://github.com/JSONbored/awesome-claude/commit/a47f6baf864e60d27c6b27ebe9b127e436be8ae9))
+* **mcp:** extract remote proxy helpers into remote-proxy-lib ([#4402](https://github.com/JSONbored/awesome-claude/issues/4402)) ([9367774](https://github.com/JSONbored/awesome-claude/commit/9367774726a7a3f1af6dcab773ffc61813931668))
+* **mcp:** extract schemas into schemas-lib and add public-url wrapper ([#4501](https://github.com/JSONbored/awesome-claude/issues/4501)) ([05976e4](https://github.com/JSONbored/awesome-claude/commit/05976e48944fae2720644bdb70b3972f97f40c53))
+* **mcp:** extract search ranking helpers into search-ranking-lib ([#4399](https://github.com/JSONbored/awesome-claude/issues/4399)) ([5a826de](https://github.com/JSONbored/awesome-claude/commit/5a826dedea508b65048f7095e1fbe59e7448bcd7))
+* **mcp:** extract submission helpers into submissions-lib ([#4396](https://github.com/JSONbored/awesome-claude/issues/4396)) ([64f8ecf](https://github.com/JSONbored/awesome-claude/commit/64f8ecf690351e50de6536c19dc67f50055f53b3))
+* **registry:** centralize public URL userinfo validation helpers ([#4438](https://github.com/JSONbored/awesome-claude/issues/4438)) ([851badf](https://github.com/JSONbored/awesome-claude/commit/851badf45c4cbe0dd542589d3dc8ce4389aa649f))
+
+
+### Bug Fixes
+
+* **mcp:** reject userinfo in endpoint URLs and align Raycast guards ([#4464](https://github.com/JSONbored/awesome-claude/issues/4464)) ([bd874f2](https://github.com/JSONbored/awesome-claude/commit/bd874f2344ff3e7ff3f62e9289ec8f07d0f1f4e3))
+* **registry:** reject credential-bearing GitHub profile contacts ([#4429](https://github.com/JSONbored/awesome-claude/issues/4429)) ([33b1c38](https://github.com/JSONbored/awesome-claude/commit/33b1c383885f54bcf472b1b857e0e7a61563040c))
+* **registry:** resolve embedded URL credential bypass in submission validation ([#4409](https://github.com/JSONbored/awesome-claude/issues/4409)) ([f6c8d1a](https://github.com/JSONbored/awesome-claude/commit/f6c8d1a6bb1738454a72986a65ad419f423ae183))
+* **registry:** strip URL userinfo during source canonicalization ([#4412](https://github.com/JSONbored/awesome-claude/issues/4412)) ([7ae3bb2](https://github.com/JSONbored/awesome-claude/commit/7ae3bb23c596e2778b209ba69f586f8442660572))
+
 ## [0.8.0](https://github.com/JSONbored/awesome-claude/compare/mcp-v0.7.0...mcp-v0.8.0) (2026-07-04)
 
 
