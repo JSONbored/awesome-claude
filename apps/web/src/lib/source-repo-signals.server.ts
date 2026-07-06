@@ -21,6 +21,8 @@ export {
 } from "@/lib/source-repo-signals-lib";
 export { fetchGitHubSourceSignal } from "@/lib/source-repo-signals-fetch-lib";
 
+type Fetcher = typeof fetch;
+
 type EntryWithRepoStats = {
   repoUrl?: string | null;
   githubStars?: number | null;
