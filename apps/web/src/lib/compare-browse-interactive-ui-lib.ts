@@ -1,10 +1,23 @@
 import type { Entry } from "@/types/registry";
+import { shouldShowBrowseCompareHint } from "@/lib/compare-browse-summary";
 import { browseCompareUiState } from "@/lib/compare-browse-ui-lib";
 
-export type BrowseCompareInteractiveUiState = NonNullable<ReturnType<typeof browseCompareUiState>>;
+export type BrowseCompareInteractiveUiState = NonNullable<
+  ReturnType<typeof browseCompareUiState>
+> & {
+  showHint: boolean;
+};
 
 export function browseCompareInteractiveUiState(
   items: Entry[],
 ): BrowseCompareInteractiveUiState | null {
-  return browseCompareUiState(items);
+  if (!shouldShowBrowseCompareHint(items)) return null;
+  return {
+    ...browseCompareUiState(items)!,
+    showHint: true,
+  };
+}
+
+export function browseCompareInteractiveUiShowsHint(items: Entry[]): boolean {
+  return browseCompareInteractiveUiState(items)?.showHint ?? false;
 }

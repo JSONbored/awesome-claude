@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
-import { compareEntryFeaturedInteractiveUiState } from "@/lib/compare-entry-featured-interactive-ui-lib";
+import {
+  compareEntryFeaturedInteractiveShowsFeaturedLinks,
+  compareEntryFeaturedInteractiveUiState,
+} from "@/lib/compare-entry-featured-interactive-ui-lib";
 
 function entry(overrides: Partial<Entry> = {}): Entry {
   return {
@@ -32,6 +35,9 @@ describe("compare entry featured interactive ui lib", () => {
       bestListLinks: [],
       hasFeaturedLinks: false,
     });
+    expect(
+      compareEntryFeaturedInteractiveShowsFeaturedLinks([], [], catalog),
+    ).toBe(false);
   });
 
   it("bundles featured comparison and best-list links for dossier surfaces", () => {
@@ -63,6 +69,18 @@ describe("compare entry featured interactive ui lib", () => {
       ],
       hasFeaturedLinks: true,
     });
+    expect(
+      compareEntryFeaturedInteractiveShowsFeaturedLinks(
+        [{ slug: "pair", refs: ["skills/alpha", "hooks/beta"] }],
+        [
+          {
+            slug: "top-picks",
+            picks: [{ ref: "skills/alpha" }, { ref: "hooks/beta" }],
+          },
+        ],
+        catalog,
+      ),
+    ).toBe(true);
   });
 
   it("formats overflow labels for wide featured best lists", () => {
@@ -92,5 +110,21 @@ describe("compare entry featured interactive ui lib", () => {
       ],
       hasFeaturedLinks: true,
     });
+    expect(
+      compareEntryFeaturedInteractiveShowsFeaturedLinks(
+        [],
+        [
+          {
+            slug: "wide-list",
+            picks: [
+              { ref: "skills/alpha" },
+              { ref: "hooks/beta" },
+              { ref: "mcp/gamma" },
+            ],
+          },
+        ],
+        catalog,
+      ),
+    ).toBe(true);
   });
 });

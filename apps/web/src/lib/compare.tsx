@@ -1,5 +1,9 @@
 import * as React from "react";
-import { compareContextInteractiveUiState } from "@/lib/compare-context-interactive-ui-lib";
+import {
+  compareContextInteractiveSelectionParam,
+  compareContextInteractiveShareUrl,
+  compareContextSelectionChanged,
+} from "@/lib/compare-context-interactive-ui-lib";
 import { hasCompareItem, resolveCompareParam, toggleCompareItem } from "@/lib/compare-selection";
 import type { EntryIdentity } from "@/lib/entry-identity";
 import type { Entry } from "@/types/registry";
@@ -73,13 +77,13 @@ function createCompareStore(): CompareStore {
       // URL, keeping the registry dataset out of the universal client bundle.
       void import("@/data/entries").then(({ ENTRIES }) => {
         const next = resolveCompareParam(ENTRIES, param);
-        const sig = compareContextInteractiveUiState(next).selectionParam;
-        const curSig = compareContextInteractiveUiState(state.items).selectionParam;
-        if (sig !== curSig) setState({ ...state, items: next });
+        if (compareContextSelectionChanged(next, state.items)) {
+          setState({ ...state, items: next });
+        }
       });
     },
-    serialize: () => compareContextInteractiveUiState(state.items).selectionParam,
-    getShareUrl: () => compareContextInteractiveUiState(state.items).shareUrl,
+    serialize: () => compareContextInteractiveSelectionParam(state.items),
+    getShareUrl: () => compareContextInteractiveShareUrl(state.items),
   };
 
   return {

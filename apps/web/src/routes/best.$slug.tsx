@@ -141,7 +141,7 @@ function BestDetail() {
         </>
       )}
 
-      {compareUi.showCompareSection && (
+      {compareUi?.showCompareSection ? (
         <section className="mt-10">
           <h2 className="h-display-2 text-ink">Compared at a glance</h2>
           <p className="mt-2 max-w-3xl text-sm text-ink-muted">
@@ -171,7 +171,7 @@ function BestDetail() {
             </Link>
           ) : null}
         </section>
-      )}
+      ) : null}
 
       <ol className="mt-10 flex flex-col gap-6 stagger-children">
         {resolved.map((p: Resolved, i: number) => (

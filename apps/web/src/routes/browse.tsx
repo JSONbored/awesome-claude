@@ -639,7 +639,7 @@ function Browse() {
                     </>
                   )}
                 </span>
-                {browseCompareUi ? (
+                {browseCompareUi?.showHint ? (
                   <div className="inline-flex flex-col items-end gap-1">
                     {browseCompareUi.overflowHint ? (
                       <span className="max-w-xs text-right text-[11px] text-amber-800">

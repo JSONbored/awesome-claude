@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
-import { browseCompareInteractiveUiState } from "@/lib/compare-browse-interactive-ui-lib";
+import {
+  browseCompareInteractiveUiShowsHint,
+  browseCompareInteractiveUiState,
+} from "@/lib/compare-browse-interactive-ui-lib";
 
 function entry(overrides: Partial<Entry> = {}): Entry {
   return {
@@ -23,6 +26,8 @@ describe("compare browse interactive ui lib", () => {
   it("returns null when fewer than two items are selected", () => {
     expect(browseCompareInteractiveUiState([])).toBeNull();
     expect(browseCompareInteractiveUiState([entry()])).toBeNull();
+    expect(browseCompareInteractiveUiShowsHint([])).toBe(false);
+    expect(browseCompareInteractiveUiShowsHint([entry()])).toBe(false);
   });
 
   it("builds capped compare CTA state aligned with hint and overflow copy", () => {
@@ -42,7 +47,9 @@ describe("compare browse interactive ui lib", () => {
       selectedCount: 4,
       hint: "Open compare to review trust and next steps side by side.",
       overflowHint: "Opening 4 of 5 selected in compare.",
+      showHint: true,
     });
+    expect(browseCompareInteractiveUiShowsHint(five)).toBe(true);
   });
 
   it("surfaces divergence hints in browse compare CTA state", () => {
@@ -61,6 +68,18 @@ describe("compare browse interactive ui lib", () => {
       selectedCount: 2,
       hint: "1 trust signal differ · next steps differ — open compare for details.",
       overflowHint: null,
+      showHint: true,
     });
+    expect(
+      browseCompareInteractiveUiShowsHint([
+        entry(),
+        entry({
+          slug: "mixed",
+          reviewedBy: "maintainer",
+          reviewedAt: "2026-01-02",
+          installCommand: "npm i fixture",
+        }),
+      ]),
+    ).toBe(true);
   });
 });

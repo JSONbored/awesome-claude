@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
-import { compareEntryInteractiveUiState } from "@/lib/compare-entry-interactive-ui-lib";
+import {
+  compareEntryInteractiveShowsDossierCompareSection,
+  compareEntryInteractiveShowsFeaturedLinks,
+  compareEntryInteractiveUiState,
+} from "@/lib/compare-entry-interactive-ui-lib";
 
 function entry(overrides: Partial<Entry> = {}): Entry {
   return {
@@ -65,7 +69,55 @@ describe("compare entry interactive ui lib", () => {
         ],
         hasFeaturedLinks: true,
       },
+      hasFeaturedLinks: true,
+      showDossierCompareSection: true,
     });
+    expect(
+      compareEntryInteractiveShowsFeaturedLinks(
+        [{ slug: "pair", refs: ["skills/alpha", "hooks/beta"] }],
+        [
+          {
+            slug: "top-picks",
+            picks: [{ ref: "skills/alpha" }, { ref: "hooks/beta" }],
+          },
+        ],
+        catalog,
+      ),
+    ).toBe(true);
+    expect(
+      compareEntryInteractiveShowsDossierCompareSection(primary, [
+        entry({ category: "hooks", slug: "alt" }),
+      ]),
+    ).toBe(true);
+    const bundled = compareEntryInteractiveUiState(
+      primary,
+      [entry({ category: "hooks", slug: "alt" })],
+      [{ slug: "pair", refs: ["skills/alpha", "hooks/beta"] }],
+      [
+        {
+          slug: "top-picks",
+          picks: [{ ref: "skills/alpha" }, { ref: "hooks/beta" }],
+        },
+      ],
+      catalog,
+    );
+    expect(bundled.hasFeaturedLinks).toBe(
+      compareEntryInteractiveShowsFeaturedLinks(
+        [{ slug: "pair", refs: ["skills/alpha", "hooks/beta"] }],
+        [
+          {
+            slug: "top-picks",
+            picks: [{ ref: "skills/alpha" }, { ref: "hooks/beta" }],
+          },
+        ],
+        catalog,
+      ),
+    );
+    expect(bundled.showDossierCompareSection).toBe(
+      compareEntryInteractiveShowsDossierCompareSection(primary, [
+        entry({ category: "hooks", slug: "alt" }),
+      ]),
+    );
   });
 
   it("hides dossier compare and featured links when nothing references the entry", () => {
@@ -84,7 +136,15 @@ describe("compare entry interactive ui lib", () => {
         bestListLinks: [],
         hasFeaturedLinks: false,
       },
+      hasFeaturedLinks: false,
+      showDossierCompareSection: false,
     });
+    expect(compareEntryInteractiveShowsFeaturedLinks([], [], catalog)).toBe(
+      false,
+    );
+    expect(compareEntryInteractiveShowsDossierCompareSection(primary, [])).toBe(
+      false,
+    );
   });
 
   it("surfaces dossier divergence banners alongside featured links", () => {
@@ -119,5 +179,7 @@ describe("compare entry interactive ui lib", () => {
     expect(state.featuredUi.bestListLinks[0]?.label).toBe(
       "Open 3 picks in the interactive comparison tool",
     );
+    expect(state.hasFeaturedLinks).toBe(true);
+    expect(state.showDossierCompareSection).toBe(true);
   });
 });

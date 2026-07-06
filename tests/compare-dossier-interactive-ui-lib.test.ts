@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
-import { compareDossierInteractiveUiState } from "@/lib/compare-dossier-interactive-ui-lib";
+import {
+  compareDossierInteractiveShowCompareSection,
+  compareDossierInteractiveUiState,
+} from "@/lib/compare-dossier-interactive-ui-lib";
 
 function entry(overrides: Partial<Entry> = {}): Entry {
   return {
@@ -28,20 +31,23 @@ describe("compare dossier interactive ui lib", () => {
       interactiveSearch: null,
       interactiveLinkLabel: "Open 1 picks in the interactive comparison tool",
     });
+    expect(compareDossierInteractiveShowCompareSection(primary, [])).toBe(
+      false,
+    );
   });
 
   it("bundles dossier compare presentation state for headers and interactive links", () => {
     const primary = entry({ category: "skills", slug: "primary" });
-    expect(
-      compareDossierInteractiveUiState(primary, [
-        entry({ category: "hooks", slug: "alt" }),
-      ]),
-    ).toEqual({
+    const alternatives = [entry({ category: "hooks", slug: "alt" })];
+    expect(compareDossierInteractiveUiState(primary, alternatives)).toEqual({
       showCompareSection: true,
       bannerTexts: [],
       interactiveSearch: { ids: "skills/primary,hooks/alt" },
       interactiveLinkLabel: "Open in the interactive comparison tool",
     });
+    expect(
+      compareDossierInteractiveShowCompareSection(primary, alternatives),
+    ).toBe(true);
   });
 
   it("surfaces divergence banners for dossier alternatives", () => {
