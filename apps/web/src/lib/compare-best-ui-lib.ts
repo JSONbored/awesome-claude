@@ -30,7 +30,7 @@ export type CompareBestUiState = {
 
 export function compareBestUiState(entries: Entry[]): CompareBestUiState {
   return {
-    showCompareSection: shouldShowBestCompareSection(entries),
+    showCompareSection: compareBestShowCompareSection(entries),
     bannerTexts: compareBestBannerTexts(entries),
     interactiveSearch: compareInteractiveSearch(entries),
     interactiveLinkLabel: compareInteractiveLinkLabel(entries.length),

@@ -94,6 +94,14 @@ describe("compare best ui lib", () => {
       interactiveSearch: { ids: "skills/alpha,hooks/beta" },
       interactiveLinkLabel: "Open in the interactive comparison tool",
     });
+    const entries = [
+      entry({ category: "skills", slug: "alpha" }),
+      entry({ category: "hooks", slug: "beta" }),
+    ];
+    const bundled = compareBestUiState(entries);
+    expect(bundled.showCompareSection).toBe(
+      compareBestShowCompareSection(entries),
+    );
     expect(
       compareBestUiState([
         entry(),
