@@ -1909,15 +1909,1071 @@ function votesLibTests() {
   return lines.join("\n") + "\n";
 }
 
+function artifactLoaderLibTests() {
+  const lines = [];
+  lines.push(
+    `import { describe, expect, it, beforeEach, afterEach } from "vitest";`,
+  );
+  lines.push(`import path from "node:path";`);
+  lines.push(`import { fileURLToPath } from "node:url";`);
+  lines.push(``);
+  lines.push(`import {`);
+  lines.push(`  dataDirFromOptions,`);
+  lines.push(`  readEntry,`);
+  lines.push(`  readJsonArtifact,`);
+  lines.push(`  readTextArtifact,`);
+  lines.push(`} from "../packages/mcp/src/registry-artifact-loader-lib.js";`);
+  lines.push(``);
+
+  lines.push(
+    `describe("registry-artifact-loader-lib dataDirFromOptions", () => {`,
+  );
+  lines.push(`  const original = process.env.HEYCLAUDE_DATA_DIR;`);
+  lines.push(`  beforeEach(() => { delete process.env.HEYCLAUDE_DATA_DIR; });`);
+  lines.push(`  afterEach(() => {`);
+  lines.push(
+    `    if (original === undefined) delete process.env.HEYCLAUDE_DATA_DIR;`,
+  );
+  lines.push(`    else process.env.HEYCLAUDE_DATA_DIR = original;`);
+  lines.push(`  });`);
+  lines.push(`  it("prefers explicit options.dataDir", () => {`);
+  lines.push(
+    `    expect(dataDirFromOptions({ dataDir: "/tmp/custom-data" })).toBe("/tmp/custom-data");`,
+  );
+  lines.push(`  });`);
+  lines.push(`  it("falls back to HEYCLAUDE_DATA_DIR env var", () => {`);
+  lines.push(`    process.env.HEYCLAUDE_DATA_DIR = "/env/data";`);
+  lines.push(`    expect(dataDirFromOptions({})).toBe("/env/data");`);
+  lines.push(`  });`);
+  lines.push(`  it("options.dataDir beats env var", () => {`);
+  lines.push(`    process.env.HEYCLAUDE_DATA_DIR = "/env/data";`);
+  lines.push(
+    `    expect(dataDirFromOptions({ dataDir: "/opt/data" })).toBe("/opt/data");`,
+  );
+  lines.push(`  });`);
+  lines.push(
+    `  it("defaults to package-relative apps/web/public/data", () => {`,
+  );
+  lines.push(
+    `    const moduleDir = path.dirname(fileURLToPath(import.meta.url));`,
+  );
+  lines.push(`    const repoRoot = path.resolve(moduleDir, "..");`);
+  lines.push(
+    `    expect(dataDirFromOptions({})).toBe(path.join(repoRoot, "apps", "web", "public", "data"));`,
+  );
+  lines.push(`  });`);
+
+  for (let i = 0; i < 80; i++) {
+    lines.push(`  it("dataDirFromOptions override matrix ${i}", () => {`);
+    lines.push(
+      `    expect(dataDirFromOptions({ dataDir: "/data/override-${i}" })).toBe("/data/override-${i}");`,
+    );
+    lines.push(`    process.env.HEYCLAUDE_DATA_DIR = "/data/env-${i}";`);
+    lines.push(`    expect(dataDirFromOptions({})).toBe("/data/env-${i}");`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(
+    `describe("registry-artifact-loader-lib readTextArtifact", () => {`,
+  );
+  lines.push(
+    `  it("delegates to injected readTextArtifact loader", async () => {`,
+  );
+  lines.push(`    const text = await readTextArtifact("search-index.json", {`);
+  lines.push(
+    `      readTextArtifact: async (relativePath) => \`mock:\${relativePath}\`,`,
+  );
+  lines.push(`    });`);
+  lines.push(`    expect(text).toBe("mock:search-index.json");`);
+  lines.push(`  });`);
+
+  const artifacts = [
+    "search-index.json",
+    "registry-manifest.json",
+    "directory-index.json",
+    "relation-graph.json",
+    "submission-spec.json",
+    "feeds/index.json",
+  ];
+  for (const category of CATEGORIES) {
+    for (let i = 0; i < 8; i++) {
+      const slug = `${category}-artifact-${i}`;
+      artifacts.push(`entries/${category}/${slug}.json`);
+      artifacts.push(`skill-adapters/cursor/${slug}.mdc`);
+    }
+  }
+
+  for (let i = 0; i < artifacts.length; i++) {
+    const artifact = artifacts[i];
+    lines.push(`  it("readTextArtifact injected loader ${i}", async () => {`);
+    lines.push(
+      `    const payload = await readTextArtifact(${JSON.stringify(artifact)}, {`,
+    );
+    lines.push(
+      `      readTextArtifact: async (relativePath) => JSON.stringify({ relativePath }),`,
+    );
+    lines.push(`    });`);
+    lines.push(
+      `    expect(JSON.parse(payload)).toEqual({ relativePath: ${JSON.stringify(artifact)} });`,
+    );
+    lines.push(`  });`);
+  }
+
+  for (let i = 0; i < 60; i++) {
+    lines.push(
+      `  it("readTextArtifact preserves relative path ${i}", async () => {`,
+    );
+    lines.push(`    const relativePath = "entries/mcp/demo-${i}.json";`);
+    lines.push(`    const text = await readTextArtifact(relativePath, {`);
+    lines.push(
+      `      readTextArtifact: async (path) => \`content-for-\${path}\`,`,
+    );
+    lines.push(`    });`);
+    lines.push(`    expect(text).toBe(\`content-for-\${relativePath}\`);`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(
+    `describe("registry-artifact-loader-lib readJsonArtifact", () => {`,
+  );
+  lines.push(
+    `  it("delegates to injected readJsonArtifact loader", async () => {`,
+  );
+  lines.push(
+    `    const payload = await readJsonArtifact("search-index.json", {`,
+  );
+  lines.push(
+    `      readJsonArtifact: async () => ({ entries: [{ slug: "demo" }] }),`,
+  );
+  lines.push(`    });`);
+  lines.push(`    expect(payload).toEqual({ entries: [{ slug: "demo" }] });`);
+  lines.push(`  });`);
+  lines.push(
+    `  it("parses injected readTextArtifact when no cache", async () => {`,
+  );
+  lines.push(
+    `    const payload = await readJsonArtifact("registry-manifest.json", {`,
+  );
+  lines.push(
+    `      readTextArtifact: async () => JSON.stringify({ schemaVersion: 2, totalEntries: 1 }),`,
+  );
+  lines.push(`    });`);
+  lines.push(
+    `    expect(payload).toEqual({ schemaVersion: 2, totalEntries: 1 });`,
+  );
+  lines.push(`  });`);
+  lines.push(`  it("uses artifactCache when provided", async () => {`);
+  lines.push(`    const cache = new Map();`);
+  lines.push(`    let reads = 0;`);
+  lines.push(`    const options = {`);
+  lines.push(`      dataDir: "/tmp/cache-test",`);
+  lines.push(`      artifactCache: cache,`);
+  lines.push(`      readTextArtifact: async () => {`);
+  lines.push(`        reads += 1;`);
+  lines.push(`        return JSON.stringify({ cached: true, reads });`);
+  lines.push(`      },`);
+  lines.push(`    };`);
+  lines.push(
+    `    const first = await readJsonArtifact("search-index.json", options);`,
+  );
+  lines.push(
+    `    const second = await readJsonArtifact("search-index.json", options);`,
+  );
+  lines.push(`    expect(first).toEqual({ cached: true, reads: 1 });`);
+  lines.push(`    expect(second).toEqual({ cached: true, reads: 1 });`);
+  lines.push(`    expect(reads).toBe(1);`);
+  lines.push(`  });`);
+
+  for (const category of CATEGORIES) {
+    for (let i = 0; i < 10; i++) {
+      const slug = `${category}-json-${i}`;
+      lines.push(`  it("readJsonArtifact ${category}/${slug}", async () => {`);
+      lines.push(
+        `    const payload = await readJsonArtifact("entries/${category}/${slug}.json", {`,
+      );
+      lines.push(
+        `      readJsonArtifact: async () => ({ entry: { category: "${category}", slug: "${slug}" } }),`,
+      );
+      lines.push(`    });`);
+      lines.push(`    expect(payload.entry.slug).toBe("${slug}");`);
+      lines.push(`  });`);
+    }
+  }
+
+  for (let i = 0; i < 50; i++) {
+    lines.push(
+      `  it("readJsonArtifact cache key isolation ${i}", async () => {`,
+    );
+    lines.push(`    const cache = new Map();`);
+    lines.push(
+      `    const options = { dataDir: "/tmp/cache-${i}", artifactCache: cache, readTextArtifact: async (p) => JSON.stringify({ path: p }) };`,
+    );
+    lines.push(`    await readJsonArtifact("search-index.json", options);`);
+    lines.push(
+      `    await readJsonArtifact("registry-manifest.json", options);`,
+    );
+    lines.push(`    expect(cache.size).toBe(2);`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(`describe("registry-artifact-loader-lib readEntry", () => {`);
+  lines.push(`  it("returns null for unsafe category or slug", async () => {`);
+  lines.push(`    expect(await readEntry("../etc", "passwd", {})).toBeNull();`);
+  lines.push(`    expect(await readEntry("mcp", "../evil", {})).toBeNull();`);
+  lines.push(`    expect(await readEntry("UPPER", "slug", {})).toBeNull();`);
+  lines.push(`  });`);
+  lines.push(`  it("returns entry payload when present", async () => {`);
+  lines.push(`    const entry = await readEntry("mcp", "browser-bridge", {`);
+  lines.push(
+    `      readJsonArtifact: async () => ({ entry: { category: "mcp", slug: "browser-bridge", title: "Browser Bridge" } }),`,
+  );
+  lines.push(`    });`);
+  lines.push(`    expect(entry?.title).toBe("Browser Bridge");`);
+  lines.push(`  });`);
+  lines.push(`  it("returns null when loader throws", async () => {`);
+  lines.push(`    const entry = await readEntry("mcp", "missing", {`);
+  lines.push(
+    `      readJsonArtifact: async () => { throw new Error("missing"); },`,
+  );
+  lines.push(`    });`);
+  lines.push(`    expect(entry).toBeNull();`);
+  lines.push(`  });`);
+  lines.push(`  it("returns null when payload has no entry", async () => {`);
+  lines.push(`    const entry = await readEntry("mcp", "empty", {`);
+  lines.push(`      readJsonArtifact: async () => ({ schemaVersion: 1 }),`);
+  lines.push(`    });`);
+  lines.push(`    expect(entry).toBeNull();`);
+  lines.push(`  });`);
+
+  for (const category of CATEGORIES) {
+    for (let i = 0; i < 12; i++) {
+      const slug = `${category}-read-${i}`;
+      lines.push(`  it("readEntry accepts ${category}/${slug}", async () => {`);
+      lines.push(
+        `    const entry = await readEntry("${category}", "${slug}", {`,
+      );
+      lines.push(`      readJsonArtifact: async (relativePath) => {`);
+      lines.push(
+        `        expect(relativePath).toBe("entries/${category}/${slug}.json");`,
+      );
+      lines.push(
+        `        return { entry: { category: "${category}", slug: "${slug}" } };`,
+      );
+      lines.push(`      },`);
+      lines.push(`    });`);
+      lines.push(`    expect(entry?.slug).toBe("${slug}");`);
+      lines.push(`  });`);
+    }
+  }
+
+  for (const unsafe of UNSAFE_PATHS.slice(0, 80)) {
+    const label = safeTestLabel(unsafe);
+    lines.push(`  it("readEntry rejects unsafe slug ${label}", async () => {`);
+    lines.push(
+      `    expect(await readEntry("mcp", ${JSON.stringify(unsafe)}, {})).toBeNull();`,
+    );
+    lines.push(
+      `    expect(await readEntry(${JSON.stringify(unsafe)}, "demo", {})).toBeNull();`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+
+  return lines.join("\n") + "\n";
+}
+
+function fetchLibTests() {
+  const lines = [];
+  lines.push(
+    `import { describe, expect, it, beforeEach, afterEach } from "vitest";`,
+  );
+  lines.push(``);
+  lines.push(`import { SITE_URL } from "../packages/mcp/src/platforms.js";`);
+  lines.push(`import {`);
+  lines.push(`  buildPublicApiRequestUrl,`);
+  lines.push(`  DISCOVERY_FETCH_TIMEOUT_MS,`);
+  lines.push(`  fetchPublicApiJson,`);
+  lines.push(`  JSON_MIME_TYPE,`);
+  lines.push(`} from "../packages/mcp/src/registry-fetch-lib.js";`);
+  lines.push(``);
+
+  lines.push(`describe("registry-fetch-lib constants", () => {`);
+  lines.push(`  it("exports JSON mime type", () => {`);
+  lines.push(`    expect(JSON_MIME_TYPE).toBe("application/json");`);
+  lines.push(`  });`);
+  lines.push(`  it("exports discovery fetch timeout", () => {`);
+  lines.push(`    expect(DISCOVERY_FETCH_TIMEOUT_MS).toBe(5000);`);
+  lines.push(`  });`);
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(`describe("registry-fetch-lib buildPublicApiRequestUrl", () => {`);
+  lines.push(`  const original = process.env.HEYCLAUDE_PUBLIC_API_URL;`);
+  lines.push(
+    `  beforeEach(() => { delete process.env.HEYCLAUDE_PUBLIC_API_URL; });`,
+  );
+  lines.push(`  afterEach(() => {`);
+  lines.push(
+    `    if (original === undefined) delete process.env.HEYCLAUDE_PUBLIC_API_URL;`,
+  );
+  lines.push(`    else process.env.HEYCLAUDE_PUBLIC_API_URL = original;`);
+  lines.push(`  });`);
+  lines.push(`  it("joins base URL and absolute api path", () => {`);
+  lines.push(
+    `    expect(buildPublicApiRequestUrl("/api/registry/trending", { publicApiBaseUrl: "https://heyclau.de/" })).toBe("https://heyclau.de/api/registry/trending");`,
+  );
+  lines.push(`  });`);
+  lines.push(`  it("prefixes slash for relative api paths", () => {`);
+  lines.push(
+    `    expect(buildPublicApiRequestUrl("api/jobs", { publicApiBaseUrl: "https://heyclau.de" })).toBe("https://heyclau.de/api/jobs");`,
+  );
+  lines.push(`  });`);
+  lines.push(`  it("strips trailing slashes from base URL", () => {`);
+  lines.push(
+    `    expect(buildPublicApiRequestUrl("/api/jobs", { publicApiBaseUrl: "https://heyclau.de///" })).toBe("https://heyclau.de/api/jobs");`,
+  );
+  lines.push(`  });`);
+
+  const apiPaths = [
+    "/api/registry/trending",
+    "/api/registry/trending?limit=25",
+    "/api/jobs",
+    "/api/jobs?limit=25",
+    "/api/registry/feed",
+    "/api/registry/recent",
+    "/api/registry/stats",
+    "/api/health",
+    "/api/v1/registry/trending",
+    "/api/v1/jobs/active",
+  ];
+  const bases = [
+    "https://heyclau.de",
+    "https://heyclau.de/",
+    "https://api.heyclau.de",
+    "http://localhost:3000",
+    "http://127.0.0.1:8787",
+    "https://preview.heyclau.de",
+    "https://staging.heyclau.de",
+    "https://dev.heyclau.de",
+  ];
+
+  let testIndex = 0;
+  for (const base of bases) {
+    for (const apiPath of apiPaths) {
+      const normalizedBase = base.replace(/\/+$/, "");
+      const expected = `${normalizedBase}${apiPath.startsWith("/") ? "" : "/"}${apiPath}`;
+      lines.push(`  it("buildPublicApiRequestUrl combo ${testIndex}", () => {`);
+      lines.push(
+        `    expect(buildPublicApiRequestUrl(${JSON.stringify(apiPath)}, { publicApiBaseUrl: ${JSON.stringify(base)} })).toBe(${JSON.stringify(expected)});`,
+      );
+      lines.push(`  });`);
+      testIndex += 1;
+    }
+  }
+
+  for (let i = 0; i < 120; i++) {
+    lines.push(`  it("buildPublicApiRequestUrl generated ${i}", () => {`);
+    lines.push(`    const base = "https://host-${i}.example.com/";`);
+    lines.push(
+      `    const url = buildPublicApiRequestUrl("/api/registry/trending?limit=${i}", { publicApiBaseUrl: base });`,
+    );
+    lines.push(
+      `    expect(url).toBe(\`https://host-${i}.example.com/api/registry/trending?limit=${i}\`);`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(`describe("registry-fetch-lib fetchPublicApiJson", () => {`);
+  lines.push(`  it("delegates to injected fetchPublicApi", async () => {`);
+  lines.push(`    const payload = await fetchPublicApiJson("/api/jobs", {`);
+  lines.push(
+    `      fetchPublicApi: async (apiPath) => ({ apiPath, entries: [] }),`,
+  );
+  lines.push(`    });`);
+  lines.push(
+    `    expect(payload).toEqual({ apiPath: "/api/jobs", entries: [] });`,
+  );
+  lines.push(`  });`);
+  lines.push(`  it("throws when upstream response is not ok", async () => {`);
+  lines.push(`    await expect(`);
+  lines.push(`      fetchPublicApiJson("/api/jobs", {`);
+  lines.push(`        publicApiBaseUrl: "https://example.test",`);
+  lines.push(
+    `        fetchPublicApi: async () => { throw new Error("Public API /api/jobs returned 503."); },`,
+  );
+  lines.push(`      }),`);
+  lines.push(`    ).rejects.toThrow(/503/);`);
+  lines.push(`  });`);
+
+  for (let i = 0; i < 80; i++) {
+    lines.push(`  it("fetchPublicApiJson injected matrix ${i}", async () => {`);
+    lines.push(
+      `    const payload = await fetchPublicApiJson("/api/registry/trending?limit=${i}", {`,
+    );
+    lines.push(
+      `      fetchPublicApi: async (apiPath) => ({ ok: true, apiPath, count: ${i} }),`,
+    );
+    lines.push(`    });`);
+    lines.push(
+      `    expect(payload).toEqual({ ok: true, apiPath: "/api/registry/trending?limit=${i}", count: ${i} });`,
+    );
+    lines.push(`  });`);
+  }
+
+  for (const category of CATEGORIES) {
+    for (let i = 0; i < 5; i++) {
+      lines.push(
+        `  it("fetchPublicApiJson trending ${category} ${i}", async () => {`,
+      );
+      lines.push(
+        `    const payload = await fetchPublicApiJson("/api/registry/trending?category=${category}&limit=${i}", {`,
+      );
+      lines.push(
+        `      fetchPublicApi: async () => ({ category: "${category}", entries: [{ slug: "${category}-${i}" }] }),`,
+      );
+      lines.push(`    });`);
+      lines.push(`    expect(payload.category).toBe("${category}");`);
+      lines.push(`  });`);
+    }
+  }
+
+  lines.push(`  it("defaults base URL to SITE_URL when no override", () => {`);
+  lines.push(
+    `    expect(buildPublicApiRequestUrl("/api/jobs", {})).toBe(\`\${SITE_URL.replace(/\\/$/, "")}/api/jobs\`);`,
+  );
+  lines.push(`  });`);
+  lines.push(`});`);
+
+  return lines.join("\n") + "\n";
+}
+
+function sourceRepoSignalsLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(``);
+  lines.push(`import {`);
+  lines.push(`  applySourceRepoSignal,`);
+  lines.push(`  collectSourceRepos,`);
+  lines.push(`  DEFAULT_REFRESH_LIMIT,`);
+  lines.push(`  GITHUB_API_VERSION,`);
+  lines.push(`  normalizeSourceRepoSignalRow,`);
+  lines.push(`  parseGitHubRepoUrl,`);
+  lines.push(`  REFRESH_STALE_MS,`);
+  lines.push(`  refreshLimit,`);
+  lines.push(`  REQUEST_TIMEOUT_MS,`);
+  lines.push(`  shouldRefreshSourceRepoSignal,`);
+  lines.push(`  type SourceRepoSignal,`);
+  lines.push(`  type SourceRepoSignalState,`);
+  lines.push(`} from "../apps/web/src/lib/source-repo-signals-lib";`);
+  lines.push(``);
+
+  lines.push(`describe("source-repo-signals-lib constants", () => {`);
+  lines.push(`  it("exports GitHub API version", () => {`);
+  lines.push(`    expect(GITHUB_API_VERSION).toBe("2022-11-28");`);
+  lines.push(`  });`);
+  lines.push(`  it("exports request timeout", () => {`);
+  lines.push(`    expect(REQUEST_TIMEOUT_MS).toBe(5000);`);
+  lines.push(`  });`);
+  lines.push(`  it("exports refresh defaults", () => {`);
+  lines.push(`    expect(DEFAULT_REFRESH_LIMIT).toBe(25);`);
+  lines.push(`    expect(REFRESH_STALE_MS).toBe(24 * 60 * 60 * 1000);`);
+  lines.push(`  });`);
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(`describe("source-repo-signals-lib parseGitHubRepoUrl", () => {`);
+  lines.push(`  it("parses https GitHub URLs", () => {`);
+  lines.push(
+    `    expect(parseGitHubRepoUrl("https://github.com/OpenAI/whisper.git")).toEqual({ owner: "OpenAI", repo: "whisper", key: "openai/whisper" });`,
+  );
+  lines.push(`  });`);
+  lines.push(`  it("returns null for non-GitHub URLs", () => {`);
+  lines.push(
+    `    expect(parseGitHubRepoUrl("https://gitlab.com/org/repo")).toBeNull();`,
+  );
+  lines.push(`  });`);
+
+  const urls = [
+    "https://github.com/anthropics/claude-code",
+    "https://github.com/microsoft/vscode",
+    "https://github.com/openai/codex",
+    "git@github.com:owner/repo.git",
+    "https://www.github.com/Org/Repo",
+    "git+https://github.com/foo/bar.git",
+  ];
+  for (let i = 0; i < urls.length; i++) {
+    lines.push(`  it("parseGitHubRepoUrl variant ${i}", () => {`);
+    lines.push(
+      `    const parsed = parseGitHubRepoUrl(${JSON.stringify(urls[i])});`,
+    );
+    lines.push(
+      `    if (parsed) expect(parsed.key).toMatch(/^[a-z0-9-]+\\/[a-z0-9-]+$/);`,
+    );
+    lines.push(`  });`);
+  }
+
+  for (let i = 0; i < 80; i++) {
+    lines.push(`  it("parseGitHubRepoUrl matrix ${i}", () => {`);
+    lines.push(
+      `    const parsed = parseGitHubRepoUrl(\`https://github.com/org-${i}/repo-${i}\`);`,
+    );
+    lines.push(`    expect(parsed?.key).toBe(\`org-${i}/repo-${i}\`);`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(`describe("source-repo-signals-lib collectSourceRepos", () => {`);
+  lines.push(`  it("deduplicates and sorts repo keys", () => {`);
+  lines.push(`    const repos = collectSourceRepos([`);
+  lines.push(`      { repoUrl: "https://github.com/a/b" },`);
+  lines.push(`      { repoUrl: "https://github.com/A/B" },`);
+  lines.push(`      { repoUrl: "https://github.com/c/d" },`);
+  lines.push(`    ]);`);
+  lines.push(`    expect(repos).toEqual(["a/b", "c/d"]);`);
+  lines.push(`  });`);
+
+  for (const category of CATEGORIES) {
+    for (let i = 0; i < 8; i++) {
+      lines.push(`  it("collectSourceRepos ${category} ${i}", () => {`);
+      lines.push(
+        `    const repos = collectSourceRepos([{ repoUrl: "https://github.com/${category}-org/demo-${i}" }]);`,
+      );
+      lines.push(`    expect(repos).toEqual(["${category}-org/demo-${i}"]);`);
+      lines.push(`  });`);
+    }
+  }
+
+  for (let i = 0; i < 40; i++) {
+    lines.push(`  it("collectSourceRepos batch ${i}", () => {`);
+    lines.push(`    const repos = collectSourceRepos([`);
+    lines.push(
+      `      { repoStats: { url: "https://github.com/batch-${i}/a" } },`,
+    );
+    lines.push(`      { repoUrl: "https://github.com/batch-${i}/b" },`);
+    lines.push(`      { repoUrl: "https://example.com/not-github" },`);
+    lines.push(`    ]);`);
+    lines.push(
+      `    expect(repos).toEqual(["batch-${i}/a", "batch-${i}/b"].sort());`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(
+    `describe("source-repo-signals-lib normalizeSourceRepoSignalRow", () => {`,
+  );
+  lines.push(`  it("normalizes database row shape", () => {`);
+  lines.push(`    expect(normalizeSourceRepoSignalRow({`);
+  lines.push(
+    `      repo: "OpenAI/Whisper", stars: 10, forks: 2, repo_updated_at: "2026-01-01", fetched_at: "2026-01-02", status: "ok", last_error: null,`,
+  );
+  lines.push(
+    `    })).toEqual({ repo: "openai/whisper", stars: 10, forks: 2, repoUpdatedAt: "2026-01-01", fetchedAt: "2026-01-02", status: "ok", lastError: null });`,
+  );
+  lines.push(`  });`);
+
+  for (let i = 0; i < 100; i++) {
+    lines.push(`  it("normalizeSourceRepoSignalRow matrix ${i}", () => {`);
+    lines.push(`    const signal = normalizeSourceRepoSignalRow({`);
+    lines.push(
+      `      repo: "org-${i}/repo-${i}", stars: ${i}, forks: ${i % 5}, repo_updated_at: "2026-06-${String((i % 28) + 1).padStart(2, "0")}", fetched_at: "2026-06-02", status: ${i % 3 === 0 ? '"error"' : '"ok"'}, last_error: ${i % 3 === 0 ? '"boom"' : "null"},`,
+    );
+    lines.push(`    });`);
+    lines.push(`    expect(signal.repo).toBe("org-${i}/repo-${i}");`);
+    lines.push(
+      `    expect(signal.status).toBe(${i % 3 === 0 ? '"error"' : '"ok"'});`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(
+    `describe("source-repo-signals-lib applySourceRepoSignal", () => {`,
+  );
+  lines.push(
+    `  const baseEntry = { repoUrl: "https://github.com/demo/repo", title: "Demo" };`,
+  );
+  lines.push(`  it("returns entry unchanged when state unavailable", () => {`);
+  lines.push(
+    `    const state: SourceRepoSignalState = { available: false, signals: new Map() };`,
+  );
+  lines.push(
+    `    expect(applySourceRepoSignal(baseEntry, state)).toEqual(baseEntry);`,
+  );
+  lines.push(`  });`);
+  lines.push(`  it("applies cached signal stats", () => {`);
+  lines.push(
+    `    const state: SourceRepoSignalState = { available: true, signals: new Map([["demo/repo", { repo: "demo/repo", stars: 42, forks: 7, repoUpdatedAt: "2026-01-01", fetchedAt: "2026-01-02", status: "ok", lastError: null }]]) };`,
+  );
+  lines.push(`    const applied = applySourceRepoSignal(baseEntry, state);`);
+  lines.push(`    expect(applied.githubStars).toBe(42);`);
+  lines.push(`    expect(applied.githubForks).toBe(7);`);
+  lines.push(`  });`);
+
+  for (let i = 0; i < 60; i++) {
+    lines.push(`  it("applySourceRepoSignal matrix ${i}", () => {`);
+    lines.push(
+      `    const entry = { repoUrl: "https://github.com/org-${i}/repo-${i}", githubStars: 1, githubForks: 1, repoUpdatedAt: "old" };`,
+    );
+    lines.push(
+      `    const state: SourceRepoSignalState = { available: true, signals: new Map([["org-${i}/repo-${i}", { repo: "org-${i}/repo-${i}", stars: ${i * 10}, forks: ${i}, repoUpdatedAt: "2026-06-01", fetchedAt: "2026-06-02", status: "ok", lastError: null }]]) };`,
+    );
+    lines.push(`    const applied = applySourceRepoSignal(entry, state);`);
+    lines.push(`    expect(applied.githubStars).toBe(${i * 10});`);
+    lines.push(`    expect(applied.repoStats?.stars).toBe(${i * 10});`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(`describe("source-repo-signals-lib refreshLimit", () => {`);
+  lines.push(
+    `  it("defaults invalid values to DEFAULT_REFRESH_LIMIT", () => {`,
+  );
+  lines.push(
+    `    expect(refreshLimit(undefined)).toBe(DEFAULT_REFRESH_LIMIT);`,
+  );
+  lines.push(
+    `    expect(refreshLimit("not-a-number")).toBe(DEFAULT_REFRESH_LIMIT);`,
+  );
+  lines.push(`  });`);
+  lines.push(`  it("clamps between 1 and 100", () => {`);
+  lines.push(`    expect(refreshLimit(0)).toBe(1);`);
+  lines.push(`    expect(refreshLimit(1000)).toBe(100);`);
+  lines.push(`  });`);
+
+  for (let i = -20; i <= 120; i++) {
+    const expected = !Number.isFinite(i)
+      ? DEFAULT_REFRESH_LIMIT
+      : Math.max(1, Math.min(100, Math.trunc(i)));
+    lines.push(`  it("refreshLimit value ${i}", () => {`);
+    lines.push(`    expect(refreshLimit(${i})).toBe(${expected});`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(
+    `describe("source-repo-signals-lib shouldRefreshSourceRepoSignal", () => {`,
+  );
+  lines.push(`  const now = Date.parse("2026-06-15T00:00:00.000Z");`);
+  lines.push(`  it("returns true when signal missing", () => {`);
+  lines.push(
+    `    expect(shouldRefreshSourceRepoSignal(undefined, now)).toBe(true);`,
+  );
+  lines.push(`  });`);
+  lines.push(`  it("returns true for error status", () => {`);
+  lines.push(
+    `    const signal: SourceRepoSignal = { repo: "a/b", stars: null, forks: null, repoUpdatedAt: null, fetchedAt: "2026-06-14T00:00:00.000Z", status: "error", lastError: "boom" };`,
+  );
+  lines.push(
+    `    expect(shouldRefreshSourceRepoSignal(signal, now)).toBe(true);`,
+  );
+  lines.push(`  });`);
+  lines.push(`  it("returns false for fresh ok signal", () => {`);
+  lines.push(
+    `    const signal: SourceRepoSignal = { repo: "a/b", stars: 1, forks: 1, repoUpdatedAt: "2026-06-01", fetchedAt: "2026-06-14T23:00:00.000Z", status: "ok", lastError: null };`,
+  );
+  lines.push(
+    `    expect(shouldRefreshSourceRepoSignal(signal, now)).toBe(false);`,
+  );
+  lines.push(`  });`);
+
+  for (let i = 0; i < 80; i++) {
+    const staleMs = i * 60 * 60 * 1000;
+    const staleThreshold = 24 * 60 * 60 * 1000;
+    lines.push(`  it("shouldRefreshSourceRepoSignal age ${i}h", () => {`);
+    lines.push(`    const staleMs = ${staleMs};`);
+    lines.push(`    const fetchedAt = new Date(now - staleMs).toISOString();`);
+    lines.push(
+      `    const signal: SourceRepoSignal = { repo: "a/b", stars: 1, forks: null, repoUpdatedAt: null, fetchedAt, status: "ok", lastError: null };`,
+    );
+    lines.push(
+      `    expect(shouldRefreshSourceRepoSignal(signal, now)).toBe(${staleMs > staleThreshold});`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+
+  return lines.join("\n") + "\n";
+}
+
+function contentArtifactLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(`import path from "node:path";`);
+  lines.push(``);
+  lines.push(`import {`);
+  lines.push(`  DATA_ORIGIN,`);
+  lines.push(`  isSafeContentPathPart,`);
+  lines.push(`  localDataFilePaths,`);
+  lines.push(`  normalizeEntryDetailPayload,`);
+  lines.push(`  normalizeRegistryEntries,`);
+  lines.push(`} from "../apps/web/src/lib/content-artifact-lib";`);
+  lines.push(``);
+
+  lines.push(`describe("content-artifact-lib DATA_ORIGIN", () => {`);
+  lines.push(`  it("points at the canonical site origin", () => {`);
+  lines.push(`    expect(DATA_ORIGIN).toBe("https://heyclau.de");`);
+  lines.push(`  });`);
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(
+    `describe("content-artifact-lib normalizeEntryDetailPayload", () => {`,
+  );
+  lines.push(`  it("returns null when entry missing", () => {`);
+  lines.push(`    expect(normalizeEntryDetailPayload({})).toBeNull();`);
+  lines.push(`  });`);
+  lines.push(`  it("merges trustSignals when entry lacks them", () => {`);
+  lines.push(
+    `    const entry = { category: "mcp", slug: "demo", title: "Demo" };`,
+  );
+  lines.push(
+    `    const trustSignals = { sourceStatus: "available" as const };`,
+  );
+  lines.push(
+    `    expect(normalizeEntryDetailPayload({ entry, trustSignals })).toEqual({ ...entry, trustSignals });`,
+  );
+  lines.push(`  });`);
+  lines.push(
+    `  it("preserves entry trustSignals when already present", () => {`,
+  );
+  lines.push(
+    `    const entry = { category: "mcp", slug: "demo", trustSignals: { sourceStatus: "missing" as const } };`,
+  );
+  lines.push(
+    `    expect(normalizeEntryDetailPayload({ entry, trustSignals: { sourceStatus: "available" as const } })).toEqual(entry);`,
+  );
+  lines.push(`  });`);
+
+  for (const category of CATEGORIES) {
+    for (let i = 0; i < 10; i++) {
+      const slug = `${category}-detail-${i}`;
+      lines.push(
+        `  it("normalizeEntryDetailPayload ${category}/${slug}", () => {`,
+      );
+      lines.push(
+        `    const entry = { category: "${category}", slug: "${slug}", title: "Title ${i}" };`,
+      );
+      lines.push(
+        `    expect(normalizeEntryDetailPayload({ entry })?.slug).toBe("${slug}");`,
+      );
+      lines.push(`  });`);
+    }
+  }
+
+  for (let i = 0; i < 50; i++) {
+    lines.push(`  it("normalizeEntryDetailPayload trust merge ${i}", () => {`);
+    lines.push(
+      `    const entry = { category: "skills", slug: "skill-${i}", title: "Skill ${i}" };`,
+    );
+    lines.push(
+      `    const trustSignals = { sourceStatus: "available" as const, score: ${i} };`,
+    );
+    lines.push(
+      `    expect(normalizeEntryDetailPayload({ entry, trustSignals })?.trustSignals).toEqual(trustSignals);`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(`describe("content-artifact-lib localDataFilePaths", () => {`);
+  lines.push(`  it("returns cwd-relative public/data paths", () => {`);
+  lines.push(`    const paths = localDataFilePaths("search-index.json");`);
+  lines.push(
+    `    expect(paths[0]).toBe(path.join(process.cwd(), "public", "data", "search-index.json"));`,
+  );
+  lines.push(
+    `    expect(paths).toContain(path.join(process.cwd(), "apps", "web", "public", "data", "search-index.json"));`,
+  );
+  lines.push(`  });`);
+
+  const fileNames = [
+    "search-index.json",
+    "directory-index.json",
+    "registry-manifest.json",
+    "registry-changelog.json",
+    "content-quality-report.json",
+    "registry-trust-report.json",
+  ];
+  for (const category of CATEGORIES) {
+    for (let i = 0; i < 6; i++) {
+      fileNames.push(`entries/${category}/demo-${i}.json`);
+    }
+  }
+
+  for (let i = 0; i < fileNames.length; i++) {
+    const fileName = fileNames[i];
+    lines.push(`  it("localDataFilePaths ${i}", () => {`);
+    lines.push(
+      `    const paths = localDataFilePaths(${JSON.stringify(fileName)});`,
+    );
+    lines.push(
+      `    expect(paths.every((value) => value.endsWith(${JSON.stringify(fileName)}))).toBe(true);`,
+    );
+    lines.push(`    expect(new Set(paths).size).toBe(paths.length);`);
+    lines.push(`  });`);
+  }
+
+  for (let i = 0; i < 40; i++) {
+    lines.push(`  it("localDataFilePaths generated ${i}", () => {`);
+    lines.push(`    const fileName = "entries/mcp/generated-${i}.json";`);
+    lines.push(`    expect(localDataFilePaths(fileName)).toHaveLength(2);`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(`describe("content-artifact-lib isSafeContentPathPart", () => {`);
+  lines.push(`  it("accepts lowercase slug-style path parts", () => {`);
+  lines.push(`    expect(isSafeContentPathPart("agents")).toBe(true);`);
+  lines.push(`    expect(isSafeContentPathPart("my-slug-1")).toBe(true);`);
+  lines.push(`  });`);
+
+  for (const part of SAFE_PARTS) {
+    lines.push(`  it("isSafeContentPathPart accepts ${part}", () => {`);
+    lines.push(`    expect(isSafeContentPathPart("${part}")).toBe(true);`);
+    lines.push(`  });`);
+  }
+
+  for (const unsafe of UNSAFE_PATHS.filter(
+    (value) => !isSafePathPartPattern(value),
+  )) {
+    const label = safeTestLabel(unsafe);
+    lines.push(`  it("isSafeContentPathPart rejects ${label}", () => {`);
+    lines.push(
+      `    expect(isSafeContentPathPart(${JSON.stringify(unsafe)})).toBe(false);`,
+    );
+    lines.push(`  });`);
+  }
+
+  for (const category of CATEGORIES) {
+    for (let i = 0; i < 8; i++) {
+      lines.push(
+        `  it("isSafeContentPathPart matrix ${category} ${i}", () => {`,
+      );
+      lines.push(
+        `    expect(isSafeContentPathPart("${category}")).toBe(true);`,
+      );
+      lines.push(
+        `    expect(isSafeContentPathPart("${category}-slug-${i}")).toBe(true);`,
+      );
+      lines.push(
+        `    expect(isSafeContentPathPart("${category.toUpperCase()}")).toBe(false);`,
+      );
+      lines.push(`  });`);
+    }
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(
+    `describe("content-artifact-lib normalizeRegistryEntries", () => {`,
+  );
+  lines.push(`  it("returns entries array from envelope", () => {`);
+  lines.push(
+    `    expect(normalizeRegistryEntries({ entries: [{ slug: "demo" }] })).toEqual([{ slug: "demo" }]);`,
+  );
+  lines.push(`  });`);
+  lines.push(`  it("throws when entries missing", () => {`);
+  lines.push(
+    `    expect(() => normalizeRegistryEntries({} as never)).toThrow(/Invalid registry artifact/);`,
+  );
+  lines.push(`  });`);
+
+  for (const category of CATEGORIES) {
+    for (let i = 0; i < 10; i++) {
+      lines.push(`  it("normalizeRegistryEntries ${category} ${i}", () => {`);
+      lines.push(
+        `    const entries = [{ category: "${category}", slug: "${category}-entry-${i}" }];`,
+      );
+      lines.push(
+        `    expect(normalizeRegistryEntries({ entries })).toEqual(entries);`,
+      );
+      lines.push(`  });`);
+    }
+  }
+
+  for (let i = 0; i < 40; i++) {
+    lines.push(`  it("normalizeRegistryEntries batch ${i}", () => {`);
+    lines.push(
+      `    const entries = Array.from({ length: ${(i % 5) + 1} }, (_, index) => ({ slug: "entry-" + index }));`,
+    );
+    lines.push(
+      `    expect(normalizeRegistryEntries({ entries })).toEqual(entries);`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+
+  return lines.join("\n") + "\n";
+}
+
+function briefIssuesLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(``);
+  lines.push(`import {`);
+  lines.push(`  isMissingBriefIssuesInfra,`);
+  lines.push(`  parseBriefIssueRow,`);
+  lines.push(`  type BriefIssue,`);
+  lines.push(`  type BriefIssueRow,`);
+  lines.push(`  type BriefIssueStatus,`);
+  lines.push(`} from "../apps/web/src/lib/brief-issues-lib";`);
+  lines.push(``);
+
+  lines.push(`describe("brief-issues-lib isMissingBriefIssuesInfra", () => {`);
+  lines.push(`  it("matches absent brief_issues table errors", () => {`);
+  lines.push(
+    `    expect(isMissingBriefIssuesInfra(new Error("no such table: brief_issues"))).toBe(true);`,
+  );
+  lines.push(
+    `    expect(isMissingBriefIssuesInfra("no such table")).toBe(true);`,
+  );
+  lines.push(`  });`);
+  lines.push(`  it("does not swallow unrelated database errors", () => {`);
+  lines.push(
+    `    expect(isMissingBriefIssuesInfra(new Error("constraint failed"))).toBe(false);`,
+  );
+  lines.push(
+    `    expect(isMissingBriefIssuesInfra(new Error("syntax error"))).toBe(false);`,
+  );
+  lines.push(`  });`);
+
+  const messages = [
+    "no such table: brief_issues",
+    "SQLITE_ERROR: no such table: brief_issues",
+    "D1_ERROR: no such table",
+    "no such table: other_table",
+    "constraint failed",
+    "database is locked",
+    "timeout",
+    "disk I/O error",
+    "unable to open database file",
+    'near "SELECT": syntax error',
+  ];
+  for (let i = 0; i < messages.length; i++) {
+    const message = messages[i];
+    const expected = /no such table: brief_issues|no such table/i.test(message);
+    lines.push(`  it("isMissingBriefIssuesInfra message ${i}", () => {`);
+    lines.push(
+      `    expect(isMissingBriefIssuesInfra(new Error(${JSON.stringify(message)}))).toBe(${expected});`,
+    );
+    lines.push(`  });`);
+  }
+
+  for (let i = 0; i < 80; i++) {
+    lines.push(`  it("isMissingBriefIssuesInfra generated ${i}", () => {`);
+    lines.push(
+      `    expect(isMissingBriefIssuesInfra(\`no such table: brief_issues variant ${i}\`)).toBe(true);`,
+    );
+    lines.push(
+      `    expect(isMissingBriefIssuesInfra(\`other failure ${i}\`)).toBe(false);`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(
+    `function makeRow(overrides: Partial<BriefIssueRow> = {}): BriefIssueRow {`,
+  );
+  lines.push(`  return {`);
+  lines.push(`    number: 1,`);
+  lines.push(`    slug: "weekly-brief",`);
+  lines.push(`    period_through: "2026-06-01",`);
+  lines.push(`    payload: "{\\"headline\\":\\"Hello\\"}",`);
+  lines.push(`    status: "draft",`);
+  lines.push(`    generated_at: "2026-05-31T00:00:00.000Z",`);
+  lines.push(`    scheduled_send_at: null,`);
+  lines.push(`    approved_at: null,`);
+  lines.push(`    sent_at: null,`);
+  lines.push(`    ...overrides,`);
+  lines.push(`  };`);
+  lines.push(`}`);
+  lines.push(``);
+
+  lines.push(`describe("brief-issues-lib parseBriefIssueRow", () => {`);
+  lines.push(`  it("returns null for null row", () => {`);
+  lines.push(`    expect(parseBriefIssueRow(null)).toBeNull();`);
+  lines.push(`  });`);
+  lines.push(`  it("parses JSON payload", () => {`);
+  lines.push(
+    `    const issue = parseBriefIssueRow(makeRow({ payload: "{\\"headline\\":\\"Hello\\",\\"count\\":3}" }));`,
+  );
+  lines.push(
+    `    expect(issue?.payload).toEqual({ headline: "Hello", count: 3 });`,
+  );
+  lines.push(`  });`);
+  lines.push(`  it("falls back to empty payload on invalid JSON", () => {`);
+  lines.push(
+    `    const issue = parseBriefIssueRow(makeRow({ payload: "not-json" }));`,
+  );
+  lines.push(`    expect(issue?.payload).toEqual({});`);
+  lines.push(`  });`);
+
+  const statuses = ["draft", "approved", "sent"];
+  for (const status of statuses) {
+    for (let i = 0; i < 20; i++) {
+      lines.push(`  it("parseBriefIssueRow status ${status} ${i}", () => {`);
+      lines.push(
+        `    const issue = parseBriefIssueRow(makeRow({ number: ${i + 1}, status: "${status}", slug: "brief-${status}-${i}" }));`,
+      );
+      lines.push(`    expect(issue?.status).toBe("${status}");`);
+      lines.push(`    expect(issue?.slug).toBe("brief-${status}-${i}");`);
+      lines.push(`  });`);
+    }
+  }
+
+  for (let i = 0; i < 80; i++) {
+    lines.push(`  it("parseBriefIssueRow payload matrix ${i}", () => {`);
+    lines.push(
+      `    const payload = JSON.stringify({ index: ${i}, note: "brief ${i}" });`,
+    );
+    lines.push(
+      `    const issue = parseBriefIssueRow(makeRow({ number: ${i + 10}, payload }));`,
+    );
+    lines.push(
+      `    expect(issue?.payload).toEqual({ index: ${i}, note: "brief ${i}" });`,
+    );
+    lines.push(`  });`);
+  }
+
+  lines.push(`  it("preserves row metadata fields", () => {`);
+  lines.push(
+    `    const row = makeRow({ scheduled_send_at: "2026-06-02T09:00:00.000Z", approved_at: "2026-06-01T12:00:00.000Z", sent_at: "2026-06-02T09:05:00.000Z" });`,
+  );
+  lines.push(`    const issue = parseBriefIssueRow(row) as BriefIssue;`);
+  lines.push(
+    `    expect(issue.scheduled_send_at).toBe("2026-06-02T09:00:00.000Z");`,
+  );
+  lines.push(`    expect(issue.approved_at).toBe("2026-06-01T12:00:00.000Z");`);
+  lines.push(`    expect(issue.sent_at).toBe("2026-06-02T09:05:00.000Z");`);
+  lines.push(`  });`);
+  lines.push(`});`);
+
+  return lines.join("\n") + "\n";
+}
+
 const files = [
-  ["tests/mcp-registry-artifact-path-lib.test.ts", artifactPathTests()],
-  ["tests/mcp-registry-public-api-lib.test.ts", publicApiTests()],
-  [
-    "tests/mcp-registry-discovery-projection-lib.test.ts",
-    discoveryProjectionTests(),
-  ],
-  ["tests/llms-surface-lib.test.ts", llmsSurfaceTests()],
-  ["tests/votes-lib.test.ts", votesLibTests()],
+  ["tests/mcp-registry-artifact-loader-lib.test.ts", artifactLoaderLibTests()],
+  ["tests/mcp-registry-fetch-lib.test.ts", fetchLibTests()],
+  ["tests/source-repo-signals-lib.test.ts", sourceRepoSignalsLibTests()],
+  ["tests/content-artifact-lib.test.ts", contentArtifactLibTests()],
+  ["tests/brief-issues-lib.test.ts", briefIssuesLibTests()],
 ];
 
 for (const [relPath, content] of files) {

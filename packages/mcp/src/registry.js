@@ -1,7 +1,3 @@
-import { readFile } from "node:fs/promises";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-
 import {
   buildSkillPlatformCompatibility,
   platformFeedSlug,
@@ -37,9 +33,7 @@ import {
 
 export * from "./schemas.js";
 
-const jsonMimeType = "application/json";
 const DISCOVERY_RESOURCE_LIMIT = 25;
-const DISCOVERY_FETCH_TIMEOUT_MS = 5000;
 
 import {
   LOCAL_DRAFT_TOOL_NAMES,
@@ -109,14 +103,13 @@ import {
   toSearchResult,
   unwrapEntries,
 } from "./registry-projection-lib.js";
+import { isSafePathPart } from "./registry-artifact-path-lib.js";
 import {
-  isSafePathPart,
-  safeRelativePath,
-} from "./registry-artifact-path-lib.js";
-import {
-  publicApiBaseUrl,
-  stripTrailingSlashes,
-} from "./registry-public-api-lib.js";
+  readEntry,
+  readJsonArtifact,
+  readTextArtifact,
+} from "./registry-artifact-loader-lib.js";
+import { fetchPublicApiJson, JSON_MIME_TYPE } from "./registry-fetch-lib.js";
 import {
   toJobEntry,
   toTrendingEntry,
@@ -132,65 +125,6 @@ export {
 export { PROMPT_DEFINITIONS, getRegistryPrompt, listRegistryPrompts };
 
 export { RESOURCE_TEMPLATES, listRegistryResourceTemplates };
-
-function dataDirFromOptions(options = {}) {
-  const envDataDir =
-    typeof process !== "undefined" ? process.env?.HEYCLAUDE_DATA_DIR : "";
-  if (options.dataDir || envDataDir) {
-    return options.dataDir || envDataDir;
-  }
-
-  const moduleUrl = import.meta.url;
-  if (!moduleUrl) {
-    throw new Error(
-      "HEYCLAUDE_DATA_DIR or readTextArtifact is required outside the Node package runtime.",
-    );
-  }
-
-  const repoRoot = path.resolve(
-    path.dirname(fileURLToPath(moduleUrl)),
-    "../../..",
-  );
-  return path.join(repoRoot, "apps", "web", "public", "data");
-}
-
-async function readTextArtifact(relativePath, options = {}) {
-  if (typeof options.readTextArtifact === "function") {
-    return options.readTextArtifact(relativePath);
-  }
-
-  const dataDir = dataDirFromOptions(options);
-  const filePath = path.join(dataDir, safeRelativePath(relativePath));
-  return readFile(filePath, "utf8");
-}
-
-// Generated registry artifacts are immutable for the lifetime of a server
-// instance, so an opt-in cache (wired up in `createHeyClaudeMcpServer`) lets the
-// long-lived stdio process parse each multi-MB artifact — most tools read the
-// ~2 MB search-index.json, and the workflow tools read it several times — once
-// instead of on every tool call. The cache is bypassed when a caller injects its
-// own loader, which owns its caching/revalidation.
-async function readJsonArtifact(relativePath, options = {}) {
-  if (typeof options.readJsonArtifact === "function") {
-    return options.readJsonArtifact(relativePath);
-  }
-
-  const cache = options.artifactCache;
-  if (!cache) {
-    return JSON.parse(await readTextArtifact(relativePath, options));
-  }
-
-  const cacheKey = path.join(
-    dataDirFromOptions(options),
-    safeRelativePath(relativePath),
-  );
-  if (cache.has(cacheKey)) {
-    return cache.get(cacheKey);
-  }
-  const parsed = JSON.parse(await readTextArtifact(relativePath, options));
-  cache.set(cacheKey, parsed);
-  return parsed;
-}
 
 function entryMatchesQuery(entry, query) {
   return matchesRegistryQuery(entry, query);
@@ -210,21 +144,6 @@ function rankSearchEntries(entries, query) {
 
 function entryMatchesPlatform(entry, platform) {
   return matchesRegistryPlatform(entry, platform);
-}
-
-async function readEntry(category, slug, options = {}) {
-  if (!isSafePathPart(category) || !isSafePathPart(slug)) {
-    return null;
-  }
-  try {
-    const payload = await readJsonArtifact(
-      `entries/${category}/${slug}.json`,
-      options,
-    );
-    return payload?.entry || null;
-  } catch {
-    return null;
-  }
 }
 
 export async function searchRegistry(args = {}, options = {}) {
@@ -903,47 +822,6 @@ export async function getClientSetup(args = {}) {
 }
 
 /**
- * Fetch JSON from a public HeyClaude API path. Tests inject a deterministic
- * fetcher via `options.fetchPublicApi`; production uses `fetch()` with a
- * bounded {@link DISCOVERY_FETCH_TIMEOUT_MS} timeout, `redirect: "error"`,
- * and a JSON `accept` header. Throws on non-2xx responses so callers can
- * convert failures into the "unavailable" graceful-degradation envelope.
- *
- * @param {string} apiPath API path beginning with `/api/...`.
- * @param {{
- *   publicApiBaseUrl?: string,
- *   fetchPublicApi?: (apiPath: string) => Promise<unknown>,
- * }} [options]
- * @returns {Promise<unknown>} Parsed JSON body from the upstream response.
- */
-async function fetchPublicApiJson(apiPath, options = {}) {
-  if (typeof options.fetchPublicApi === "function") {
-    return options.fetchPublicApi(apiPath);
-  }
-  const baseUrl = stripTrailingSlashes(publicApiBaseUrl(options));
-  const url = `${baseUrl}${apiPath.startsWith("/") ? "" : "/"}${apiPath}`;
-  const controller = new AbortController();
-  const timeout = setTimeout(
-    () => controller.abort(),
-    DISCOVERY_FETCH_TIMEOUT_MS,
-  );
-  try {
-    const response = await fetch(url, {
-      method: "GET",
-      headers: { accept: jsonMimeType },
-      redirect: "error",
-      signal: controller.signal,
-    });
-    if (!response.ok) {
-      throw new Error(`Public API ${apiPath} returned ${response.status}.`);
-    }
-    return await response.json();
-  } finally {
-    clearTimeout(timeout);
-  }
-}
-
-/**
  * Build the `heyclaude://registry/recent` resource payload. Reads the
  * generated `search-index.json` artifact, sorts entries by `repoUpdatedAt`
  * (falling back to `updatedAt` / `dateAdded`) descending, and bounds
@@ -1100,14 +978,14 @@ export async function listRegistryResources(args = {}, options = {}) {
         name: "HeyClaude directory index",
         title: "HeyClaude directory index",
         description: "Generated public directory index artifact.",
-        mimeType: jsonMimeType,
+        mimeType: JSON_MIME_TYPE,
       },
       ...categories.map((category) => ({
         uri: `heyclaude://category/${category}`,
         name: `HeyClaude ${category} category`,
         title: `HeyClaude ${category}`,
         description: `Generated public ${category} category summary entries.`,
-        mimeType: jsonMimeType,
+        mimeType: JSON_MIME_TYPE,
       })),
       ...DISCOVERY_RESOURCES,
     ],
@@ -1120,7 +998,7 @@ export async function readRegistryResource(args = {}, options = {}) {
     contents: [
       {
         uri: uri || "heyclaude://error",
-        mimeType: jsonMimeType,
+        mimeType: JSON_MIME_TYPE,
         text: JSON.stringify(withPublicPolicy(payload), null, 2),
       },
     ],

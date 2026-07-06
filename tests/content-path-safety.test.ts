@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { isSafeContentPathPart } from "@/lib/content.server";
+import { isSafeContentPathPart } from "@/lib/content-artifact-lib";
 
 describe("isSafeContentPathPart", () => {
   it("accepts lowercase slug-style path parts", () => {

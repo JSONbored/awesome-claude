@@ -1,6 +1,5 @@
 import { cache } from "react";
 import { readFile } from "node:fs/promises";
-import path from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
 import { renderEntryLlms } from "@heyclaude/registry";
 import type {
@@ -9,11 +8,17 @@ import type {
   ContentEntry,
   DirectoryEntry,
   RegistryTrustReport,
-  RegistryEnvelope,
   SearchDocument,
 } from "@heyclaude/registry";
 
 import { getCloudflareBinding } from "@/lib/cloudflare-env.server";
+import {
+  DATA_ORIGIN,
+  isSafeContentPathPart,
+  localDataFilePaths,
+  normalizeEntryDetailPayload,
+  normalizeRegistryEntries,
+} from "@/lib/content-artifact-lib";
 import { categoryDescriptions, categoryLabels, siteConfig } from "@/lib/site";
 import {
   applySourceRepoSignalToEntry,
@@ -21,8 +26,12 @@ import {
 } from "@/lib/source-repo-signals.server";
 
 export type { CategorySummary, ContentEntry, DirectoryEntry };
+export {
+  isSafeContentPathPart,
+  normalizeEntryDetailPayload,
+  normalizeRegistryEntries,
+} from "@/lib/content-artifact-lib";
 
-const DATA_ORIGIN = "https://heyclau.de";
 const MAX_ENTRY_DETAIL_CACHE_SIZE = 512;
 let directoryIndexPromise: Promise<DirectoryEntry[]> | null = null;
 const entryDetailPromises = new Map<string, Promise<ContentEntry | null>>();
@@ -32,20 +41,6 @@ type EntryDetailPayload = {
   entry?: ContentEntry;
   trustSignals?: ContentEntry["trustSignals"];
 };
-
-export function normalizeEntryDetailPayload(payload: EntryDetailPayload): ContentEntry | null {
-  const entry = payload.entry ?? null;
-  if (!entry) return null;
-  if (!payload.trustSignals || entry.trustSignals) return entry;
-  return { ...entry, trustSignals: payload.trustSignals };
-}
-
-function localDataFilePaths(fileName: string) {
-  return [
-    path.join(process.cwd(), "public", "data", fileName),
-    path.join(process.cwd(), "apps", "web", "public", "data", fileName),
-  ].filter((filePath, index, paths) => paths.indexOf(filePath) === index);
-}
 
 async function readLocalDataFile(fileName: string) {
   let lastError: unknown = null;
@@ -110,30 +105,19 @@ export async function loadTextDataFile(fileName: string): Promise<string> {
   }
 }
 
-export function normalizeRegistryEntries<T>(payload: RegistryEnvelope<T>): T[] {
-  if (!Array.isArray(payload?.entries)) {
-    throw new Error("Invalid registry artifact: expected entries envelope");
-  }
-  return payload.entries;
-}
-
 const loadDirectoryIndex = cache(async (): Promise<DirectoryEntry[]> => {
   directoryIndexPromise ??=
-    loadJsonDataFile<RegistryEnvelope<DirectoryEntry>>("directory-index.json").then(
-      normalizeRegistryEntries,
-    );
+    loadJsonDataFile<import("@heyclaude/registry").RegistryEnvelope<DirectoryEntry>>(
+      "directory-index.json",
+    ).then(normalizeRegistryEntries);
   return directoryIndexPromise;
 });
 
 const loadSearchIndex = cache(async () => {
-  return loadJsonDataFile<RegistryEnvelope<SearchDocument>>("search-index.json").then(
-    normalizeRegistryEntries,
-  );
+  return loadJsonDataFile<import("@heyclaude/registry").RegistryEnvelope<SearchDocument>>(
+    "search-index.json",
+  ).then(normalizeRegistryEntries);
 });
-
-export function isSafeContentPathPart(value: string) {
-  return /^[a-z0-9-]+$/.test(value);
-}
 
 async function loadEntryDetail(category: string, slug: string) {
   if (!isSafeContentPathPart(category) || !isSafeContentPathPart(slug)) {

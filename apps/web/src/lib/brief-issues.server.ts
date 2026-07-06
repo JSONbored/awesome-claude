@@ -1,42 +1,13 @@
 import { getSiteDb } from "@/lib/db";
+import {
+  isMissingBriefIssuesInfra,
+  parseBriefIssueRow,
+  type BriefIssue,
+  type BriefIssueRow,
+  type BriefIssueStatus,
+} from "@/lib/brief-issues-lib";
 
-export type BriefIssueStatus = "draft" | "approved" | "sent";
-
-export type BriefIssueRow = {
-  number: number;
-  slug: string;
-  period_through: string;
-  payload: string;
-  status: BriefIssueStatus;
-  generated_at: string;
-  scheduled_send_at: string | null;
-  approved_at: string | null;
-  sent_at: string | null;
-};
-
-export type BriefIssue = Omit<BriefIssueRow, "payload"> & {
-  payload: Record<string, unknown>;
-};
-
-// Fail open only for a not-yet-applied migration (the absent-binding case is
-// already short-circuited by the getSiteDb() null guards before any query
-// runs). Real D1 faults — constraint violations, syntax errors, timeouts — must
-// still surface, so this matcher is deliberately narrow to "table not present".
-function isMissingInfra(error: unknown): boolean {
-  const message = error instanceof Error ? error.message : String(error ?? "");
-  return /no such table: brief_issues|no such table/i.test(message);
-}
-
-function parseRow(row: BriefIssueRow | null): BriefIssue | null {
-  if (!row) return null;
-  let payload: Record<string, unknown> = {};
-  try {
-    payload = JSON.parse(row.payload) as Record<string, unknown>;
-  } catch {
-    payload = {};
-  }
-  return { ...row, payload };
-}
+export type { BriefIssue, BriefIssueRow, BriefIssueStatus };
 
 /**
  * Persist a freshly generated weekly brief as a draft. Idempotent on the
@@ -62,7 +33,7 @@ export async function upsertBriefDraft(input: {
       .run();
     return Boolean(result?.meta?.changes);
   } catch (error) {
-    if (isMissingInfra(error)) return false;
+    if (isMissingBriefIssuesInfra(error)) return false;
     throw error;
   }
 }
@@ -79,9 +50,9 @@ export async function getLatestPublishedBrief(): Promise<BriefIssue | null> {
       )
       .bind()
       .first<BriefIssueRow>();
-    return parseRow(row);
+    return parseBriefIssueRow(row);
   } catch (error) {
-    if (isMissingInfra(error)) return null;
+    if (isMissingBriefIssuesInfra(error)) return null;
     throw error;
   }
 }
@@ -97,9 +68,9 @@ export async function getBriefByNumber(number: number): Promise<BriefIssue | nul
       )
       .bind(number)
       .first<BriefIssueRow>();
-    return parseRow(row);
+    return parseBriefIssueRow(row);
   } catch (error) {
-    if (isMissingInfra(error)) return null;
+    if (isMissingBriefIssuesInfra(error)) return null;
     throw error;
   }
 }
@@ -117,9 +88,11 @@ export async function listPublishedBriefs(limit = 24): Promise<BriefIssue[]> {
       )
       .bind(Math.max(1, Math.min(limit, 100)))
       .all<BriefIssueRow>();
-    return (results ?? []).map(parseRow).filter((issue): issue is BriefIssue => issue !== null);
+    return (results ?? [])
+      .map(parseBriefIssueRow)
+      .filter((issue): issue is BriefIssue => issue !== null);
   } catch (error) {
-    if (isMissingInfra(error)) return [];
+    if (isMissingBriefIssuesInfra(error)) return [];
     throw error;
   }
 }
@@ -136,9 +109,9 @@ export async function getLatestDraft(): Promise<BriefIssue | null> {
       )
       .bind()
       .first<BriefIssueRow>();
-    return parseRow(row);
+    return parseBriefIssueRow(row);
   } catch (error) {
-    if (isMissingInfra(error)) return null;
+    if (isMissingBriefIssuesInfra(error)) return null;
     throw error;
   }
 }
@@ -174,7 +147,7 @@ export async function approveBrief(
       .run();
     return Boolean(result?.meta?.changes);
   } catch (error) {
-    if (isMissingInfra(error)) return false;
+    if (isMissingBriefIssuesInfra(error)) return false;
     throw error;
   }
 }
@@ -193,9 +166,11 @@ export async function getDueApprovedBriefs(nowIso: string): Promise<BriefIssue[]
       )
       .bind(nowIso)
       .all<BriefIssueRow>();
-    return (results ?? []).map(parseRow).filter((issue): issue is BriefIssue => issue !== null);
+    return (results ?? [])
+      .map(parseBriefIssueRow)
+      .filter((issue): issue is BriefIssue => issue !== null);
   } catch (error) {
-    if (isMissingInfra(error)) return [];
+    if (isMissingBriefIssuesInfra(error)) return [];
     throw error;
   }
 }
@@ -215,7 +190,7 @@ export async function markBriefSent(number: number): Promise<boolean> {
       .run();
     return Boolean(result?.meta?.changes);
   } catch (error) {
-    if (isMissingInfra(error)) return false;
+    if (isMissingBriefIssuesInfra(error)) return false;
     throw error;
   }
 }

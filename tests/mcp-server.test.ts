@@ -2550,6 +2550,10 @@ describe("HeyClaude read-only MCP helpers", () => {
         path.join(repoRoot, "packages/mcp/src/registry-public-api-lib.js"),
         "utf8",
       );
+      const fetchLibSource = fs.readFileSync(
+        path.join(repoRoot, "packages/mcp/src/registry-fetch-lib.js"),
+        "utf8",
+      );
       const discoveryProjectionLibSource = fs.readFileSync(
         path.join(
           repoRoot,
@@ -2585,7 +2589,10 @@ describe("HeyClaude read-only MCP helpers", () => {
       requireDocstringBefore("export async function listRegistryRecent(");
       requireDocstringBefore("export async function listRegistryTrending(");
       requireDocstringBefore("export async function listJobsActive(");
-      requireDocstringBefore("async function fetchPublicApiJson(");
+      requireDocstringBefore(
+        "export async function fetchPublicApiJson(",
+        fetchLibSource,
+      );
       requireDocstringBefore(
         "export function publicApiBaseUrl(",
         publicApiLibSource,
