@@ -225,7 +225,11 @@ function Dossier() {
   const entryRef = `${entry.category}/${entry.slug}`;
   const comparedIn = COMPARISONS.filter((c) => c.refs.includes(entryRef));
   const featuredIn = BEST_LISTS.filter((l) => l.picks.some((p) => p.ref === entryRef));
-  const { dossierUi: dossierCompareUi, featuredUi } = useMemo(
+  const {
+    dossierUi: dossierCompareUi,
+    featuredUi,
+    hasFeaturedLinks,
+  } = useMemo(
     () => compareEntryInteractiveUiState(entry, alternatives, comparedIn, featuredIn, ENTRIES),
     [entry, alternatives, comparedIn, featuredIn],
   );
@@ -731,7 +735,7 @@ function Dossier() {
             </DossierSection>
           )}
 
-          {featuredUi.hasFeaturedLinks && (
+          {hasFeaturedLinks && (
             <DossierSection id="featured-in" title="Featured in">
               <ul className="flex flex-col gap-2 text-sm">
                 {featuredIn.map((l) => {

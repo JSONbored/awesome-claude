@@ -13,6 +13,7 @@ import {
 export type CompareEntryInteractiveUiState = {
   dossierUi: CompareDossierInteractiveUiState;
   featuredUi: CompareEntryFeaturedInteractiveUiState;
+  hasFeaturedLinks: boolean;
 };
 
 export function compareEntryInteractiveUiState(
@@ -22,8 +23,18 @@ export function compareEntryInteractiveUiState(
   lists: ReadonlyArray<{ slug: string; picks: BestListPickRef[] }>,
   catalog: EntryIdentity[],
 ): CompareEntryInteractiveUiState {
+  const featuredUi = compareEntryFeaturedInteractiveUiState(comparisons, lists, catalog);
   return {
     dossierUi: compareDossierInteractiveUiState(entry, alternatives),
-    featuredUi: compareEntryFeaturedInteractiveUiState(comparisons, lists, catalog),
+    featuredUi,
+    hasFeaturedLinks: featuredUi.hasFeaturedLinks,
   };
+}
+
+export function compareEntryInteractiveShowsFeaturedLinks(
+  comparisons: ReadonlyArray<{ slug: string; refs: string[] }>,
+  lists: ReadonlyArray<{ slug: string; picks: BestListPickRef[] }>,
+  catalog: EntryIdentity[],
+): boolean {
+  return compareEntryFeaturedInteractiveUiState(comparisons, lists, catalog).hasFeaturedLinks;
 }
