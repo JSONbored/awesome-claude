@@ -5,18 +5,23 @@ import {
   type CompareCuratedUiState,
 } from "@/lib/compare-curated-ui-lib";
 
-export type CompareCuratedInteractiveUiState = CompareCuratedUiState;
+export type CompareCuratedInteractiveUiState = CompareCuratedUiState & {
+  renderable: boolean;
+};
 
 export function compareCuratedInteractiveUiState(
   refs: string[],
   catalog: EntryIdentity[],
 ): CompareCuratedInteractiveUiState {
-  return compareCuratedUiState(refs, catalog);
+  return {
+    ...compareCuratedUiState(refs, catalog),
+    renderable: compareCuratedHasRenderableEntries(refs, catalog),
+  };
 }
 
 export function compareCuratedInteractivePageRenderable(
   refs: string[],
   catalog: EntryIdentity[],
 ): boolean {
-  return compareCuratedHasRenderableEntries(refs, catalog);
+  return compareCuratedInteractiveUiState(refs, catalog).renderable;
 }

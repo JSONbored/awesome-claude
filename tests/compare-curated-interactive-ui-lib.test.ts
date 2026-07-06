@@ -30,10 +30,16 @@ const catalog = [
 
 describe("compare curated interactive ui lib", () => {
   it("requires at least two resolved entries for curated pages", () => {
-    expect(compareCuratedInteractivePageRenderable([], catalog)).toBe(false);
+    expect(compareCuratedInteractiveUiState([], catalog).renderable).toBe(
+      false,
+    );
     expect(
-      compareCuratedInteractivePageRenderable(["skills/alpha"], catalog),
+      compareCuratedInteractiveUiState(["skills/alpha"], catalog).renderable,
     ).toBe(false);
+    expect(
+      compareCuratedInteractiveUiState(["skills/alpha", "hooks/beta"], catalog)
+        .renderable,
+    ).toBe(true);
     expect(
       compareCuratedInteractivePageRenderable(
         ["skills/alpha", "hooks/beta"],
@@ -50,6 +56,7 @@ describe("compare curated interactive ui lib", () => {
       bannerTexts: [],
       interactiveSearch: { ids: "skills/alpha,hooks/beta" },
       interactiveLinkLabel: "Open in the interactive comparison tool",
+      renderable: true,
     });
   });
 
@@ -64,6 +71,7 @@ describe("compare curated interactive ui lib", () => {
       bannerTexts: [],
       interactiveSearch: null,
       interactiveLinkLabel: "Open 1 picks in the interactive comparison tool",
+      renderable: false,
     });
   });
 
