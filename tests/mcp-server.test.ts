@@ -2546,6 +2546,17 @@ describe("HeyClaude read-only MCP helpers", () => {
         ),
         "utf8",
       );
+      const publicApiLibSource = fs.readFileSync(
+        path.join(repoRoot, "packages/mcp/src/registry-public-api-lib.js"),
+        "utf8",
+      );
+      const discoveryProjectionLibSource = fs.readFileSync(
+        path.join(
+          repoRoot,
+          "packages/mcp/src/registry-discovery-projection-lib.js",
+        ),
+        "utf8",
+      );
 
       const requireDocstringBefore = (
         declaration: string,
@@ -2575,10 +2586,19 @@ describe("HeyClaude read-only MCP helpers", () => {
       requireDocstringBefore("export async function listRegistryTrending(");
       requireDocstringBefore("export async function listJobsActive(");
       requireDocstringBefore("async function fetchPublicApiJson(");
-      requireDocstringBefore("function publicApiBaseUrl(");
+      requireDocstringBefore(
+        "export function publicApiBaseUrl(",
+        publicApiLibSource,
+      );
       requireDocstringBefore("export function unavailable(", responseLibSource);
-      requireDocstringBefore("function toTrendingEntry(");
-      requireDocstringBefore("function toJobEntry(");
+      requireDocstringBefore(
+        "export function toTrendingEntry(",
+        discoveryProjectionLibSource,
+      );
+      requireDocstringBefore(
+        "export function toJobEntry(",
+        discoveryProjectionLibSource,
+      );
       requireDocstringBefore(
         "export const DISCOVERY_RESOURCES = [",
         resourceMetadataLibSource,

@@ -5,7 +5,6 @@ import { fileURLToPath } from "node:url";
 import {
   buildSkillPlatformCompatibility,
   platformFeedSlug,
-  SITE_URL,
 } from "./platforms.js";
 import {
   DEFAULT_REMOTE_MCP_URL,
@@ -38,7 +37,6 @@ import {
 
 export * from "./schemas.js";
 
-const safePathPartPattern = /^[a-z0-9-]+$/;
 const jsonMimeType = "application/json";
 const DISCOVERY_RESOURCE_LIMIT = 25;
 const DISCOVERY_FETCH_TIMEOUT_MS = 5000;
@@ -111,6 +109,18 @@ import {
   toSearchResult,
   unwrapEntries,
 } from "./registry-projection-lib.js";
+import {
+  isSafePathPart,
+  safeRelativePath,
+} from "./registry-artifact-path-lib.js";
+import {
+  publicApiBaseUrl,
+  stripTrailingSlashes,
+} from "./registry-public-api-lib.js";
+import {
+  toJobEntry,
+  toTrendingEntry,
+} from "./registry-discovery-projection-lib.js";
 
 export {
   LOCAL_DRAFT_TOOL_NAMES,
@@ -142,21 +152,6 @@ function dataDirFromOptions(options = {}) {
     "../../..",
   );
   return path.join(repoRoot, "apps", "web", "public", "data");
-}
-
-function isSafePathPart(value) {
-  return safePathPartPattern.test(String(value || ""));
-}
-
-function safeRelativePath(relativePath) {
-  const parts = String(relativePath || "").split("/");
-  if (
-    !parts.length ||
-    parts.some((part) => !part || part === "." || part === "..")
-  ) {
-    throw new Error(`Unsafe registry artifact path: ${relativePath}`);
-  }
-  return parts.join(path.sep);
 }
 
 async function readTextArtifact(relativePath, options = {}) {
@@ -908,35 +903,6 @@ export async function getClientSetup(args = {}) {
 }
 
 /**
- * Resolve the public HeyClaude API base URL. Prefers an explicit override
- * on `options.publicApiBaseUrl`, then the `HEYCLAUDE_PUBLIC_API_URL`
- * environment variable, then falls back to the canonical site URL.
- *
- * @param {{ publicApiBaseUrl?: string }} [options]
- * @returns {string} Base URL used to build `/api/...` requests.
- */
-function publicApiBaseUrl(options = {}) {
-  return (
-    options.publicApiBaseUrl || process.env.HEYCLAUDE_PUBLIC_API_URL || SITE_URL
-  );
-}
-
-/**
- * Remove trailing slashes without using a potentially expensive regex on
- * caller-controlled API base URL overrides.
- *
- * @param {string} value
- * @returns {string}
- */
-function stripTrailingSlashes(value) {
-  let end = value.length;
-  while (end > 0 && value.charCodeAt(end - 1) === 47) {
-    end -= 1;
-  }
-  return value.slice(0, end);
-}
-
-/**
  * Fetch JSON from a public HeyClaude API path. Tests inject a deterministic
  * fetcher via `options.fetchPublicApi`; production uses `fetch()` with a
  * bounded {@link DISCOVERY_FETCH_TIMEOUT_MS} timeout, `redirect: "error"`,
@@ -1018,32 +984,6 @@ export async function listRegistryRecent(options = {}) {
 }
 
 /**
- * Normalize a raw `/api/registry/trending` entry into the small, stable
- * shape published by the MCP `registry/trending` resource. Defends against
- * upstream field churn (missing arrays, non-numeric scores, dropped
- * `trustSignals`) so MCP clients see a predictable schema.
- *
- * @param {Record<string, unknown> & { category: string, slug: string }} entry
- * @returns {Record<string, unknown>} Normalized trending entry.
- */
-function toTrendingEntry(entry) {
-  return {
-    key: `${entry.category}:${entry.slug}`,
-    category: entry.category,
-    slug: entry.slug,
-    title: entry.title || "",
-    description: entry.description || "",
-    canonicalUrl: entryCanonicalUrl(entry),
-    platforms: Array.isArray(entry.platforms) ? entry.platforms : [],
-    tags: Array.isArray(entry.tags) ? entry.tags : [],
-    dateAdded: entry.dateAdded || "",
-    score: typeof entry.score === "number" ? entry.score : 0,
-    reasons: Array.isArray(entry.reasons) ? entry.reasons : [],
-    trustSignals: entry.trustSignals || { sourceStatus: "missing" },
-  };
-}
-
-/**
  * Build the `heyclaude://registry/trending` resource payload. Reuses the
  * public `/api/registry/trending` endpoint (no DB access from the MCP
  * package). Returns an `unavailable` envelope when the upstream fetch
@@ -1095,31 +1035,6 @@ export async function listRegistryTrending(options = {}) {
         : null,
     source: "public-api",
     entries,
-  };
-}
-
-/**
- * Normalize a raw `/api/jobs` entry into the small, stable shape published
- * by the MCP `jobs/active` resource. Defends against upstream field churn
- * and never exposes private/admin-only fields (we only project the public
- * subset already returned by `buildPublicJobsIndex`).
- *
- * @param {Record<string, unknown>} job
- * @returns {Record<string, unknown>} Normalized public job entry.
- */
-function toJobEntry(job) {
-  return {
-    id: job.id || job.slug || "",
-    title: job.title || "",
-    company: job.company || "",
-    location: job.location || "",
-    type: job.type || "",
-    isRemote: Boolean(job.isRemote),
-    tier: job.tier || "",
-    applyUrl: job.applyUrl || job.url || "",
-    sourceLabel: job.sourceLabel || "",
-    postedAt: job.postedAt || job.publishedAt || "",
-    labels: Array.isArray(job.labels) ? job.labels : [],
   };
 }
 

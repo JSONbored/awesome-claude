@@ -1,24 +1,11 @@
 import { getSiteDb, type D1DatabaseLike } from "@/lib/db";
 import { chunk, inPlaceholders } from "@/lib/d1-batch";
+import { getFallbackClientVotes, getFallbackVoteCounts, isValidEntryKey } from "@/lib/votes-lib";
 
-export function isValidEntryKey(key: string) {
-  return /^[a-z0-9-]+:[a-z0-9-]+$/.test(key);
-}
+export { getFallbackClientVotes, getFallbackVoteCounts, isValidEntryKey };
 
 export function getVotesDb(): D1DatabaseLike | null {
   return getSiteDb();
-}
-
-export function getFallbackVoteCounts(keys: string[]) {
-  const counts: Record<string, number> = {};
-  for (const key of keys) counts[key] = 0;
-  return counts;
-}
-
-export function getFallbackClientVotes(keys: string[]) {
-  const voted: Record<string, boolean> = {};
-  for (const key of keys) voted[key] = false;
-  return voted;
 }
 
 async function ensureEntry(db: D1DatabaseLike, entryKey: string) {
@@ -45,8 +32,7 @@ export async function queryVoteCounts(db: D1DatabaseLike, keys: string[]) {
       .bind(...batch)
       .all<{ entry_key: string; upvote_count: number }>();
 
-    for (const row of results)
-      counts[row.entry_key] = Number(row.upvote_count ?? 0);
+    for (const row of results) counts[row.entry_key] = Number(row.upvote_count ?? 0);
   }
 
   return counts;
@@ -67,10 +53,7 @@ export async function safeVoteCounts(keys: string[]) {
     };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    if (
-      !message.includes("no such table: votes_entries") &&
-      !message.includes("SITE_DB")
-    ) {
+    if (!message.includes("no such table: votes_entries") && !message.includes("SITE_DB")) {
       console.warn("[votes] failed to read counts", error);
     }
     return {
@@ -80,11 +63,7 @@ export async function safeVoteCounts(keys: string[]) {
   }
 }
 
-export async function queryVotesByClient(
-  db: D1DatabaseLike,
-  keys: string[],
-  clientId: string,
-) {
+export async function queryVotesByClient(db: D1DatabaseLike, keys: string[], clientId: string) {
   if (!keys.length || !clientId) return {};
 
   const voted: Record<string, boolean> = {};
@@ -116,9 +95,7 @@ export async function toggleVote(params: {
 
   if (vote) {
     const insert = await db
-      .prepare(
-        "INSERT OR IGNORE INTO votes_by_client (entry_key, client_id) VALUES (?, ?)",
-      )
+      .prepare("INSERT OR IGNORE INTO votes_by_client (entry_key, client_id) VALUES (?, ?)")
       .bind(entryKey, clientId)
       .run();
     const changes = Number(insert.meta?.changes ?? 0);
@@ -133,9 +110,7 @@ export async function toggleVote(params: {
     }
   } else {
     const del = await db
-      .prepare(
-        "DELETE FROM votes_by_client WHERE entry_key = ? AND client_id = ?",
-      )
+      .prepare("DELETE FROM votes_by_client WHERE entry_key = ? AND client_id = ?")
       .bind(entryKey, clientId)
       .run();
     const changes = Number(del.meta?.changes ?? 0);
@@ -156,9 +131,7 @@ export async function toggleVote(params: {
     .first<{ upvote_count: number }>();
 
   const votedRow = await db
-    .prepare(
-      "SELECT 1 AS voted FROM votes_by_client WHERE entry_key = ? AND client_id = ? LIMIT 1",
-    )
+    .prepare("SELECT 1 AS voted FROM votes_by_client WHERE entry_key = ? AND client_id = ? LIMIT 1")
     .bind(entryKey, clientId)
     .first<{ voted: number }>();
 
