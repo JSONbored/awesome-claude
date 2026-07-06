@@ -1,0 +1,291 @@
+---
+title: LLM Pulse MCP Server for Claude
+slug: llm-pulse-mcp-server
+category: mcp
+description: >-
+  Hosted LLM Pulse MCP server for AI visibility analytics, brand mentions,
+  citations, sentiment, share of voice, recommendations, GEO Writer, and AI
+  traffic workflows.
+cardDescription: >-
+  Connect Claude to LLM Pulse to query AI visibility, citations, sentiment,
+  competitors, recommendations, GEO Writer tasks, and AI traffic through MCP.
+seoTitle: LLM Pulse MCP Server for Claude
+seoDescription: >-
+  Use the LLM Pulse MCP server with Claude and other MCP clients to analyze AI
+  search visibility, brand mentions, citations, sentiment, share of voice,
+  recommendations, GEO Writer tasks, and AI traffic.
+author: LLM Pulse
+authorProfileUrl: "https://llmpulse.ai"
+submittedBy: estevecastells
+submittedByUrl: "https://github.com/estevecastells"
+dateAdded: "2026-07-06"
+brandName: LLM Pulse
+brandDomain: llmpulse.ai
+repoUrl: "https://github.com/LLM-Pulse/llmpulse-mcp"
+documentationUrl: "https://llmpulse.ai/features/mcp"
+websiteUrl: "https://llmpulse.ai"
+installable: true
+installCommand: "claude mcp add --transport http llm-pulse https://api.llmpulse.ai/api/v1/mcp"
+usageSnippet: >-
+  Add the hosted MCP endpoint, authenticate with your LLM Pulse account through
+  OAuth in supported clients, then ask Claude for visibility trends, competitor
+  share of voice, citations, sentiment, prompts, recommendations, or GEO Writer
+  tasks.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "llm-pulse": {
+        "url": "https://api.llmpulse.ai/api/v1/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  Headless API-key fallback for Scale and Enterprise:
+  npx mcp-remote https://api.llmpulse.ai/api/v1/mcp --header "Authorization: Bearer YOUR_API_KEY"
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "LLM Pulse account with access to the projects you want Claude to analyze."
+  - "MCP-capable client that supports remote Streamable HTTP servers and OAuth, such as Claude, ChatGPT, Gemini, Cursor, Windsurf, Zed, or a compatible custom agent."
+  - "Optional API key only for Scale and Enterprise headless integrations or local wrapper use."
+  - "Project, competitor, prompt, Search Console, AI traffic, and GEO Writer permissions appropriate to the workflows you plan to run."
+safetyNotes:
+  - "LLM Pulse MCP includes read tools for analytics and write-capable workflows for prompts, competitors, tags, annotations, recommendations, GEO Writer, and technical GEO audits."
+  - "Write scopes should be granted only when AI-assisted edits or audit launches are approved for the account."
+  - "Some tools follow the same plan gates and team-member permissions as the LLM Pulse app."
+  - "Review AI-proposed prompt, competitor, tag, annotation, content, or audit changes before approving them in production workspaces."
+privacyNotes:
+  - "MCP responses can expose brand names, tracked prompts, AI answer text, citations, sentiment, source domains, competitors, Search Console metrics, AI traffic data, and recommendations to the connected AI client."
+  - "OAuth tokens and API keys should stay in the MCP client, connector settings, operating-system keychain, or secrets manager, not in chat messages, screenshots, or source control."
+  - "Assistant transcripts, MCP client logs, exported chats, and support tickets can retain analytics data returned by the server."
+  - "Headless bearer-token setups depend on the API key owner and plan permissions."
+disclosure: >-
+  Commercial hosted MCP server from LLM Pulse. The public GitHub repository
+  contains metadata and a small local stdio wrapper for the hosted endpoint, not
+  the private LLM Pulse application source code. OAuth access is available on
+  every plan in supported clients; bearer API-key fallback is for Scale and
+  Enterprise headless integrations.
+sourceUrls:
+  - "https://llmpulse.ai/features/mcp"
+  - "https://llmpulse.ai/api-docs"
+  - "https://github.com/LLM-Pulse/llmpulse-mcp"
+  - "https://raw.githubusercontent.com/LLM-Pulse/llmpulse-mcp/main/README.md"
+  - "https://raw.githubusercontent.com/LLM-Pulse/llmpulse-mcp/main/server.json"
+  - "https://raw.githubusercontent.com/LLM-Pulse/llmpulse-mcp/main/package.json"
+  - "https://raw.githubusercontent.com/LLM-Pulse/llmpulse-mcp/main/src/index.js"
+tags:
+  - ai-visibility
+  - seo
+  - analytics
+  - citations
+  - sentiment
+  - remote-mcp
+keywords:
+  - LLM Pulse MCP Server
+  - LLM Pulse Claude
+  - AI visibility MCP
+  - GEO analytics MCP
+  - brand mention tracking MCP
+  - share of voice MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+LLM Pulse MCP Server connects Claude and other MCP-capable clients to LLM Pulse,
+an AI visibility analytics platform for monitoring how brands appear in AI
+search and LLM-generated answers. Teams use it to inspect brand mentions,
+citations, sentiment, competitor share of voice, weighted visibility, prompt
+coverage, source domains, recommendations, GEO Writer tasks, Search Console
+metrics, and AI traffic data from a conversational workflow.
+
+The hosted endpoint is:
+
+```text
+https://api.llmpulse.ai/api/v1/mcp
+```
+
+Supported clients can connect through remote Streamable HTTP and authenticate
+with OAuth. LLM Pulse also documents an API-key fallback for headless
+integrations on Scale and Enterprise plans, plus a small public wrapper
+repository for local stdio testing.
+
+## Source Review
+
+- https://llmpulse.ai/features/mcp
+- https://llmpulse.ai/api-docs
+- https://github.com/LLM-Pulse/llmpulse-mcp
+- https://raw.githubusercontent.com/LLM-Pulse/llmpulse-mcp/main/README.md
+- https://raw.githubusercontent.com/LLM-Pulse/llmpulse-mcp/main/server.json
+- https://raw.githubusercontent.com/LLM-Pulse/llmpulse-mcp/main/package.json
+- https://raw.githubusercontent.com/LLM-Pulse/llmpulse-mcp/main/src/index.js
+
+These sources were reviewed on **2026-07-06**. Prefer the live product docs,
+API docs, public metadata repository, server manifest, package metadata, and
+wrapper source for current setup and operating details.
+
+## Features
+
+- Remote Streamable HTTP MCP endpoint for LLM Pulse account data.
+- OAuth connection path for supported clients, with token refresh handled by the
+  client flow.
+- Headless API-key fallback for Scale and Enterprise integrations.
+- Project, competitor, tag, model, locale, prompt, execution, citation, source,
+  mention, sentiment, and answer discovery tools.
+- Timeseries, summary, share of voice, prompt summary, top source, AI model, and
+  AI traffic analytics where plan access allows.
+- Recommendation and GEO Writer workflows for turning visibility data into
+  content and optimization actions.
+- Write-capable workflows for adding prompts, competitors, tags, annotations,
+  technical GEO reports, and related account actions when scopes permit.
+- Public local wrapper that can expose the hosted tool set through stdio when
+  `LLMPULSE_API_KEY` is configured.
+
+## Use Cases
+
+- Ask Claude for this month's AI visibility trend across ChatGPT, Perplexity,
+  Gemini, Google AI surfaces, and other tracked models.
+- Compare brand share of voice against tracked competitors for a project,
+  locale, model, or prompt collection.
+- Pull citations and source domains behind positive, neutral, or negative AI
+  answers.
+- Investigate weak prompts, low weighted visibility, missing citations, and
+  sentiment changes without exporting CSV files.
+- Draft a GEO Writer brief or recommendation from live LLM Pulse metrics.
+- Review AI bot traffic and Search Console context alongside AI visibility data
+  where the connected account has access.
+- Let an internal agent monitor brand visibility and propose prompt, competitor,
+  tag, annotation, or content updates for human review.
+
+## Installation
+
+### Claude Code
+
+Add the hosted MCP endpoint:
+
+```sh
+claude mcp add --transport http llm-pulse https://api.llmpulse.ai/api/v1/mcp
+```
+
+Open the MCP connection and complete the LLM Pulse OAuth flow when prompted by
+your client.
+
+### Claude, ChatGPT, Gemini, Cursor, Windsurf, Zed, and custom clients
+
+Add the same URL as a custom MCP connector or remote HTTP MCP server:
+
+```text
+https://api.llmpulse.ai/api/v1/mcp
+```
+
+Use OAuth in clients that support it. For headless automations on Scale and
+Enterprise, use the documented bearer-token fallback:
+
+```sh
+npx mcp-remote https://api.llmpulse.ai/api/v1/mcp --header "Authorization: Bearer YOUR_API_KEY"
+```
+
+### Local stdio wrapper
+
+Clone the public wrapper repository and run it with an API key:
+
+```sh
+npm install
+LLMPULSE_API_KEY=llmpulse_your_key_here npm start
+```
+
+Without `LLMPULSE_API_KEY`, the wrapper exposes a setup/status tool so registries
+and users can verify that the server starts before connecting real account data.
+
+## Configuration
+
+Remote clients can use the hosted endpoint directly:
+
+```json
+{
+  "mcpServers": {
+    "llm-pulse": {
+      "url": "https://api.llmpulse.ai/api/v1/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+Headless bearer-token setups should keep the API key in client secrets or
+environment configuration:
+
+```json
+{
+  "mcpServers": {
+    "llm-pulse": {
+      "url": "https://api.llmpulse.ai/api/v1/mcp",
+      "type": "http",
+      "headers": {
+        "Authorization": "Bearer llmpulse_your_key_here"
+      }
+    }
+  }
+}
+```
+
+## Example Prompts
+
+### Visibility trend
+
+```text
+Show my brand visibility trend for the last 30 days and explain the biggest model-level changes.
+```
+
+### Competitor share of voice
+
+```text
+Compare our share of voice against our top competitors for the current project this quarter.
+```
+
+### Citation investigation
+
+```text
+Which domains cite us most often in AI answers, and which high-value prompts still have weak citation coverage?
+```
+
+### GEO action plan
+
+```text
+Find three prompts where we are visible but poorly positioned, then draft a GEO Writer brief to improve the weakest cluster.
+```
+
+## Safety and Privacy
+
+Treat LLM Pulse MCP as access to live account analytics. Read calls can return
+tracked prompts, brand names, competitor names, AI answer text, citation URLs,
+source domains, sentiment labels, Search Console metrics, AI traffic data, and
+recommendations. Only connect clients approved to process that data, and avoid
+pasting OAuth tokens or API keys into chat.
+
+Write scopes can modify account objects or start workflows. Review any
+AI-proposed prompt, competitor, tag, annotation, content, or technical audit
+change before approving it, especially inside shared customer, agency, or
+white-label workspaces.
+
+## Troubleshooting
+
+### OAuth connection fails
+
+Confirm that your MCP client supports remote Streamable HTTP and OAuth for
+custom connectors. If the client does not support OAuth yet, use the documented
+API-key fallback only where your plan and security policy allow it.
+
+### Tools are missing
+
+LLM Pulse filters the MCP tool list by plan, scopes, and team-member
+permissions. Re-authenticate with the correct account, check the user's project
+access, and confirm that the requested feature is available on the current
+plan.
+
+### Headless wrapper only shows status
+
+Set `LLMPULSE_API_KEY` before starting the wrapper. Without an API key, the
+wrapper intentionally exposes only the setup/status tool.
