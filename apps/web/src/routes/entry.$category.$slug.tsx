@@ -39,8 +39,7 @@ import { WatchButton } from "@/components/watch-button";
 import { CopyButton } from "@/components/copy-button";
 import { ResourceCard } from "@/components/resource-card";
 import { ComparisonTable } from "@/components/comparison-table";
-import { compareEntryFeaturedInteractiveUiState } from "@/lib/compare-entry-featured-interactive-ui-lib";
-import { compareDossierInteractiveUiState } from "@/lib/compare-dossier-interactive-ui-lib";
+import { compareEntryInteractiveUiState } from "@/lib/compare-entry-interactive-ui-lib";
 import { buildEntryJsonLd } from "@heyclaude/registry";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl, clampDescription } from "@/lib/seo";
@@ -223,9 +222,12 @@ function Dossier() {
     const pool = altGroup && altGroup.entries.length > 0 ? altGroup.entries : rel;
     return pool.slice(0, 3);
   }, [relGroups, rel]);
-  const dossierCompareUi = useMemo(
-    () => compareDossierInteractiveUiState(entry, alternatives),
-    [entry, alternatives],
+  const entryRef = `${entry.category}/${entry.slug}`;
+  const comparedIn = COMPARISONS.filter((c) => c.refs.includes(entryRef));
+  const featuredIn = BEST_LISTS.filter((l) => l.picks.some((p) => p.ref === entryRef));
+  const { dossierUi: dossierCompareUi, featuredUi } = useMemo(
+    () => compareEntryInteractiveUiState(entry, alternatives, comparedIn, featuredIn, ENTRIES),
+    [entry, alternatives, comparedIn, featuredIn],
   );
   // Deterministic "how do I use this" next-step links — guides sharing a tag,
   // minus any guide already shown in the related grid (no duplicate links).
@@ -237,13 +239,6 @@ function Dossier() {
     );
     return relatedGuides(entry).filter((g) => !shown.has(`${g.category}/${g.slug}`));
   }, [entry, relGroups, rel]);
-  const entryRef = `${entry.category}/${entry.slug}`;
-  const comparedIn = COMPARISONS.filter((c) => c.refs.includes(entryRef));
-  const featuredIn = BEST_LISTS.filter((l) => l.picks.some((p) => p.ref === entryRef));
-  const featuredUi = useMemo(
-    () => compareEntryFeaturedInteractiveUiState(comparedIn, featuredIn, ENTRIES),
-    [comparedIn, featuredIn],
-  );
   const recents = useRecents();
   useEffect(() => {
     recents.pushEntry({ category: entry.category, slug: entry.slug, title: entry.title });
