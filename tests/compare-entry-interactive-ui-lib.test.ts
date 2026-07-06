@@ -89,6 +89,35 @@ describe("compare entry interactive ui lib", () => {
         entry({ category: "hooks", slug: "alt" }),
       ]),
     ).toBe(true);
+    const bundled = compareEntryInteractiveUiState(
+      primary,
+      [entry({ category: "hooks", slug: "alt" })],
+      [{ slug: "pair", refs: ["skills/alpha", "hooks/beta"] }],
+      [
+        {
+          slug: "top-picks",
+          picks: [{ ref: "skills/alpha" }, { ref: "hooks/beta" }],
+        },
+      ],
+      catalog,
+    );
+    expect(bundled.hasFeaturedLinks).toBe(
+      compareEntryInteractiveShowsFeaturedLinks(
+        [{ slug: "pair", refs: ["skills/alpha", "hooks/beta"] }],
+        [
+          {
+            slug: "top-picks",
+            picks: [{ ref: "skills/alpha" }, { ref: "hooks/beta" }],
+          },
+        ],
+        catalog,
+      ),
+    );
+    expect(bundled.showDossierCompareSection).toBe(
+      compareEntryInteractiveShowsDossierCompareSection(primary, [
+        entry({ category: "hooks", slug: "alt" }),
+      ]),
+    );
   });
 
   it("hides dossier compare and featured links when nothing references the entry", () => {

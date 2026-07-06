@@ -31,8 +31,12 @@ export function compareEntryInteractiveUiState(
   return {
     dossierUi,
     featuredUi,
-    hasFeaturedLinks: featuredUi.hasFeaturedLinks,
-    showDossierCompareSection: dossierUi.showCompareSection,
+    hasFeaturedLinks: compareEntryFeaturedInteractiveShowsFeaturedLinks(
+      comparisons,
+      lists,
+      catalog,
+    ),
+    showDossierCompareSection: compareDossierInteractiveShowCompareSection(entry, alternatives),
   };
 }
 
