@@ -34,7 +34,7 @@ export type CompareDossierUiState = {
 export function compareDossierUiState(entry: Entry, alternatives: Entry[]): CompareDossierUiState {
   const comparedCount = alternatives.length + 1;
   return {
-    showCompareSection: alternatives.length > 0,
+    showCompareSection: compareDossierShowCompareSection(alternatives),
     bannerTexts: compareDossierBannerTexts(entry, alternatives),
     interactiveSearch: compareDossierInteractiveSearch(entry, alternatives),
     interactiveLinkLabel: compareInteractiveLinkLabel(comparedCount),

@@ -93,6 +93,11 @@ describe("compare dossier ui lib", () => {
       interactiveSearch: { ids: "skills/primary,hooks/alt" },
       interactiveLinkLabel: "Open in the interactive comparison tool",
     });
+    const alternatives = [entry({ category: "hooks", slug: "alt" })];
+    const bundled = compareDossierUiState(primary, alternatives);
+    expect(bundled.showCompareSection).toBe(
+      compareDossierShowCompareSection(alternatives),
+    );
     expect(
       compareDossierUiState(primary, [
         entry({
