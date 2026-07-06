@@ -13,5 +13,5 @@ export function compareBestInteractiveUiState(entries: Entry[]): CompareBestInte
 }
 
 export function compareBestInteractiveShowCompareSection(entries: Entry[]): boolean {
-  return compareBestInteractiveUiState(entries).showCompareSection;
+  return shouldShowBestCompareSection(entries);
 }
