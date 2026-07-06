@@ -2,6 +2,7 @@ import type { Entry } from "@/types/registry";
 import type { BestListPickRef } from "@/lib/compare-best-summary";
 import type { EntryIdentity } from "@/lib/entry-identity";
 import {
+  compareDossierInteractiveShowCompareSection,
   compareDossierInteractiveUiState,
   type CompareDossierInteractiveUiState,
 } from "@/lib/compare-dossier-interactive-ui-lib";
@@ -46,5 +47,5 @@ export function compareEntryInteractiveShowsDossierCompareSection(
   entry: Entry,
   alternatives: Entry[],
 ): boolean {
-  return compareDossierInteractiveUiState(entry, alternatives).showCompareSection;
+  return compareDossierInteractiveShowCompareSection(entry, alternatives);
 }

@@ -1,5 +1,9 @@
 import type { Entry } from "@/types/registry";
-import { compareDossierUiState, type CompareDossierUiState } from "@/lib/compare-dossier-ui-lib";
+import {
+  compareDossierShowCompareSection,
+  compareDossierUiState,
+  type CompareDossierUiState,
+} from "@/lib/compare-dossier-ui-lib";
 
 export type CompareDossierInteractiveUiState = CompareDossierUiState;
 
@@ -7,5 +11,16 @@ export function compareDossierInteractiveUiState(
   entry: Entry,
   alternatives: Entry[],
 ): CompareDossierInteractiveUiState {
-  return compareDossierUiState(entry, alternatives);
+  const ui = compareDossierUiState(entry, alternatives);
+  return {
+    ...ui,
+    showCompareSection: compareDossierShowCompareSection(alternatives),
+  };
+}
+
+export function compareDossierInteractiveShowCompareSection(
+  _entry: Entry,
+  alternatives: Entry[],
+): boolean {
+  return compareDossierShowCompareSection(alternatives);
 }
