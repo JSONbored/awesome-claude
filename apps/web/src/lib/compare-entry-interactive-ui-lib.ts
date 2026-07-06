@@ -7,6 +7,7 @@ import {
   type CompareDossierInteractiveUiState,
 } from "@/lib/compare-dossier-interactive-ui-lib";
 import {
+  compareEntryFeaturedInteractiveShowsFeaturedLinks,
   compareEntryFeaturedInteractiveUiState,
   type CompareEntryFeaturedInteractiveUiState,
 } from "@/lib/compare-entry-featured-interactive-ui-lib";
@@ -40,7 +41,7 @@ export function compareEntryInteractiveShowsFeaturedLinks(
   lists: ReadonlyArray<{ slug: string; picks: BestListPickRef[] }>,
   catalog: EntryIdentity[],
 ): boolean {
-  return compareEntryFeaturedInteractiveUiState(comparisons, lists, catalog).hasFeaturedLinks;
+  return compareEntryFeaturedInteractiveShowsFeaturedLinks(comparisons, lists, catalog);
 }
 
 export function compareEntryInteractiveShowsDossierCompareSection(
