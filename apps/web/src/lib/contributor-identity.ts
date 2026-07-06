@@ -1,15 +1,7 @@
-export function contributorSlug(value: string) {
-  return value
-    .trim()
-    .toLowerCase()
-    .replace(/^@/, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
-
-export function authorMatchesSubmitter(author?: string, submittedBy?: string) {
-  if (!author || !submittedBy) return false;
-  const authorSlug = contributorSlug(author);
-  const submittedBySlug = contributorSlug(submittedBy);
-  return Boolean(authorSlug && authorSlug === submittedBySlug);
-}
+/**
+ * Contributor identity surface.
+ *
+ * Pure helpers live in `contributor-identity-lib.ts`. This module re-exports
+ * that surface so existing `@/lib/contributor-identity` imports stay unchanged.
+ */
+export { contributorSlug, authorMatchesSubmitter } from "@/lib/contributor-identity-lib";
