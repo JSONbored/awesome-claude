@@ -8,7 +8,7 @@ export function compareBestInteractiveUiState(entries: Entry[]): CompareBestInte
   const ui = compareBestUiState(entries);
   return {
     ...ui,
-    showCompareSection: shouldShowBestCompareSection(entries),
+    showCompareSection: compareBestInteractiveShowCompareSection(entries),
   };
 }
 

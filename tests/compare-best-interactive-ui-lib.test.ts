@@ -51,6 +51,14 @@ describe("compare best interactive ui lib", () => {
         entry({ category: "hooks", slug: "beta" }),
       ]),
     ).toBe(true);
+    const entries = [
+      entry({ category: "skills", slug: "alpha" }),
+      entry({ category: "hooks", slug: "beta" }),
+    ];
+    const bundled = compareBestInteractiveUiState(entries);
+    expect(bundled.showCompareSection).toBe(
+      compareBestInteractiveShowCompareSection(entries),
+    );
   });
 
   it("surfaces divergence banners for multi-entry best lists", () => {
