@@ -21,6 +21,7 @@ import {
   isBrowseTrustSignalFilter,
   toggleBrowseTrustSignal,
 } from "@/lib/browse-trust-filters";
+import { browseFilterDecisionUiState } from "@/lib/browse-filter-decision-hints";
 import {
   CATEGORIES,
   type Category,
@@ -303,6 +304,24 @@ function Browse() {
   const browseCompareUi = useMemo(
     () => browseCompareInteractiveUiState(compare.items),
     [compare.items],
+  );
+
+  const browseFilterDecision = useMemo(
+    () =>
+      browseFilterDecisionUiState(
+        {
+          q: sp.q,
+          category: sp.category,
+          trust: sp.trust,
+          source: sp.source,
+          signal: sp.signal,
+          platform: sp.platform,
+          sort: sp.sort,
+        },
+        results,
+        compare.items.length,
+      ),
+    [sp, results, compare.items.length],
   );
 
   const activeCount =
@@ -756,6 +775,12 @@ function Browse() {
           {activeFilters.length > 0 && (
             <FilterSummaryBar filters={activeFilters} onClearAll={clearAll} className="mt-3" />
           )}
+
+          {browseFilterDecision.hint ? (
+            <p className="mt-2 text-xs text-ink-muted" role="status">
+              {browseFilterDecision.hint}
+            </p>
+          ) : null}
 
           {sp.category &&
             (() => {
