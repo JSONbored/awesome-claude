@@ -13,6 +13,13 @@ import type {
 
 import { getCloudflareBinding } from "@/lib/cloudflare-env.server";
 import {
+  buildAssetsDataRequestUrl,
+  loadJsonFromAssetsBinding,
+  loadTextFromAssetsBinding,
+  readLocalDataFileFromPaths,
+  readLocalJsonDataFileWithRetry,
+} from "@/lib/content-loader-lib";
+import {
   DATA_ORIGIN,
   isSafeContentPathPart,
   localDataFilePaths,
@@ -50,29 +57,11 @@ type EntryDetailPayload = {
 };
 
 async function readLocalDataFile(fileName: string) {
-  let lastError: unknown = null;
-  for (const filePath of localDataFilePaths(fileName)) {
-    try {
-      return await readFile(filePath, "utf8");
-    } catch (error) {
-      lastError = error;
-    }
-  }
-  throw lastError || new Error(`Local data artifact not found: ${fileName}`);
+  return readLocalDataFileFromPaths(localDataFilePaths(fileName), readFile);
 }
 
 async function readLocalJsonDataFile<T>(fileName: string): Promise<T> {
-  let lastError: unknown = null;
-  for (let attempt = 0; attempt < 3; attempt += 1) {
-    try {
-      const raw = await readLocalDataFile(fileName);
-      return JSON.parse(raw) as T;
-    } catch (error) {
-      lastError = error;
-      if (attempt < 2) await sleep(25);
-    }
-  }
-  throw lastError || new Error(`Invalid local data artifact: ${fileName}`);
+  return readLocalJsonDataFileWithRetry<T>(fileName, localDataFilePaths(fileName), readFile, sleep);
 }
 
 export async function loadJsonDataFile<T>(fileName: string): Promise<T> {
@@ -80,18 +69,20 @@ export async function loadJsonDataFile<T>(fileName: string): Promise<T> {
   try {
     return await readLocalJsonDataFile<T>(safePath);
   } catch {
-    // In the Cloudflare Worker runtime, read from the static ASSETS binding.
     const assets = getCloudflareBinding<{
       fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
     }>("ASSETS");
     if (!assets) {
       throw new Error(`Static ASSETS binding is not available for ${safePath}`);
     }
-    const response = await assets.fetch(new Request(`${DATA_ORIGIN}/data/${safePath}`));
-    if (!response.ok) {
-      throw new Error(`Failed to load ${safePath} asset (${response.status})`);
+    const url = buildAssetsDataRequestUrl(DATA_ORIGIN, safePath);
+    try {
+      return await loadJsonFromAssetsBinding<T>(assets, url);
+    } catch (error) {
+      throw new Error(
+        `Failed to load ${safePath} asset (${error instanceof Error ? error.message : "unknown"})`,
+      );
     }
-    return (await response.json()) as T;
   }
 }
 
@@ -106,11 +97,14 @@ export async function loadTextDataFile(fileName: string): Promise<string> {
     if (!assets) {
       throw new Error(`Static ASSETS binding is not available for ${safePath}`);
     }
-    const response = await assets.fetch(new Request(`${DATA_ORIGIN}/data/${safePath}`));
-    if (!response.ok) {
-      throw new Error(`Failed to load ${safePath} asset (${response.status})`);
+    const url = buildAssetsDataRequestUrl(DATA_ORIGIN, safePath);
+    try {
+      return await loadTextFromAssetsBinding(assets, url);
+    } catch (error) {
+      throw new Error(
+        `Failed to load ${safePath} asset (${error instanceof Error ? error.message : "unknown"})`,
+      );
     }
-    return response.text();
   }
 }
 

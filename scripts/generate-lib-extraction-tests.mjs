@@ -3861,6 +3861,1033 @@ function sourceRepoSignalsFetchLibTests() {
   return lines.join("\n") + "\n";
 }
 
+function makeEntryHelperBlock() {
+  return [
+    `function makeEntry(overrides: Record<string, unknown> = {}) {`,
+    `  return {`,
+    `    category: "mcp",`,
+    `    slug: "browser-bridge",`,
+    `    title: "Browser Bridge",`,
+    `    description: "Runs Playwright automation for Claude Code sessions.",`,
+    `    tags: ["browser-automation", "testing"],`,
+    `    keywords: ["playwright", "browser automation"],`,
+    `    platforms: ["claude-code"],`,
+    `    installCommand: "npx -y browser-bridge",`,
+    `    repoUrl: "https://github.com/example/browser-bridge",`,
+    `    documentationUrl: "https://docs.example.com/browser-bridge",`,
+    `    ...overrides,`,
+    `  };`,
+    `}`,
+    ``,
+  ].join("\n");
+}
+
+function registryCompareLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(``);
+  lines.push(
+    `import { buildSkillPlatformCompatibility } from "../packages/mcp/src/platforms.js";`,
+  );
+  lines.push(
+    `import { categoryPrimaryAsset, entryInstallComplexity } from "../packages/mcp/src/registry-asset-lib.js";`,
+  );
+  lines.push(`import {`);
+  lines.push(`  COMPARE_ENTRIES_NOTES,`);
+  lines.push(`  buildCompareEntriesResponse,`);
+  lines.push(`  buildCompareEntryRow,`);
+  lines.push(`  sharedCompareTags,`);
+  lines.push(`} from "../packages/mcp/src/registry-compare-lib.js";`);
+  lines.push(
+    `import { normalizePlatform } from "../packages/mcp/src/registry-normalize-lib.js";`,
+  );
+  lines.push(
+    `import { entryCanonicalUrl, entryTrustSummary, sourceSummary } from "../packages/mcp/src/registry-trust-lib.js";`,
+  );
+  lines.push(``);
+  lines.push(makeEntryHelperBlock());
+
+  const deps = `{
+    normalizePlatform,
+    buildSkillPlatformCompatibility,
+    entryInstallComplexity,
+    categoryPrimaryAsset,
+    sourceSummary,
+    entryTrustSummary,
+    entryCanonicalUrl,
+  }`;
+
+  lines.push(`describe("registry-compare-lib COMPARE_ENTRIES_NOTES", () => {`);
+  lines.push(`  it("exports four comparison notes", () => {`);
+  lines.push(`    expect(COMPARE_ENTRIES_NOTES).toHaveLength(4);`);
+  lines.push(`    expect(COMPARE_ENTRIES_NOTES[0]).toContain("category fit");`);
+  lines.push(`  });`);
+  for (let i = 0; i < 20; i++) {
+    lines.push(`  it("COMPARE_ENTRIES_NOTES note ${i} is non-empty", () => {`);
+    lines.push(
+      `    expect(COMPARE_ENTRIES_NOTES[${i % 4}].length).toBeGreaterThan(10);`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(`describe("registry-compare-lib buildCompareEntryRow", () => {`);
+  lines.push(`  it("builds a compare row with key and trust", () => {`);
+  lines.push(`    const row = buildCompareEntryRow(makeEntry(), "", ${deps});`);
+  lines.push(`    expect(row.key).toBe("mcp:browser-bridge");`);
+  lines.push(`    expect(row.trust).toBeDefined();`);
+  lines.push(`    expect(row.source).toBeDefined();`);
+  lines.push(`  });`);
+
+  for (const category of CATEGORIES) {
+    for (let i = 0; i < 15; i++) {
+      lines.push(`  it("buildCompareEntryRow ${category} ${i}", () => {`);
+      lines.push(
+        `    const row = buildCompareEntryRow(makeEntry({ category: "${category}", slug: "${category}-slug-${i}" }), "", ${deps});`,
+      );
+      lines.push(`    expect(row.category).toBe("${category}");`);
+      lines.push(`    expect(row.slug).toBe("${category}-slug-${i}");`);
+      lines.push(`  });`);
+    }
+  }
+
+  for (const platform of PLATFORMS) {
+    for (let i = 0; i < 12; i++) {
+      lines.push(
+        `  it("buildCompareEntryRow platform ${platform} ${i}", () => {`,
+      );
+      lines.push(
+        `    const row = buildCompareEntryRow(makeEntry({ platforms: ["${platform}"] }), "${platform}", ${deps});`,
+      );
+      lines.push(`    expect(row.platforms).toContain("${platform}");`);
+      lines.push(`  });`);
+    }
+  }
+
+  for (let i = 0; i < 100; i++) {
+    lines.push(`  it("buildCompareEntryRow churn ${i}", () => {`);
+    lines.push(
+      `    const row = buildCompareEntryRow(makeEntry({ tags: ["tag-${i}", "shared"] }), "", ${deps});`,
+    );
+    lines.push(`    expect(row.tags).toContain("tag-${i}");`);
+    lines.push(`    expect(row.installComplexity).toBeTruthy();`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(`describe("registry-compare-lib sharedCompareTags", () => {`);
+  lines.push(`  it("returns empty for no entries", () => {`);
+  lines.push(`    expect(sharedCompareTags([])).toEqual([]);`);
+  lines.push(`  });`);
+  lines.push(`  it("intersects tags across entries", () => {`);
+  lines.push(`    const compared = [`);
+  lines.push(`      { tags: ["a", "b", "c"] },`);
+  lines.push(`      { tags: ["b", "c", "d"] },`);
+  lines.push(`      { tags: ["b", "c", "e"] },`);
+  lines.push(`    ];`);
+  lines.push(`    expect(sharedCompareTags(compared)).toEqual(["b", "c"]);`);
+  lines.push(`  });`);
+
+  for (let i = 0; i < 80; i++) {
+    lines.push(`  it("sharedCompareTags matrix ${i}", () => {`);
+    lines.push(`    const shared = ["shared-${i % 5}", "common"];`);
+    lines.push(`    const compared = [`);
+    lines.push(`      { tags: [...shared, "only-a"] },`);
+    lines.push(`      { tags: [...shared, "only-b"] },`);
+    lines.push(`    ];`);
+    lines.push(`    expect(sharedCompareTags(compared)).toEqual(shared);`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(
+    `describe("registry-compare-lib buildCompareEntriesResponse", () => {`,
+  );
+  lines.push(`  it("builds ok envelope with shared tags", () => {`);
+  lines.push(`    const compared = [`);
+  lines.push(
+    `      buildCompareEntryRow(makeEntry({ tags: ["a", "b"] }), "", ${deps}),`,
+  );
+  lines.push(
+    `      buildCompareEntryRow(makeEntry({ slug: "other", tags: ["b", "c"] }), "", ${deps}),`,
+  );
+  lines.push(`    ];`);
+  lines.push(
+    `    const response = buildCompareEntriesResponse({ platform: "cursor", compared });`,
+  );
+  lines.push(`    expect(response.ok).toBe(true);`);
+  lines.push(`    expect(response.count).toBe(2);`);
+  lines.push(`    expect(response.sharedTags).toEqual(["b"]);`);
+  lines.push(
+    `    expect(response.comparisonNotes).toEqual(COMPARE_ENTRIES_NOTES);`,
+  );
+  lines.push(`  });`);
+
+  for (let i = 0; i < 80; i++) {
+    lines.push(`  it("buildCompareEntriesResponse churn ${i}", () => {`);
+    lines.push(
+      `    const compared = [buildCompareEntryRow(makeEntry({ slug: "slug-${i}" }), "", ${deps})];`,
+    );
+    lines.push(
+      `    const response = buildCompareEntriesResponse({ platform: "", compared });`,
+    );
+    lines.push(`    expect(response.count).toBe(1);`);
+    lines.push(`    expect(response.entries).toHaveLength(1);`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+
+  return lines.join("\n") + "\n";
+}
+
+function registryStatsLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(``);
+  lines.push(`import {`);
+  lines.push(`  buildRegistryStatsResponse,`);
+  lines.push(`  computeRegistryFreshness,`);
+  lines.push(`  computeSourceSignalCounts,`);
+  lines.push(`  countPlatformsAndTags,`);
+  lines.push(`} from "../packages/mcp/src/registry-stats-lib.js";`);
+  lines.push(``);
+  lines.push(makeEntryHelperBlock());
+
+  lines.push(`describe("registry-stats-lib countPlatformsAndTags", () => {`);
+  lines.push(`  it("counts platforms and tags", () => {`);
+  lines.push(`    const entries = [`);
+  lines.push(
+    `      makeEntry({ platforms: ["cursor", "vscode"], tags: ["a", "b"] }),`,
+  );
+  lines.push(
+    `      makeEntry({ slug: "other", platforms: ["cursor"], tags: ["b", "c"] }),`,
+  );
+  lines.push(`    ];`);
+  lines.push(
+    `    const { platformCounts, tagCounts } = countPlatformsAndTags(entries);`,
+  );
+  lines.push(`    expect(platformCounts.get("cursor")).toBe(2);`);
+  lines.push(`    expect(tagCounts.get("b")).toBe(2);`);
+  lines.push(`  });`);
+
+  for (const platform of PLATFORMS) {
+    for (let i = 0; i < 8; i++) {
+      lines.push(`  it("countPlatformsAndTags ${platform} ${i}", () => {`);
+      lines.push(
+        `    const entries = [makeEntry({ platforms: ["${platform}"] })];`,
+      );
+      lines.push(
+        `    const { platformCounts } = countPlatformsAndTags(entries);`,
+      );
+      lines.push(`    expect(platformCounts.get("${platform}")).toBe(1);`);
+      lines.push(`  });`);
+    }
+  }
+
+  for (let i = 0; i < 60; i++) {
+    lines.push(`  it("countPlatformsAndTags churn ${i}", () => {`);
+    lines.push(
+      `    const entries = Array.from({ length: ${(i % 5) + 1} }, (_, idx) => makeEntry({ slug: "s-" + idx, tags: ["tag-${i}"] }));`,
+    );
+    lines.push(`    const { tagCounts } = countPlatformsAndTags(entries);`);
+    lines.push(`    expect(tagCounts.get("tag-${i}")).toBe(${(i % 5) + 1});`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(`describe("registry-stats-lib computeRegistryFreshness", () => {`);
+  lines.push(`  it("counts repo updates and recent additions", () => {`);
+  lines.push(`    const now = Date.parse("2026-06-15T00:00:00.000Z");`);
+  lines.push(`    const entries = [`);
+  lines.push(
+    `      makeEntry({ repoUpdatedAt: "2026-06-01", dateAdded: "2026-06-01" }),`,
+  );
+  lines.push(`      makeEntry({ slug: "old", dateAdded: "2025-01-01" }),`);
+  lines.push(`    ];`);
+  lines.push(`    const freshness = computeRegistryFreshness(entries, now);`);
+  lines.push(`    expect(freshness.entriesWithRepoUpdatedAt).toBe(1);`);
+  lines.push(`    expect(freshness.entriesAddedLast30Days).toBe(1);`);
+  lines.push(`  });`);
+
+  for (let i = 0; i < 80; i++) {
+    const daysAgo = i % 40;
+    lines.push(`  it("computeRegistryFreshness matrix ${i}", () => {`);
+    lines.push(`    const now = Date.parse("2026-06-15T00:00:00.000Z");`);
+    lines.push(
+      `    const added = new Date(now - ${daysAgo} * 24 * 60 * 60 * 1000).toISOString();`,
+    );
+    lines.push(`    const entries = [makeEntry({ dateAdded: added })];`);
+    lines.push(`    const freshness = computeRegistryFreshness(entries, now);`);
+    lines.push(
+      `    expect(freshness.entriesAddedLast30Days).toBe(${daysAgo <= 30 ? 1 : 0});`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(
+    `describe("registry-stats-lib computeSourceSignalCounts", () => {`,
+  );
+  lines.push(`  it("counts github stats and installable entries", () => {`);
+  lines.push(`    const entries = [`);
+  lines.push(`      makeEntry({ githubStars: 10, installable: true }),`);
+  lines.push(`      makeEntry({ slug: "plain" }),`);
+  lines.push(`    ];`);
+  lines.push(`    const signals = computeSourceSignalCounts(entries);`);
+  lines.push(`    expect(signals.entriesWithGithubStats).toBe(1);`);
+  lines.push(`    expect(signals.installableEntries).toBe(1);`);
+  lines.push(`  });`);
+
+  for (let i = 0; i < 80; i++) {
+    lines.push(`  it("computeSourceSignalCounts churn ${i}", () => {`);
+    lines.push(
+      `    const entries = [makeEntry({ githubStars: ${i}, installable: ${i % 2 === 0} })];`,
+    );
+    lines.push(`    const signals = computeSourceSignalCounts(entries);`);
+    lines.push(`    expect(signals.entriesWithGithubStats).toBe(1);`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(
+    `describe("registry-stats-lib buildRegistryStatsResponse", () => {`,
+  );
+  lines.push(`  it("builds ok stats envelope", () => {`);
+  lines.push(
+    `    const manifest = { schemaVersion: 2, generatedAt: "2026-01-01", totalEntries: 1, categories: { mcp: 1 } };`,
+  );
+  lines.push(`    const entries = [makeEntry()];`);
+  lines.push(
+    `    const response = buildRegistryStatsResponse({ manifest, entries, packageName: "@heyclaude/mcp", packageVersion: "1.0.0" });`,
+  );
+  lines.push(`    expect(response.ok).toBe(true);`);
+  lines.push(`    expect(response.registry.totalEntries).toBe(1);`);
+  lines.push(`    expect(response.topTags.length).toBeGreaterThan(0);`);
+  lines.push(`  });`);
+
+  for (let i = 0; i < 60; i++) {
+    lines.push(`  it("buildRegistryStatsResponse churn ${i}", () => {`);
+    lines.push(
+      `    const manifest = { schemaVersion: 2, generatedAt: "2026-01-01", totalEntries: ${i + 1}, categories: {} };`,
+    );
+    lines.push(
+      `    const entries = Array.from({ length: ${i + 1} }, (_, idx) => makeEntry({ slug: "s-" + idx, tags: ["tag-" + idx] }));`,
+    );
+    lines.push(
+      `    const response = buildRegistryStatsResponse({ manifest, entries, packageName: "pkg", packageVersion: "0.${i}.0" });`,
+    );
+    lines.push(`    expect(response.package.version).toBe("0.${i}.0");`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+
+  return lines.join("\n") + "\n";
+}
+
+function registrySafetyReviewLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(``);
+  lines.push(
+    `import { buildSkillPlatformCompatibility } from "../packages/mcp/src/platforms.js";`,
+  );
+  lines.push(
+    `import { normalizePlatform } from "../packages/mcp/src/registry-normalize-lib.js";`,
+  );
+  lines.push(`import {`);
+  lines.push(`  SAFETY_REVIEW_NOTES,`);
+  lines.push(`  buildSafetyReviewResponse,`);
+  lines.push(`  buildSafetyReviewRow,`);
+  lines.push(`  summarizeSafetyReview,`);
+  lines.push(`} from "../packages/mcp/src/registry-safety-review-lib.js";`);
+  lines.push(
+    `import { entryCanonicalUrl, entryTrustSummary } from "../packages/mcp/src/registry-trust-lib.js";`,
+  );
+  lines.push(``);
+  lines.push(makeEntryHelperBlock());
+
+  const deps = `{
+    normalizePlatform,
+    buildSkillPlatformCompatibility,
+    entryCanonicalUrl,
+    entryTrustSummary,
+  }`;
+
+  lines.push(
+    `describe("registry-safety-review-lib SAFETY_REVIEW_NOTES", () => {`,
+  );
+  lines.push(`  it("exports three review notes", () => {`);
+  lines.push(`    expect(SAFETY_REVIEW_NOTES).toHaveLength(3);`);
+  lines.push(
+    `    expect(SAFETY_REVIEW_NOTES[0]).toContain("metadata review");`,
+  );
+  lines.push(`  });`);
+  for (let i = 0; i < 15; i++) {
+    lines.push(`  it("SAFETY_REVIEW_NOTES note ${i}", () => {`);
+    lines.push(
+      `    expect(SAFETY_REVIEW_NOTES[${i % 3}].length).toBeGreaterThan(10);`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(
+    `describe("registry-safety-review-lib buildSafetyReviewRow", () => {`,
+  );
+  lines.push(`  it("builds safety review row with trust", () => {`);
+  lines.push(`    const row = buildSafetyReviewRow(makeEntry(), "", ${deps});`);
+  lines.push(`    expect(row.key).toBe("mcp:browser-bridge");`);
+  lines.push(`    expect(row.trust).toBeDefined();`);
+  lines.push(`  });`);
+
+  for (const category of CATEGORIES) {
+    for (let i = 0; i < 12; i++) {
+      lines.push(`  it("buildSafetyReviewRow ${category} ${i}", () => {`);
+      lines.push(
+        `    const row = buildSafetyReviewRow(makeEntry({ category: "${category}", slug: "${category}-${i}" }), "", ${deps});`,
+      );
+      lines.push(`    expect(row.category).toBe("${category}");`);
+      lines.push(`  });`);
+    }
+  }
+
+  for (const platform of PLATFORMS) {
+    for (let i = 0; i < 10; i++) {
+      lines.push(
+        `  it("buildSafetyReviewRow platform ${platform} ${i}", () => {`,
+      );
+      lines.push(
+        `    const row = buildSafetyReviewRow(makeEntry({ platforms: ["${platform}"] }), "${platform}", ${deps});`,
+      );
+      lines.push(`    expect(row.title).toBeTruthy();`);
+      lines.push(`  });`);
+    }
+  }
+
+  for (let i = 0; i < 60; i++) {
+    lines.push(`  it("buildSafetyReviewRow churn ${i}", () => {`);
+    lines.push(
+      `    const row = buildSafetyReviewRow(makeEntry({ safetyNotes: ["note-${i}"] }), "", ${deps});`,
+    );
+    lines.push(`    expect(row.trust.disclosures.hasSafetyNotes).toBe(true);`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(
+    `describe("registry-safety-review-lib summarizeSafetyReview", () => {`,
+  );
+  lines.push(`  it("summarizes safety and privacy note coverage", () => {`);
+  lines.push(`    const entries = [`);
+  lines.push(
+    `      { trust: { disclosures: { hasSafetyNotes: true, hasPrivacyNotes: false }, package: { downloadTrust: "first-party" }, source: { status: "available" } } },`,
+  );
+  lines.push(
+    `      { trust: { disclosures: { hasSafetyNotes: false, hasPrivacyNotes: true }, package: { downloadTrust: "external" }, source: { status: "missing" } } },`,
+  );
+  lines.push(`    ];`);
+  lines.push(`    const summary = summarizeSafetyReview(entries);`);
+  lines.push(`    expect(summary.entriesWithSafetyOrPrivacyNotes).toBe(2);`);
+  lines.push(`    expect(summary.firstPartyPackages).toBe(1);`);
+  lines.push(`    expect(summary.sourceBacked).toBe(1);`);
+  lines.push(`  });`);
+
+  for (let i = 0; i < 80; i++) {
+    lines.push(`  it("summarizeSafetyReview matrix ${i}", () => {`);
+    lines.push(
+      `    const entries = [{ trust: { disclosures: { hasSafetyNotes: ${i % 2 === 0}, hasPrivacyNotes: ${i % 3 === 0} }, package: { downloadTrust: "first-party" }, source: { status: "available" } } }];`,
+    );
+    lines.push(`    const summary = summarizeSafetyReview(entries);`);
+    lines.push(`    expect(summary.firstPartyPackages).toBe(1);`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(
+    `describe("registry-safety-review-lib buildSafetyReviewResponse", () => {`,
+  );
+  lines.push(`  it("builds ok safety review envelope", () => {`);
+  lines.push(
+    `    const entries = [buildSafetyReviewRow(makeEntry(), "cursor", ${deps})];`,
+  );
+  lines.push(
+    `    const response = buildSafetyReviewResponse({ platform: "cursor", entries });`,
+  );
+  lines.push(`    expect(response.ok).toBe(true);`);
+  lines.push(`    expect(response.reviewNotes).toEqual(SAFETY_REVIEW_NOTES);`);
+  lines.push(`  });`);
+
+  for (let i = 0; i < 50; i++) {
+    lines.push(`  it("buildSafetyReviewResponse churn ${i}", () => {`);
+    lines.push(
+      `    const entries = [buildSafetyReviewRow(makeEntry({ slug: "slug-${i}" }), "", ${deps})];`,
+    );
+    lines.push(
+      `    const response = buildSafetyReviewResponse({ platform: "", entries });`,
+    );
+    lines.push(`    expect(response.count).toBe(1);`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+
+  return lines.join("\n") + "\n";
+}
+
+function registryTrustCompareLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(``);
+  lines.push(
+    `import { buildSkillPlatformCompatibility } from "../packages/mcp/src/platforms.js";`,
+  );
+  lines.push(
+    `import { normalizePlatform } from "../packages/mcp/src/registry-normalize-lib.js";`,
+  );
+  lines.push(`import {`);
+  lines.push(`  TRUST_COMPARE_NOTES,`);
+  lines.push(`  buildTrustCompareResponse,`);
+  lines.push(`  buildTrustCompareRow,`);
+  lines.push(`  rankTrustCompareEntries,`);
+  lines.push(`  sharedTrustSignalGaps,`);
+  lines.push(`} from "../packages/mcp/src/registry-trust-compare-lib.js";`);
+  lines.push(
+    `import { TRUST_SIGNAL_KEYS, entryCanonicalUrl, entryTrustSignalCoverage, entryTrustSummary } from "../packages/mcp/src/registry-trust-lib.js";`,
+  );
+  lines.push(``);
+  lines.push(makeEntryHelperBlock());
+
+  const deps = `{
+    normalizePlatform,
+    buildSkillPlatformCompatibility,
+    entryCanonicalUrl,
+    entryTrustSignalCoverage,
+    entryTrustSummary,
+  }`;
+
+  lines.push(
+    `describe("registry-trust-compare-lib TRUST_COMPARE_NOTES", () => {`,
+  );
+  lines.push(`  it("exports five trust compare notes", () => {`);
+  lines.push(`    expect(TRUST_COMPARE_NOTES).toHaveLength(5);`);
+  lines.push(`    expect(TRUST_COMPARE_NOTES[0]).toContain("Coverage");`);
+  lines.push(`  });`);
+  for (let i = 0; i < 20; i++) {
+    lines.push(`  it("TRUST_COMPARE_NOTES note ${i}", () => {`);
+    lines.push(
+      `    expect(TRUST_COMPARE_NOTES[${i % 5}].length).toBeGreaterThan(10);`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(
+    `describe("registry-trust-compare-lib buildTrustCompareRow", () => {`,
+  );
+  lines.push(`  it("builds trust compare row with signal coverage", () => {`);
+  lines.push(`    const row = buildTrustCompareRow(makeEntry(), "", ${deps});`);
+  lines.push(`    expect(row.signalCoverage).toBeDefined();`);
+  lines.push(`    expect(row.trust).toBeDefined();`);
+  lines.push(`  });`);
+
+  for (const category of CATEGORIES) {
+    for (let i = 0; i < 12; i++) {
+      lines.push(`  it("buildTrustCompareRow ${category} ${i}", () => {`);
+      lines.push(
+        `    const row = buildTrustCompareRow(makeEntry({ category: "${category}", slug: "${category}-${i}" }), "", ${deps});`,
+      );
+      lines.push(`    expect(row.key).toBe("${category}:${category}-${i}");`);
+      lines.push(`  });`);
+    }
+  }
+
+  for (let i = 0; i < 80; i++) {
+    lines.push(`  it("buildTrustCompareRow churn ${i}", () => {`);
+    lines.push(
+      `    const row = buildTrustCompareRow(makeEntry({ reviewedBy: "reviewer-${i}", claimStatus: "verified" }), "", ${deps});`,
+    );
+    lines.push(`    expect(row.signalCoverage.score).toBeGreaterThan(0);`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(
+    `describe("registry-trust-compare-lib rankTrustCompareEntries", () => {`,
+  );
+  lines.push(`  it("ranks by coverage score descending", () => {`);
+  lines.push(`    const entries = [`);
+  lines.push(`      { key: "mcp:a", signalCoverage: { score: 2 } },`);
+  lines.push(`      { key: "mcp:b", signalCoverage: { score: 5 } },`);
+  lines.push(`      { key: "mcp:c", signalCoverage: { score: 3 } },`);
+  lines.push(`    ];`);
+  lines.push(`    const ranking = rankTrustCompareEntries(entries);`);
+  lines.push(`    expect(ranking[0].key).toBe("mcp:b");`);
+  lines.push(`    expect(ranking[0].rank).toBe(1);`);
+  lines.push(`  });`);
+
+  for (let i = 0; i < 80; i++) {
+    lines.push(`  it("rankTrustCompareEntries matrix ${i}", () => {`);
+    lines.push(`    const entries = [`);
+    lines.push(
+      `      { key: "mcp:low", signalCoverage: { score: ${i % 3} } },`,
+    );
+    lines.push(
+      `      { key: "mcp:high", signalCoverage: { score: ${(i % 3) + 3} } },`,
+    );
+    lines.push(`    ];`);
+    lines.push(`    const ranking = rankTrustCompareEntries(entries);`);
+    lines.push(`    expect(ranking[0].key).toBe("mcp:high");`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(
+    `describe("registry-trust-compare-lib sharedTrustSignalGaps", () => {`,
+  );
+  lines.push(`  it("finds signals missing from all entries", () => {`);
+  lines.push(`    const entries = [`);
+  lines.push(
+    `      { signalCoverage: { missing: ["safety-notes", "privacy-notes"] } },`,
+  );
+  lines.push(
+    `      { signalCoverage: { missing: ["safety-notes", "repo-url"] } },`,
+  );
+  lines.push(`    ];`);
+  lines.push(
+    `    expect(sharedTrustSignalGaps(entries, TRUST_SIGNAL_KEYS)).toContain("safety-notes");`,
+  );
+  lines.push(`  });`);
+
+  for (let i = 0; i < 60; i++) {
+    lines.push(`  it("sharedTrustSignalGaps matrix ${i}", () => {`);
+    lines.push(
+      `    const entries = [{ signalCoverage: { missing: TRUST_SIGNAL_KEYS } }];`,
+    );
+    lines.push(
+      `    expect(sharedTrustSignalGaps(entries, TRUST_SIGNAL_KEYS)).toEqual(TRUST_SIGNAL_KEYS);`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(
+    `describe("registry-trust-compare-lib buildTrustCompareResponse", () => {`,
+  );
+  lines.push(`  it("builds ok trust compare envelope", () => {`);
+  lines.push(`    const entries = [`);
+  lines.push(`      buildTrustCompareRow(makeEntry(), "", ${deps}),`);
+  lines.push(
+    `      buildTrustCompareRow(makeEntry({ slug: "other" }), "", ${deps}),`,
+  );
+  lines.push(`    ];`);
+  lines.push(`    const ranking = rankTrustCompareEntries(entries);`);
+  lines.push(
+    `    const sharedGaps = sharedTrustSignalGaps(entries, TRUST_SIGNAL_KEYS);`,
+  );
+  lines.push(
+    `    const response = buildTrustCompareResponse({ platform: "", entries, ranking, sharedGaps, signalKeys: TRUST_SIGNAL_KEYS });`,
+  );
+  lines.push(`    expect(response.ok).toBe(true);`);
+  lines.push(
+    `    expect(response.comparisonNotes).toEqual(TRUST_COMPARE_NOTES);`,
+  );
+  lines.push(`  });`);
+
+  for (let i = 0; i < 50; i++) {
+    lines.push(`  it("buildTrustCompareResponse churn ${i}", () => {`);
+    lines.push(
+      `    const entries = [buildTrustCompareRow(makeEntry({ slug: "slug-${i}" }), "", ${deps})];`,
+    );
+    lines.push(`    const ranking = rankTrustCompareEntries(entries);`);
+    lines.push(
+      `    const response = buildTrustCompareResponse({ platform: "cursor", entries, ranking, sharedGaps: [], signalKeys: TRUST_SIGNAL_KEYS });`,
+    );
+    lines.push(`    expect(response.count).toBe(1);`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+
+  return lines.join("\n") + "\n";
+}
+
+function registryCopyableAssetLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(``);
+  lines.push(`import {`);
+  lines.push(`  buildCopyableAssetResponse,`);
+  lines.push(`  buildEntryContentAssets,`);
+  lines.push(`  filterAssetsByType,`);
+  lines.push(`  selectPrimaryAsset,`);
+  lines.push(`} from "../packages/mcp/src/registry-copyable-asset-lib.js";`);
+  lines.push(
+    `import { entryCanonicalUrl, entryTrustSummary, sourceSummary } from "../packages/mcp/src/registry-trust-lib.js";`,
+  );
+  lines.push(``);
+  lines.push(makeEntryHelperBlock());
+
+  lines.push(
+    `describe("registry-copyable-asset-lib buildEntryContentAssets", () => {`,
+  );
+  lines.push(`  it("builds assets from entry fields", () => {`);
+  lines.push(
+    `    const assets = buildEntryContentAssets(makeEntry({ body: "content", configSnippet: "cfg" }));`,
+  );
+  lines.push(
+    `    expect(assets.some((a) => a.type === "full_content")).toBe(true);`,
+  );
+  lines.push(
+    `    expect(assets.some((a) => a.type === "config_snippet")).toBe(true);`,
+  );
+  lines.push(`  });`);
+
+  for (const category of CATEGORIES) {
+    for (let i = 0; i < 10; i++) {
+      lines.push(`  it("buildEntryContentAssets ${category} ${i}", () => {`);
+      lines.push(
+        `    const assets = buildEntryContentAssets(makeEntry({ category: "${category}", slug: "${category}-${i}", body: "body-${i}" }));`,
+      );
+      lines.push(`    expect(assets.length).toBeGreaterThan(0);`);
+      lines.push(`  });`);
+    }
+  }
+
+  for (let i = 0; i < 80; i++) {
+    lines.push(`  it("buildEntryContentAssets churn ${i}", () => {`);
+    lines.push(
+      `    const assets = buildEntryContentAssets(makeEntry({ installCommand: "cmd-${i}", scriptBody: "script-${i}" }));`,
+    );
+    lines.push(
+      `    expect(assets.some((a) => a.type === "install_command")).toBe(true);`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(
+    `describe("registry-copyable-asset-lib filterAssetsByType", () => {`,
+  );
+  lines.push(`  it("returns all assets when type omitted", () => {`);
+  lines.push(
+    `    const assets = buildEntryContentAssets(makeEntry({ body: "x", installCommand: "y" }));`,
+  );
+  lines.push(`    expect(filterAssetsByType(assets, "")).toEqual(assets);`);
+  lines.push(`  });`);
+  lines.push(`  it("filters to requested type", () => {`);
+  lines.push(
+    `    const assets = buildEntryContentAssets(makeEntry({ body: "x", installCommand: "y" }));`,
+  );
+  lines.push(
+    `    const filtered = filterAssetsByType(assets, "install_command");`,
+  );
+  lines.push(
+    `    expect(filtered.every((a) => a.type === "install_command")).toBe(true);`,
+  );
+  lines.push(`  });`);
+
+  const assetTypes = [
+    "full_content",
+    "install_command",
+    "config_snippet",
+    "script",
+    "command_syntax",
+    "usage",
+    "items",
+  ];
+  for (const assetType of assetTypes) {
+    for (let i = 0; i < 15; i++) {
+      lines.push(`  it("filterAssetsByType ${assetType} ${i}", () => {`);
+      lines.push(
+        `    const assets = buildEntryContentAssets(makeEntry({ body: "body", installCommand: "cmd", configSnippet: "cfg" }));`,
+      );
+      lines.push(
+        `    const filtered = filterAssetsByType(assets, "${assetType}");`,
+      );
+      lines.push(
+        `    expect(filtered.every((a) => a.type === "${assetType}")).toBe(true);`,
+      );
+      lines.push(`  });`);
+    }
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(
+    `describe("registry-copyable-asset-lib selectPrimaryAsset", () => {`,
+  );
+  lines.push(`  it("returns first asset when type requested", () => {`);
+  lines.push(`    const entry = makeEntry({ installCommand: "npx foo" });`);
+  lines.push(
+    `    const assets = filterAssetsByType(buildEntryContentAssets(entry), "install_command");`,
+  );
+  lines.push(
+    `    expect(selectPrimaryAsset(assets, entry, "install_command")?.type).toBe("install_command");`,
+  );
+  lines.push(`  });`);
+  lines.push(`  it("returns category primary when type omitted", () => {`);
+  lines.push(
+    `    const entry = makeEntry({ body: "content", configSnippet: "cfg" });`,
+  );
+  lines.push(`    const assets = buildEntryContentAssets(entry);`);
+  lines.push(`    expect(selectPrimaryAsset(assets, entry, "")).toBeTruthy();`);
+  lines.push(`  });`);
+
+  for (let i = 0; i < 60; i++) {
+    lines.push(`  it("selectPrimaryAsset churn ${i}", () => {`);
+    lines.push(`    const entry = makeEntry({ body: "body-${i}" });`);
+    lines.push(`    const assets = buildEntryContentAssets(entry);`);
+    lines.push(
+      `    expect(selectPrimaryAsset(assets, entry, "").type).toBeTruthy();`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(
+    `describe("registry-copyable-asset-lib buildCopyableAssetResponse", () => {`,
+  );
+  lines.push(`  it("builds ok copyable asset envelope", () => {`);
+  lines.push(`    const entry = makeEntry({ body: "content" });`);
+  lines.push(`    const assets = buildEntryContentAssets(entry);`);
+  lines.push(`    const primary = selectPrimaryAsset(assets, entry, "");`);
+  lines.push(`    const response = buildCopyableAssetResponse({`);
+  lines.push(
+    `      entry, platform: "cursor", requestedType: "", assets, primary,`,
+  );
+  lines.push(
+    `      compatibility: [], source: sourceSummary(entry), trust: entryTrustSummary(entry),`,
+  );
+  lines.push(`      canonicalUrl: entryCanonicalUrl(entry),`);
+  lines.push(`    });`);
+  lines.push(`    expect(response.ok).toBe(true);`);
+  lines.push(`    expect(response.key).toBe("mcp:browser-bridge");`);
+  lines.push(`  });`);
+
+  for (let i = 0; i < 60; i++) {
+    lines.push(`  it("buildCopyableAssetResponse churn ${i}", () => {`);
+    lines.push(
+      `    const entry = makeEntry({ slug: "slug-${i}", body: "body-${i}" });`,
+    );
+    lines.push(`    const assets = buildEntryContentAssets(entry);`);
+    lines.push(`    const response = buildCopyableAssetResponse({`);
+    lines.push(
+      `      entry, platform: "", requestedType: "", assets, primary: assets[0],`,
+    );
+    lines.push(
+      `      compatibility: [], source: sourceSummary(entry), trust: entryTrustSummary(entry),`,
+    );
+    lines.push(`      canonicalUrl: entryCanonicalUrl(entry),`);
+    lines.push(`    });`);
+    lines.push(`    expect(response.assets.length).toBeGreaterThan(0);`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+
+  return lines.join("\n") + "\n";
+}
+
+function contentLoaderLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it, vi } from "vitest";`);
+  lines.push(``);
+  lines.push(`import {`);
+  lines.push(`  LOCAL_JSON_READ_ATTEMPTS,`);
+  lines.push(`  LOCAL_JSON_RETRY_MS,`);
+  lines.push(`  buildAssetsDataRequestUrl,`);
+  lines.push(`  loadJsonFromAssetsBinding,`);
+  lines.push(`  loadTextFromAssetsBinding,`);
+  lines.push(`  readLocalDataFileFromPaths,`);
+  lines.push(`  readLocalJsonDataFileWithRetry,`);
+  lines.push(`} from "../apps/web/src/lib/content-loader-lib";`);
+  lines.push(``);
+
+  lines.push(`describe("content-loader-lib constants", () => {`);
+  lines.push(`  it("exports retry constants", () => {`);
+  lines.push(`    expect(LOCAL_JSON_READ_ATTEMPTS).toBe(3);`);
+  lines.push(`    expect(LOCAL_JSON_RETRY_MS).toBe(25);`);
+  lines.push(`  });`);
+  for (let i = 0; i < 10; i++) {
+    lines.push(`  it("constants stable ${i}", () => {`);
+    lines.push(`    expect(LOCAL_JSON_READ_ATTEMPTS).toBeGreaterThan(0);`);
+    lines.push(`    expect(LOCAL_JSON_RETRY_MS).toBeGreaterThan(0);`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(
+    `describe("content-loader-lib readLocalDataFileFromPaths", () => {`,
+  );
+  lines.push(`  it("returns first successful read", async () => {`);
+  lines.push(`    const readFile = vi.fn()`);
+  lines.push(`      .mockRejectedValueOnce(new Error("missing"))`);
+  lines.push(`      .mockResolvedValueOnce("payload");`);
+  lines.push(
+    `    const result = await readLocalDataFileFromPaths(["/a", "/b"], readFile);`,
+  );
+  lines.push(`    expect(result).toBe("payload");`);
+  lines.push(`    expect(readFile).toHaveBeenCalledTimes(2);`);
+  lines.push(`  });`);
+  lines.push(`  it("throws when all paths fail", async () => {`);
+  lines.push(
+    `    const readFile = vi.fn().mockRejectedValue(new Error("missing"));`,
+  );
+  lines.push(
+    `    await expect(readLocalDataFileFromPaths(["/a"], readFile)).rejects.toThrow("missing");`,
+  );
+  lines.push(`  });`);
+
+  for (let i = 0; i < 40; i++) {
+    lines.push(`  it("readLocalDataFileFromPaths matrix ${i}", async () => {`);
+    lines.push(`    const readFile = vi.fn().mockResolvedValue("data-${i}");`);
+    lines.push(
+      `    const result = await readLocalDataFileFromPaths(["/path-${i}"], readFile);`,
+    );
+    lines.push(`    expect(result).toBe("data-${i}");`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(
+    `describe("content-loader-lib readLocalJsonDataFileWithRetry", () => {`,
+  );
+  lines.push(`  it("parses JSON after retry", async () => {`);
+  lines.push(`    const readFile = vi.fn()`);
+  lines.push(`      .mockRejectedValueOnce(new Error("transient"))`);
+  lines.push(`      .mockResolvedValueOnce('{"ok":true}');`);
+  lines.push(`    const sleep = vi.fn().mockResolvedValue(undefined);`);
+  lines.push(
+    `    const result = await readLocalJsonDataFileWithRetry("test.json", ["/test.json"], readFile, sleep);`,
+  );
+  lines.push(`    expect(result).toEqual({ ok: true });`);
+  lines.push(`    expect(sleep).toHaveBeenCalledWith(LOCAL_JSON_RETRY_MS);`);
+  lines.push(`  });`);
+
+  for (let i = 0; i < 50; i++) {
+    lines.push(
+      `  it("readLocalJsonDataFileWithRetry matrix ${i}", async () => {`,
+    );
+    lines.push(
+      `    const readFile = vi.fn().mockResolvedValue('{"value":${i}}');`,
+    );
+    lines.push(`    const sleep = vi.fn().mockResolvedValue(undefined);`);
+    lines.push(
+      `    const result = await readLocalJsonDataFileWithRetry("f-${i}.json", ["/f-${i}.json"], readFile, sleep);`,
+    );
+    lines.push(`    expect(result).toEqual({ value: ${i} });`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(
+    `describe("content-loader-lib buildAssetsDataRequestUrl", () => {`,
+  );
+  lines.push(`  it("builds data asset URL", () => {`);
+  lines.push(
+    `    expect(buildAssetsDataRequestUrl("https://heyclau.de", "directory-index.json")).toBe("https://heyclau.de/data/directory-index.json");`,
+  );
+  lines.push(`  });`);
+
+  const paths = [
+    "directory-index.json",
+    "search-index.json",
+    "registry-manifest.json",
+    "entries/mcp/demo.json",
+  ];
+  for (const safePath of paths) {
+    for (let i = 0; i < 20; i++) {
+      lines.push(
+        `  it("buildAssetsDataRequestUrl ${safeTestLabel(safePath)} ${i}", () => {`,
+      );
+      lines.push(
+        `    expect(buildAssetsDataRequestUrl("https://origin-${i}.example", "${safePath}")).toContain("/data/${safePath}");`,
+      );
+      lines.push(`  });`);
+    }
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(
+    `describe("content-loader-lib loadJsonFromAssetsBinding", () => {`,
+  );
+  lines.push(`  it("loads JSON from assets binding", async () => {`);
+  lines.push(
+    `    const assets = { fetch: vi.fn().mockResolvedValue({ ok: true, json: async () => ({ ok: true }) }) };`,
+  );
+  lines.push(
+    `    const result = await loadJsonFromAssetsBinding(assets, "https://example/data/test.json");`,
+  );
+  lines.push(`    expect(result).toEqual({ ok: true });`);
+  lines.push(`  });`);
+  lines.push(`  it("throws on non-ok response", async () => {`);
+  lines.push(
+    `    const assets = { fetch: vi.fn().mockResolvedValue({ ok: false, status: 404 }) };`,
+  );
+  lines.push(
+    `    await expect(loadJsonFromAssetsBinding(assets, "https://example/data/missing.json")).rejects.toThrow("404");`,
+  );
+  lines.push(`  });`);
+
+  for (let i = 0; i < 40; i++) {
+    lines.push(`  it("loadJsonFromAssetsBinding matrix ${i}", async () => {`);
+    lines.push(
+      `    const assets = { fetch: vi.fn().mockResolvedValue({ ok: true, json: async () => ({ n: ${i} }) }) };`,
+    );
+    lines.push(
+      `    const result = await loadJsonFromAssetsBinding(assets, "https://example/data/${i}.json");`,
+    );
+    lines.push(`    expect(result).toEqual({ n: ${i} });`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(
+    `describe("content-loader-lib loadTextFromAssetsBinding", () => {`,
+  );
+  lines.push(`  it("loads text from assets binding", async () => {`);
+  lines.push(
+    `    const assets = { fetch: vi.fn().mockResolvedValue({ ok: true, text: async () => "hello" }) };`,
+  );
+  lines.push(
+    `    const result = await loadTextFromAssetsBinding(assets, "https://example/data/test.txt");`,
+  );
+  lines.push(`    expect(result).toBe("hello");`);
+  lines.push(`  });`);
+
+  for (let i = 0; i < 40; i++) {
+    lines.push(`  it("loadTextFromAssetsBinding matrix ${i}", async () => {`);
+    lines.push(
+      `    const assets = { fetch: vi.fn().mockResolvedValue({ ok: true, text: async () => "text-${i}" }) };`,
+    );
+    lines.push(
+      `    const result = await loadTextFromAssetsBinding(assets, "https://example/data/${i}.txt");`,
+    );
+    lines.push(`    expect(result).toBe("text-${i}");`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+
+  return lines.join("\n") + "\n";
+}
+
 const files = [
   ["tests/mcp-registry-artifact-loader-lib.test.ts", artifactLoaderLibTests()],
   ["tests/mcp-registry-fetch-lib.test.ts", fetchLibTests()],
@@ -3880,6 +4907,21 @@ const files = [
     "tests/source-repo-signals-fetch-lib.test.ts",
     sourceRepoSignalsFetchLibTests(),
   ],
+  ["tests/mcp-registry-compare-lib.test.ts", registryCompareLibTests()],
+  ["tests/mcp-registry-stats-lib.test.ts", registryStatsLibTests()],
+  [
+    "tests/mcp-registry-safety-review-lib.test.ts",
+    registrySafetyReviewLibTests(),
+  ],
+  [
+    "tests/mcp-registry-trust-compare-lib.test.ts",
+    registryTrustCompareLibTests(),
+  ],
+  [
+    "tests/mcp-registry-copyable-asset-lib.test.ts",
+    registryCopyableAssetLibTests(),
+  ],
+  ["tests/content-loader-lib.test.ts", contentLoaderLibTests()],
 ];
 
 for (const [relPath, content] of files) {

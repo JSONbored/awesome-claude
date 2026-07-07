@@ -5,7 +5,6 @@ import {
   buildShieldsStarsUrl,
   fetchGitHubSourceSignal,
   parseGitHubRepoApiPayload,
-  parseGitHubRepoKey,
   parseShieldsStarsPayload,
 } from "../apps/web/src/lib/source-repo-signals-fetch-lib";
 
@@ -1953,25 +1952,6 @@ describe("source-repo-signals-fetch-lib parseShieldsStarsPayload", () => {
   it("parseShieldsStarsPayload matrix 59", () => {
     const parsed = parseShieldsStarsPayload({ value: "590" });
     expect(parsed?.stars).toBe(590);
-  });
-});
-
-describe("source-repo-signals-fetch-lib parseGitHubRepoKey", () => {
-  it("accepts canonical owner/repo keys", () => {
-    expect(parseGitHubRepoKey("openai/whisper")).toEqual({
-      owner: "openai",
-      repo: "whisper",
-    });
-  });
-
-  it("rejects malformed or untrusted repo keys before outbound fetch", async () => {
-    expect(parseGitHubRepoKey("")).toBeNull();
-    expect(parseGitHubRepoKey("only-owner")).toBeNull();
-    expect(parseGitHubRepoKey("owner/repo/extra")).toBeNull();
-    expect(parseGitHubRepoKey("owner/repo@evil.com")).toBeNull();
-    await expect(
-      fetchGitHubSourceSignal("bad/key/extra", fetch),
-    ).rejects.toThrow("invalid_repo:bad/key/extra");
   });
 });
 

@@ -66,7 +66,6 @@ import {
   listRegistryResourceTemplates,
 } from "./registry-resource-metadata-lib.js";
 import {
-  intersection,
   normalizeDateFloor,
   parsedTrustArgs,
 } from "./registry-collection-lib.js";
@@ -77,7 +76,6 @@ import {
 import { projectEntryBody } from "./registry-excerpt-lib.js";
 import {
   categoryPrimaryAsset,
-  contentAsset,
   entryInstallComplexity,
 } from "./registry-asset-lib.js";
 import {
@@ -116,6 +114,27 @@ import {
 } from "./registry-discovery-projection-lib.js";
 import { buildClientSetupResponse } from "./registry-client-setup-lib.js";
 import { buildSubmissionPolicyEnvelope } from "./registry-submission-policy-lib.js";
+import {
+  buildCompareEntryRow,
+  buildCompareEntriesResponse,
+} from "./registry-compare-lib.js";
+import { buildRegistryStatsResponse } from "./registry-stats-lib.js";
+import {
+  buildSafetyReviewRow,
+  buildSafetyReviewResponse,
+} from "./registry-safety-review-lib.js";
+import {
+  buildTrustCompareRow,
+  buildTrustCompareResponse,
+  rankTrustCompareEntries,
+  sharedTrustSignalGaps,
+} from "./registry-trust-compare-lib.js";
+import {
+  buildCopyableAssetResponse,
+  buildEntryContentAssets,
+  filterAssetsByType,
+  selectPrimaryAsset,
+} from "./registry-copyable-asset-lib.js";
 
 export {
   LOCAL_DRAFT_TOOL_NAMES,
@@ -536,66 +555,22 @@ export async function getCopyableAsset(args = {}, options = {}) {
   }
 
   const requestedType = normalizeText(args.assetType);
-  const allAssets = [
-    contentAsset(
-      "full_content",
-      "Full usable entry content",
-      entry.fullCopyableContent || entry.copySnippet || entry.body,
-    ),
-    contentAsset(
-      "install_command",
-      "Install command",
-      entry.installCommand,
-      "shell",
-    ),
-    contentAsset(
-      "config_snippet",
-      "Configuration snippet",
-      entry.configSnippet,
-      "text",
-    ),
-    contentAsset("script", "Script body", entry.scriptBody, "text"),
-    contentAsset(
-      "command_syntax",
-      "Command syntax",
-      entry.commandSyntax,
-      "text",
-    ),
-    contentAsset("usage", "Usage snippet", entry.usageSnippet, "markdown"),
-    contentAsset("items", "Collection items", entry.items, "json"),
-  ].filter(Boolean);
-  // When a specific assetType is requested, return only that asset so the
-  // caller does not pay for the (potentially tens-of-KB) full_content/script
-  // payloads it did not ask for.
-  const assets = requestedType
-    ? allAssets.filter((asset) => asset.type === requestedType)
-    : allAssets;
-  const primary = requestedType
-    ? assets[0] || null
-    : categoryPrimaryAsset(entry);
+  const allAssets = buildEntryContentAssets(entry);
+  const assets = filterAssetsByType(allAssets, requestedType);
+  const primary = selectPrimaryAsset(assets, entry, requestedType);
   const compatibility = buildSkillPlatformCompatibility(entry);
 
-  return {
-    ok: true,
-    key: `${entry.category}:${entry.slug}`,
-    category: entry.category,
-    slug: entry.slug,
-    title: entry.title,
-    canonicalUrl: entryCanonicalUrl(entry),
-    platform: platform || "",
-    requestedAssetType: requestedType || "",
-    primaryAsset: primary,
+  return buildCopyableAssetResponse({
+    entry,
+    platform,
+    requestedType,
     assets,
-    installCommand: entry.installCommand || "",
-    configSnippet: entry.configSnippet || "",
-    usageSnippet: entry.usageSnippet || "",
-    downloadUrl: entry.downloadUrl || "",
-    safetyNotes: notes(entry.safetyNotes),
-    privacyNotes: notes(entry.privacyNotes),
-    platformCompatibility: compatibility,
+    primary,
+    compatibility,
     source: sourceSummary(entry),
     trust: entryTrustSummary(entry),
-  };
+    canonicalUrl: entryCanonicalUrl(entry),
+  });
 }
 
 export async function compareEntries(args = {}, options = {}) {
@@ -611,56 +586,19 @@ export async function compareEntries(args = {}, options = {}) {
     entries.push(entry);
   }
 
-  const compared = entries.map((entry) => {
-    const compatibility = buildSkillPlatformCompatibility(entry);
-    const selectedCompatibility = platform
-      ? compatibility.find(
-          (item) => normalizePlatform(item.platform) === platform,
-        ) || null
-      : null;
-    return {
-      key: `${entry.category}:${entry.slug}`,
-      category: entry.category,
-      slug: entry.slug,
-      title: entry.title,
-      description: entry.description,
-      canonicalUrl: entryCanonicalUrl(entry),
-      tags: entry.tags || [],
-      platforms: entry.platforms || [],
-      selectedCompatibility,
-      installComplexity: entryInstallComplexity(entry),
-      copyableAssetTypes: [
-        categoryPrimaryAsset(entry)?.type,
-        entry.configSnippet ? "config_snippet" : "",
-        entry.installCommand ? "install_command" : "",
-        entry.scriptBody ? "script" : "",
-      ].filter(Boolean),
-      source: sourceSummary(entry),
-      trust: entryTrustSummary(entry),
-    };
-  });
-  const sharedTags = compared.length
-    ? compared
-        .slice(1)
-        .reduce(
-          (tags, entry) => intersection(tags, entry.tags || []),
-          compared[0].tags || [],
-        )
-    : [];
+  const compared = entries.map((entry) =>
+    buildCompareEntryRow(entry, platform, {
+      normalizePlatform,
+      buildSkillPlatformCompatibility,
+      entryInstallComplexity,
+      categoryPrimaryAsset,
+      sourceSummary,
+      entryTrustSummary,
+      entryCanonicalUrl,
+    }),
+  );
 
-  return {
-    ok: true,
-    platform: platform || "",
-    count: compared.length,
-    sharedTags,
-    entries: compared,
-    comparisonNotes: [
-      "Prefer exact category fit before source popularity.",
-      "Treat GitHub stars/forks as source signals only when present; absence is not a negative ranking.",
-      "Install complexity is derived from available install/config/download/prerequisite metadata.",
-      "Safety/privacy notes are disclosure metadata, not a malware verdict.",
-    ],
-  };
+  return buildCompareEntriesResponse({ platform, compared });
 }
 
 export async function getRegistryStats(args = {}, options = {}) {
@@ -669,58 +607,13 @@ export async function getRegistryStats(args = {}, options = {}) {
     readJsonArtifact("search-index.json", options),
   ]);
   const entries = unwrapEntries(searchIndexPayload);
-  const platformCounts = new Map();
-  const tagCounts = new Map();
-  for (const entry of entries) {
-    for (const platform of entry.platforms || []) {
-      platformCounts.set(platform, (platformCounts.get(platform) || 0) + 1);
-    }
-    for (const tag of entry.tags || []) {
-      tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
-    }
-  }
 
-  return {
-    ok: true,
-    package: {
-      name: packageName,
-      version: packageVersion,
-    },
-    registry: {
-      schemaVersion: manifest.schemaVersion,
-      generatedAt: manifest.generatedAt,
-      totalEntries: manifest.totalEntries,
-      categories: manifest.categories || {},
-    },
-    freshness: {
-      entriesWithRepoUpdatedAt: entries.filter((entry) => entry.repoUpdatedAt)
-        .length,
-      entriesAddedLast30Days: entries.filter((entry) => {
-        const added = Date.parse(entry.dateAdded || "");
-        return (
-          Number.isFinite(added) &&
-          Date.now() - added <= 30 * 24 * 60 * 60 * 1000
-        );
-      }).length,
-    },
-    sourceSignals: {
-      entriesWithGithubStats: entries.filter(
-        (entry) => typeof entry.githubStars === "number",
-      ).length,
-      installableEntries: entries.filter((entry) => entry.installable).length,
-    },
-    platforms: Object.fromEntries(
-      [...platformCounts.entries()].sort((left, right) =>
-        left[0].localeCompare(right[0]),
-      ),
-    ),
-    topTags: [...tagCounts.entries()]
-      .sort(
-        (left, right) => right[1] - left[1] || left[0].localeCompare(right[0]),
-      )
-      .slice(0, 20)
-      .map(([tag, count]) => ({ tag, count })),
-  };
+  return buildRegistryStatsResponse({
+    manifest,
+    entries,
+    packageName,
+    packageVersion,
+  });
 }
 
 export async function getClientSetup(args = {}) {
@@ -1199,48 +1092,17 @@ export async function reviewEntrySafety(args = {}, options = {}) {
     if (!entry) {
       return notFound(`No HeyClaude entry found for ${category}/${slug}.`);
     }
-    const compatibility = buildSkillPlatformCompatibility(entry);
-    entries.push({
-      key: `${entry.category}:${entry.slug}`,
-      category: entry.category,
-      slug: entry.slug,
-      title: entry.title,
-      canonicalUrl: entryCanonicalUrl(entry),
-      selectedCompatibility: platform
-        ? compatibility.find(
-            (item) => normalizePlatform(item.platform) === platform,
-          ) || null
-        : null,
-      trust: entryTrustSummary(entry),
-    });
+    entries.push(
+      buildSafetyReviewRow(entry, platform, {
+        normalizePlatform,
+        buildSkillPlatformCompatibility,
+        entryCanonicalUrl,
+        entryTrustSummary,
+      }),
+    );
   }
 
-  const entriesWithNotes = entries.filter(
-    (entry) =>
-      entry.trust.disclosures.hasSafetyNotes ||
-      entry.trust.disclosures.hasPrivacyNotes,
-  );
-
-  return {
-    ok: true,
-    platform: platform || "",
-    count: entries.length,
-    entries,
-    summary: {
-      entriesWithSafetyOrPrivacyNotes: entriesWithNotes.length,
-      firstPartyPackages: entries.filter(
-        (entry) => entry.trust.package.downloadTrust === "first-party",
-      ).length,
-      sourceBacked: entries.filter(
-        (entry) => entry.trust.source.status === "available",
-      ).length,
-    },
-    reviewNotes: [
-      "This is a metadata review, not a malware scan or install verdict.",
-      "Prefer source-backed entries and first-party maintainer-built downloads when installing packages.",
-      "Inspect commands, requested permissions, and external writes before running any copied content.",
-    ],
-  };
+  return buildSafetyReviewResponse({ platform, entries });
 }
 
 export async function compareEntryTrust(args = {}, options = {}) {
@@ -1259,55 +1121,27 @@ export async function compareEntryTrust(args = {}, options = {}) {
     if (entry == null) {
       return notFound(`No HeyClaude entry found for ${category}/${slug}.`);
     }
-    const compatibility = buildSkillPlatformCompatibility(entry);
-    entries.push({
-      key: `${entry.category}:${entry.slug}`,
-      category: entry.category,
-      slug: entry.slug,
-      title: entry.title,
-      canonicalUrl: entryCanonicalUrl(entry),
-      selectedCompatibility: platform
-        ? compatibility.find(
-            (item) => normalizePlatform(item.platform) === platform,
-          ) || null
-        : null,
-      signalCoverage: entryTrustSignalCoverage(entry),
-      trust: entryTrustSummary(entry),
-    });
+    entries.push(
+      buildTrustCompareRow(entry, platform, {
+        normalizePlatform,
+        buildSkillPlatformCompatibility,
+        entryCanonicalUrl,
+        entryTrustSignalCoverage,
+        entryTrustSummary,
+      }),
+    );
   }
 
-  // Deterministic ordering: higher disclosed-metadata coverage first, then a
-  // stable tiebreak on key so the ranking never depends on input order.
-  const ranking = entries
-    .map((entry) => ({ key: entry.key, score: entry.signalCoverage.score }))
-    .sort((left, right) => {
-      if (left.score !== right.score) return right.score - left.score;
-      return left.key.localeCompare(right.key);
-    })
-    .map((item, index) => ({ ...item, rank: index + 1 }));
+  const ranking = rankTrustCompareEntries(entries);
+  const sharedGaps = sharedTrustSignalGaps(entries, TRUST_SIGNAL_KEYS);
 
-  // Signals that no compared entry discloses, so callers can ask for them.
-  const sharedGaps = TRUST_SIGNAL_KEYS.filter((key) =>
-    entries.every((entry) => entry.signalCoverage.missing.includes(key)),
-  );
-
-  return {
-    ok: true,
-    platform: platform || "",
-    count: entries.length,
-    signalKeys: TRUST_SIGNAL_KEYS,
+  return buildTrustCompareResponse({
+    platform,
     entries,
     ranking,
-    bestDocumented: ranking[0]?.key || "",
     sharedGaps,
-    comparisonNotes: [
-      "Coverage counts disclosed trust metadata only; it is not a malware scan, a safety verdict, or installation approval.",
-      "A higher coverage score means more trust metadata is present, not that an entry is safer or recommended to install.",
-      "bestDocumented is the entry with the most disclosed trust metadata, not the safest entry.",
-      "Inspect commands, requested permissions, external writes, and missing signals before relying on any entry.",
-      "Use entry.trust for one entry's full trust breakdown and entry.asset only after trust review.",
-    ],
-  };
+    signalKeys: TRUST_SIGNAL_KEYS,
+  });
 }
 
 export async function callRegistryTool(name, args = {}, options = {}) {
