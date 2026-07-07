@@ -67,6 +67,7 @@ export default defineConfig({
         "apps/web/src/lib/contributor-identity.ts",
         "apps/web/src/lib/contributors.ts",
         "apps/web/src/lib/data-reports.ts",
+        "apps/web/src/lib/ecosystem-pulse-window.ts",
         "apps/web/src/lib/ecosystem-stats.ts",
         "apps/web/src/lib/platform-pages.ts",
         "apps/web/src/lib/api-security.ts",
