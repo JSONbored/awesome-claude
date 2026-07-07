@@ -95,6 +95,7 @@ describe("compare page ui lib", () => {
     const bundled = comparePageUiState(entries);
     expect(bundled.actionRowDiverges).toBe(comparePageActionsDiverge(entries));
     expect(bundled.shareUrl).toBe(comparePageShareUrl(entries));
+    expect(bundled.bannerTexts).toEqual(comparePageHeaderBannerTexts(entries));
     expect(
       comparePageUiState([
         entry(),
