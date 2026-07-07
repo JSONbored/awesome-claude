@@ -11,13 +11,16 @@ import { useMemo } from "react";
 import { toast } from "sonner";
 import { ResourceCard } from "@/components/resource-card";
 import { FilterChip, FilterChipGroup } from "@/components/filter-chip";
+import { countSearchResults, normalizeSearchQuery, search } from "@/data/search";
 import {
-  countSearchResults,
-  normalizeSearchQuery,
-  search,
-  TRUST_SIGNAL_FILTERS,
-  type TrustSignalFilter,
-} from "@/data/search";
+  BROWSE_TRUST_SIGNAL_OPTIONS,
+  browseTrustRelaxationTrials,
+  browseTrustSignalLabel,
+  buildBrowseTrustSignalCounts,
+  buildBrowseTrustUtilityOptions,
+  isBrowseTrustSignalFilter,
+  toggleBrowseTrustSignal,
+} from "@/lib/browse-trust-filters";
 import {
   CATEGORIES,
   type Category,
@@ -155,7 +158,7 @@ export const Route = createFileRoute("/browse")({
     // Stale/external links with unknown category values (e.g. ?category=plugins) render an
     // empty result set that Google flags as a soft 404. Redirect them to clean /browse.
     const invalidCategory = search.category && !CATEGORIES.some((c) => c.id === search.category);
-    const invalidSignal = search.signal && !isTrustSignalFilter(search.signal);
+    const invalidSignal = search.signal && !isBrowseTrustSignalFilter(search.signal);
     if (invalidCategory || invalidSignal) {
       throw redirect({
         to: "/browse",
@@ -199,25 +202,6 @@ const PLATFORM_IDS: Platform[] = [
   "cli",
   "raycast",
 ];
-const TRUST_SIGNAL_OPTIONS: { id: TrustSignalFilter; label: string }[] = [
-  { id: "safety-notes", label: "Safety notes" },
-  { id: "privacy-notes", label: "Privacy notes" },
-  { id: "source-backed", label: "Source-backed" },
-  { id: "trusted-package", label: "Trusted package" },
-  { id: "reviewed", label: "Reviewed" },
-  { id: "checksums", label: "Checksums" },
-];
-const TRUST_SIGNAL_LABEL = Object.fromEntries(
-  TRUST_SIGNAL_OPTIONS.map((option) => [option.id, option.label]),
-) as Record<TrustSignalFilter, string>;
-
-function isTrustSignalFilter(value: string): value is TrustSignalFilter {
-  return TRUST_SIGNAL_FILTERS.includes(value as TrustSignalFilter);
-}
-
-function signalLabel(value: string) {
-  return isTrustSignalFilter(value) ? TRUST_SIGNAL_LABEL[value] : "";
-}
 
 function Browse() {
   const sp = Route.useSearch();
@@ -275,7 +259,7 @@ function Browse() {
       categories: sp.category ? [sp.category as Category] : undefined,
       trust: sp.trust ? [sp.trust as TrustLevel] : undefined,
       source: sp.source ? [sp.source as SourceStatus] : undefined,
-      signal: isTrustSignalFilter(sp.signal) ? sp.signal : "",
+      signal: isBrowseTrustSignalFilter(sp.signal) ? sp.signal : "",
       platforms: sp.platform ? [sp.platform as Platform] : undefined,
       sort: sp.sort,
     }),
@@ -346,7 +330,7 @@ function Browse() {
     if (activeCount === 0) return;
     const label = sp.q
       ? `“${sp.q}”${sp.category ? ` · ${sp.category}` : ""}`
-      : `${sp.category || sp.trust || sp.source || signalLabel(sp.signal) || sp.platform || "Filter"}`;
+      : `${sp.category || sp.trust || sp.source || browseTrustSignalLabel(sp.signal) || sp.platform || "Filter"}`;
     recents.saveSearch({
       label,
       q: sp.q,
@@ -381,7 +365,7 @@ function Browse() {
         categories: merged.category ? [merged.category as Category] : undefined,
         trust: merged.trust ? [merged.trust as TrustLevel] : undefined,
         source: merged.source ? [merged.source as SourceStatus] : undefined,
-        signal: isTrustSignalFilter(merged.signal) ? merged.signal : "",
+        signal: isBrowseTrustSignalFilter(merged.signal) ? merged.signal : "",
         platforms: merged.platform ? [merged.platform as Platform] : undefined,
         sort: merged.sort,
       });
@@ -390,9 +374,15 @@ function Browse() {
       category: Object.fromEntries(CATEGORIES.map((c) => [c.id, countFor("category", c.id)])),
       trust: Object.fromEntries(TRUST_LEVELS.map((t) => [t, countFor("trust", t)])),
       source: Object.fromEntries(SOURCE_STATUSES.map((s) => [s, countFor("source", s)])),
-      signal: Object.fromEntries(
-        TRUST_SIGNAL_OPTIONS.map((option) => [option.id, countFor("signal", option.id)]),
-      ),
+      signal: buildBrowseTrustSignalCounts({
+        q: sp.q,
+        category: sp.category,
+        trust: sp.trust,
+        source: sp.source,
+        signal: sp.signal,
+        platform: sp.platform,
+        sort: sp.sort,
+      }),
       platform: Object.fromEntries(PLATFORM_IDS.map((p) => [p, countFor("platform", p)])),
     } as Record<string, Record<string, number>>;
   }, [sp]);
@@ -440,11 +430,11 @@ function Browse() {
       value: sp.source,
       onClear: () => set({ source: "" }),
     });
-  if (isTrustSignalFilter(sp.signal))
+  if (isBrowseTrustSignalFilter(sp.signal))
     activeFilters.push({
       key: "signal",
       label: "Signal",
-      value: signalLabel(sp.signal),
+      value: browseTrustSignalLabel(sp.signal),
       onClear: () => set({ signal: "" }),
     });
   if (sp.platform)
@@ -459,15 +449,15 @@ function Browse() {
   const suggestions = useMemo(() => {
     if (results.length > 0 || activeFilters.length === 0)
       return [] as { label: string; apply: () => void; count: number }[];
-    const trials: { label: string; patch: Partial<typeof sp> }[] = [];
-    if (sp.platform)
-      trials.push({ label: `Remove platform "${sp.platform}"`, patch: { platform: "" } });
-    if (sp.signal)
-      trials.push({ label: `Remove signal "${signalLabel(sp.signal)}"`, patch: { signal: "" } });
-    if (sp.source) trials.push({ label: `Remove source "${sp.source}"`, patch: { source: "" } });
-    if (sp.trust) trials.push({ label: `Remove trust "${sp.trust}"`, patch: { trust: "" } });
-    if (sp.category) trials.push({ label: `Search all categories`, patch: { category: "" } });
-    if (sp.q) trials.push({ label: `Drop search "${sp.q}"`, patch: { q: "" } });
+    const trials = browseTrustRelaxationTrials({
+      q: sp.q,
+      category: sp.category,
+      trust: sp.trust,
+      source: sp.source,
+      signal: sp.signal,
+      platform: sp.platform,
+      sort: sp.sort,
+    });
     return trials
       .map((t) => {
         const merged = { ...sp, ...t.patch };
@@ -476,7 +466,7 @@ function Browse() {
           categories: merged.category ? [merged.category as Category] : undefined,
           trust: merged.trust ? [merged.trust as TrustLevel] : undefined,
           source: merged.source ? [merged.source as SourceStatus] : undefined,
-          signal: isTrustSignalFilter(merged.signal) ? merged.signal : "",
+          signal: isBrowseTrustSignalFilter(merged.signal) ? merged.signal : "",
           platforms: merged.platform ? [merged.platform as Platform] : undefined,
           sort: merged.sort,
         });
@@ -486,6 +476,11 @@ function Browse() {
       .slice(0, 3);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sp, results.length]);
+
+  const trustUtilityOptions = useMemo(
+    () => buildBrowseTrustUtilityOptions(facetCounts.signal),
+    [facetCounts.signal],
+  );
 
   return (
     <div className="mx-auto max-w-page px-4 py-6 sm:px-6">
@@ -662,7 +657,23 @@ function Browse() {
                   </div>
                 ) : null}
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <label className="inline-flex items-center gap-1.5 text-xs text-ink-muted">
+                  <SlidersHorizontal className="h-3.5 w-3.5" />
+                  Utility
+                  <select
+                    value={sp.signal}
+                    onChange={(e) => set({ signal: e.target.value })}
+                    aria-label="Trust signal utility filter"
+                    className="h-7 max-w-[11rem] rounded-md border border-border bg-surface px-2 text-xs text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
+                  >
+                    {trustUtilityOptions.map((option) => (
+                      <option key={option.id || "all"} value={option.id}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
                 <label className="inline-flex items-center gap-1.5 text-xs text-ink-muted">
                   <ArrowDownNarrowWide className="h-3.5 w-3.5" />
                   Sort
@@ -706,7 +717,7 @@ function Browse() {
                   : sp.category ||
                     sp.trust ||
                     sp.source ||
-                    signalLabel(sp.signal) ||
+                    browseTrustSignalLabel(sp.signal) ||
                     sp.platform ||
                     ""
               }
@@ -714,12 +725,12 @@ function Browse() {
               onSave={saveCurrent}
             />
             <FilterChipGroup label="Trust signal quick filters" multi={false}>
-              {TRUST_SIGNAL_OPTIONS.map((option) => (
+              {BROWSE_TRUST_SIGNAL_OPTIONS.map((option) => (
                 <FilterChip
                   key={option.id}
                   role="radio"
                   active={sp.signal === option.id}
-                  onClick={() => set({ signal: sp.signal === option.id ? "" : option.id })}
+                  onClick={() => set({ signal: toggleBrowseTrustSignal(sp.signal, option.id) })}
                   count={axisCount("signal", option.id)}
                 >
                   {option.label}
@@ -770,6 +781,31 @@ function Browse() {
                     {c.label}
                   </FilterChip>
                 </Link>
+              ))}
+            </div>
+            <span
+              aria-hidden
+              className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-background to-transparent"
+            />
+          </div>
+
+          <div className="relative mt-2 lg:hidden">
+            <div
+              className="flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+              role="radiogroup"
+              aria-label="Trust signal quick filters"
+            >
+              {BROWSE_TRUST_SIGNAL_OPTIONS.map((option) => (
+                <span key={option.id} className="shrink-0">
+                  <FilterChip
+                    role="radio"
+                    active={sp.signal === option.id}
+                    onClick={() => set({ signal: toggleBrowseTrustSignal(sp.signal, option.id) })}
+                    count={axisCount("signal", option.id)}
+                  >
+                    {option.label}
+                  </FilterChip>
+                </span>
               ))}
             </div>
             <span
