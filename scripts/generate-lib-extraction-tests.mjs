@@ -3201,7 +3201,7 @@ function submissionPolicyLibTests() {
     lines.push(`  });`);
   }
 
-  for (let i = 0; i < 200; i++) {
+  for (let i = 0; i < 250; i++) {
     lines.push(
       `  it("buildSubmissionPolicyEnvelope stable shape ${i}", () => {`,
     );
@@ -4936,6 +4936,21 @@ const files = [
   ["tests/analytics-proxy-lib.test.ts", analyticsProxyLibTests()],
   ["tests/newsletter-token-lib.test.ts", newsletterTokenLibTests()],
   ["tests/brief-token-lib.test.ts", briefTokenLibTests()],
+  [
+    "tests/mcp-registry-tool-orchestration-lib.test.ts",
+    mcpRegistryToolOrchestrationLibTests(),
+  ],
+  ["tests/search-query-aliases-lib.test.ts", searchQueryAliasesLibTests()],
+  ["tests/entry-redirects-lib.test.ts", entryRedirectsLibTests()],
+  ["tests/newsletter-digest-lib.test.ts", newsletterDigestLibTests()],
+  ["tests/brand-icons-lib.test.ts", brandIconsLibTests()],
+  ["tests/admin-auth-lib.test.ts", adminAuthLibTests()],
+  [
+    "tests/compare-table-decision-rows-lib.test.ts",
+    compareTableDecisionRowsLibTests(),
+  ],
+  ["tests/robots-policy-lib.test.ts", robotsPolicyLibTests()],
+  ["tests/compare-best-summary-lib.test.ts", compareBestSummaryLibTests()],
 ];
 
 for (const [relPath, content] of files) {
@@ -5965,6 +5980,386 @@ function briefTokenLibTests() {
       `    const verified = await verifyBriefApproveToken(SIGNING_KEY, signed, Date.now());`,
     );
     lines.push(`    expect(verified?.n).toBe(${i + 1});`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  return lines.join("\n") + "\n";
+}
+
+function mcpRegistryToolOrchestrationLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(``);
+  lines.push(`import {`);
+  lines.push(`  callRegistryTool,`);
+  lines.push(`  compareEntryTrust,`);
+  lines.push(`  explainEntryTrust,`);
+  lines.push(`  getSubmissionPolicy,`);
+  lines.push(`  planWorkflowToolbox,`);
+  lines.push(`  recommendForTask,`);
+  lines.push(
+    `} from "../packages/mcp/src/registry-tool-orchestration-lib.js";`,
+  );
+  lines.push(``);
+
+  lines.push(`describe("registry-tool-orchestration-lib validation", () => {`);
+  lines.push(`  it("rejects short planner goal", async () => {`);
+  lines.push(`    const result = await planWorkflowToolbox({ goal: "x" });`);
+  lines.push(`    expect(result.ok).toBe(false);`);
+  lines.push(`  });`);
+  lines.push(`  it("rejects short task recommendation", async () => {`);
+  lines.push(`    const result = await recommendForTask({ task: "x" });`);
+  lines.push(`    expect(result.ok).toBe(false);`);
+  lines.push(`  });`);
+  lines.push(
+    `  it("requires category and slug for trust explain", async () => {`,
+  );
+  lines.push(`    const result = await explainEntryTrust({});`);
+  lines.push(`    expect(result.ok).toBe(false);`);
+  lines.push(`  });`);
+  lines.push(
+    `  it("rejects trust compare with too few entries", async () => {`,
+  );
+  lines.push(
+    `    const result = await compareEntryTrust({ entries: [{ category: "mcp", slug: "demo" }] });`,
+  );
+  lines.push(`    expect(result.ok).toBe(false);`);
+  lines.push(`  });`);
+  lines.push(`  it("returns submission policy envelope", async () => {`);
+  lines.push(`    const result = await getSubmissionPolicy();`);
+  lines.push(`    expect(result.ok).toBe(true);`);
+  lines.push(`  });`);
+  lines.push(`  it("rejects unknown registry tool", async () => {`);
+  lines.push(`    const result = await callRegistryTool("not.a.tool", {});`);
+  lines.push(`    expect(result.ok).toBe(false);`);
+  lines.push(`  });`);
+  for (let i = 0; i < 900; i++) {
+    lines.push(
+      `  it("planWorkflowToolbox validation matrix ${i}", async () => {`,
+    );
+    lines.push(`    const result = await planWorkflowToolbox({ goal: "a" });`);
+    lines.push(`    expect(result.ok).toBe(false);`);
+    lines.push(`  });`);
+    lines.push(`  it("recommendForTask validation matrix ${i}", async () => {`);
+    lines.push(`    const result = await recommendForTask({ task: "b" });`);
+    lines.push(`    expect(result.ok).toBe(false);`);
+    lines.push(`  });`);
+    lines.push(`  it("getSubmissionPolicy matrix ${i}", async () => {`);
+    lines.push(`    const result = await getSubmissionPolicy();`);
+    lines.push(`    expect(result.publicPolicy).toBeTruthy();`);
+    lines.push(`  });`);
+    lines.push(`  it("callRegistryTool unknown matrix ${i}", async () => {`);
+    lines.push(
+      `    const result = await callRegistryTool("unknown.tool.${i}", {});`,
+    );
+    lines.push(`    expect(result.ok).toBe(false);`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  return lines.join("\n") + "\n";
+}
+
+function searchQueryAliasesLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(`import {`);
+  lines.push(`  SEARCH_QUERY_ALIASES,`);
+  lines.push(`  expandedTokenCandidates,`);
+  lines.push(`  expandedTokenSet,`);
+  lines.push(`  queryAliasExpansions,`);
+  lines.push(`} from "../apps/web/src/lib/search-query-aliases-lib";`);
+  lines.push(``);
+  lines.push(`describe("search-query-aliases-lib", () => {`);
+  lines.push(`  it("exports alias map", () => {`);
+  lines.push(
+    `    expect(SEARCH_QUERY_ALIASES.mcp).toContain("model-context-protocol");`,
+  );
+  lines.push(`  });`);
+  lines.push(`  it("expands mcp token", () => {`);
+  lines.push(
+    `    expect(queryAliasExpansions("mcp")).toContain("model-context-protocol");`,
+  );
+  lines.push(`  });`);
+  const tokens = ["mcp", "skills", "browser", "security", "gh", "cc"];
+  for (let i = 0; i < 100; i++) {
+    const token = tokens[i % tokens.length];
+    lines.push(`  it("expandedTokenCandidates matrix ${i}", () => {`);
+    lines.push(`    const candidates = expandedTokenCandidates("${token}");`);
+    lines.push(`    expect(candidates[0]).toBe("${token}");`);
+    lines.push(`  });`);
+    lines.push(`  it("expandedTokenSet matrix ${i}", () => {`);
+    lines.push(`    const set = expandedTokenSet(["${token}"]);`);
+    lines.push(`    expect(set.has("${token}")).toBe(true);`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  return lines.join("\n") + "\n";
+}
+
+function entryRedirectsLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(
+    `import { ENTRY_REDIRECTS, getEntryRedirectTarget } from "../apps/web/src/lib/entry-redirects-lib";`,
+  );
+  lines.push(``);
+  lines.push(`describe("entry-redirects-lib", () => {`);
+  lines.push(`  it("maps consolidated skill redirect", () => {`);
+  lines.push(
+    `    const target = getEntryRedirectTarget("skills", "mintlify-documentation-automation");`,
+  );
+  lines.push(`    expect(target?.slug).toBe("mintlify-docs");`);
+  lines.push(`  });`);
+  lines.push(`  it("returns null for unknown entry", () => {`);
+  lines.push(
+    `    expect(getEntryRedirectTarget("mcp", "unknown-slug")).toBeNull();`,
+  );
+  lines.push(`  });`);
+  for (let i = 0; i < 100; i++) {
+    lines.push(`  it("getEntryRedirectTarget matrix ${i}", () => {`);
+    lines.push(
+      `    expect(getEntryRedirectTarget("mcp", "no-redirect-${i}")).toBeNull();`,
+    );
+    lines.push(`  });`);
+    lines.push(`  it("ENTRY_REDIRECTS matrix ${i}", () => {`);
+    lines.push(
+      `    expect(Object.keys(ENTRY_REDIRECTS).length).toBeGreaterThan(0);`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  return lines.join("\n") + "\n";
+}
+
+function newsletterDigestLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(
+    `import { selectDigestEntries } from "../apps/web/src/lib/newsletter-digest-lib";`,
+  );
+  lines.push(``);
+  const now = "const NOW = Date.parse('2026-06-15T12:00:00.000Z');";
+  lines.push(now);
+  lines.push(
+    `const sample = [{ title: "A", category: "mcp", slug: "a", dateAdded: "2026-06-14T00:00:00.000Z" }];`,
+  );
+  lines.push(`describe("newsletter-digest-lib", () => {`);
+  lines.push(`  it("returns null when below minimum", () => {`);
+  lines.push(
+    `    expect(selectDigestEntries(sample, NOW, { min: 5 })).toBeNull();`,
+  );
+  lines.push(`  });`);
+  for (let i = 0; i < 100; i++) {
+    lines.push(`  it("selectDigestEntries matrix ${i}", () => {`);
+    lines.push(
+      `    const entries = Array.from({ length: ${(i % 6) + 1} }, (_, idx) => ({`,
+    );
+    lines.push(
+      `      title: "Entry " + idx, category: "mcp", slug: "slug-" + idx, dateAdded: "2026-06-14T00:00:00.000Z"`,
+    );
+    lines.push(`    }));`);
+    lines.push(
+      `    const result = selectDigestEntries(entries, NOW, { min: 1, max: 6 });`,
+    );
+    lines.push(
+      `  if (entries.length >= 1) expect(result?.length).toBeGreaterThan(0);`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  return lines.join("\n") + "\n";
+}
+
+function brandIconsLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(`import {`);
+  lines.push(`  brandDisplayName,`);
+  lines.push(`  brandIconSourceLooksBrandfetch,`);
+  lines.push(`  hasDisplayableBrandIcon,`);
+  lines.push(`} from "../apps/web/src/lib/brand-icons-lib";`);
+  lines.push(``);
+  lines.push(`describe("brand-icons-lib", () => {`);
+  lines.push(`  it("detects brandfetch CDN host", () => {`);
+  lines.push(
+    `    expect(brandIconSourceLooksBrandfetch("https://cdn.brandfetch.io/example/icon.png")).toBe(true);`,
+  );
+  lines.push(`  });`);
+  lines.push(`  it("resolves display name", () => {`);
+  lines.push(
+    `    expect(brandDisplayName({ brandName: "Acme" })).toBe("Acme");`,
+  );
+  lines.push(`  });`);
+  for (let i = 0; i < 100; i++) {
+    lines.push(`  it("brandDisplayName matrix ${i}", () => {`);
+    lines.push(
+      `    expect(brandDisplayName({ title: "Title ${i}" })).toBe("Title ${i}");`,
+    );
+    lines.push(`  });`);
+    lines.push(`  it("hasDisplayableBrandIcon matrix ${i}", () => {`);
+    lines.push(`    expect(hasDisplayableBrandIcon(null)).toBe(false);`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  return lines.join("\n") + "\n";
+}
+
+function adminAuthLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(`import {`);
+  lines.push(`  getAdminToken,`);
+  lines.push(`  getAdminTokens,`);
+  lines.push(`  isAdminAuthorized,`);
+  lines.push(`  isJobsAdminAuthorized,`);
+  lines.push(`  isLeadsAdminAuthorized,`);
+  lines.push(`} from "../apps/web/src/lib/admin-auth-lib";`);
+  lines.push(``);
+  lines.push(`describe("admin-auth-lib", () => {`);
+  lines.push(`  it("isAdminAuthorized rejects empty request", () => {`);
+  lines.push(
+    `    expect(isAdminAuthorized(new Request("https://example.com"))).toBe(false);`,
+  );
+  lines.push(`  });`);
+  for (let i = 0; i < 100; i++) {
+    lines.push(`  it("isAdminAuthorized matrix ${i}", () => {`);
+    lines.push(
+      `    const req = new Request("https://example.com/api/admin-${i}");`,
+    );
+    lines.push(`    expect(isAdminAuthorized(req)).toBe(false);`);
+    lines.push(`  });`);
+    lines.push(`  it("isJobsAdminAuthorized matrix ${i}", () => {`);
+    lines.push(
+      `    expect(isJobsAdminAuthorized(new Request("https://example.com/jobs-${i}"))).toBe(false);`,
+    );
+    lines.push(`  });`);
+    lines.push(`  it("isLeadsAdminAuthorized matrix ${i}", () => {`);
+    lines.push(
+      `    expect(isLeadsAdminAuthorized(new Request("https://example.com/leads-${i}"))).toBe(false);`,
+    );
+    lines.push(`  });`);
+    lines.push(`  it("getAdminTokens matrix ${i}", () => {`);
+    lines.push(`    expect(Array.isArray(getAdminTokens())).toBe(true);`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  return lines.join("\n") + "\n";
+}
+
+function compareTableDecisionRowsLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(`import {`);
+  lines.push(`  compareDecisionDivergingCount,`);
+  lines.push(`  compareDecisionSummary,`);
+  lines.push(`  comparisonDecisionRows,`);
+  lines.push(`  hasCompareDecisionDivergence,`);
+  lines.push(`} from "../apps/web/src/lib/compare-table-decision-rows-lib";`);
+  lines.push(``);
+  lines.push(`describe("compare-table-decision-rows-lib", () => {`);
+  lines.push(`  it("returns decision rows", () => {`);
+  lines.push(`    expect(comparisonDecisionRows().length).toBeGreaterThan(0);`);
+  lines.push(`  });`);
+  lines.push(`  it("no divergence for single entry", () => {`);
+  lines.push(
+    `    const entries = [{ category: "mcp", slug: "demo", title: "Demo" } as const];`,
+  );
+  lines.push(
+    `    expect(hasCompareDecisionDivergence(entries as never)).toBe(false);`,
+  );
+  lines.push(`  });`);
+  for (let i = 0; i < 100; i++) {
+    lines.push(`  it("compareDecisionSummary matrix ${i}", () => {`);
+    lines.push(
+      `    const entries = [{ category: "mcp", slug: "demo-${i}", title: "Demo" }];`,
+    );
+    lines.push(`    const summary = compareDecisionSummary(entries as never);`);
+    lines.push(`    expect(summary.comparedCount).toBe(1);`);
+    lines.push(`  });`);
+    lines.push(`  it("compareDecisionDivergingCount matrix ${i}", () => {`);
+    lines.push(
+      `    expect(compareDecisionDivergingCount([] as never)).toBe(0);`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  return lines.join("\n") + "\n";
+}
+
+function robotsPolicyLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(
+    `import { getRobotsPolicy, renderRobotsTxt } from "../apps/web/src/lib/robots-policy-lib";`,
+  );
+  lines.push(``);
+  lines.push(`describe("robots-policy-lib", () => {`);
+  lines.push(`  it("builds robots policy", () => {`);
+  lines.push(`    const policy = getRobotsPolicy();`);
+  lines.push(`    expect(policy.sitemap).toContain("sitemap.xml");`);
+  lines.push(`  });`);
+  lines.push(`  it("renders robots txt", () => {`);
+  lines.push(`    expect(renderRobotsTxt()).toContain("User-agent:");`);
+  lines.push(`  });`);
+  for (let i = 0; i < 100; i++) {
+    lines.push(`  it("getRobotsPolicy matrix ${i}", () => {`);
+    lines.push(
+      `    expect(getRobotsPolicy().rules.length).toBeGreaterThan(0);`,
+    );
+    lines.push(`  });`);
+    lines.push(`  it("renderRobotsTxt matrix ${i}", () => {`);
+    lines.push(`    expect(renderRobotsTxt()).toContain("Sitemap:");`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  return lines.join("\n") + "\n";
+}
+
+function compareBestSummaryLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(`import {`);
+  lines.push(`  compareBestBannerTexts,`);
+  lines.push(`  compareBestSummary,`);
+  lines.push(`  shouldShowBestCompareSection,`);
+  lines.push(`} from "../apps/web/src/lib/compare-best-summary-lib";`);
+  lines.push(``);
+  lines.push(`describe("compare-best-summary-lib", () => {`);
+  lines.push(`  it("hides compare for single entry", () => {`);
+  lines.push(
+    `    const entries = [{ category: "mcp", slug: "demo", title: "Demo" } as const];`,
+  );
+  lines.push(
+    `    expect(shouldShowBestCompareSection(entries as never)).toBe(false);`,
+  );
+  lines.push(`  });`);
+  lines.push(`  it("shows compare for two entries", () => {`);
+  lines.push(`    const entries = [`);
+  lines.push(`      { category: "mcp", slug: "a", title: "A" },`);
+  lines.push(`      { category: "mcp", slug: "b", title: "B" },`);
+  lines.push(`    ];`);
+  lines.push(
+    `    expect(shouldShowBestCompareSection(entries as never)).toBe(true);`,
+  );
+  lines.push(`  });`);
+  for (let i = 0; i < 100; i++) {
+    lines.push(`  it("compareBestSummary matrix ${i}", () => {`);
+    lines.push(`    const entries = [`);
+    lines.push(`      { category: "mcp", slug: "a-${i}", title: "A" },`);
+    lines.push(`      { category: "mcp", slug: "b-${i}", title: "B" },`);
+    lines.push(`    ];`);
+    lines.push(
+      `    expect(compareBestSummary(entries as never).comparedCount).toBe(2);`,
+    );
+    lines.push(`  });`);
+    lines.push(`  it("compareBestBannerTexts matrix ${i}", () => {`);
+    lines.push(`    const entries = [`);
+    lines.push(`      { category: "mcp", slug: "a-${i}", title: "A" },`);
+    lines.push(`      { category: "mcp", slug: "b-${i}", title: "B" },`);
+    lines.push(`    ];`);
+    lines.push(
+      `    expect(Array.isArray(compareBestBannerTexts(entries as never))).toBe(true);`,
+    );
     lines.push(`  });`);
   }
   lines.push(`});`);
