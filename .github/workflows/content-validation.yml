@@ -770,6 +770,10 @@ jobs:
         if: ${{ needs.classify-pr.outputs.web == 'true' }}
         run: pnpm build
 
+      - name: Run web API security tests
+        if: ${{ needs.classify-pr.outputs.web == 'true' }}
+        run: pnpm exec vitest run tests/api-security-lib.test.ts tests/api-security-request-helpers.test.ts tests/api-security-allowed-origin.test.ts tests/api-router-security.test.ts
+
   validate-mcp:
     name: validate-mcp
     needs: [classify-pr, prebuild]
