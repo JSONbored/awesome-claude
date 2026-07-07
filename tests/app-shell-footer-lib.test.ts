@@ -26,7 +26,20 @@ describe("app-shell-footer-lib", () => {
   });
 
   it("maps footer column spans to grid classes", () => {
+    expect(footerColumnSpanClass(4)).toBe("md:col-span-4");
     expect(footerColumnSpanClass(3)).toBe("md:col-span-3");
+    expect(footerColumnSpanClass(2)).toBe("md:col-span-2");
     expect(footerColumnSpanClass()).toBe("md:col-span-2");
+  });
+
+  it("keeps external policy links in the community column", () => {
+    const community = SHELL_FOOTER_COLUMNS.find(
+      (column) => column.id === "community",
+    );
+    expect(community?.links.map((link) => link.to)).toEqual([
+      "/about",
+      "/jobs",
+      "/state-of-claude-tooling",
+    ]);
   });
 });
