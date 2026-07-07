@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import type { Entry } from "@/types/registry";
+import { hostOf } from "@/lib/source-citations-lib";
 
 type Citation = {
   label: string;
@@ -19,15 +20,6 @@ type Citation = {
   verifiedAt?: string;
   contributorSlug?: string;
 };
-
-function hostOf(url?: string): string | undefined {
-  if (!url) return undefined;
-  try {
-    return new URL(url).host.replace(/^www\./, "");
-  } catch {
-    return url;
-  }
-}
 
 export function SourceCitations({
   entry,
