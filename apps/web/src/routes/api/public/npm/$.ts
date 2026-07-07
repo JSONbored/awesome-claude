@@ -22,6 +22,16 @@ interface NpmMeta {
 // In-memory cache (per isolate). Avoids hammering registry.npmjs.org.
 const cache = new Map<string, { at: number; data: NpmMeta }>();
 const TTL_MS = 10 * 60 * 1000; // 10 minutes
+const MAX_CACHE_ENTRIES = 256;
+
+function enforceCacheBound() {
+  if (cache.size <= MAX_CACHE_ENTRIES) return;
+  const oldest = cache.entries().next().value as
+    | [string, { at: number; data: NpmMeta }]
+    | undefined;
+  if (!oldest) return;
+  cache.delete(oldest[0]);
+}
 
 async function fetchMeta(pkg: string): Promise<NpmMeta> {
   const cached = cache.get(pkg);
@@ -83,37 +93,44 @@ async function fetchMeta(pkg: string): Promise<NpmMeta> {
     fetchedAt: new Date().toISOString(),
   };
   cache.set(pkg, { at: Date.now(), data });
+  enforceCacheBound();
   return data;
+}
+
+export function __resetNpmMetaCacheForTest() {
+  cache.clear();
 }
 
 export const Route = createApiFileRoute("/api/public/npm/$")({
   server: {
     handlers: {
-      GET: async ({ params }) => {
-        const pkg = params._splat ?? "";
-        if (!pkg || !/^@?[a-z0-9][\w./@-]{0,213}$/i.test(pkg)) {
-          return new Response(JSON.stringify({ error: "Invalid package name" }), {
-            status: 400,
-            headers: { "Content-Type": "application/json" },
-          });
-        }
-        try {
-          const data = await fetchMeta(pkg);
-          return new Response(JSON.stringify(data), {
-            status: 200,
-            headers: {
-              "Content-Type": "application/json",
-              "Cache-Control": "public, s-maxage=600, stale-while-revalidate=3600",
-            },
-          });
-        } catch (err) {
-          console.error("npm proxy error", err);
-          return new Response(JSON.stringify({ error: "Upstream metadata unavailable" }), {
-            status: 502,
-            headers: { "Content-Type": "application/json" },
-          });
-        }
-      },
+      GET,
     },
   },
 });
+
+export async function GET({ params }: { params: Record<string, string> }) {
+  const pkg = params._splat ?? "";
+  if (!pkg || !/^@?[a-z0-9][\w./@-]{0,213}$/i.test(pkg)) {
+    return new Response(JSON.stringify({ error: "Invalid package name" }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+  try {
+    const data = await fetchMeta(pkg);
+    return new Response(JSON.stringify(data), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+        "Cache-Control": "public, s-maxage=600, stale-while-revalidate=3600",
+      },
+    });
+  } catch (err) {
+    console.error("npm proxy error", err);
+    return new Response(JSON.stringify({ error: "Upstream metadata unavailable" }), {
+      status: 502,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+}
