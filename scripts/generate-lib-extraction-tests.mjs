@@ -4936,10 +4936,7 @@ const files = [
   ["tests/analytics-proxy-lib.test.ts", analyticsProxyLibTests()],
   ["tests/newsletter-token-lib.test.ts", newsletterTokenLibTests()],
   ["tests/brief-token-lib.test.ts", briefTokenLibTests()],
-  [
-    "tests/mcp-registry-tool-orchestration-lib.test.ts",
-    mcpRegistryToolOrchestrationLibTests(),
-  ],
+  ...mcpRegistryToolOrchestrationLibTestFiles(),
   ["tests/search-query-aliases-lib.test.ts", searchQueryAliasesLibTests()],
   ["tests/entry-redirects-lib.test.ts", entryRedirectsLibTests()],
   ["tests/newsletter-digest-lib.test.ts", newsletterDigestLibTests()],
@@ -5986,7 +5983,25 @@ function briefTokenLibTests() {
   return lines.join("\n") + "\n";
 }
 
-function mcpRegistryToolOrchestrationLibTests() {
+function mcpRegistryToolOrchestrationLibTestFiles() {
+  const chunkCount = 5;
+  const iterationsPerChunk = 900 / chunkCount;
+  const suffixes = ["a", "b", "c", "d", "e"];
+  return suffixes.map((suffix, index) => [
+    `tests/mcp-registry-tool-orchestration-lib-${suffix}.test.ts`,
+    mcpRegistryToolOrchestrationLibTests({
+      start: index * iterationsPerChunk,
+      end: (index + 1) * iterationsPerChunk,
+      label: suffix,
+    }),
+  ]);
+}
+
+function mcpRegistryToolOrchestrationLibTests({
+  start = 0,
+  end = 900,
+  label = "all",
+} = {}) {
   const lines = [];
   lines.push(`import { describe, expect, it } from "vitest";`);
   lines.push(``);
@@ -6002,38 +6017,42 @@ function mcpRegistryToolOrchestrationLibTests() {
   );
   lines.push(``);
 
-  lines.push(`describe("registry-tool-orchestration-lib validation", () => {`);
-  lines.push(`  it("rejects short planner goal", async () => {`);
-  lines.push(`    const result = await planWorkflowToolbox({ goal: "x" });`);
-  lines.push(`    expect(result.ok).toBe(false);`);
-  lines.push(`  });`);
-  lines.push(`  it("rejects short task recommendation", async () => {`);
-  lines.push(`    const result = await recommendForTask({ task: "x" });`);
-  lines.push(`    expect(result.ok).toBe(false);`);
-  lines.push(`  });`);
   lines.push(
-    `  it("requires category and slug for trust explain", async () => {`,
+    `describe("registry-tool-orchestration-lib validation (${label})", () => {`,
   );
-  lines.push(`    const result = await explainEntryTrust({});`);
-  lines.push(`    expect(result.ok).toBe(false);`);
-  lines.push(`  });`);
-  lines.push(
-    `  it("rejects trust compare with too few entries", async () => {`,
-  );
-  lines.push(
-    `    const result = await compareEntryTrust({ entries: [{ category: "mcp", slug: "demo" }] });`,
-  );
-  lines.push(`    expect(result.ok).toBe(false);`);
-  lines.push(`  });`);
-  lines.push(`  it("returns submission policy envelope", async () => {`);
-  lines.push(`    const result = await getSubmissionPolicy();`);
-  lines.push(`    expect(result.ok).toBe(true);`);
-  lines.push(`  });`);
-  lines.push(`  it("rejects unknown registry tool", async () => {`);
-  lines.push(`    const result = await callRegistryTool("not.a.tool", {});`);
-  lines.push(`    expect(result.ok).toBe(false);`);
-  lines.push(`  });`);
-  for (let i = 0; i < 900; i++) {
+  if (start === 0) {
+    lines.push(`  it("rejects short planner goal", async () => {`);
+    lines.push(`    const result = await planWorkflowToolbox({ goal: "x" });`);
+    lines.push(`    expect(result.ok).toBe(false);`);
+    lines.push(`  });`);
+    lines.push(`  it("rejects short task recommendation", async () => {`);
+    lines.push(`    const result = await recommendForTask({ task: "x" });`);
+    lines.push(`    expect(result.ok).toBe(false);`);
+    lines.push(`  });`);
+    lines.push(
+      `  it("requires category and slug for trust explain", async () => {`,
+    );
+    lines.push(`    const result = await explainEntryTrust({});`);
+    lines.push(`    expect(result.ok).toBe(false);`);
+    lines.push(`  });`);
+    lines.push(
+      `  it("rejects trust compare with too few entries", async () => {`,
+    );
+    lines.push(
+      `    const result = await compareEntryTrust({ entries: [{ category: "mcp", slug: "demo" }] });`,
+    );
+    lines.push(`    expect(result.ok).toBe(false);`);
+    lines.push(`  });`);
+    lines.push(`  it("returns submission policy envelope", async () => {`);
+    lines.push(`    const result = await getSubmissionPolicy();`);
+    lines.push(`    expect(result.ok).toBe(true);`);
+    lines.push(`  });`);
+    lines.push(`  it("rejects unknown registry tool", async () => {`);
+    lines.push(`    const result = await callRegistryTool("not.a.tool", {});`);
+    lines.push(`    expect(result.ok).toBe(false);`);
+    lines.push(`  });`);
+  }
+  for (let i = start; i < end; i++) {
     lines.push(
       `  it("planWorkflowToolbox validation matrix ${i}", async () => {`,
     );
