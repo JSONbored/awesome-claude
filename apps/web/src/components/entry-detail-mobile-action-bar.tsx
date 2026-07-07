@@ -8,6 +8,14 @@ import {
 } from "@/lib/entry-detail-command-center";
 import { siteConfig } from "@/lib/site";
 import { absoluteUrl } from "@/lib/seo";
+import { trackEvent } from "@/lib/analytics";
+import {
+  entryDetailMobileActionAnalyticsData,
+  entryDetailMobileActionAnalyticsEvent,
+  entryDetailMobileCopyIntentType,
+  entryDetailMobileLinkIntentType,
+} from "@/lib/entry-detail-cta-events";
+import { recordIntentEvent } from "@/lib/intent-event-client";
 import { cn } from "@/lib/utils";
 
 type EntryDetailMobileActionBarProps = {
@@ -32,7 +40,14 @@ export function EntryDetailMobileActionBar({
       const action = actions.find((item) => item.id === actionId);
       if (!action) return;
 
+      const analyticsData = entryDetailMobileActionAnalyticsData(
+        entry.category,
+        entry.slug,
+        actionId,
+      );
+
       if (action.kind === "scroll" && action.scrollTargetId) {
+        trackEvent(entryDetailMobileActionAnalyticsEvent(actionId), analyticsData);
         const target = document.getElementById(action.scrollTargetId ?? ENTRY_COMMAND_CENTER_ID);
         target?.scrollIntoView({ behavior: "smooth", block: "start" });
         return;
@@ -41,6 +56,8 @@ export function EntryDetailMobileActionBar({
       if (action.kind === "copy" && action.copyValue) {
         try {
           await navigator.clipboard.writeText(action.copyValue);
+          trackEvent(entryDetailMobileActionAnalyticsEvent(actionId), analyticsData);
+          void recordIntentEvent(entryDetailMobileCopyIntentType(entry), entry);
           toast.success("Copied install command");
         } catch {
           toast.error("Copy failed");
@@ -49,6 +66,9 @@ export function EntryDetailMobileActionBar({
       }
 
       if (action.kind === "link" && action.href) {
+        trackEvent(entryDetailMobileActionAnalyticsEvent(actionId), analyticsData);
+        const intentType = entryDetailMobileLinkIntentType(actionId);
+        if (intentType) void recordIntentEvent(intentType, entry);
         if (action.external) {
           window.open(action.href, "_blank", "noopener,noreferrer");
         } else {
@@ -56,7 +76,7 @@ export function EntryDetailMobileActionBar({
         }
       }
     },
-    [actions],
+    [actions, entry],
   );
 
   return (

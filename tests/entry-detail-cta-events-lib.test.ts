@@ -8,6 +8,10 @@ import {
   entryDetailCopyAnalyticsData,
   entryDetailCopyAnalyticsEvent,
   entryDetailCopyIntentType,
+  entryDetailMobileActionAnalyticsData,
+  entryDetailMobileActionAnalyticsEvent,
+  entryDetailMobileCopyIntentType,
+  entryDetailMobileLinkIntentType,
 } from "@/lib/entry-detail-cta-events-lib";
 
 describe("entry detail cta events lib", () => {
@@ -48,5 +52,24 @@ describe("entry detail cta events lib", () => {
       count: 4,
       surface: "compare-tray",
     });
+  });
+
+  it("builds mobile action analytics and intent helpers", () => {
+    expect(entryDetailMobileActionAnalyticsEvent("copy")).toBe(
+      "detail_mobile_copy",
+    );
+    expect(
+      entryDetailMobileActionAnalyticsData("mcp", "browser", "install"),
+    ).toEqual({
+      entry: "mcp/browser",
+      action: "install",
+      surface: "detail-mobile",
+    });
+    expect(entryDetailMobileCopyIntentType({ installCommand: "npm i x" })).toBe(
+      "install",
+    );
+    expect(entryDetailMobileCopyIntentType({})).toBe("copy");
+    expect(entryDetailMobileLinkIntentType("source")).toBe("open");
+    expect(entryDetailMobileLinkIntentType("claim")).toBeNull();
   });
 });

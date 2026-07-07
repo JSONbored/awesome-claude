@@ -67,6 +67,7 @@ import {
   entryDetailCompareAnalyticsData,
   entryDetailCompareAnalyticsEvent,
 } from "@/lib/entry-detail-cta-events";
+import { resourceCardCompareFullMessage } from "@/lib/resource-card-compare-ui";
 import { useCopyPref, useHarnessPref, type CopyVariant } from "@/lib/dossier-prefs";
 import { variantsForEntry } from "@/components/copy-segmented";
 import type { Harness } from "@/types/registry";
@@ -271,7 +272,11 @@ function Dossier() {
   const inCompare = useIsCompared(entry);
   const onToggleCompare = useCallback(() => {
     const wasIn = inCompare;
-    compare.toggle(entry);
+    const changed = compare.toggle(entry);
+    if (!changed) {
+      toast.error(resourceCardCompareFullMessage());
+      return;
+    }
     trackEvent(entryDetailCompareAnalyticsEvent(!wasIn), {
       ...entryDetailCompareAnalyticsData(entry.category, entry.slug),
       compareCount: wasIn ? Math.max(0, compare.items.length - 1) : compare.items.length + 1,

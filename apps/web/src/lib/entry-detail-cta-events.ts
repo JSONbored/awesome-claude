@@ -6,6 +6,7 @@ export {
   COMPARE_TRAY_SURFACE,
   ENTRY_DETAIL_COMMAND_CENTER_SURFACE,
   ENTRY_DETAIL_COMPARE_SURFACE,
+  ENTRY_DETAIL_MOBILE_SURFACE,
   browseCompareOpenAnalyticsData,
   comparisonTrayFullCompareAnalyticsData,
   comparisonTrayQuickCompareAnalyticsData,
@@ -15,4 +16,8 @@ export {
   entryDetailCopyAnalyticsEvent,
   entryDetailCopyIntentType,
   entryDetailEntryKey,
+  entryDetailMobileActionAnalyticsData,
+  entryDetailMobileActionAnalyticsEvent,
+  entryDetailMobileCopyIntentType,
+  entryDetailMobileLinkIntentType,
 } from "@/lib/entry-detail-cta-events-lib";

@@ -7,9 +7,11 @@
 
 import type { CopyVariant } from "@/lib/dossier-prefs";
 import type { IntentEventClientType } from "@/lib/intent-event-client-lib";
+import type { Entry } from "@/types/registry";
 
 export const ENTRY_DETAIL_COMMAND_CENTER_SURFACE = "detail-command-center";
 export const ENTRY_DETAIL_COMPARE_SURFACE = "detail-compare";
+export const ENTRY_DETAIL_MOBILE_SURFACE = "detail-mobile";
 export const BROWSE_COMPARE_SURFACE = "browse-compare";
 export const COMPARE_TRAY_SURFACE = "compare-tray";
 
@@ -56,4 +58,30 @@ export function comparisonTrayQuickCompareAnalyticsData(count: number) {
 
 export function comparisonTrayFullCompareAnalyticsData(count: number) {
   return { count, surface: COMPARE_TRAY_SURFACE };
+}
+
+export function entryDetailMobileActionAnalyticsEvent(actionId: string): string {
+  return `detail_mobile_${actionId.replace(/-/g, "_")}`;
+}
+
+export function entryDetailMobileActionAnalyticsData(
+  category: string,
+  slug: string,
+  actionId: string,
+) {
+  return {
+    entry: entryDetailEntryKey(category, slug),
+    action: actionId,
+    surface: ENTRY_DETAIL_MOBILE_SURFACE,
+  };
+}
+
+export function entryDetailMobileCopyIntentType(
+  entry: Pick<Entry, "installCommand">,
+): IntentEventClientType {
+  return entry.installCommand ? "install" : "copy";
+}
+
+export function entryDetailMobileLinkIntentType(actionId: string): IntentEventClientType | null {
+  return actionId === "source" ? "open" : null;
 }
