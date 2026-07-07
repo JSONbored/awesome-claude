@@ -53,6 +53,7 @@ export default defineConfig({
         "apps/web/src/data/tools.ts",
         "apps/web/src/lib/api/example.functions.ts",
         "apps/web/src/lib/csv.ts",
+        "apps/web/src/lib/d1-batch.ts",
         "apps/web/src/lib/format.ts",
         "apps/web/src/lib/api-logs.ts",
         "apps/web/src/lib/client-logs.ts",
