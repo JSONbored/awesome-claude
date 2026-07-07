@@ -30,6 +30,7 @@ import {
   type AlertSchedule,
 } from "@/lib/recents";
 import { subscribeToNewsletter } from "@/lib/api/newsletter";
+import { hashSearch } from "@/lib/saved-search-hash-lib";
 import { CopyButton } from "@/components/copy-button";
 import { cn } from "@/lib/utils";
 
@@ -44,13 +45,6 @@ function applyToBrowseSearch(s: SavedSearch) {
     view: "row" as const,
     compare: "",
   };
-}
-
-function hashSearch(s: SavedSearch): string {
-  const raw = `${s.q}|${s.category ?? ""}|${s.trust ?? ""}|${s.source ?? ""}|${s.platform ?? ""}`;
-  let h = 0;
-  for (let i = 0; i < raw.length; i++) h = (h * 31 + raw.charCodeAt(i)) | 0;
-  return Math.abs(h).toString(36);
 }
 
 export function savedFeedUrl(s: SavedSearch): string {
