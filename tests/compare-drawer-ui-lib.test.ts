@@ -108,5 +108,8 @@ describe("compare drawer ui lib", () => {
     expect(bundled.fullViewSearch).toEqual(
       compareDrawerFullViewSearch(entries),
     );
+    expect(bundled.bannerTexts).toEqual(
+      compareDrawerHeaderBannerTexts(entries),
+    );
   });
 });

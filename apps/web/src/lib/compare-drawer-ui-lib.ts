@@ -14,7 +14,7 @@ export type CompareDrawerUiState = {
 export function compareDrawerUiState(items: Entry[]): CompareDrawerUiState {
   return {
     actionRowDiverges: compareDrawerActionsDiverge(items),
-    bannerTexts: compareDrawerBannerTexts(items),
+    bannerTexts: compareDrawerHeaderBannerTexts(items),
     fullViewSearch: compareDrawerFullViewSearch(items),
   };
 }
