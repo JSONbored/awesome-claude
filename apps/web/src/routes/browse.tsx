@@ -22,6 +22,8 @@ import {
   toggleBrowseTrustSignal,
 } from "@/lib/browse-trust-filters";
 import { browseFilterDecisionUiState } from "@/lib/browse-filter-decision-hints";
+import { browseResultsTrustDecisionUiState } from "@/lib/browse-results-trust-decision";
+import { BrowseResultsTrustPanel } from "@/components/browse-results-trust-panel";
 import {
   CATEGORIES,
   type Category,
@@ -322,6 +324,11 @@ function Browse() {
         compare.items.length,
       ),
     [sp, results, compare.items.length],
+  );
+
+  const browseResultsTrust = useMemo(
+    () => browseResultsTrustDecisionUiState(results, compare.items.length),
+    [results, compare.items.length],
   );
 
   const activeCount =
@@ -780,6 +787,21 @@ function Browse() {
             <p className="mt-2 text-xs text-ink-muted" role="status">
               {browseFilterDecision.hint}
             </p>
+          ) : null}
+
+          {browseResultsTrust.showPanel ? (
+            <BrowseResultsTrustPanel
+              state={browseResultsTrust}
+              compareLink={
+                browseCompareUi?.showHint
+                  ? {
+                      search: browseCompareUi.search,
+                      selectedCount: browseCompareUi.selectedCount,
+                    }
+                  : null
+              }
+              className="mt-3"
+            />
           ) : null}
 
           {sp.category &&
