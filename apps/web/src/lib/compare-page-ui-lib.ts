@@ -43,7 +43,7 @@ export function comparePageUiState(items: Entry[]): ComparePageUiState {
   return {
     actionRowDiverges: comparePageActionsDiverge(items),
     bannerTexts: comparePageHeaderBannerTexts(items),
-    singleItemHint: compareSingleItemHintText(items.length),
+    singleItemHint: comparePageSelectionHint(items.length),
     shareUrl: comparePageShareUrl(items),
   };
 }
