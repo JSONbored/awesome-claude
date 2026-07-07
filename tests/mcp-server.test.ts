@@ -2561,6 +2561,13 @@ describe("HeyClaude read-only MCP helpers", () => {
         ),
         "utf8",
       );
+      const orchestrationLibSource = fs.readFileSync(
+        path.join(
+          repoRoot,
+          "packages/mcp/src/registry-tool-orchestration-lib.js",
+        ),
+        "utf8",
+      );
 
       const requireDocstringBefore = (
         declaration: string,
@@ -2586,9 +2593,18 @@ describe("HeyClaude read-only MCP helpers", () => {
         expect(block.length).toBeGreaterThan(40);
       };
 
-      requireDocstringBefore("export async function listRegistryRecent(");
-      requireDocstringBefore("export async function listRegistryTrending(");
-      requireDocstringBefore("export async function listJobsActive(");
+      requireDocstringBefore(
+        "export async function listRegistryRecent(",
+        orchestrationLibSource,
+      );
+      requireDocstringBefore(
+        "export async function listRegistryTrending(",
+        orchestrationLibSource,
+      );
+      requireDocstringBefore(
+        "export async function listJobsActive(",
+        orchestrationLibSource,
+      );
       requireDocstringBefore(
         "export async function fetchPublicApiJson(",
         fetchLibSource,
