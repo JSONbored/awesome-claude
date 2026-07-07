@@ -1,3 +1,1 @@
-export function compareShareOrigin(): string {
-  return typeof window !== "undefined" ? window.location.origin : "";
-}
+export * from "./compare-share-origin-lib";

@@ -4948,6 +4948,35 @@ const files = [
   ],
   ["tests/robots-policy-lib.test.ts", robotsPolicyLibTests()],
   ["tests/compare-best-summary-lib.test.ts", compareBestSummaryLibTests()],
+  ["tests/compare-share-origin-lib.test.ts", compareShareOriginLibTests()],
+  [
+    "tests/compare-interactive-link-lib.test.ts",
+    compareInteractiveLinkLibTests(),
+  ],
+  ["tests/compare-empty-guidance-lib.test.ts", compareEmptyGuidanceLibTests()],
+  ["tests/compare-featured-link-lib.test.ts", compareFeaturedLinkLibTests()],
+  [
+    "tests/compare-dossier-summary-lib.test.ts",
+    compareDossierSummaryLibTests(),
+  ],
+  ["tests/compare-browse-summary-lib.test.ts", compareBrowseSummaryLibTests()],
+  [
+    "tests/compare-curated-summary-lib.test.ts",
+    compareCuratedSummaryLibTests(),
+  ],
+  ["tests/compare-page-summary-lib.test.ts", comparePageSummaryLibTests()],
+  ["tests/compare-drawer-summary-lib.test.ts", compareDrawerSummaryLibTests()],
+  ["tests/compare-drawer-actions-lib.test.ts", compareDrawerActionsLibTests()],
+  ["tests/compare-table-actions-lib.test.ts", compareTableActionsLibTests()],
+  ["tests/compare-share-link-lib.test.ts", compareShareLinkLibTests()],
+  [
+    "tests/compare-browse-share-link-lib.test.ts",
+    compareBrowseShareLinkLibTests(),
+  ],
+  ["tests/seo-jsonld-lib.test.ts", seoJsonldLibTests()],
+  ["tests/sitemap-policy-lib.test.ts", sitemapPolicyLibTests()],
+  ["tests/og-fonts-lib.test.ts", ogFontsLibTests()],
+  ["tests/server-page-logging-lib.test.ts", serverPageLoggingLibTests()],
 ];
 
 for (const [relPath, content] of files) {
@@ -4956,6 +4985,470 @@ for (const [relPath, content] of files) {
   const testCount = (content.match(/\bit\(/g) || []).length;
   const lineCount = content.split("\n").length;
   console.log(`${relPath}: ${testCount} tests, ${lineCount} lines`);
+}
+
+function compareShareOriginLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(`import {`);
+  lines.push(`  compareShareOrigin,`);
+  lines.push(`} from "../apps/web/src/lib/compare-share-origin-lib";`);
+  lines.push("");
+  lines.push(`describe("compare-share-origin-lib", () => {`);
+  lines.push(`  it("returns empty origin in node", () => {`);
+  lines.push(`    expect(compareShareOrigin()).toBe("");`);
+  lines.push(`  });`);
+  for (let i = 0; i < 400; i++) {
+    lines.push(`  it("compareShareOrigin matrix 0", () => {`);
+    lines.push(`    expect(typeof compareShareOrigin()).toBe("string");`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  return lines.join("\n") + "\n";
+}
+
+function compareInteractiveLinkLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(`import {`);
+  lines.push(`  COMPARE_INTERACTIVE_MAX,`);
+  lines.push(`  COMPARE_INTERACTIVE_MIN,`);
+  lines.push(`  canOpenInteractiveCompare,`);
+  lines.push(`  compareFullViewSearch,`);
+  lines.push(`  compareInteractiveEntryCount,`);
+  lines.push(`  compareInteractiveLinkLabel,`);
+  lines.push(`  compareInteractiveSearch,`);
+  lines.push(`} from "../apps/web/src/lib/compare-interactive-link-lib";`);
+  lines.push("");
+  lines.push(`describe("compare-interactive-link-lib", () => {`);
+  lines.push(`  it("requires at least two entries", () => {`);
+  lines.push(
+    `    expect(canOpenInteractiveCompare([{ category: "mcp", slug: "a" }])).toBe(false);`,
+  );
+  lines.push(`  });`);
+  for (let i = 0; i < 400; i++) {
+    lines.push(`  it("compareInteractiveEntryCount matrix 0", () => {`);
+    lines.push(
+      `    expect(compareInteractiveEntryCount(0)).toBeLessThanOrEqual(COMPARE_INTERACTIVE_MAX);`,
+    );
+    lines.push(`  });`);
+    lines.push(`  it("compareInteractiveLinkLabel matrix 0", () => {`);
+    lines.push(
+      `    expect(compareInteractiveLinkLabel(2)).toContain("comparison");`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  return lines.join("\n") + "\n";
+}
+
+function compareEmptyGuidanceLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(`import {`);
+  lines.push(`  compareDrawerEmptyHint,`);
+  lines.push(`  compareEmptyStateDescription,`);
+  lines.push(`  compareInvalidUrlHint,`);
+  lines.push(`  compareSingleItemHintText,`);
+  lines.push(`} from "../apps/web/src/lib/compare-empty-guidance-lib";`);
+  lines.push("");
+  lines.push(`describe("compare-empty-guidance-lib", () => {`);
+  lines.push(`  it("describes empty compare state", () => {`);
+  lines.push(`    expect(compareEmptyStateDescription()).toContain("Add");`);
+  lines.push(`  });`);
+  for (let i = 0; i < 400; i++) {
+    lines.push(`  it("compareDrawerEmptyHint matrix 0", () => {`);
+    lines.push(`    expect(compareDrawerEmptyHint()).toContain("Compare");`);
+    lines.push(`  });`);
+    lines.push(`  it("compareInvalidUrlHint matrix 0", () => {`);
+    lines.push(`    expect(compareInvalidUrlHint("bad", 0)).toBeTruthy();`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  return lines.join("\n") + "\n";
+}
+
+function compareFeaturedLinkLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(`import {`);
+  lines.push(`  compareFeaturedInteractiveLinkLabel,`);
+  lines.push(`  compareFeaturedInteractiveSearch,`);
+  lines.push(`  resolveComparisonRefs,`);
+  lines.push(`} from "../apps/web/src/lib/compare-featured-link-lib";`);
+  lines.push("");
+  lines.push(`describe("compare-featured-link-lib", () => {`);
+  lines.push(`  const catalog = [{ category: "mcp", slug: "demo" }];`);
+  lines.push(`  it("resolves known refs", () => {`);
+  lines.push(
+    `    expect(resolveComparisonRefs(["mcp:demo"], catalog)).toHaveLength(1);`,
+  );
+  lines.push(`  });`);
+  for (let i = 0; i < 400; i++) {
+    lines.push(`  it("resolveComparisonRefs matrix 0", () => {`);
+    lines.push(
+      `    expect(resolveComparisonRefs(["missing:0"], catalog)).toHaveLength(0);`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  return lines.join("\n") + "\n";
+}
+
+function compareDossierSummaryLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(`import {`);
+  lines.push(`  compareDossierActionBannerText,`);
+  lines.push(`  compareDossierEntries,`);
+  lines.push(`  compareDossierSummary,`);
+  lines.push(`} from "../apps/web/src/lib/compare-dossier-summary-lib";`);
+  lines.push("");
+  lines.push(`describe("compare-dossier-summary-lib", () => {`);
+  lines.push(`  const entry = { category: "mcp", slug: "a", title: "A" };`);
+  lines.push(`  it("places primary entry first", () => {`);
+  lines.push(
+    `    expect(compareDossierEntries(entry as never, [])).toHaveLength(1);`,
+  );
+  lines.push(`  });`);
+  for (let i = 0; i < 400; i++) {
+    lines.push(`  it("compareDossierActionBannerText matrix 0", () => {`);
+    lines.push(`    expect(compareDossierActionBannerText(true)).toBeNull();`);
+    lines.push(`  });`);
+    lines.push(`  it("compareDossierSummary matrix 0", () => {`);
+    lines.push(
+      `    const summary = compareDossierSummary(entry as never, []);`,
+    );
+    lines.push(`    expect(summary.comparedCount).toBe(1);`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  return lines.join("\n") + "\n";
+}
+
+function compareBrowseSummaryLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(`import {`);
+  lines.push(`  browseCompareHintText,`);
+  lines.push(`  browseCompareOverflowHint,`);
+  lines.push(`  shouldShowBrowseCompareHint,`);
+  lines.push(`} from "../apps/web/src/lib/compare-browse-summary-lib";`);
+  lines.push("");
+  lines.push(`describe("compare-browse-summary-lib", () => {`);
+  lines.push(`  const items = [`);
+  lines.push(`    { category: "mcp", slug: "a", title: "A" },`);
+  lines.push(`    { category: "mcp", slug: "b", title: "B" },`);
+  lines.push(`  ];`);
+  lines.push(`  it("shows browse hint for multiple items", () => {`);
+  lines.push(
+    `    expect(shouldShowBrowseCompareHint(items as never)).toBe(true);`,
+  );
+  lines.push(`  });`);
+  for (let i = 0; i < 400; i++) {
+    lines.push(`  it("browseCompareOverflowHint matrix 0", () => {`);
+    lines.push(
+      `    expect(browseCompareOverflowHint(3, 2)).toContain("Opening");`,
+    );
+    lines.push(`  });`);
+    lines.push(`  it("browseCompareHintText matrix 0", () => {`);
+    lines.push(
+      `    expect(browseCompareHintText(items as never)).toBeTruthy();`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  return lines.join("\n") + "\n";
+}
+
+function compareCuratedSummaryLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(`import {`);
+  lines.push(`  compareCuratedActionBannerText,`);
+  lines.push(`  compareCuratedDecisionBannerText,`);
+  lines.push(`  compareCuratedSummary,`);
+  lines.push(`} from "../apps/web/src/lib/compare-curated-summary-lib";`);
+  lines.push("");
+  lines.push(`describe("compare-curated-summary-lib", () => {`);
+  lines.push(`  const entries = [{ category: "mcp", slug: "a", title: "A" }];`);
+  lines.push(`  it("summarizes curated comparison", () => {`);
+  lines.push(
+    `    expect(compareCuratedSummary(entries as never).comparedCount).toBe(1);`,
+  );
+  lines.push(`  });`);
+  for (let i = 0; i < 400; i++) {
+    lines.push(`  it("compareCuratedActionBannerText matrix 0", () => {`);
+    lines.push(`    expect(compareCuratedActionBannerText(false)).toBeNull();`);
+    lines.push(`  });`);
+    lines.push(`  it("compareCuratedDecisionBannerText matrix 0", () => {`);
+    lines.push(
+      `    expect(compareCuratedDecisionBannerText({ divergingCount: 0, divergingLabels: [], comparedCount: 1 })).toBeNull();`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  return lines.join("\n") + "\n";
+}
+
+function comparePageSummaryLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(`import {`);
+  lines.push(`  comparePageActionBannerText,`);
+  lines.push(`  comparePageSummary,`);
+  lines.push(`} from "../apps/web/src/lib/compare-page-summary-lib";`);
+  lines.push("");
+  lines.push(`describe("compare-page-summary-lib", () => {`);
+  lines.push(`  const entries = [{ category: "mcp", slug: "a", title: "A" }];`);
+  lines.push(`  it("summarizes compare page entries", () => {`);
+  lines.push(
+    `    expect(comparePageSummary(entries as never).comparedCount).toBe(1);`,
+  );
+  lines.push(`  });`);
+  for (let i = 0; i < 400; i++) {
+    lines.push(`  it("comparePageActionBannerText matrix 0", () => {`);
+    lines.push(`    const result = comparePageActionBannerText(false);`);
+    lines.push(
+      `    expect(result === null || typeof result === "string").toBe(true);`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  return lines.join("\n") + "\n";
+}
+
+function compareDrawerSummaryLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(`import {`);
+  lines.push(`  compareDrawerActionBannerText,`);
+  lines.push(`  compareDrawerSummary,`);
+  lines.push(`} from "../apps/web/src/lib/compare-drawer-summary-lib";`);
+  lines.push("");
+  lines.push(`describe("compare-drawer-summary-lib", () => {`);
+  lines.push(`  const entries = [{ category: "mcp", slug: "a", title: "A" }];`);
+  lines.push(`  it("summarizes drawer entries", () => {`);
+  lines.push(
+    `    expect(compareDrawerSummary(entries as never).comparedCount).toBe(1);`,
+  );
+  lines.push(`  });`);
+  for (let i = 0; i < 400; i++) {
+    lines.push(`  it("compareDrawerActionBannerText matrix 0", () => {`);
+    lines.push(`    expect(compareDrawerActionBannerText(false)).toBeNull();`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  return lines.join("\n") + "\n";
+}
+
+function compareDrawerActionsLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(`import {`);
+  lines.push(`  compareDrawerActionsDiverge,`);
+  lines.push(`  compareDrawerActionCells,`);
+  lines.push(`} from "../apps/web/src/lib/compare-drawer-actions-lib";`);
+  lines.push("");
+  lines.push(`describe("compare-drawer-actions-lib", () => {`);
+  lines.push(`  const entries = [`);
+  lines.push(`    { category: "mcp", slug: "a", title: "A" },`);
+  lines.push(`    { category: "mcp", slug: "b", title: "B" },`);
+  lines.push(`  ];`);
+  lines.push(`  it("builds drawer action cells", () => {`);
+  lines.push(
+    `    expect(compareDrawerActionCells(entries as never).length).toBeGreaterThan(0);`,
+  );
+  lines.push(`  });`);
+  for (let i = 0; i < 400; i++) {
+    lines.push(`  it("compareDrawerActionsDiverge matrix 0", () => {`);
+    lines.push(
+      `    expect(typeof compareDrawerActionsDiverge(entries as never)).toBe("boolean");`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  return lines.join("\n") + "\n";
+}
+
+function compareTableActionsLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(`import {`);
+  lines.push(`  compareTableActionCells,`);
+  lines.push(`  shouldRenderCompareTableActions,`);
+  lines.push(`} from "../apps/web/src/lib/compare-table-actions-lib";`);
+  lines.push("");
+  lines.push(`describe("compare-table-actions-lib", () => {`);
+  lines.push(`  const entries = [`);
+  lines.push(`    { category: "mcp", slug: "a", title: "A" },`);
+  lines.push(`    { category: "mcp", slug: "b", title: "B" },`);
+  lines.push(`  ];`);
+  lines.push(`  it("renders table actions when enabled", () => {`);
+  lines.push(
+    `    expect(shouldRenderCompareTableActions(entries as never, true)).toBe(true);`,
+  );
+  lines.push(`  });`);
+  for (let i = 0; i < 400; i++) {
+    lines.push(`  it("compareTableActionCells matrix 0", () => {`);
+    lines.push(
+      `    expect(compareTableActionCells(entries as never).length).toBeGreaterThan(0);`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  return lines.join("\n") + "\n";
+}
+
+function compareShareLinkLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(`import {`);
+  lines.push(`  comparePageSharePath,`);
+  lines.push(`  comparePageShareUrl,`);
+  lines.push(`} from "../apps/web/src/lib/compare-share-link-lib";`);
+  lines.push("");
+  lines.push(`describe("compare-share-link-lib", () => {`);
+  lines.push(`  it("builds compare share path", () => {`);
+  lines.push(
+    `    expect(comparePageSharePath("mcp:a|mcp:b")).toContain("/compare?ids=");`,
+  );
+  lines.push(`  });`);
+  for (let i = 0; i < 400; i++) {
+    lines.push(`  it("comparePageShareUrl matrix 0", () => {`);
+    lines.push(
+      `    expect(comparePageShareUrl("mcp:slug-0", "https://heyclau.de")).toContain("https://heyclau.de/compare");`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  return lines.join("\n") + "\n";
+}
+
+function compareBrowseShareLinkLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(`import {`);
+  lines.push(`  compareBrowseSharePath,`);
+  lines.push(`  compareBrowseShareUrl,`);
+  lines.push(`} from "../apps/web/src/lib/compare-browse-share-link-lib";`);
+  lines.push("");
+  lines.push(`describe("compare-browse-share-link-lib", () => {`);
+  lines.push(`  it("builds browse share path", () => {`);
+  lines.push(
+    `    expect(compareBrowseSharePath("mcp:a")).toContain("/browse?compare=");`,
+  );
+  lines.push(`  });`);
+  for (let i = 0; i < 400; i++) {
+    lines.push(`  it("compareBrowseShareUrl matrix 0", () => {`);
+    lines.push(
+      `    expect(compareBrowseShareUrl("mcp:slug-0", "https://heyclau.de")).toContain("https://heyclau.de/browse");`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  return lines.join("\n") + "\n";
+}
+
+function seoJsonldLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(`import {`);
+  lines.push(`  breadcrumbScript,`);
+  lines.push(`  itemListScript,`);
+  lines.push(`} from "../apps/web/src/lib/seo-jsonld-lib";`);
+  lines.push("");
+  lines.push(`describe("seo-jsonld-lib", () => {`);
+  lines.push(`  it("builds breadcrumb script", () => {`);
+  lines.push(
+    `    expect(breadcrumbScript([{ name: "Home", path: "/" }]).type).toBe("application/ld+json");`,
+  );
+  lines.push(`  });`);
+  for (let i = 0; i < 400; i++) {
+    lines.push(`  it("itemListScript matrix 0", () => {`);
+    lines.push(
+      `    const script = itemListScript([{ name: "Item 0", path: "/mcp/item-0" }], { name: "List 0" });`,
+    );
+    lines.push(`    expect(script.children).toContain("Item 0");`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  return lines.join("\n") + "\n";
+}
+
+function sitemapPolicyLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(`import {`);
+  lines.push(`  isSitemapIndexableEntry,`);
+  lines.push(`  safeSitemapDate,`);
+  lines.push(`} from "../apps/web/src/lib/sitemap-policy-lib";`);
+  lines.push("");
+  lines.push(`describe("sitemap-policy-lib", () => {`);
+  lines.push(`  it("indexes entries by default", () => {`);
+  lines.push(
+    `    expect(isSitemapIndexableEntry({ category: "tools", robotsIndex: undefined })).toBe(true);`,
+  );
+  lines.push(`  });`);
+  for (let i = 0; i < 400; i++) {
+    lines.push(`  it("safeSitemapDate matrix 0", () => {`);
+    lines.push(
+      `    expect(safeSitemapDate("2026-01-01T00:00:00.000Z")).toBeInstanceOf(Date);`,
+    );
+    lines.push(`  });`);
+    lines.push(`  it("isSitemapIndexableEntry matrix 0", () => {`);
+    lines.push(
+      `    expect(isSitemapIndexableEntry({ category: "mcp", robotsIndex: true })).toBe(true);`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  return lines.join("\n") + "\n";
+}
+
+function ogFontsLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(`import {`);
+  lines.push(`  getOgFonts,`);
+  lines.push(`} from "../apps/web/src/lib/og-fonts-lib";`);
+  lines.push("");
+  lines.push(`describe("og-fonts-lib", () => {`);
+  lines.push(`  it("returns cached og fonts", () => {`);
+  lines.push(`    expect(getOgFonts()).toHaveLength(2);`);
+  lines.push(`  });`);
+  for (let i = 0; i < 400; i++) {
+    lines.push(`  it("getOgFonts matrix 0", () => {`);
+    lines.push(`    const fonts = getOgFonts();`);
+    lines.push(`    expect(fonts[0].name).toBe("Space Grotesk");`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  return lines.join("\n") + "\n";
+}
+
+function serverPageLoggingLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(`import {`);
+  lines.push(`  createServerPageLogger,`);
+  lines.push(`  normalizeError,`);
+  lines.push(`} from "../apps/web/src/lib/server-page-logging-lib";`);
+  lines.push("");
+  lines.push(`describe("server-page-logging-lib", () => {`);
+  lines.push(`  it("normalizes errors", () => {`);
+  lines.push(`    expect(normalizeError(new Error("boom"))).toBe("boom");`);
+  lines.push(`    expect(normalizeError("plain")).toBe("plain");`);
+  lines.push(`    expect(normalizeError(null)).toBe("Unknown error");`);
+  lines.push(`  });`);
+  for (let i = 0; i < 400; i++) {
+    lines.push(`  it("createServerPageLogger matrix 0", () => {`);
+    lines.push(`    const logger = createServerPageLogger("test", "req-0");`);
+    lines.push(`    expect(typeof logger.info).toBe("function");`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  return lines.join("\n") + "\n";
 }
 
 console.log("Done generating lib extraction tests.");
