@@ -8,6 +8,7 @@ import {
   OctagonX,
   FileText,
   GitCompare,
+  Terminal,
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import type { Entry, Harness } from "@/types/registry";
@@ -28,6 +29,7 @@ import {
   entryDetailCompareCtaState,
   ENTRY_DETAIL_COMPARE_MAX,
 } from "@/lib/entry-detail-compare-ui";
+import { resolveDetailIntegrationLinks } from "@/lib/entry-detail-integration-links";
 import { INSTALL_RISK_LABEL } from "@/lib/trust";
 import type { InstallRisk } from "@/lib/trust-lib";
 import { siteConfig } from "@/lib/site";
@@ -83,6 +85,7 @@ export function EntryDetailCommandCenter({
 }: EntryDetailCommandCenterProps) {
   const readiness = resolveDetailReadinessItems(entry);
   const quickLinks = resolveDetailQuickLinks(entry);
+  const integrationLinks = resolveDetailIntegrationLinks(entry);
   const communityAnchors = resolveDetailCommunityAnchors(relatedCount, guideCount, true);
   const compareState = entryDetailCompareCtaState(compareCta.inCompare, compareCta.compareCount);
   const safetyGate = detailSafetyGateMessage(risk, entry);
@@ -282,6 +285,26 @@ export function EntryDetailCommandCenter({
           </div>
         </div>
 
+        <div className="border-b border-border px-4 py-3">
+          <div className="eyebrow mb-2">Integrations & API</div>
+          <ul className="space-y-1.5 text-xs">
+            {integrationLinks.map((link) => (
+              <li key={link.id}>
+                <a
+                  href={link.href}
+                  target={link.external ? "_blank" : undefined}
+                  rel={link.external ? "noreferrer" : undefined}
+                  className="inline-flex items-center gap-1.5 text-ink-muted hover:text-ink"
+                >
+                  <Terminal className="h-3.5 w-3.5" />
+                  {link.label}
+                  {link.external ? <ExternalLink className="h-3 w-3" /> : null}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
         <div className="px-4 py-3">
           <div className="eyebrow mb-2">Contribute</div>
           <div className="flex flex-col gap-1.5 text-xs">
@@ -336,26 +359,19 @@ export function EntryDetailCommandCenter({
               </a>
             );
           }
-          if (link.id === "registry") {
+          if (link.id === "browse") {
             return (
               <Link
                 key={link.id}
                 to={link.href}
+                search={{ category: entry.category }}
                 className="inline-flex items-center gap-1.5 text-ink-muted hover:text-ink"
               >
                 <Code2 className="h-3.5 w-3.5" /> {link.label}
               </Link>
             );
           }
-          return (
-            <a
-              key={link.id}
-              href={link.href}
-              className="inline-flex items-center gap-1.5 text-ink-muted hover:text-ink"
-            >
-              <FileText className="h-3.5 w-3.5" /> {link.label}
-            </a>
-          );
+          return null;
         })}
       </div>
     </aside>
