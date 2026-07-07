@@ -1,0 +1,112 @@
+---
+title: AgentServices MCP Server
+slug: agentservices-mcp-server
+category: mcp
+description: >-
+  50 paid APIs for AI agents via x402 micropayments. Crypto data, market intelligence, DeFi analytics, on-chain data, portfolio intelligence, and AI inference.
+cardDescription: >-
+  50 x402 API endpoints for AI agents — crypto, DeFi, market intelligence, on-chain analytics with USDC micropayments.
+seoTitle: AgentServices MCP Server — x402 APIs for AI Agents
+seoDescription: >-
+  Remote MCP server with 50 API endpoints for AI agents. Free + paid (x402 USDC). Crypto, DeFi, market data, inference.
+author: Vivek Kotecha
+authorProfileUrl: "https://agentservices.to"
+submittedBy: vbkotecha
+submittedByUrl: "https://github.com/vbkotecha"
+dateAdded: "2026-07-07"
+submittedAt: "2026-07-07"
+documentationUrl: "https://agentservices.to/examples"
+websiteUrl: "https://agentservices.to"
+retrievalSources:
+  - "https://agentservices.to"
+  - "https://github.com/vbkotecha/aiservices-api"
+  - "https://agentservices.to/openapi.json"
+installable: true
+installCommand: "claude mcp add --transport http agentservices https://agentservices.to/mcp"
+usageSnippet: >-
+  Connect to the remote MCP endpoint. Free tools (crypto prices, fear-greed) work immediately. Paid tools return x402 payment instructions.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "agentservices": {
+        "url": "https://agentservices.to/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "agentservices": {
+        "url": "https://agentservices.to/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "MCP client with streamable HTTP transport support (Claude Desktop, Cursor, Windsurf, etc.)"
+  - "For paid endpoints: USDC on Base mainnet and x402-compatible wallet"
+safetyNotes:
+  - "Remote MCP server. Free endpoints require no authentication."
+  - "Paid endpoints use x402 protocol — payment is handled automatically by compatible clients."
+privacyNotes:
+  - "Query parameters may include cryptocurrency symbols and addresses."
+  - "No user data stored — stateless API."
+tags:
+  - mcp
+  - x402
+  - crypto
+  - finance
+  - data
+  - defi
+keywords:
+  - AgentServices MCP Server
+  - x402 APIs for AI agents
+  - crypto data MCP
+  - DeFi analytics MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+**AgentServices** is a remote MCP server providing 50 API endpoints for AI agents. It covers crypto data, market intelligence, DeFi analytics, on-chain data, portfolio intelligence, and AI inference. Payments are handled via the x402 protocol (USDC micropayments on Base mainnet).
+
+- **Free endpoints:** 12 services (crypto prices, fear-greed, trending, gas, news, social)
+- **Paid endpoints:** 38 services ($0.01–$0.25 per call)
+- **MCP tools:** 36 tools exposed via SSE transport
+
+## Installation
+
+```bash
+claude mcp add --transport http agentservices https://agentservices.to/mcp
+```
+
+## Key Endpoints
+
+| Endpoint | Description | Price |
+|----------|-------------|-------|
+| `crypto_prices` | Real-time crypto prices | Free |
+| `fear_greed` | Fear & Greed Index | Free |
+| `indicators` | Technical indicators (RSI, MACD, etc.) | $0.02 |
+| `defi_yields` | DeFi yield rates across protocols | $0.02 |
+| `market_pulse` | Aggregated market overview | $0.05 |
+| `portfolio_intelligence` | Portfolio analysis with verdict | $0.10 |
+| `defi_strategy` | DeFi investment report | $0.25 |
+| `onchain_overview` | On-chain analytics bundle | $0.15 |
+| `deep_research` | Search + extract + synthesize | $0.05 |
+| `inference` | AI inference (GPT models) | $0.03 |
+
+## Source Verification Notes
+
+- **Website:** https://agentservices.to — publicly reachable, returns OpenAPI spec at `/openapi.json`
+- **MCP endpoint:** https://agentservices.to/mcp — SSE transport, 36 tools
+- **x402 manifest:** https://agentservices.to/.well-known/x402.json — v2 format with Bazaar extensions
+- **GitHub:** https://github.com/vbkotecha/aiservices-api — MIT licensed, active development
+- **Health check:** Returns v5.3.0, 50 services, x402 enabled
+
+## Editorial Disclosure
+
+Community listing by **vbkotecha** (project author). AgentServices is an original project, all source code publicly available.
