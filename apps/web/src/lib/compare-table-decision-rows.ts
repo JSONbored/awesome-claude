@@ -28,8 +28,12 @@ export function divergingDecisionRowLabels(entries: Entry[]): string[] {
     .map((row) => row.label);
 }
 
+export function compareDecisionDivergingCount(entries: Entry[]): number {
+  return divergingDecisionRowLabels(entries).length;
+}
+
 export function hasCompareDecisionDivergence(entries: Entry[]): boolean {
-  return divergingDecisionRowLabels(entries).length > 0;
+  return compareDecisionDivergingCount(entries) > 0;
 }
 
 export function compareDecisionSummary(entries: Entry[]): {
@@ -40,7 +44,7 @@ export function compareDecisionSummary(entries: Entry[]): {
   const divergingLabels = divergingDecisionRowLabels(entries);
   return {
     comparedCount: entries.length,
-    divergingCount: divergingLabels.length,
+    divergingCount: compareDecisionDivergingCount(entries),
     divergingLabels,
   };
 }
