@@ -115,6 +115,7 @@ describe("public GitHub webhook route", () => {
 
   it("accepts signed push events within the body limit", async () => {
     const body = JSON.stringify({
+      repository: { full_name: "jsonbored/awesome-claude" },
       ref: "refs/heads/main",
       commits: [
         {
@@ -131,5 +132,46 @@ describe("public GitHub webhook route", () => {
 
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toEqual({ ok: true, count: 1 });
+  });
+
+  it("rejects signed events missing the canonical repository name", async () => {
+    const body = JSON.stringify({
+      ref: "refs/heads/main",
+      commits: [
+        {
+          id: "abc123",
+          timestamp: "2026-06-18T23:00:00.000Z",
+          added: ["content/mcp/example.mdx"],
+        },
+      ],
+    });
+
+    const response = await handleGithubWebhookPost(
+      await signedWebhookRequest("push", body),
+    );
+
+    expect(response.status).toBe(403);
+    await expect(response.text()).resolves.toBe("Unknown repo");
+  });
+
+  it("rejects signed events for non-canonical repositories", async () => {
+    const body = JSON.stringify({
+      repository: { full_name: "attacker/awesome-claude" },
+      ref: "refs/heads/main",
+      commits: [
+        {
+          id: "abc123",
+          timestamp: "2026-06-18T23:00:00.000Z",
+          added: ["content/mcp/example.mdx"],
+        },
+      ],
+    });
+
+    const response = await handleGithubWebhookPost(
+      await signedWebhookRequest("push", body),
+    );
+
+    expect(response.status).toBe(403);
+    await expect(response.text()).resolves.toBe("Unknown repo");
   });
 });

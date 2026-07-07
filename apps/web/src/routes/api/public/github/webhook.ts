@@ -156,7 +156,7 @@ export async function handleGithubWebhookPost(request: Request) {
   }
 
   const repo = (payload.repository as { full_name?: string } | undefined)?.full_name;
-  if (repo && repo !== ALLOWED_REPO) {
+  if (repo !== ALLOWED_REPO) {
     return new Response("Unknown repo", { status: 403 });
   }
 
