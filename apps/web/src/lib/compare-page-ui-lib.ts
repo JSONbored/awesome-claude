@@ -44,6 +44,6 @@ export function comparePageUiState(items: Entry[]): ComparePageUiState {
     actionRowDiverges: comparePageActionsDiverge(items),
     bannerTexts: comparePageBannerTexts(items),
     singleItemHint: compareSingleItemHintText(items.length),
-    shareUrl: comparePageShareUrlForWindow(items),
+    shareUrl: comparePageShareUrl(items),
   };
 }
