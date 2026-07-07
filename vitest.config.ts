@@ -64,6 +64,7 @@ export default defineConfig({
         "apps/web/src/lib/content-section-parsing.ts",
         "apps/web/src/lib/content-section-variant.ts",
         "apps/web/src/lib/content.server.ts",
+        "apps/web/src/lib/contributor-identity.ts",
         "apps/web/src/lib/contributors.ts",
         "apps/web/src/lib/data-reports.ts",
         "apps/web/src/lib/ecosystem-stats.ts",
