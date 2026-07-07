@@ -10,4 +10,6 @@ export {
   peekPanelActionAnalyticsData,
   peekPanelActionAnalyticsEvent,
   peekPanelEntryKey,
+  peekPanelOpenAnalyticsData,
+  peekPanelOpenAnalyticsEvent,
 } from "@/lib/peek-panel-cta-events-lib";

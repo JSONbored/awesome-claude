@@ -44,3 +44,14 @@ export function peekPanelActionAnalyticsData(
     surface: PEEK_PANEL_SURFACE,
   };
 }
+
+export function peekPanelOpenAnalyticsEvent(): string {
+  return "peek_open";
+}
+
+export function peekPanelOpenAnalyticsData(category: string, slug: string) {
+  return {
+    entry: peekPanelEntryKey(category, slug),
+    surface: PEEK_PANEL_SURFACE,
+  };
+}

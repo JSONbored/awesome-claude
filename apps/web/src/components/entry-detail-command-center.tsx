@@ -46,6 +46,7 @@ import {
 } from "@/lib/entry-detail-integration-links";
 import { recordIntentEvent } from "@/lib/intent-event-client";
 import { trackEvent } from "@/lib/analytics";
+import { claimCtaAnalyticsData, claimCtaAnalyticsEvent } from "@/lib/conversion-cta-events";
 import { INSTALL_RISK_LABEL } from "@/lib/trust";
 import type { InstallRisk } from "@/lib/trust-lib";
 import { siteConfig } from "@/lib/site";
@@ -368,6 +369,12 @@ export function EntryDetailCommandCenter({
               <Link
                 to="/claim"
                 className="inline-flex items-center gap-1.5 text-ink-muted hover:text-ink"
+                onClick={() =>
+                  trackEvent(
+                    claimCtaAnalyticsEvent(),
+                    claimCtaAnalyticsData("detail-command-center", entry.category, entry.slug),
+                  )
+                }
               >
                 Claim this listing
               </Link>

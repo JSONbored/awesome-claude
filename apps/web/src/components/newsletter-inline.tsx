@@ -1,6 +1,11 @@
 import { useState, type FormEvent } from "react";
 import { Mail, Check, ArrowRight } from "lucide-react";
 import { subscribeToNewsletter } from "@/lib/api/newsletter";
+import { trackEvent } from "@/lib/analytics";
+import {
+  newsletterSubscribeAnalyticsData,
+  newsletterSubscribeAnalyticsEvent,
+} from "@/lib/conversion-cta-events";
 import { cn } from "@/lib/utils";
 
 type Variant = "quiet" | "card" | "footer-strip";
@@ -47,10 +52,10 @@ export function NewsletterInline({
     if (result.ok) {
       setDone(true);
       setPending(result.pending);
-      // First-party site analytics (umami) — not an email tracking pixel.
-      (
-        window as unknown as { umami?: { track?: (e: string, d?: Record<string, unknown>) => void } }
-      ).umami?.track?.("newsletter-subscribe", { source });
+      trackEvent(
+        newsletterSubscribeAnalyticsEvent(),
+        newsletterSubscribeAnalyticsData(source, result.pending),
+      );
       return;
     }
     setError(result.error);

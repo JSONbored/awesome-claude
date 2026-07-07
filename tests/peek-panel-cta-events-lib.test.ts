@@ -5,6 +5,8 @@ import {
   peekCopyIntentType,
   peekPanelActionAnalyticsData,
   peekPanelActionAnalyticsEvent,
+  peekPanelOpenAnalyticsData,
+  peekPanelOpenAnalyticsEvent,
 } from "@/lib/peek-panel-cta-events-lib";
 
 describe("peek panel cta events lib", () => {
@@ -24,6 +26,11 @@ describe("peek panel cta events lib", () => {
     expect(peekPanelActionAnalyticsData("skills", "demo", "dossier")).toEqual({
       entry: "skills/demo",
       action: "dossier",
+      surface: "peek-panel",
+    });
+    expect(peekPanelOpenAnalyticsEvent()).toBe("peek_open");
+    expect(peekPanelOpenAnalyticsData("mcp", "browser")).toEqual({
+      entry: "mcp/browser",
       surface: "peek-panel",
     });
   });

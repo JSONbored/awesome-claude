@@ -35,6 +35,8 @@ import {
   peekCopyIntentType,
   peekPanelActionAnalyticsData,
   peekPanelActionAnalyticsEvent,
+  peekPanelOpenAnalyticsData,
+  peekPanelOpenAnalyticsEvent,
 } from "@/lib/peek-panel-cta-events";
 import { recordIntentEvent } from "@/lib/intent-event-client";
 
@@ -58,12 +60,30 @@ export const PeekButton = React.forwardRef<PeekHandle, Props>(function PeekButto
 ) {
   const peekId = entryDomId(entry);
   const [open, setOpen] = React.useState(false);
-  React.useImperativeHandle(ref, () => ({ open: () => setOpen(true) }), []);
+  const openRef = React.useRef(open);
+  openRef.current = open;
+
+  const handleOpenChange = React.useCallback(
+    (next: boolean) => {
+      if (next && !openRef.current) {
+        trackEvent(
+          peekPanelOpenAnalyticsEvent(),
+          peekPanelOpenAnalyticsData(entry.category, entry.slug),
+        );
+      }
+      setOpen(next);
+    },
+    [entry.category, entry.slug],
+  );
+
+  React.useImperativeHandle(ref, () => ({ open: () => handleOpenChange(true) }), [
+    handleOpenChange,
+  ]);
   React.useEffect(() => {
     installPeekShortcut();
   }, []);
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <Sheet open={open} onOpenChange={handleOpenChange}>
       <TooltipProvider delayDuration={300}>
         <Tooltip>
           <TooltipTrigger asChild>
