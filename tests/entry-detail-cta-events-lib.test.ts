@@ -8,10 +8,13 @@ import {
   entryDetailCopyAnalyticsData,
   entryDetailCopyAnalyticsEvent,
   entryDetailCopyIntentType,
+  entryDetailIntegrationAnalyticsData,
+  entryDetailIntegrationAnalyticsEvent,
   entryDetailMobileActionAnalyticsData,
   entryDetailMobileActionAnalyticsEvent,
   entryDetailMobileCopyIntentType,
   entryDetailMobileLinkIntentType,
+  entryDetailMobileLlmsAnalyticsData,
 } from "@/lib/entry-detail-cta-events-lib";
 
 describe("entry detail cta events lib", () => {
@@ -70,6 +73,25 @@ describe("entry detail cta events lib", () => {
     );
     expect(entryDetailMobileCopyIntentType({})).toBe("copy");
     expect(entryDetailMobileLinkIntentType("source")).toBe("open");
+    expect(entryDetailMobileLinkIntentType("llms")).toBe("open");
     expect(entryDetailMobileLinkIntentType("claim")).toBeNull();
+  });
+
+  it("builds integration CTA analytics without sensitive payloads", () => {
+    expect(entryDetailIntegrationAnalyticsEvent("api-json")).toBe(
+      "detail_integration_api_json",
+    );
+    expect(
+      entryDetailIntegrationAnalyticsData("mcp", "browser", "llms"),
+    ).toEqual({
+      entry: "mcp/browser",
+      link: "llms",
+      surface: "detail-command-center",
+    });
+    expect(entryDetailMobileLlmsAnalyticsData("skills", "demo")).toEqual({
+      entry: "skills/demo",
+      link: "llms",
+      surface: "detail-mobile",
+    });
   });
 });

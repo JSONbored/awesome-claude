@@ -47,12 +47,7 @@ describe("entry detail command center lib", () => {
         sourceUrl: "https://github.com/example/repo",
       }),
     );
-    expect(links.map((link) => link.id)).toEqual([
-      "docs",
-      "source",
-      "registry",
-      "llms",
-    ]);
+    expect(links.map((link) => link.id)).toEqual(["docs", "source", "browse"]);
     expect(links[0]).toMatchObject({ external: true });
     expect(links[2]).toMatchObject({ href: "/browse", external: false });
   });
@@ -81,6 +76,7 @@ describe("entry detail command center lib", () => {
     expect(detailMobileActionIds(actions)).toEqual([
       "install",
       "copy",
+      "llms",
       "source",
       "suggest",
       "claim",
@@ -99,7 +95,11 @@ describe("entry detail command center lib", () => {
       "https://heyclau.de/entry/skills/fixture",
       "https://github.com/JSONbored/awesome-claude",
     );
-    expect(detailMobileActionIds(actions)).toEqual(["install", "suggest"]);
+    expect(detailMobileActionIds(actions)).toEqual([
+      "install",
+      "llms",
+      "suggest",
+    ]);
   });
 
   it("elevates the safety gate for risky or note-missing installable entries", () => {

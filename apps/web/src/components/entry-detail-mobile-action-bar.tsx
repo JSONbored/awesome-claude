@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { toast } from "sonner";
-import { Copy, ExternalLink, Package, FileText } from "lucide-react";
+import { Copy, ExternalLink, Package, FileText, Terminal } from "lucide-react";
 import type { Entry } from "@/types/registry";
 import {
   ENTRY_COMMAND_CENTER_ID,
@@ -88,6 +88,8 @@ export function EntryDetailMobileActionBar({
               <Package className="h-3.5 w-3.5" />
             ) : action.id === "copy" ? (
               <Copy className="h-3.5 w-3.5" />
+            ) : action.id === "llms" ? (
+              <Terminal className="h-3.5 w-3.5" />
             ) : action.id === "source" || action.id === "suggest" ? (
               <ExternalLink className="h-3.5 w-3.5" />
             ) : (

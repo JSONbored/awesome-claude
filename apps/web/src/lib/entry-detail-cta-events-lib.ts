@@ -83,5 +83,30 @@ export function entryDetailMobileCopyIntentType(
 }
 
 export function entryDetailMobileLinkIntentType(actionId: string): IntentEventClientType | null {
-  return actionId === "source" ? "open" : null;
+  if (actionId === "source" || actionId === "llms") return "open";
+  return null;
+}
+
+export function entryDetailIntegrationAnalyticsEvent(linkId: string): string {
+  return `detail_integration_${linkId.replace(/-/g, "_")}`;
+}
+
+export function entryDetailIntegrationAnalyticsData(
+  category: string,
+  slug: string,
+  linkId: string,
+) {
+  return {
+    entry: entryDetailEntryKey(category, slug),
+    link: linkId,
+    surface: ENTRY_DETAIL_COMMAND_CENTER_SURFACE,
+  };
+}
+
+export function entryDetailMobileLlmsAnalyticsData(category: string, slug: string) {
+  return {
+    entry: entryDetailEntryKey(category, slug),
+    link: "llms",
+    surface: ENTRY_DETAIL_MOBILE_SURFACE,
+  };
 }

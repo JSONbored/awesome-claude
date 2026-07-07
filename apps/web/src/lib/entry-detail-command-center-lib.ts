@@ -7,6 +7,7 @@
  */
 
 import type { InstallRisk } from "@/lib/trust-lib";
+import { entryLlmsApiPath } from "@/lib/entry-detail-integration-links-lib";
 import type { Entry } from "@/types/registry";
 import { TRUST_LABEL } from "@/types/registry";
 
@@ -117,16 +118,9 @@ export function resolveDetailQuickLinks(
   }
 
   links.push({
-    id: "registry",
-    label: "Registry JSON · LLM text",
+    id: "browse",
+    label: "Browse directory",
     href: "/browse",
-    external: false,
-  });
-
-  links.push({
-    id: "llms",
-    label: "LLM plain text",
-    href: `/api/registry/entries/${entry.category}/${entry.slug}/llms`,
     external: false,
   });
 
@@ -187,6 +181,14 @@ export function resolveDetailMobileActions(
       copyValue: copyPayload,
     });
   }
+
+  actions.push({
+    id: "llms",
+    label: "LLM",
+    kind: "link",
+    href: entryLlmsApiPath(entry.category, entry.slug),
+    external: false,
+  });
 
   if (entry.sourceUrl) {
     actions.push({
