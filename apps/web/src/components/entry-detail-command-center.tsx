@@ -7,6 +7,7 @@ import {
   AlertTriangle,
   OctagonX,
   FileText,
+  GitCompare,
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import type { Entry, Harness } from "@/types/registry";
@@ -23,6 +24,10 @@ import {
   resolveDetailReadinessItems,
   shouldElevateDetailSafetyGate,
 } from "@/lib/entry-detail-command-center";
+import {
+  entryDetailCompareCtaState,
+  ENTRY_DETAIL_COMPARE_MAX,
+} from "@/lib/entry-detail-compare-ui";
 import { INSTALL_RISK_LABEL } from "@/lib/trust";
 import type { InstallRisk } from "@/lib/trust-lib";
 import { siteConfig } from "@/lib/site";
@@ -41,6 +46,12 @@ type EntryDetailCommandCenterProps = {
   tabPayload?: string;
   relatedCount: number;
   guideCount: number;
+  compareCta: {
+    inCompare: boolean;
+    compareCount: number;
+    onToggle: () => void;
+    onOpenCompare: () => void;
+  };
 };
 
 function ReadinessRow({ label, value, ok }: { label: string; value: string; ok: boolean }) {
@@ -68,10 +79,12 @@ export function EntryDetailCommandCenter({
   tabPayload,
   relatedCount,
   guideCount,
+  compareCta,
 }: EntryDetailCommandCenterProps) {
   const readiness = resolveDetailReadinessItems(entry);
   const quickLinks = resolveDetailQuickLinks(entry);
   const communityAnchors = resolveDetailCommunityAnchors(relatedCount, guideCount, true);
+  const compareState = entryDetailCompareCtaState(compareCta.inCompare, compareCta.compareCount);
   const safetyGate = detailSafetyGateMessage(risk, entry);
   const elevateSafety = shouldElevateDetailSafetyGate(risk, entry);
   const suggestUrl = entryDetailSuggestChangeUrl(
@@ -231,6 +244,43 @@ export function EntryDetailCommandCenter({
             </ul>
           </div>
         )}
+
+        <div className="border-b border-border px-4 py-3">
+          <div className="eyebrow mb-2">Compare</div>
+          <div className="flex flex-col gap-1.5 text-xs">
+            <button
+              type="button"
+              onClick={compareCta.onToggle}
+              disabled={compareState.disabled}
+              className={cn(
+                "inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 font-medium",
+                compareState.disabled
+                  ? "cursor-not-allowed border-border bg-surface text-ink-subtle"
+                  : compareCta.inCompare
+                    ? "border-accent bg-accent/10 text-ink hover:bg-accent/15"
+                    : "border-border bg-background text-ink hover:bg-surface-2",
+              )}
+            >
+              <GitCompare className="h-3.5 w-3.5" />
+              {compareState.label}
+              <span className="font-mono text-[10px] text-ink-subtle">
+                {compareCta.compareCount}/{ENTRY_DETAIL_COMPARE_MAX}
+              </span>
+            </button>
+            {compareState.hint ? (
+              <p className="text-[11px] text-ink-muted">{compareState.hint}</p>
+            ) : null}
+            {compareState.showOpenCompare ? (
+              <button
+                type="button"
+                onClick={compareCta.onOpenCompare}
+                className="inline-flex items-center gap-1.5 text-ink-muted hover:text-ink"
+              >
+                Open compare tray
+              </button>
+            ) : null}
+          </div>
+        </div>
 
         <div className="px-4 py-3">
           <div className="eyebrow mb-2">Contribute</div>

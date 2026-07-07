@@ -58,8 +58,10 @@ import { EntrySignalsPanel } from "@/components/entry-signals-panel";
 import { EntryBrandMark } from "@/components/entry-brand-mark";
 import { PLATFORM_SUPPORT_LABEL, type Entry } from "@/types/registry";
 import { installRiskLevel, INSTALL_RISK_LABEL, INSTALL_RISK_DETAIL } from "@/lib/trust";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
+import { toast } from "sonner";
 import { useRecents } from "@/lib/recents";
+import { useCompare, useIsCompared } from "@/lib/compare";
 import { useCopyPref, useHarnessPref, type CopyVariant } from "@/lib/dossier-prefs";
 import { variantsForEntry } from "@/components/copy-segmented";
 import type { Harness } from "@/types/registry";
@@ -260,6 +262,24 @@ function Dossier() {
 
   const tabPayload = liveVariants.find((v) => v.id === tab)?.value;
 
+  const compare = useCompare();
+  const inCompare = useIsCompared(entry);
+  const onToggleCompare = useCallback(() => {
+    const wasIn = inCompare;
+    compare.toggle(entry);
+    if (wasIn) {
+      toast(`Removed “${entry.title}” from compare`);
+    } else {
+      toast.success("Added to compare", {
+        action: {
+          label: "View",
+          onClick: () => compare.setOpen(true),
+        },
+      });
+    }
+  }, [compare, entry, inCompare]);
+  const onOpenCompare = useCallback(() => compare.setOpen(true), [compare]);
+
   const risk = installRiskLevel(entry);
   const hasSchema = hasSchemaDetails(entry);
 
@@ -390,6 +410,12 @@ function Dossier() {
           tabPayload={tabPayload}
           relatedCount={rel.length}
           guideCount={guides.length}
+          compareCta={{
+            inCompare,
+            compareCount: compare.items.length,
+            onToggle: onToggleCompare,
+            onOpenCompare,
+          }}
         />
       </header>
       <div id="dossier-header-sentinel" aria-hidden className="h-px w-full" />
