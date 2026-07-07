@@ -1,0 +1,52 @@
+import { describe, expect, it } from "vitest";
+import {
+  browseCompareOpenAnalyticsData,
+  comparisonTrayFullCompareAnalyticsData,
+  comparisonTrayQuickCompareAnalyticsData,
+  entryDetailCompareAnalyticsData,
+  entryDetailCompareAnalyticsEvent,
+  entryDetailCopyAnalyticsData,
+  entryDetailCopyAnalyticsEvent,
+  entryDetailCopyIntentType,
+} from "@/lib/entry-detail-cta-events-lib";
+
+describe("entry detail cta events lib", () => {
+  it("maps copy tabs to intent types without sensitive payloads", () => {
+    expect(entryDetailCopyIntentType("install")).toBe("install");
+    expect(entryDetailCopyIntentType("config")).toBe("copy");
+    expect(entryDetailCopyIntentType("full")).toBe("copy");
+  });
+
+  it("builds analytics event names and data for detail CTAs", () => {
+    expect(entryDetailCopyAnalyticsEvent("install")).toBe(
+      "detail_copy_install",
+    );
+    expect(entryDetailCopyAnalyticsData("mcp", "browser")).toEqual({
+      entry: "mcp/browser",
+      surface: "detail-command-center",
+    });
+    expect(entryDetailCompareAnalyticsEvent(true)).toBe("detail_compare_add");
+    expect(entryDetailCompareAnalyticsEvent(false)).toBe(
+      "detail_compare_remove",
+    );
+    expect(entryDetailCompareAnalyticsData("skills", "demo")).toEqual({
+      entry: "skills/demo",
+      surface: "detail-compare",
+    });
+  });
+
+  it("builds browse and compare tray analytics data without entry payloads", () => {
+    expect(browseCompareOpenAnalyticsData(3)).toEqual({
+      count: 3,
+      surface: "browse-compare",
+    });
+    expect(comparisonTrayQuickCompareAnalyticsData(2)).toEqual({
+      count: 2,
+      surface: "compare-tray",
+    });
+    expect(comparisonTrayFullCompareAnalyticsData(4)).toEqual({
+      count: 4,
+      surface: "compare-tray",
+    });
+  });
+});

@@ -62,6 +62,11 @@ import { useEffect, useMemo, useState, useCallback } from "react";
 import { toast } from "sonner";
 import { useRecents } from "@/lib/recents";
 import { useCompare, useIsCompared } from "@/lib/compare";
+import { trackEvent } from "@/lib/analytics";
+import {
+  entryDetailCompareAnalyticsData,
+  entryDetailCompareAnalyticsEvent,
+} from "@/lib/entry-detail-cta-events";
 import { useCopyPref, useHarnessPref, type CopyVariant } from "@/lib/dossier-prefs";
 import { variantsForEntry } from "@/components/copy-segmented";
 import type { Harness } from "@/types/registry";
@@ -267,6 +272,10 @@ function Dossier() {
   const onToggleCompare = useCallback(() => {
     const wasIn = inCompare;
     compare.toggle(entry);
+    trackEvent(entryDetailCompareAnalyticsEvent(!wasIn), {
+      ...entryDetailCompareAnalyticsData(entry.category, entry.slug),
+      compareCount: wasIn ? Math.max(0, compare.items.length - 1) : compare.items.length + 1,
+    });
     if (wasIn) {
       toast(`Removed “${entry.title}” from compare`);
     } else {
@@ -278,7 +287,13 @@ function Dossier() {
       });
     }
   }, [compare, entry, inCompare]);
-  const onOpenCompare = useCallback(() => compare.setOpen(true), [compare]);
+  const onOpenCompare = useCallback(() => {
+    compare.setOpen(true);
+    trackEvent("detail_compare_open_tray", {
+      ...entryDetailCompareAnalyticsData(entry.category, entry.slug),
+      compareCount: compare.items.length,
+    });
+  }, [compare, entry.category, entry.slug]);
 
   const risk = installRiskLevel(entry);
   const hasSchema = hasSchemaDetails(entry);

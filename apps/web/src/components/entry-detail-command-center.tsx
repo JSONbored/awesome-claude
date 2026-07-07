@@ -28,6 +28,12 @@ import {
   entryDetailCompareCtaState,
   ENTRY_DETAIL_COMPARE_MAX,
 } from "@/lib/entry-detail-compare-ui";
+import {
+  entryDetailCopyAnalyticsData,
+  entryDetailCopyAnalyticsEvent,
+  entryDetailCopyIntentType,
+} from "@/lib/entry-detail-cta-events";
+import { recordIntentEvent } from "@/lib/intent-event-client";
 import { INSTALL_RISK_LABEL } from "@/lib/trust";
 import type { InstallRisk } from "@/lib/trust-lib";
 import { siteConfig } from "@/lib/site";
@@ -202,6 +208,11 @@ export function EntryDetailCommandCenter({
                     label={`Copy ${tab}`}
                     size="md"
                     className="flex-1 justify-center"
+                    event={entryDetailCopyAnalyticsEvent(tab)}
+                    eventData={entryDetailCopyAnalyticsData(entry.category, entry.slug)}
+                    onCopied={() => {
+                      void recordIntentEvent(entryDetailCopyIntentType(tab), entry);
+                    }}
                   />
                 </div>
               </>

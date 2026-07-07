@@ -41,6 +41,8 @@ import {
 } from "lucide-react";
 import { useCompare } from "@/lib/compare";
 import { browseCompareInteractiveUiState } from "@/lib/compare-browse-interactive-ui-lib";
+import { browseCompareOpenAnalyticsData } from "@/lib/entry-detail-cta-events";
+import { trackEvent } from "@/lib/analytics";
 import { useRecents, type SavedSearch } from "@/lib/recents";
 import { entryByRef } from "@/data/entries";
 import { SavedSearchManager } from "@/components/saved-search-manager";
@@ -649,6 +651,11 @@ function Browse() {
                     <Link
                       to="/compare"
                       search={browseCompareUi.search}
+                      onClick={() => {
+                        trackEvent("browse_compare_open", {
+                          ...browseCompareOpenAnalyticsData(browseCompareUi.selectedCount),
+                        });
+                      }}
                       className="inline-flex items-center gap-1.5 rounded-full border border-accent bg-accent/10 px-2.5 py-1 text-[11px] font-medium text-ink hover:bg-accent/15"
                     >
                       <span className="font-mono">{browseCompareUi.selectedCount}</span> selected ·

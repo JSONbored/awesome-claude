@@ -13,24 +13,11 @@ export {
 } from "@/lib/compare-entry-actions-lib";
 
 import type { Entry } from "@/types/registry";
+import { recordIntentEvent } from "@/lib/intent-event-client";
 
 export async function recordCompareIntentEvent(
   type: "copy" | "open" | "install",
   entry: Pick<Entry, "category" | "slug">,
 ): Promise<boolean> {
-  try {
-    const response = await fetch("/api/intent-events", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({
-        type,
-        entryKey: `${entry.category}:${entry.slug}`,
-      }),
-    });
-    if (!response.ok) return false;
-    const payload = (await response.json()) as { stored?: boolean };
-    return payload.stored === true;
-  } catch {
-    return false;
-  }
+  return recordIntentEvent(type, entry);
 }

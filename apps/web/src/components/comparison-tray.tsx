@@ -3,6 +3,11 @@ import { GitCompare, X, ArrowRight, Shield, Lock, Package } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { useCompare } from "@/lib/compare";
 import { comparisonTrayChipSignals, comparisonTrayUiState } from "@/lib/comparison-tray-ui";
+import {
+  comparisonTrayFullCompareAnalyticsData,
+  comparisonTrayQuickCompareAnalyticsData,
+} from "@/lib/entry-detail-cta-events";
+import { trackEvent } from "@/lib/analytics";
 import { TrustBadge, SourceBadge, ReadinessDot } from "./badges";
 import { cn } from "@/lib/utils";
 import type { Entry } from "@/types/registry";
@@ -80,7 +85,12 @@ export function ComparisonTray() {
           {tray.canQuickCompare ? (
             <button
               type="button"
-              onClick={() => setOpen(true)}
+              onClick={() => {
+                trackEvent("compare_tray_quick_compare", {
+                  ...comparisonTrayQuickCompareAnalyticsData(tray.count),
+                });
+                setOpen(true);
+              }}
               className="inline-flex h-8 items-center gap-1 rounded-md border border-border bg-background px-3 text-xs font-medium text-ink hover:bg-surface-2"
             >
               Quick compare
@@ -90,7 +100,12 @@ export function ComparisonTray() {
             <Link
               to="/compare"
               search={{ ids: tray.compareIds }}
-              onClick={() => setOpen(false)}
+              onClick={() => {
+                trackEvent("compare_tray_full_compare", {
+                  ...comparisonTrayFullCompareAnalyticsData(tray.count),
+                });
+                setOpen(false);
+              }}
               className="inline-flex h-8 items-center gap-1 rounded-md bg-accent px-3 text-xs font-semibold text-accent-ink hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/40"
             >
               Full compare <ArrowRight className="h-3 w-3" />
