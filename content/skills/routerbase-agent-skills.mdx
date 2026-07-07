@@ -33,7 +33,7 @@ copySnippet: |-
   for this workload, then provide an OpenAI-compatible request example with
   ROUTERBASE_API_KEY kept in environment variables.
 skillType: capability-pack
-skillLevel: advanced
+skillLevel: expert
 verificationStatus: validated
 verifiedAt: "2026-07-08"
 retrievalSources:
@@ -103,6 +103,16 @@ JSON mode, tool calling, prompt caching, and media generation details can change
 with upstream providers. Treat the skills as workflow guidance, then verify
 current catalog data and feature support immediately before production use.
 
+## Retrieval Sources
+
+This listing is grounded in:
+
+- The public `zenlee123/routerbase-agent-skills` repository README.
+- The `routerbase-api-integration` skill instructions.
+- The `routerbase-model-routing` skill instructions.
+- The `routerbase-media-generation` skill instructions.
+- The public [routerbase](https://routerbase.com/) website for the product link.
+
 ## Core Workflow
 
 Install the full skill collection:
@@ -124,6 +134,14 @@ For live requests, keep credentials outside prompts and source files:
 export ROUTERBASE_API_KEY="..."
 ```
 
+## Capability Scope
+
+| Skill | Scope |
+| --- | --- |
+| `routerbase-api-integration` | Set up OpenAI-compatible client configuration for RouterBase, including base URL, API key handling, request examples, and response validation. |
+| `routerbase-model-routing` | Choose primary and fallback models for chat, reasoning, embeddings, image, video, and audio workloads while checking cost, latency, context, and modality support. |
+| `routerbase-media-generation` | Validate media generation requests, output formats, async job assumptions, prompt safety, and provider-specific capability differences. |
+
 ## What The Skills Cover
 
 1. OpenAI-compatible client configuration using RouterBase as the base URL.
@@ -139,3 +157,18 @@ export ROUTERBASE_API_KEY="..."
 - Examples include concrete pass/fail validation checks.
 - Retry logic distinguishes transient failures from authentication, validation, and policy errors.
 - High-stakes outputs require human review before use.
+
+## Production Rules
+
+- Verify current RouterBase model IDs, pricing, modality support, context limits,
+  JSON mode, tool calling, and media behavior before shipping a production
+  integration.
+- Keep `ROUTERBASE_API_KEY` in environment variables or a secret manager; never
+  commit live keys, account IDs, prompts, logs, screenshots, or response bodies
+  that expose private customer data.
+- Treat routing plans as implementation guidance, not a replacement for product
+  policy, compliance, or cost controls.
+- Use explicit pass/fail checks for authentication, validation errors, rate
+  limits, transient provider failures, retries, streaming, and fallback behavior.
+- Redact prompts, generated media, embeddings input, request IDs, billing
+  metadata, and user identifiers before sharing examples publicly.
