@@ -52,6 +52,7 @@ export default defineConfig({
         "apps/web/src/data/comparisons.ts",
         "apps/web/src/data/tools.ts",
         "apps/web/src/lib/api/example.functions.ts",
+        "apps/web/src/lib/brief-schedule.ts",
         "apps/web/src/lib/csv.ts",
         "apps/web/src/lib/d1-batch.ts",
         "apps/web/src/lib/format.ts",
