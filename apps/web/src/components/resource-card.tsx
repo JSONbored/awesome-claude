@@ -27,6 +27,8 @@ import {
   resourceCardInstallIntentType,
 } from "@/lib/resource-card-cta-events";
 import { resourceCardCompareFullMessage } from "@/lib/resource-card-compare-ui";
+import { resourceCardTrustDecisionState } from "@/lib/resource-card-trust-decision";
+import { ResourceCardTrustHint } from "@/components/resource-card-trust-hint";
 import { cn } from "@/lib/utils";
 import { trackEvent, outboundHost } from "@/lib/analytics";
 
@@ -50,13 +52,19 @@ function ResourceCardInner({
   entry,
   variant = "row",
   rank,
+  compareItems = [],
 }: {
   entry: Entry;
   variant?: "row" | "grid" | "compact";
   rank?: number;
+  compareItems?: Entry[];
 }) {
   const { toggle, setOpen } = useCompareActions();
   const inCompare = useIsCompared(entry);
+  const trustDecision = React.useMemo(
+    () => resourceCardTrustDecisionState(entry, compareItems),
+    [entry, compareItems],
+  );
   const peekRef = React.useRef<PeekHandle>(null);
   const handle = React.useMemo(() => ({ open: () => peekRef.current?.open() }), []);
   const [hovered, setHovered] = React.useState(false);
@@ -179,6 +187,9 @@ function ResourceCardInner({
               <p className="mt-1.5 line-clamp-2 text-sm text-ink-muted">
                 {entry.cardDescription ?? entry.description}
               </p>
+              {trustDecision ? (
+                <ResourceCardTrustHint state={trustDecision} className="mt-2" />
+              ) : null}
             </div>
             <EntryFacets entry={entry} density="card" />
             <div className="mt-auto flex flex-wrap items-center gap-1.5">
@@ -270,6 +281,7 @@ function ResourceCardInner({
             <LazyEntryAuthorAttribution entry={entry} />
           </div>
           <p className="line-clamp-2 max-w-3xl text-sm text-ink-muted">{entry.description}</p>
+          {trustDecision ? <ResourceCardTrustHint state={trustDecision} className="mt-1" /> : null}
           <div className="flex flex-wrap items-center gap-2 pt-0.5">
             <EntryFacets entry={entry} density="card" />
             <NotesPresenceChips entry={entry} />

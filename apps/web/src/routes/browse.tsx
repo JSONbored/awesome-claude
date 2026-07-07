@@ -24,6 +24,8 @@ import {
 import { browseFilterDecisionUiState } from "@/lib/browse-filter-decision-hints";
 import { browseResultsTrustDecisionUiState } from "@/lib/browse-results-trust-decision";
 import { BrowseResultsTrustPanel } from "@/components/browse-results-trust-panel";
+import { BrowseCompareSelectionBanner } from "@/components/browse-compare-selection-banner";
+import { browseCompareSelectionContextState } from "@/lib/resource-card-trust-decision";
 import {
   CATEGORIES,
   type Category,
@@ -329,6 +331,11 @@ function Browse() {
   const browseResultsTrust = useMemo(
     () => browseResultsTrustDecisionUiState(results, compare.items.length),
     [results, compare.items.length],
+  );
+
+  const browseCompareSelection = useMemo(
+    () => browseCompareSelectionContextState(compare.items),
+    [compare.items],
   );
 
   const activeCount =
@@ -1011,10 +1018,22 @@ function Browse() {
             </div>
           ) : (
             <>
+              {browseCompareSelection.showBanner && browseCompareUi ? (
+                <BrowseCompareSelectionBanner
+                  state={browseCompareSelection}
+                  compareSearch={browseCompareUi.search}
+                  className="mt-4"
+                />
+              ) : null}
               {sp.view === "grid" ? (
                 <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                   {results.slice(0, shown).map((e) => (
-                    <ResourceCard key={`${e.category}/${e.slug}`} entry={e} variant="grid" />
+                    <ResourceCard
+                      key={`${e.category}/${e.slug}`}
+                      entry={e}
+                      variant="grid"
+                      compareItems={compare.items}
+                    />
                   ))}
                 </div>
               ) : sp.view === "compact" ? (
@@ -1025,13 +1044,18 @@ function Browse() {
                       entry={e}
                       variant="compact"
                       rank={i + 1}
+                      compareItems={compare.items}
                     />
                   ))}
                 </div>
               ) : (
                 <div className="mt-2 overflow-hidden rounded-lg border border-border bg-surface">
                   {results.slice(0, shown).map((e) => (
-                    <ResourceCard key={`${e.category}/${e.slug}`} entry={e} />
+                    <ResourceCard
+                      key={`${e.category}/${e.slug}`}
+                      entry={e}
+                      compareItems={compare.items}
+                    />
                   ))}
                 </div>
               )}
