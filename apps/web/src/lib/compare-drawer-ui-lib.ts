@@ -13,10 +13,14 @@ export type CompareDrawerUiState = {
 
 export function compareDrawerUiState(items: Entry[]): CompareDrawerUiState {
   return {
-    actionRowDiverges: compareDrawerActionsDiverge(items),
+    actionRowDiverges: compareDrawerUiActionsDiverge(items),
     bannerTexts: compareDrawerHeaderBannerTexts(items),
     fullViewSearch: compareDrawerFullViewSearch(items),
   };
+}
+
+export function compareDrawerUiActionsDiverge(items: Entry[]): boolean {
+  return compareDrawerActionsDiverge(items);
 }
 
 export function compareDrawerShareUrl(items: Entry[]): string {

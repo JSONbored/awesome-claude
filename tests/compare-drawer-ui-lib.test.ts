@@ -5,6 +5,7 @@ import {
   compareDrawerFullViewSearch,
   compareDrawerHeaderBannerTexts,
   compareDrawerShareUrl,
+  compareDrawerUiActionsDiverge,
   compareDrawerUiState,
 } from "@/lib/compare-drawer-ui-lib";
 
@@ -105,6 +106,9 @@ describe("compare drawer ui lib", () => {
       fullViewSearch: { ids: "mcp/fixture,mcp/other" },
     });
     const bundled = compareDrawerUiState(entries);
+    expect(bundled.actionRowDiverges).toBe(
+      compareDrawerUiActionsDiverge(entries),
+    );
     expect(bundled.fullViewSearch).toEqual(
       compareDrawerFullViewSearch(entries),
     );
