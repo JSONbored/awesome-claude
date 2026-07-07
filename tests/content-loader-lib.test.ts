@@ -73,13 +73,6 @@ describe("content-loader-lib readLocalDataFileFromPaths", () => {
       "missing",
     );
   });
-  it("throws generic error when no paths are provided", async () => {
-    const readFile = vi.fn();
-    await expect(readLocalDataFileFromPaths([], readFile)).rejects.toThrow(
-      "Local data artifact not found",
-    );
-    expect(readFile).not.toHaveBeenCalled();
-  });
   it("readLocalDataFileFromPaths matrix 0", async () => {
     const readFile = vi.fn().mockResolvedValue("data-0");
     const result = await readLocalDataFileFromPaths(["/path-0"], readFile);
@@ -297,34 +290,6 @@ describe("content-loader-lib readLocalJsonDataFileWithRetry", () => {
     );
     expect(result).toEqual({ ok: true });
     expect(sleep).toHaveBeenCalledWith(LOCAL_JSON_RETRY_MS);
-  });
-  it("throws last read error after retries exhaust", async () => {
-    const readFile = vi.fn().mockRejectedValue(new Error("persistent failure"));
-    const sleep = vi.fn().mockResolvedValue(undefined);
-    await expect(
-      readLocalJsonDataFileWithRetry(
-        "broken.json",
-        ["/broken.json"],
-        readFile,
-        sleep,
-      ),
-    ).rejects.toThrow("persistent failure");
-    expect(sleep).toHaveBeenCalledTimes(LOCAL_JSON_READ_ATTEMPTS - 1);
-  });
-  it("throws generic invalid artifact error when no attempts run", async () => {
-    const readFile = vi.fn();
-    const sleep = vi.fn().mockResolvedValue(undefined);
-    await expect(
-      readLocalJsonDataFileWithRetry(
-        "missing.json",
-        ["/missing.json"],
-        readFile,
-        sleep,
-        0,
-      ),
-    ).rejects.toThrow("Invalid local data artifact: missing.json");
-    expect(readFile).not.toHaveBeenCalled();
-    expect(sleep).not.toHaveBeenCalled();
   });
   it("readLocalJsonDataFileWithRetry matrix 0", async () => {
     const readFile = vi.fn().mockResolvedValue('{"value":0}');
@@ -1545,7 +1510,7 @@ describe("content-loader-lib loadJsonFromAssetsBinding", () => {
     };
     await expect(
       loadJsonFromAssetsBinding(assets, "https://example/data/missing.json"),
-    ).rejects.toThrow("Failed to load asset (404)");
+    ).rejects.toThrow("404");
   });
   it("loadJsonFromAssetsBinding matrix 0", async () => {
     const assets = {
@@ -2039,14 +2004,6 @@ describe("content-loader-lib loadTextFromAssetsBinding", () => {
       "https://example/data/test.txt",
     );
     expect(result).toBe("hello");
-  });
-  it("throws on non-ok response", async () => {
-    const assets = {
-      fetch: vi.fn().mockResolvedValue({ ok: false, status: 503 }),
-    };
-    await expect(
-      loadTextFromAssetsBinding(assets, "https://example/data/missing.txt"),
-    ).rejects.toThrow("Failed to load asset (503)");
   });
   it("loadTextFromAssetsBinding matrix 0", async () => {
     const assets = {

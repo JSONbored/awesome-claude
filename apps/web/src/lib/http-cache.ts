@@ -1,36 +1,18 @@
 import { applySecurityHeaders } from "@/lib/security-headers";
 
-const CACHE_HEADERS = {
-  "cache-control": "public, max-age=300, stale-while-revalidate=3600",
-} as const;
+import {
+  buildEtag,
+  hasMatchingEtag,
+  ifNoneMatchMatches,
+  JSON_CACHE_HEADERS,
+} from "@/lib/http-cache-lib";
 
-function toHex(buffer: ArrayBuffer) {
-  return [...new Uint8Array(buffer)]
-    .map((value) => value.toString(16).padStart(2, "0"))
-    .join("");
-}
-
-export async function buildEtag(body: string) {
-  const digest = await crypto.subtle.digest(
-    "SHA-256",
-    new TextEncoder().encode(body),
-  );
-  return `"sha256-${toHex(digest).slice(0, 32)}"`;
-}
-
-export function ifNoneMatchMatches(header: string | null, etag: string) {
-  if (!header) return false;
-  const normalize = (value: string) => value.trim().replace(/^W\//i, "");
-  const normalizedEtag = normalize(etag);
-  return header
-    .split(",")
-    .map(normalize)
-    .some((candidate) => candidate === "*" || candidate === normalizedEtag);
-}
-
-function hasMatchingEtag(request: Request, etag: string) {
-  return ifNoneMatchMatches(request.headers.get("if-none-match"), etag);
-}
+export {
+  buildEtag,
+  hasMatchingEtag,
+  ifNoneMatchMatches,
+  JSON_CACHE_HEADERS,
+} from "@/lib/http-cache-lib";
 
 export async function cachedJsonResponse(
   request: Request,
@@ -43,7 +25,7 @@ export async function cachedJsonResponse(
   applySecurityHeaders(headers);
   headers.set("content-type", "application/json; charset=utf-8");
   headers.set("etag", etag);
-  for (const [name, value] of Object.entries(CACHE_HEADERS)) {
+  for (const [name, value] of Object.entries(JSON_CACHE_HEADERS)) {
     if (!headers.has(name)) headers.set(name, value);
   }
 
@@ -54,18 +36,14 @@ export async function cachedJsonResponse(
   return new Response(body, { ...init, headers });
 }
 
-export async function cachedTextResponse(
-  request: Request,
-  text: string,
-  init: ResponseInit = {},
-) {
+export async function cachedTextResponse(request: Request, text: string, init: ResponseInit = {}) {
   const body = text.endsWith("\n") ? text : `${text}\n`;
   const etag = await buildEtag(body);
   const headers = new Headers(init.headers);
   applySecurityHeaders(headers);
   headers.set("content-type", "text/plain; charset=utf-8");
   headers.set("etag", etag);
-  for (const [name, value] of Object.entries(CACHE_HEADERS)) {
+  for (const [name, value] of Object.entries(JSON_CACHE_HEADERS)) {
     if (!headers.has(name)) headers.set(name, value);
   }
 

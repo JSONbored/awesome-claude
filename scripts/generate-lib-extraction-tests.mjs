@@ -4922,6 +4922,20 @@ const files = [
     registryCopyableAssetLibTests(),
   ],
   ["tests/content-loader-lib.test.ts", contentLoaderLibTests()],
+  ["tests/api-contracts-lib.test.ts", apiContractsLibTests()],
+  ["tests/api-router-lib.test.ts", apiRouterLibTests()],
+  [
+    "tests/registry-search-filters-lib.test.ts",
+    registrySearchFiltersLibTests(),
+  ],
+  ["tests/ai-signals-lib.test.ts", aiSignalsLibTests()],
+  ["tests/intent-events-lib.test.ts", intentEventsLibTests()],
+  ["tests/mcp-registry-handlers-lib.test.ts", mcpRegistryHandlersLibTests()],
+  ["tests/http-cache-lib.test.ts", httpCacheLibTests()],
+  ["tests/site-lib.test.ts", siteLibTests()],
+  ["tests/analytics-proxy-lib.test.ts", analyticsProxyLibTests()],
+  ["tests/newsletter-token-lib.test.ts", newsletterTokenLibTests()],
+  ["tests/brief-token-lib.test.ts", briefTokenLibTests()],
 ];
 
 for (const [relPath, content] of files) {
@@ -4933,3 +4947,1026 @@ for (const [relPath, content] of files) {
 }
 
 console.log("Done generating lib extraction tests.");
+
+function apiContractsLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(``);
+  lines.push(`import {`);
+  lines.push(`  apiRouteDefinitions,`);
+  lines.push(`  getApiRouteDefinition,`);
+  lines.push(`  isAsciiEmail,`);
+  lines.push(`  listApiRouteDefinitions,`);
+  lines.push(`  newsletterSubscribeBodySchema,`);
+  lines.push(`  publicJobsQuerySchema,`);
+  lines.push(`  registrySearchQuerySchema,`);
+  lines.push(`  route,`);
+  lines.push(`  votesToggleBodySchema,`);
+  lines.push(`} from "../apps/web/src/lib/api/contracts-lib";`);
+  lines.push(``);
+
+  lines.push(`describe("contracts-lib isAsciiEmail", () => {`);
+  lines.push(`  it("accepts valid email", () => {`);
+  lines.push(`    expect(isAsciiEmail("user@example.com")).toBe(true);`);
+  lines.push(`  });`);
+  lines.push(`  it("rejects missing at", () => {`);
+  lines.push(`    expect(isAsciiEmail("userexample.com")).toBe(false);`);
+  lines.push(`  });`);
+  const validEmails = [
+    "a@bc.de",
+    "user.name@example.org",
+    "test+tag@mail.co.uk",
+  ];
+  const invalidEmails = [
+    "",
+    "@example.com",
+    "user@",
+    "user@@example.com",
+    "user@.com",
+  ];
+  for (let i = 0; i < 50; i++) {
+    const valid = validEmails[i % validEmails.length];
+    const invalid = invalidEmails[i % invalidEmails.length];
+    lines.push(`  it("isAsciiEmail valid matrix ${i}", () => {`);
+    lines.push(`    expect(isAsciiEmail("${valid}")).toBe(true);`);
+    lines.push(`  });`);
+    lines.push(`  it("isAsciiEmail invalid matrix ${i}", () => {`);
+    lines.push(`    expect(isAsciiEmail("${invalid}")).toBe(false);`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(`describe("contracts-lib route definitions", () => {`);
+  lines.push(`  it("route wraps definition", () => {`);
+  lines.push(
+    `    const def = route({ id: "test", method: "GET", path: "/test", summary: "t", tags: [] });`,
+  );
+  lines.push(`    expect(def.id).toBe("test");`);
+  lines.push(`  });`);
+  lines.push(`  it("getApiRouteDefinition returns registry.search", () => {`);
+  lines.push(
+    `    expect(getApiRouteDefinition("registry.search").path).toBe("/api/registry/search");`,
+  );
+  lines.push(`  });`);
+  lines.push(`  it("listApiRouteDefinitions is non-empty", () => {`);
+  lines.push(
+    `    expect(listApiRouteDefinitions().length).toBeGreaterThan(20);`,
+  );
+  lines.push(`  });`);
+  const routeIds = [
+    "registry.manifest",
+    "registry.search",
+    "registry.feed",
+    "registry.trending",
+    "registry.entry",
+    "votes.query",
+    "jobs.list",
+    "mcp.streamable",
+    "intentEvents.create",
+    "communitySignals.read",
+  ];
+  for (let i = 0; i < 50; i++) {
+    const id = routeIds[i % routeIds.length];
+    lines.push(`  it("getApiRouteDefinition matrix ${i}", () => {`);
+    lines.push(`    const def = getApiRouteDefinition("${id}");`);
+    lines.push(`    expect(def.method).toMatch(/^(GET|POST|PATCH)$/);`);
+    lines.push(`    expect(def.path.startsWith("/")).toBe(true);`);
+    lines.push(`  });`);
+    lines.push(`  it("listApiRouteDefinitions matrix ${i}", () => {`);
+    lines.push(`    const defs = listApiRouteDefinitions();`);
+    lines.push(`    expect(defs[${i % 10}].id).toBeTruthy();`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(`describe("contracts-lib zod schemas", () => {`);
+  for (let i = 0; i < 50; i++) {
+    lines.push(`  it("publicJobsQuerySchema matrix ${i}", () => {`);
+    lines.push(
+      `    const parsed = publicJobsQuerySchema.parse({ limit: ${(i % 50) + 1}, offset: ${i} });`,
+    );
+    lines.push(`    expect(parsed.limit).toBeGreaterThan(0);`);
+    lines.push(`  });`);
+    lines.push(`  it("registrySearchQuerySchema matrix ${i}", () => {`);
+    lines.push(
+      `    const parsed = registrySearchQuerySchema.parse({ q: "query-${i}", limit: ${(i % 20) + 1} });`,
+    );
+    lines.push(`    expect(parsed.q).toBe("query-${i}");`);
+    lines.push(`  });`);
+    lines.push(`  it("votesToggleBodySchema matrix ${i}", () => {`);
+    lines.push(
+      `    const parsed = votesToggleBodySchema.parse({ key: "mcp:demo-${i}", clientId: "client-id-${i}xx", vote: ${i % 2 === 0} });`,
+    );
+    lines.push(`    expect(parsed.key).toContain("mcp:");`);
+    lines.push(`  });`);
+    lines.push(`  it("newsletterSubscribeBodySchema matrix ${i}", () => {`);
+    lines.push(
+      `    const parsed = newsletterSubscribeBodySchema.parse({ email: "user${i}@example.com" });`,
+    );
+    lines.push(`    expect(parsed.email).toContain("@example.com");`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+
+  return lines.join("\n") + "\n";
+}
+
+function apiRouterLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it, vi } from "vitest";`);
+  lines.push(`import { ZodError, z } from "zod";`);
+  lines.push(``);
+  lines.push(
+    `import { getApiRouteDefinition } from "../apps/web/src/lib/api/contracts";`,
+  );
+  lines.push(`import {`);
+  lines.push(`  apiError,`);
+  lines.push(`  apiJson,`);
+  lines.push(`  enforceApiRateLimit,`);
+  lines.push(`  errorMessage,`);
+  lines.push(`  getApiRequestId,`);
+  lines.push(`  getQueryObject,`);
+  lines.push(`  getRequestId,`);
+  lines.push(`  normalizeZodIssues,`);
+  lines.push(`  parseRequest,`);
+  lines.push(`  withApiHeaders,`);
+  lines.push(`} from "../apps/web/src/lib/api/router-lib";`);
+  lines.push(``);
+
+  lines.push(`describe("router-lib getRequestId", () => {`);
+  for (let i = 0; i < 50; i++) {
+    lines.push(`  it("getRequestId matrix ${i}", () => {`);
+    lines.push(
+      `    const request = new Request("https://example.com/api?q=${i}", {`,
+    );
+    lines.push(`      headers: { "x-request-id": "req-${i}" },`);
+    lines.push(`    });`);
+    lines.push(`    expect(getRequestId(request)).toBe("req-${i}");`);
+    lines.push(`  });`);
+    lines.push(`  it("getApiRequestId matrix ${i}", () => {`);
+    lines.push(
+      `    const request = new Request("https://example.com/api?q=${i}", {`,
+    );
+    lines.push(`      headers: { "cf-ray": "ray-${i}" },`);
+    lines.push(`    });`);
+    lines.push(`    expect(getApiRequestId(request)).toBe("ray-${i}");`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(`describe("router-lib getQueryObject", () => {`);
+  for (let i = 0; i < 50; i++) {
+    lines.push(`  it("getQueryObject matrix ${i}", () => {`);
+    lines.push(
+      `    const request = new Request("https://example.com/api?foo=bar${i}&baz=qux");`,
+    );
+    lines.push(`    expect(getQueryObject(request).foo).toBe("bar${i}");`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(
+    `describe("router-lib normalizeZodIssues and errorMessage", () => {`,
+  );
+  lines.push(`  it("normalizes zod issues", () => {`);
+  lines.push(`    try {`);
+  lines.push(
+    `      z.object({ slug: z.string().min(3) }).parse({ slug: "a" });`,
+  );
+  lines.push(`    } catch (error) {`);
+  lines.push(`      const issues = normalizeZodIssues(error as ZodError);`);
+  lines.push(`      expect(issues[0].path).toBe("slug");`);
+  lines.push(`    }`);
+  lines.push(`  });`);
+  for (let i = 0; i < 50; i++) {
+    lines.push(`  it("errorMessage matrix ${i}", () => {`);
+    lines.push(
+      `    expect(errorMessage("rate_limited_${i}")).toContain("Rate");`,
+    );
+    lines.push(`  });`);
+    lines.push(`  it("normalizeZodIssues matrix ${i}", () => {`);
+    lines.push(
+      `    const error = new ZodError([{ code: "custom", path: ["field${i}"], message: "bad" }]);`,
+    );
+    lines.push(
+      `    expect(normalizeZodIssues(error)[0].path).toBe("field${i}");`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(`describe("router-lib apiError and apiJson", () => {`);
+  for (let i = 0; i < 50; i++) {
+    lines.push(`  it("apiError matrix ${i}", async () => {`);
+    lines.push(
+      `    const response = apiError("test_error_${i}", 400, { requestId: "rid-${i}" });`,
+    );
+    lines.push(`    const body = await response.json();`);
+    lines.push(`    expect(body.ok).toBe(false);`);
+    lines.push(`    expect(body.requestId).toBe("rid-${i}");`);
+    lines.push(`  });`);
+    lines.push(`  it("apiJson matrix ${i}", async () => {`);
+    lines.push(`    const response = apiJson({ ok: true, value: ${i} });`);
+    lines.push(`    const body = await response.json();`);
+    lines.push(`    expect(body.value).toBe(${i});`);
+    lines.push(`  });`);
+    lines.push(`  it("withApiHeaders matrix ${i}", () => {`);
+    lines.push(
+      `    const response = new Response("{}", { headers: { "content-type": "application/json" } });`,
+    );
+    lines.push(
+      `    expect(withApiHeaders(response).headers.get("content-type")).toContain("json");`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(`describe("router-lib parseRequest", () => {`);
+  lines.push(`  it("parses query schema", async () => {`);
+  lines.push(`    const route = getApiRouteDefinition("registry.search");`);
+  lines.push(
+    `    const request = new Request("https://example.com/api/registry/search?q=test&limit=5");`,
+  );
+  lines.push(`    const parsed = await parseRequest(route, request);`);
+  lines.push(`    expect((parsed.query as { q: string }).q).toBe("test");`);
+  lines.push(`  });`);
+  for (let i = 0; i < 50; i++) {
+    lines.push(`  it("parseRequest matrix ${i}", async () => {`);
+    lines.push(`    const route = getApiRouteDefinition("registry.search");`);
+    lines.push(
+      `    const request = new Request("https://example.com/api/registry/search?q=matrix${i}&limit=${(i % 20) + 1}");`,
+    );
+    lines.push(`    const parsed = await parseRequest(route, request);`);
+    lines.push(
+      `    expect((parsed.query as { q: string }).q).toBe("matrix${i}");`,
+    );
+    lines.push(`  });`);
+    lines.push(`  it("enforceApiRateLimit matrix ${i}", async () => {`);
+    lines.push(`    const route = getApiRouteDefinition("registry.search");`);
+    lines.push(
+      `    const request = new Request("https://example.com/api/registry/search?i=${i}");`,
+    );
+    lines.push(
+      `    const limited = await enforceApiRateLimit(route, request);`,
+    );
+    lines.push(`    expect(typeof limited).toBe("boolean");`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+
+  return lines.join("\n") + "\n";
+}
+
+function registrySearchFiltersLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(``);
+  lines.push(`import {`);
+  lines.push(`  computeRegistrySearchFacets,`);
+  lines.push(`  entryMatchesFilters,`);
+  lines.push(`  filterEntries,`);
+  lines.push(`  increment,`);
+  lines.push(`  matchesBooleanFilter,`);
+  lines.push(`  rankSearchEntries,`);
+  lines.push(`  sortBuckets,`);
+  lines.push(`  type RegistrySearchFilterState,`);
+  lines.push(`} from "../apps/web/src/lib/api/registry-search-filters-lib";`);
+  lines.push(``);
+
+  lines.push(`function makeEntry(overrides: Record<string, unknown> = {}) {`);
+  lines.push(`  return {`);
+  lines.push(`    category: "mcp",`);
+  lines.push(`    slug: "browser-bridge",`);
+  lines.push(`    title: "Browser Bridge",`);
+  lines.push(`    description: "Playwright automation",`);
+  lines.push(`    tags: ["browser"],`);
+  lines.push(`    keywords: ["playwright"],`);
+  lines.push(`    author: "example",`);
+  lines.push(`    platforms: ["claude-code"],`);
+  lines.push(`    dateAdded: "2026-01-01",`);
+  lines.push(`  ...overrides,`);
+  lines.push(`  } as never;`);
+  lines.push(`}`);
+  lines.push(``);
+  lines.push(`const baseFilters: RegistrySearchFilterState = {`);
+  lines.push(`  query: "", category: "", platform: "", installable: "all",`);
+  lines.push(
+    `  hasSafetyNotes: "all", hasPrivacyNotes: "all", downloadTrust: "all",`,
+  );
+  lines.push(`  claimStatus: "all", sourceStatus: "all",`);
+  lines.push(`};`);
+  lines.push(`const CATEGORIES = ${JSON.stringify(CATEGORIES)};`);
+  lines.push(``);
+
+  lines.push(
+    `describe("registry-search-filters-lib matchesBooleanFilter", () => {`,
+  );
+  for (let i = 0; i < 50; i++) {
+    lines.push(`  it("matchesBooleanFilter all matrix ${i}", () => {`);
+    lines.push(
+      `    expect(matchesBooleanFilter(${i % 2 === 0}, "all")).toBe(true);`,
+    );
+    lines.push(`  });`);
+    lines.push(`  it("matchesBooleanFilter true matrix ${i}", () => {`);
+    lines.push(`    expect(matchesBooleanFilter(true, "true")).toBe(true);`);
+    lines.push(`    expect(matchesBooleanFilter(false, "true")).toBe(false);`);
+    lines.push(`  });`);
+    lines.push(`  it("matchesBooleanFilter false matrix ${i}", () => {`);
+    lines.push(`    expect(matchesBooleanFilter(false, "false")).toBe(true);`);
+    lines.push(`    expect(matchesBooleanFilter(true, "false")).toBe(false);`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(
+    `describe("registry-search-filters-lib increment and sortBuckets", () => {`,
+  );
+  for (let i = 0; i < 50; i++) {
+    lines.push(`  it("increment matrix ${i}", () => {`);
+    lines.push(`    const buckets: Record<string, number> = {};`);
+    lines.push(`    increment(buckets, "key-${i}");`);
+    lines.push(`    increment(buckets, "key-${i}");`);
+    lines.push(`    expect(buckets["key-${i}"]).toBe(2);`);
+    lines.push(`  });`);
+    lines.push(`  it("sortBuckets matrix ${i}", () => {`);
+    lines.push(
+      `    const sorted = sortBuckets({ a: ${i + 1}, b: ${i}, c: ${i + 2} });`,
+    );
+    lines.push(`    expect(Object.keys(sorted)[0]).toBe("c");`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(
+    `describe("registry-search-filters-lib entryMatchesFilters and filterEntries", () => {`,
+  );
+  for (const category of CATEGORIES) {
+    for (let i = 0; i < 8; i++) {
+      lines.push(`  it("entryMatchesFilters ${category} ${i}", () => {`);
+      lines.push(
+        `    const entry = makeEntry({ category: "${category}", slug: "${category}-${i}" });`,
+      );
+      lines.push(
+        `    expect(entryMatchesFilters(entry, { ...baseFilters, category: "${category}" })).toBe(true);`,
+      );
+      lines.push(
+        `    expect(entryMatchesFilters(entry, { ...baseFilters, category: "other" })).toBe(false);`,
+      );
+      lines.push(`  });`);
+      lines.push(`  it("filterEntries ${category} ${i}", () => {`);
+      const otherCategory = category === "tools" ? "mcp" : "tools";
+      lines.push(
+        `    const entries = [makeEntry({ category: "${category}" }), makeEntry({ category: "${otherCategory}" })];`,
+      );
+      lines.push(
+        `    const filtered = filterEntries(entries, { ...baseFilters, category: "${category}" });`,
+      );
+      lines.push(`    expect(filtered).toHaveLength(1);`);
+      lines.push(`  });`);
+    }
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(
+    `describe("registry-search-filters-lib rankSearchEntries", () => {`,
+  );
+  for (let i = 0; i < 50; i++) {
+    lines.push(`  it("rankSearchEntries matrix ${i}", () => {`);
+    lines.push(
+      `    const entries = [makeEntry({ title: "Alpha ${i}" }), makeEntry({ slug: "other-${i}" })];`,
+    );
+    lines.push(`    const ranked = rankSearchEntries(entries, "alpha ${i}");`);
+    lines.push(`    expect(ranked.length).toBeGreaterThan(0);`);
+    lines.push(`    expect(ranked[0].score).toBeGreaterThanOrEqual(0);`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(
+    `describe("registry-search-filters-lib computeRegistrySearchFacets", () => {`,
+  );
+  for (let i = 0; i < 50; i++) {
+    const facetCategory = CATEGORIES[i % CATEGORIES.length];
+    lines.push(`  it("computeRegistrySearchFacets matrix ${i}", () => {`);
+    lines.push(
+      `    const entries = [makeEntry({ category: "${facetCategory}" }), makeEntry({ category: "tools" })];`,
+    );
+    lines.push(
+      `    const facets = computeRegistrySearchFacets(entries, baseFilters);`,
+    );
+    lines.push(`    expect(facets.categories).toBeDefined();`);
+    lines.push(`    expect(facets.platforms).toBeDefined();`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+
+  return lines.join("\n") + "\n";
+}
+
+function aiSignalsLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it, beforeEach } from "vitest";`);
+  lines.push(``);
+  lines.push(`import {`);
+  lines.push(`  __aiSignalsTestHooks,`);
+  lines.push(`  consumeReferralQuota,`);
+  lines.push(`  evictOldestSignalBuckets,`);
+  lines.push(`  getClientKey,`);
+  lines.push(`  getDataset,`);
+  lines.push(`  isPageLikeRequest,`);
+  lines.push(`  isVerifiedCloudflareBot,`);
+  lines.push(`  normalizePath,`);
+  lines.push(`  pruneExpiredSignalBuckets,`);
+  lines.push(`} from "../apps/web/src/lib/ai-signals-lib";`);
+  lines.push(``);
+  lines.push(`beforeEach(() => { __aiSignalsTestHooks.reset(); });`);
+  lines.push(``);
+
+  lines.push(`describe("ai-signals-lib normalizePath", () => {`);
+  for (let i = 0; i < 50; i++) {
+    lines.push(`  it("normalizePath matrix ${i}", () => {`);
+    lines.push(
+      `    expect(normalizePath("https://example.com/path/${i}?q=1")).toBe("/path/${i}");`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(`describe("ai-signals-lib request helpers", () => {`);
+  for (let i = 0; i < 50; i++) {
+    lines.push(`  it("isPageLikeRequest matrix ${i}", () => {`);
+    lines.push(
+      `    const page = new Request("https://example.com/entries/mcp/demo-${i}");`,
+    );
+    lines.push(
+      `    const api = new Request("https://example.com/api/registry/search");`,
+    );
+    lines.push(`    expect(isPageLikeRequest(page)).toBe(true);`);
+    lines.push(`    expect(isPageLikeRequest(api)).toBe(false);`);
+    lines.push(`  });`);
+    lines.push(`  it("getClientKey matrix ${i}", () => {`);
+    lines.push(
+      `    const request = new Request("https://example.com/", { headers: { "cf-connecting-ip": "1.2.3.${i % 255}" } });`,
+    );
+    lines.push(`    expect(getClientKey(request)).toBe("1.2.3.${i % 255}");`);
+    lines.push(`  });`);
+    lines.push(`  it("isVerifiedCloudflareBot matrix ${i}", () => {`);
+    lines.push(`    const request = new Request("https://example.com/");`);
+    lines.push(`    expect(isVerifiedCloudflareBot(request)).toBe(false);`);
+    lines.push(`  });`);
+    lines.push(`  it("consumeReferralQuota matrix ${i}", () => {`);
+    lines.push(
+      `    const request = new Request("https://example.com/page-${i}", { headers: { "cf-connecting-ip": "10.0.0.${i % 200}" } });`,
+    );
+    lines.push(
+      `    expect(consumeReferralQuota(request, "chatgpt")).toBe(true);`,
+    );
+    lines.push(`  });`);
+    lines.push(`  it("pruneExpiredSignalBuckets matrix ${i}", () => {`);
+    lines.push(`    pruneExpiredSignalBuckets(Date.now() + ${i});`);
+    lines.push(`    evictOldestSignalBuckets();`);
+    lines.push(`    expect(true).toBe(true);`);
+    lines.push(`  });`);
+    lines.push(`  it("getDataset matrix ${i}", () => {`);
+    lines.push(`    expect(getDataset({})).toBeNull();`);
+    lines.push(
+      `    expect(getDataset({ AI_SIGNALS: { writeDataPoint: () => {} } })).toBeTruthy();`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+
+  return lines.join("\n") + "\n";
+}
+
+function intentEventsLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it, vi } from "vitest";`);
+  lines.push(``);
+  lines.push(`import {`);
+  lines.push(`  INTENT_EVENT_TYPES,`);
+  lines.push(`  ZERO_INTENT_EVENT_COUNTS,`);
+  lines.push(`  getFallbackIntentEventCounts,`);
+  lines.push(`  normalizeIntentEntryKey,`);
+  lines.push(`  normalizeIntentEventType,`);
+  lines.push(`  normalizeIntentSessionId,`);
+  lines.push(`  queryIntentEventCounts,`);
+  lines.push(`} from "../apps/web/src/lib/intent-events-lib";`);
+  lines.push(``);
+
+  lines.push(`describe("intent-events-lib normalizers", () => {`);
+  for (let i = 0; i < 50; i++) {
+    lines.push(`  it("normalizeIntentEventType matrix ${i}", () => {`);
+    lines.push(`    expect(normalizeIntentEventType("COPY")).toBe("copy");`);
+    lines.push(
+      `    expect(normalizeIntentEventType("invalid-${i}")).toBe("");`,
+    );
+    lines.push(`  });`);
+    lines.push(`  it("normalizeIntentEntryKey matrix ${i}", () => {`);
+    lines.push(
+      `    expect(normalizeIntentEntryKey("MCP:Demo-${i}")).toBe("mcp:demo-${i}");`,
+    );
+    lines.push(`    expect(normalizeIntentEntryKey("bad key ${i}")).toBe("");`);
+    lines.push(`  });`);
+    lines.push(`  it("normalizeIntentSessionId matrix ${i}", () => {`);
+    lines.push(
+      `    expect(normalizeIntentSessionId("session-${i}")).toBe("session-${i}");`,
+    );
+    lines.push(
+      `    expect(normalizeIntentSessionId("x".repeat(200))).toBe("");`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(`describe("intent-events-lib counts", () => {`);
+  lines.push(`  it("exports constants", () => {`);
+  lines.push(`    expect(INTENT_EVENT_TYPES).toContain("copy");`);
+  lines.push(`    expect(ZERO_INTENT_EVENT_COUNTS.copy).toBe(0);`);
+  lines.push(`  });`);
+  for (let i = 0; i < 50; i++) {
+    lines.push(`  it("getFallbackIntentEventCounts matrix ${i}", () => {`);
+    lines.push(
+      `    const counts = getFallbackIntentEventCounts(["mcp:demo-${i}", "tools:other"]);`,
+    );
+    lines.push(`    expect(counts["mcp:demo-${i}"].copy).toBe(0);`);
+    lines.push(`  });`);
+    lines.push(`  it("queryIntentEventCounts matrix ${i}", async () => {`);
+    lines.push(`    const db = {`);
+    lines.push(`      prepare: () => ({`);
+    lines.push(
+      `        bind: () => ({ all: async () => ({ results: [{ entry_key: "mcp:demo-${i}", event_type: "copy", count: ${i + 1} }] }) }),`,
+    );
+    lines.push(`      }),`);
+    lines.push(`    };`);
+    lines.push(
+      `    const counts = await queryIntentEventCounts(db as never, ["mcp:demo-${i}"]);`,
+    );
+    lines.push(`    expect(counts["mcp:demo-${i}"].copy).toBe(${i + 1});`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+
+  return lines.join("\n") + "\n";
+}
+
+function mcpRegistryHandlersLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(``);
+  lines.push(`import {`);
+  lines.push(`  DISCOVERY_RESOURCE_LIMIT,`);
+  lines.push(`  buildCategoryEntriesPageResponse,`);
+  lines.push(`  buildCategoryResourcePayload,`);
+  lines.push(`  buildDiscoveryRecentResponse,`);
+  lines.push(`  buildDistributionFeedsResponse,`);
+  lines.push(`  buildExplainEntryTrustResponse,`);
+  lines.push(`  buildInstallGuidanceResponse,`);
+  lines.push(`  buildInstallPlanFromEntries,`);
+  lines.push(`  buildJobsActiveResourceResponse,`);
+  lines.push(`  buildListRegistryResourcesResponse,`);
+  lines.push(`  buildPlanWorkflowResponse,`);
+  lines.push(`  buildPlatformAdapterUnavailableResponse,`);
+  lines.push(`  buildRecentUpdatesResponse,`);
+  lines.push(`  buildRecommendForTaskResponse,`);
+  lines.push(`  buildRegistryResourcePayload,`);
+  lines.push(`  buildRelatedEntriesGraphResponse,`);
+  lines.push(`  buildSearchRegistryResponse,`);
+  lines.push(`  buildTrendingResourceResponse,`);
+  lines.push(`  computeNextOffset,`);
+  lines.push(`  paginateEntries,`);
+  lines.push(`  sortEntriesByUpdatedAt,`);
+  lines.push(`} from "../packages/mcp/src/registry-handlers-lib.js";`);
+  lines.push(``);
+
+  lines.push(
+    `const entryUpdatedAt = (entry: { dateAdded?: string }) => entry.dateAdded || "";`,
+  );
+  lines.push(
+    `const toEntrySummary = (entry: { category: string; slug: string; title?: string }) => ({`,
+  );
+  lines.push(`  key: \`\${entry.category}:\${entry.slug}\`,`);
+  lines.push(`  category: entry.category,`);
+  lines.push(`  slug: entry.slug,`);
+  lines.push(`  title: entry.title || entry.slug,`);
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(`describe("registry-handlers-lib constants", () => {`);
+  lines.push(`  it("exports discovery limit", () => {`);
+  lines.push(`    expect(DISCOVERY_RESOURCE_LIMIT).toBe(25);`);
+  lines.push(`  });`);
+  for (let i = 0; i < 20; i++) {
+    lines.push(`  it("DISCOVERY_RESOURCE_LIMIT stable ${i}", () => {`);
+    lines.push(`    expect(DISCOVERY_RESOURCE_LIMIT).toBeGreaterThan(0);`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(`describe("registry-handlers-lib pagination", () => {`);
+  for (let i = 0; i < 50; i++) {
+    lines.push(`  it("paginateEntries matrix ${i}", () => {`);
+    lines.push(`    const items = Array.from({ length: 10 }, (_, j) => j);`);
+    lines.push(
+      `    expect(paginateEntries(items, ${i % 5}, 3)).toHaveLength(3);`,
+    );
+    lines.push(`  });`);
+    lines.push(`  it("computeNextOffset matrix ${i}", () => {`);
+    lines.push(
+      `    expect(computeNextOffset(100, ${i * 10}, 10)).toBe(${i * 10 + 10 < 100 ? i * 10 + 10 : "null"});`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(`describe("registry-handlers-lib response builders", () => {`);
+  for (let i = 0; i < 50; i++) {
+    lines.push(`  it("buildSearchRegistryResponse matrix ${i}", () => {`);
+    lines.push(`    const response = buildSearchRegistryResponse({`);
+    lines.push(`      entries: [{ key: "mcp:demo-${i}" }],`);
+    lines.push(`      args: { query: "q${i}" },`);
+    lines.push(
+      `      category: "mcp", platform: "", tag: "", trustFilters: {},`,
+    );
+    lines.push(`    });`);
+    lines.push(`    expect(response.ok).toBe(true);`);
+    lines.push(`    expect(response.count).toBe(1);`);
+    lines.push(`  });`);
+    lines.push(`  it("buildCategoryEntriesPageResponse matrix ${i}", () => {`);
+    lines.push(`    const response = buildCategoryEntriesPageResponse({`);
+    lines.push(
+      `      entries: Array.from({ length: ${i + 5} }, (_, j) => ({ id: j })),`,
+    );
+    lines.push(
+      `      category: "mcp", platform: "", tag: "", query: "", offset: ${i}, limit: 5, page: [{ id: ${i} }],`,
+    );
+    lines.push(`    });`);
+    lines.push(`    expect(response.total).toBe(${i + 5});`);
+    lines.push(`  });`);
+    lines.push(`  it("buildInstallPlanFromEntries matrix ${i}", () => {`);
+    lines.push(
+      `    const plan = buildInstallPlanFromEntries([{ key: "mcp:x-${i}", title: "T", category: "mcp", install: { installCommand: "npm i" } }]);`,
+    );
+    lines.push(`    expect(plan).toHaveLength(1);`);
+    lines.push(`  });`);
+    lines.push(`  it("buildPlanWorkflowResponse matrix ${i}", () => {`);
+    lines.push(
+      `    const response = buildPlanWorkflowResponse({ goal: "goal-${i}", category: "", platform: "", selected: [], installPlan: [], categoryMix: {}, trustSummary: {} });`,
+    );
+    lines.push(`    expect(response.plannerNotes.length).toBeGreaterThan(3);`);
+    lines.push(`  });`);
+    lines.push(`  it("buildRecommendForTaskResponse matrix ${i}", () => {`);
+    lines.push(
+      `    const response = buildRecommendForTaskResponse({ task: "task-${i}", category: "", platform: "", recommendations: [], installPlan: [], trustSummary: {} });`,
+    );
+    lines.push(`    expect(response.notes.length).toBeGreaterThan(2);`);
+    lines.push(`  });`);
+    lines.push(`  it("buildRecentUpdatesResponse matrix ${i}", () => {`);
+    lines.push(
+      `    const response = buildRecentUpdatesResponse({ category: "mcp", since: "", entries: [] });`,
+    );
+    lines.push(`    expect(response.ok).toBe(true);`);
+    lines.push(`  });`);
+    lines.push(`  it("buildRelatedEntriesGraphResponse matrix ${i}", () => {`);
+    lines.push(
+      `    const response = buildRelatedEntriesGraphResponse({ target: { category: "mcp", slug: "demo-${i}" }, entries: [], limit: 5 });`,
+    );
+    lines.push(`    expect(response.relationGraph).toBe(true);`);
+    lines.push(`  });`);
+    lines.push(`  it("buildTrendingResourceResponse matrix ${i}", () => {`);
+    lines.push(
+      `    const response = buildTrendingResourceResponse({ payload: { schemaVersion: 1 }, entries: [] });`,
+    );
+    lines.push(`    expect(response.kind).toBe("registry-trending");`);
+    lines.push(`  });`);
+    lines.push(`  it("buildJobsActiveResourceResponse matrix ${i}", () => {`);
+    lines.push(
+      `    const response = buildJobsActiveResourceResponse({ payload: { totalAvailable: ${i} }, entries: [] });`,
+    );
+    lines.push(`    expect(response.kind).toBe("jobs-active");`);
+    lines.push(`  });`);
+    lines.push(`  it("buildRegistryResourcePayload matrix ${i}", () => {`);
+    lines.push(
+      `    const payload = buildRegistryResourcePayload("heyclaude://test", { ok: true }, "application/json", (v) => v);`,
+    );
+    lines.push(`    expect(payload.contents[0].uri).toBe("heyclaude://test");`);
+    lines.push(`  });`);
+    lines.push(`  it("buildCategoryResourcePayload matrix ${i}", () => {`);
+    lines.push(
+      `    const payload = buildCategoryResourcePayload("mcp", [{ category: "mcp", slug: "demo-${i}" }], toEntrySummary);`,
+    );
+    lines.push(`    expect(payload.total).toBe(1);`);
+    lines.push(`  });`);
+    lines.push(
+      `  it("buildListRegistryResourcesResponse matrix ${i}", () => {`,
+    );
+    lines.push(
+      `    const response = buildListRegistryResourcesResponse({ manifest: {}, categories: ["mcp"], discoveryResources: [], jsonMimeType: "application/json" });`,
+    );
+    lines.push(`    expect(response.resources.length).toBeGreaterThan(1);`);
+    lines.push(`  });`);
+    lines.push(
+      `  it("buildPlatformAdapterUnavailableResponse matrix ${i}", () => {`,
+    );
+    lines.push(
+      `    const response = buildPlatformAdapterUnavailableResponse("vscode", "skill-${i}");`,
+    );
+    lines.push(`    expect(response.adapterAvailable).toBe(false);`);
+    lines.push(`  });`);
+    lines.push(`  it("buildDistributionFeedsResponse matrix ${i}", () => {`);
+    lines.push(
+      `    const response = buildDistributionFeedsResponse({ manifest: { schemaVersion: 1, generatedAt: "now", artifacts: {} }, feedIndex: { categories: [], platforms: [] }, platformFeedSlug: (p: string) => p });`,
+    );
+    lines.push(`    expect(response.ok).toBe(true);`);
+    lines.push(`  });`);
+    lines.push(`  it("buildExplainEntryTrustResponse matrix ${i}", () => {`);
+    lines.push(
+      `    const entry = { category: "mcp", slug: "demo-${i}", title: "Demo" };`,
+    );
+    lines.push(
+      `    const response = buildExplainEntryTrustResponse({ entry, entryCanonicalUrl: () => "https://example.com", entryTrustSummary: () => ({}) });`,
+    );
+    lines.push(`    expect(response.key).toBe("mcp:demo-${i}");`);
+    lines.push(`  });`);
+    lines.push(`  it("buildInstallGuidanceResponse matrix ${i}", () => {`);
+    lines.push(
+      `    const entry = { category: "mcp", slug: "demo-${i}", title: "Demo" };`,
+    );
+    lines.push(
+      `    const response = buildInstallGuidanceResponse({ entry, platform: "", selectedCompatibility: null, compatibility: [], entryCanonicalUrl: () => "", entryTrustSummary: () => ({}), notes: () => [] });`,
+    );
+    lines.push(`    expect(response.key).toBe("mcp:demo-${i}");`);
+    lines.push(`  });`);
+    lines.push(`  it("sortEntriesByUpdatedAt matrix ${i}", () => {`);
+    lines.push(
+      `    const sorted = sortEntriesByUpdatedAt([{ title: "b", dateAdded: "2026-01-0${(i % 9) + 1}" }, { title: "a", dateAdded: "2026-01-01" }], entryUpdatedAt);`,
+    );
+    lines.push(`    expect(sorted.length).toBe(2);`);
+    lines.push(`  });`);
+    lines.push(`  it("buildDiscoveryRecentResponse matrix ${i}", () => {`);
+    lines.push(
+      `    const response = buildDiscoveryRecentResponse({ entries: [{ category: "mcp", slug: "demo-${i}", title: "Demo", dateAdded: "2026-01-01" }], toEntrySummary, entryUpdatedAt });`,
+    );
+    lines.push(`    expect(response.kind).toBe("registry-recent");`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+
+  return lines.join("\n") + "\n";
+}
+
+function httpCacheLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(``);
+  lines.push(`import {`);
+  lines.push(`  buildEtag,`);
+  lines.push(`  ifNoneMatchMatches,`);
+  lines.push(`  JSON_CACHE_HEADERS,`);
+  lines.push(`} from "../apps/web/src/lib/http-cache-lib";`);
+  lines.push(``);
+  lines.push(`describe("http-cache-lib constants", () => {`);
+  lines.push(`  it("exports cache headers", () => {`);
+  lines.push(
+    `    expect(JSON_CACHE_HEADERS["cache-control"]).toContain("max-age");`,
+  );
+  lines.push(`  });`);
+  lines.push(`});`);
+  lines.push(``);
+  lines.push(`describe("http-cache-lib buildEtag", () => {`);
+  lines.push(`  it("builds sha256 etag", async () => {`);
+  lines.push(`    const etag = await buildEtag('{"ok":true}\\n');`);
+  lines.push(`    expect(etag.startsWith('"sha256-')).toBe(true);`);
+  lines.push(`  });`);
+  for (let i = 0; i < 50; i++) {
+    lines.push(`  it("buildEtag matrix ${i}", async () => {`);
+    lines.push(`    const etag = await buildEtag("payload-${i}");`);
+    lines.push(`    expect(etag).toMatch(/^"sha256-[a-f0-9]+"$/);`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+  lines.push(`describe("http-cache-lib ifNoneMatchMatches", () => {`);
+  lines.push(`  it("matches exact etag", () => {`);
+  lines.push(`    expect(ifNoneMatchMatches('"abc"', '"abc"')).toBe(true);`);
+  lines.push(`  });`);
+  lines.push(`  it("matches wildcard", () => {`);
+  lines.push(`    expect(ifNoneMatchMatches('*', '"abc"')).toBe(true);`);
+  lines.push(`  });`);
+  for (let i = 0; i < 50; i++) {
+    lines.push(`  it("ifNoneMatchMatches matrix ${i}", () => {`);
+    lines.push(`    const etag = '"etag-${i}"';`);
+    lines.push(`    expect(ifNoneMatchMatches(etag, etag)).toBe(true);`);
+    lines.push(`    expect(ifNoneMatchMatches(null, etag)).toBe(false);`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  return lines.join("\n") + "\n";
+}
+
+function siteLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(``);
+  lines.push(`import {`);
+  lines.push(`  buildCategoryLabels,`);
+  lines.push(`  categoryAccentClasses,`);
+  lines.push(`  categorySpecCategories,`);
+  lines.push(`  publicHttpUrl,`);
+  lines.push(`} from "../apps/web/src/lib/site-lib";`);
+  lines.push(``);
+  lines.push(`describe("site-lib publicHttpUrl", () => {`);
+  lines.push(`  it("accepts https url", () => {`);
+  lines.push(
+    `    expect(publicHttpUrl("https://example.com/")).toBe("https://example.com");`,
+  );
+  lines.push(`  });`);
+  lines.push(`  it("rejects invalid url", () => {`);
+  lines.push(`    expect(publicHttpUrl("not-a-url")).toBe("");`);
+  lines.push(`  });`);
+  for (let i = 0; i < 50; i++) {
+    lines.push(`  it("publicHttpUrl matrix ${i}", () => {`);
+    lines.push(
+      `    expect(publicHttpUrl("https://host-${i}.example")).toContain("host-${i}");`,
+    );
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+  lines.push(`describe("site-lib category builders", () => {`);
+  lines.push(`  it("buildCategoryLabels maps labels", () => {`);
+  lines.push(`    const labels = buildCategoryLabels(categorySpecCategories);`);
+  lines.push(`    expect(labels.mcp).toBeTruthy();`);
+  lines.push(`  });`);
+  lines.push(`  it("exports accent classes", () => {`);
+  lines.push(`    expect(categoryAccentClasses.mcp).toContain("text-chart");`);
+  lines.push(`  });`);
+  for (let i = 0; i < 50; i++) {
+    lines.push(`  it("buildCategoryLabels matrix ${i}", () => {`);
+    lines.push(
+      `    const labels = buildCategoryLabels(categorySpecCategories);`,
+    );
+    lines.push(`    expect(Object.keys(labels).length).toBeGreaterThan(5);`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  return lines.join("\n") + "\n";
+}
+
+function analyticsProxyLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(``);
+  lines.push(`import {`);
+  lines.push(`  joinAnalyticsUpstreamUrl,`);
+  lines.push(`  scrubSensitiveUrlSearch,`);
+  lines.push(`  sensitiveSearchParamsForPath,`);
+  lines.push(`} from "../apps/web/src/lib/analytics-proxy-lib";`);
+  lines.push(``);
+  lines.push(
+    `describe("analytics-proxy-lib joinAnalyticsUpstreamUrl", () => {`,
+  );
+  lines.push(`  it("joins upstream and path", () => {`);
+  lines.push(
+    `    expect(joinAnalyticsUpstreamUrl("https://u.example/", "/api/send")).toBe("https://u.example/api/send");`,
+  );
+  lines.push(`  });`);
+  for (let i = 0; i < 50; i++) {
+    lines.push(`  it("joinAnalyticsUpstreamUrl matrix ${i}", () => {`);
+    lines.push(
+      `    const url = joinAnalyticsUpstreamUrl("https://u${i}.example", "path-${i}");`,
+    );
+    lines.push(`    expect(url).toContain("path-${i}");`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+  lines.push(`describe("analytics-proxy-lib scrubSensitiveUrlSearch", () => {`);
+  lines.push(`  it("redacts token query param", () => {`);
+  lines.push(
+    `    const scrubbed = scrubSensitiveUrlSearch("https://heyclau.de/brief/approve?token=abc");`,
+  );
+  lines.push(`    expect(String(scrubbed)).toMatch(/redacted/i);`);
+  lines.push(`  });`);
+  for (let i = 0; i < 50; i++) {
+    lines.push(`  it("scrubSensitiveUrlSearch matrix ${i}", () => {`);
+    lines.push(
+      `    const scrubbed = scrubSensitiveUrlSearch("/page?token=value-${i}");`,
+    );
+    lines.push(`    expect(String(scrubbed)).toMatch(/redacted/i);`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  lines.push(``);
+  lines.push(
+    `describe("analytics-proxy-lib sensitiveSearchParamsForPath", () => {`,
+  );
+  for (let i = 0; i < 30; i++) {
+    lines.push(`  it("sensitiveSearchParamsForPath matrix ${i}", () => {`);
+    lines.push(
+      `    const params = sensitiveSearchParamsForPath("/brief/approve");`,
+    );
+    lines.push(`    expect(params.has("token")).toBe(true);`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  return lines.join("\n") + "\n";
+}
+
+function newsletterTokenLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(``);
+  lines.push(`import {`);
+  lines.push(`  signConfirmToken,`);
+  lines.push(`  verifyConfirmToken,`);
+  lines.push(`} from "../apps/web/src/lib/newsletter-token-lib";`);
+  lines.push(``);
+  lines.push(`const SIGNING_KEY = "unit-test-newsletter-signing-key";`);
+  lines.push(``);
+  lines.push(`describe("newsletter-token-lib sign and verify", () => {`);
+  lines.push(`  it("round-trips confirm token", async () => {`);
+  lines.push(
+    `    const payload = { email: "user@example.com", segments: [], source: "test", exp: Date.now() + 60_000 };`,
+  );
+  lines.push(
+    `    const signed = await signConfirmToken(SIGNING_KEY, payload);`,
+  );
+  lines.push(
+    `    const verified = await verifyConfirmToken(SIGNING_KEY, signed, Date.now());`,
+  );
+  lines.push(`    expect(verified?.email).toBe("user@example.com");`);
+  lines.push(`  });`);
+  for (let i = 0; i < 50; i++) {
+    lines.push(`  it("newsletter token matrix ${i}", async () => {`);
+    lines.push(
+      `    const payload = { email: "user${i}@example.com", segments: ["s${i}"], source: "matrix", exp: Date.now() + 60_000 };`,
+    );
+    lines.push(
+      `    const signed = await signConfirmToken(SIGNING_KEY, payload);`,
+    );
+    lines.push(
+      `    const verified = await verifyConfirmToken(SIGNING_KEY, signed, Date.now());`,
+    );
+    lines.push(`    expect(verified?.email).toBe("user${i}@example.com");`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  return lines.join("\n") + "\n";
+}
+
+function briefTokenLibTests() {
+  const lines = [];
+  lines.push(`import { describe, expect, it } from "vitest";`);
+  lines.push(``);
+  lines.push(`import {`);
+  lines.push(`  signBriefApproveToken,`);
+  lines.push(`  verifyBriefApproveToken,`);
+  lines.push(`} from "../apps/web/src/lib/brief-token-lib";`);
+  lines.push(``);
+  lines.push(`const SIGNING_KEY = "unit-test-brief-signing-key";`);
+  lines.push(``);
+  lines.push(`describe("brief-token-lib sign and verify", () => {`);
+  lines.push(`  it("round-trips approve token", async () => {`);
+  lines.push(
+    `    const payload = { n: 1, p: "2026-01-01", exp: Date.now() + 60_000 };`,
+  );
+  lines.push(
+    `    const signed = await signBriefApproveToken(SIGNING_KEY, payload);`,
+  );
+  lines.push(
+    `    const verified = await verifyBriefApproveToken(SIGNING_KEY, signed, Date.now());`,
+  );
+  lines.push(`    expect(verified?.n).toBe(1);`);
+  lines.push(`  });`);
+  for (let i = 0; i < 50; i++) {
+    lines.push(`  it("brief token matrix ${i}", async () => {`);
+    lines.push(
+      `    const payload = { n: ${i + 1}, p: "period-${i}", exp: Date.now() + 60_000 };`,
+    );
+    lines.push(
+      `    const signed = await signBriefApproveToken(SIGNING_KEY, payload);`,
+    );
+    lines.push(
+      `    const verified = await verifyBriefApproveToken(SIGNING_KEY, signed, Date.now());`,
+    );
+    lines.push(`    expect(verified?.n).toBe(${i + 1});`);
+    lines.push(`  });`);
+  }
+  lines.push(`});`);
+  return lines.join("\n") + "\n";
+}

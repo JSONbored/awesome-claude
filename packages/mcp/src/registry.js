@@ -33,7 +33,32 @@ import {
 
 export * from "./schemas.js";
 
-const DISCOVERY_RESOURCE_LIMIT = 25;
+import {
+  buildCategoryEntriesPageResponse,
+  buildCategoryResourcePayload,
+  buildDiscoveryRecentResponse,
+  buildDistributionFeedsResponse,
+  buildExplainEntryTrustResponse,
+  buildInstallGuidanceResponse,
+  buildInstallPlanFromEntries,
+  buildJobsActiveResourceResponse,
+  buildListRegistryResourcesResponse,
+  buildPlanWorkflowResponse,
+  buildPlatformAdapterAvailableResponse,
+  buildPlatformAdapterUnavailableResponse,
+  buildRecentUpdatesResponse,
+  buildRecommendForTaskResponse,
+  buildRegistryResourcePayload,
+  buildRelatedEntriesGraphResponse,
+  buildRelatedEntriesScoredResponse,
+  buildSearchRegistryResponse,
+  buildTrendingResourceResponse,
+  DISCOVERY_RESOURCE_LIMIT,
+  mapRecentUpdateEntries,
+  paginateEntries,
+  resolveGraphRelatedEntries,
+  sortEntriesByUpdatedAt,
+} from "./registry-handlers-lib.js";
 
 import {
   LOCAL_DRAFT_TOOL_NAMES,
@@ -168,16 +193,14 @@ export async function searchRegistry(args = {}, options = {}) {
     .slice(0, limit)
     .map((item) => toSearchResult(item.entry, item));
 
-  return {
-    ok: true,
-    count: entries.length,
-    query: args.query || "",
-    category: category || "",
-    platform: platform || "",
-    tag: tag || "",
-    filters: trustFilters,
+  return buildSearchRegistryResponse({
     entries,
-  };
+    args,
+    category,
+    platform,
+    tag,
+    trustFilters,
+  });
 }
 
 export async function planWorkflowToolbox(args = {}, options = {}) {
@@ -225,40 +248,17 @@ export async function planWorkflowToolbox(args = {}, options = {}) {
     }),
   );
 
-  // Consolidated, ordered install commands for the recommended stack.
-  const installPlan = selected
-    .filter((entry) => entry.install?.installCommand)
-    .map((entry) => ({
-      key: entry.key,
-      title: entry.title,
-      category: entry.category,
-      installCommand: entry.install.installCommand,
-    }));
+  const installPlan = buildInstallPlanFromEntries(selected);
 
-  return {
-    ok: true,
+  return buildPlanWorkflowResponse({
     goal,
-    category: category || "",
-    platform: platform || "",
-    count: selected.length,
-    entries: selected,
+    category,
+    platform,
+    selected,
     installPlan,
     categoryMix: toolboxCategoryMix(selected),
     trustSummary: toolboxTrustSummary(selected),
-    recommendedNextTools: [
-      "entry.detail",
-      "entry.trust",
-      "entry.compare",
-      "entry.asset",
-    ],
-    plannerNotes: [
-      "This planner is metadata review only; it is not install approval or malware scanning, and it does not execute or install entries.",
-      "Each entry carries an inline install block and the recommended stack is summarized in installPlan; still review trust before running anything.",
-      "Recommendations are bounded and category-diverse where matching entries allow it.",
-      "Prefer source-backed entries with safety/privacy notes for risk-bearing MCP, hooks, skills, commands, and statuslines.",
-      "Use entry.detail, entry.trust, entry.compare, and entry.asset before relying on any entry.",
-    ],
-  };
+  });
 }
 
 export async function recommendForTask(args = {}, options = {}) {
@@ -304,31 +304,16 @@ export async function recommendForTask(args = {}, options = {}) {
     }),
   );
 
-  const installPlan = recommendations
-    .filter((entry) => entry.install?.installCommand)
-    .map((entry) => ({
-      key: entry.key,
-      title: entry.title,
-      category: entry.category,
-      installCommand: entry.install.installCommand,
-    }));
+  const installPlan = buildInstallPlanFromEntries(recommendations);
 
-  return {
-    ok: true,
+  return buildRecommendForTaskResponse({
     task,
-    category: category || "",
-    platform: platform || "",
-    count: recommendations.length,
-    topPick: recommendations[0]?.key || "",
+    category,
+    platform,
     recommendations,
     installPlan,
     trustSummary: toolboxTrustSummary(recommendations),
-    notes: [
-      "Best-match recommendations for the task; unlike workflow.plan they are not forced to span categories.",
-      "This is metadata review only — it does not execute, install, or scan entries. Review trust before running anything.",
-      "Use entry.compare to weigh the top picks and entry.trust before relying on any entry.",
-    ],
-  };
+  });
 }
 
 export async function getServerInfo(args = {}, options = {}) {
@@ -380,21 +365,18 @@ export async function listCategoryEntries(args = {}, options = {}) {
     .filter((entry) => entryMatchesPlatform(entry, platform))
     .filter((entry) => entryMatchesTag(entry, tag))
     .filter((entry) => entryMatchesQuery(entry, query));
-  const page = entries.slice(offset, offset + limit).map(toEntrySummary);
+  const page = paginateEntries(entries, offset, limit).map(toEntrySummary);
 
-  return {
-    ok: true,
-    category: category || "",
-    platform: platform || "",
-    tag: tag || "",
-    query: args.query || "",
-    total: entries.length,
-    count: page.length,
+  return buildCategoryEntriesPageResponse({
+    entries,
+    category,
+    platform,
+    tag,
+    query: args.query,
     offset,
     limit,
-    nextOffset: offset + limit < entries.length ? offset + limit : null,
-    entries: page,
-  };
+    page,
+  });
 }
 
 export async function getRecentUpdates(args = {}, options = {}) {
@@ -407,31 +389,19 @@ export async function getRecentUpdates(args = {}, options = {}) {
   const searchIndex = unwrapEntries(
     await readJsonArtifact("search-index.json", options),
   );
-  const entries = searchIndex
-    .filter((entry) => !category || entry.category === category)
-    .filter((entry) => !since || entryUpdatedAt(entry) >= since)
-    .slice()
-    .sort((left, right) => {
-      const dateCompare = entryUpdatedAt(right).localeCompare(
-        entryUpdatedAt(left),
-      );
-      if (dateCompare !== 0) return dateCompare;
-      return String(left.title || "").localeCompare(String(right.title || ""));
-    })
-    .slice(0, limit)
-    .map((entry) => ({
-      ...toEntrySummary(entry),
-      updatedAt: entryUpdatedAt(entry),
-      updateKind: entry.repoUpdatedAt ? "upstream_update" : "added",
-    }));
+  const sorted = sortEntriesByUpdatedAt(
+    searchIndex
+      .filter((entry) => !category || entry.category === category)
+      .filter((entry) => !since || entryUpdatedAt(entry) >= since),
+    entryUpdatedAt,
+  );
+  const entries = mapRecentUpdateEntries(
+    sorted.slice(0, limit),
+    toEntrySummary,
+    entryUpdatedAt,
+  );
 
-  return {
-    ok: true,
-    category: category || "",
-    since,
-    count: entries.length,
-    entries,
-  };
+  return buildRecentUpdatesResponse({ category, since, entries });
 }
 
 export async function getRelatedEntries(args = {}, options = {}) {
@@ -454,31 +424,18 @@ export async function getRelatedEntries(args = {}, options = {}) {
   const graphRow = Array.isArray(graph?.entries)
     ? graph.entries.find((entry) => entry.key === `${category}:${slug}`)
     : null;
-  if (graphRow?.related?.length) {
-    const searchByKey = new Map(
-      searchIndex.map((entry) => [`${entry.category}:${entry.slug}`, entry]),
-    );
-    const entries = graphRow.related
-      .map((relation) => {
-        const entry = searchByKey.get(relation.key);
-        if (!entry) return null;
-        return {
-          ...toEntrySummary(entry),
-          relation: relation.relation,
-          relatedScore: relation.score,
-          relatedReasons: relation.reasons || [],
-        };
-      })
-      .filter(Boolean)
-      .slice(0, limit);
-
-    return {
-      ok: true,
-      key: `${target.category}:${target.slug}`,
-      relationGraph: true,
-      count: entries.length,
-      entries,
-    };
+  const graphEntries = resolveGraphRelatedEntries({
+    graphRow,
+    searchIndex,
+    toEntrySummary,
+    limit,
+  });
+  if (graphEntries) {
+    return buildRelatedEntriesGraphResponse({
+      target,
+      entries: graphEntries,
+      limit,
+    });
   }
 
   const entries = searchIndex
@@ -501,12 +458,7 @@ export async function getRelatedEntries(args = {}, options = {}) {
       relatedReasons: related.reasons,
     }));
 
-  return {
-    ok: true,
-    key: `${target.category}:${target.slug}`,
-    count: entries.length,
-    entries,
-  };
+  return buildRelatedEntriesScoredResponse({ target, entries, limit });
 }
 
 export async function getEntryDetail(args = {}, options = {}) {
@@ -649,30 +601,11 @@ export async function listRegistryRecent(options = {}) {
   const searchIndex = unwrapEntries(
     await readJsonArtifact("search-index.json", options),
   );
-  const entries = searchIndex
-    .slice()
-    .sort((left, right) => {
-      const dateCompare = entryUpdatedAt(right).localeCompare(
-        entryUpdatedAt(left),
-      );
-      if (dateCompare !== 0) return dateCompare;
-      return String(left.title || "").localeCompare(String(right.title || ""));
-    })
-    .slice(0, DISCOVERY_RESOURCE_LIMIT)
-    .map((entry) => ({
-      ...toEntrySummary(entry),
-      updatedAt: entryUpdatedAt(entry),
-      updateKind: entry.repoUpdatedAt ? "upstream_update" : "added",
-    }));
-
-  return {
-    ok: true,
-    kind: "registry-recent",
-    schemaVersion: 1,
-    limit: DISCOVERY_RESOURCE_LIMIT,
-    count: entries.length,
-    entries,
-  };
+  return buildDiscoveryRecentResponse({
+    entries: searchIndex,
+    toEntrySummary,
+    entryUpdatedAt,
+  });
 }
 
 /**
@@ -713,21 +646,7 @@ export async function listRegistryTrending(options = {}) {
     .slice(0, DISCOVERY_RESOURCE_LIMIT)
     .map(toTrendingEntry);
 
-  return {
-    ok: true,
-    kind: "registry-trending",
-    schemaVersion: payload?.schemaVersion ?? 1,
-    category: payload?.category || "all",
-    platform: payload?.platform || "all",
-    limit: DISCOVERY_RESOURCE_LIMIT,
-    count: entries.length,
-    signalsAvailable:
-      payload?.signalsAvailable && typeof payload.signalsAvailable === "object"
-        ? payload.signalsAvailable
-        : null,
-    source: "public-api",
-    entries,
-  };
+  return buildTrendingResourceResponse({ payload, entries });
 }
 
 /**
@@ -767,56 +686,29 @@ export async function listJobsActive(options = {}) {
     .slice(0, DISCOVERY_RESOURCE_LIMIT)
     .map(toJobEntry);
 
-  return {
-    ok: true,
-    kind: "jobs-active",
-    schemaVersion: payload?.schemaVersion ?? 1,
-    limit: DISCOVERY_RESOURCE_LIMIT,
-    count: entries.length,
-    totalAvailable:
-      typeof payload?.totalAvailable === "number"
-        ? payload.totalAvailable
-        : null,
-    source: "public-api",
-    entries,
-  };
+  return buildJobsActiveResourceResponse({ payload, entries });
 }
 
 export async function listRegistryResources(args = {}, options = {}) {
   const manifest = await readJsonArtifact("registry-manifest.json", options);
   const categories = Object.keys(manifest.categories || {}).sort();
-  return {
-    resources: [
-      {
-        uri: "heyclaude://feeds/directory",
-        name: "HeyClaude directory index",
-        title: "HeyClaude directory index",
-        description: "Generated public directory index artifact.",
-        mimeType: JSON_MIME_TYPE,
-      },
-      ...categories.map((category) => ({
-        uri: `heyclaude://category/${category}`,
-        name: `HeyClaude ${category} category`,
-        title: `HeyClaude ${category}`,
-        description: `Generated public ${category} category summary entries.`,
-        mimeType: JSON_MIME_TYPE,
-      })),
-      ...DISCOVERY_RESOURCES,
-    ],
-  };
+  return buildListRegistryResourcesResponse({
+    manifest,
+    categories,
+    discoveryResources: DISCOVERY_RESOURCES,
+    jsonMimeType: JSON_MIME_TYPE,
+  });
 }
 
 export async function readRegistryResource(args = {}, options = {}) {
   const uri = String(args.uri || "");
-  const resourcePayload = (payload) => ({
-    contents: [
-      {
-        uri: uri || "heyclaude://error",
-        mimeType: JSON_MIME_TYPE,
-        text: JSON.stringify(withPublicPolicy(payload), null, 2),
-      },
-    ],
-  });
+  const resourcePayload = (payload) =>
+    buildRegistryResourcePayload(
+      uri,
+      payload,
+      JSON_MIME_TYPE,
+      withPublicPolicy,
+    );
   let parsed;
   try {
     parsed = new URL(uri);
@@ -844,15 +736,8 @@ export async function readRegistryResource(args = {}, options = {}) {
     }
     const entries = unwrapEntries(
       await readJsonArtifact("search-index.json", options),
-    )
-      .filter((entry) => entry.category === category)
-      .map(toEntrySummary);
-    payload = {
-      ok: true,
-      category,
-      total: entries.length,
-      entries,
-    };
+    );
+    payload = buildCategoryResourcePayload(category, entries, toEntrySummary);
   } else if (parsed.hostname === "entry" && parts.length === 2) {
     const [category, slug] = parts.map(normalizeText);
     // Resource reads return the full document; only the tool defaults to a
@@ -927,24 +812,15 @@ export async function getInstallGuidance(args = {}, options = {}) {
       ) || null
     : null;
 
-  return {
-    ok: true,
-    key: `${entry.category}:${entry.slug}`,
-    canonicalUrl: entryCanonicalUrl(entry),
-    title: entry.title,
-    installCommand: entry.installCommand || entry.commandSyntax || "",
-    configSnippet: entry.configSnippet || "",
-    usageSnippet: entry.usageSnippet || "",
-    downloadUrl: entry.downloadUrl || "",
-    documentationUrl: entry.documentationUrl || "",
-    repoUrl: entry.repoUrl || "",
-    safetyNotes: notes(entry.safetyNotes),
-    privacyNotes: notes(entry.privacyNotes),
-    trust: entryTrustSummary(entry),
-    platform: platform || "",
+  return buildInstallGuidanceResponse({
+    entry,
+    platform,
     selectedCompatibility,
-    platformCompatibility: compatibility,
-  };
+    compatibility,
+    entryCanonicalUrl,
+    entryTrustSummary,
+    notes,
+  });
 }
 
 export async function getPlatformAdapter(args = {}, options = {}) {
@@ -953,14 +829,7 @@ export async function getPlatformAdapter(args = {}, options = {}) {
   if (!slug) return invalid("slug is required.");
 
   if (platform !== "cursor") {
-    return {
-      ok: true,
-      platform,
-      slug,
-      adapterAvailable: false,
-      message:
-        "Native Agent Skill platforms use the SKILL.md package directly; generated adapters are currently provided for Cursor rules.",
-    };
+    return buildPlatformAdapterUnavailableResponse(platform, slug);
   }
 
   const entry = await readEntry("skills", slug, options);
@@ -973,14 +842,7 @@ export async function getPlatformAdapter(args = {}, options = {}) {
       `skill-adapters/cursor/${slug}.mdc`,
       options,
     );
-    return {
-      ok: true,
-      platform: "cursor",
-      slug,
-      adapterAvailable: true,
-      adapterPath: `/data/skill-adapters/cursor/${slug}.mdc`,
-      content: adapter,
-    };
+    return buildPlatformAdapterAvailableResponse(slug, adapter);
   } catch {
     return notFound(`No Cursor adapter generated for ${slug}.`);
   }
@@ -992,17 +854,11 @@ export async function listDistributionFeeds(args = {}, options = {}) {
     readJsonArtifact("feeds/index.json", options),
   ]);
 
-  return {
-    ok: true,
-    schemaVersion: manifest.schemaVersion,
-    generatedAt: manifest.generatedAt,
-    artifacts: manifest.artifacts,
-    categories: feedIndex.categories || [],
-    platforms: (feedIndex.platforms || []).map((platform) => ({
-      ...platform,
-      feedSlug: platformFeedSlug(platform.platform),
-    })),
-  };
+  return buildDistributionFeedsResponse({
+    manifest,
+    feedIndex,
+    platformFeedSlug,
+  });
 }
 
 async function readSubmissionSpec(options = {}) {
@@ -1073,13 +929,11 @@ export async function explainEntryTrust(args = {}, options = {}) {
     return notFound(`No HeyClaude entry found for ${category}/${slug}.`);
   }
 
-  return {
-    ok: true,
-    key: `${entry.category}:${entry.slug}`,
-    title: entry.title,
-    canonicalUrl: entryCanonicalUrl(entry),
-    trust: entryTrustSummary(entry),
-  };
+  return buildExplainEntryTrustResponse({
+    entry,
+    entryCanonicalUrl,
+    entryTrustSummary,
+  });
 }
 
 export async function reviewEntrySafety(args = {}, options = {}) {
