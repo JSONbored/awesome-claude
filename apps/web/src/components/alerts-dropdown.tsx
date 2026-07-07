@@ -3,6 +3,7 @@ import { Bell, CheckCheck, AlertTriangle, Info, OctagonX } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useWatch, type Alert } from "@/lib/watch";
+import { alertBucket } from "@/lib/alerts-bucket-lib";
 import { cn } from "@/lib/utils";
 
 const SEV_ICON = {
@@ -11,20 +12,13 @@ const SEV_ICON = {
   blocker: { Icon: OctagonX, cls: "text-trust-blocked" },
 };
 
-function bucket(alert: Alert, lastSeenAt: string) {
-  const t = Date.parse(alert.date);
-  const now = Date.now();
-  if (t > now - 86_400_000) return "Today";
-  if (t > now - 7 * 86_400_000) return "This week";
-  return "Earlier";
-}
-
 export function AlertsDropdown() {
   const { alerts, unreadCount, lastSeenAt, markAllRead, targets, savedSearchAlertCount } =
     useWatch();
   const grouped = React.useMemo(() => {
     const out: Record<string, Alert[]> = { Today: [], "This week": [], Earlier: [] };
-    for (const a of alerts) out[bucket(a, lastSeenAt)].push(a);
+    const now = Date.now();
+    for (const a of alerts) out[alertBucket(a.date, now)].push(a);
     return out;
   }, [alerts, lastSeenAt]);
 
