@@ -61,7 +61,7 @@ async function parsePayload(request: Request): Promise<UnsubscribePayload> {
   return Schema.parse(JSON.parse(rawBody)) as UnsubscribePayload;
 }
 
-async function POST(request: Request): Promise<Response> {
+export async function POST(request: Request): Promise<Response> {
   const requestId = getRequestId(request);
 
   if (!isAllowedOrigin(request)) {
@@ -132,7 +132,7 @@ async function POST(request: Request): Promise<Response> {
     }
   }
 
-  if (lastError && lastError !== "network") {
+  if (lastError) {
     logApiError(request, "newsletter.unsubscribe.provider_error", {
       email: redactEmail(payload.email),
       error: lastError,
