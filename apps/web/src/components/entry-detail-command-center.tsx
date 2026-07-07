@@ -337,11 +337,7 @@ export function EntryDetailCommandCenter({
                   onClick={() => {
                     trackEvent(
                       entryDetailIntegrationAnalyticsEvent(link.id),
-                      entryDetailIntegrationAnalyticsData(
-                        entry.category,
-                        entry.slug,
-                        link.id,
-                      ),
+                      entryDetailIntegrationAnalyticsData(entry.category, entry.slug, link.id),
                     );
                     void recordIntentEvent("open", entry);
                   }}

@@ -54,7 +54,9 @@ describe("entry detail cta events lib", () => {
   });
 
   it("builds integration CTA analytics without sensitive payloads", () => {
-    expect(entryDetailIntegrationAnalyticsEvent("api-json")).toBe("detail_integration_api_json");
+    expect(entryDetailIntegrationAnalyticsEvent("api-json")).toBe(
+      "detail_integration_api_json",
+    );
     expect(
       entryDetailIntegrationAnalyticsData("mcp", "browser", "llms"),
     ).toEqual({
