@@ -383,7 +383,7 @@ function Dossier() {
           risk={risk}
           harnessAvailable={harnessAvailable}
           harness={harness as Harness | null}
-          onHarnessChange={setHarness}
+          onHarnessChange={(h) => setHarness(h)}
           liveVariants={liveVariants}
           tab={tab}
           onTabChange={setTab}

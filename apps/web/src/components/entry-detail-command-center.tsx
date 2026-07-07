@@ -34,7 +34,7 @@ type EntryDetailCommandCenterProps = {
   risk: InstallRisk;
   harnessAvailable: Harness[];
   harness: Harness | null;
-  onHarnessChange: (value: Harness | null) => void;
+  onHarnessChange: (value: Harness) => void;
   liveVariants: VariantOption[];
   tab: CopyVariant;
   onTabChange: (value: CopyVariant) => void;

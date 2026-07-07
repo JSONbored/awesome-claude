@@ -257,7 +257,7 @@ export function detailSafetyGateMessage(
   if (risk === "high") {
     return "High install risk — read safety and privacy notes before copying or installing.";
   }
-  if (risk === "medium") {
+  if (risk === "review") {
     return "Review safety and privacy notes before installing or copying commands.";
   }
 

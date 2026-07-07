@@ -134,7 +134,7 @@ describe("entry detail command center lib", () => {
     ).toContain("Missing safety and privacy notes");
     expect(
       detailSafetyGateMessage(
-        "medium",
+        "review",
         entry({
           safetyNotes: "ok",
           privacyNotes: "ok",
