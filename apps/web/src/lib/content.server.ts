@@ -18,6 +18,7 @@ import {
   localDataFilePaths,
   normalizeEntryDetailPayload,
   normalizeRegistryEntries,
+  safeDataArtifactPath,
 } from "@/lib/content-artifact-lib";
 import {
   buildCategorySummaries,
@@ -75,37 +76,39 @@ async function readLocalJsonDataFile<T>(fileName: string): Promise<T> {
 }
 
 export async function loadJsonDataFile<T>(fileName: string): Promise<T> {
+  const safePath = safeDataArtifactPath(fileName);
   try {
-    return await readLocalJsonDataFile<T>(fileName);
+    return await readLocalJsonDataFile<T>(safePath);
   } catch {
     // In the Cloudflare Worker runtime, read from the static ASSETS binding.
     const assets = getCloudflareBinding<{
       fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
     }>("ASSETS");
     if (!assets) {
-      throw new Error(`Static ASSETS binding is not available for ${fileName}`);
+      throw new Error(`Static ASSETS binding is not available for ${safePath}`);
     }
-    const response = await assets.fetch(new Request(`${DATA_ORIGIN}/data/${fileName}`));
+    const response = await assets.fetch(new Request(`${DATA_ORIGIN}/data/${safePath}`));
     if (!response.ok) {
-      throw new Error(`Failed to load ${fileName} asset (${response.status})`);
+      throw new Error(`Failed to load ${safePath} asset (${response.status})`);
     }
     return (await response.json()) as T;
   }
 }
 
 export async function loadTextDataFile(fileName: string): Promise<string> {
+  const safePath = safeDataArtifactPath(fileName);
   try {
-    return await readLocalDataFile(fileName);
+    return await readLocalDataFile(safePath);
   } catch {
     const assets = getCloudflareBinding<{
       fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
     }>("ASSETS");
     if (!assets) {
-      throw new Error(`Static ASSETS binding is not available for ${fileName}`);
+      throw new Error(`Static ASSETS binding is not available for ${safePath}`);
     }
-    const response = await assets.fetch(new Request(`${DATA_ORIGIN}/data/${fileName}`));
+    const response = await assets.fetch(new Request(`${DATA_ORIGIN}/data/${safePath}`));
     if (!response.ok) {
-      throw new Error(`Failed to load ${fileName} asset (${response.status})`);
+      throw new Error(`Failed to load ${safePath} asset (${response.status})`);
     }
     return response.text();
   }

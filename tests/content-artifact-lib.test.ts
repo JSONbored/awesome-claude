@@ -7,6 +7,7 @@ import {
   localDataFilePaths,
   normalizeEntryDetailPayload,
   normalizeRegistryEntries,
+  safeDataArtifactPath,
 } from "../apps/web/src/lib/content-artifact-lib";
 
 describe("content-artifact-lib DATA_ORIGIN", () => {
@@ -3306,6 +3307,25 @@ describe("content-artifact-lib isSafeContentPathPart", () => {
     expect(isSafeContentPathPart("statuslines")).toBe(true);
     expect(isSafeContentPathPart("statuslines-slug-7")).toBe(true);
     expect(isSafeContentPathPart("STATUSLINES")).toBe(false);
+  });
+});
+
+describe("content-artifact-lib safeDataArtifactPath", () => {
+  it("accepts canonical registry artifact paths", () => {
+    expect(safeDataArtifactPath("search-index.json")).toBe("search-index.json");
+    expect(safeDataArtifactPath("entries/mcp/browser-bridge.json")).toBe(
+      "entries/mcp/browser-bridge.json",
+    );
+  });
+
+  it("rejects traversal and empty path segments", () => {
+    expect(() => safeDataArtifactPath("../registry-manifest.json")).toThrow(
+      /Unsafe data artifact path/,
+    );
+    expect(() => safeDataArtifactPath("entries/../secret.json")).toThrow(
+      /Unsafe data artifact path/,
+    );
+    expect(() => safeDataArtifactPath("")).toThrow(/Unsafe data artifact path/);
   });
 });
 

@@ -31,6 +31,15 @@ export function isSafeContentPathPart(value: string) {
   return /^[a-z0-9-]+$/.test(value);
 }
 
+export function safeDataArtifactPath(fileName: string) {
+  const normalized = String(fileName || "").replace(/\\/g, "/");
+  const parts = normalized.split("/");
+  if (!parts.length || parts.some((part) => !part || part === "." || part === "..")) {
+    throw new Error(`Unsafe data artifact path: ${fileName}`);
+  }
+  return parts.join("/");
+}
+
 export function normalizeRegistryEntries<T>(payload: RegistryEnvelope<T>): T[] {
   if (!Array.isArray(payload?.entries)) {
     throw new Error("Invalid registry artifact: expected entries envelope");
