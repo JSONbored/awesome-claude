@@ -170,7 +170,7 @@ const readme = `<table>
         <tr>
           <td align="center"><strong>${total}</strong><br><sub>entries</sub></td>
           <td align="center"><strong>${categoryOrder.length}</strong><br><sub>sections</sub></td>
-          <td align="center"><strong>human</strong><br><sub>merge gate</sub></td>
+          <td align="center"><strong>AI-reviewed</strong><br><sub>merge gate</sub></td>
         </tr>
         <tr>
           <td align="center"><strong>source</strong><br><sub>first UGC</sub></td>

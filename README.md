@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>1339+ file-backed entries</strong> stay useful as both an
+        <strong>1340+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,9 +36,9 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>1339</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>1340</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
-          <td align="center"><strong>human</strong><br><sub>merge gate</sub></td>
+          <td align="center"><strong>AI-reviewed</strong><br><sub>merge gate</sub></td>
         </tr>
         <tr>
           <td align="center"><strong>source</strong><br><sub>first UGC</sub></td>
@@ -69,7 +69,7 @@
         </td>
 <td align="center" width="20%">
           <a href="#mcp-servers"><strong>🔌 MCP Servers</strong></a><br>
-          <code>467</code><br>
+          <code>468</code><br>
           <sub>Model Context Protocol servers and integrations.</sub>
         </td>
 <td align="center" width="20%">
@@ -297,7 +297,7 @@ packages use checksums and package trust metadata after review.
 - **[Web Async Agent Coordinator - Agents](https://heyclau.de/entry/agents/web-async-agent-coordinator)** - System-prompt agent that helps you drive Claude Code on the web: submitting long-running coding tasks to Anthropic's cloud, running independent sessions in parallel, linking GitHub repositories, tracking progress, and turning finished work into pull requests from the browser.
 - **[Zero Data Retention Compliance Agent](https://heyclau.de/entry/agents/zero-data-retention-compliance-agent)** - Community reusable agent prompt for mapping Claude Code deployments to zero data retention requirements using official ZDR docs: logging boundaries, MCP data flows, session storage, and compliance evidence checklists for security review.
 
-## 🔌 MCP Servers (467)
+## 🔌 MCP Servers (468)
 
 - **[Ableton MCP Extended](https://heyclau.de/entry/mcp/ableton-mcp-extended)** - Source-install MCP server for controlling Ableton Live from Claude, including session inspection, track and clip creation, MIDI note editing, tempo and transport control, browser item loading, arrangement workflows, device parameters, automation, external plugins, audio imports, and optional ElevenLabs.
 - **[ABMeter MCP Server](https://heyclau.de/entry/mcp/abmeter-mcp-server)** - ABMeter MCP exposes experimentation and analytics tooling over streamable HTTP for MCP clients.
@@ -571,6 +571,7 @@ packages use checksums and package trust metadata after review.
 - **[Linux MCP Server for Claude](https://heyclau.de/entry/mcp/linux-mcp-server)** - Run Linux system diagnostics from Claude — inspect CPU, memory, disk, network, services, processes, and journal logs — with the official Linux MCP Server from Red Hat's RHEL Lightspeed team, supporting both local and remote SSH-connected hosts.
 - **[Liveblocks MCP Server for Claude](https://heyclau.de/entry/mcp/liveblocks-mcp-server)** - Manage Liveblocks real-time collaboration infrastructure from Claude — create and manage rooms, broadcast events, retrieve collaborative storage and Yjs documents, manage threads and comments, handle inbox notifications, and configure notification settings — with the official Liveblocks MCP server.
 - **[LiveKit Docs MCP Server](https://heyclau.de/entry/mcp/livekit-docs-mcp-server)** - Connect Claude Code, Cursor, Codex, VS Code, Gemini CLI, Copilot CLI, and other MCP clients to LiveKit's free documentation MCP server for current realtime voice AI, WebRTC, SDK, CLI, and agent implementation context.
+- **[LLM Pulse MCP Server for Claude](https://heyclau.de/entry/mcp/llm-pulse-mcp-server)** - Hosted LLM Pulse MCP server for AI visibility analytics, brand mentions, citations, sentiment, share of voice, recommendations, GEO Writer, and AI traffic workflows.
 - **[Pydantic Logfire MCP Server for Claude](https://heyclau.de/entry/mcp/logfire-mcp-server)** - Query OpenTelemetry traces and metrics, manage dashboards, analyze distributed traces, and investigate exceptions from Claude — with the official Pydantic Logfire remote MCP server hosted at logfire-us.pydantic.dev/mcp.
 - **[Mac Messages MCP Server](https://heyclau.de/entry/mcp/mac-messages-mcp-server)** - macOS Messages MCP server that lets Claude read recent conversations, search messages, inspect contacts and chats, fetch attachments, and send iMessage or SMS/RCS messages.
 - **[macOS Automator MCP](https://heyclau.de/entry/mcp/macos-automator-mcp)** - MCP server for running AppleScript and JavaScript for Automation on macOS, with a searchable knowledge base of automation recipes for apps, files, browsers, system settings, Terminal, and productivity workflows.
