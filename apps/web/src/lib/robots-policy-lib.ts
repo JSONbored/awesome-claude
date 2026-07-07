@@ -37,8 +37,7 @@ export function getRobotsPolicy() {
   };
 }
 
-export function renderRobotsTxt() {
-  const policy = getRobotsPolicy();
+export function renderRobotsTxt(policy = getRobotsPolicy()) {
   const lines: string[] = [];
   for (const rule of policy.rules) {
     const userAgents = Array.isArray(rule.userAgent) ? rule.userAgent : [rule.userAgent];

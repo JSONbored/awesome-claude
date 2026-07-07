@@ -77,7 +77,7 @@ export function displayableBrandIconUrl(
   target: BrandIconTarget | null | undefined,
 ): string | undefined {
   if (!target || !hasDisplayableBrandIcon(target)) return undefined;
-  return clean(target.brandIconUrl) || undefined;
+  return clean(target.brandIconUrl);
 }
 
 export function brandIdentityLabel(target: BrandIconTarget | null | undefined): string {
