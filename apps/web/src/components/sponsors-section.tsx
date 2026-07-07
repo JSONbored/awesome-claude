@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { IntegrationMark } from "@/components/integration-marks";
 import { PARTNER_ROLE_LABEL, PARTNERS, SPONSORS, type Partner } from "@/data/sponsors";
+import { sponsorKindLabel } from "@/lib/sponsor-kind-lib";
 import { cn } from "@/lib/utils";
 
 export function SponsorsSection() {
@@ -56,7 +57,7 @@ export function SponsorsSection() {
                   />
                 ) : (
                   <span className="text-[10px] uppercase tracking-wider text-ink-subtle">
-                    {kindBadge(s.kind)}
+                    {sponsorKindLabel(s.kind)}
                   </span>
                 )}
                 <span className="text-xs font-medium text-ink">{s.name}</span>
@@ -348,16 +349,6 @@ function Field({
       />
     </div>
   );
-}
-
-function kindBadge(kind: string) {
-  return kind === "ai"
-    ? "AI"
-    : kind === "infra"
-      ? "INFRA"
-      : kind === "credits"
-        ? "CREDITS"
-        : "SERVICE";
 }
 
 // Silence unused warning for cn until used elsewhere in this file.
