@@ -15,7 +15,7 @@ export function compareDrawerUiState(items: Entry[]): CompareDrawerUiState {
   return {
     actionRowDiverges: compareDrawerActionsDiverge(items),
     bannerTexts: compareDrawerBannerTexts(items),
-    fullViewSearch: compareFullViewSearch(items),
+    fullViewSearch: compareDrawerFullViewSearch(items),
   };
 }
 

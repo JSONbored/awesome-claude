@@ -87,17 +87,16 @@ describe("compare drawer ui lib", () => {
   });
 
   it("bundles drawer presentation state for banners, actions, and full-view links", () => {
+    const entries = [
+      entry({ reviewedBy: "maintainer", reviewedAt: "2026-01-02" }),
+      entry({ slug: "other", installCommand: "npm i fixture" }),
+    ];
     expect(compareDrawerUiState([])).toEqual({
       actionRowDiverges: false,
       bannerTexts: [],
       fullViewSearch: null,
     });
-    expect(
-      compareDrawerUiState([
-        entry({ reviewedBy: "maintainer", reviewedAt: "2026-01-02" }),
-        entry({ slug: "other", installCommand: "npm i fixture" }),
-      ]),
-    ).toEqual({
+    expect(compareDrawerUiState(entries)).toEqual({
       actionRowDiverges: true,
       bannerTexts: [
         "1 trust signal differ across this comparison (Review status).",
@@ -105,5 +104,9 @@ describe("compare drawer ui lib", () => {
       ],
       fullViewSearch: { ids: "mcp/fixture,mcp/other" },
     });
+    const bundled = compareDrawerUiState(entries);
+    expect(bundled.fullViewSearch).toEqual(
+      compareDrawerFullViewSearch(entries),
+    );
   });
 });
