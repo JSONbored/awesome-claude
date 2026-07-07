@@ -85,6 +85,7 @@ export default defineConfig({
         "apps/web/src/lib/jobs-utils.ts",
         "apps/web/src/lib/og-render.server.ts",
         "apps/web/src/lib/peek-hotkey.ts",
+        "apps/web/src/lib/search-query-tokenization.ts",
         "apps/web/src/lib/security-headers.ts",
         "apps/web/src/lib/site.ts",
         "apps/web/src/lib/tags.ts",
