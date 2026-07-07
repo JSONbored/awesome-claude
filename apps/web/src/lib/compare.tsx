@@ -10,7 +10,7 @@ import type { Entry } from "@/types/registry";
 
 interface CompareActions {
   setOpen: (open: boolean) => void;
-  toggle: (e: Entry) => void;
+  toggle: (e: Entry) => boolean;
   clear: () => void;
   has: (entry: EntryIdentity) => boolean;
   /** Hydrate selection from a `cat/slug,cat/slug` URL param string. */
@@ -60,8 +60,9 @@ function createCompareStore(): CompareStore {
     toggle: (e) => {
       const cur = state.items;
       const next = toggleCompareItem(cur, e);
-      if (next === cur) return; // at the 4-item cap — no change
+      if (next === cur) return false;
       setState({ ...state, items: next });
+      return true;
     },
     clear: () => {
       if (state.items.length === 0 && !state.open) return;

@@ -18,8 +18,17 @@ import { PeekButton, setHotPeek, clearHotPeek, type PeekHandle } from "./peek-bu
 import { PeekHint } from "./peek-hint";
 import { LazyEntryAuthorAttribution } from "./lazy-linked-attribution";
 import { useCompareActions, useIsCompared } from "@/lib/compare";
+import { recordIntentEvent } from "@/lib/intent-event-client";
+import {
+  resourceCardCompareAnalyticsData,
+  resourceCardCompareAnalyticsEvent,
+  resourceCardInstallAnalyticsData,
+  resourceCardInstallAnalyticsEvent,
+  resourceCardInstallIntentType,
+} from "@/lib/resource-card-cta-events";
+import { resourceCardCompareFullMessage } from "@/lib/resource-card-compare-ui";
 import { cn } from "@/lib/utils";
-import { trackEvent, entryEventKey, outboundHost } from "@/lib/analytics";
+import { trackEvent, outboundHost } from "@/lib/analytics";
 
 import { formatCompact, timeAgo } from "@/lib/format";
 const fmtNum = (n?: number) => formatCompact(n);
@@ -74,7 +83,14 @@ function ResourceCardInner({
 
   const onCompareToggle = () => {
     const wasIn = inCompare;
-    toggle(entry);
+    const changed = toggle(entry);
+    if (!changed) {
+      toast.error(resourceCardCompareFullMessage());
+      return;
+    }
+    trackEvent(resourceCardCompareAnalyticsEvent(!wasIn), {
+      ...resourceCardCompareAnalyticsData(entry.category, entry.slug),
+    });
     if (wasIn) {
       toast(`Removed “${entry.title}” from compare`);
     } else {
@@ -84,6 +100,12 @@ function ResourceCardInner({
       });
     }
   };
+
+  const onInstallCopied = () => {
+    void recordIntentEvent(resourceCardInstallIntentType(entry), entry);
+  };
+
+  const installAnalyticsData = resourceCardInstallAnalyticsData(entry.category, entry.slug);
 
   if (variant === "compact") {
     return (
@@ -184,8 +206,9 @@ function ResourceCardInner({
                 value={installPayload}
                 label="Copy install"
                 toastLabel={`Copied install — ${entry.title}`}
-                event="copy-install"
-                eventData={{ entry: entryEventKey(entry.category, entry.slug) }}
+                event={resourceCardInstallAnalyticsEvent()}
+                eventData={installAnalyticsData}
+                onCopied={onInstallCopied}
               />
             </div>
           )}
@@ -276,8 +299,9 @@ function ResourceCardInner({
                 value={installPayload}
                 label="Install"
                 className="w-full justify-center"
-                event="copy-install"
-                eventData={{ entry: entryEventKey(entry.category, entry.slug) }}
+                event={resourceCardInstallAnalyticsEvent()}
+                eventData={installAnalyticsData}
+                onCopied={onInstallCopied}
               />
             ) : (
               <span aria-hidden className="block h-7 w-full" />
@@ -305,8 +329,9 @@ function ResourceCardInner({
                 rel="noreferrer"
                 onClick={() =>
                   trackEvent("source-click", {
-                    entry: entryEventKey(entry.category, entry.slug),
+                    entry: resourceCardInstallAnalyticsData(entry.category, entry.slug).entry,
                     host: outboundHost(entry.sourceUrl!),
+                    surface: installAnalyticsData.surface,
                   })
                 }
                 className="inline-flex h-7 w-full items-center justify-center gap-1 rounded-md border border-border bg-surface px-2 text-xs font-medium text-ink hover:border-border-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60"
