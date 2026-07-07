@@ -39,6 +39,18 @@ export type ResourceCardTrustHintKind =
   | "diverges"
   | "mixed-trust";
 
+const TRUST_HINT_TONE_CLASS: Record<ResourceCardTrustHintKind, string> = {
+  aligns: "border-border bg-surface text-ink-muted",
+  stronger: "border-trust-trusted/30 bg-trust-trusted/5 text-trust-trusted",
+  weaker: "border-trust-review/30 bg-trust-review/5 text-amber-900",
+  diverges: "border-amber-500/30 bg-amber-500/5 text-amber-900",
+  "mixed-trust": "border-accent/30 bg-accent/5 text-ink",
+};
+
+export function resourceCardTrustHintToneClass(kind: ResourceCardTrustHintKind): string {
+  return TRUST_HINT_TONE_CLASS[kind];
+}
+
 export type ResourceCardTrustDecisionState = {
   showHint: boolean;
   kind: ResourceCardTrustHintKind;
@@ -178,4 +190,9 @@ export function browseCompareSelectionContextState(
     headline,
     hint,
   };
+}
+
+export function browseCompareSelectionDivergingLine(labels: string[]): string | null {
+  if (labels.length === 0) return null;
+  return `Differs on: ${labels.join(", ")}`;
 }
