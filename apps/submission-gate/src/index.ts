@@ -4523,12 +4523,19 @@ async function route(request: Request, env: Env, ctx: ExecutionContext) {
     return getDraftRoute(request, env, id);
   }
   if (request.method === "GET" && url.pathname === "/auth/github/start") {
+    const rateLimitResponse = await enforceDraftRateLimit(request, env);
+    if (rateLimitResponse) return rateLimitResponse;
+
     const draftId = url.searchParams.get("draftId") || "";
+    const token = url.searchParams.get("token") || "";
+    if (
+      !draftId ||
+      !token ||
+      !(await verifyDraftState(env.SUBMISSION_GATE_DB, draftId, token))
+    ) {
+      return json({ ok: false, error: "not_found" }, { status: 404 });
+    }
     const state = randomToken();
-    const draft = draftId
-      ? await getDraft(env.SUBMISSION_GATE_DB, draftId)
-      : null;
-    if (!draft) return json({ ok: false, error: "not_found" }, { status: 404 });
     await updateDraftAuthState(env.SUBMISSION_GATE_DB, draftId, state);
     return json({
       ok: true,

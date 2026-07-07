@@ -2598,6 +2598,29 @@ ${urls}
     expect(source).toContain('status.searchParams.set("token", token)');
   });
 
+  it("requires a draft status token before starting GitHub OAuth", () => {
+    const source = readWorkerSource();
+    const routeSource =
+      source.match(
+        /if \(request\.method === "GET" && url\.pathname === "\/auth\/github\/start"\)[\s\S]*?\n  if \(request\.method === "GET" && url\.pathname === "\/auth\/github\/callback"\)/,
+      )?.[0] || "";
+    const rateLimitIndex = routeSource.indexOf(
+      "enforceDraftRateLimit(request, env)",
+    );
+    const tokenIndex = routeSource.indexOf('searchParams.get("token")');
+    const verifyIndex = routeSource.indexOf(
+      "verifyDraftState(env.SUBMISSION_GATE_DB, draftId, token)",
+    );
+    const updateIndex = routeSource.indexOf("updateDraftAuthState");
+    const notFoundIndex = routeSource.indexOf('error: "not_found"');
+
+    expect(rateLimitIndex).toBeGreaterThan(0);
+    expect(tokenIndex).toBeGreaterThan(rateLimitIndex);
+    expect(verifyIndex).toBeGreaterThan(tokenIndex);
+    expect(updateIndex).toBeGreaterThan(verifyIndex);
+    expect(notFoundIndex).toBeGreaterThan(0);
+  });
+
   it("configures a durable Cloudflare rate limit for draft creation", () => {
     const wranglerConfig = fs.readFileSync(
       path.join(repoRoot, "apps/submission-gate/wrangler.jsonc"),
