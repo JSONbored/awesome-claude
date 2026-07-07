@@ -1,5 +1,12 @@
 # @heyclaude/mcp Changelog
 
+## [0.11.0](https://github.com/JSONbored/awesome-claude/compare/mcp-v0.10.0...mcp-v0.11.0) (2026-07-07)
+
+
+### Features
+
+* **web,mcp:** extract API, MCP handler, site, token, and cache libs ([#4554](https://github.com/JSONbored/awesome-claude/issues/4554)) ([0e087f2](https://github.com/JSONbored/awesome-claude/commit/0e087f285cdaa6d509d3e28137324e2668759b86))
+
 ## [0.10.0](https://github.com/JSONbored/awesome-claude/compare/mcp-v0.9.0...mcp-v0.10.0) (2026-07-07)
 
 
