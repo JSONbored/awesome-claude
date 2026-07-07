@@ -710,10 +710,7 @@ async function getDraftRoute(request: Request, env: Env, id: string) {
   if (rateLimitResponse) return rateLimitResponse;
 
   const token = new URL(request.url).searchParams.get("token") || "";
-  if (
-    !token ||
-    !(await verifyDraftState(env.SUBMISSION_GATE_DB, id, token))
-  ) {
+  if (!token || !(await verifyDraftState(env.SUBMISSION_GATE_DB, id, token))) {
     return json({ ok: false, error: "not_found" }, { status: 404 });
   }
 
