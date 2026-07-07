@@ -21,6 +21,7 @@ describe("sitemap-policy-lib", () => {
   it("returns undefined for missing or invalid sitemap dates", () => {
     expect(safeSitemapDate()).toBeUndefined();
     expect(safeSitemapDate(null)).toBeUndefined();
+    expect(safeSitemapDate("")).toBeUndefined();
     expect(safeSitemapDate("not-a-date")).toBeUndefined();
   });
 
@@ -38,6 +39,38 @@ describe("sitemap-policy-lib", () => {
     expect(sitemapEntryLastModified(entry)?.toISOString()).toBe(
       "2026-02-01T00:00:00.000Z",
     );
+  });
+
+  it("uses repo, verified, and dateAdded when earlier timestamps are absent", () => {
+    const base = {
+      category: "mcp",
+      slug: "demo",
+      title: "Demo",
+    } as Parameters<typeof sitemapEntryLastModified>[0];
+
+    expect(
+      sitemapEntryLastModified({
+        ...base,
+        repoUpdatedAt: "2026-03-01T00:00:00.000Z",
+        verifiedAt: "2026-04-01T00:00:00.000Z",
+        dateAdded: "2026-01-01T00:00:00.000Z",
+      })?.toISOString(),
+    ).toBe("2026-03-01T00:00:00.000Z");
+
+    expect(
+      sitemapEntryLastModified({
+        ...base,
+        verifiedAt: "2026-04-01T00:00:00.000Z",
+        dateAdded: "2026-01-01T00:00:00.000Z",
+      })?.toISOString(),
+    ).toBe("2026-04-01T00:00:00.000Z");
+
+    expect(
+      sitemapEntryLastModified({
+        ...base,
+        dateAdded: "2026-01-01T00:00:00.000Z",
+      })?.toISOString(),
+    ).toBe("2026-01-01T00:00:00.000Z");
   });
   it("safeSitemapDate matrix 0", () => {
     expect(safeSitemapDate("2026-01-01T00:00:00.000Z")).toBeInstanceOf(Date);
