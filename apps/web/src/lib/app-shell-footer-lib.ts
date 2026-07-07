@@ -7,6 +7,9 @@ export type FooterColumn = {
   span?: 2 | 3 | 4;
 };
 
+export const SHELL_FOOTER_BRAND_SPAN = 4;
+export const SHELL_FOOTER_GRID_COLUMNS = 12;
+
 export const SHELL_FOOTER_COLUMNS: FooterColumn[] = [
   {
     id: "product",
@@ -65,4 +68,27 @@ export function footerColumnSpanClass(span: FooterColumn["span"] = 2): string {
   if (span === 4) return "md:col-span-4";
   if (span === 3) return "md:col-span-3";
   return "md:col-span-2";
+}
+
+export function shellFooterBrandSpanClass(span: number = SHELL_FOOTER_BRAND_SPAN): string {
+  if (span === 4) return "md:col-span-4";
+  if (span === 3) return "md:col-span-3";
+  return "md:col-span-2";
+}
+
+export function shellFooterColumnSpans(
+  columns: FooterColumn[] = SHELL_FOOTER_COLUMNS,
+  brandSpan: number = SHELL_FOOTER_BRAND_SPAN,
+): { brandSpan: number; linkSpans: number[]; totalSpan: number } {
+  const linkSpans = columns.map((column) => column.span ?? 2);
+  const totalSpan = brandSpan + linkSpans.reduce((sum, value) => sum + value, 0);
+  return { brandSpan, linkSpans, totalSpan };
+}
+
+export function shellFooterLayoutFitsGrid(
+  columns: FooterColumn[] = SHELL_FOOTER_COLUMNS,
+  gridColumns: number = SHELL_FOOTER_GRID_COLUMNS,
+  brandSpan: number = SHELL_FOOTER_BRAND_SPAN,
+): boolean {
+  return shellFooterColumnSpans(columns, brandSpan).totalSpan === gridColumns;
 }

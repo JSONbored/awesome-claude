@@ -57,7 +57,7 @@ import { EntryDetailMobileActionBar } from "@/components/entry-detail-mobile-act
 import { EntrySignalsPanel } from "@/components/entry-signals-panel";
 import { EntryBrandMark } from "@/components/entry-brand-mark";
 import { PLATFORM_SUPPORT_LABEL, type Entry } from "@/types/registry";
-import { buildEntryTocItems } from "@/lib/entry-detail-sidebar-lib";
+import { buildEntryTocItems, entryQuickLinks } from "@/lib/entry-detail-sidebar-lib";
 import { installRiskLevel, INSTALL_RISK_LABEL, INSTALL_RISK_DETAIL } from "@/lib/trust";
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { toast } from "sonner";
@@ -327,6 +327,7 @@ function Dossier() {
       guides.length,
     ],
   );
+  const quickLinks = useMemo(() => entryQuickLinks(entry), [entry]);
   const entryUrl = `/entry/${entry.category}/${entry.slug}`;
 
   return (
@@ -740,7 +741,7 @@ function Dossier() {
           />
         </div>
 
-        <EntryDetailRail entry={entry} tocItems={tocItems} />
+        <EntryDetailRail entry={entry} tocItems={tocItems} quickLinks={quickLinks} />
       </div>
       <EntryDetailMobileActionBar entry={entry} copyPayload={tabPayload} />
       <div className="h-14 lg:hidden" aria-hidden />

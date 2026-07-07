@@ -1,8 +1,13 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  SHELL_FOOTER_BRAND_SPAN,
   SHELL_FOOTER_COLUMNS,
+  SHELL_FOOTER_GRID_COLUMNS,
   footerColumnSpanClass,
+  shellFooterBrandSpanClass,
+  shellFooterColumnSpans,
+  shellFooterLayoutFitsGrid,
 } from "../apps/web/src/lib/app-shell-footer-lib";
 
 describe("app-shell-footer-lib", () => {
@@ -30,6 +35,21 @@ describe("app-shell-footer-lib", () => {
     expect(footerColumnSpanClass(3)).toBe("md:col-span-3");
     expect(footerColumnSpanClass(2)).toBe("md:col-span-2");
     expect(footerColumnSpanClass()).toBe("md:col-span-2");
+    expect(shellFooterBrandSpanClass()).toBe("md:col-span-4");
+  });
+
+  it("fits brand and link columns into the 12-column footer grid", () => {
+    expect(shellFooterLayoutFitsGrid()).toBe(true);
+    expect(shellFooterColumnSpans()).toEqual({
+      brandSpan: SHELL_FOOTER_BRAND_SPAN,
+      linkSpans: [2, 2, 2, 2],
+      totalSpan: SHELL_FOOTER_GRID_COLUMNS,
+    });
+    expect(
+      shellFooterLayoutFitsGrid(
+        SHELL_FOOTER_COLUMNS.map((column) => ({ ...column, span: 3 })),
+      ),
+    ).toBe(false);
   });
 
   it("keeps external policy links in the community column", () => {

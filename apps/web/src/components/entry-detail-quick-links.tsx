@@ -8,10 +8,19 @@ const QUICK_LINK_ICONS = {
   "registry-json": Code2,
 } as const;
 
-export function EntryDetailQuickLinks({ links }: { links: EntryQuickLink[] }) {
+export function EntryDetailQuickLinks({
+  links,
+  className,
+}: {
+  links: EntryQuickLink[];
+  className?: string;
+}) {
   if (!links.length) return null;
   return (
-    <nav aria-label="Entry resource links" className="mt-3 flex flex-col gap-1.5 text-xs">
+    <nav
+      aria-label="Entry resource links"
+      className={className ?? "mt-3 flex flex-col gap-1.5 text-xs"}
+    >
       {links.map((link) => {
         const Icon = QUICK_LINK_ICONS[link.id as keyof typeof QUICK_LINK_ICONS] ?? Code2;
         if (link.href) {

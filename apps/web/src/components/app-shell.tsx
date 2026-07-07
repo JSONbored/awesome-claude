@@ -21,7 +21,11 @@ import {
   SHELL_PRIMARY_NAV,
   shellNavItemActive,
 } from "@/lib/app-shell-nav-lib";
-import { footerColumnSpanClass, SHELL_FOOTER_COLUMNS } from "@/lib/app-shell-footer-lib";
+import {
+  footerColumnSpanClass,
+  SHELL_FOOTER_COLUMNS,
+  shellFooterBrandSpanClass,
+} from "@/lib/app-shell-footer-lib";
 
 export function TopBar() {
   const { theme, toggle } = useTheme();
@@ -178,7 +182,7 @@ export function Footer() {
         className="border-0 border-b border-border bg-background"
       />
       <div className="mx-auto grid max-w-page gap-10 px-4 py-12 sm:grid-cols-2 sm:px-6 md:grid-cols-12">
-        <div className="sm:col-span-2 md:col-span-4">
+        <div className={cn("sm:col-span-2", shellFooterBrandSpanClass())}>
           <div className="flex items-center gap-2">
             <span className="flex h-7 w-7 items-center justify-center rounded-md bg-ink text-background">
               <span className="font-display text-sm font-bold">hc</span>
