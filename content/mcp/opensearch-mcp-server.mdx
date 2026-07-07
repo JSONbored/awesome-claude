@@ -1,0 +1,225 @@
+---
+title: OpenSearch MCP Server
+slug: opensearch-mcp-server
+category: mcp
+description: >-
+  The official OpenSearch Project MCP server (opensearch-mcp-server-py) that lets
+  AI assistants query and operate OpenSearch clusters — listing indices, reading
+  mappings, running Query DSL and PPL searches, inspecting shards and cluster
+  health — over stdio or streaming transports, with basic-auth, AWS IAM, and
+  header-based authentication.
+cardDescription: >-
+  Official OpenSearch MCP server: list indices, read mappings, run Query DSL/PPL
+  searches, and inspect shards and cluster health over stdio or streaming.
+seoTitle: OpenSearch MCP Server — Query DSL, PPL & Cluster Tools for LLMs
+seoDescription: >-
+  The official OpenSearch Project MCP server (opensearch-mcp-server-py) gives
+  LLMs tools to search indices with Query DSL/PPL, read mappings, inspect shards
+  and cluster health, and call any OpenSearch API, with basic-auth, AWS IAM, and
+  header-based authentication over stdio or streaming transports.
+author: opensearch-project
+authorProfileUrl: https://github.com/opensearch-project
+submittedBy: davion-knight
+submittedByUrl: "https://github.com/davion-knight"
+dateAdded: "2026-07-07"
+brandName: OpenSearch MCP Server
+brandDomain: opensearch.org
+websiteUrl: https://opensearch.org/
+repoUrl: https://github.com/opensearch-project/opensearch-mcp-server-py
+documentationUrl: https://github.com/opensearch-project/opensearch-mcp-server-py/blob/main/USER_GUIDE.md
+installable: true
+installCommand: uvx opensearch-mcp-server-py
+usageSnippet: |
+  # Run the published package with uv (stdio transport, the default)
+  OPENSEARCH_URL="https://localhost:9200" \
+  OPENSEARCH_USERNAME="admin" \
+  OPENSEARCH_PASSWORD="<YOUR_PASSWORD>" \
+  uvx opensearch-mcp-server-py
+copySnippet: |
+  {
+    "mcpServers": {
+      "opensearch-mcp-server": {
+        "command": "uvx",
+        "args": ["opensearch-mcp-server-py"],
+        "env": {
+          "OPENSEARCH_URL": "<your_opensearch_domain_url>",
+          "OPENSEARCH_USERNAME": "<your_username>",
+          "OPENSEARCH_PASSWORD": "<YOUR_PASSWORD>"
+        }
+      }
+    }
+  }
+configSnippet: |
+  {
+    "mcpServers": {
+      "opensearch": {
+        "command": "uvx",
+        "args": ["opensearch-mcp-server-py"]
+      }
+    }
+  }
+prerequisites:
+  - Python 3.10 or newer and the `uv`/`uvx` package manager (or `pip install opensearch-mcp-server-py`)
+  - A reachable OpenSearch cluster — self-managed, Amazon OpenSearch Service, or OpenSearch Serverless
+  - Credentials for the chosen auth method — basic auth (username/password), AWS IAM role/profile, or header-based auth
+  - An MCP-compatible client (Claude Desktop, Claude Code, Cursor, Kiro, VS Code, etc.)
+safetyNotes:
+  - Core tools are read/query-oriented, but the default-enabled GenericOpenSearchApiTool can call ANY OpenSearch API endpoint with a custom path, method, and body — including write and delete operations within the credential's permissions.
+  - Opt-in categories add mutating tools; for example the memory and agentic-memory tools can create and delete stored memories (including delete-by-query), and search-relevance tools can create and delete configurations, query sets, judgments, and experiments.
+  - Access is bounded by the OpenSearch credential and cluster RBAC, not by tool naming — scope the user/role to least privilege and prefer a non-production cluster when an agent acts autonomously.
+  - Dynamic connection parameters let an agent pass `opensearch_url` and auth values per tool call, so a single running server can be pointed at multiple clusters; restrict which endpoints and credentials are available to the agent.
+  - In streaming (SSE/Streamable HTTP) mode the server listens on a network port; do not expose it on a public interface without authentication in front of it.
+privacyNotes:
+  - The server connects to your OpenSearch cluster with the credentials you supply; index documents, mappings, and search results it returns are passed to the LLM/MCP client and can include sensitive or PII fields stored in your indices.
+  - Cluster-introspection tools (shards, nodes, cluster state/health, allocation, hot threads, tasks) can expose infrastructure metadata such as node hosts, system metrics, and index settings.
+  - Credentials are provided via environment variables or per-call parameters — basic-auth passwords, AWS IAM role ARNs, and AWS profiles/keys — so keep client config out of version control and restrict access to it.
+  - Memory and agentic-memory tools persist agent-authored statements into OpenSearch; treat that stored content and any semantic enrichment as retained data.
+sourceUrls:
+  - https://github.com/opensearch-project/opensearch-mcp-server-py/blob/main/README.md
+  - https://github.com/opensearch-project/opensearch-mcp-server-py/blob/main/USER_GUIDE.md
+  - https://pypi.org/project/opensearch-mcp-server-py/
+  - https://github.com/opensearch-project/opensearch-mcp-server-py/blob/main/LICENSE.txt
+tags:
+  - mcp
+  - opensearch
+  - search
+  - database
+  - observability
+  - query-dsl
+  - ppl
+  - aws
+  - python
+keywords:
+  - OpenSearch MCP server
+  - opensearch-mcp-server-py
+  - OpenSearch Query DSL MCP
+  - PPL MCP
+  - Amazon OpenSearch Service MCP
+  - OpenSearch Serverless MCP
+  - Model Context Protocol OpenSearch
+  - LLM search cluster access
+  - OpenSearch cluster tools
+  - OpenSearch Project MCP server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+The **OpenSearch MCP Server** is the official Model Context Protocol server maintained by the
+[OpenSearch Project](https://github.com/opensearch-project). It bridges AI assistants and
+OpenSearch clusters — self-managed, [Amazon OpenSearch Service](https://aws.amazon.com/opensearch-service/),
+or OpenSearch Serverless — so an agent can **list indices**, **read mappings**, **run Query DSL and
+PPL searches**, **inspect shards and cluster health**, and **call arbitrary OpenSearch APIs** over
+both **stdio** and **streaming** (SSE / Streamable HTTP) transports.
+
+The project is written in Python, distributed as the PyPI package
+[`opensearch-mcp-server-py`](https://pypi.org/project/opensearch-mcp-server-py/) (v0.10.0, Python
+`>=3.10`), and licensed under Apache 2.0. It supports single- and multi-cluster configurations and
+multiple authentication methods (basic auth, AWS IAM roles, AWS credentials/profiles, and
+header-based auth). Full documentation lives in the
+[USER_GUIDE.md](https://github.com/opensearch-project/opensearch-mcp-server-py/blob/main/USER_GUIDE.md).
+
+## Source Review
+
+The following real repository and package sources were fetched and reviewed for this entry:
+
+- [README.md](https://github.com/opensearch-project/opensearch-mcp-server-py/blob/main/README.md) — install command, zero-config and env-var client config blocks, the core/opt-in tool catalog, tool categories, and transport support.
+- [USER_GUIDE.md](https://github.com/opensearch-project/opensearch-mcp-server-py/blob/main/USER_GUIDE.md) — stdio vs streaming modes, single/multi-cluster (`--mode`) setup, authentication methods, and per-cluster config.
+- [PyPI: opensearch-mcp-server-py](https://pypi.org/project/opensearch-mcp-server-py/) — package name and version (`0.10.0`) and `requires_python >=3.10`.
+- [LICENSE.txt](https://github.com/opensearch-project/opensearch-mcp-server-py/blob/main/LICENSE.txt) — Apache License 2.0.
+
+Repository facts confirmed at review time: official `opensearch-project` organization, default branch
+`main`, not archived, actively maintained, and released as `opensearch-mcp-server-py` v0.10.0 on PyPI.
+
+## Features
+
+- **Index discovery** — `ListIndexTool` lists indices with docs counts and store sizes; `IndexMappingTool` returns mappings and settings.
+- **Search** — `SearchIndexTool` runs Query DSL, `MsearchTool` batches multiple searches, `CountTool` counts matches, and `ExplainTool` explains why a document matches.
+- **Cluster inspection** — `GetShardsTool` and `ClusterHealthTool` report shard and cluster health; opt-in tools cover nodes, cluster state, segments, allocation, tasks, and query insights.
+- **Generic API access** — `GenericOpenSearchApiTool` calls any OpenSearch API endpoint with a custom path, method, query params, and body, reducing tool explosion.
+- **Observability (opt-in)** — `PPLQueryTool` runs Piped Processing Language queries with `jdbc`/`csv`/`raw` output.
+- **Search relevance (opt-in)** — tools to create, search, and delete search configurations, query sets, judgment lists, and experiments (PAIRWISE_COMPARISON, POINTWISE_EVALUATION, HYBRID_OPTIMIZER).
+- **Agent memory (opt-in)** — memory and agentic-memory tools give the agent persistent, semantically indexed memory backed by OpenSearch.
+- **Tool filtering** — enable categories via `OPENSEARCH_ENABLED_CATEGORIES` or a config file; only core tools are on by default.
+- **Multiple transports & clusters** — `stdio` (default) or streaming (SSE / Streamable HTTP), and single- or multi-cluster via `--mode single|multi`.
+- **Flexible auth** — basic auth, AWS IAM roles, AWS credentials/profiles, header-based auth, and OpenSearch Serverless.
+
+## Installation
+
+Run the published package with `uvx` (no clone required):
+
+```bash
+uvx opensearch-mcp-server-py
+```
+
+Add it to an MCP client (e.g. Claude Desktop's `claude_desktop_config.json`) with basic auth:
+
+```json
+{
+  "mcpServers": {
+    "opensearch-mcp-server": {
+      "command": "uvx",
+      "args": ["opensearch-mcp-server-py"],
+      "env": {
+        "OPENSEARCH_URL": "<your_opensearch_domain_url>",
+        "OPENSEARCH_USERNAME": "<your_username>",
+        "OPENSEARCH_PASSWORD": "<YOUR_PASSWORD>"
+      }
+    }
+  }
+}
+```
+
+Or run zero-config and let the agent pass connection details per tool call (useful for multi-cluster
+sessions):
+
+```json
+{
+  "mcpServers": {
+    "opensearch": {
+      "command": "uvx",
+      "args": ["opensearch-mcp-server-py"]
+    }
+  }
+}
+```
+
+### Key environment variables
+
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `OPENSEARCH_URL` | Yes (unless passed per call) | Cluster endpoint, e.g. `https://localhost:9200` |
+| `OPENSEARCH_USERNAME` / `OPENSEARCH_PASSWORD` | For basic auth | Basic-auth credentials |
+| `AWS_REGION` | For AWS IAM auth | AWS region of the managed domain |
+| `AWS_IAM_ARN` / `AWS_PROFILE` | For AWS IAM auth | IAM role ARN or named AWS profile |
+| `AWS_OPENSEARCH_SERVERLESS` | For Serverless | Target OpenSearch Serverless |
+| `OPENSEARCH_ENABLED_CATEGORIES` | No | Enable opt-in tool categories (e.g. `observability`, `search_relevance`) |
+
+Every connection parameter can also be supplied per tool call (`opensearch_url`, `opensearch_username`,
+etc.), which overrides the environment — see the User Guide's Dynamic Connection Parameters.
+
+## Use Cases
+
+- **Conversational search** — ask natural-language questions and have the agent build Query DSL or PPL against your indices.
+- **Index and mapping exploration** — let an LLM enumerate indices, fields, and settings before writing queries or ingest pipelines.
+- **Cluster operations** — inspect shard allocation, cluster health, nodes, and long-running tasks during triage.
+- **Search-relevance tuning (opt-in)** — create query sets, judgment lists, and experiments to evaluate and optimize search configurations.
+- **Multi-cluster workflows** — run one server in `--mode multi` and let the agent target different clusters per request.
+
+## Safety and Privacy
+
+- **Generic API tool is powerful.** `GenericOpenSearchApiTool` can call any OpenSearch endpoint, including write/delete operations, within the credential's permissions — treat it like direct cluster API access.
+- **Opt-in tools mutate data.** Memory/agentic-memory and search-relevance tools can create and delete stored objects (including delete-by-query); enable categories deliberately.
+- **RBAC is the boundary.** Scope the OpenSearch user/role to least privilege; tool naming is not access control. Prefer a non-production cluster for autonomous agents.
+- **Data flows to the model.** Documents, mappings, and search results are returned to the LLM/MCP client and can include PII; cluster-introspection tools expose infrastructure metadata.
+- **Credential hygiene.** Basic-auth passwords, AWS IAM ARNs, and AWS profiles live in the client config or per-call parameters — keep config out of version control and restrict access.
+- **Network exposure.** In streaming mode the server opens a port; do not bind it to a public interface without authentication in front of it.
+
+## Duplicate Check
+
+No existing entry in the directory matches this server. A search of all directory entries for
+"opensearch" across slugs, titles, repository URLs, and install commands returned no dedicated entry
+(the term appears only inside unrelated servers that list OpenSearch as one supported datasource), and
+there is no prior entry pointing at `github.com/opensearch-project/opensearch-mcp-server-py` or the
+PyPI package `opensearch-mcp-server-py`. This is therefore a net-new, non-duplicate entry.
