@@ -41,15 +41,16 @@ export async function readLocalJsonDataFileWithRetry<T>(
   paths: string[],
   readFile: ReadFileFn,
   sleep: SleepFn,
+  maxAttempts: number = LOCAL_JSON_READ_ATTEMPTS,
 ): Promise<T> {
   let lastError: unknown = null;
-  for (let attempt = 0; attempt < LOCAL_JSON_READ_ATTEMPTS; attempt += 1) {
+  for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
     try {
       const raw = await readLocalDataFileFromPaths(paths, readFile);
       return JSON.parse(raw) as T;
     } catch (error) {
       lastError = error;
-      if (attempt < LOCAL_JSON_READ_ATTEMPTS - 1) {
+      if (attempt < maxAttempts - 1) {
         await sleep(LOCAL_JSON_RETRY_MS);
       }
     }
