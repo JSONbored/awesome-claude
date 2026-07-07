@@ -6,6 +6,7 @@ import {
   filterSearchEntries,
   matchesEntryQuery,
   normalizeSearchQuery,
+  search,
 } from "../apps/web/src/data/search";
 import type { Entry } from "../apps/web/src/types/registry";
 
@@ -173,5 +174,71 @@ describe("entry search filters", () => {
       packageEntry,
     ]);
     expect(countSearchResults({ signal: "reviewed" }, entries)).toBe(1);
+  });
+});
+
+describe("weighted search ranking", () => {
+  it("prefers title and slug matches over generic body mentions", () => {
+    const genericMention = entry({
+      slug: "observability-notes",
+      title: "Operational Notes",
+      description: "Mentions browser bridge once inside long documentation.",
+      tags: ["ops"],
+      keywords: ["docs"],
+      dateAdded: "2026-01-06",
+    });
+    const keywordMatch = entry({
+      slug: "automation-suite",
+      title: "Automation Suite",
+      description: "Playwright and browser automation for test workflows.",
+      tags: ["browser-automation"],
+      keywords: ["browser bridge toolkit"],
+      dateAdded: "2026-01-05",
+    });
+    const titleMatch = entry({
+      slug: "browser-bridge",
+      title: "Browser Bridge",
+      description: "Bridge Claude to a local browser session.",
+      tags: ["browser", "automation"],
+      keywords: ["playwright"],
+      dateAdded: "2026-01-04",
+    });
+
+    const ranked = search({ q: "browser bridge", sort: "popular" }, [
+      genericMention,
+      keywordMatch,
+      titleMatch,
+    ]);
+    expect(ranked.map((item) => item.slug)).toEqual([
+      "browser-bridge",
+      "automation-suite",
+      "observability-notes",
+    ]);
+  });
+
+  it("keeps recommended-score fallback when relevance ties", () => {
+    const lowerTrust = entry({
+      slug: "browser-helper-a",
+      title: "Browser Helper",
+      description: "Browser helper for Claude.",
+      source: "external",
+      dateAdded: "2026-01-01",
+    });
+    const higherTrust = entry({
+      slug: "browser-helper-b",
+      title: "Browser Helper",
+      description: "Browser helper for Claude.",
+      source: "first-party",
+      packageVerified: true,
+      safetyNotes: "Requires local browser access.",
+      privacyNotes: "Reads browser cookies.",
+      dateAdded: "2026-01-01",
+    });
+
+    const ranked = search({ q: "browser helper", sort: "popular" }, [
+      lowerTrust,
+      higherTrust,
+    ]);
+    expect(ranked[0]?.slug).toBe("browser-helper-b");
   });
 });

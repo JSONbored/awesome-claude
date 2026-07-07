@@ -41,6 +41,13 @@ export type TrustSignalFilter = (typeof TRUST_SIGNAL_FILTERS)[number];
 interface EntrySearchProfile {
   haystack: string;
   words: string[];
+  title: string;
+  slug: string;
+  category: string;
+  author: string;
+  tags: string[];
+  keywords: string[];
+  description: string;
 }
 
 interface QuerySearchProfile {
@@ -87,6 +94,19 @@ function normalizedSearchText(entry: Entry) {
     .toLowerCase();
 }
 
+function normalizedFieldTokens(values: (string | undefined)[]) {
+  const joined = values.filter(Boolean).join(" ").toLowerCase();
+  if (!joined) return [] as string[];
+  return [
+    ...new Set(
+      joined
+        .split(TOKEN_SPLIT_PATTERN)
+        .map((value) => value.trim())
+        .filter(Boolean),
+    ),
+  ];
+}
+
 function entrySearchProfile(entry: Entry) {
   let profile = ENTRY_SEARCH_PROFILES.get(entry);
   if (!profile) {
@@ -102,6 +122,13 @@ function entrySearchProfile(entry: Entry) {
     profile = {
       haystack,
       words,
+      title: `${entry.title || ""} ${entry.cardDescription || ""}`.toLowerCase(),
+      slug: String(entry.slug || "").toLowerCase(),
+      category: String(entry.category || "").toLowerCase(),
+      author: `${entry.author || ""} ${entry.submittedBy || ""}`.toLowerCase(),
+      tags: normalizedFieldTokens(entry.tags ?? []),
+      keywords: normalizedFieldTokens(entry.keywords ?? []),
+      description: `${entry.description || ""} ${entry.cardDescription || ""}`.toLowerCase(),
     };
     ENTRY_SEARCH_PROFILES.set(entry, profile);
   }
@@ -131,6 +158,63 @@ function matchesEntryQueryProfile(entry: Entry, queryProfile: QuerySearchProfile
   return tokens.every((token) =>
     expandedTokenCandidates(token).some((candidate) => candidateMatchesText(candidate, profile)),
   );
+}
+
+function bestCandidateTokenScore(candidate: string, profile: EntrySearchProfile) {
+  let score = 0;
+  if (!candidate) return score;
+
+  if (profile.title.includes(candidate)) {
+    score = Math.max(score, candidate.length >= 4 ? 48 : 20);
+  }
+  if (profile.slug === candidate) {
+    score = Math.max(score, 36);
+  } else if (profile.slug.startsWith(candidate)) {
+    score = Math.max(score, 22);
+  }
+  if (profile.category === candidate) {
+    score = Math.max(score, 16);
+  }
+  if (profile.author.includes(candidate)) {
+    score = Math.max(score, 16);
+  }
+  if (profile.tags.some((tag) => tag === candidate || tag.startsWith(candidate))) {
+    score = Math.max(score, 22);
+  }
+  if (profile.keywords.some((keyword) => keyword === candidate || keyword.startsWith(candidate))) {
+    score = Math.max(score, 20);
+  }
+  if (profile.words.some((word) => word === candidate || word.startsWith(candidate))) {
+    score = Math.max(score, candidate.length >= 4 ? 14 : 8);
+  } else if (profile.description.includes(candidate)) {
+    score = Math.max(score, 6);
+  } else if (profile.haystack.includes(candidate)) {
+    score = Math.max(score, 3);
+  }
+
+  return score;
+}
+
+function queryRelevanceScore(entry: Entry, queryProfile: QuerySearchProfile) {
+  const profile = entrySearchProfile(entry);
+  const { normalizedQuery, tokens } = queryProfile;
+  let score = 0;
+
+  if (profile.title.startsWith(normalizedQuery)) score += 100;
+  else if (profile.title.includes(normalizedQuery)) score += normalizedQuery.length >= 4 ? 64 : 26;
+
+  if (profile.slug === normalizedQuery) score += 80;
+  else if (profile.slug.startsWith(normalizedQuery)) score += 36;
+
+  for (const token of tokens) {
+    const candidateScore = expandedTokenCandidates(token).reduce((best, candidate) => {
+      const matchScore = bestCandidateTokenScore(candidate, profile);
+      return Math.max(best, matchScore);
+    }, 0);
+    score += candidateScore;
+  }
+
+  return score;
 }
 
 export function matchesEntryQuery(entry: Entry, query: string) {
@@ -221,13 +305,20 @@ export function countSearchResults(filters: SearchFilters = {}, entries: Entry[]
   return count;
 }
 
-export function search(filters: SearchFilters = {}): Entry[] {
-  let rows = filterSearchEntries(filters);
+export function search(filters: SearchFilters = {}, entries: Entry[] = ENTRIES): Entry[] {
+  const prepared = prepareSearchFilters(filters);
+  let rows = entries.filter((entry) => matchesSearchFilters(entry, prepared));
 
   const sort = filters.sort ?? "popular";
   rows = [...rows].sort((a, b) => {
     if (sort === "newest") return a.dateAdded < b.dateAdded ? 1 : -1;
     if (sort === "title") return a.title.localeCompare(b.title);
+    if (prepared.queryProfile) {
+      const relevanceDelta =
+        queryRelevanceScore(b, prepared.queryProfile) -
+        queryRelevanceScore(a, prepared.queryProfile);
+      if (relevanceDelta !== 0) return relevanceDelta;
+    }
     return recommendedScore(b) - recommendedScore(a);
   });
   return rows;
