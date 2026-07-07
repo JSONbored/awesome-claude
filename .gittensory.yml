@@ -58,6 +58,28 @@ gate:
 settings:
   reviewEvasionProtection: close
 
+  # Linked-issue label propagation (#4000): a PR closing an issue inherits that issue's point-bearing
+  # gittensor:* label, instead of the PR's own label being decided purely by commit-title regex. Mirrors
+  # the block already live on JSONbored/gittensory (#3903). bug/feature trust a maintainer-authored linked
+  # issue (routine categorization, no reward at stake); priority omits that flag -- it is the scarce,
+  # maintainer-hand-picked reward label and must still require the PR author to be the issue's actual
+  # author/assignee.
+  linkedIssueLabelPropagation:
+    enabled: true
+    mode: exclusive_type_label
+    mappings:
+      - issueLabel: "gittensor:bug"
+        prLabel: "gittensor:bug"
+        removeOtherTypeLabels: true
+        trustMaintainerAuthoredIssue: true
+      - issueLabel: "gittensor:feature"
+        prLabel: "gittensor:feature"
+        removeOtherTypeLabels: true
+        trustMaintainerAuthoredIssue: true
+      - issueLabel: "gittensor:priority"
+        prLabel: "gittensor:priority"
+        removeOtherTypeLabels: true
+
 publicNotes:
   - Content is PR-first — submit one source-backed entry per PR under content/<category>/.
   - Prefer free, source-backed, practical resources. Paid tools, commercial listings, jobs, and
