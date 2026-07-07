@@ -10,7 +10,7 @@ import {
 } from "@/lib/api-security";
 import { logApiError, logApiWarn } from "@/lib/api-logs";
 import { getCloudflareBinding } from "@/lib/cloudflare-env.server";
-import { loadJsonDataFile, loadTextDataFile } from "@/lib/content.server";
+import { createMcpArtifactReaders } from "@/lib/mcp-artifact-readers-lib";
 import { applySecurityHeaders } from "@/lib/security-headers";
 
 const route = getApiRouteDefinition("mcp.streamable");
@@ -66,40 +66,6 @@ function mcpMethodNotAllowed() {
       },
     ),
   );
-}
-
-function assetRequest(origin: string, fileName: string) {
-  return new Request(`${origin}/data/${fileName}`);
-}
-
-function createMcpArtifactReaders(origin: string, assets?: StaticAssetsBinding) {
-  const loadAssetText = async (fileName: string) => {
-    const response = await (assets?.fetch(assetRequest(origin, fileName)) ??
-      fetch(assetRequest(origin, fileName)));
-    if (!response.ok) {
-      throw new Error(`Failed to load ${fileName} asset (${response.status})`);
-    }
-    return response.text();
-  };
-
-  const readTextArtifact = async (fileName: string) => {
-    try {
-      return await loadTextDataFile(fileName);
-    } catch {
-      return loadAssetText(fileName);
-    }
-  };
-
-  return {
-    readTextArtifact,
-    readJsonArtifact: async <T>(fileName: string): Promise<T> => {
-      try {
-        return await loadJsonDataFile<T>(fileName);
-      } catch {
-        return JSON.parse(await loadAssetText(fileName)) as T;
-      }
-    },
-  };
 }
 
 async function validateMcpRequest(request: Request) {
