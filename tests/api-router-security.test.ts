@@ -319,7 +319,7 @@ describe("central API router security", () => {
       "utf8",
     );
     const routerSource = fs.readFileSync(
-      path.join(repoRoot, "apps/web/src/lib/api/router.ts"),
+      path.join(repoRoot, "apps/web/src/lib/api/router-lib.ts"),
       "utf8",
     );
 
