@@ -1,5 +1,14 @@
 # @heyclaude/mcp Changelog
 
+## [0.10.0](https://github.com/JSONbored/awesome-claude/compare/mcp-v0.9.0...mcp-v0.10.0) (2026-07-07)
+
+
+### Features
+
+* **mcp,web:** extract artifact loader, fetch, signals, content, and brief libs ([#4514](https://github.com/JSONbored/awesome-claude/issues/4514)) ([2f58886](https://github.com/JSONbored/awesome-claude/commit/2f588864cb62da4ddb4fda55c0da80c8677eb5da))
+* **mcp,web:** extract client setup, OG render, dossier prefs, content query, and fetch libs ([#4526](https://github.com/JSONbored/awesome-claude/issues/4526)) ([3e6f717](https://github.com/JSONbored/awesome-claude/commit/3e6f7171ab67a383ddadb7e18b51d558e75deb0a))
+* **mcp,web:** extract compare, stats, safety, trust, asset, and content loader libs ([#4542](https://github.com/JSONbored/awesome-claude/issues/4542)) ([0141599](https://github.com/JSONbored/awesome-claude/commit/014159912f923acb2fe7fbd59888af8692650c1b))
+
 ## [0.9.0](https://github.com/JSONbored/awesome-claude/compare/mcp-v0.8.0...mcp-v0.9.0) (2026-07-06)
 
 
