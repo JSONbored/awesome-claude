@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
+import { countSearchResults } from "@/data/search";
 import {
   BROWSE_TRUST_SIGNAL_OPTIONS,
   browseTrustRelaxationTrials,
@@ -49,6 +50,9 @@ describe("browse trust filters lib", () => {
   it("toggles trust signal selection for quick chips", () => {
     expect(toggleBrowseTrustSignal("", "reviewed")).toBe("reviewed");
     expect(toggleBrowseTrustSignal("reviewed", "reviewed")).toBe("");
+    expect(toggleBrowseTrustSignal("safety-notes", "reviewed")).toBe(
+      "reviewed",
+    );
   });
 
   it("counts trust signals from the currently loaded entries", () => {
@@ -73,6 +77,58 @@ describe("browse trust filters lib", () => {
     expect(counts["safety-notes"]).toBe(1);
     expect(counts["privacy-notes"]).toBe(1);
     expect(counts["reviewed"]).toBe(1);
+    expect(counts["source-backed"]).toBe(0);
+  });
+
+  it("builds facet counts through countSearchResults with active browse filters", () => {
+    const entries = [
+      entry({
+        category: "mcp",
+        slug: "safe-mcp",
+        safetyNotes: "Sandboxed",
+        platforms: ["claude-code"],
+        source: "source-backed",
+      }),
+      entry({
+        category: "mcp",
+        slug: "other-mcp",
+        platforms: ["claude-code"],
+        reviewed: true,
+      }),
+      entry({
+        category: "skills",
+        slug: "skill",
+        safetyNotes: "Read docs",
+        platforms: ["cursor"],
+      }),
+    ];
+
+    const counts = buildBrowseTrustSignalCounts(
+      {
+        ...slice,
+        category: "mcp",
+        platform: "claude-code",
+      },
+      (filters) => countSearchResults(filters, entries),
+    );
+
+    expect(counts["safety-notes"]).toBe(1);
+    expect(counts["reviewed"]).toBe(1);
+    expect(counts["source-backed"]).toBe(1);
+    expect(counts["privacy-notes"]).toBe(0);
+  });
+
+  it("ignores invalid signal values when building facet counts", () => {
+    const entries = [entry({ safetyNotes: "Present" })];
+    const counts = buildBrowseTrustSignalCounts(
+      { ...slice, signal: "not-a-signal" },
+      (filters) => countSearchResults(filters, entries),
+    );
+
+    expect(counts["safety-notes"]).toBe(1);
+    expect(Object.keys(counts)).toHaveLength(
+      BROWSE_TRUST_SIGNAL_OPTIONS.length,
+    );
   });
 
   it("formats utility dropdown labels with facet counts", () => {
@@ -115,5 +171,19 @@ describe("browse trust filters lib", () => {
       { category: "" },
       { q: "" },
     ]);
+  });
+
+  it("skips signal relaxation when the active signal is invalid", () => {
+    expect(
+      browseTrustRelaxationTrials({
+        ...slice,
+        signal: "not-real",
+        platform: "claude-code",
+      }).map((trial) => trial.label),
+    ).toEqual(['Remove platform "claude-code"']);
+  });
+
+  it("returns no relaxation trials when browse filters are empty", () => {
+    expect(browseTrustRelaxationTrials(slice)).toEqual([]);
   });
 });
