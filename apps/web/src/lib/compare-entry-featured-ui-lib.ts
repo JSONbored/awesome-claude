@@ -47,6 +47,17 @@ export function compareEntryFeaturedBestListLinks(
   }));
 }
 
+export function compareEntryFeaturedShowsFeaturedLinks(
+  comparisons: ReadonlyArray<{ slug: string; refs: string[] }>,
+  lists: ReadonlyArray<{ slug: string; picks: BestListPickRef[] }>,
+  catalog: EntryIdentity[],
+): boolean {
+  return (
+    compareEntryFeaturedComparisonLinks(comparisons, catalog).length > 0 ||
+    compareEntryFeaturedBestListLinks(lists, catalog).length > 0
+  );
+}
+
 export type CompareEntryFeaturedUiState = {
   comparisonLinks: CompareEntryFeaturedComparisonLink[];
   bestListLinks: CompareEntryFeaturedBestListLink[];
@@ -63,6 +74,6 @@ export function compareEntryFeaturedUiState(
   return {
     comparisonLinks,
     bestListLinks,
-    hasFeaturedLinks: comparisonLinks.length > 0 || bestListLinks.length > 0,
+    hasFeaturedLinks: compareEntryFeaturedShowsFeaturedLinks(comparisons, lists, catalog),
   };
 }
