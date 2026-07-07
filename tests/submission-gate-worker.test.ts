@@ -2576,6 +2576,28 @@ ${urls}
     expect(source).toContain("const MAX_DRAFT_BODY_BYTES = 64 * 1024");
   });
 
+  it("requires a draft status token before returning draft metadata", () => {
+    const source = readWorkerSource();
+    const routeSource =
+      source.match(
+        /async function getDraftRoute[\s\S]*?\nasync function githubCallbackRoute/,
+      )?.[0] || "";
+    const rateLimitIndex = routeSource.indexOf(
+      "enforceDraftRateLimit(request, env)",
+    );
+    const tokenIndex = routeSource.indexOf('searchParams.get("token")');
+    const verifyIndex = routeSource.indexOf(
+      "verifyDraftState(env.SUBMISSION_GATE_DB, id, token)",
+    );
+    const notFoundIndex = routeSource.indexOf('error: "not_found"');
+
+    expect(rateLimitIndex).toBeGreaterThan(0);
+    expect(tokenIndex).toBeGreaterThan(rateLimitIndex);
+    expect(verifyIndex).toBeGreaterThan(tokenIndex);
+    expect(notFoundIndex).toBeGreaterThan(verifyIndex);
+    expect(source).toContain('status.searchParams.set("token", token)');
+  });
+
   it("configures a durable Cloudflare rate limit for draft creation", () => {
     const wranglerConfig = fs.readFileSync(
       path.join(repoRoot, "apps/submission-gate/wrangler.jsonc"),

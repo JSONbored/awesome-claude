@@ -510,9 +510,11 @@ function callbackUrl(request: Request) {
   return `${url.origin}/auth/github/callback`;
 }
 
-function draftStatusUrl(request: Request, id: string) {
+function draftStatusUrl(request: Request, id: string, token: string) {
   const url = new URL(request.url);
-  return `${url.origin}/drafts/${id}`;
+  const status = new URL(`/drafts/${id}`, url.origin);
+  status.searchParams.set("token", token);
+  return status.toString();
 }
 
 function requestBodyTooLarge(limitBytes: number) {
@@ -689,7 +691,7 @@ async function createDraftRoute(request: Request, env: Env) {
     ok: true,
     configured,
     draftId: id,
-    statusUrl: draftStatusUrl(request, id),
+    statusUrl: draftStatusUrl(request, id, state),
     authUrl: authUrl || undefined,
     target,
     manualPr: configured
@@ -703,7 +705,18 @@ async function createDraftRoute(request: Request, env: Env) {
   });
 }
 
-async function getDraftRoute(env: Env, id: string) {
+async function getDraftRoute(request: Request, env: Env, id: string) {
+  const rateLimitResponse = await enforceDraftRateLimit(request, env);
+  if (rateLimitResponse) return rateLimitResponse;
+
+  const token = new URL(request.url).searchParams.get("token") || "";
+  if (
+    !token ||
+    !(await verifyDraftState(env.SUBMISSION_GATE_DB, id, token))
+  ) {
+    return json({ ok: false, error: "not_found" }, { status: 404 });
+  }
+
   const draft = await getDraft(env.SUBMISSION_GATE_DB, id);
   if (!draft) return json({ ok: false, error: "not_found" }, { status: 404 });
   const fields = redactPublicDraftFields(
@@ -770,7 +783,7 @@ async function githubCallbackRoute(request: Request, env: Env) {
   });
 
   return textResponse(
-    `<meta http-equiv="refresh" content="0; url=${draftStatusUrl(request, draftId)}">Submission queued.`,
+    `<meta http-equiv="refresh" content="0; url=${draftStatusUrl(request, draftId, stateToken)}">Submission queued.`,
   );
 }
 
@@ -4510,7 +4523,7 @@ async function route(request: Request, env: Env, ctx: ExecutionContext) {
     if (!/^draft_[0-9a-f-]{36}$/i.test(id)) {
       return json({ ok: false, error: "invalid_id" }, { status: 400 });
     }
-    return getDraftRoute(env, id);
+    return getDraftRoute(request, env, id);
   }
   if (request.method === "GET" && url.pathname === "/auth/github/start") {
     const draftId = url.searchParams.get("draftId") || "";
