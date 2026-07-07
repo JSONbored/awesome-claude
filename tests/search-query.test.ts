@@ -241,4 +241,78 @@ describe("weighted search ranking", () => {
     ]);
     expect(ranked[0]?.slug).toBe("browser-helper-b");
   });
+
+  it("boosts exact slug and category intent matches", () => {
+    const slugExact = entry({
+      category: "mcp",
+      slug: "browser-bridge",
+      title: "Bridge",
+      description: "Utility bridge.",
+    });
+    const categoryOnly = entry({
+      category: "mcp",
+      slug: "helper-tool",
+      title: "Helper Tool",
+      description: "A helper in the MCP category.",
+    });
+    const weakMention = entry({
+      category: "commands",
+      slug: "notes",
+      title: "Notes",
+      description: "Mentions mcp browser bridge in passing.",
+    });
+
+    const ranked = search({ q: "mcp", sort: "popular" }, [
+      weakMention,
+      categoryOnly,
+      slugExact,
+    ]);
+    expect(ranked.at(-1)?.slug).toBe("notes");
+    expect(new Set(ranked.slice(0, 2).map((item) => item.slug))).toEqual(
+      new Set(["browser-bridge", "helper-tool"]),
+    );
+  });
+
+  it("uses author and submitted-by fields in relevance scoring", () => {
+    const submittedByMatch = entry({
+      slug: "submission-helper",
+      title: "Submission Helper",
+      submittedBy: "kiannidev",
+    });
+    const bodyMention = entry({
+      slug: "body-mention",
+      title: "Body Mention",
+      description: "Created by kiannidev according to release notes.",
+    });
+
+    const ranked = search({ q: "kiannidev", sort: "popular" }, [
+      bodyMention,
+      submittedByMatch,
+    ]);
+    expect(ranked[0]?.slug).toBe("submission-helper");
+  });
+
+  it("preserves explicit newest and title sort modes", () => {
+    const zebra = entry({
+      slug: "zebra",
+      title: "Zebra Tool",
+      dateAdded: "2026-01-01",
+    });
+    const alpha = entry({
+      slug: "alpha",
+      title: "Alpha Tool",
+      dateAdded: "2026-02-01",
+    });
+
+    expect(
+      search({ q: "tool", sort: "newest" }, [zebra, alpha]).map(
+        (item) => item.slug,
+      ),
+    ).toEqual(["alpha", "zebra"]);
+    expect(
+      search({ q: "tool", sort: "title" }, [zebra, alpha]).map(
+        (item) => item.slug,
+      ),
+    ).toEqual(["alpha", "zebra"]);
+  });
 });
