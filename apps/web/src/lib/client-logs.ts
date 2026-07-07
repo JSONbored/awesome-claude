@@ -1,23 +1,10 @@
+import { normalizeError } from "@/lib/client-logs-lib";
+
+export { normalizeError } from "@/lib/client-logs-lib";
+
 type ClientLogMeta = Record<string, unknown>;
 
-function normalizeError(error: unknown) {
-  if (error instanceof Error) {
-    return {
-      name: error.name,
-      message: error.message,
-    };
-  }
-  return {
-    name: "Error",
-    message: String(error || "Unknown error"),
-  };
-}
-
-function writeClientLog(
-  level: "error",
-  event: string,
-  meta: ClientLogMeta = {},
-) {
+function writeClientLog(level: "error", event: string, meta: ClientLogMeta = {}) {
   console.error(
     JSON.stringify({
       ts: new Date().toISOString(),
@@ -28,11 +15,7 @@ function writeClientLog(
   );
 }
 
-export function logClientError(
-  event: string,
-  error: unknown,
-  meta: ClientLogMeta = {},
-) {
+export function logClientError(event: string, error: unknown, meta: ClientLogMeta = {}) {
   writeClientLog("error", event, {
     ...meta,
     error: normalizeError(error),
