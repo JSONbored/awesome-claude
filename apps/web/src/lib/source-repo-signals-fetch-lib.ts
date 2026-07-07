@@ -1,15 +1,31 @@
 import { parseAbbreviatedCount } from "@heyclaude/registry/presentation";
 
-import { GITHUB_API_VERSION, REQUEST_TIMEOUT_MS } from "@/lib/source-repo-signals-lib";
+import {
+  GITHUB_API_VERSION,
+  REQUEST_TIMEOUT_MS,
+  parseGitHubRepoUrl,
+} from "@/lib/source-repo-signals-lib";
 
 type Fetcher = typeof fetch;
 
+export function parseGitHubRepoKey(repoKey: string) {
+  const normalized = String(repoKey || "").trim();
+  if (!normalized) return null;
+  const segments = normalized.split("/");
+  if (segments.length !== 2 || segments.some((segment) => !segment)) {
+    return null;
+  }
+  const parsed = parseGitHubRepoUrl(`https://github.com/${normalized}`);
+  if (!parsed) return null;
+  return { owner: parsed.owner, repo: parsed.repo };
+}
+
 export function buildGitHubRepoApiUrl(owner: string, repo: string) {
-  return `https://api.github.com/repos/${owner}/${repo}`;
+  return `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`;
 }
 
 export function buildShieldsStarsUrl(owner: string, repo: string) {
-  return `https://img.shields.io/github/stars/${owner}/${repo}.json`;
+  return `https://img.shields.io/github/stars/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}.json`;
 }
 
 export function parseGitHubRepoApiPayload(data: Record<string, unknown>) {
@@ -42,8 +58,9 @@ async function fetchShieldsStars(repo: { owner: string; repo: string }, fetcher:
 }
 
 export async function fetchGitHubSourceSignal(repoKey: string, fetcher: Fetcher = fetch) {
-  const [owner, repo] = repoKey.split("/");
-  if (!owner || !repo) throw new Error(`invalid_repo:${repoKey}`);
+  const parsed = parseGitHubRepoKey(repoKey);
+  if (!parsed) throw new Error(`invalid_repo:${repoKey}`);
+  const { owner, repo } = parsed;
 
   const headers: HeadersInit = {
     accept: "application/vnd.github+json",
