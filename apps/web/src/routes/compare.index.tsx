@@ -15,6 +15,8 @@ import { recordCompareIntentEvent } from "@/lib/compare-entry-actions";
 import { COMPARE_PAGE_SURFACE, type CompareAction } from "@/lib/compare-page-actions-ui-lib";
 import { comparePageActionsForEntry } from "@/lib/compare-page-actions-interactive-ui-lib";
 import { comparePageInteractiveUiState } from "@/lib/compare-page-interactive-ui-lib";
+import { comparePageTrustDecisionUiState } from "@/lib/compare-page-trust-decision";
+import { ComparePageTrustDecisionPanel } from "@/components/compare-page-trust-decision-panel";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
 import { sameEntry } from "@/lib/entry-identity";
 import { search } from "@/data/search";
@@ -69,6 +71,7 @@ function ComparePage() {
     () => comparePageInteractiveUiState(items, sp.ids, COMPARISONS, ENTRIES),
     [items, sp.ids],
   );
+  const trustDecision = React.useMemo(() => comparePageTrustDecisionUiState(items), [items]);
 
   const pushIds = (next: Entry[]) => {
     const ids = serializeCompareItems(next);
@@ -183,6 +186,15 @@ function ComparePage() {
           </button>
         </div>
       </div>
+
+      {trustDecision.showPanel ? (
+        <ComparePageTrustDecisionPanel
+          state={trustDecision}
+          entries={items}
+          actionCells={actionCells}
+          className="mt-4"
+        />
+      ) : null}
 
       <div className="mt-4 overflow-auto rounded-xl border border-border">
         <table className="w-full border-collapse text-sm">

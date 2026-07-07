@@ -21,6 +21,8 @@ import { useCopyPref, useHarnessPref } from "@/lib/dossier-prefs";
 import { COMPARE_DRAWER_SURFACE, type CompareAction } from "@/lib/compare-drawer-actions-ui-lib";
 import { compareDrawerActionsForEntry } from "@/lib/compare-drawer-actions-interactive-ui-lib";
 import { compareDrawerInteractiveUiState } from "@/lib/compare-drawer-interactive-ui-lib";
+import { comparePageTrustDecisionUiState } from "@/lib/compare-page-trust-decision";
+import { ComparePageTrustDecisionPanel } from "@/components/compare-page-trust-decision-panel";
 import { recordCompareIntentEvent } from "@/lib/compare-entry-actions";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
 import type { Entry, Harness } from "@/types/registry";
@@ -319,6 +321,7 @@ export function CompareDrawer() {
   const { drawerUi, emptyHint, shareUrl, divergingDecisionLabels, actionRowDiverges, actionCells } =
     compareDrawerInteractiveUiState(items);
   const { bannerTexts, fullViewSearch } = drawerUi;
+  const trustDecision = React.useMemo(() => comparePageTrustDecisionUiState(items), [items]);
 
   const onClear = () => {
     const snapshot = items.map((e) => `${e.category}/${e.slug}`).join(",");
@@ -410,6 +413,16 @@ export function CompareDrawer() {
             </div>
           </div>
         </SheetHeader>
+
+        {trustDecision.showPanel ? (
+          <ComparePageTrustDecisionPanel
+            state={trustDecision}
+            entries={items}
+            actionCells={actionCells}
+            variant="compact"
+            className="mx-4 mt-3 sm:mx-6"
+          />
+        ) : null}
 
         {items.length === 0 ? (
           <div className="flex h-[60vh] items-center justify-center px-6 text-sm text-ink-muted">
