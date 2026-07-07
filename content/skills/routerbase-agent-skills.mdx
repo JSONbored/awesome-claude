@@ -1,0 +1,141 @@
+---
+title: RouterBase Agent Skills
+slug: routerbase-agent-skills
+category: skills
+description: >-
+  Source-backed Agent Skills for using RouterBase as an OpenAI-compatible model
+  gateway: API integration, model routing, and media generation workflows for
+  chat, image, video, audio, and embeddings requests.
+cardDescription: >-
+  RouterBase skills for OpenAI-compatible API setup, model routing decisions,
+  fallback planning, and media generation validation.
+seoTitle: RouterBase Agent Skills for Claude Code, Codex, Cursor, and OpenClaw
+seoDescription: >-
+  Install RouterBase Agent Skills for AI coding agents that need OpenAI-compatible
+  RouterBase API integration, model routing, fallback plans, and media generation
+  validation with safe API-key handling.
+author: RouterBase
+authorProfileUrl: "https://routerbase.com/"
+dateAdded: "2026-07-08"
+repoUrl: "https://github.com/zenlee123/routerbase-agent-skills"
+documentationUrl: "https://github.com/zenlee123/routerbase-agent-skills#readme"
+websiteUrl: "https://routerbase.com/"
+downloadUrl: "https://github.com/zenlee123/routerbase-agent-skills/archive/refs/heads/main.zip"
+installable: true
+installCommand: "npx skills add zenlee123/routerbase-agent-skills"
+usageSnippet: >-
+  Install the RouterBase skill collection, then let your agent invoke the API
+  integration, model routing, or media generation skill for the current task.
+copySnippet: |-
+  npx skills add zenlee123/routerbase-agent-skills
+
+  Use the RouterBase model routing skill to choose a primary and fallback model
+  for this workload, then provide an OpenAI-compatible request example with
+  ROUTERBASE_API_KEY kept in environment variables.
+skillType: capability-pack
+skillLevel: advanced
+verificationStatus: validated
+verifiedAt: "2026-07-08"
+retrievalSources:
+  - "https://github.com/zenlee123/routerbase-agent-skills"
+  - "https://raw.githubusercontent.com/zenlee123/routerbase-agent-skills/main/README.md"
+  - "https://raw.githubusercontent.com/zenlee123/routerbase-agent-skills/main/skills/routerbase-api-integration/SKILL.md"
+  - "https://raw.githubusercontent.com/zenlee123/routerbase-agent-skills/main/skills/routerbase-model-routing/SKILL.md"
+  - "https://raw.githubusercontent.com/zenlee123/routerbase-agent-skills/main/skills/routerbase-media-generation/SKILL.md"
+  - "https://routerbase.com/"
+testedPlatforms:
+  - Agent Skills compatible hosts
+  - Claude Code compatible skill installers
+  - Codex compatible skill installers
+  - Cursor compatible skill installers
+  - OpenClaw compatible skill installers
+prerequisites:
+  - "An Agent Skills compatible host or installer that can install GitHub-hosted skills."
+  - "A RouterBase account and API key only when running live API requests."
+  - "Current RouterBase model, pricing, and feature checks before production routing decisions."
+safetyNotes:
+  - "The skills can produce live API request examples for external model providers through RouterBase; review prompts, model choices, costs, and retry behavior before running them in production."
+  - "Keep ROUTERBASE_API_KEY in environment variables or a secret manager, and do not paste live keys into public prompts, logs, screenshots, repository files, or pull requests."
+  - "Model catalogs, prices, supported modalities, JSON mode, tool calling, prompt caching, and media generation behavior can change; verify against current RouterBase data before rollout."
+privacyNotes:
+  - "RouterBase requests may include prompts, media inputs, embeddings text, generated outputs, model IDs, account routing metadata, response logs, and billing-relevant usage details."
+  - "Redact customer data, private prompts, API keys, account IDs, and proprietary media before sharing examples or debugging transcripts publicly."
+tags:
+  - routerbase
+  - skills
+  - llm-routing
+  - openai-compatible
+  - media-generation
+  - ai-gateway
+keywords:
+  - RouterBase Agent Skills
+  - RouterBase Claude Code skills
+  - RouterBase Codex skills
+  - OpenAI compatible gateway skill
+  - LLM routing skill
+  - AI model gateway skill
+readingTime: 6
+difficultyScore: 72
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# RouterBase Agent Skills
+
+The `zenlee123/routerbase-agent-skills` repository packages three source-backed
+Agent Skills for working with [routerbase](https://routerbase.com/):
+
+- `routerbase-api-integration` for OpenAI-compatible client setup and safe API key handling.
+- `routerbase-model-routing` for primary/fallback model plans across chat, image, video, audio, and embeddings workloads.
+- `routerbase-media-generation` for validating media generation requests, output formats, and async workflow assumptions.
+
+Use this listing for the installable skill collection. Use separate product or
+tool listings when evaluating RouterBase itself rather than reusable agent
+instructions.
+
+## Knowledge Freshness
+
+RouterBase model availability, pricing, modality support, routing behavior,
+JSON mode, tool calling, prompt caching, and media generation details can change
+with upstream providers. Treat the skills as workflow guidance, then verify
+current catalog data and feature support immediately before production use.
+
+## Core Workflow
+
+Install the full skill collection:
+
+```bash
+npx skills add zenlee123/routerbase-agent-skills
+```
+
+Then invoke the relevant skill by task:
+
+```text
+Use RouterBase model routing to choose a primary model and two fallbacks for a
+latency-sensitive support chatbot. Include validation tests and safe retry rules.
+```
+
+For live requests, keep credentials outside prompts and source files:
+
+```bash
+export ROUTERBASE_API_KEY="..."
+```
+
+## What The Skills Cover
+
+1. OpenAI-compatible client configuration using RouterBase as the base URL.
+2. Model shortlist and fallback planning by workload and modality.
+3. Pricing, latency, context, streaming, JSON mode, and tool-calling checks.
+4. Media generation validation for images, video, and audio.
+5. Safety and privacy guidance for API keys, prompts, logs, and customer data.
+
+## Quality Gates
+
+- Model IDs and pricing are verified against current RouterBase data.
+- API keys are referenced only through environment variables or a secret manager.
+- Examples include concrete pass/fail validation checks.
+- Retry logic distinguishes transient failures from authentication, validation, and policy errors.
+- High-stakes outputs require human review before use.
