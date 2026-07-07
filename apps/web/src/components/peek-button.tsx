@@ -28,6 +28,15 @@ import { entryDomId } from "@/lib/entry-identity";
 import { cn } from "@/lib/utils";
 import { setHotPeek, clearHotPeek, installPeekShortcut } from "@/lib/peek-hotkey";
 import { LazyEntryAuthorAttribution, LazyLinkedSourceCitations } from "./lazy-linked-attribution";
+import { trackEvent } from "@/lib/analytics";
+import {
+  peekCopyAnalyticsData,
+  peekCopyAnalyticsEvent,
+  peekCopyIntentType,
+  peekPanelActionAnalyticsData,
+  peekPanelActionAnalyticsEvent,
+} from "@/lib/peek-panel-cta-events";
+import { recordIntentEvent } from "@/lib/intent-event-client";
 
 export interface PeekHandle {
   open: () => void;
@@ -99,6 +108,28 @@ function PeekBody({ entry, peekId }: { entry: Entry; peekId: string }) {
   const [harness, setHarness] = useHarnessPref(entry.category, entry.slug, harnessAvailable);
   const variants = React.useMemo(() => variantsForEntry(entry, harness), [entry, harness]);
 
+  const onPeekCopy = React.useCallback(
+    (variant: CopyVariant) => {
+      trackEvent(
+        peekCopyAnalyticsEvent(variant),
+        peekCopyAnalyticsData(entry.category, entry.slug, variant),
+      );
+      void recordIntentEvent(peekCopyIntentType(variant), entry);
+    },
+    [entry],
+  );
+
+  const onPeekAction = React.useCallback(
+    (action: "dossier" | "source" | "docs") => {
+      trackEvent(
+        peekPanelActionAnalyticsEvent(action),
+        peekPanelActionAnalyticsData(entry.category, entry.slug, action),
+      );
+      if (action === "source") void recordIntentEvent("open", entry);
+    },
+    [entry],
+  );
+
   return (
     <>
       <SheetHeader className="space-y-3 text-left">
@@ -166,6 +197,7 @@ function PeekBody({ entry, peekId }: { entry: Entry; peekId: string }) {
             variants={variants}
             entryTitle={entry.title}
             labelId={`peek-snippet-${peekId}`}
+            onCopied={onPeekCopy}
           />
         </div>
         {variants.find((v) => v.id === variants.find((x) => x.value)?.id)?.value && (
@@ -182,6 +214,7 @@ function PeekBody({ entry, peekId }: { entry: Entry; peekId: string }) {
         <Link
           to="/entry/$category/$slug"
           params={{ category: entry.category, slug: entry.slug }}
+          onClick={() => onPeekAction("dossier")}
           className="inline-flex h-8 items-center gap-1.5 rounded-md bg-ink px-3 text-xs font-medium text-background hover:bg-ink/90"
         >
           Open dossier <ArrowUpRight className="h-3 w-3" />
@@ -191,6 +224,7 @@ function PeekBody({ entry, peekId }: { entry: Entry; peekId: string }) {
             href={entry.sourceUrl}
             target="_blank"
             rel="noreferrer"
+            onClick={() => onPeekAction("source")}
             className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-surface px-3 text-xs font-medium text-ink hover:bg-surface-2"
           >
             <GitBranch className="h-3.5 w-3.5" /> Source <ExternalLink className="h-3 w-3" />
@@ -201,6 +235,7 @@ function PeekBody({ entry, peekId }: { entry: Entry; peekId: string }) {
             href={entry.docsUrl}
             target="_blank"
             rel="noreferrer"
+            onClick={() => onPeekAction("docs")}
             className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-surface px-3 text-xs font-medium text-ink hover:bg-surface-2"
           >
             <BookOpen className="h-3.5 w-3.5" /> Docs <ExternalLink className="h-3 w-3" />

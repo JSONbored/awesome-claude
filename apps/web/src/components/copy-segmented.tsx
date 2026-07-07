@@ -21,6 +21,8 @@ interface Props {
   hideCopy?: boolean;
   /** Optional id for aria-labelledby on the radiogroup. */
   labelId?: string;
+  /** Optional hook after a successful clipboard write. */
+  onCopied?: (variant: CopyVariant) => void;
 }
 
 /**
@@ -35,6 +37,7 @@ export function CopySegmented({
   className,
   hideCopy = false,
   labelId,
+  onCopied,
 }: Props) {
   const [pref, setPref] = useCopyPref();
   const available = variants.filter((v) => !!v.value);
@@ -55,11 +58,12 @@ export function CopySegmented({
       toast.success(msg);
       if (liveRef.current) liveRef.current.textContent = msg;
       setJustCopied(true);
+      onCopied?.(active);
       window.setTimeout(() => setJustCopied(false), 1200);
     } catch {
       toast.error("Copy failed");
     }
-  }, [payload, active, entryTitle]);
+  }, [payload, active, entryTitle, onCopied]);
 
   const moveBy = (delta: number) => {
     const idx = available.findIndex((v) => v.id === active);
