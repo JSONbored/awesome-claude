@@ -9,6 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { absoluteShareUrl } from "@/lib/share-url-lib";
 
 export interface ShareMenuProps {
   /** Absolute or root-relative URL of the entry page. */
@@ -23,12 +24,6 @@ export interface ShareMenuProps {
   raycastUrl?: string;
 }
 
-function abs(url: string) {
-  if (typeof window === "undefined") return url;
-  if (/^https?:\/\//.test(url)) return url;
-  return `${window.location.origin}${url}`;
-}
-
 async function copy(value: string, label: string) {
   try {
     await navigator.clipboard.writeText(value);
@@ -39,7 +34,10 @@ async function copy(value: string, label: string) {
 }
 
 export function ShareMenu({ url, title, description, llmsUrl, ogUrl, raycastUrl }: ShareMenuProps) {
-  const absolute = abs(url);
+  const absolute = absoluteShareUrl(
+    url,
+    typeof window === "undefined" ? "" : window.location.origin,
+  );
   const citation = description
     ? `[${title}](${absolute}) — ${description}`
     : `[${title}](${absolute})`;
