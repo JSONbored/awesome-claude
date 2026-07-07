@@ -1969,9 +1969,9 @@ describe("source-repo-signals-fetch-lib parseGitHubRepoKey", () => {
     expect(parseGitHubRepoKey("only-owner")).toBeNull();
     expect(parseGitHubRepoKey("owner/repo/extra")).toBeNull();
     expect(parseGitHubRepoKey("owner/repo@evil.com")).toBeNull();
-    await expect(fetchGitHubSourceSignal("bad/key/extra", fetch)).rejects.toThrow(
-      "invalid_repo:bad/key/extra",
-    );
+    await expect(
+      fetchGitHubSourceSignal("bad/key/extra", fetch),
+    ).rejects.toThrow("invalid_repo:bad/key/extra");
   });
 });
 
