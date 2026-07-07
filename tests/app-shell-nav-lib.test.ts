@@ -14,6 +14,11 @@ describe("app-shell-nav-lib", () => {
     expect(shellNavItemActive("/trending", "/browse")).toBe(false);
   });
 
+  it("treats the home route as active only on exact match", () => {
+    expect(shellNavItemActive("/", "/")).toBe(true);
+    expect(shellNavItemActive("/browse", "/")).toBe(false);
+  });
+
   it("groups mobile navigation into product areas", () => {
     expect(SHELL_PRIMARY_NAV.map((item) => item.to)).toContain("/quality");
     expect(SHELL_MOBILE_NAV_SECTIONS.map((section) => section.id)).toEqual([
@@ -27,5 +32,11 @@ describe("app-shell-nav-lib", () => {
         (link) => link.to === "/integrations/mcp-server",
       ),
     ).toBe(true);
+    expect(flattenShellMobileNav()).toHaveLength(
+      SHELL_MOBILE_NAV_SECTIONS.reduce(
+        (count, section) => count + section.links.length,
+        0,
+      ),
+    );
   });
 });
