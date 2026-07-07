@@ -2,14 +2,10 @@ import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-route
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import {
-  ArrowUpRight,
-  BookOpen,
   ExternalLink,
-  GitBranch,
   ShieldCheck,
   AlertTriangle,
   ListChecks,
-  Code2,
   Sparkles,
   Star,
   FileText,
@@ -56,15 +52,16 @@ import { SourceCitations } from "@/components/source-citations";
 import { CitationFacts } from "@/components/citation-facts";
 import { ProvenanceBlock } from "@/components/provenance-block";
 import { StickyMetaBar } from "@/components/sticky-meta-bar";
+import { EntryDetailCommandCenter } from "@/components/entry-detail-command-center";
+import { EntryDetailMobileActionBar } from "@/components/entry-detail-mobile-action-bar";
 import { EntrySignalsPanel } from "@/components/entry-signals-panel";
 import { EntryBrandMark } from "@/components/entry-brand-mark";
-import { TRUST_LABEL, PLATFORM_SUPPORT_LABEL, type Entry } from "@/types/registry";
+import { PLATFORM_SUPPORT_LABEL, type Entry } from "@/types/registry";
 import { installRiskLevel, INSTALL_RISK_LABEL, INSTALL_RISK_DETAIL } from "@/lib/trust";
 import { useEffect, useMemo, useState } from "react";
 import { useRecents } from "@/lib/recents";
 import { useCopyPref, useHarnessPref, type CopyVariant } from "@/lib/dossier-prefs";
 import { variantsForEntry } from "@/components/copy-segmented";
-import { HarnessVariantPicker } from "@/components/harness-variant-picker";
 import type { Harness } from "@/types/registry";
 import { cn } from "@/lib/utils";
 
@@ -381,129 +378,19 @@ function Dossier() {
           <EntryFacets entry={entry} density="card" className="mt-3" />
         </div>
 
-        {/* Sticky install panel */}
-        <aside className="min-w-0 lg:sticky lg:top-20 lg:self-start">
-          <div className="overflow-hidden rounded-xl border border-border bg-surface">
-            <div className="flex items-center justify-between border-b border-border px-4 py-2.5">
-              <div className="eyebrow">Install</div>
-              {entry.sourceUrl && (
-                <a
-                  href={entry.sourceUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-1 text-xs text-ink-muted hover:text-ink"
-                >
-                  Source <ArrowUpRight className="h-3 w-3" />
-                </a>
-              )}
-            </div>
-            {harnessAvailable.length >= 2 && (
-              <div className="border-b border-border px-3 py-2">
-                <div className="mb-1.5 text-[10px] uppercase tracking-wider text-ink-subtle">
-                  Harness variant
-                </div>
-                <HarnessVariantPicker
-                  available={harnessAvailable}
-                  value={harness as Harness | null}
-                  onChange={setHarness}
-                />
-              </div>
-            )}
-            <div className="flex gap-1 border-b border-border px-3 pt-2">
-              {(["install", "config", "full"] as const).map((t) => {
-                const payload = liveVariants.find((v) => v.id === t)?.value;
-                if (!payload) return null;
-                return (
-                  <button
-                    key={t}
-                    onClick={() => setTab(t)}
-                    aria-pressed={tab === t}
-                    className={cn(
-                      "rounded-t-md px-2.5 py-1.5 text-xs font-medium capitalize focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60",
-                      tab === t ? "bg-background text-ink" : "text-ink-muted hover:text-ink",
-                    )}
-                  >
-                    {t}
-                  </button>
-                );
-              })}
-            </div>
-            <div className="bg-background p-3">
-              {tabPayload ? (
-                <>
-                  <pre className="max-h-64 overflow-auto rounded-md bg-surface-2 p-3 font-mono text-[12px] leading-relaxed text-ink">
-                    <code>{tabPayload}</code>
-                  </pre>
-                  <div className="mt-3 flex items-center gap-2">
-                    <CopyButton
-                      value={tabPayload}
-                      label={`Copy ${tab}`}
-                      size="md"
-                      className="flex-1 justify-center"
-                    />
-                  </div>
-                </>
-              ) : (
-                <div className="rounded-md bg-surface-2 p-4 text-xs text-ink-muted">
-                  No installable payload for this tab.
-                </div>
-              )}
-            </div>
-
-            <div className="border-t border-border px-4 py-3">
-              <div className="eyebrow mb-2">Readiness</div>
-              <ul className="space-y-1.5 text-xs">
-                <Readiness
-                  label="Trust"
-                  value={TRUST_LABEL[entry.trust]}
-                  ok={entry.trust === "trusted"}
-                />
-                <Readiness label="Source" value={entry.source} ok={entry.source !== "unverified"} />
-                <Readiness
-                  label="Safety notes"
-                  value={entry.safetyNotes ? "Present" : "Missing"}
-                  ok={!!entry.safetyNotes}
-                />
-                <Readiness
-                  label="Reviewed"
-                  value={entry.reviewed ? "Yes" : "No"}
-                  ok={!!entry.reviewed}
-                />
-              </ul>
-            </div>
-          </div>
-
-          <div className="mt-3 flex flex-col gap-1.5 text-xs">
-            {entry.docsUrl && (
-              <a
-                href={entry.docsUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-1.5 text-ink-muted hover:text-ink"
-              >
-                <BookOpen className="h-3.5 w-3.5" /> Documentation{" "}
-                <ExternalLink className="h-3 w-3" />
-              </a>
-            )}
-            {entry.sourceUrl && (
-              <a
-                href={entry.sourceUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-1.5 text-ink-muted hover:text-ink"
-              >
-                <GitBranch className="h-3.5 w-3.5" /> Source repository{" "}
-                <ExternalLink className="h-3 w-3" />
-              </a>
-            )}
-            <Link
-              to="/browse"
-              className="inline-flex items-center gap-1.5 text-ink-muted hover:text-ink"
-            >
-              <Code2 className="h-3.5 w-3.5" /> Registry JSON · LLM text
-            </Link>
-          </div>
-        </aside>
+        <EntryDetailCommandCenter
+          entry={entry}
+          risk={risk}
+          harnessAvailable={harnessAvailable}
+          harness={harness as Harness | null}
+          onHarnessChange={setHarness}
+          liveVariants={liveVariants}
+          tab={tab}
+          onTabChange={setTab}
+          tabPayload={tabPayload}
+          relatedCount={rel.length}
+          guideCount={guides.length}
+        />
       </header>
       <div id="dossier-header-sentinel" aria-hidden className="h-px w-full" />
 
@@ -823,6 +710,8 @@ function Dossier() {
           </div>
         </aside>
       </div>
+      <EntryDetailMobileActionBar entry={entry} copyPayload={tabPayload} />
+      <div className="h-14 lg:hidden" aria-hidden />
     </div>
   );
 }
@@ -1220,18 +1109,5 @@ function DossierSection({
       </div>
       <div className="prose-editorial text-sm">{children}</div>
     </section>
-  );
-}
-
-function Readiness({ label, value, ok }: { label: string; value: string; ok: boolean }) {
-  return (
-    <li className="flex items-center justify-between">
-      <span className="text-ink-muted">{label}</span>
-      <span
-        className={cn("font-medium capitalize", ok ? "text-trust-trusted" : "text-trust-review")}
-      >
-        {value}
-      </span>
-    </li>
   );
 }
