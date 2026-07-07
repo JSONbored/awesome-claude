@@ -57,3 +57,27 @@ export function comparisonTrayQuickCompareAnalyticsData(count: number) {
 export function comparisonTrayFullCompareAnalyticsData(count: number) {
   return { count, surface: COMPARE_TRAY_SURFACE };
 }
+
+export function entryDetailIntegrationAnalyticsEvent(linkId: string): string {
+  return `detail_integration_${linkId.replace(/-/g, "_")}`;
+}
+
+export function entryDetailIntegrationAnalyticsData(
+  category: string,
+  slug: string,
+  linkId: string,
+) {
+  return {
+    entry: entryDetailEntryKey(category, slug),
+    link: linkId,
+    surface: ENTRY_DETAIL_COMMAND_CENTER_SURFACE,
+  };
+}
+
+export function entryDetailMobileLlmsAnalyticsData(category: string, slug: string) {
+  return {
+    entry: entryDetailEntryKey(category, slug),
+    link: "llms",
+    surface: "detail-mobile",
+  };
+}

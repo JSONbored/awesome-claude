@@ -15,4 +15,7 @@ export {
   entryDetailCopyAnalyticsEvent,
   entryDetailCopyIntentType,
   entryDetailEntryKey,
+  entryDetailIntegrationAnalyticsData,
+  entryDetailIntegrationAnalyticsEvent,
+  entryDetailMobileLlmsAnalyticsData,
 } from "@/lib/entry-detail-cta-events-lib";

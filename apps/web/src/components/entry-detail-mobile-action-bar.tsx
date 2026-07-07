@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { toast } from "sonner";
-import { Copy, ExternalLink, Package, FileText } from "lucide-react";
+import { Copy, ExternalLink, Package, FileText, Terminal } from "lucide-react";
 import type { Entry } from "@/types/registry";
 import {
   ENTRY_COMMAND_CENTER_ID,
@@ -8,6 +8,12 @@ import {
 } from "@/lib/entry-detail-command-center";
 import { siteConfig } from "@/lib/site";
 import { absoluteUrl } from "@/lib/seo";
+import { trackEvent } from "@/lib/analytics";
+import {
+  entryDetailMobileLlmsAnalyticsData,
+  entryDetailIntegrationAnalyticsEvent,
+} from "@/lib/entry-detail-cta-events";
+import { recordIntentEvent } from "@/lib/intent-event-client";
 import { cn } from "@/lib/utils";
 
 type EntryDetailMobileActionBarProps = {
@@ -49,6 +55,12 @@ export function EntryDetailMobileActionBar({
       }
 
       if (action.kind === "link" && action.href) {
+        if (action.id === "llms") {
+          trackEvent(entryDetailIntegrationAnalyticsEvent("llms"), {
+            ...entryDetailMobileLlmsAnalyticsData(entry.category, entry.slug),
+          });
+          void recordIntentEvent("open", entry);
+        }
         if (action.external) {
           window.open(action.href, "_blank", "noopener,noreferrer");
         } else {
@@ -56,7 +68,7 @@ export function EntryDetailMobileActionBar({
         }
       }
     },
-    [actions],
+    [actions, entry],
   );
 
   return (
@@ -68,6 +80,8 @@ export function EntryDetailMobileActionBar({
               <Package className="h-3.5 w-3.5" />
             ) : action.id === "copy" ? (
               <Copy className="h-3.5 w-3.5" />
+            ) : action.id === "llms" ? (
+              <Terminal className="h-3.5 w-3.5" />
             ) : action.id === "source" || action.id === "suggest" ? (
               <ExternalLink className="h-3.5 w-3.5" />
             ) : (

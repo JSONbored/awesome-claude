@@ -8,6 +8,9 @@ import {
   entryDetailCopyAnalyticsData,
   entryDetailCopyAnalyticsEvent,
   entryDetailCopyIntentType,
+  entryDetailIntegrationAnalyticsData,
+  entryDetailIntegrationAnalyticsEvent,
+  entryDetailMobileLlmsAnalyticsData,
 } from "@/lib/entry-detail-cta-events-lib";
 
 describe("entry detail cta events lib", () => {
@@ -47,6 +50,22 @@ describe("entry detail cta events lib", () => {
     expect(comparisonTrayFullCompareAnalyticsData(4)).toEqual({
       count: 4,
       surface: "compare-tray",
+    });
+  });
+
+  it("builds integration CTA analytics without sensitive payloads", () => {
+    expect(entryDetailIntegrationAnalyticsEvent("api-json")).toBe("detail_integration_api_json");
+    expect(
+      entryDetailIntegrationAnalyticsData("mcp", "browser", "llms"),
+    ).toEqual({
+      entry: "mcp/browser",
+      link: "llms",
+      surface: "detail-command-center",
+    });
+    expect(entryDetailMobileLlmsAnalyticsData("skills", "demo")).toEqual({
+      entry: "skills/demo",
+      link: "llms",
+      surface: "detail-mobile",
     });
   });
 });
