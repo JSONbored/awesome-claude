@@ -31,21 +31,9 @@ import {
 } from "@/lib/recents";
 import { subscribeToNewsletter } from "@/lib/api/newsletter";
 import { hashSearch } from "@/lib/saved-search-hash-lib";
+import { applyToBrowseSearch } from "@/lib/saved-search-nav-lib";
 import { CopyButton } from "@/components/copy-button";
 import { cn } from "@/lib/utils";
-
-function applyToBrowseSearch(s: SavedSearch) {
-  return {
-    q: s.q ?? "",
-    category: s.category ?? "",
-    trust: s.trust ?? "",
-    source: s.source ?? "",
-    platform: s.platform ?? "",
-    sort: (s.sort as "popular" | "newest" | "title") ?? "popular",
-    view: "row" as const,
-    compare: "",
-  };
-}
 
 export function savedFeedUrl(s: SavedSearch): string {
   const p = new URLSearchParams();
