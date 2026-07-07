@@ -1,22 +1,10 @@
 import { contributorForSubmitter } from "@/data/contributors";
-import type { Contributor, Entry } from "@/types/registry";
+import type { Entry } from "@/types/registry";
 
-export function contributorProfileStats(contributor: Contributor) {
-  return {
-    accepted: contributor.acceptedCount,
-    reviewed: contributor.reviewedCount ?? 0,
-    sourceLinked: contributor.sourceSubmissionCount ?? 0,
-    categories: contributor.categories?.length ?? 0,
-  };
-}
-
-export function contributorCardSummary(contributor: Contributor) {
-  const stats = contributorProfileStats(contributor);
-  const parts = [`${stats.accepted} accepted`];
-  if (stats.reviewed > 0) parts.push(`${stats.reviewed} reviewed`);
-  if (stats.sourceLinked > 0) parts.push(`${stats.sourceLinked} source-linked`);
-  return parts.join(" · ");
-}
+export {
+  contributorCardSummary,
+  contributorProfileStats,
+} from "@/lib/contributor-profile-summary-lib";
 
 export type SubmitterAttribution =
   | { kind: "contributor"; slug: string; label: string }
