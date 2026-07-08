@@ -46,6 +46,11 @@ import {
 } from "@/lib/compare-operational-fit-heatmap";
 import { CompareOperationalFitHeatmapPanel } from "@/components/compare-operational-fit-heatmap-panel";
 import {
+  compareDeploymentRiskMapState,
+  type DeploymentRiskPresetId,
+} from "@/lib/compare-deployment-risk-map";
+import { CompareDeploymentRiskMapPanel } from "@/components/compare-deployment-risk-map-panel";
+import {
   compareDrawerDecisionRows,
   compareSignalToneClass,
   type CompareSignalValue,
@@ -338,6 +343,7 @@ export function CompareDrawer() {
   const [scenario, setScenario] = React.useState<CompareScenarioId>("balanced");
   const [rolloutPreset, setRolloutPreset] = React.useState<RolloutPresetId>("team");
   const [fitPreset, setFitPreset] = React.useState<OperationalFitPresetId>("team-default");
+  const [riskPreset, setRiskPreset] = React.useState<DeploymentRiskPresetId>("balanced");
   const { drawerUi, emptyHint, shareUrl, divergingDecisionLabels, actionRowDiverges, actionCells } =
     compareDrawerInteractiveUiState(items);
   const decisionBrief = compareDecisionBriefState(items);
@@ -345,6 +351,7 @@ export function CompareDrawer() {
   const evidenceGaps = compareEvidenceGapsState(items);
   const rolloutReadiness = compareRolloutReadinessState(items, rolloutPreset);
   const operationalFitHeatmap = compareOperationalFitHeatmapState(items, fitPreset);
+  const deploymentRiskMap = compareDeploymentRiskMapState(items, riskPreset);
   const { bannerTexts, fullViewSearch } = drawerUi;
 
   const onClear = () => {
@@ -464,6 +471,13 @@ export function CompareDrawer() {
               state={operationalFitHeatmap}
               selectedPreset={fitPreset}
               onSelectPreset={setFitPreset}
+              compact
+              className="m-3 mt-0"
+            />
+            <CompareDeploymentRiskMapPanel
+              state={deploymentRiskMap}
+              selectedPreset={riskPreset}
+              onSelectPreset={setRiskPreset}
               compact
               className="m-3 mt-0"
             />
