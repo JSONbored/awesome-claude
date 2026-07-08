@@ -32,6 +32,7 @@ import {
 import { subscribeToNewsletter } from "@/lib/api/newsletter";
 import { hashSearch } from "@/lib/saved-search-hash-lib";
 import { applyToBrowseSearch } from "@/lib/saved-search-nav-lib";
+import { defaultAlerts } from "@/lib/saved-search-default-alerts-lib";
 import { savedFeedUrl } from "@/lib/saved-search-feed-url-lib";
 import { CopyButton } from "@/components/copy-button";
 import { cn } from "@/lib/utils";
@@ -53,10 +54,6 @@ const CHANNEL_META: {
 ];
 
 const CADENCES: AlertCadence[] = ["instant", "daily", "weekly"];
-
-function defaultAlerts(): AlertSchedule {
-  return { enabled: true, channels: ["inapp"], cadence: "instant" };
-}
 
 function AlertEditor({
   search,
