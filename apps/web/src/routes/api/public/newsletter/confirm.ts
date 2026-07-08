@@ -6,7 +6,7 @@ import { BodyTooLargeError, readRequestTextWithinLimit } from "@/lib/api-securit
 import { getEnvString } from "@/lib/cloudflare-env.server";
 import { verifyConfirmToken } from "@/lib/newsletter-token.server";
 import { addNewsletterContact } from "@/routes/api/newsletter/subscribe";
-import { buildWelcomeEmail } from "@/lib/newsletter-emails";
+import { buildWelcomeEmail, escapeHtml } from "@/lib/newsletter-emails";
 import { sendResendEmail } from "@/lib/newsletter-send.server";
 import { siteConfig } from "@/lib/site";
 
@@ -41,14 +41,6 @@ function resultPage(opts: {
     status: opts.status ?? (opts.ok ? 200 : 400),
     headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" },
   });
-}
-
-function escapeHtml(value: string): string {
-  return value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;");
 }
 
 const consumedConfirmTokens = new Map<string, number>();
