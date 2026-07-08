@@ -86,6 +86,7 @@ export function buildEntryTocItems(input: {
   items.push({ id: "citation-facts", label: "Citation facts" });
   items.push({ id: "adoption-plan", label: "Adoption plan" });
   items.push({ id: "decision-playbook", label: "Decision playbook" });
+  items.push({ id: "evidence-matrix", label: "Evidence matrix" });
   if (input.hasSafetyNotes) items.push({ id: "safety", label: "Safety notes" });
   if (input.hasPrivacyNotes) items.push({ id: "privacy", label: "Privacy notes" });
   if (input.hasPrerequisites) items.push({ id: "prerequisites", label: "Prerequisites" });
