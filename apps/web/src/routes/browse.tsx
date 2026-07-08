@@ -28,6 +28,8 @@ import { BrowseCompareSelectionBanner } from "@/components/browse-compare-select
 import { browseCompareSelectionContextState } from "@/lib/resource-card-trust-decision";
 import { browseRolloutSignalsState } from "@/lib/browse-rollout-signals";
 import { BrowseRolloutSignalsPanel } from "@/components/browse-rollout-signals-panel";
+import { browseAdoptionQueueState, type BrowseAdoptionPresetId } from "@/lib/browse-adoption-queue";
+import { BrowseAdoptionQueuePanel } from "@/components/browse-adoption-queue-panel";
 import {
   CATEGORIES,
   type Category,
@@ -340,6 +342,11 @@ function Browse() {
     [compare.items],
   );
   const browseRolloutSignals = useMemo(() => browseRolloutSignalsState(results, 12), [results]);
+  const [adoptionPreset, setAdoptionPreset] = React.useState<BrowseAdoptionPresetId>("balanced");
+  const browseAdoptionQueue = useMemo(
+    () => browseAdoptionQueueState(results, adoptionPreset, 8),
+    [results, adoptionPreset],
+  );
 
   const activeCount =
     Number(!!sp.q) +
@@ -622,7 +629,7 @@ function Browse() {
 
         {/* Results */}
         <div>
-          <div className="sticky top-16 z-20 -mx-4 flex flex-col gap-3 border-b border-border bg-background/95 px-4 pb-4 pt-2 backdrop-blur supports-[backdrop-filter]:bg-background/80 sm:-mx-6 sm:px-6">
+          <div className="sticky top-16 z-20 -mx-4 flex flex-col gap-3 border-b border-border bg-background/95 px-4 pb-4 pt-2 backdrop-blur supports-backdrop-filter:bg-background/80 sm:-mx-6 sm:px-6">
             <div className="flex items-center gap-2 rounded-lg border border-border bg-surface px-3 focus-within:border-accent/50 focus-within:ring-2 focus-within:ring-accent/40">
               <SearchIcon className="h-4 w-4 text-ink-muted" />
               <input
@@ -708,7 +715,7 @@ function Browse() {
                     value={sp.signal}
                     onChange={(e) => set({ signal: e.target.value })}
                     aria-label="Trust signal utility filter"
-                    className="h-7 max-w-[11rem] rounded-md border border-border bg-surface px-2 text-xs text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
+                    className="h-7 max-w-44 rounded-md border border-border bg-surface px-2 text-xs text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
                   >
                     {trustUtilityOptions.map((option) => (
                       <option key={option.id || "all"} value={option.id}>
@@ -814,6 +821,12 @@ function Browse() {
             />
           ) : null}
           <BrowseRolloutSignalsPanel state={browseRolloutSignals} className="mt-3" />
+          <BrowseAdoptionQueuePanel
+            state={browseAdoptionQueue}
+            selectedPreset={adoptionPreset}
+            onSelectPreset={setAdoptionPreset}
+            className="mt-3"
+          />
 
           {sp.category &&
             (() => {
@@ -828,7 +841,7 @@ function Browse() {
           {/* Mobile filter chips */}
           <div className="relative mt-4 lg:hidden">
             <div
-              className="flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+              className="scrollbar-none flex gap-2 overflow-x-auto pb-2 [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
               role="radiogroup"
               aria-label="Filter by category"
             >
@@ -850,13 +863,13 @@ function Browse() {
             </div>
             <span
               aria-hidden
-              className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-background to-transparent"
+              className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-linear-to-l from-background to-transparent"
             />
           </div>
 
           <div className="relative mt-2 lg:hidden">
             <div
-              className="flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+              className="scrollbar-none flex gap-2 overflow-x-auto pb-2 [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
               role="radiogroup"
               aria-label="Trust signal quick filters"
             >
@@ -875,7 +888,7 @@ function Browse() {
             </div>
             <span
               aria-hidden
-              className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-background to-transparent"
+              className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-linear-to-l from-background to-transparent"
             />
           </div>
 
