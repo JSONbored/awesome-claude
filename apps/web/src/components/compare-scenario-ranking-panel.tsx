@@ -3,13 +3,8 @@ import type {
   CompareScenarioRankingState,
 } from "@/lib/compare-scenario-ranking";
 import { COMPARE_SCENARIO_PRESETS } from "@/lib/compare-scenario-ranking";
+import { scoreDeltaText } from "@/lib/scenario-score-delta-lib";
 import { cn } from "@/lib/utils";
-
-function scoreDeltaText(delta: number): string {
-  if (delta === 0) return "Top score";
-  if (delta > 0) return `+${delta}`;
-  return `${delta}`;
-}
 
 export function CompareScenarioRankingPanel({
   state,
