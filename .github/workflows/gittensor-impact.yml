@@ -1,0 +1,60 @@
+name: Gittensor Impact
+
+# Renders the README contributor-impact card with scripts/gittensor-impact-card.mjs
+# (our own script, styled to this repo's brand — see apps/web/src/styles.css) and
+# publishes it to the gittensor-impact-assets branch, which the README embeds
+# directly. No third-party action: this replaced matthewevans/gittensor-impact-action
+# once its generic template no longer matched the site's design.
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "40 5 * * 1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gittensor-impact
+  cancel-in-progress: false
+
+jobs:
+  publish-impact-card:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # Scoped here rather than at workflow level (defense-in-depth): this is the
+    # only job that needs write access, to push the rendered SVG to the
+    # dedicated gittensor-impact-assets branch.
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: 22
+
+      - name: Render impact card
+        run: node scripts/gittensor-impact-card.mjs JSONbored/awesome-claude gittensor-impact-dark.svg
+
+      - name: Publish to gittensor-impact-assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          workdir="$RUNNER_TEMP/gittensor-impact-publish"
+          rm -rf "$workdir"
+          mkdir -p "$workdir"
+          cp gittensor-impact-dark.svg "$workdir/"
+          cd "$workdir"
+          git init -b gittensor-impact-assets --quiet
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add gittensor-impact-dark.svg
+          git commit -m "chore: refresh Gittensor impact card" --quiet
+          git push --force origin HEAD:gittensor-impact-assets
