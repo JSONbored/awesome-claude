@@ -6,6 +6,7 @@ import {
   savedSearchAlertTargetId,
   type SavedSearchAlertSearch,
 } from "@/lib/saved-search-alerts";
+import { entryDetailUrl, eventTargetId, type RegistryEvent } from "@/lib/watch-events-lib";
 import type { RegistryEntry } from "@/data/entry-normalize";
 import type { Entry } from "@/types/registry";
 
@@ -75,24 +76,6 @@ function saveState(state: StoredState) {
   }
 }
 
-interface RegistryEvent {
-  id?: string;
-  kind?: string;
-  category?: string;
-  slug?: string;
-  action?: string;
-  date?: string;
-  title?: string;
-  commit?: string;
-}
-
-function eventTargetId(event: RegistryEvent): string | null {
-  if (event.kind === "entry" && event.category && event.slug) {
-    return `entry:${event.category}/${event.slug}`;
-  }
-  return null;
-}
-
 function eventToAlert(event: RegistryEvent, target: WatchTarget): Alert | null {
   const targetId = eventTargetId(event);
   if (!targetId || targetId !== target.id || !event.date) return null;
@@ -130,11 +113,6 @@ function savedSearchSignature(searches: SavedSearchAlertSearch[]) {
       ].join("\t"),
     )
     .join("\n");
-}
-
-function entryDetailUrl(event: RegistryEvent) {
-  if (event.kind !== "entry" || !event.category || !event.slug) return null;
-  return `/data/entries/${encodeURIComponent(event.category)}/${encodeURIComponent(event.slug)}.json`;
 }
 
 async function loadEventEntries(events: RegistryEvent[]) {
