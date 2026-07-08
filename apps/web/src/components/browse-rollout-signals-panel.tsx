@@ -1,11 +1,6 @@
+import { toneClass } from "@/lib/browse-rollout-tone-lib";
 import type { BrowseRolloutSignalsState } from "@/lib/browse-rollout-signals";
 import { cn } from "@/lib/utils";
-
-function toneClass(tone: "good" | "watch" | "risk"): string {
-  if (tone === "good") return "border-trust-trusted/30 bg-trust-trusted/5 text-trust-trusted";
-  if (tone === "watch") return "border-amber-500/30 bg-amber-500/5 text-amber-900";
-  return "border-trust-blocked/30 bg-trust-blocked/5 text-trust-blocked";
-}
 
 export function BrowseRolloutSignalsPanel({
   state,
