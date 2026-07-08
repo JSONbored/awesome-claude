@@ -1,0 +1,209 @@
+---
+title: Telnyx MCP Server
+slug: telnyx-mcp-server
+category: mcp
+description: >-
+  The official Telnyx MCP server (@telnyx/mcp) that lets AI assistants use
+  Telnyx's communications APIs through function calling — messaging (SMS/MMS),
+  voice and call control, phone-number management, SIP connections,
+  verification, and wireless. The npx package proxies to Telnyx's hosted MCP
+  server over HTTPS and authenticates with a Telnyx API key.
+cardDescription: >-
+  Official Telnyx MCP server: use Telnyx messaging, voice, numbers, SIP,
+  verification, and wireless APIs via a package that proxies to Telnyx's hosted
+  server.
+seoTitle: Telnyx MCP Server — Messaging, Voice & Numbers for LLMs
+seoDescription: >-
+  The official Telnyx MCP server (@telnyx/mcp) gives LLMs tools across Telnyx's
+  communications APIs — SMS/MMS messaging, voice and call control, phone
+  numbers, SIP connections, verification, and wireless — proxying to Telnyx's
+  hosted MCP server with API-key auth.
+author: team-telnyx
+authorProfileUrl: https://github.com/team-telnyx
+submittedBy: davion-knight
+submittedByUrl: "https://github.com/davion-knight"
+dateAdded: "2026-07-08"
+brandName: Telnyx MCP Server
+brandDomain: telnyx.com
+websiteUrl: https://telnyx.com/
+repoUrl: https://github.com/team-telnyx/ai
+documentationUrl: https://github.com/team-telnyx/ai/tree/main/tools/mcp
+installable: true
+installCommand: npx -y @telnyx/mcp --api-key=YOUR_TELNYX_API_KEY
+usageSnippet: |
+  # Run directly from npm via npx (proxies to Telnyx's hosted MCP server)
+  npx -y @telnyx/mcp --api-key=YOUR_TELNYX_API_KEY
+
+  # Or provide the key via an environment variable
+  export TELNYX_API_KEY=YOUR_TELNYX_API_KEY
+  npx -y @telnyx/mcp
+copySnippet: |
+  {
+    "mcpServers": {
+      "telnyx": {
+        "command": "npx",
+        "args": ["-y", "@telnyx/mcp", "--api-key=YOUR_TELNYX_API_KEY"]
+      }
+    }
+  }
+configSnippet: |
+  {
+    "mcpServers": {
+      "telnyx": {
+        "command": "npx",
+        "args": ["-y", "@telnyx/mcp"],
+        "env": {
+          "TELNYX_API_KEY": "YOUR_TELNYX_API_KEY"
+        }
+      }
+    }
+  }
+prerequisites:
+  - Node.js and npm (the server runs via `npx -y @telnyx/mcp`)
+  - A Telnyx account and an API key (create one in the Telnyx portal under API Keys)
+  - Outbound HTTPS access, since the package proxies to Telnyx's hosted MCP server at api.telnyx.com
+  - An MCP-compatible client (Claude Desktop, Cursor, VS Code, etc.)
+safetyNotes:
+  - The Telnyx API key grants access to your account's communications APIs, so tools can take real actions — sending SMS/MMS, placing or controlling calls, and managing phone numbers, SIP connections, and messaging profiles.
+  - Messaging and voice operations reach real recipients and incur usage charges, so use a limited or test key and review actions before running against a production account.
+  - Access is bounded by the API key's permissions, not by tool naming; scope the key to the minimum needed and treat it as a secret.
+  - The package proxies your requests to Telnyx's hosted MCP server over HTTPS and sends the API key to authenticate against the Telnyx API.
+  - Prefer a dedicated or restricted key for autonomous agents rather than a full-access production key.
+privacyNotes:
+  - The server calls Telnyx APIs with your key; account, phone-number, messaging, and call data it returns is passed to the LLM/MCP client.
+  - Communications data can include phone numbers, message content, and call metadata, which are personal data, so avoid exposing production data to the model unnecessarily.
+  - Requests and the API key are sent to Telnyx's hosted MCP server; review Telnyx's data-handling terms before using real customer data.
+  - The API key lives in your MCP client config (argument or `TELNYX_API_KEY` env var) — keep that config out of version control and restrict access to it.
+sourceUrls:
+  - https://github.com/team-telnyx/ai/tree/main/tools/mcp
+  - https://www.npmjs.com/package/@telnyx/mcp
+  - https://developers.telnyx.com/
+  - https://github.com/team-telnyx/ai/blob/main/LICENSE
+tags:
+  - mcp
+  - telnyx
+  - communications
+  - messaging
+  - sms
+  - voice
+  - telephony
+  - nodejs
+keywords:
+  - Telnyx MCP server
+  - "@telnyx/mcp"
+  - Telnyx API MCP
+  - SMS MCP server
+  - voice MCP
+  - telephony MCP
+  - Model Context Protocol Telnyx
+  - Telnyx messaging MCP
+  - phone number MCP
+  - team-telnyx MCP server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+The **Telnyx MCP Server** is the official Model Context Protocol server from
+[Telnyx](https://github.com/team-telnyx). It lets LLMs and agentic clients use Telnyx's
+[communications APIs](https://developers.telnyx.com/) through function calling — spanning
+**messaging** (SMS/MMS), **voice and call control**, **phone-number management**, **SIP
+connections**, **verification**, and **wireless** — so an agent can operate real communications
+workflows conversationally.
+
+It ships as the npm package [`@telnyx/mcp`](https://www.npmjs.com/package/@telnyx/mcp) (v0.1.0,
+MIT), runs over `stdio` via `npx`, and authenticates with a **Telnyx API key**
+(`--api-key` or the `TELNYX_API_KEY` environment variable). Telnyx also hosts a remote MCP server at
+`https://api.telnyx.com/v2/mcp`, and this package **proxies MCP requests to that hosted server over
+HTTPS**. Setup details live in the
+[package README](https://github.com/team-telnyx/ai/tree/main/tools/mcp).
+
+## Source Review
+
+The following real repository and package sources were fetched and reviewed for this entry:
+
+- [tools/mcp README](https://github.com/team-telnyx/ai/tree/main/tools/mcp) — the `npx -y @telnyx/mcp` install command, the `--api-key` / `TELNYX_API_KEY` auth options, the hosted-server endpoint (`https://api.telnyx.com/v2/mcp`), and the note that the package proxies requests to the hosted MCP server over HTTP(S).
+- [npm: @telnyx/mcp](https://www.npmjs.com/package/@telnyx/mcp) — package name and version (`0.1.0`), MIT license, and the `telnyx-mcp` bin entry.
+- [Telnyx developer docs](https://developers.telnyx.com/) — the underlying Telnyx APIs (messaging, voice, numbers, SIP, verification, wireless) the hosted MCP server exposes.
+- [LICENSE](https://github.com/team-telnyx/ai/blob/main/LICENSE) — MIT License.
+
+Repository facts confirmed at review time: official `team-telnyx` organization, repository
+`team-telnyx/ai` (MCP package under `tools/mcp`), not archived, actively maintained, and released as
+`@telnyx/mcp` v0.1.0 on npm.
+
+## Features
+
+- **Messaging** — send and manage SMS/MMS through Telnyx's messaging APIs.
+- **Voice & call control** — place and control calls via Telnyx's voice APIs.
+- **Phone numbers** — search, order, and manage phone numbers on your account.
+- **SIP connections** — work with SIP connections and related voice configuration.
+- **Verification** — use Telnyx Verify for one-time passcodes and 2FA flows.
+- **Wireless** — manage Telnyx wireless (IoT SIM) resources.
+- **Hosted-server proxy** — the local package forwards MCP requests to Telnyx's hosted MCP server (`https://api.telnyx.com/v2/mcp`) over HTTPS, so tools stay current with the hosted service.
+- **API-key auth** — authenticates with a single Telnyx API key via `--api-key` or `TELNYX_API_KEY`.
+- **One-command install** — runs via `npx -y @telnyx/mcp` with no clone or build step.
+
+## Installation
+
+Run the published package with `npx`, providing your Telnyx API key:
+
+```bash
+npx -y @telnyx/mcp --api-key=YOUR_TELNYX_API_KEY
+```
+
+Add it to an MCP client (e.g. Claude Desktop's `claude_desktop_config.json`) using the API key
+argument:
+
+```json
+{
+  "mcpServers": {
+    "telnyx": {
+      "command": "npx",
+      "args": ["-y", "@telnyx/mcp", "--api-key=YOUR_TELNYX_API_KEY"]
+    }
+  }
+}
+```
+
+Or provide the key via an environment variable:
+
+```json
+{
+  "mcpServers": {
+    "telnyx": {
+      "command": "npx",
+      "args": ["-y", "@telnyx/mcp"],
+      "env": {
+        "TELNYX_API_KEY": "YOUR_TELNYX_API_KEY"
+      }
+    }
+  }
+}
+```
+
+The package proxies MCP requests to Telnyx's hosted server at `https://api.telnyx.com/v2/mcp`, so
+outbound HTTPS access is required.
+
+## Use Cases
+
+- **Conversational messaging** — send and manage SMS/MMS from an agentic workflow.
+- **Voice automation** — initiate and control calls through Telnyx's voice APIs.
+- **Number provisioning** — search for and order phone numbers on demand.
+- **Verification flows** — trigger one-time passcodes for 2FA use cases.
+- **Wireless management** — inspect and manage IoT SIM resources.
+
+## Safety and Privacy
+
+- **Real communications, real cost.** The API key can send SMS/MMS, place or control calls, and manage numbers/SIP — actions that reach real recipients and incur charges.
+- **Key is the boundary.** Scope the Telnyx API key to the minimum needed and prefer a restricted or test key for autonomous agents; treat it as a secret.
+- **Proxies to Telnyx.** Requests and the API key are sent to Telnyx's hosted MCP server over HTTPS; review Telnyx's data-handling terms before using real customer data.
+- **Data flows to the model.** Account, number, messaging, and call data (including phone numbers and message content) is returned to the LLM/MCP client.
+- **Credential hygiene.** The key lives in your MCP client config (argument or `TELNYX_API_KEY`) — keep it out of version control and restrict access.
+
+## Duplicate Check
+
+No existing entry in the directory matches this server. A search of all directory entries for "telnyx"
+across slugs, titles, repository URLs, and install commands returned no results, and there is no prior
+entry pointing at `github.com/team-telnyx/ai` or the npm package `@telnyx/mcp`. This is therefore a
+net-new, non-duplicate entry.
