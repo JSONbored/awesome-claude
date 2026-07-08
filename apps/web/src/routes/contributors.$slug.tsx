@@ -25,6 +25,7 @@ import { stringifyJsonLd } from "@/lib/json-ld";
 import { ogImageUrl } from "@/lib/og-image";
 import { submitterAttribution } from "@/lib/contributor-profile-summary";
 import type { Category, Contributor, Entry } from "@/types/registry";
+import { categoryBreakdown } from "@/lib/contributor-category-breakdown-lib";
 
 export const Route = createFileRoute("/contributors/$slug")({
   loader: ({ params }) => {
@@ -209,17 +210,6 @@ function ContributorPage() {
       </div>
     </div>
   );
-}
-
-function categoryBreakdown(entries: Entry[]) {
-  const counts = new Map<Category, number>();
-  for (const entry of entries) {
-    counts.set(entry.category, (counts.get(entry.category) ?? 0) + 1);
-  }
-
-  return [...counts.entries()]
-    .map(([category, count]) => ({ category, count }))
-    .sort((left, right) => right.count - left.count || left.category.localeCompare(right.category));
 }
 
 function ContributorStat({
