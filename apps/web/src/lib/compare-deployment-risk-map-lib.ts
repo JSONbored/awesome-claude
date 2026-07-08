@@ -3,6 +3,13 @@ import type { Entry } from "@/types/registry";
 export type DeploymentRiskPresetId = "balanced" | "security" | "speed";
 export type DeploymentRiskBand = "low" | "medium" | "high";
 
+/** Tailwind border/background/text classes for a deployment risk band chip. */
+export function deploymentRiskBandClass(band: DeploymentRiskBand): string {
+  if (band === "high") return "border-trust-blocked/35 bg-trust-blocked/5 text-trust-blocked";
+  if (band === "medium") return "border-amber-500/35 bg-amber-500/5 text-amber-900";
+  return "border-trust-trusted/35 bg-trust-trusted/5 text-trust-trusted";
+}
+
 export type DeploymentRiskRow = {
   id: string;
   label: string;

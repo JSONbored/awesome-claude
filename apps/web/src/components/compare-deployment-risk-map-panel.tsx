@@ -1,8 +1,8 @@
 import type {
   CompareDeploymentRiskMapState,
-  DeploymentRiskBand,
   DeploymentRiskPresetId,
 } from "@/lib/compare-deployment-risk-map";
+import { deploymentRiskBandClass } from "@/lib/compare-deployment-risk-map-lib";
 import { cn } from "@/lib/utils";
 
 const PRESETS: { id: DeploymentRiskPresetId; label: string }[] = [
@@ -10,12 +10,6 @@ const PRESETS: { id: DeploymentRiskPresetId; label: string }[] = [
   { id: "security", label: "Security" },
   { id: "speed", label: "Speed" },
 ];
-
-function bandClass(band: DeploymentRiskBand): string {
-  if (band === "high") return "border-trust-blocked/35 bg-trust-blocked/5 text-trust-blocked";
-  if (band === "medium") return "border-amber-500/35 bg-amber-500/5 text-amber-900";
-  return "border-trust-trusted/35 bg-trust-trusted/5 text-trust-trusted";
-}
 
 export function CompareDeploymentRiskMapPanel({
   state,
@@ -78,7 +72,7 @@ export function CompareDeploymentRiskMapPanel({
                 <span
                   className={cn(
                     "inline-flex rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-wide",
-                    bandClass(entry.riskBand),
+                    deploymentRiskBandClass(entry.riskBand),
                   )}
                 >
                   {entry.riskBand}

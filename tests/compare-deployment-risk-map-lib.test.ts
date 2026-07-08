@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
-import { compareDeploymentRiskMapState } from "@/lib/compare-deployment-risk-map-lib";
+import {
+  compareDeploymentRiskMapState,
+  deploymentRiskBandClass,
+} from "@/lib/compare-deployment-risk-map-lib";
 
 function entry(overrides: Partial<Entry> = {}): Entry {
   return {
@@ -199,5 +202,13 @@ describe("compare deployment risk map lib", () => {
     const b = entry({ slug: "b", title: "B" });
     const state = compareDeploymentRiskMapState([b, a], "balanced");
     expect(state.entries[0].title).toBe("A");
+  });
+});
+
+describe("deploymentRiskBandClass", () => {
+  it("maps each band to its chip classes", () => {
+    expect(deploymentRiskBandClass("high")).toContain("text-trust-blocked");
+    expect(deploymentRiskBandClass("medium")).toContain("text-amber-900");
+    expect(deploymentRiskBandClass("low")).toContain("text-trust-trusted");
   });
 });
