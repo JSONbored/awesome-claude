@@ -3,6 +3,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { BriefSections, type BriefSectionsData } from "@/components/brief-sections";
+import { parseBriefNumber } from "@/lib/brief-number-parse-lib";
 import { absoluteUrl } from "@/lib/seo";
 
 const loadBriefIssue = createServerFn({ method: "GET" })
@@ -28,13 +29,9 @@ const loadBriefIssue = createServerFn({ method: "GET" })
     };
   });
 
-function parseNumber(value: string): number {
-  return /^\d+$/.test(value) ? Number(value) : NaN;
-}
-
 export const Route = createFileRoute("/brief/$number")({
   loader: async ({ params }) => {
-    const number = parseNumber(params.number);
+    const number = parseBriefNumber(params.number);
     if (!Number.isInteger(number)) throw notFound();
     const issue = await loadBriefIssue({ data: { number } });
     if (!issue.found) throw notFound();
