@@ -1,9 +1,12 @@
 import { AlertTriangle, CheckCircle2, Circle, GitCompare, ShieldAlert } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import type {
   DecisionChecklistItem,
   DecisionChecklistTone,
+  DecisionPlaybookAction,
   EntryDetailDecisionPlaybookState,
 } from "@/lib/entry-detail-decision-playbook";
+import { entryDetailDecisionPlaybookActions } from "@/lib/entry-detail-decision-playbook";
 import { compareScoreLabel } from "@/lib/compare-score-label-lib";
 import { cn } from "@/lib/utils";
 
@@ -83,13 +86,95 @@ function SectionCard({
   );
 }
 
+function PlaybookActionButton({
+  action,
+  onToggleCompare,
+  onOpenCompareTray,
+  onAction,
+}: {
+  action: DecisionPlaybookAction;
+  onToggleCompare: () => void;
+  onOpenCompareTray: () => void;
+  onAction: (actionId: string) => void;
+}) {
+  const className = cn(
+    "inline-flex h-8 items-center rounded-md px-3 text-xs font-medium",
+    action.primary
+      ? "bg-ink text-background hover:bg-ink/90"
+      : "border border-border bg-background text-ink hover:bg-surface-2",
+    action.disabled && "cursor-not-allowed opacity-60",
+  );
+
+  if (action.kind === "open-full-compare" && action.compareIds) {
+    return (
+      <Link
+        to="/compare"
+        search={{ ids: action.compareIds }}
+        onClick={() => onAction(action.id)}
+        className={className}
+      >
+        {action.label}
+      </Link>
+    );
+  }
+
+  if (action.kind === "scroll" && action.scrollTargetId) {
+    return (
+      <button
+        type="button"
+        className={className}
+        onClick={() => {
+          onAction(action.id);
+          document.getElementById(action.scrollTargetId ?? "")?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }}
+      >
+        {action.label}
+      </button>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      className={className}
+      disabled={action.disabled}
+      title={action.hint ?? undefined}
+      onClick={() => {
+        if (action.disabled) return;
+        if (action.kind === "compare-toggle") onToggleCompare();
+        if (action.kind === "open-compare-tray") onOpenCompareTray();
+        onAction(action.id);
+      }}
+    >
+      {action.label}
+    </button>
+  );
+}
+
 export function EntryDetailDecisionPlaybook({
   state,
+  compareIds,
+  onToggleCompare,
+  onOpenCompareTray,
+  onAction,
   className,
 }: {
   state: EntryDetailDecisionPlaybookState;
+  compareIds: string;
+  onToggleCompare: () => void;
+  onOpenCompareTray: () => void;
+  onAction: (actionId: string) => void;
   className?: string;
 }) {
+  const actions = entryDetailDecisionPlaybookActions(
+    state.compare,
+    compareIds,
+    state.showEscalationCallout,
+  );
+
   return (
     <section
       id="decision-playbook"
@@ -144,6 +229,17 @@ export function EntryDetailDecisionPlaybook({
             No major trust-signal divergence detected in the current selection.
           </p>
         )}
+        <div className="mt-3 flex flex-wrap gap-2">
+          {actions.map((action) => (
+            <PlaybookActionButton
+              key={action.id}
+              action={action}
+              onToggleCompare={onToggleCompare}
+              onOpenCompareTray={onOpenCompareTray}
+              onAction={onAction}
+            />
+          ))}
+        </div>
       </div>
 
       <div className="mt-4 grid gap-3 lg:grid-cols-2">

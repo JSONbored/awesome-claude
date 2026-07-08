@@ -11,6 +11,7 @@ import type { Entry } from "@/types/registry";
 
 export const ENTRY_DETAIL_COMMAND_CENTER_SURFACE = "detail-command-center";
 export const ENTRY_DETAIL_COMPARE_SURFACE = "detail-compare";
+export const ENTRY_DETAIL_DECISION_PLAYBOOK_SURFACE = "detail-decision-playbook";
 export const ENTRY_DETAIL_MOBILE_SURFACE = "detail-mobile";
 export const BROWSE_COMPARE_SURFACE = "browse-compare";
 export const COMPARE_TRAY_SURFACE = "compare-tray";
@@ -124,5 +125,23 @@ export function entryDetailMobileLlmsAnalyticsData(category: string, slug: strin
     entry: entryDetailEntryKey(category, slug),
     link: "llms",
     surface: ENTRY_DETAIL_MOBILE_SURFACE,
+  };
+}
+
+export function entryDetailPlaybookActionAnalyticsEvent(actionId: string): string {
+  return `detail_playbook_${actionId.replace(/-/g, "_")}`;
+}
+
+export function entryDetailPlaybookActionAnalyticsData(
+  category: string,
+  slug: string,
+  actionId: string,
+  compareCount: number,
+) {
+  return {
+    entry: entryDetailEntryKey(category, slug),
+    action: actionId,
+    surface: ENTRY_DETAIL_DECISION_PLAYBOOK_SURFACE,
+    compareCount,
   };
 }

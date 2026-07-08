@@ -17,6 +17,8 @@ import {
   entryDetailMobileCopyIntentType,
   entryDetailMobileLinkIntentType,
   entryDetailMobileLlmsAnalyticsData,
+  entryDetailPlaybookActionAnalyticsData,
+  entryDetailPlaybookActionAnalyticsEvent,
 } from "@/lib/entry-detail-cta-events-lib";
 
 describe("entry detail cta events lib", () => {
@@ -105,6 +107,25 @@ describe("entry detail cta events lib", () => {
       entry: "skills/demo",
       link: "llms",
       surface: "detail-mobile",
+    });
+  });
+
+  it("builds decision playbook action analytics on a dedicated surface", () => {
+    expect(entryDetailPlaybookActionAnalyticsEvent("open-full-compare")).toBe(
+      "detail_playbook_open_full_compare",
+    );
+    expect(
+      entryDetailPlaybookActionAnalyticsData(
+        "skills",
+        "demo",
+        "compare-toggle",
+        2,
+      ),
+    ).toEqual({
+      entry: "skills/demo",
+      action: "compare-toggle",
+      surface: "detail-decision-playbook",
+      compareCount: 2,
     });
   });
 });

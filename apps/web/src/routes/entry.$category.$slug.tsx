@@ -74,12 +74,15 @@ import { useEffect, useMemo, useState, useCallback } from "react";
 import { toast } from "sonner";
 import { useRecents } from "@/lib/recents";
 import { useCompare, useIsCompared } from "@/lib/compare";
+import { serializeCompareItems } from "@/lib/compare-selection";
 import { trackEvent } from "@/lib/analytics";
 import {
   entryDetailCompareAnalyticsData,
   entryDetailCompareAnalyticsEvent,
   entryDetailMobileCompareAnalyticsData,
   entryDetailMobileCompareAnalyticsEvent,
+  entryDetailPlaybookActionAnalyticsData,
+  entryDetailPlaybookActionAnalyticsEvent,
 } from "@/lib/entry-detail-cta-events";
 import { resourceCardCompareFullMessage } from "@/lib/resource-card-compare-ui";
 import { useCopyPref, useHarnessPref, type CopyVariant } from "@/lib/dossier-prefs";
@@ -357,6 +360,42 @@ function Dossier() {
     });
   }, [compare, entry.category, entry.slug]);
 
+  const compareIds = useMemo(() => serializeCompareItems(compare.items), [compare.items]);
+  const onPlaybookAction = useCallback(
+    (actionId: string) => {
+      trackEvent(entryDetailPlaybookActionAnalyticsEvent(actionId), {
+        ...entryDetailPlaybookActionAnalyticsData(
+          entry.category,
+          entry.slug,
+          actionId,
+          compare.items.length,
+        ),
+      });
+    },
+    [compare.items.length, entry.category, entry.slug],
+  );
+  const onPlaybookToggleCompare = useCallback(() => {
+    const wasIn = inCompare;
+    const changed = compare.toggle(entry);
+    if (!changed) {
+      toast.error(resourceCardCompareFullMessage());
+      return;
+    }
+    if (wasIn) {
+      toast(`Removed “${entry.title}” from compare`);
+    } else {
+      toast.success("Added to compare", {
+        action: {
+          label: "View",
+          onClick: () => compare.setOpen(true),
+        },
+      });
+    }
+  }, [compare, entry, inCompare]);
+  const onPlaybookOpenCompareTray = useCallback(() => {
+    compare.setOpen(true);
+  }, [compare]);
+
   const risk = installRiskLevel(entry);
   const hasSchema = hasSchemaDetails(entry);
 
@@ -555,7 +594,13 @@ function Dossier() {
             </p>
             <CitationFacts entry={entry} />
           </DossierSection>
-          <EntryDetailDecisionPlaybook state={decisionPlaybook} />
+          <EntryDetailDecisionPlaybook
+            state={decisionPlaybook}
+            compareIds={compareIds}
+            onToggleCompare={onPlaybookToggleCompare}
+            onOpenCompareTray={onPlaybookOpenCompareTray}
+            onAction={onPlaybookAction}
+          />
           <EntryAdoptionPlanPanel
             state={adoptionPlan}
             selectedPreset={adoptionPreset}

@@ -3,8 +3,10 @@ import type { Entry } from "@/types/registry";
 import {
   entryDecisionCompareContext,
   entryDecisionTrustScore,
+  entryDetailDecisionPlaybookActions,
   entryDetailDecisionPlaybookState,
 } from "@/lib/entry-detail-decision-playbook-lib";
+import { ENTRY_DETAIL_COMPARE_MAX } from "@/lib/entry-detail-compare-ui-lib";
 
 function entry(overrides: Partial<Entry> = {}): Entry {
   return {
@@ -210,5 +212,92 @@ describe("entry detail decision playbook lib", () => {
       [],
     );
     expect(state.heading).toContain("Ready to evaluate");
+  });
+
+  it("returns add-to-compare as primary when tray is empty", () => {
+    const actions = entryDetailDecisionPlaybookActions(
+      entryDecisionCompareContext(entry(), []),
+      "",
+      false,
+    );
+    expect(actions[0]).toMatchObject({
+      id: "compare-toggle",
+      label: "Add to compare",
+      primary: true,
+    });
+  });
+
+  it("blocks add-to-compare when the tray is full", () => {
+    const fullTray = Array.from(
+      { length: ENTRY_DETAIL_COMPARE_MAX },
+      (_, index) => entry({ slug: `peer-${index}` }),
+    );
+    const actions = entryDetailDecisionPlaybookActions(
+      entryDecisionCompareContext(entry(), fullTray),
+      "tools/peer-0,tools/peer-1,tools/peer-2,tools/peer-3",
+      false,
+    );
+    expect(
+      actions.find((action) => action.id === "compare-toggle"),
+    ).toMatchObject({
+      disabled: true,
+      hint: expect.stringContaining("Compare is full"),
+    });
+  });
+
+  it("surfaces tray and full compare actions when multiple entries are selected", () => {
+    const current = entry();
+    const peer = entry({ slug: "peer", title: "Peer" });
+    const compare = entryDecisionCompareContext(current, [current, peer]);
+    const actions = entryDetailDecisionPlaybookActions(
+      compare,
+      "tools/fixture,tools/peer",
+      false,
+    );
+    expect(actions.map((action) => action.id)).toEqual([
+      "open-compare-tray",
+      "open-full-compare",
+      "compare-toggle",
+    ]);
+    expect(actions[0]).toMatchObject({ primary: true });
+  });
+
+  it("prioritizes full compare when trust signals diverge", () => {
+    const current = entry({ source: "unverified" });
+    const peer = entry({
+      slug: "peer",
+      title: "Peer",
+      trust: "trusted",
+      reviewed: true,
+      source: "source-backed",
+      safetyNotes: "yes",
+      privacyNotes: "yes",
+      packageVerified: true,
+      claimed: true,
+    });
+    const compare = entryDecisionCompareContext(current, [current, peer]);
+    const actions = entryDetailDecisionPlaybookActions(
+      compare,
+      "tools/fixture,tools/peer",
+      false,
+    );
+    expect(actions[0]).toMatchObject({
+      id: "open-full-compare",
+      primary: true,
+    });
+  });
+
+  it("surfaces install review scroll action when escalation is required", () => {
+    const blocked = entry({ trust: "blocked", source: "unverified" });
+    const actions = entryDetailDecisionPlaybookActions(
+      entryDecisionCompareContext(blocked, []),
+      "",
+      true,
+    );
+    expect(actions[0]).toMatchObject({
+      id: "review-install-trust",
+      kind: "scroll",
+      primary: true,
+    });
   });
 });

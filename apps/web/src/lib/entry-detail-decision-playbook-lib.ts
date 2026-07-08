@@ -7,6 +7,8 @@
 
 import type { Entry, TrustLevel } from "@/types/registry";
 import { sameEntry } from "@/lib/entry-identity";
+import { ENTRY_COMMAND_CENTER_ID } from "@/lib/entry-detail-command-center-lib";
+import { entryDetailCompareCtaState } from "@/lib/entry-detail-compare-ui-lib";
 
 export type DecisionChecklistTone = "complete" | "warning" | "critical";
 
@@ -43,6 +45,23 @@ export type EntryDetailDecisionPlaybookState = {
   sections: DecisionPlaybookSection[];
   showEscalationCallout: boolean;
   escalationText: string | null;
+};
+
+export type DecisionPlaybookActionKind =
+  | "compare-toggle"
+  | "open-compare-tray"
+  | "open-full-compare"
+  | "scroll";
+
+export type DecisionPlaybookAction = {
+  id: string;
+  label: string;
+  kind: DecisionPlaybookActionKind;
+  disabled?: boolean;
+  hint?: string | null;
+  primary?: boolean;
+  scrollTargetId?: string;
+  compareIds?: string;
 };
 
 const TRUST_RANK: Record<TrustLevel, number> = {
@@ -361,4 +380,70 @@ export function entryDetailDecisionPlaybookState(
     showEscalationCallout: Boolean(escalation),
     escalationText: escalation,
   };
+}
+
+export function entryDetailDecisionPlaybookActions(
+  compare: DecisionCompareContext,
+  compareIds: string,
+  showEscalationCallout: boolean,
+): DecisionPlaybookAction[] {
+  const cta = entryDetailCompareCtaState(compare.inCompareTray, compare.selectedCount);
+  const actions: DecisionPlaybookAction[] = [];
+  const hasMultiCompare = compare.selectedCount >= 2;
+  const hasDivergence = compare.divergingSignals.length > 0;
+
+  if (showEscalationCallout) {
+    actions.push({
+      id: "review-install-trust",
+      label: "Review install & trust",
+      kind: "scroll",
+      scrollTargetId: ENTRY_COMMAND_CENTER_ID,
+      primary: true,
+    });
+  } else if (hasMultiCompare && hasDivergence) {
+    actions.push({
+      id: "open-full-compare",
+      label: "Open full compare",
+      kind: "open-full-compare",
+      compareIds,
+      primary: true,
+    });
+  } else if (!compare.inCompareTray && !cta.disabled) {
+    actions.push({
+      id: "compare-toggle",
+      label: cta.label,
+      kind: "compare-toggle",
+      primary: true,
+    });
+  }
+
+  if (hasMultiCompare) {
+    actions.push({
+      id: "open-compare-tray",
+      label: "Open compare tray",
+      kind: "open-compare-tray",
+      primary: !showEscalationCallout && !(hasMultiCompare && hasDivergence),
+    });
+    if (!actions.some((action) => action.id === "open-full-compare")) {
+      actions.push({
+        id: "open-full-compare",
+        label: "Open full compare",
+        kind: "open-full-compare",
+        compareIds,
+      });
+    }
+  }
+
+  if (!actions.some((action) => action.id === "compare-toggle")) {
+    actions.push({
+      id: "compare-toggle",
+      label: cta.label,
+      kind: "compare-toggle",
+      disabled: cta.disabled,
+      hint: cta.hint,
+      primary: compare.inCompareTray && !hasMultiCompare && !showEscalationCallout,
+    });
+  }
+
+  return actions;
 }
