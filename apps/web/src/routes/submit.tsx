@@ -18,6 +18,7 @@ import {
   type SpecField,
 } from "@/lib/submission-spec";
 import { logClientError } from "@/lib/client-logs";
+import { safeGitHubAuthUrl } from "@/lib/github-auth-url-lib";
 import { siteConfig } from "@/lib/site";
 import { CopyButton } from "@/components/copy-button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -46,7 +47,6 @@ export const Route = createFileRoute("/submit")({
 });
 
 const STEPS = ["Category", "Details", "Safety & privacy", "Review"] as const;
-const GITHUB_AUTH_HOSTS = new Set(["github.com"]);
 
 type PreflightResponse = {
   ok: true;
@@ -75,18 +75,6 @@ type PreflightResponse = {
     url?: string;
   };
 };
-
-function safeGitHubAuthUrl(value: string) {
-  try {
-    const url = new URL(value);
-    if (url.protocol !== "https:" || !GITHUB_AUTH_HOSTS.has(url.hostname)) {
-      return "";
-    }
-    return url.toString();
-  } catch {
-    return "";
-  }
-}
 
 function originFor(value: string) {
   try {
