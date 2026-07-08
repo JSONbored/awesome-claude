@@ -118,6 +118,7 @@ describe("entry-detail-sidebar-lib", () => {
       "decision-playbook",
       "evidence-matrix",
       "decision-timeline",
+      "compare-benchmark",
       "privacy",
       "prerequisites",
       "about",

@@ -62,6 +62,7 @@ import { EntryDecisionTimelinePanel } from "@/components/entry-decision-timeline
 import { EntryBrandMark } from "@/components/entry-brand-mark";
 import { EntryAdoptionPlanPanel } from "@/components/entry-adoption-plan-panel";
 import { EntryEvidenceReadinessMatrix } from "@/components/entry-evidence-readiness-matrix";
+import { EntryCompareBenchmarkPanel } from "@/components/entry-compare-benchmark-panel";
 import { PLATFORM_SUPPORT_LABEL, type Entry } from "@/types/registry";
 import {
   buildEntryTocItems,
@@ -93,6 +94,10 @@ import {
   entryDecisionTimelineState,
   type DecisionTimelinePresetId,
 } from "@/lib/entry-decision-timeline";
+import {
+  entryCompareBenchmarkState,
+  type CompareBenchmarkPresetId,
+} from "@/lib/entry-compare-benchmark";
 
 const loadFullEntry = createServerFn({ method: "GET" })
   .inputValidator(z.object({ category: z.string().min(1), slug: z.string().min(1) }))
@@ -293,6 +298,7 @@ function Dossier() {
   const [adoptionPreset, setAdoptionPreset] = useState<AdoptionPlanPresetId>("balanced-rollout");
   const [evidencePreset, setEvidencePreset] = useState<EvidenceMatrixPresetId>("balanced");
   const [timelinePreset, setTimelinePreset] = useState<DecisionTimelinePresetId>("balanced");
+  const [benchmarkPreset, setBenchmarkPreset] = useState<CompareBenchmarkPresetId>("balanced");
   const inCompare = useIsCompared(entry);
   const onToggleCompare = useCallback(() => {
     const wasIn = inCompare;
@@ -367,6 +373,10 @@ function Dossier() {
   const decisionTimeline = useMemo(
     () => entryDecisionTimelineState(entry, timelinePreset, compare.items),
     [entry, timelinePreset, compare.items],
+  );
+  const compareBenchmark = useMemo(
+    () => entryCompareBenchmarkState(entry, benchmarkPreset, compare.items),
+    [entry, benchmarkPreset, compare.items],
   );
   const entryUrl = `/entry/${entry.category}/${entry.slug}`;
 
@@ -533,6 +543,11 @@ function Dossier() {
             state={decisionTimeline}
             selectedPreset={timelinePreset}
             onSelectPreset={setTimelinePreset}
+          />
+          <EntryCompareBenchmarkPanel
+            state={compareBenchmark}
+            selectedPreset={benchmarkPreset}
+            onSelectPreset={setBenchmarkPreset}
           />
           {entry.safetyNotes && (
             <DossierSection id="safety" icon={ShieldCheck} title="Safety notes" tone="trust">
