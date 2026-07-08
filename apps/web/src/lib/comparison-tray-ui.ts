@@ -11,6 +11,9 @@ export type {
 export {
   COMPARISON_TRAY_MAX_ITEMS,
   comparisonTrayChipSignals,
+  comparisonTrayClearAriaLabel,
   comparisonTrayHintMessages,
+  comparisonTraySecondaryHint,
+  comparisonTrayTrustDivergenceBadgeLabel,
   comparisonTrayUiState,
 } from "@/lib/comparison-tray-ui-lib";

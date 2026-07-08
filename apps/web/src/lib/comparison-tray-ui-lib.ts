@@ -121,3 +121,17 @@ export function comparisonTrayUiState(entries: Entry[]): ComparisonTrayUiState {
     hasTrustDivergence: summary.hasAnyDivergence,
   };
 }
+
+export function comparisonTrayClearAriaLabel(count: number): string {
+  return count === 1 ? "Clear 1 entry from compare" : `Clear ${count} entries from compare`;
+}
+
+export function comparisonTrayTrustDivergenceBadgeLabel(
+  hasTrustDivergence: boolean,
+): string | null {
+  return hasTrustDivergence ? "Trust gap" : null;
+}
+
+export function comparisonTraySecondaryHint(hints: string[]): string | null {
+  return hints[1] ?? null;
+}
