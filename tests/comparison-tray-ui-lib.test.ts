@@ -41,7 +41,48 @@ describe("comparison tray ui lib", () => {
       reviewed: true,
       claimed: true,
       installable: true,
+      packageTrustTone: "missing",
+      sourceProvenanceTone: "missing",
     });
+  });
+
+  it("maps package trust and source provenance tones from compare signal helpers", () => {
+    expect(
+      comparisonTrayChipSignals(
+        entry({
+          packageVerified: true,
+          verifiedAt: "2026-01-02",
+          sourceSubmissionUrl: "https://github.com/org/repo/issues/1",
+        }),
+      ),
+    ).toEqual({
+      hasSafetyNotes: false,
+      hasPrivacyNotes: false,
+      reviewed: false,
+      claimed: false,
+      installable: false,
+      packageTrustTone: "verified",
+      sourceProvenanceTone: "present",
+    });
+    expect(
+      comparisonTrayChipSignals(
+        entry({ downloadSha256: "abc", source: "source-backed" }),
+      ),
+    ).toMatchObject({
+      packageTrustTone: "present",
+      sourceProvenanceTone: "present",
+    });
+  });
+
+  it("surfaces package trust divergence hints in the tray", () => {
+    expect(
+      comparisonTrayHintMessages([
+        entry(),
+        entry({ packageVerified: true, verifiedAt: "2026-01-02" }),
+      ]),
+    ).toEqual([
+      "1 trust signal differ across this comparison (Package trust).",
+    ]);
   });
 
   it("requires at least two entries before enabling quick compare actions", () => {

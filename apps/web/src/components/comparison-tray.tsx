@@ -1,5 +1,5 @@
 import * as React from "react";
-import { GitCompare, X, ArrowRight, Shield, Lock, Package } from "lucide-react";
+import { BadgeCheck, GitCompare, X, ArrowRight, Shield, Lock, Link2, Package } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { useCompare } from "@/lib/compare";
 import { comparisonTrayChipSignals, comparisonTrayUiState } from "@/lib/comparison-tray-ui";
@@ -9,6 +9,7 @@ import {
 } from "@/lib/entry-detail-cta-events";
 import { trackEvent } from "@/lib/analytics";
 import { TrustBadge, SourceBadge, ReadinessDot } from "./badges";
+import { compareSignalToneClass } from "@/lib/compare-entry-signals";
 import { cn } from "@/lib/utils";
 import type { Entry } from "@/types/registry";
 
@@ -29,6 +30,22 @@ function TrayChip({ entry, onRemove }: { entry: Entry; onRemove: () => void }) {
         />
         <Lock
           className={cn("h-3 w-3", signals.hasPrivacyNotes ? "text-trust-trusted" : "opacity-40")}
+        />
+        <BadgeCheck
+          className={cn(
+            "h-3 w-3",
+            signals.packageTrustTone === "missing"
+              ? "opacity-40"
+              : compareSignalToneClass(signals.packageTrustTone),
+          )}
+        />
+        <Link2
+          className={cn(
+            "h-3 w-3",
+            signals.sourceProvenanceTone === "missing"
+              ? "opacity-40"
+              : compareSignalToneClass(signals.sourceProvenanceTone),
+          )}
         />
         {signals.installable ? <Package className="h-3 w-3 text-ink-muted" /> : null}
       </span>

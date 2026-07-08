@@ -11,6 +11,12 @@ import {
   compareCuratedActionBannerText,
   compareCuratedDecisionBannerText,
 } from "@/lib/compare-curated-summary";
+import {
+  packageTrustCompareSignal,
+  reviewCompareSignal,
+  sourceProvenanceCompareSignal,
+  type CompareSignalTone,
+} from "@/lib/compare-entry-signals-lib";
 import { compareSurfaceSummary } from "@/lib/compare-surface-summary-lib";
 
 export type ComparisonTrayChipSignals = {
@@ -19,6 +25,8 @@ export type ComparisonTrayChipSignals = {
   reviewed: boolean;
   claimed: boolean;
   installable: boolean;
+  packageTrustTone: CompareSignalTone;
+  sourceProvenanceTone: CompareSignalTone;
 };
 
 export type ComparisonTrayUiState = {
@@ -59,19 +67,32 @@ export function comparisonTrayChipSignals(
     | "privacyNotesList"
     | "reviewed"
     | "reviewedBy"
+    | "reviewedAt"
     | "claimed"
     | "installCommand"
     | "configSnippet"
     | "fullCopy"
     | "copySnippet"
+    | "packageVerified"
+    | "verifiedAt"
+    | "trustSignals"
+    | "downloadSha256"
+    | "source"
+    | "sourceSubmissionUrl"
+    | "importPrUrl"
   >,
 ): ComparisonTrayChipSignals {
+  const packageTrust = packageTrustCompareSignal(entry);
+  const sourceProvenance = sourceProvenanceCompareSignal(entry);
+
   return {
     hasSafetyNotes: hasSafetyNotes(entry),
     hasPrivacyNotes: hasPrivacyNotes(entry),
-    reviewed: Boolean(entry.reviewed || entry.reviewedBy),
+    reviewed: reviewCompareSignal(entry).tone !== "missing",
     claimed: Boolean(entry.claimed),
     installable: isInstallable(entry),
+    packageTrustTone: packageTrust.tone,
+    sourceProvenanceTone: sourceProvenance.tone,
   };
 }
 
