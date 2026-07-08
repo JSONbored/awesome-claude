@@ -116,6 +116,7 @@ describe("entry-detail-sidebar-lib", () => {
       "citation-facts",
       "adoption-plan",
       "decision-playbook",
+      "decision-timeline",
       "privacy",
       "prerequisites",
       "about",
