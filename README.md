@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>1340+ file-backed entries</strong> stay useful as both an
+        <strong>1341+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>1340</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>1341</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>AI-reviewed</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -79,7 +79,7 @@ Refreshed weekly by [`.github/workflows/gittensor-impact.yml`](.github/workflows
         </td>
 <td align="center" width="20%">
           <a href="#mcp-servers"><strong>🔌 MCP Servers</strong></a><br>
-          <code>468</code><br>
+          <code>469</code><br>
           <sub>Model Context Protocol servers and integrations.</sub>
         </td>
 <td align="center" width="20%">
@@ -307,7 +307,7 @@ packages use checksums and package trust metadata after review.
 - **[Web Async Agent Coordinator - Agents](https://heyclau.de/entry/agents/web-async-agent-coordinator)** - System-prompt agent that helps you drive Claude Code on the web: submitting long-running coding tasks to Anthropic's cloud, running independent sessions in parallel, linking GitHub repositories, tracking progress, and turning finished work into pull requests from the browser.
 - **[Zero Data Retention Compliance Agent](https://heyclau.de/entry/agents/zero-data-retention-compliance-agent)** - Community reusable agent prompt for mapping Claude Code deployments to zero data retention requirements using official ZDR docs: logging boundaries, MCP data flows, session storage, and compliance evidence checklists for security review.
 
-## 🔌 MCP Servers (468)
+## 🔌 MCP Servers (469)
 
 - **[Ableton MCP Extended](https://heyclau.de/entry/mcp/ableton-mcp-extended)** - Source-install MCP server for controlling Ableton Live from Claude, including session inspection, track and clip creation, MIDI note editing, tempo and transport control, browser item loading, arrangement workflows, device parameters, automation, external plugins, audio imports, and optional ElevenLabs.
 - **[ABMeter MCP Server](https://heyclau.de/entry/mcp/abmeter-mcp-server)** - ABMeter MCP exposes experimentation and analytics tooling over streamable HTTP for MCP clients.
@@ -651,6 +651,7 @@ packages use checksums and package trust metadata after review.
 - **[OpenAPI MCP Server for Claude](https://heyclau.de/entry/mcp/openapi-mcp-server)** - Explore OpenAPI and Swagger specifications from Claude through a hosted MCP server that returns API overviews and per-operation schema details.
 - **[OpenClaw MCP Server for Claude](https://heyclau.de/entry/mcp/openclaw-mcp-server)** - Connect Claude, Codex, Claude Code, and other MCP clients to OpenClaw Gateway-backed channel conversations with the official `openclaw mcp serve` bridge, plus manage OpenClaw-saved outbound MCP server definitions.
 - **[OpenMetadata MCP Server](https://heyclau.de/entry/mcp/openmetadata-mcp-server)** - OpenMetadata MCP OAuth server that lets Claude-compatible clients access OpenMetadata metadata tools through user SSO or Basic Auth, PKCE, dynamic client registration, and OpenMetadata's normal permission model.
+- **[OpenSearch MCP Server](https://heyclau.de/entry/mcp/opensearch-mcp-server)** - The official OpenSearch Project MCP server (opensearch-mcp-server-py) that lets AI assistants query and operate OpenSearch clusters — listing indices, reading mappings, running Query DSL and PPL searches, inspecting shards and cluster health — over stdio or streaming transports, with basic-auth, AWS IAM, and header-based authentication.
 - **[OpenTelemetry MCP Server for Claude](https://heyclau.de/entry/mcp/opentelemetry-mcp-server)** - Analyze distributed traces and LLM observability data from Claude — search traces and spans, find errors, list services, analyze LLM token usage, identify slow LLM operations, and discover AI model usage patterns — with the OpenTelemetry MCP server supporting Jaeger, Grafana Tempo, and Traceloop backends.
 - **[Opik MCP Server for Claude](https://heyclau.de/entry/mcp/opik-mcp-server)** - Debug, evaluate, and monitor LLM applications from Claude — read traces and spans, score outputs, save prompts, run evaluation experiments, and query project metrics — with the official Opik MCP server by Comet.
 - **[Oracle MCP Servers](https://heyclau.de/entry/mcp/oracle-mcp-servers)** - Official Oracle repository of MCP reference servers for OCI CLI, OCI SDK, Oracle Database services, Cloud Guard, Object Storage, Monitoring, Logging, and Oracle Database documentation workflows.
