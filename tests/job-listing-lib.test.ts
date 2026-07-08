@@ -67,4 +67,52 @@ describe("normalizeJobListing", () => {
       tier: "featured",
     });
   });
+
+  it("passes through every optional string and list field when provided", () => {
+    const job = normalizeJobListing({
+      slug: "full",
+      title: "Full Role",
+      company: "Acme",
+      companyUrl: "https://acme.example",
+      location: "NYC",
+      isRemote: true,
+      isWorldwide: true,
+      type: "Full-time",
+      postedAt: "2026-01-01T00:00:00.000Z",
+      lastVerifiedAt: "2026-02-01T00:00:00.000Z",
+      compensation: "$200k",
+      equity: "0.1%",
+      bonus: "10%",
+      description: "A role.",
+      benefits: ["Health"],
+      responsibilities: ["Ship"],
+      requirements: ["TypeScript"],
+      labels: ["senior"],
+      applyUrl: "https://acme.example/apply",
+      sourceUrl: "https://acme.example/jobs",
+      curationNote: "Verified listing.",
+      featured: true,
+      sponsored: true,
+    });
+    expect(job).toMatchObject({
+      companyUrl: "https://acme.example",
+      location: "NYC",
+      isWorldwide: true,
+      type: "Full-time",
+      postedAt: "2026-01-01T00:00:00.000Z",
+      lastVerifiedAt: "2026-02-01T00:00:00.000Z",
+      compensation: "$200k",
+      equity: "0.1%",
+      bonus: "10%",
+      description: "A role.",
+      benefits: ["Health"],
+      responsibilities: ["Ship"],
+      requirements: ["TypeScript"],
+      labels: ["senior"],
+      applyUrl: "https://acme.example/apply",
+      sourceUrl: "https://acme.example/jobs",
+      curationNote: "Verified listing.",
+      sponsored: true,
+    });
+  });
 });
