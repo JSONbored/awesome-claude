@@ -33,6 +33,8 @@ import {
   type CompareScenarioId,
 } from "@/lib/compare-scenario-ranking";
 import { CompareScenarioRankingPanel } from "@/components/compare-scenario-ranking-panel";
+import { compareEvidenceGapsState } from "@/lib/compare-evidence-gaps";
+import { CompareEvidenceGapsPanel } from "@/components/compare-evidence-gaps-panel";
 import {
   compareDrawerDecisionRows,
   compareSignalToneClass,
@@ -328,6 +330,7 @@ export function CompareDrawer() {
     compareDrawerInteractiveUiState(items);
   const decisionBrief = compareDecisionBriefState(items);
   const scenarioRanking = compareScenarioRankingState(items, scenario);
+  const evidenceGaps = compareEvidenceGapsState(items);
   const { bannerTexts, fullViewSearch } = drawerUi;
 
   const onClear = () => {
@@ -435,6 +438,7 @@ export function CompareDrawer() {
               compact
               className="mx-3"
             />
+            <CompareEvidenceGapsPanel state={evidenceGaps} compact className="m-3 mt-0" />
             <div className="min-w-full">
               <table className="w-full border-collapse text-sm">
                 <thead className="sticky top-0 z-10 bg-surface">

@@ -20,6 +20,7 @@ import {
   compareScenarioRankingState,
   type CompareScenarioId,
 } from "@/lib/compare-scenario-ranking";
+import { compareEvidenceGapsState } from "@/lib/compare-evidence-gaps";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
 import { sameEntry } from "@/lib/entry-identity";
 import { search } from "@/data/search";
@@ -27,6 +28,7 @@ import { cn } from "@/lib/utils";
 import type { Entry } from "@/types/registry";
 import { CompareDecisionBriefPanel } from "@/components/compare-decision-brief-panel";
 import { CompareScenarioRankingPanel } from "@/components/compare-scenario-ranking-panel";
+import { CompareEvidenceGapsPanel } from "@/components/compare-evidence-gaps-panel";
 
 const defaultSearch = { ids: "" };
 
@@ -82,6 +84,7 @@ function ComparePage() {
     () => compareScenarioRankingState(items, scenario),
     [items, scenario],
   );
+  const evidenceGaps = React.useMemo(() => compareEvidenceGapsState(items), [items]);
 
   const pushIds = (next: Entry[]) => {
     const ids = serializeCompareItems(next);
@@ -205,6 +208,7 @@ function ComparePage() {
           onSelectScenario={setScenario}
           className="m-3"
         />
+        <CompareEvidenceGapsPanel state={evidenceGaps} className="m-3 mt-0" />
       </div>
 
       <div className="mt-4 overflow-auto rounded-xl border border-border">
