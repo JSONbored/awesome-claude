@@ -26,6 +26,8 @@ import { browseResultsTrustDecisionUiState } from "@/lib/browse-results-trust-de
 import { BrowseResultsTrustPanel } from "@/components/browse-results-trust-panel";
 import { BrowseCompareSelectionBanner } from "@/components/browse-compare-selection-banner";
 import { browseCompareSelectionContextState } from "@/lib/resource-card-trust-decision";
+import { browseRolloutSignalsState } from "@/lib/browse-rollout-signals";
+import { BrowseRolloutSignalsPanel } from "@/components/browse-rollout-signals-panel";
 import {
   CATEGORIES,
   type Category,
@@ -337,6 +339,7 @@ function Browse() {
     () => browseCompareSelectionContextState(compare.items),
     [compare.items],
   );
+  const browseRolloutSignals = useMemo(() => browseRolloutSignalsState(results, 12), [results]);
 
   const activeCount =
     Number(!!sp.q) +
@@ -810,6 +813,7 @@ function Browse() {
               className="mt-3"
             />
           ) : null}
+          <BrowseRolloutSignalsPanel state={browseRolloutSignals} className="mt-3" />
 
           {sp.category &&
             (() => {
