@@ -71,4 +71,35 @@ describe("SECRET_VALUE_PATTERN", () => {
       expect(SECRET_VALUE_PATTERN.test(value)).toBe(false);
     });
   });
+
+  describe("enforces the exact length thresholds of each token shape", () => {
+    // Pin the {20,} / {40,} / {16} quantifiers at their boundary: one char short must
+    // not match, the threshold length must. This guards against a future edit loosening
+    // (false positives on short look-alikes) or tightening (leaking a real credential) a
+    // minimum length.
+    const boundaries: Array<[string, string, boolean]> = [
+      ["ghp_ at the 20-char body minimum", "ghp_" + "A".repeat(20), true],
+      ["ghp_ one char under the minimum", "ghp_" + "A".repeat(19), false],
+      [
+        "github_pat_ at the 40-char body minimum",
+        "github_pat_" + "A".repeat(40),
+        true,
+      ],
+      [
+        "github_pat_ one char under the minimum",
+        "github_pat_" + "A".repeat(39),
+        false,
+      ],
+      ["glpat- at the 20-char body minimum", "glpat-" + "A".repeat(20), true],
+      ["glpat- one char under the minimum", "glpat-" + "A".repeat(19), false],
+      ["AKIA with its exact 16-char body", "AKIA" + "1234567890ABCDEF", true],
+      ["AKIA one char short of 16", "AKIA" + "1234567890ABCDE", false],
+      ["Bearer at the 16-char token minimum", "Bearer " + "A".repeat(16), true],
+      ["Bearer one char under the minimum", "Bearer " + "A".repeat(15), false],
+    ];
+
+    it.each(boundaries)("%s -> %j", (_label, value, expected) => {
+      expect(SECRET_VALUE_PATTERN.test(value)).toBe(expected);
+    });
+  });
 });
