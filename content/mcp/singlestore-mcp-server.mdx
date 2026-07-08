@@ -1,0 +1,200 @@
+---
+title: SingleStore MCP Server
+slug: singlestore-mcp-server
+category: mcp
+description: >-
+  The official SingleStore MCP server (singlestore-mcp-server) that lets AI
+  assistants manage SingleStore from natural language — running SQL on a
+  workspace, inspecting organizations, workspace groups, and workspaces,
+  managing starter workspaces, notebooks, scheduled jobs, and Stage files — with
+  no API keys required thanks to browser-based OAuth.
+cardDescription: >-
+  Official SingleStore MCP server: run SQL, manage workspaces, notebooks, jobs,
+  and Stage files, with zero-config browser OAuth (no API keys).
+seoTitle: SingleStore MCP Server — SQL, Workspaces & Jobs for LLMs
+seoDescription: >-
+  The official SingleStore MCP server (singlestore-mcp-server) gives LLMs tools
+  to run SQL on a workspace, manage organizations, workspaces, starter
+  workspaces, notebooks, scheduled jobs, and Stage files, using browser OAuth
+  with no API keys required.
+author: singlestore-labs
+authorProfileUrl: https://github.com/singlestore-labs
+submittedBy: davion-knight
+submittedByUrl: "https://github.com/davion-knight"
+dateAdded: "2026-07-08"
+brandName: SingleStore MCP Server
+brandDomain: singlestore.com
+websiteUrl: https://www.singlestore.com/
+repoUrl: https://github.com/singlestore-labs/mcp-server-singlestore
+documentationUrl: https://github.com/singlestore-labs/mcp-server-singlestore/blob/main/README.md
+installable: true
+installCommand: uvx singlestore-mcp-server start
+usageSnippet: |
+  # Run the published package with uv (stdio transport); browser OAuth on start
+  uvx singlestore-mcp-server start
+
+  # Or scaffold client config automatically for a specific client
+  uvx singlestore-mcp-server init --client=claude-desktop
+copySnippet: |
+  {
+    "mcpServers": {
+      "singlestore-mcp-server": {
+        "command": "uvx",
+        "args": ["singlestore-mcp-server", "start"]
+      }
+    }
+  }
+configSnippet: |
+  {
+    "mcpServers": {
+      "singlestore-mcp-server": {
+        "command": "uvx",
+        "args": ["singlestore-mcp-server", "start"]
+      }
+    }
+  }
+prerequisites:
+  - Python 3.10 or newer and the `uv`/`uvx` package manager (or `pip install singlestore-mcp-server`)
+  - A SingleStore account; the standard setup signs in through browser-based OAuth on first start
+  - For Docker runs only, a SingleStore Management API key (`MCP_API_KEY`), since the OAuth flow is not supported inside containers
+  - An MCP-compatible client (Claude Desktop, Claude Code, Cursor, VS Code, Windsurf, Gemini, etc.)
+safetyNotes:
+  - The `run_sql` tool executes SQL against a connected workspace with the authenticated user's permissions, so it can read and modify data; scope the SingleStore account/role to least privilege.
+  - Workspace and job tools can create and terminate starter workspaces and create or delete scheduled jobs (`create_starter_workspace`, `terminate_starter_workspace`, `create_job_from_notebook`, `delete_job`), which affect real cloud resources and billing.
+  - Stage tools can upload, move, and delete files in a deployment's Stage file system (`stage_upload_file`, `stage_move`, `stage_delete`); treat them as write/delete-capable.
+  - Authentication is the boundary — the standard flow stores browser-OAuth session credentials, and the Docker flow uses a Management API key, so restrict what the authenticated identity can reach.
+  - Point the server at a non-production organization or a least-privilege identity when letting an agent act autonomously.
+privacyNotes:
+  - The server connects to your SingleStore account and workspaces; user and organization details, SQL results, notebook contents, and Stage files it returns are passed to the LLM/MCP client.
+  - SQL query results can include sensitive or PII data stored in your databases, and organization/workspace metadata can reveal infrastructure details.
+  - OAuth session credentials (standard setup) or the `MCP_API_KEY` (Docker) grant account access — keep client config out of version control and restrict access to it.
+  - Notebook and Stage tools can read and write files in SingleStore Spaces/Stage; treat that stored content as retained data.
+sourceUrls:
+  - https://github.com/singlestore-labs/mcp-server-singlestore/blob/main/README.md
+  - https://pypi.org/project/singlestore-mcp-server/
+  - https://github.com/singlestore-labs/mcp-server-singlestore/blob/main/LICENSE
+tags:
+  - mcp
+  - singlestore
+  - database
+  - sql
+  - cloud
+  - notebooks
+  - oauth
+  - python
+keywords:
+  - SingleStore MCP server
+  - singlestore-mcp-server
+  - SingleStore SQL MCP
+  - SingleStore workspace MCP
+  - SingleStore Management API MCP
+  - Model Context Protocol SingleStore
+  - LLM database access
+  - SingleStore notebooks MCP
+  - SingleStore Stage MCP
+  - SingleStore Labs MCP server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+The **SingleStore MCP Server** is the official Model Context Protocol server maintained by
+[SingleStore Labs](https://github.com/singlestore-labs). It lets LLMs and agentic clients manage
+[SingleStore](https://www.singlestore.com/) from natural language — **running SQL** on a workspace,
+inspecting **organizations, workspace groups, and workspaces**, managing **starter workspaces**,
+working with **notebooks and scheduled jobs**, and reading/writing **Stage** files.
+
+The project is written in Python, distributed as the PyPI package
+[`singlestore-mcp-server`](https://pypi.org/project/singlestore-mcp-server/) (v0.4.19, Python
+`>=3.10`), and licensed under MIT. Its standout is a **zero-config** experience: **no API keys,
+tokens, or environment variables are required** for the standard setup — the server handles
+authentication via **browser-based OAuth** when started. A `uvx singlestore-mcp-server init` helper
+scaffolds config for Claude Desktop, Claude Code, Cursor, VS Code, Windsurf, Gemini, and more.
+
+## Source Review
+
+The following real repository and package sources were fetched and reviewed for this entry:
+
+- [README.md](https://github.com/singlestore-labs/mcp-server-singlestore/blob/main/README.md) — install command, standard client config block, per-client `init` helpers, the browser-OAuth flow, the Docker/`MCP_API_KEY` note, and the full tool list.
+- [PyPI: singlestore-mcp-server](https://pypi.org/project/singlestore-mcp-server/) — package name and version (`0.4.19`) and `requires_python >=3.10`.
+- [LICENSE](https://github.com/singlestore-labs/mcp-server-singlestore/blob/main/LICENSE) — MIT License.
+
+Repository facts confirmed at review time: official `singlestore-labs` organization, default branch
+`main`, not archived, MIT-licensed, and released as `singlestore-mcp-server` v0.4.19 on PyPI.
+
+## Features
+
+- **SQL execution** — `run_sql` runs SQL operations against a connected workspace.
+- **Account & org context** — `get_user_info`, `organization_info`, `choose_organization`, and `set_organization` inspect and select the active organization.
+- **Workspace management** — `workspace_groups_info`, `workspaces_info`, `resume_workspace`, and starter-workspace tools (`list_starter_workspaces`, `create_starter_workspace`, `terminate_starter_workspace`).
+- **Regions** — `list_regions` and `list_sharedtier_regions` enumerate available regions.
+- **Notebooks & jobs** — `create_notebook_file`, `upload_notebook_file`, `create_job_from_notebook`, `get_job`, and `delete_job` manage SingleStore Spaces notebooks and scheduled jobs.
+- **Stage file system** — `stage_list_files`, `stage_get_file`, `stage_create_folder`, `stage_upload_file`, `stage_move`, and `stage_delete` operate on a deployment's Stage.
+- **Zero-config OAuth** — the standard setup requires no API keys; authentication happens through browser OAuth on start.
+- **Per-client scaffolding** — `uvx singlestore-mcp-server init --client=<name>` generates config for popular MCP clients.
+- **Docker option** — a container image (built from the repo) runs with an `MCP_API_KEY`, since OAuth is not supported inside containers.
+
+## Installation
+
+Run the published package with `uvx` (no clone required); the standard setup authenticates through
+browser OAuth on start:
+
+```bash
+uvx singlestore-mcp-server start
+```
+
+Add it to an MCP client (e.g. Claude Desktop's `claude_desktop_config.json`) with the standard config:
+
+```json
+{
+  "mcpServers": {
+    "singlestore-mcp-server": {
+      "command": "uvx",
+      "args": ["singlestore-mcp-server", "start"]
+    }
+  }
+}
+```
+
+Or scaffold client config automatically:
+
+```bash
+uvx singlestore-mcp-server init --client=claude-desktop
+```
+
+For **Docker**, an API key is required because the OAuth flow is not supported inside containers:
+
+```json
+{
+  "mcpServers": {
+    "singlestore-mcp-server": {
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "-e", "MCP_API_KEY=your_api_key_here", "singlestore/mcp-server-singlestore"]
+    }
+  }
+}
+```
+
+## Use Cases
+
+- **Conversational SQL** — ask natural-language questions and have the agent run SQL against a workspace.
+- **Workspace operations** — inspect, resume, create, and terminate starter workspaces during development.
+- **Notebook & job automation** — create notebooks and schedule or manage jobs from an agentic workflow.
+- **Stage file management** — list, read, upload, move, and delete files in a deployment's Stage.
+- **Frictionless onboarding** — start with zero API-key setup via browser OAuth and per-client `init` scaffolding.
+
+## Safety and Privacy
+
+- **SQL is powerful.** `run_sql` executes SQL with the authenticated user's permissions and can read or modify data; scope the SingleStore role to least privilege.
+- **Resource and billing impact.** Workspace and job tools can create/terminate starter workspaces and create/delete scheduled jobs — real cloud resources.
+- **Stage writes/deletes.** Stage tools can upload, move, and delete files; treat them as mutating operations.
+- **Auth is the boundary.** The standard flow stores browser-OAuth session credentials; the Docker flow uses `MCP_API_KEY`. Restrict what the identity can reach and keep config out of version control.
+- **Data flows to the model.** SQL results, org/workspace metadata, notebooks, and Stage files are returned to the LLM/MCP client and can include PII or sensitive data.
+
+## Duplicate Check
+
+No existing entry in the directory matches this server. A search of all directory entries for
+"singlestore" across slugs, titles, repository URLs, and install commands returned no results, and
+there is no prior entry pointing at `github.com/singlestore-labs/mcp-server-singlestore` or the PyPI
+package `singlestore-mcp-server`. This is therefore a net-new, non-duplicate entry.
