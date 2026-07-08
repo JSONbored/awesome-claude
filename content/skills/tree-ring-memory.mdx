@@ -1,0 +1,246 @@
+---
+title: Tree Ring Memory
+slug: tree-ring-memory
+category: skills
+description: >-
+  Framework-agnostic agent memory lifecycle skill and Rust-native CLI for
+  explicit recall, evidence-backed memory, forgetting, audit, consolidation,
+  DOX/Revolve sync, and local SQLite/FTS storage.
+cardDescription: >-
+  Give agent memory a lifecycle with explicit recall, evidence, forgetting,
+  rings, scars, seeds, and local Rust-native CLI storage.
+seoTitle: Tree Ring Memory Skill for Agent Recall, Evidence, Forgetting, and Local Rust CLI Storage
+seoDescription: >-
+  Source-backed Tree Ring Memory listing for framework-agnostic agent memory,
+  portable SKILL.md guidance, explicit writes, evidence loops, DOX/Revolve
+  adapters, SQLite/FTS recall, and Rust-native CLI workflows.
+author: TerminallyLazy
+authorProfileUrl: "https://github.com/TerminallyLazy"
+submittedBy: TerminallyLazy
+submittedByUrl: "https://github.com/TerminallyLazy"
+dateAdded: "2026-07-08"
+submittedAt: "2026-07-08"
+repoUrl: "https://github.com/TerminallyLazy/Tree-Ring-Memory"
+documentationUrl: "https://github.com/TerminallyLazy/Tree-Ring-Memory/blob/main/docs/integrations/agent-skill.md"
+websiteUrl: "https://terminallylazy.github.io/Tree-Ring-Memory/"
+downloadUrl: "https://github.com/TerminallyLazy/Tree-Ring-Memory/archive/refs/heads/main.zip"
+installable: true
+installCommand: "cargo install --git https://github.com/TerminallyLazy/Tree-Ring-Memory tree-ring-memory-cli --locked"
+usageSnippet: >-
+  Use Tree Ring Memory when an agent needs project-scoped recall, explicit
+  memory capture, source-linked evidence, privacy-aware forgetting, DOX/Revolve
+  import previews, or a portable memory skill for another agent host.
+copySnippet: |-
+  # Install the Rust-native CLI from source with Cargo
+  cargo install --git https://github.com/TerminallyLazy/Tree-Ring-Memory tree-ring-memory-cli --locked
+
+  # Initialize local project memory and try recall
+  tree-ring init
+  tree-ring remember "Use project-scoped recall before risky release changes." --event-type lesson --scope project
+  tree-ring recall "release changes"
+  tree-ring evidence "The eval passed after the fix." --outcome promoted --evidence-ref evals/run-042
+  tree-ring tui
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-07-08"
+retrievalSources:
+  - "https://github.com/TerminallyLazy/Tree-Ring-Memory"
+  - "https://github.com/TerminallyLazy/Tree-Ring-Memory/blob/main/README.md"
+  - "https://github.com/TerminallyLazy/Tree-Ring-Memory/blob/main/skills/tree-ring-memory/SKILL.md"
+  - "https://github.com/TerminallyLazy/Tree-Ring-Memory/blob/main/docs/integrations/agent-skill.md"
+  - "https://terminallylazy.github.io/Tree-Ring-Memory/press-kit.md"
+  - "https://terminallylazy.github.io/Tree-Ring-Memory/launch/rust-native-agent-memory-cli.md"
+testedPlatforms:
+  - Claude
+  - Claude Code
+  - Codex
+  - Gemini
+  - OpenCode
+  - Generic AGENTS
+prerequisites:
+  - "Rust/Cargo for source installs unless using a future verified release archive path."
+  - "A project or agent workflow where durable memory should be explicit, scoped, and auditable."
+  - "A local memory root such as `.tree-ring/` for project-scoped stores, skill guidance, and CLI references."
+  - "Review of generated `.tree-ring/SKILL.md`, `.tree-ring/AGENTS.md`, and `.tree-ring/CLI.md` before wiring them into an agent host."
+safetyNotes:
+  - "The repository includes an optional shell installer; review `install.sh` before running it in locked-down or production environments."
+  - "Memory writes are explicit through commands such as `remember`, `evidence`, `import`, consolidation, maintenance, TUI actions, or deliberate agent calls; do not configure agents to store everything by default."
+  - "Run `tree-ring dox sync` and `tree-ring revolve sync` with `--dry-run` first because adapters summarize source artifacts into memory events."
+  - "Use `forget`, redaction, supersession, audit, and maintenance commands when a memory is wrong, sensitive, stale, or no longer useful."
+  - "Tree Ring Memory is in protocol-preview status, so verify command behavior and integration expectations before relying on it for critical workflows."
+privacyNotes:
+  - "Project memory normally lives in a local `.tree-ring/` SQLite store and generated guidance files; treat that directory as project data."
+  - "Tree Ring Memory does not scrape transcripts or run a hidden background recorder, but agent-mediated prompts can still include sensitive context if the active agent chooses to write it."
+  - "DOX/Revolve adapters and integration scans inspect local source roots to create concise, source-linked summaries; preview outputs before committing them to durable memory."
+  - "Do not store secrets, credentials, private keys, raw chain-of-thought, or regulated personal data; prefer short redacted summaries with source references."
+tags:
+  - agent-memory
+  - local-first
+  - rust
+  - cli
+  - recall
+  - skills
+  - dox
+  - revolve
+keywords:
+  - Tree Ring Memory
+  - agent memory lifecycle
+  - local first AI memory
+  - Rust agent memory CLI
+  - Claude Code memory skill
+  - Codex memory skill
+  - DOX Revolve memory adapter
+  - explicit AI memory writes
+  - SQLite FTS recall
+  - agent forgetting redaction audit
+readingTime: 8
+difficultyScore: 76
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# Tree Ring Memory
+
+Tree Ring Memory is a framework-agnostic, local-first memory lifecycle layer for
+AI agents. It helps agents remember useful decisions, warnings, preferences,
+and evidence without turning memory into raw transcript storage.
+
+The checked-in skill teaches an agent when to recall, remember, redact, forget,
+and avoid memory capture. The Rust-native CLI owns the local store, recall,
+evidence capture, audit, consolidation, import/export, maintenance, terminal
+onboarding, and Ratatui operator console.
+
+## Knowledge Freshness
+
+This listing was verified on **2026-07-08** against the public repository,
+README, portable `SKILL.md`, integration guide, press kit, and Rust-native CLI
+launch article. Tree Ring Memory is currently marked as protocol-preview, so
+re-check the release and CLI help before production integration.
+
+## Retrieval Sources
+
+- https://github.com/TerminallyLazy/Tree-Ring-Memory
+- https://github.com/TerminallyLazy/Tree-Ring-Memory/blob/main/README.md
+- https://github.com/TerminallyLazy/Tree-Ring-Memory/blob/main/skills/tree-ring-memory/SKILL.md
+- https://github.com/TerminallyLazy/Tree-Ring-Memory/blob/main/docs/integrations/agent-skill.md
+- https://terminallylazy.github.io/Tree-Ring-Memory/press-kit.md
+- https://terminallylazy.github.io/Tree-Ring-Memory/launch/rust-native-agent-memory-cli.md
+
+## Core Workflow
+
+Install the CLI from source with Cargo:
+
+```bash
+cargo install --git https://github.com/TerminallyLazy/Tree-Ring-Memory tree-ring-memory-cli --locked
+```
+
+Initialize local memory and try recall:
+
+```bash
+tree-ring init
+tree-ring remember "Use project-scoped recall before risky release changes." --event-type lesson --scope project
+tree-ring recall "release changes"
+tree-ring evidence "The eval passed after the fix." --outcome promoted --evidence-ref evals/run-042
+tree-ring tui
+```
+
+Use adapter previews when source artifacts already exist:
+
+```bash
+tree-ring dox sync --source-root . --dry-run
+tree-ring revolve sync --source-root revolve --dry-run
+tree-ring integrations scan --source-root .
+```
+
+## Capability Scope
+
+- Project-scoped and global memory recall.
+- Explicit memory capture through `remember`.
+- Evidence-backed outcomes through `tree-ring evidence`.
+- Ring lifecycle model: cambium, outer, inner, heartwood, scar, and seed.
+- Local SQLite/FTS storage and JSONL import/export.
+- Forgetting, redaction, supersession, audit, consolidation, and maintenance.
+- DOX and Revolve source adapters with dry-run previews.
+- Portable `SKILL.md`, generated `.tree-ring/` guidance, and agent-framework
+  discovery.
+- Terminal onboarding and Ratatui operator console.
+
+## Compatibility
+
+### Native
+
+- **Rust CLI / terminal workflows**: use `tree-ring` commands directly.
+- **Agent hosts that support local skills or instruction packs**: load
+  `skills/tree-ring-memory/SKILL.md` or the generated `.tree-ring/SKILL.md`.
+
+### Manual Adaptation
+
+- **Claude Code, Codex, Gemini, OpenCode, and Generic AGENTS workflows**: point
+  project bridge files at `.tree-ring/SKILL.md`, `.tree-ring/AGENTS.md`, and
+  `.tree-ring/CLI.md` so host-specific instructions stay scoped to the current
+  project.
+- **DOX-aware repositories**: merge the generated `.tree-ring/AGENTS.md`
+  guidance manually when agents should discover Tree Ring rules before entering
+  the memory directory.
+
+## Production Rules
+
+- Treat memory as a lifecycle, not a transcript dump.
+- Recall before changing architecture, storage, security, privacy, release
+  behavior, or project conventions.
+- Store concise lessons, decisions, warnings, user preferences, or future seeds
+  only when they will materially help future work.
+- Prefer `tree-ring evidence` for evaluated outcomes, incidents, checkpoints,
+  or reviewed run artifacts.
+- Run source adapters with `--dry-run` first and preserve source references.
+- Do not promote weak claims to heartwood; use outer or seed until evidence is
+  stronger.
+- Redact or delete memories that are wrong, sensitive, stale, or superseded.
+- Keep source documents authoritative; memory points back to them instead of
+  replacing them.
+
+## Troubleshooting
+
+**Issue:** `tree-ring` is not on `PATH` after a global install
+**Fix:** open a new shell, run `$HOME/.local/bin/tree-ring`, or add the install
+bin directory to the current terminal path.
+
+**Issue:** An agent wants to store too much context
+**Fix:** apply the portable skill guidance and store only durable, concise,
+privacy-safe lessons with source references.
+
+**Issue:** A source adapter produces noisy memories
+**Fix:** keep the `--dry-run` output, narrow the source root, and write only the
+summaries that are useful and source-linked.
+
+## Output Contract
+
+When using this skill, produce:
+
+1. Relevant recalled lessons, warnings, preferences, or decisions.
+2. A clear decision on whether new durable memory is warranted.
+3. The exact `tree-ring` command to write, evidence-link, redact, delete, or
+   supersede memory.
+4. Safety and privacy notes for any proposed write.
+5. Source references for memories derived from docs, issues, PRs, evals, DOX, or
+   Revolve artifacts.
+
+## Duplicate Review
+
+Checked `content/skills`, generated catalog text, and current source entries
+for Tree Ring Memory, local-first agent memory lifecycle, DOX/Revolve memory
+adapters, and Rust-native agent memory CLI listings. Existing entries cover
+general agent skills, plugin creation, portability, and other AI memory
+resources, but no HeyClaude `skills` entry lists Tree Ring Memory's portable
+skill plus Rust-native local memory lifecycle CLI.
+
+## Editorial Disclosure
+
+Submitted by the project owner as a source-backed community listing. The
+project is MIT-licensed, protocol-preview software; review the installer,
+generated guidance files, and local privacy boundary before adopting it in a
+production agent workflow.
