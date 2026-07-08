@@ -21,6 +21,9 @@ jobs:
     # `gittensor-impact` release via matthewevans/gittensor-impact-action.
     permissions:
       contents: write
+    # matthewevans/gittensor-impact-action is a ~1.5-day-old repo; require a
+    # human approval before it runs with contents:write, on top of the SHA pin.
+    environment: gittensor-impact
     steps:
       - name: Generate and publish Gittensor impact card
         uses: matthewevans/gittensor-impact-action@397fd470899cba47367458289a374eea9cb0d76a # main, 2026-07-06 (#1 per-repo API endpoint)
