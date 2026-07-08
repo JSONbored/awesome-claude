@@ -16,12 +16,17 @@ import { COMPARE_PAGE_SURFACE, type CompareAction } from "@/lib/compare-page-act
 import { comparePageActionsForEntry } from "@/lib/compare-page-actions-interactive-ui-lib";
 import { comparePageInteractiveUiState } from "@/lib/compare-page-interactive-ui-lib";
 import { compareDecisionBriefState } from "@/lib/compare-decision-brief";
+import {
+  compareScenarioRankingState,
+  type CompareScenarioId,
+} from "@/lib/compare-scenario-ranking";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
 import { sameEntry } from "@/lib/entry-identity";
 import { search } from "@/data/search";
 import { cn } from "@/lib/utils";
 import type { Entry } from "@/types/registry";
 import { CompareDecisionBriefPanel } from "@/components/compare-decision-brief-panel";
+import { CompareScenarioRankingPanel } from "@/components/compare-scenario-ranking-panel";
 
 const defaultSearch = { ids: "" };
 
@@ -72,6 +77,11 @@ function ComparePage() {
     [items, sp.ids],
   );
   const decisionBrief = React.useMemo(() => compareDecisionBriefState(items), [items]);
+  const [scenario, setScenario] = React.useState<CompareScenarioId>("balanced");
+  const scenarioRanking = React.useMemo(
+    () => compareScenarioRankingState(items, scenario),
+    [items, scenario],
+  );
 
   const pushIds = (next: Entry[]) => {
     const ids = serializeCompareItems(next);
@@ -189,6 +199,12 @@ function ComparePage() {
 
       <div className="mt-4 overflow-auto rounded-xl border border-border">
         <CompareDecisionBriefPanel state={decisionBrief} className="m-3 mb-0" />
+        <CompareScenarioRankingPanel
+          state={scenarioRanking}
+          selectedScenario={scenario}
+          onSelectScenario={setScenario}
+          className="m-3"
+        />
       </div>
 
       <div className="mt-4 overflow-auto rounded-xl border border-border">

@@ -29,6 +29,11 @@ import { brandIdentityLabel } from "@/lib/brand-icons";
 import { compareDecisionBriefState } from "@/lib/compare-decision-brief";
 import { CompareDecisionBriefPanel } from "@/components/compare-decision-brief-panel";
 import {
+  compareScenarioRankingState,
+  type CompareScenarioId,
+} from "@/lib/compare-scenario-ranking";
+import { CompareScenarioRankingPanel } from "@/components/compare-scenario-ranking-panel";
+import {
   compareDrawerDecisionRows,
   compareSignalToneClass,
   type CompareSignalValue,
@@ -318,9 +323,11 @@ function SnippetCell({ entry }: { entry: Entry }) {
 
 export function CompareDrawer() {
   const { items, open, setOpen, toggle, clear, hydrate } = useCompare();
+  const [scenario, setScenario] = React.useState<CompareScenarioId>("balanced");
   const { drawerUi, emptyHint, shareUrl, divergingDecisionLabels, actionRowDiverges, actionCells } =
     compareDrawerInteractiveUiState(items);
   const decisionBrief = compareDecisionBriefState(items);
+  const scenarioRanking = compareScenarioRankingState(items, scenario);
   const { bannerTexts, fullViewSearch } = drawerUi;
 
   const onClear = () => {
@@ -421,6 +428,13 @@ export function CompareDrawer() {
         ) : (
           <div className="h-[calc(88vh-57px)] overflow-auto">
             <CompareDecisionBriefPanel state={decisionBrief} compact className="m-3" />
+            <CompareScenarioRankingPanel
+              state={scenarioRanking}
+              selectedScenario={scenario}
+              onSelectScenario={setScenario}
+              compact
+              className="mx-3"
+            />
             <div className="min-w-full">
               <table className="w-full border-collapse text-sm">
                 <thead className="sticky top-0 z-10 bg-surface">
