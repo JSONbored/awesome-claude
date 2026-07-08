@@ -1,0 +1,224 @@
+---
+title: Paddle MCP Server
+slug: paddle-mcp-server
+category: mcp
+description: >-
+  The official Paddle MCP server (@paddle/paddle-mcp) that lets AI assistants
+  work with Paddle Billing — managing the product catalog, prices, and
+  discounts, customers and businesses, subscriptions, transactions and
+  adjustments, and financial reports — over the Paddle API, with sandbox or
+  production environments and a read-only / non-destructive / all tool-permission
+  filter.
+cardDescription: >-
+  Official Paddle Billing MCP server: manage catalog, customers, subscriptions,
+  transactions, and reports, with sandbox/production and a tool-permission
+  filter.
+seoTitle: Paddle MCP Server — Billing, Subscriptions & Reports for LLMs
+seoDescription: >-
+  The official Paddle MCP server (@paddle/paddle-mcp) gives LLMs tools to manage
+  Paddle Billing — catalog, prices, discounts, customers, subscriptions,
+  transactions, adjustments, and reports — with sandbox/production environments
+  and read-only, non-destructive, or all tool permissions.
+author: PaddleHQ
+authorProfileUrl: https://github.com/PaddleHQ
+submittedBy: davion-knight
+submittedByUrl: "https://github.com/davion-knight"
+dateAdded: "2026-07-08"
+brandName: Paddle MCP Server
+brandDomain: paddle.com
+websiteUrl: https://www.paddle.com/
+repoUrl: https://github.com/PaddleHQ/paddle-mcp-server
+documentationUrl: https://github.com/PaddleHQ/paddle-mcp-server/blob/main/README.md
+installable: true
+installCommand: npx -y @paddle/paddle-mcp --api-key=YOUR_API_KEY --environment=sandbox
+usageSnippet: |
+  # Run directly from npm via npx (stdio transport); use a sandbox key first
+  npx -y @paddle/paddle-mcp \
+    --api-key=YOUR_API_KEY \
+    --environment=sandbox \
+    --tools=non-destructive
+copySnippet: |
+  {
+    "mcpServers": {
+      "paddle": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@paddle/paddle-mcp",
+          "--api-key=YOUR_API_KEY",
+          "--environment=sandbox",
+          "--tools=non-destructive"
+        ]
+      }
+    }
+  }
+configSnippet: |
+  {
+    "mcpServers": {
+      "paddle": {
+        "command": "npx",
+        "args": ["-y", "@paddle/paddle-mcp"],
+        "env": {
+          "PADDLE_API_KEY": "YOUR_API_KEY",
+          "PADDLE_ENVIRONMENT": "sandbox",
+          "PADDLE_MCP_TOOLS": "non-destructive"
+        }
+      }
+    }
+  }
+prerequisites:
+  - Node.js and npm (the server runs via `npx -y @paddle/paddle-mcp`)
+  - A Paddle Billing account (this server does not support Paddle Classic)
+  - A Paddle API key created under Paddle > Developer tools > Authentication (use a sandbox key to start)
+  - A choice of environment (`sandbox` or `production`) and tool-permission mode (`read-only`, `non-destructive`, or `all`)
+  - An MCP-compatible client (Claude Desktop, Cursor, VS Code, Windsurf, etc.)
+safetyNotes:
+  - The server acts on your real Paddle Billing account via its API key; with write permissions it can create and adjust products, prices, discounts, customers, subscriptions, and transactions.
+  - Tool permissions are controlled by `--tools` / `PADDLE_MCP_TOOLS`; `non-destructive` (the default) allows reads and safe writes, `read-only` allows reads only, and `all` enables every operation — choose the narrowest mode for the task.
+  - Adjustment and transaction tools can move real money (refunds, credits, charges), so prefer `read-only` or `non-destructive` unless a destructive action is explicitly intended.
+  - Use `--environment=sandbox` with a sandbox API key while developing; point at `production` only when you intend to act on live billing data.
+  - Treat the Paddle API key as a secret with broad account access, and scope what the agent can do through the environment and tools settings rather than the tool names alone.
+privacyNotes:
+  - The server sends requests to the Paddle Billing API using your API key; customer, business, subscription, transaction, and report data it returns is passed to the LLM/MCP client.
+  - Billing data can include personal and financial information (names, emails, addresses, purchase history, payment metadata), so avoid exposing production data to the model unnecessarily.
+  - Reports and customer/subscription tools can surface aggregate revenue and account details; treat that output as sensitive business data.
+  - The API key is provided via a command-line argument or the `PADDLE_API_KEY` environment variable in your MCP client config — keep that config out of version control and restrict access to it.
+sourceUrls:
+  - https://github.com/PaddleHQ/paddle-mcp-server/blob/main/README.md
+  - https://www.npmjs.com/package/@paddle/paddle-mcp
+  - https://github.com/PaddleHQ/paddle-mcp-server/blob/main/LICENSE
+tags:
+  - mcp
+  - paddle
+  - billing
+  - payments
+  - subscriptions
+  - saas
+  - merchant-of-record
+  - nodejs
+keywords:
+  - Paddle MCP server
+  - "@paddle/paddle-mcp"
+  - Paddle Billing MCP
+  - Paddle API MCP
+  - subscriptions MCP
+  - payments MCP server
+  - Model Context Protocol Paddle
+  - Paddle catalog MCP
+  - merchant of record MCP
+  - PaddleHQ MCP server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+The **Paddle MCP Server** is the official Model Context Protocol server maintained by
+[Paddle](https://github.com/PaddleHQ). It gives LLMs and agentic clients near-parity access to the
+[Paddle Billing](https://www.paddle.com/billing) API — Paddle is a developer-first **merchant of
+record** that handles payments, tax, and subscriptions — so an agent can **manage the product
+catalog**, **view customers and purchases**, **handle subscription, payment, and refund workflows**,
+**create and adjust transactions**, and **generate financial reports**.
+
+The project is written in TypeScript, distributed as the npm package
+[`@paddle/paddle-mcp`](https://www.npmjs.com/package/@paddle/paddle-mcp) (v0.1.6), and licensed under
+Apache 2.0. It runs over `stdio` via `npx`, authenticates with a Paddle API key, targets either the
+**sandbox** or **production** environment, and exposes a **tool-permission filter**
+(`read-only`, `non-destructive`, or `all`) so you can bound what the agent may do. It supports Paddle
+Billing (not Paddle Classic).
+
+## Source Review
+
+The following real repository and package sources were fetched and reviewed for this entry:
+
+- [README.md](https://github.com/PaddleHQ/paddle-mcp-server/blob/main/README.md) — install methods (command-line args and environment variables), the config blocks, the `--tools`/`PADDLE_MCP_TOOLS` permission modes, environment settings, and the full tool catalog.
+- [npm: @paddle/paddle-mcp](https://www.npmjs.com/package/@paddle/paddle-mcp) — package name and version (`0.1.6`), Apache-2.0 license, and the `paddle` bin entry.
+- [LICENSE](https://github.com/PaddleHQ/paddle-mcp-server/blob/main/LICENSE) — Apache License 2.0.
+
+Repository facts confirmed at review time: official `PaddleHQ` organization, default branch `main`,
+not archived, and released as `@paddle/paddle-mcp` v0.1.6 on npm.
+
+## Features
+
+- **Catalog management** — create and update products, prices, and discounts (e.g. `create_product`, `create_price`, `create_discount`).
+- **Customers & businesses** — view and manage customers, businesses, and addresses (e.g. `create_customer`, `get_customer`, `create_business`).
+- **Subscriptions** — inspect, activate, cancel, and charge subscriptions (e.g. `activate_subscription`, `cancel_subscription`, `create_subscription_charge`).
+- **Transactions & adjustments** — create transactions and issue adjustments such as refunds and credits (e.g. `create_transaction`, `create_adjustment`).
+- **Reports** — generate financial and operational reports (e.g. `create_report`).
+- **Simulations** — create and run integration simulations (e.g. `create_simulation`, `create_simulation_run`).
+- **Tool-permission filter** — `read-only`, `non-destructive` (default), `all`, or a comma-separated allowlist of specific tools via `--tools` / `PADDLE_MCP_TOOLS`.
+- **Sandbox or production** — target `sandbox` for development or `production` for live data via `--environment` / `PADDLE_ENVIRONMENT`.
+- **One-command install** — runs via `npx -y @paddle/paddle-mcp` with no clone or build step.
+
+## Installation
+
+Run the published package with `npx`, passing your API key, environment, and tool mode as arguments
+(recommended):
+
+```bash
+npx -y @paddle/paddle-mcp --api-key=YOUR_API_KEY --environment=sandbox --tools=non-destructive
+```
+
+Add it to an MCP client (e.g. Cursor / Claude Desktop) using command-line arguments:
+
+```json
+{
+  "mcpServers": {
+    "paddle": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@paddle/paddle-mcp",
+        "--api-key=YOUR_API_KEY",
+        "--environment=sandbox",
+        "--tools=non-destructive"
+      ]
+    }
+  }
+}
+```
+
+Or configure it with environment variables instead:
+
+```json
+{
+  "mcpServers": {
+    "paddle": {
+      "command": "npx",
+      "args": ["-y", "@paddle/paddle-mcp"],
+      "env": {
+        "PADDLE_API_KEY": "YOUR_API_KEY",
+        "PADDLE_ENVIRONMENT": "sandbox",
+        "PADDLE_MCP_TOOLS": "non-destructive"
+      }
+    }
+  }
+}
+```
+
+Create and manage API keys in **Paddle > Developer tools > Authentication** (sandbox and live are
+separate). Accepted `--tools` / `PADDLE_MCP_TOOLS` values are `all`, `read-only`, `non-destructive`
+(default), or a comma-separated list of specific tool names.
+
+## Use Cases
+
+- **Conversational billing ops** — inspect customers, subscriptions, and transactions and make changes in natural language.
+- **Catalog authoring** — create and adjust products, prices, and discounts from an agentic workflow.
+- **Refunds and adjustments** — issue credits or refunds through adjustment tools (with appropriate permissions).
+- **Financial reporting** — generate revenue and operational reports for analysis.
+- **Integration testing** — run simulations against the sandbox environment while building a Paddle integration.
+
+## Safety and Privacy
+
+- **Acts on real billing data.** With write permissions the server can create and modify products, customers, subscriptions, and transactions; adjustment/transaction tools can move real money.
+- **Permission filter is a first-class control.** Use `--tools=read-only` or the default `non-destructive` unless a destructive action is intended; `all` enables every operation.
+- **Sandbox first.** Develop with `--environment=sandbox` and a sandbox key; switch to `production` only deliberately.
+- **API key is sensitive.** It grants broad account access — keep client config out of version control and restrict access.
+- **Data flows to the model.** Customer, business, subscription, transaction, and report data (including personal and financial details) is returned to the LLM/MCP client, so avoid exposing production data unnecessarily.
+
+## Duplicate Check
+
+No existing entry in the directory matches this server. A search of all directory entries for
+"paddle" across slugs, titles, repository URLs, and install commands returned no results, and there
+is no prior entry pointing at `github.com/PaddleHQ/paddle-mcp-server` or the npm package
+`@paddle/paddle-mcp`. This is therefore a net-new, non-duplicate entry.
