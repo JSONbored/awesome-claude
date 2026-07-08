@@ -1,0 +1,210 @@
+---
+title: Infisical MCP Server
+slug: infisical-mcp-server
+category: mcp
+description: >-
+  The official Infisical MCP server (@infisical/mcp) that lets AI assistants
+  work with Infisical's secrets-management API through function calling —
+  reading, creating, updating, and deleting secrets, and managing projects,
+  environments, folders, and project members — authenticating with a Machine
+  Identity (universal auth) or an access token against Infisical Cloud or a
+  self-hosted instance.
+cardDescription: >-
+  Official Infisical MCP server: read/create/update/delete secrets and manage
+  projects, environments, folders, and members via Machine Identity or token
+  auth.
+seoTitle: Infisical MCP Server — Secrets & Project Management for LLMs
+seoDescription: >-
+  The official Infisical MCP server (@infisical/mcp) gives LLMs tools to manage
+  secrets (get, list, create, update, delete) and projects, environments,
+  folders, and members, authenticating with a Machine Identity or access token
+  against Infisical Cloud or a self-hosted instance.
+author: Infisical
+authorProfileUrl: https://github.com/Infisical
+submittedBy: davion-knight
+submittedByUrl: "https://github.com/davion-knight"
+dateAdded: "2026-07-08"
+brandName: Infisical MCP Server
+brandDomain: infisical.com
+websiteUrl: https://infisical.com/
+repoUrl: https://github.com/Infisical/infisical-mcp-server
+documentationUrl: https://github.com/Infisical/infisical-mcp-server/blob/main/README.md
+installable: true
+installCommand: npx -y @infisical/mcp
+usageSnippet: |
+  # Run directly from npm via npx (stdio transport)
+  # Universal-auth (Machine Identity) is the default auth method.
+  export INFISICAL_UNIVERSAL_AUTH_CLIENT_ID="your_client_id"
+  export INFISICAL_UNIVERSAL_AUTH_CLIENT_SECRET="your_client_secret"
+  npx -y @infisical/mcp
+copySnippet: |
+  {
+    "mcpServers": {
+      "infisical": {
+        "command": "npx",
+        "args": ["-y", "@infisical/mcp"],
+        "env": {
+          "INFISICAL_UNIVERSAL_AUTH_CLIENT_ID": "your_client_id",
+          "INFISICAL_UNIVERSAL_AUTH_CLIENT_SECRET": "your_client_secret"
+        }
+      }
+    }
+  }
+configSnippet: |
+  {
+    "mcpServers": {
+      "infisical": {
+        "command": "npx",
+        "args": ["-y", "@infisical/mcp"],
+        "env": {
+          "INFISICAL_HOST_URL": "https://app.infisical.com",
+          "INFISICAL_AUTH_METHOD": "access-token",
+          "INFISICAL_TOKEN": "your_access_token"
+        }
+      }
+    }
+  }
+prerequisites:
+  - Node.js and npm (the server runs via `npx -y @infisical/mcp`)
+  - An Infisical account on Infisical Cloud or a self-hosted instance
+  - Credentials — a Machine Identity universal-auth client ID and secret, or an access token (`INFISICAL_TOKEN`)
+  - Optionally `INFISICAL_HOST_URL` for a self-hosted or dedicated instance (defaults to `https://app.infisical.com`)
+  - An MCP-compatible client (Claude Desktop, Cursor, VS Code, etc.)
+safetyNotes:
+  - The server can read, create, update, and delete secrets (`get-secret`, `list-secrets`, `create-secret`, `update-secret`, `delete-secret`) in the projects and environments its identity can access, so deletions and edits affect real secrets.
+  - It can also create projects, environments, and folders and invite members to a project (`create-project`, `create-environment`, `create-folder`, `invite-members-to-project`), which change structure and access.
+  - Access is bounded by the Machine Identity or access token, not by tool naming; scope that identity to the minimum projects, environments, and permissions needed.
+  - Because this manages secrets, prefer a least-privilege identity and a non-production project when an agent acts autonomously.
+  - The universal-auth client secret or `INFISICAL_TOKEN` grants access to your secrets and must itself be treated as a secret.
+privacyNotes:
+  - The `get-secret` and `list-secrets` tools return secret values to the LLM/MCP client, so plaintext secrets can be exposed to the model and its provider — a significant consideration for a secrets manager.
+  - Avoid pointing the server at production secrets; use a scoped, non-sensitive project for agent workflows where possible.
+  - The identity credentials (client ID/secret or access token) live in your MCP client config env block — keep that config out of version control and restrict access to it.
+  - When self-hosting, `INFISICAL_HOST_URL` targets your own instance, and requests plus credentials are sent there.
+sourceUrls:
+  - https://github.com/Infisical/infisical-mcp-server/blob/main/README.md
+  - https://www.npmjs.com/package/@infisical/mcp
+  - https://github.com/Infisical/infisical-mcp-server/blob/main/LICENSE
+tags:
+  - mcp
+  - infisical
+  - secrets-management
+  - security
+  - devops
+  - configuration
+  - nodejs
+keywords:
+  - Infisical MCP server
+  - "@infisical/mcp"
+  - Infisical secrets MCP
+  - secrets management MCP
+  - Machine Identity MCP
+  - Model Context Protocol Infisical
+  - Infisical API MCP
+  - secret rotation MCP
+  - environment secrets MCP
+  - Infisical official MCP server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+The **Infisical MCP Server** is the official Model Context Protocol server maintained by
+[Infisical](https://github.com/Infisical). It lets LLMs and agentic clients work with
+[Infisical](https://infisical.com/)'s secrets-management API through function calling — **reading,
+creating, updating, and deleting secrets**, and managing **projects**, **environments**, **folders**,
+and **project members** — on Infisical Cloud or a self-hosted instance.
+
+It ships as the npm package [`@infisical/mcp`](https://www.npmjs.com/package/@infisical/mcp)
+(v0.0.23, Apache-2.0), runs over `stdio` via `npx`, and authenticates with a **Machine Identity**
+(universal auth, the default) or an **access token**. The optional `INFISICAL_HOST_URL` defaults to
+`https://app.infisical.com` and can point at a self-hosted instance. Setup details live in the
+[repository README](https://github.com/Infisical/infisical-mcp-server/blob/main/README.md).
+
+## Source Review
+
+The following real repository and package sources were fetched and reviewed for this entry:
+
+- [README.md](https://github.com/Infisical/infisical-mcp-server/blob/main/README.md) — the `npx` install command, the `universal-auth` and `access-token` auth methods and their environment variables, the `INFISICAL_HOST_URL` option, the client config blocks, and the tool list.
+- [npm: @infisical/mcp](https://www.npmjs.com/package/@infisical/mcp) — package name and version (`0.0.23`) and Apache-2.0 license.
+- [LICENSE](https://github.com/Infisical/infisical-mcp-server/blob/main/LICENSE) — Apache License 2.0.
+
+Repository facts confirmed at review time: official `Infisical` organization, repository
+`Infisical/infisical-mcp-server`, default branch `main`, not archived, and released as
+`@infisical/mcp` v0.0.23 on npm.
+
+## Features
+
+- **Secret operations** — `get-secret`, `list-secrets`, `create-secret`, `update-secret`, and `delete-secret` read and manage secrets.
+- **Projects** — `create-project` and `list-projects` create and enumerate Infisical projects.
+- **Environments & folders** — `create-environment` and `create-folder` organize secrets within a project.
+- **Membership** — `invite-members-to-project` invites one or more members to a project.
+- **Flexible auth** — Machine Identity universal auth (client ID/secret, the default) or an access token (`INFISICAL_TOKEN`).
+- **Cloud or self-hosted** — targets Infisical Cloud by default, or a self-hosted/dedicated instance via `INFISICAL_HOST_URL`.
+- **One-command install** — runs via `npx -y @infisical/mcp` with no clone or build step.
+
+## Installation
+
+Run the published package with `npx`. Universal auth (Machine Identity) is the default method:
+
+```json
+{
+  "mcpServers": {
+    "infisical": {
+      "command": "npx",
+      "args": ["-y", "@infisical/mcp"],
+      "env": {
+        "INFISICAL_UNIVERSAL_AUTH_CLIENT_ID": "your_client_id",
+        "INFISICAL_UNIVERSAL_AUTH_CLIENT_SECRET": "your_client_secret"
+      }
+    }
+  }
+}
+```
+
+Or authenticate with an access token (personal or machine identity), optionally against a self-hosted
+instance:
+
+```json
+{
+  "mcpServers": {
+    "infisical": {
+      "command": "npx",
+      "args": ["-y", "@infisical/mcp"],
+      "env": {
+        "INFISICAL_HOST_URL": "https://app.infisical.com",
+        "INFISICAL_AUTH_METHOD": "access-token",
+        "INFISICAL_TOKEN": "your_access_token"
+      }
+    }
+  }
+}
+```
+
+`INFISICAL_AUTH_METHOD` accepts `universal-auth` (default) or `access-token`. `INFISICAL_HOST_URL`
+defaults to `https://app.infisical.com` and can point at a self-hosted or dedicated Infisical
+instance.
+
+## Use Cases
+
+- **Conversational secret management** — read, create, update, and delete secrets across environments from an agentic workflow.
+- **Project bootstrapping** — create projects, environments, and folders to structure a new codebase's configuration.
+- **Onboarding** — invite members to a project during setup.
+- **Configuration review** — list projects and secrets to audit what exists (with appropriate least-privilege access).
+- **Self-hosted workflows** — operate against a self-hosted Infisical instance via `INFISICAL_HOST_URL`.
+
+## Safety and Privacy
+
+- **Reads and writes real secrets.** `get`/`list`/`create`/`update`/`delete-secret` can expose and modify secret values; it can also create projects/environments/folders and invite members.
+- **Secrets flow to the model.** `get-secret` and `list-secrets` return secret values to the LLM/MCP client, so plaintext secrets can reach the model and its provider — the key consideration for a secrets manager.
+- **Scope the identity.** Access is bounded by the Machine Identity or token; grant only the projects, environments, and permissions needed, and prefer a non-production project for autonomous agents.
+- **Credentials are secrets too.** The universal-auth client secret or `INFISICAL_TOKEN` grants access to your vault — keep client config out of version control and restrict access.
+- **Self-hosting.** `INFISICAL_HOST_URL` sends requests and credentials to your own instance; confirm it is the intended target.
+
+## Duplicate Check
+
+No existing entry in the directory matches this server. A search of all directory entries for
+"infisical" across slugs, titles, repository URLs, and install commands returned no results, and there
+is no prior entry pointing at `github.com/Infisical/infisical-mcp-server` or the npm package
+`@infisical/mcp`. This is therefore a net-new, non-duplicate entry.
