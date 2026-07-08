@@ -1,0 +1,197 @@
+---
+title: Mux MCP Server
+slug: mux-mcp-server
+category: mcp
+description: >-
+  The official Mux MCP server (@mux/mcp) that gives AI agents access to the Mux
+  API for video and analytics. It uses a "Code Mode" scheme — exposing a
+  documentation-search tool and a code tool that runs agent-written TypeScript
+  against the Mux SDK in an isolated sandbox — to work with Mux Video (assets,
+  live streams, playback IDs, uploads) and Mux Data (viewer metrics and
+  monitoring).
+cardDescription: >-
+  Official Mux MCP server: work with Mux Video and Mux Data via a Code Mode
+  scheme that runs sandboxed TypeScript against the Mux SDK.
+seoTitle: Mux MCP Server — Mux Video & Data API for LLMs
+seoDescription: >-
+  The official Mux MCP server (@mux/mcp) gives LLMs access to the Mux API — Mux
+  Video assets, live streams, playback IDs, and uploads, plus Mux Data metrics
+  and monitoring — using a Code Mode scheme that executes sandboxed TypeScript
+  against the Mux SDK.
+author: muxinc
+authorProfileUrl: https://github.com/muxinc
+submittedBy: davion-knight
+submittedByUrl: "https://github.com/davion-knight"
+dateAdded: "2026-07-08"
+brandName: Mux MCP Server
+brandDomain: mux.com
+websiteUrl: https://www.mux.com/
+repoUrl: https://github.com/muxinc/mux-node-sdk
+documentationUrl: https://github.com/muxinc/mux-node-sdk/blob/master/packages/mcp-server/README.md
+installable: true
+installCommand: npx -y @mux/mcp@latest
+usageSnippet: |
+  # Run directly from npm via npx (stdio transport)
+  export MUX_TOKEN_ID="your_token_id"
+  export MUX_TOKEN_SECRET="your_token_secret"
+  npx -y @mux/mcp@latest
+copySnippet: |
+  {
+    "mcpServers": {
+      "mux": {
+        "command": "npx",
+        "args": ["-y", "@mux/mcp"],
+        "env": {
+          "MUX_TOKEN_ID": "your_token_id",
+          "MUX_TOKEN_SECRET": "your_token_secret"
+        }
+      }
+    }
+  }
+configSnippet: |
+  {
+    "mcpServers": {
+      "mux": {
+        "command": "npx",
+        "args": ["-y", "@mux/mcp"],
+        "env": {
+          "MUX_TOKEN_ID": "your_token_id",
+          "MUX_TOKEN_SECRET": "your_token_secret"
+        }
+      }
+    }
+  }
+prerequisites:
+  - Node.js and npm (the server runs via `npx -y @mux/mcp@latest`)
+  - A Mux account and an access token (token ID and secret) from the Mux dashboard
+  - Optional Mux signing/private keys or webhook secret if you use signed playback or webhook features
+  - An MCP-compatible client (Claude Desktop, Cursor, VS Code, Windsurf, etc.)
+safetyNotes:
+  - This server uses a Code Mode scheme — the agent writes TypeScript against the Mux SDK and the server runs it in an isolated sandbox that has no web or filesystem access, then returns what the code prints or returns.
+  - The sandboxed code runs with your Mux access token, so it can create, modify, and delete real Mux resources (assets, live streams, playback IDs, uploads) within that token's permissions.
+  - Access is bounded by the Mux token's permissions, not by tool naming — scope the token to least privilege and prefer a non-production environment when an agent acts autonomously.
+  - Optional Mux signing and private keys enable signed playback URLs and JWTs; treat `MUX_SIGNING_KEY` and `MUX_PRIVATE_KEY` as secrets.
+  - Launching the client with the remote HTTP transport opens a network listener, so secure and authenticate it before exposing it beyond localhost.
+privacyNotes:
+  - The server calls the Mux API with your credentials; asset metadata, live-stream details, and Mux Data results it returns are passed to the LLM/MCP client.
+  - Mux Data covers viewer and playback analytics (video views, errors, quality-of-experience metrics), which can include viewer and session information.
+  - Credentials (`MUX_TOKEN_ID`, `MUX_TOKEN_SECRET`, and any signing/webhook secrets) are provided via environment variables in your MCP client config — keep that config out of version control and restrict access to it.
+  - Video assets and analytics can reference real customer-facing content and usage, so avoid exposing a production account's data to the model unnecessarily.
+sourceUrls:
+  - https://github.com/muxinc/mux-node-sdk/blob/master/packages/mcp-server/README.md
+  - https://www.npmjs.com/package/@mux/mcp
+  - https://github.com/muxinc/mux-node-sdk/blob/master/LICENSE
+tags:
+  - mcp
+  - mux
+  - video
+  - streaming
+  - analytics
+  - media
+  - api
+  - nodejs
+keywords:
+  - Mux MCP server
+  - "@mux/mcp"
+  - Mux Video MCP
+  - Mux Data MCP
+  - Mux API MCP
+  - Model Context Protocol Mux
+  - video streaming MCP
+  - Mux assets MCP
+  - Code Mode MCP
+  - muxinc MCP server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+The **Mux MCP Server** is the official Model Context Protocol server for the
+[Mux](https://www.mux.com/) API, maintained by [Mux](https://github.com/muxinc). It gives LLMs and
+agentic clients access to **Mux Video** — assets, live streams, playback IDs, and direct uploads —
+and **Mux Data** — viewer and playback analytics — through the Mux SDK.
+
+It ships as the npm package [`@mux/mcp`](https://www.npmjs.com/package/@mux/mcp) (v14.1.1,
+Apache-2.0), runs over `stdio` via `npx`, and authenticates with a Mux access token
+(`MUX_TOKEN_ID` / `MUX_TOKEN_SECRET`). Rather than exposing one tool per API operation, it uses a
+**Code Mode** scheme: it presents a documentation-search tool and a code tool, and the agent writes
+TypeScript against the Mux SDK that runs in an **isolated sandbox** (no web or filesystem access),
+returning whatever the code prints or returns. Full setup lives in the
+[mcp-server README](https://github.com/muxinc/mux-node-sdk/blob/master/packages/mcp-server/README.md).
+
+## Source Review
+
+The following real repository and package sources were fetched and reviewed for this entry:
+
+- [mcp-server README](https://github.com/muxinc/mux-node-sdk/blob/master/packages/mcp-server/README.md) — the `npx` install command, the `MUX_TOKEN_ID`/`MUX_TOKEN_SECRET` (and optional signing/webhook) env vars, the client config block, the Code Mode scheme, and the remote HTTP transport option.
+- [npm: @mux/mcp](https://www.npmjs.com/package/@mux/mcp) — package name and version (`14.1.1`), Apache-2.0 license, and the `mcp-server` bin entry.
+- [muxinc/mux-node-sdk](https://github.com/muxinc/mux-node-sdk) — the official Mux Node SDK repository that hosts the MCP server package.
+
+Repository facts confirmed at review time: official `muxinc` organization, default branch `master`,
+not archived, actively maintained, with the MCP server distributed as `@mux/mcp` v14.1.1 on npm.
+
+## Features
+
+- **Code Mode architecture** — exposes a documentation-search tool plus a code tool that executes agent-written TypeScript against the Mux SDK in an isolated sandbox.
+- **Mux Video** — work with assets, live streams, playback IDs, and direct uploads through the SDK.
+- **Mux Data** — query viewer and playback analytics such as video views, errors, and quality metrics.
+- **Token authentication** — authenticates with a Mux access token (`MUX_TOKEN_ID` / `MUX_TOKEN_SECRET`); optional signing/private keys and webhook secret for signed playback and webhooks.
+- **Sandboxed execution** — the code tool runs without web or filesystem access, returning only what the code outputs.
+- **Deterministic complex tasks** — because the agent writes SDK code, multi-step operations run repeatably.
+- **Remote transport** — a `--transport=http` option runs the server over HTTP for remote clients.
+- **One-command install** — runs via `npx -y @mux/mcp@latest` with no clone or build step.
+
+## Installation
+
+Run the published package with `npx`, providing a Mux access token via environment variables:
+
+```bash
+export MUX_TOKEN_ID="your_token_id"
+export MUX_TOKEN_SECRET="your_token_secret"
+npx -y @mux/mcp@latest
+```
+
+Add it to an MCP client (e.g. Claude Desktop's `claude_desktop_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "mux": {
+      "command": "npx",
+      "args": ["-y", "@mux/mcp"],
+      "env": {
+        "MUX_TOKEN_ID": "your_token_id",
+        "MUX_TOKEN_SECRET": "your_token_secret"
+      }
+    }
+  }
+}
+```
+
+Optional environment variables (`MUX_SIGNING_KEY`, `MUX_PRIVATE_KEY`, `MUX_WEBHOOK_SECRET`) enable
+signed playback URLs and webhook handling. Launching the client with `--transport=http` runs the
+server over HTTP for remote use.
+
+## Use Cases
+
+- **Video asset management** — create, inspect, and manage Mux Video assets and uploads in natural language.
+- **Live streaming operations** — set up and inspect live streams and playback IDs.
+- **Analytics queries** — pull Mux Data metrics such as views, errors, and quality-of-experience for a title or time range.
+- **Deterministic automations** — have the agent write SDK code for multi-step Mux workflows that run repeatably.
+- **Integration prototyping** — explore the Mux API via the documentation-search tool while building an integration.
+
+## Safety and Privacy
+
+- **Code Mode runs agent-written code.** The code tool executes TypeScript against the Mux SDK in a sandbox with no web or filesystem access, but it runs with your Mux token and can create, modify, or delete real resources.
+- **Token is the boundary.** Scope the Mux access token to least privilege and prefer a non-production environment for autonomous agents.
+- **Signing keys are secrets.** `MUX_SIGNING_KEY` / `MUX_PRIVATE_KEY` enable signed playback and JWTs; keep them and the token secret out of version control.
+- **Data flows to the model.** Asset metadata and Mux Data analytics (including viewer/session information) are returned to the LLM/MCP client.
+- **Remote transport exposure.** The `--transport=http` option opens a network listener; secure and authenticate it before exposing it beyond localhost.
+
+## Duplicate Check
+
+No existing entry in the directory matches this server. A search of all directory entries for "mux"
+across slugs, titles, repository URLs, and install commands returned no results, and there is no prior
+entry pointing at `github.com/muxinc/mux-node-sdk` or the npm package `@mux/mcp`. This is therefore a
+net-new, non-duplicate entry.
