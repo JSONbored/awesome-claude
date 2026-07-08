@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
-import { compareOperationalFitHeatmapState } from "@/lib/compare-operational-fit-heatmap-lib";
+import {
+  compareOperationalFitHeatmapState,
+  operationalFitToneClass,
+} from "@/lib/compare-operational-fit-heatmap-lib";
 
 function entry(overrides: Partial<Entry> = {}): Entry {
   return {
@@ -200,5 +203,13 @@ describe("compare operational fit heatmap lib", () => {
   it("generates summary when weak entries absent", () => {
     const state = compareOperationalFitHeatmapState([strong], "team-default");
     expect(state.summary).toContain("strong operational fit");
+  });
+});
+
+describe("operationalFitToneClass", () => {
+  it("maps each tone to its chip classes", () => {
+    expect(operationalFitToneClass("strong")).toContain("text-trust-trusted");
+    expect(operationalFitToneClass("mixed")).toContain("text-amber-900");
+    expect(operationalFitToneClass("weak")).toContain("text-trust-blocked");
   });
 });

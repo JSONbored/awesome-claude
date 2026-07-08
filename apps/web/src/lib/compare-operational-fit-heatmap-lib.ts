@@ -3,6 +3,13 @@ import type { Entry } from "@/types/registry";
 export type OperationalFitPresetId = "team-default" | "security-hardening" | "rapid-adoption";
 export type OperationalFitTone = "strong" | "mixed" | "weak";
 
+/** Tailwind border/background/text classes for an operational-fit tone chip. */
+export function operationalFitToneClass(tone: OperationalFitTone): string {
+  if (tone === "strong") return "border-trust-trusted/35 bg-trust-trusted/5 text-trust-trusted";
+  if (tone === "mixed") return "border-amber-500/35 bg-amber-500/5 text-amber-900";
+  return "border-trust-blocked/35 bg-trust-blocked/5 text-trust-blocked";
+}
+
 export type OperationalFitAxis = {
   id: string;
   label: string;

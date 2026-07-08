@@ -1,8 +1,8 @@
 import type {
   CompareOperationalFitHeatmapState,
   OperationalFitPresetId,
-  OperationalFitTone,
 } from "@/lib/compare-operational-fit-heatmap";
+import { operationalFitToneClass } from "@/lib/compare-operational-fit-heatmap-lib";
 import { cn } from "@/lib/utils";
 
 const PRESETS: { id: OperationalFitPresetId; label: string }[] = [
@@ -10,12 +10,6 @@ const PRESETS: { id: OperationalFitPresetId; label: string }[] = [
   { id: "security-hardening", label: "Security hardening" },
   { id: "rapid-adoption", label: "Rapid adoption" },
 ];
-
-function toneClass(tone: OperationalFitTone): string {
-  if (tone === "strong") return "border-trust-trusted/35 bg-trust-trusted/5 text-trust-trusted";
-  if (tone === "mixed") return "border-amber-500/35 bg-amber-500/5 text-amber-900";
-  return "border-trust-blocked/35 bg-trust-blocked/5 text-trust-blocked";
-}
 
 export function CompareOperationalFitHeatmapPanel({
   state,
@@ -78,7 +72,7 @@ export function CompareOperationalFitHeatmapPanel({
                 <span
                   className={cn(
                     "inline-flex rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-wide",
-                    toneClass(entry.fitTone),
+                    operationalFitToneClass(entry.fitTone),
                   )}
                 >
                   {entry.fitTone}
