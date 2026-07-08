@@ -38,6 +38,7 @@ import { ComparisonTable } from "@/components/comparison-table";
 import { compareEntryInteractiveUiState } from "@/lib/compare-entry-interactive-ui-lib";
 import { buildEntryJsonLd } from "@heyclaude/registry";
 import { stringifyJsonLd } from "@/lib/json-ld";
+import { hasSchemaDetails } from "@/lib/entry-schema-details-lib";
 import { absoluteUrl, clampDescription } from "@/lib/seo";
 import { categoryLabels, categoryUsageHints, siteConfig } from "@/lib/site";
 import { tagSlug } from "@/lib/tags";
@@ -814,39 +815,6 @@ function BadgeSection({
         />
       </div>
     </DossierSection>
-  );
-}
-
-function hasSchemaDetails(entry: Entry) {
-  return Boolean(
-    entry.skillType ||
-    entry.skillLevel ||
-    entry.verificationStatus ||
-    entry.verifiedAt ||
-    entry.retrievalSources?.length ||
-    entry.testedPlatforms?.length ||
-    entry.platformCompatibility?.length ||
-    entry.trigger ||
-    entry.commandSyntax ||
-    entry.argumentHint ||
-    entry.allowedTools?.length ||
-    entry.scriptLanguage ||
-    entry.scriptBody ||
-    entry.items?.length ||
-    entry.installationOrder?.length ||
-    entry.estimatedSetupTime ||
-    entry.difficulty ||
-    entry.websiteUrl ||
-    entry.pricingModel ||
-    entry.disclosure ||
-    entry.applicationCategory ||
-    entry.operatingSystem ||
-    entry.repoStats ||
-    entry.downloadUrl ||
-    entry.packageVerified !== undefined ||
-    entry.downloadSha256 ||
-    entry.copySnippet ||
-    entry.fullCopy,
   );
 }
 
