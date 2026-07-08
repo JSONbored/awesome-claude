@@ -84,6 +84,7 @@ export function buildEntryTocItems(input: {
   const items: EntryTocItem[] = [];
   if (input.risk !== "low") items.push({ id: "risk-callout", label: "Install risk" });
   items.push({ id: "citation-facts", label: "Citation facts" });
+  items.push({ id: "adoption-plan", label: "Adoption plan" });
   if (input.hasSafetyNotes) items.push({ id: "safety", label: "Safety notes" });
   if (input.hasPrivacyNotes) items.push({ id: "privacy", label: "Privacy notes" });
   if (input.hasPrerequisites) items.push({ id: "prerequisites", label: "Prerequisites" });

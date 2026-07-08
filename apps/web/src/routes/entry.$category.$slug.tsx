@@ -56,6 +56,7 @@ import { EntryDetailCommandCenter } from "@/components/entry-detail-command-cent
 import { EntryDetailMobileActionBar } from "@/components/entry-detail-mobile-action-bar";
 import { EntrySignalsPanel } from "@/components/entry-signals-panel";
 import { EntryBrandMark } from "@/components/entry-brand-mark";
+import { EntryAdoptionPlanPanel } from "@/components/entry-adoption-plan-panel";
 import { PLATFORM_SUPPORT_LABEL, type Entry } from "@/types/registry";
 import {
   buildEntryTocItems,
@@ -77,6 +78,7 @@ import { useCopyPref, useHarnessPref, type CopyVariant } from "@/lib/dossier-pre
 import { variantsForEntry } from "@/components/copy-segmented";
 import type { Harness } from "@/types/registry";
 import { cn } from "@/lib/utils";
+import { entryAdoptionPlanState, type AdoptionPlanPresetId } from "@/lib/entry-adoption-plan";
 
 const loadFullEntry = createServerFn({ method: "GET" })
   .inputValidator(z.object({ category: z.string().min(1), slug: z.string().min(1) }))
@@ -274,6 +276,7 @@ function Dossier() {
   const tabPayload = liveVariants.find((v) => v.id === tab)?.value;
 
   const compare = useCompare();
+  const [adoptionPreset, setAdoptionPreset] = useState<AdoptionPlanPresetId>("balanced-rollout");
   const inCompare = useIsCompared(entry);
   const onToggleCompare = useCallback(() => {
     const wasIn = inCompare;
@@ -333,6 +336,10 @@ function Dossier() {
   );
   const quickLinks = useMemo(() => entryQuickLinks(entry), [entry]);
   const readinessRows = useMemo(() => entryReadinessRows(entry), [entry]);
+  const adoptionPlan = useMemo(
+    () => entryAdoptionPlanState(entry, adoptionPreset, compare.items),
+    [entry, adoptionPreset, compare.items],
+  );
   const entryUrl = `/entry/${entry.category}/${entry.slug}`;
 
   return (
@@ -483,6 +490,11 @@ function Dossier() {
             </p>
             <CitationFacts entry={entry} />
           </DossierSection>
+          <EntryAdoptionPlanPanel
+            state={adoptionPlan}
+            selectedPreset={adoptionPreset}
+            onSelectPreset={setAdoptionPreset}
+          />
           {entry.safetyNotes && (
             <DossierSection id="safety" icon={ShieldCheck} title="Safety notes" tone="trust">
               <NoteList value={entry.safetyNotesList ?? [entry.safetyNotes]} />
