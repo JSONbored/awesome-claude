@@ -62,7 +62,7 @@ function bucketWeekly(prs, now) {
 
   for (const pr of prs) {
     const t = new Date(pr.mergedAt);
-    if (t < bucketStart || t > now) continue;
+    if (Number.isNaN(t.getTime()) || t < bucketStart || t > now) continue;
     const idx = Math.min(WEEKS - 1, Math.floor((t - bucketStart) / weekMs));
     prBuckets[idx] += 1;
     locBuckets[idx] += (pr.additions || 0) + (pr.deletions || 0);
