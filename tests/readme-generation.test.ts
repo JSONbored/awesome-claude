@@ -117,6 +117,11 @@ describe("generated README catalog", () => {
     expect(top).toContain("https://heyclau.de/jobs");
     expect(top).toContain("https://heyclau.de/claim");
     expect(top).toContain("https://awesome.re/mentioned-badge.svg");
-    expect(top).toContain("https://gittensor.io/repositories");
+    expect(top).toContain(
+      "https://gittensor.io/miners/repository?name=JSONbored/awesome-claude",
+    );
+    expect(top).toContain(
+      "https://api.gittensor.io/repos/JSONbored%2Fawesome-claude/badge.svg",
+    );
   });
 });

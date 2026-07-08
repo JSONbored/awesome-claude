@@ -183,7 +183,7 @@ const readme = `<table>
         <a href="https://smithery.ai/servers/heyclaude/heyclaude"><img src="https://smithery.ai/badge/heyclaude/heyclaude" alt="Listed on Smithery"></a>
       </p>
       <p>
-        <a href="https://gittensor.io/repositories"><img src="https://gittensor.io/favicon.ico" alt="" height="16" align="absmiddle"> <strong>Listed on Gittensor</strong></a><br>
+        <a href="https://gittensor.io/miners/repository?name=JSONbored/awesome-claude"><img src="https://api.gittensor.io/repos/JSONbored%2Fawesome-claude/badge.svg" alt="Gittensor impact"></a><br>
         <sub>Unofficial community project. Contribution eligibility and rewards follow Gittensor's current rules.</sub>
       </p>
     </td>
