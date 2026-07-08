@@ -5,6 +5,7 @@ import { parseAbbreviatedCount } from "@heyclaude/registry/presentation";
 import { apiError, apiJson, createApiHandler } from "@/lib/api/router";
 import { logApiError, logApiInfo, logApiWarn, sample } from "@/lib/api-logs";
 import { getEnvString } from "@/lib/cloudflare-env.server";
+import { parseRepo } from "@/lib/github-repo-url-lib";
 import { siteConfig } from "@/lib/site";
 
 const GITHUB_API_VERSION = "2022-11-28";
@@ -16,18 +17,6 @@ type GitHubStats = {
   forks: number | null;
   updatedAt: string | null;
 };
-
-function parseRepo(url: string) {
-  try {
-    const parsed = new URL(url);
-    if (parsed.hostname !== "github.com") return null;
-    const [owner, repo] = parsed.pathname.split("/").filter(Boolean);
-    if (!owner || !repo) return null;
-    return { owner, repo: repo.replace(/\.git$/, "") };
-  } catch {
-    return null;
-  }
-}
 
 function getGithubToken() {
   return getEnvString("GITHUB_TOKEN");
