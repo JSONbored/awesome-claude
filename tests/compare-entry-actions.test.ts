@@ -42,7 +42,16 @@ describe("compare entry actions", () => {
           claimed: true,
         }),
       ).map((action) => action.id),
-    ).toEqual(["dossier", "install", "config", "source"]);
+    ).toEqual([
+      "dossier",
+      "install",
+      "config",
+      "api-json",
+      "llms",
+      "mcp-feed",
+      "source",
+      "newsletter",
+    ]);
   });
 
   it("detects when compared entries expose different next-action sets", () => {
