@@ -26,7 +26,7 @@ export function compareCuratedDecisionBannerText(decision: CompareDecisionSummar
 
 export function compareCuratedActionBannerText(actionsDiverge: boolean): string | null {
   if (!actionsDiverge) return null;
-  return "Next steps differ across entries — open the interactive comparison to copy install commands and source links per resource.";
+  return "Next steps differ across entries — open the interactive comparison to compare install/config copy, source links, API JSON, and LLM/MCP handoff links per resource.";
 }
 
 export function compareCuratedBannerTexts(entries: Entry[]): string[] {

@@ -89,7 +89,7 @@ describe("compare curated summary", () => {
   it("formats action divergence banner copy for curated headers", () => {
     expect(compareCuratedActionBannerText(false)).toBeNull();
     expect(compareCuratedActionBannerText(true)).toBe(
-      "Next steps differ across entries — open the interactive comparison to copy install commands and source links per resource.",
+      "Next steps differ across entries — open the interactive comparison to compare install/config copy, source links, API JSON, and LLM/MCP handoff links per resource.",
     );
   });
 
@@ -107,7 +107,7 @@ describe("compare curated summary", () => {
         entry({ installCommand: "npm i fixture" }),
       ]),
     ).toEqual([
-      "Next steps differ across entries — open the interactive comparison to copy install commands and source links per resource.",
+      "Next steps differ across entries — open the interactive comparison to compare install/config copy, source links, API JSON, and LLM/MCP handoff links per resource.",
     ]);
     expect(compareCuratedBannerTexts([entry()])).toEqual([]);
     expect(
@@ -122,7 +122,7 @@ describe("compare curated summary", () => {
       ]),
     ).toEqual([
       "1 trust signal differ across this comparison (Review status).",
-      "Next steps differ across entries — open the interactive comparison to copy install commands and source links per resource.",
+      "Next steps differ across entries — open the interactive comparison to compare install/config copy, source links, API JSON, and LLM/MCP handoff links per resource.",
     ]);
   });
 
