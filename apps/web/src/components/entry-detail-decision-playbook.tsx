@@ -4,6 +4,7 @@ import type {
   DecisionChecklistTone,
   EntryDetailDecisionPlaybookState,
 } from "@/lib/entry-detail-decision-playbook";
+import { compareScoreLabel } from "@/lib/compare-score-label-lib";
 import { cn } from "@/lib/utils";
 
 const TONE_STYLES: Record<DecisionChecklistTone, string> = {
@@ -80,13 +81,6 @@ function SectionCard({
       </ul>
     </section>
   );
-}
-
-function compareScoreLabel(scoreDelta: number | null) {
-  if (scoreDelta === null) return "No baseline selected";
-  if (scoreDelta > 0) return `+${scoreDelta} vs baseline`;
-  if (scoreDelta < 0) return `${scoreDelta} vs baseline`;
-  return "Score parity with baseline";
 }
 
 export function EntryDetailDecisionPlaybook({
