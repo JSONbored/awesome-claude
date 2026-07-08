@@ -25,6 +25,10 @@ import {
   compareRolloutReadinessState,
   type RolloutPresetId,
 } from "@/lib/compare-rollout-readiness";
+import {
+  compareOperationalFitHeatmapState,
+  type OperationalFitPresetId,
+} from "@/lib/compare-operational-fit-heatmap";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
 import { sameEntry } from "@/lib/entry-identity";
 import { search } from "@/data/search";
@@ -34,6 +38,7 @@ import { CompareDecisionBriefPanel } from "@/components/compare-decision-brief-p
 import { CompareScenarioRankingPanel } from "@/components/compare-scenario-ranking-panel";
 import { CompareEvidenceGapsPanel } from "@/components/compare-evidence-gaps-panel";
 import { CompareRolloutReadinessPanel } from "@/components/compare-rollout-readiness-panel";
+import { CompareOperationalFitHeatmapPanel } from "@/components/compare-operational-fit-heatmap-panel";
 
 const defaultSearch = { ids: "" };
 
@@ -86,6 +91,7 @@ function ComparePage() {
   const decisionBrief = React.useMemo(() => compareDecisionBriefState(items), [items]);
   const [scenario, setScenario] = React.useState<CompareScenarioId>("balanced");
   const [rolloutPreset, setRolloutPreset] = React.useState<RolloutPresetId>("team");
+  const [fitPreset, setFitPreset] = React.useState<OperationalFitPresetId>("team-default");
   const scenarioRanking = React.useMemo(
     () => compareScenarioRankingState(items, scenario),
     [items, scenario],
@@ -94,6 +100,10 @@ function ComparePage() {
   const rolloutReadiness = React.useMemo(
     () => compareRolloutReadinessState(items, rolloutPreset),
     [items, rolloutPreset],
+  );
+  const operationalFitHeatmap = React.useMemo(
+    () => compareOperationalFitHeatmapState(items, fitPreset),
+    [items, fitPreset],
   );
 
   const pushIds = (next: Entry[]) => {
@@ -223,6 +233,12 @@ function ComparePage() {
           state={rolloutReadiness}
           selectedPreset={rolloutPreset}
           onSelectPreset={setRolloutPreset}
+          className="m-3 mt-0"
+        />
+        <CompareOperationalFitHeatmapPanel
+          state={operationalFitHeatmap}
+          selectedPreset={fitPreset}
+          onSelectPreset={setFitPreset}
           className="m-3 mt-0"
         />
       </div>

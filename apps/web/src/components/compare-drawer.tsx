@@ -41,6 +41,11 @@ import {
 } from "@/lib/compare-rollout-readiness";
 import { CompareRolloutReadinessPanel } from "@/components/compare-rollout-readiness-panel";
 import {
+  compareOperationalFitHeatmapState,
+  type OperationalFitPresetId,
+} from "@/lib/compare-operational-fit-heatmap";
+import { CompareOperationalFitHeatmapPanel } from "@/components/compare-operational-fit-heatmap-panel";
+import {
   compareDrawerDecisionRows,
   compareSignalToneClass,
   type CompareSignalValue,
@@ -332,12 +337,14 @@ export function CompareDrawer() {
   const { items, open, setOpen, toggle, clear, hydrate } = useCompare();
   const [scenario, setScenario] = React.useState<CompareScenarioId>("balanced");
   const [rolloutPreset, setRolloutPreset] = React.useState<RolloutPresetId>("team");
+  const [fitPreset, setFitPreset] = React.useState<OperationalFitPresetId>("team-default");
   const { drawerUi, emptyHint, shareUrl, divergingDecisionLabels, actionRowDiverges, actionCells } =
     compareDrawerInteractiveUiState(items);
   const decisionBrief = compareDecisionBriefState(items);
   const scenarioRanking = compareScenarioRankingState(items, scenario);
   const evidenceGaps = compareEvidenceGapsState(items);
   const rolloutReadiness = compareRolloutReadinessState(items, rolloutPreset);
+  const operationalFitHeatmap = compareOperationalFitHeatmapState(items, fitPreset);
   const { bannerTexts, fullViewSearch } = drawerUi;
 
   const onClear = () => {
@@ -450,6 +457,13 @@ export function CompareDrawer() {
               state={rolloutReadiness}
               selectedPreset={rolloutPreset}
               onSelectPreset={setRolloutPreset}
+              compact
+              className="m-3 mt-0"
+            />
+            <CompareOperationalFitHeatmapPanel
+              state={operationalFitHeatmap}
+              selectedPreset={fitPreset}
+              onSelectPreset={setFitPreset}
               compact
               className="m-3 mt-0"
             />
