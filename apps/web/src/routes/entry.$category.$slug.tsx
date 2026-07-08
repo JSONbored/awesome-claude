@@ -341,6 +341,7 @@ function Dossier() {
   const adoptionPlan = useMemo(
     () => entryAdoptionPlanState(entry, adoptionPreset, compare.items),
     [entry, adoptionPreset, compare.items],
+  );
   const decisionPlaybook = useMemo(
     () => entryDetailDecisionPlaybookState(entry, compare.items),
     [entry, compare.items],
