@@ -1,0 +1,263 @@
+---
+title: InfluxDB 3 MCP Server
+slug: influxdb-3-mcp-server
+category: mcp
+description: >-
+  The official InfluxData MCP server for InfluxDB 3 (Core, Enterprise, Cloud
+  Dedicated, Clustered, and Cloud Serverless). It lets LLMs run SQL queries,
+  write line-protocol data, inspect databases and measurement schemas, manage
+  databases and tokens, and check cluster health over the Model Context
+  Protocol.
+cardDescription: >-
+  Official InfluxDB 3 MCP server: run SQL, write line protocol, inspect schema,
+  and manage databases and tokens across Core, Enterprise, and Cloud.
+seoTitle: InfluxDB 3 MCP Server — SQL, Line Protocol & Admin Tools for LLMs
+seoDescription: >-
+  The official InfluxData MCP server (@influxdata/influxdb3-mcp-server) gives
+  LLMs tools to query InfluxDB 3 with SQL, write line-protocol data, inspect
+  measurement schemas, and administer databases and tokens across Core,
+  Enterprise, Cloud Dedicated, Clustered, and Cloud Serverless.
+author: influxdata
+authorProfileUrl: https://github.com/influxdata
+submittedBy: davion-knight
+submittedByUrl: "https://github.com/davion-knight"
+dateAdded: "2026-07-08"
+brandName: InfluxDB 3 MCP Server
+brandDomain: influxdata.com
+websiteUrl: https://www.influxdata.com/
+repoUrl: https://github.com/influxdata/influxdb3_mcp_server
+documentationUrl: https://docs.influxdata.com/influxdb3/enterprise/admin/mcp-server/
+installable: true
+installCommand: npx -y @influxdata/influxdb3-mcp-server
+usageSnippet: |
+  # Run directly from npm via npx (stdio transport, the default)
+  INFLUX_DB_INSTANCE_URL="https://us-east-1-1.aws.cloud2.influxdata.com" \
+  INFLUX_DB_TOKEN="<YOUR_INFLUXDB_TOKEN>" \
+  INFLUX_DB_PRODUCT_TYPE="cloud-serverless" \
+  npx -y @influxdata/influxdb3-mcp-server
+copySnippet: |
+  {
+    "mcpServers": {
+      "influxdb": {
+        "command": "npx",
+        "args": ["-y", "@influxdata/influxdb3-mcp-server"],
+        "env": {
+          "INFLUX_DB_INSTANCE_URL": "https://us-east-1-1.aws.cloud2.influxdata.com",
+          "INFLUX_DB_TOKEN": "<YOUR_INFLUXDB_TOKEN>",
+          "INFLUX_DB_PRODUCT_TYPE": "cloud-serverless"
+        }
+      }
+    }
+  }
+configSnippet: |
+  {
+    "mcpServers": {
+      "influxdb": {
+        "command": "npx",
+        "args": ["-y", "@influxdata/influxdb3-mcp-server"],
+        "env": {
+          "INFLUX_DB_INSTANCE_URL": "https://us-east-1-1.aws.cloud2.influxdata.com",
+          "INFLUX_DB_TOKEN": "<YOUR_INFLUXDB_TOKEN>",
+          "INFLUX_DB_PRODUCT_TYPE": "cloud-serverless"
+        }
+      }
+    }
+  }
+prerequisites:
+  - Node.js 20.11 or newer and npm 9 or newer (for the npm/npx runtime), or Docker as an alternative
+  - A reachable InfluxDB 3 instance — Core, Enterprise, Cloud Serverless, Cloud Dedicated, or Clustered
+  - An InfluxDB token (and, for Cloud Dedicated, the cluster ID) with the permissions you want the agent to have
+  - The correct `INFLUX_DB_PRODUCT_TYPE` for your deployment (`core`, `enterprise`, `cloud-serverless`, `cloud-dedicated`, or `clustered`)
+  - An MCP-compatible client (Claude Desktop, Cursor, VS Code, etc.)
+safetyNotes:
+  - The server exposes write and delete tools — `write_line_protocol` ingests data, `create_database`/`update_database` change database config, and `delete_database` permanently removes a database (the README marks it irreversible).
+  - On Core/Enterprise it can mint and revoke credentials via `create_admin_token` (full permissions), `create_resource_token`, and `delete_token`; `regenerate_operator_token` is flagged dangerous/irreversible and rotates the operator token.
+  - The `execute_query` tool runs arbitrary SQL against the target database with the supplied token's permissions, so scope the token to least privilege rather than relying on tool naming.
+  - Cloud Dedicated/Clustered token tools (`cloud_create_database_token`, `cloud_update_database_token`, `cloud_delete_database_token`) manage real database access grants on the cluster.
+  - Point the server at a non-production instance or a tightly scoped token when letting an agent act autonomously; token permissions are the authoritative boundary, not the tool list.
+privacyNotes:
+  - The server connects to your live InfluxDB 3 instance with the token you supply; query results, measurement schemas, and database listings it returns are passed to the LLM/MCP client.
+  - Time-series records and tags can contain sensitive or identifying data (device IDs, user IDs, locations, metrics), and query/schema tools can surface those fields to the model.
+  - Token-management tools can list and reveal token metadata; treat created tokens and their scopes as secrets.
+  - Credentials (`INFLUX_DB_TOKEN`, instance URL, cluster ID) are provided through environment variables in your MCP client config — keep that config out of version control and restrict access to it.
+sourceUrls:
+  - https://github.com/influxdata/influxdb3_mcp_server/blob/main/README.md
+  - https://github.com/influxdata/influxdb3_mcp_server/blob/main/LICENSE-APACHE.txt
+  - https://www.npmjs.com/package/@influxdata/influxdb3-mcp-server
+  - https://docs.influxdata.com/influxdb3/enterprise/admin/mcp-server/
+tags:
+  - mcp
+  - influxdb
+  - influxdata
+  - database
+  - time-series
+  - sql
+  - line-protocol
+  - observability
+  - nodejs
+keywords:
+  - InfluxDB MCP server
+  - InfluxDB 3 MCP
+  - influxdb3-mcp-server
+  - time-series database MCP
+  - line protocol MCP
+  - InfluxDB SQL MCP
+  - Model Context Protocol InfluxDB
+  - InfluxDB Cloud MCP
+  - LLM time-series access
+  - InfluxData MCP server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+The **InfluxDB 3 MCP Server** is the official Model Context Protocol server maintained by
+[InfluxData](https://github.com/influxdata). It connects LLMs and agentic clients directly to an
+**InfluxDB 3** instance — **Core**, **Enterprise**, **Cloud Serverless**, **Cloud Dedicated**, or
+**Clustered** — to run **SQL queries**, **write line-protocol data**, **inspect databases and
+measurement schemas**, **manage databases and tokens**, and **check cluster health**.
+
+The project is written in TypeScript, distributed as the npm package
+[`@influxdata/influxdb3-mcp-server`](https://www.npmjs.com/package/@influxdata/influxdb3-mcp-server)
+(v1.3.0), and can also run as a Docker image built from the repo. It runs over `stdio` by default and is configured
+entirely through environment variables, so it drops into Claude Desktop, Cursor, VS Code, and other
+MCP clients with a small config block. Full documentation lives in the
+[InfluxDB 3 admin docs](https://docs.influxdata.com/influxdb3/enterprise/admin/mcp-server/).
+
+## Source Review
+
+The following real repository and package sources were fetched and reviewed for this entry:
+
+- [README.md](https://github.com/influxdata/influxdb3_mcp_server/blob/main/README.md) — prerequisites, the full tool/resource/prompt list, per-product environment variables, and the `stdio`/npx/Docker client config blocks.
+- [npm: @influxdata/influxdb3-mcp-server](https://www.npmjs.com/package/@influxdata/influxdb3-mcp-server) — package name and version (`1.3.0`), license `(Apache-2.0 OR MIT)`, `engines.node >=20.11.0`, and the `influxdb-mcp-server` bin entry.
+- [LICENSE-APACHE.txt](https://github.com/influxdata/influxdb3_mcp_server/blob/main/LICENSE-APACHE.txt) — dual-licensed under Apache License 2.0 or MIT.
+- [InfluxDB 3 MCP docs](https://docs.influxdata.com/influxdb3/enterprise/admin/mcp-server/) — official InfluxData documentation for the server.
+
+Repository facts confirmed at review time: official `influxdata` organization, default branch `main`,
+not archived, actively maintained (pushed within days of this submission), and released as
+`@influxdata/influxdb3-mcp-server` v1.3.0 on npm.
+
+## Features
+
+- **SQL querying** — `execute_query` runs SQL against a database and supports multiple output formats.
+- **Data ingestion** — `write_line_protocol` writes points using InfluxDB line protocol.
+- **Schema & discovery** — `list_databases`, `get_measurements`, and `get_measurement_schema` inspect databases, measurements (tables), and column types.
+- **Database management** — `create_database`, `update_database` (retention and, on Cloud Dedicated/Clustered, table/column limits), and `delete_database` (irreversible).
+- **Token management (Core/Enterprise)** — `create_admin_token`, `list_admin_tokens`, `create_resource_token`, `list_resource_tokens`, `delete_token`, and `regenerate_operator_token`.
+- **Token management (Cloud Dedicated/Clustered)** — `cloud_list_database_tokens`, `cloud_get_database_token`, `cloud_create_database_token`, `cloud_update_database_token`, and `cloud_delete_database_token`.
+- **Health & help** — `health_check` reports connection/health status, and `get_help` returns troubleshooting guidance; `load_database_context` loads optional custom database context.
+- **MCP resources & prompts** — read-only resources such as `influx-config`, `influx-status`, and `influx-databases`, plus a `check-health` prompt.
+- **Broad InfluxDB 3 coverage** — one server works across Core, Enterprise, Cloud Serverless, Cloud Dedicated, and Clustered via `INFLUX_DB_PRODUCT_TYPE`.
+- **Multiple runtimes** — run via `npx` (no install), a from-source Node build, or a Docker image you build from the repo (tagged `mcp/influxdb`).
+
+## Installation
+
+Run the published package with `npx` (no clone required):
+
+```bash
+npx -y @influxdata/influxdb3-mcp-server
+```
+
+Add it to an MCP client (e.g. Claude Desktop's `claude_desktop_config.json`) for a Cloud Serverless
+instance (self-hosted Core/Enterprise instances use their own TLS instance URL and
+`INFLUX_DB_PRODUCT_TYPE=core`/`enterprise`):
+
+```json
+{
+  "mcpServers": {
+    "influxdb": {
+      "command": "npx",
+      "args": ["-y", "@influxdata/influxdb3-mcp-server"],
+      "env": {
+        "INFLUX_DB_INSTANCE_URL": "https://us-east-1-1.aws.cloud2.influxdata.com",
+        "INFLUX_DB_TOKEN": "<YOUR_INFLUXDB_TOKEN>",
+        "INFLUX_DB_PRODUCT_TYPE": "cloud-serverless"
+      }
+    }
+  }
+}
+```
+
+Or run via Docker. The image is built from the repo first (`docker compose build` or
+`npm run docker:build`, which tags it `mcp/influxdb`), then invoked by the MCP client:
+
+```json
+{
+  "mcpServers": {
+    "influxdb": {
+      "command": "docker",
+      "args": ["run", "--rm", "-i",
+        "-e", "INFLUX_DB_INSTANCE_URL",
+        "-e", "INFLUX_DB_TOKEN",
+        "-e", "INFLUX_DB_PRODUCT_TYPE",
+        "mcp/influxdb"],
+      "env": {
+        "INFLUX_DB_INSTANCE_URL": "https://us-east-1-1.aws.cloud2.influxdata.com",
+        "INFLUX_DB_TOKEN": "<YOUR_INFLUXDB_TOKEN>",
+        "INFLUX_DB_PRODUCT_TYPE": "cloud-serverless"
+      }
+    }
+  }
+}
+```
+
+For a **Cloud Dedicated** cluster, set `INFLUX_DB_PRODUCT_TYPE=cloud-dedicated` and
+`INFLUX_DB_CLUSTER_ID`, plus a token combination (database token for query/write, management token
+for database administration, or both for full functionality):
+
+```json
+{
+  "mcpServers": {
+    "influxdb": {
+      "command": "npx",
+      "args": ["-y", "@influxdata/influxdb3-mcp-server"],
+      "env": {
+        "INFLUX_DB_PRODUCT_TYPE": "cloud-dedicated",
+        "INFLUX_DB_CLUSTER_ID": "<YOUR_CLUSTER_ID>",
+        "INFLUX_DB_ACCOUNT_ID": "<YOUR_ACCOUNT_ID>",
+        "INFLUX_DB_TOKEN": "<YOUR_DATABASE_TOKEN>",
+        "INFLUX_DB_MANAGEMENT_TOKEN": "<YOUR_MANAGEMENT_TOKEN>"
+      }
+    }
+  }
+}
+```
+
+### Key environment variables
+
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `INFLUX_DB_INSTANCE_URL` | Yes (Core/Enterprise/Serverless/Clustered) | Instance endpoint, e.g. `https://us-east-1-1.aws.cloud2.influxdata.com` |
+| `INFLUX_DB_TOKEN` | Yes* | Database/instance token (query and write operations) |
+| `INFLUX_DB_PRODUCT_TYPE` | Yes | `core`, `enterprise`, `cloud-serverless`, `cloud-dedicated`, or `clustered` |
+| `INFLUX_DB_CLUSTER_ID` | Yes (Cloud Dedicated) | Cluster identifier for Cloud Dedicated |
+| `INFLUX_DB_ACCOUNT_ID` | Cloud Dedicated (management) | Account identifier, with a management token |
+| `INFLUX_DB_MANAGEMENT_TOKEN` | Cloud Dedicated/Clustered (management) | Token for database-management operations |
+
+\* On Cloud Dedicated and Clustered, provide a database token, a management token (with
+`INFLUX_DB_ACCOUNT_ID` on Cloud Dedicated), or both, per the README's per-product options.
+
+## Use Cases
+
+- **Conversational analytics** — ask natural-language questions and have the agent translate them into SQL against your InfluxDB 3 databases.
+- **Schema exploration** — let an LLM enumerate databases, measurements, and column types before writing queries or application code.
+- **Operational data entry** — write line-protocol points into a database from within an agentic workflow.
+- **Database administration** — create, reconfigure (retention/limits), and remove databases through natural language.
+- **Token lifecycle management** — mint, list, and revoke admin/resource/database tokens on Core, Enterprise, and Cloud clusters (with least-privilege scoping).
+
+## Safety and Privacy
+
+- **Write and delete capable.** `write_line_protocol`, `create_database`/`update_database`, and the irreversible `delete_database` can change or destroy data; `execute_query` runs arbitrary SQL with the token's permissions.
+- **Credential-issuing tools.** Token tools can create and revoke access — `regenerate_operator_token` is explicitly dangerous/irreversible. Treat created tokens as secrets and scope them tightly.
+- **Token is the boundary.** Tool availability is not access control; use a least-privilege InfluxDB token (and a non-production instance where possible) when an agent acts autonomously.
+- **Data flows to the model.** Query results, schemas, and database listings are returned to the LLM/MCP client and can include sensitive time-series tags or fields (device, user, or location identifiers).
+- **Credential hygiene.** `INFLUX_DB_TOKEN`, instance URL, and cluster ID live in your client config's `env` block — keep it out of version control and restrict who can read it.
+
+## Duplicate Check
+
+No existing entry in the directory matches this server. A search of all directory entries for
+"influxdb", "influx", and "influxdata" across slugs, titles, repository URLs, and install commands
+returned no dedicated entry, and there is no prior entry pointing at
+`github.com/influxdata/influxdb3_mcp_server` or the npm package
+`@influxdata/influxdb3-mcp-server`. This is therefore a net-new, non-duplicate entry.
