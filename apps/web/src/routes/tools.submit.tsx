@@ -1,3 +1,4 @@
+import { toolListingTierInterest } from "@/lib/tool-listing-tier-lib";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import { ArrowRight } from "lucide-react";
@@ -5,15 +6,6 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { CommercialDisclosure } from "@/components/commercial-disclosure";
 import { absoluteUrl } from "@/lib/seo";
 import { submitListingLead } from "@/lib/listing-lead-client";
-
-const TOOL_LISTING_TIERS = ["featured", "sponsored"] as const;
-
-function toolListingTierInterest(raw: FormDataEntryValue | null) {
-  const value = String(raw ?? "featured");
-  return TOOL_LISTING_TIERS.includes(value as (typeof TOOL_LISTING_TIERS)[number])
-    ? (value as (typeof TOOL_LISTING_TIERS)[number])
-    : "featured";
-}
 
 export const Route = createFileRoute("/tools/submit")({
   head: () => ({
