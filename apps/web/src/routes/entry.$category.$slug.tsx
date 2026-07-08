@@ -39,6 +39,7 @@ import { compareEntryInteractiveUiState } from "@/lib/compare-entry-interactive-
 import { buildEntryJsonLd } from "@heyclaude/registry";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { hasSchemaDetails } from "@/lib/entry-schema-details-lib";
+import { booleanLabel } from "@/lib/boolean-label-lib";
 import { absoluteUrl, clampDescription } from "@/lib/seo";
 import { categoryLabels, categoryUsageHints, siteConfig } from "@/lib/site";
 import { tagSlug } from "@/lib/tags";
@@ -984,11 +985,6 @@ function SchemaDetails({ entry }: { entry: Entry }) {
       </div>
     </DossierSection>
   );
-}
-
-function booleanLabel(value?: boolean) {
-  if (value === undefined) return undefined;
-  return value ? "Yes" : "No";
 }
 
 function MetadataGroup({
