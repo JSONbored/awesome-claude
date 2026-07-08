@@ -31,6 +31,11 @@ import { BrowseRolloutSignalsPanel } from "@/components/browse-rollout-signals-p
 import { browseAdoptionQueueState, type BrowseAdoptionPresetId } from "@/lib/browse-adoption-queue";
 import { BrowseAdoptionQueuePanel } from "@/components/browse-adoption-queue-panel";
 import {
+  browseDecisionConfidenceState,
+  type BrowseConfidencePresetId,
+} from "@/lib/browse-decision-confidence";
+import { BrowseDecisionConfidencePanel } from "@/components/browse-decision-confidence-panel";
+import {
   CATEGORIES,
   type Category,
   type Platform,
@@ -346,6 +351,12 @@ function Browse() {
   const browseAdoptionQueue = useMemo(
     () => browseAdoptionQueueState(results, adoptionPreset, 8),
     [results, adoptionPreset],
+  );
+  const [confidencePreset, setConfidencePreset] =
+    React.useState<BrowseConfidencePresetId>("balanced");
+  const browseDecisionConfidence = useMemo(
+    () => browseDecisionConfidenceState(results, confidencePreset, 8),
+    [results, confidencePreset],
   );
 
   const activeCount =
@@ -825,6 +836,12 @@ function Browse() {
             state={browseAdoptionQueue}
             selectedPreset={adoptionPreset}
             onSelectPreset={setAdoptionPreset}
+            className="mt-3"
+          />
+          <BrowseDecisionConfidencePanel
+            state={browseDecisionConfidence}
+            selectedPreset={confidencePreset}
+            onSelectPreset={setConfidencePreset}
             className="mt-3"
           />
 
