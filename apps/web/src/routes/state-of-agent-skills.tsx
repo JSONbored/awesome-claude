@@ -4,7 +4,8 @@ import { Sparkles, BadgeCheck, Boxes, ShieldCheck, CalendarClock } from "lucide-
 
 import { ENTRIES, REGISTRY_GENERATED_AT } from "@/data/entries";
 import { buildSkillsReport } from "@/lib/skills-stats";
-import { buildReportDataset, type ReportStat } from "@/lib/data-reports";
+import { buildReportDataset } from "@/lib/data-reports";
+import { statHint } from "@/lib/report-stat-hint-lib";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl, OG_WIDTH, OG_HEIGHT } from "@/lib/og-image";
 import { stringifyJsonLd } from "@/lib/json-ld";
@@ -31,10 +32,6 @@ const OG_IMAGE = ogImageUrl({
   title: MODEL.title,
   description: `${MODEL.total} agent skills by use case, type & verification`,
 });
-
-function statHint(stat: ReportStat): string {
-  return stat.hint === "%" ? `${stat.value}%` : stat.hint;
-}
 
 export const Route = createFileRoute("/state-of-agent-skills")({
   head: () => {
