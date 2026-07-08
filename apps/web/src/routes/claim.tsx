@@ -2,6 +2,7 @@ import * as React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Check, ShieldCheck, ListChecks } from "lucide-react";
 import { ENTRIES } from "@/data/entries";
+import { resolveClaimWebsiteUrl } from "@/lib/claim-website-url-lib";
 import { cn } from "@/lib/utils";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { absoluteUrl } from "@/lib/seo";
@@ -78,31 +79,6 @@ const PROOF_FIELDS = [
 ] as const;
 
 const TYPE_OPTIONS: ClaimType[] = ["maintain", "transfer", "correct", "remove"];
-
-function resolveClaimWebsiteUrl(
-  entry: (typeof ENTRIES)[number],
-  proof: Record<string, string>,
-): string {
-  const candidates = [entry.sourceUrl, entry.repoUrl, entry.docsUrl, entry.websiteUrl];
-  for (const url of candidates) {
-    const trimmed = (url ?? "").trim();
-    if (/^https:\/\//i.test(trimmed)) return trimmed;
-  }
-  const repo = (proof.repo ?? "").trim();
-  if (repo) {
-    const normalized = repo
-      .replace(/^https?:\/\/github\.com\//i, "")
-      .replace(/^github\.com\//i, "")
-      .replace(/^\//, "")
-      .replace(/[?#].*$/, "");
-    if (/^[\w.-]+\/[\w.-]+$/.test(normalized)) {
-      return `https://github.com/${normalized}`;
-    }
-  }
-  const link = (proof.link ?? "").trim();
-  if (/^https:\/\//i.test(link)) return link;
-  return "";
-}
 
 function ClaimPage() {
   const [done, setDone] = React.useState(false);
