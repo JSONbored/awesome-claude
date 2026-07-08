@@ -20,6 +20,7 @@ import {
 import { logClientError } from "@/lib/client-logs";
 import { safeGitHubAuthUrl } from "@/lib/github-auth-url-lib";
 import { siteConfig } from "@/lib/site";
+import { originFor, safeUrlForOrigins } from "@/lib/submit-url-safety-lib";
 import { CopyButton } from "@/components/copy-button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { cn } from "@/lib/utils";
@@ -75,37 +76,6 @@ type PreflightResponse = {
     url?: string;
   };
 };
-
-function originFor(value: string) {
-  try {
-    return new URL(value).origin;
-  } catch {
-    return "";
-  }
-}
-
-function safeUrlForOrigins(
-  value: string | undefined,
-  allowedOrigins: Set<string>,
-  baseUrl = siteConfig.url,
-) {
-  if (!value) return "";
-  try {
-    const url = new URL(value, baseUrl);
-    if (
-      (url.protocol !== "https:" && url.protocol !== "http:") ||
-      !allowedOrigins.has(url.origin)
-    ) {
-      return "";
-    }
-    if (value.startsWith("/") && url.origin === originFor(baseUrl)) {
-      return `${url.pathname}${url.search}${url.hash}`;
-    }
-    return url.toString();
-  } catch {
-    return "";
-  }
-}
 
 function safeGateStatusUrl(value: string | undefined) {
   const gateOrigin = originFor(siteConfig.submissionGateUrl);
