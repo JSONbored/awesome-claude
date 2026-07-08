@@ -10,10 +10,7 @@ export function escapeDiscordMarkdown(value: string): string {
 }
 
 /** Post a plain message to a Discord webhook. No-ops without a URL; never throws. */
-export async function sendDiscordMessage(
-  webhookUrl: string,
-  content: string,
-): Promise<boolean> {
+export async function sendDiscordMessage(webhookUrl: string, content: string): Promise<boolean> {
   if (!webhookUrl) return false;
   try {
     const response = await fetch(webhookUrl, {

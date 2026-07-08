@@ -86,7 +86,10 @@ export async function sendResendBroadcast(params: {
  * Record a server-side umami event (best-effort) so newsletter sends show up in
  * the same dashboard as web traffic. No-op on failure — analytics never blocks.
  */
-export async function recordUmamiEvent(name: string, data?: Record<string, unknown>): Promise<void> {
+export async function recordUmamiEvent(
+  name: string,
+  data?: Record<string, unknown>,
+): Promise<void> {
   const upstream = getEnvString("UMAMI_UPSTREAM_URL") || DEFAULT_UMAMI_UPSTREAM;
   const websiteId = getEnvString("UMAMI_WEBSITE_ID") || DEFAULT_UMAMI_WEBSITE_ID;
   try {
