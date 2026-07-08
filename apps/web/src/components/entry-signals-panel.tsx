@@ -8,6 +8,11 @@ import {
   asCommunityCounts,
 } from "@/lib/entry-signals-counts-lib";
 import { communityTargetKey, entryKey } from "@/lib/entry-signals-keys-lib";
+import {
+  getClientId,
+  readActiveCommunity,
+  writeActiveCommunity,
+} from "@/lib/entry-signals-storage-lib";
 import { cn } from "@/lib/utils";
 
 type SignalState = {
@@ -19,43 +24,6 @@ type SignalState = {
   community: CommunityCounts;
   activeCommunity: Partial<Record<keyof CommunityCounts, boolean>>;
 };
-
-const CLIENT_STORAGE_KEY = "hc:client-id";
-const COMMUNITY_STORAGE_PREFIX = "hc:community:";
-
-function getClientId() {
-  if (typeof window === "undefined") return "";
-  const existing = window.localStorage.getItem(CLIENT_STORAGE_KEY);
-  if (existing && /^[a-zA-Z0-9_-]{16,96}$/.test(existing)) return existing;
-
-  const generated =
-    typeof crypto !== "undefined" && "randomUUID" in crypto
-      ? `hc-${crypto.randomUUID()}`
-      : `hc-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 18)}`;
-  window.localStorage.setItem(CLIENT_STORAGE_KEY, generated);
-  return generated;
-}
-
-function readActiveCommunity(targetKey: string): SignalState["activeCommunity"] {
-  if (typeof window === "undefined") return {};
-  try {
-    const raw = window.localStorage.getItem(`${COMMUNITY_STORAGE_PREFIX}${targetKey}`);
-    if (!raw) return {};
-    const parsed = JSON.parse(raw) as Record<string, unknown>;
-    return {
-      used: parsed.used === true,
-      works: parsed.works === true,
-      broken: parsed.broken === true,
-    };
-  } catch {
-    return {};
-  }
-}
-
-function writeActiveCommunity(targetKey: string, active: SignalState["activeCommunity"]) {
-  if (typeof window === "undefined") return;
-  window.localStorage.setItem(`${COMMUNITY_STORAGE_PREFIX}${targetKey}`, JSON.stringify(active));
-}
 
 async function postJson(path: string, payload: unknown) {
   const response = await fetch(path, {
@@ -82,11 +50,11 @@ export function EntrySignalsPanel({ category, slug }: { category: Category; slug
 
   React.useEffect(() => {
     let cancelled = false;
-    const clientId = getClientId();
+    const clientId = getClientId(window.localStorage);
     setState((current) => ({
       ...current,
       loading: true,
-      activeCommunity: readActiveCommunity(targetKey),
+      activeCommunity: readActiveCommunity(window.localStorage, targetKey),
     }));
 
     Promise.allSettled([
@@ -129,7 +97,7 @@ export function EntrySignalsPanel({ category, slug }: { category: Category; slug
   }, [key, targetKey]);
 
   const toggleVote = async () => {
-    const clientId = getClientId();
+    const clientId = getClientId(window.localStorage);
     const nextVote = !state.voted;
     setState((current) => ({
       ...current,
@@ -159,10 +127,10 @@ export function EntrySignalsPanel({ category, slug }: { category: Category; slug
   };
 
   const toggleCommunity = async (signalType: keyof CommunityCounts) => {
-    const clientId = getClientId();
+    const clientId = getClientId(window.localStorage);
     const active = !state.activeCommunity[signalType];
     const nextActive = { ...state.activeCommunity, [signalType]: active };
-    writeActiveCommunity(targetKey, nextActive);
+    writeActiveCommunity(window.localStorage, targetKey, nextActive);
     setState((current) => ({
       ...current,
       activeCommunity: nextActive,
@@ -187,7 +155,7 @@ export function EntrySignalsPanel({ category, slug }: { category: Category; slug
       }));
     } catch {
       const rolledBack = { ...state.activeCommunity };
-      writeActiveCommunity(targetKey, rolledBack);
+      writeActiveCommunity(window.localStorage, targetKey, rolledBack);
       setState((current) => ({
         ...current,
         communityAvailable: false,
