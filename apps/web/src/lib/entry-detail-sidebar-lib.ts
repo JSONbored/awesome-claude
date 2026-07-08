@@ -85,6 +85,7 @@ export function buildEntryTocItems(input: {
   if (input.risk !== "low") items.push({ id: "risk-callout", label: "Install risk" });
   items.push({ id: "citation-facts", label: "Citation facts" });
   items.push({ id: "adoption-plan", label: "Adoption plan" });
+  items.push({ id: "decision-playbook", label: "Decision playbook" });
   if (input.hasSafetyNotes) items.push({ id: "safety", label: "Safety notes" });
   if (input.hasPrivacyNotes) items.push({ id: "privacy", label: "Privacy notes" });
   if (input.hasPrerequisites) items.push({ id: "prerequisites", label: "Prerequisites" });
