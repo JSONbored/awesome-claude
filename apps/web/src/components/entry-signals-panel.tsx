@@ -7,6 +7,7 @@ import {
   ZERO_COMMUNITY,
   asCommunityCounts,
 } from "@/lib/entry-signals-counts-lib";
+import { defaultLocalStorage } from "@/lib/dossier-prefs-lib";
 import { communityTargetKey, entryKey } from "@/lib/entry-signals-keys-lib";
 import {
   getClientId,
@@ -50,11 +51,11 @@ export function EntrySignalsPanel({ category, slug }: { category: Category; slug
 
   React.useEffect(() => {
     let cancelled = false;
-    const clientId = getClientId(window.localStorage);
+    const clientId = getClientId(defaultLocalStorage());
     setState((current) => ({
       ...current,
       loading: true,
-      activeCommunity: readActiveCommunity(window.localStorage, targetKey),
+      activeCommunity: readActiveCommunity(defaultLocalStorage(), targetKey),
     }));
 
     Promise.allSettled([
@@ -97,7 +98,7 @@ export function EntrySignalsPanel({ category, slug }: { category: Category; slug
   }, [key, targetKey]);
 
   const toggleVote = async () => {
-    const clientId = getClientId(window.localStorage);
+    const clientId = getClientId(defaultLocalStorage());
     const nextVote = !state.voted;
     setState((current) => ({
       ...current,
@@ -127,10 +128,10 @@ export function EntrySignalsPanel({ category, slug }: { category: Category; slug
   };
 
   const toggleCommunity = async (signalType: keyof CommunityCounts) => {
-    const clientId = getClientId(window.localStorage);
+    const clientId = getClientId(defaultLocalStorage());
     const active = !state.activeCommunity[signalType];
     const nextActive = { ...state.activeCommunity, [signalType]: active };
-    writeActiveCommunity(window.localStorage, targetKey, nextActive);
+    writeActiveCommunity(defaultLocalStorage(), targetKey, nextActive);
     setState((current) => ({
       ...current,
       activeCommunity: nextActive,
@@ -155,7 +156,7 @@ export function EntrySignalsPanel({ category, slug }: { category: Category; slug
       }));
     } catch {
       const rolledBack = { ...state.activeCommunity };
-      writeActiveCommunity(window.localStorage, targetKey, rolledBack);
+      writeActiveCommunity(defaultLocalStorage(), targetKey, rolledBack);
       setState((current) => ({
         ...current,
         communityAvailable: false,
