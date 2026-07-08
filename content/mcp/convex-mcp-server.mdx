@@ -1,0 +1,188 @@
+---
+title: Convex MCP Server
+slug: convex-mcp-server
+category: mcp
+description: >-
+  The official Convex MCP server, built into the Convex CLI, that lets AI agents
+  introspect and query a Convex deployment — listing tables, paginating data,
+  running deployed functions and read-only one-off queries, reading logs and
+  function specs, and managing environment variables — with production
+  deployments blocked by default as a safety measure.
+cardDescription: >-
+  Official Convex MCP server (via the Convex CLI): inspect tables, query data,
+  run functions, read logs, and manage env vars, with production blocked by
+  default.
+seoTitle: Convex MCP Server — Tables, Data & Function Tools for LLMs
+seoDescription: >-
+  The official Convex MCP server (npx convex mcp start) gives LLMs tools to
+  introspect a Convex deployment — tables, data, deployed functions, one-off
+  read-only queries, logs, function specs, insights, and environment variables —
+  with production deployments blocked by default.
+author: get-convex
+authorProfileUrl: https://github.com/get-convex
+submittedBy: davion-knight
+submittedByUrl: "https://github.com/davion-knight"
+dateAdded: "2026-07-08"
+brandName: Convex MCP Server
+brandDomain: convex.dev
+websiteUrl: https://www.convex.dev/
+repoUrl: https://github.com/get-convex/convex-backend
+documentationUrl: https://docs.convex.dev/ai/convex-mcp-server
+installable: true
+installCommand: npx -y convex@latest mcp start
+usageSnippet: |
+  # Run the MCP server from the Convex CLI (stdio transport)
+  npx -y convex@latest mcp start
+
+  # Optionally point at a specific project directory
+  npx -y convex@latest mcp start --project-dir /path/to/project
+copySnippet: |
+  {
+    "mcpServers": {
+      "convex": {
+        "command": "npx",
+        "args": ["-y", "convex@latest", "mcp", "start"]
+      }
+    }
+  }
+configSnippet: |
+  {
+    "mcpServers": {
+      "convex": {
+        "command": "npx",
+        "args": ["-y", "convex@latest", "mcp", "start"]
+      }
+    }
+  }
+prerequisites:
+  - Node.js and npm (the server runs via `npx -y convex@latest mcp start`)
+  - A Convex project and account; the CLI uses your existing Convex login for deployment access
+  - A Convex deployment to target (the dev deployment is used by default; production is opt-in)
+  - An MCP-compatible client (Claude Desktop, Cursor, VS Code, Windsurf, etc.)
+safetyNotes:
+  - Production deployments are blocked by default; accessing them requires the explicit `--dangerously-enable-production-deployments` flag, which then allows reading and modifying live production data.
+  - The `run` tool executes deployed Convex functions (including mutations) and the env tools (`envSet`, `envRemove`) change deployment configuration, so these can modify a deployment.
+  - The `runOneoffQuery` tool runs sandboxed JavaScript that is read-only and cannot modify data, but `data`/`tables` can read arbitrary documents from the deployment.
+  - Per the docs, setting `--project-dir` does not stop an agent from passing a custom `projectDir` in the status tool or acting on deployments of other projects; restrict access accordingly.
+  - Use `--disable-tools` (e.g. `data,run,envSet`) to narrow what the server can do, and keep it pointed at a development deployment when an agent acts autonomously.
+privacyNotes:
+  - The server connects to your Convex deployment using your local CLI credentials; table listings, documents, logs, and function specs it returns are passed to the LLM/MCP client.
+  - Document data can include sensitive or PII fields stored in your tables, and log output can contain request data.
+  - Environment-variable tools (`envGet`, `envList`) can read deployment configuration, which may include secrets; treat that output as sensitive.
+  - The server reads your local Convex project directory to resolve deployments; keep credentials and any custom `--env-file` out of version control.
+sourceUrls:
+  - https://docs.convex.dev/ai/convex-mcp-server
+  - https://www.npmjs.com/package/convex
+  - https://github.com/get-convex/convex-backend
+tags:
+  - mcp
+  - convex
+  - database
+  - backend
+  - serverless
+  - reactive
+  - typescript
+  - nodejs
+keywords:
+  - Convex MCP server
+  - convex mcp start
+  - Convex deployment MCP
+  - Convex database MCP
+  - Model Context Protocol Convex
+  - Convex CLI MCP
+  - reactive backend MCP
+  - Convex functions MCP
+  - LLM Convex access
+  - get-convex MCP server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+The **Convex MCP Server** is the official Model Context Protocol server from
+[Convex](https://github.com/get-convex), built directly into the Convex CLI. It gives LLMs and
+agentic clients introspection and query access to a **Convex** deployment — listing **tables**,
+paginating **data**, running deployed **functions** and read-only **one-off queries**, reading
+**logs** and **function specs**, surfacing query **insights**, and managing **environment
+variables**.
+
+The server ships in the [`convex`](https://www.npmjs.com/package/convex) npm package (v1.42.1,
+Apache-2.0) and runs with `npx -y convex@latest mcp start` over `stdio`. It connects to your Convex
+deployment using your existing CLI login, targets the **development** deployment by default, and
+**blocks production deployments** unless you explicitly opt in — a deliberate safety measure. Full
+documentation lives in the [Convex MCP docs](https://docs.convex.dev/ai/convex-mcp-server).
+
+## Source Review
+
+The following real sources were fetched and reviewed for this entry:
+
+- [Convex MCP docs](https://docs.convex.dev/ai/convex-mcp-server) — the `mcp start` command, deployment-selection flags (`--prod`, `--preview-name`, `--deployment-name`, `--env-file`, `--project-dir`), the production-deployment safety gate, `--disable-tools`, and the full tool list.
+- [npm: convex](https://www.npmjs.com/package/convex) — package name and version (`1.42.1`) and Apache-2.0 license; the `mcp` subcommand ships in this package.
+- [get-convex/convex-backend](https://github.com/get-convex/convex-backend) — the official Convex open-source repository.
+
+Repository facts confirmed at review time: official `get-convex` organization, not archived, actively
+maintained, with the MCP server distributed via the `convex` CLI package v1.42.1 on npm.
+
+## Features
+
+- **Deployment selection** — `status` finds available deployments and returns a selector used by the other tools; flags choose dev, preview, named, or (opt-in) production deployments.
+- **Table & data introspection** — `tables` lists tables and metadata; `data` paginates documents in a table.
+- **Read-only queries** — `runOneoffQuery` runs sandboxed, read-only JavaScript queries against the deployment's data.
+- **Function tools** — `run` executes deployed Convex functions and `functionSpec` returns function metadata.
+- **Observability** — `logs` reads deployment logs and `insights` surfaces query-optimization information.
+- **Environment variables** — `envGet`, `envList`, `envSet`, and `envRemove` read and manage deployment env vars.
+- **Production safety gate** — production deployments are inaccessible unless `--dangerously-enable-production-deployments` is passed.
+- **Tool disabling** — `--disable-tools` (e.g. `data,run,envSet`) restricts which tools the server exposes.
+- **Zero-clone install** — runs via `npx -y convex@latest mcp start` with no separate install step.
+
+## Installation
+
+Run the MCP server from the Convex CLI (from within a Convex project):
+
+```bash
+npx -y convex@latest mcp start
+```
+
+Add it to an MCP client (e.g. Cursor / Claude Desktop):
+
+```json
+{
+  "mcpServers": {
+    "convex": {
+      "command": "npx",
+      "args": ["-y", "convex@latest", "mcp", "start"]
+    }
+  }
+}
+```
+
+Useful flags:
+
+- `--project-dir /path/to/project` — resolve deployments from a specific project directory.
+- `--deployment-name <name>` / `--preview-name <name>` — target a specific or preview deployment.
+- `--prod` with `--dangerously-enable-production-deployments` — target production (use with care).
+- `--disable-tools data,run,envSet` — restrict which tools are exposed.
+
+## Use Cases
+
+- **Schema and data exploration** — let an agent enumerate tables and page through documents to understand a deployment.
+- **Read-only analytics** — run sandboxed one-off queries to answer questions without mutating data.
+- **Function debugging** — inspect function specs, run functions, and read logs during development.
+- **Query optimization** — use `insights` to surface slow or problematic query patterns.
+- **Environment management** — review and update deployment environment variables from an agentic workflow.
+
+## Safety and Privacy
+
+- **Production is opt-in.** The server refuses production deployments unless `--dangerously-enable-production-deployments` is set; enabling it allows reading and modifying live data.
+- **Some tools mutate.** `run` can invoke mutations and `envSet`/`envRemove` change configuration; `runOneoffQuery` is read-only by design.
+- **Scope with flags.** Use `--disable-tools` and keep the server on a development deployment when an agent acts autonomously; note `--project-dir` does not fully prevent access to other projects.
+- **Data flows to the model.** Tables, documents, logs, and function specs are returned to the LLM/MCP client and can include PII; env-var tools can reveal secrets.
+- **Credential hygiene.** The server uses your local Convex CLI login and project directory — keep credentials and any custom `--env-file` out of version control.
+
+## Duplicate Check
+
+No existing entry in the directory matches this server. A search of all directory entries for
+"convex" across slugs, titles, repository URLs, and install commands returned no results, and there
+is no prior entry pointing at `github.com/get-convex/convex-backend` or the Convex CLI `mcp`
+subcommand. This is therefore a net-new, non-duplicate entry.
