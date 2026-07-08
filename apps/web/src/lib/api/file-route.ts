@@ -1,1 +1,1 @@
-export * from "./api-file-route-lib";
+export * from "../api-file-route-lib";
