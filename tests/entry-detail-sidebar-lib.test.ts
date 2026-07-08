@@ -114,6 +114,7 @@ describe("entry-detail-sidebar-lib", () => {
     });
     expect(items.map((item) => item.id)).toEqual([
       "citation-facts",
+      "decision-playbook",
       "privacy",
       "prerequisites",
       "about",
