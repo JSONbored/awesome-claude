@@ -115,6 +115,7 @@ describe("entry-detail-sidebar-lib", () => {
     expect(items.map((item) => item.id)).toEqual([
       "citation-facts",
       "adoption-plan",
+      "decision-playbook",
       "privacy",
       "prerequisites",
       "about",
