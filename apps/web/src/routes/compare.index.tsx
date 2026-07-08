@@ -33,6 +33,10 @@ import {
   compareDeploymentRiskMapState,
   type DeploymentRiskPresetId,
 } from "@/lib/compare-deployment-risk-map";
+import {
+  compareMitigationPriorityState,
+  type MitigationPriorityPresetId,
+} from "@/lib/compare-mitigation-priority";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
 import { sameEntry } from "@/lib/entry-identity";
 import { search } from "@/data/search";
@@ -44,6 +48,7 @@ import { CompareEvidenceGapsPanel } from "@/components/compare-evidence-gaps-pan
 import { CompareRolloutReadinessPanel } from "@/components/compare-rollout-readiness-panel";
 import { CompareOperationalFitHeatmapPanel } from "@/components/compare-operational-fit-heatmap-panel";
 import { CompareDeploymentRiskMapPanel } from "@/components/compare-deployment-risk-map-panel";
+import { CompareMitigationPriorityPanel } from "@/components/compare-mitigation-priority-panel";
 
 const defaultSearch = { ids: "" };
 
@@ -98,6 +103,8 @@ function ComparePage() {
   const [rolloutPreset, setRolloutPreset] = React.useState<RolloutPresetId>("team");
   const [fitPreset, setFitPreset] = React.useState<OperationalFitPresetId>("team-default");
   const [riskPreset, setRiskPreset] = React.useState<DeploymentRiskPresetId>("balanced");
+  const [mitigationPreset, setMitigationPreset] =
+    React.useState<MitigationPriorityPresetId>("balanced");
   const scenarioRanking = React.useMemo(
     () => compareScenarioRankingState(items, scenario),
     [items, scenario],
@@ -114,6 +121,10 @@ function ComparePage() {
   const deploymentRiskMap = React.useMemo(
     () => compareDeploymentRiskMapState(items, riskPreset),
     [items, riskPreset],
+  );
+  const mitigationPriority = React.useMemo(
+    () => compareMitigationPriorityState(items, mitigationPreset),
+    [items, mitigationPreset],
   );
 
   const pushIds = (next: Entry[]) => {
@@ -255,6 +266,12 @@ function ComparePage() {
           state={deploymentRiskMap}
           selectedPreset={riskPreset}
           onSelectPreset={setRiskPreset}
+          className="m-3 mt-0"
+        />
+        <CompareMitigationPriorityPanel
+          state={mitigationPriority}
+          selectedPreset={mitigationPreset}
+          onSelectPreset={setMitigationPreset}
           className="m-3 mt-0"
         />
       </div>

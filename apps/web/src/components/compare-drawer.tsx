@@ -51,6 +51,11 @@ import {
 } from "@/lib/compare-deployment-risk-map";
 import { CompareDeploymentRiskMapPanel } from "@/components/compare-deployment-risk-map-panel";
 import {
+  compareMitigationPriorityState,
+  type MitigationPriorityPresetId,
+} from "@/lib/compare-mitigation-priority";
+import { CompareMitigationPriorityPanel } from "@/components/compare-mitigation-priority-panel";
+import {
   compareDrawerDecisionRows,
   compareSignalToneClass,
   type CompareSignalValue,
@@ -344,6 +349,8 @@ export function CompareDrawer() {
   const [rolloutPreset, setRolloutPreset] = React.useState<RolloutPresetId>("team");
   const [fitPreset, setFitPreset] = React.useState<OperationalFitPresetId>("team-default");
   const [riskPreset, setRiskPreset] = React.useState<DeploymentRiskPresetId>("balanced");
+  const [mitigationPreset, setMitigationPreset] =
+    React.useState<MitigationPriorityPresetId>("balanced");
   const { drawerUi, emptyHint, shareUrl, divergingDecisionLabels, actionRowDiverges, actionCells } =
     compareDrawerInteractiveUiState(items);
   const decisionBrief = compareDecisionBriefState(items);
@@ -352,6 +359,7 @@ export function CompareDrawer() {
   const rolloutReadiness = compareRolloutReadinessState(items, rolloutPreset);
   const operationalFitHeatmap = compareOperationalFitHeatmapState(items, fitPreset);
   const deploymentRiskMap = compareDeploymentRiskMapState(items, riskPreset);
+  const mitigationPriority = compareMitigationPriorityState(items, mitigationPreset);
   const { bannerTexts, fullViewSearch } = drawerUi;
 
   const onClear = () => {
@@ -478,6 +486,13 @@ export function CompareDrawer() {
               state={deploymentRiskMap}
               selectedPreset={riskPreset}
               onSelectPreset={setRiskPreset}
+              compact
+              className="m-3 mt-0"
+            />
+            <CompareMitigationPriorityPanel
+              state={mitigationPriority}
+              selectedPreset={mitigationPreset}
+              onSelectPreset={setMitigationPreset}
               compact
               className="m-3 mt-0"
             />
