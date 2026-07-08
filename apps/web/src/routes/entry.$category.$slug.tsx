@@ -88,7 +88,10 @@ import {
   entryEvidenceReadinessMatrixState,
   type EvidenceMatrixPresetId,
 } from "@/lib/entry-evidence-readiness-matrix";
-import { entryDecisionTimelineState, type DecisionTimelinePresetId } from "@/lib/entry-decision-timeline";
+import {
+  entryDecisionTimelineState,
+  type DecisionTimelinePresetId,
+} from "@/lib/entry-decision-timeline";
 
 const loadFullEntry = createServerFn({ method: "GET" })
   .inputValidator(z.object({ category: z.string().min(1), slug: z.string().min(1) }))
@@ -359,6 +362,7 @@ function Dossier() {
   const evidenceMatrix = useMemo(
     () => entryEvidenceReadinessMatrixState(entry, evidencePreset, compare.items),
     [entry, evidencePreset, compare.items],
+  );
   const decisionTimeline = useMemo(
     () => entryDecisionTimelineState(entry, timelinePreset, compare.items),
     [entry, timelinePreset, compare.items],
