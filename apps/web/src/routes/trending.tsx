@@ -1,4 +1,5 @@
 import * as React from "react";
+import { hasLiveSignals, type SignalState } from "@/lib/trending-live-signals-lib";
 import { createFileRoute, Link, stripSearchParams } from "@tanstack/react-router";
 import { z } from "zod";
 import { ArrowRight, Clock, Flame, Info, Rss, Star, TrendingUp } from "lucide-react";
@@ -25,12 +26,6 @@ const trendingSchema = z.object({
   window: z.enum(["7d", "30d", "all"]).catch(defaultSearch.window).default(defaultSearch.window),
   category: z.string().catch(defaultSearch.category).default(defaultSearch.category),
 });
-
-type SignalState = {
-  votes?: boolean;
-  community?: boolean;
-  intent?: boolean;
-};
 
 type TrendingEntry = Entry & {
   trendingScore?: number;
@@ -95,10 +90,6 @@ export const Route = createFileRoute("/trending")({
   }),
   component: TrendingPage,
 });
-
-function hasLiveSignals(signals?: SignalState) {
-  return Boolean(signals?.votes || signals?.community || signals?.intent);
-}
 
 function fallbackRows(): TrendingEntry[] {
   return search({ sort: "popular" })
