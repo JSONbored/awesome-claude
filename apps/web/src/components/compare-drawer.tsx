@@ -41,6 +41,11 @@ import {
 } from "@/lib/compare-rollout-readiness";
 import { CompareRolloutReadinessPanel } from "@/components/compare-rollout-readiness-panel";
 import {
+  compareDeploymentRiskMapState,
+  type DeploymentRiskPresetId,
+} from "@/lib/compare-deployment-risk-map";
+import { CompareDeploymentRiskMapPanel } from "@/components/compare-deployment-risk-map-panel";
+import {
   compareDrawerDecisionRows,
   compareSignalToneClass,
   type CompareSignalValue,
@@ -332,12 +337,14 @@ export function CompareDrawer() {
   const { items, open, setOpen, toggle, clear, hydrate } = useCompare();
   const [scenario, setScenario] = React.useState<CompareScenarioId>("balanced");
   const [rolloutPreset, setRolloutPreset] = React.useState<RolloutPresetId>("team");
+  const [riskPreset, setRiskPreset] = React.useState<DeploymentRiskPresetId>("balanced");
   const { drawerUi, emptyHint, shareUrl, divergingDecisionLabels, actionRowDiverges, actionCells } =
     compareDrawerInteractiveUiState(items);
   const decisionBrief = compareDecisionBriefState(items);
   const scenarioRanking = compareScenarioRankingState(items, scenario);
   const evidenceGaps = compareEvidenceGapsState(items);
   const rolloutReadiness = compareRolloutReadinessState(items, rolloutPreset);
+  const deploymentRiskMap = compareDeploymentRiskMapState(items, riskPreset);
   const { bannerTexts, fullViewSearch } = drawerUi;
 
   const onClear = () => {
@@ -450,6 +457,13 @@ export function CompareDrawer() {
               state={rolloutReadiness}
               selectedPreset={rolloutPreset}
               onSelectPreset={setRolloutPreset}
+              compact
+              className="m-3 mt-0"
+            />
+            <CompareDeploymentRiskMapPanel
+              state={deploymentRiskMap}
+              selectedPreset={riskPreset}
+              onSelectPreset={setRiskPreset}
               compact
               className="m-3 mt-0"
             />
