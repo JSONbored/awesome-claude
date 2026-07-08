@@ -34,7 +34,9 @@ function compact(n) {
 }
 
 async function fetchJson(url) {
-  const res = await fetch(url, { headers: { "User-Agent": "gittensor-impact-card/1.0" } });
+  const res = await fetch(url, {
+    headers: { "User-Agent": "gittensor-impact-card/1.0" },
+  });
   if (!res.ok) throw new Error(`fetch failed: ${url} (${res.status})`);
   return res.json();
 }
@@ -70,8 +72,16 @@ function sparkline(x, y, w, h, values, mutedColor, accentColor, cardBg) {
   const range = max - min || 1;
   const n = values.length;
   const stepX = w / (n - 1);
-  const pts = values.map((v, i) => [x + i * stepX, y + h - ((v - min) / range) * h]);
-  const svgPath = pts.map(([px, py], i) => `${i === 0 ? "M" : "L"}${px.toFixed(1)},${py.toFixed(1)}`).join(" ");
+  const pts = values.map((v, i) => [
+    x + i * stepX,
+    y + h - ((v - min) / range) * h,
+  ]);
+  const svgPath = pts
+    .map(
+      ([px, py], i) =>
+        `${i === 0 ? "M" : "L"}${px.toFixed(1)},${py.toFixed(1)}`,
+    )
+    .join(" ");
   const [lastX, lastY] = pts[pts.length - 1];
   return `
 <path d="${svgPath}" fill="none" stroke="${mutedColor}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
@@ -88,37 +98,79 @@ function meter(x, y, w, h, value, max, accentColor, trackColor) {
 
 function render({ repo, impact, buckets, gtLogoB64, repoIconB64 }) {
   const { cardBg, fg, muted, accent, accentTrack, border, radius } = THEME;
-  const W = 1200, H = 420;
+  const W = 1200,
+    H = 420;
   const pad = 56;
   const cols = 4;
   const colW = (W - 2 * pad) / cols;
   const font = "'DM Sans', ui-sans-serif, system-ui, -apple-system, sans-serif";
-  const displayFont = "'Space Grotesk', ui-sans-serif, system-ui, -apple-system, sans-serif";
+  const displayFont =
+    "'Space Grotesk', ui-sans-serif, system-ui, -apple-system, sans-serif";
   const sparkW = colW - 40;
   const sparkH = 56;
   const sparkY = 150;
 
   const stats = [
-    { type: "sparkline", series: buckets.prBuckets, value: impact.totalPRs.toLocaleString(), label: "merged PRs" },
-    { type: "sparkline", series: buckets.contributorBuckets, value: String(impact.totalContributors), label: "contributors" },
-    { type: "sparkline", series: buckets.locBuckets, value: compact(impact.totalLinesChanged), label: "lines changed" },
-    { type: "meter", raw: impact.emissionShare * 100, max: 100, value: `${(impact.emissionShare * 100).toFixed(1)}%`, label: "emission share" },
+    {
+      type: "sparkline",
+      series: buckets.prBuckets,
+      value: impact.totalPRs.toLocaleString(),
+      label: "merged PRs",
+    },
+    {
+      type: "sparkline",
+      series: buckets.contributorBuckets,
+      value: String(impact.totalContributors),
+      label: "contributors",
+    },
+    {
+      type: "sparkline",
+      series: buckets.locBuckets,
+      value: compact(impact.totalLinesChanged),
+      label: "lines changed",
+    },
+    {
+      type: "meter",
+      raw: impact.emissionShare * 100,
+      max: 100,
+      value: `${(impact.emissionShare * 100).toFixed(1)}%`,
+      label: "emission share",
+    },
   ];
 
   let statsSvg = "";
   stats.forEach((s, i) => {
     const x = pad + i * colW;
     if (s.type === "meter") {
-      statsSvg += meter(x, sparkY + sparkH / 2 - 7, sparkW, 14, s.raw, s.max, accent, accentTrack);
+      statsSvg += meter(
+        x,
+        sparkY + sparkH / 2 - 7,
+        sparkW,
+        14,
+        s.raw,
+        s.max,
+        accent,
+        accentTrack,
+      );
     } else {
-      statsSvg += sparkline(x, sparkY, sparkW, sparkH, s.series, muted, accent, cardBg);
+      statsSvg += sparkline(
+        x,
+        sparkY,
+        sparkW,
+        sparkH,
+        s.series,
+        muted,
+        accent,
+        cardBg,
+      );
     }
     statsSvg += `
 <text x="${x}" y="${sparkY + sparkH + 78}" font-family="${font}" font-size="60" font-weight="700" fill="${fg}">${s.value}</text>
 <text x="${x}" y="${sparkY + sparkH + 112}" font-family="${font}" font-size="21" font-weight="500" fill="${muted}">${s.label}</text>`;
   });
 
-  const logoW = 48, logoH = 48 / (708 / 567); // gittensor.io/gt-logo.svg aspect ratio
+  const logoW = 48,
+    logoH = 48 / (708 / 567); // gittensor.io/gt-logo.svg aspect ratio
   const repoIconSize = 26;
   const repoIconX = W - pad - repoIconSize;
   const repoIconY = 396 - 14 - (repoIconSize - 16);
@@ -139,10 +191,12 @@ ${statsSvg}
 async function main() {
   const [repo, outFile] = process.argv.slice(2);
   if (!repo || !outFile) {
-    console.error("Usage: node scripts/gittensor-impact-card.mjs <owner/repo> <out-file.svg>");
+    console.error(
+      "Usage: node scripts/gittensor-impact-card.mjs <owner/repo> <out-file.svg>",
+    );
     process.exit(1);
   }
-  const encoded = repo.replace("/", "%2F");
+  const encoded = encodeURIComponent(repo);
   const [impact, prs, gtLogoSvg] = await Promise.all([
     fetchJson(`https://api.gittensor.io/repos/${encoded}/impact`),
     fetchJson(`https://api.gittensor.io/repos/${encoded}/prs`),
@@ -150,7 +204,9 @@ async function main() {
   ]);
   const buckets = bucketWeekly(prs, new Date());
   const gtLogoB64 = Buffer.from(gtLogoSvg).toString("base64");
-  const repoIconB64 = Buffer.from(readFileSync(repoIconPath)).toString("base64");
+  const repoIconB64 = Buffer.from(readFileSync(repoIconPath)).toString(
+    "base64",
+  );
 
   const svg = render({ repo, impact, buckets, gtLogoB64, repoIconB64 });
   writeFileSync(outFile, svg);
