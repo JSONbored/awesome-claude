@@ -7,9 +7,9 @@ import {
   categoryLabels,
   categoryDescriptions,
   categorySeoDescriptions,
-  categoryUsageHints,
   categoryQuickstarts,
 } from "@/lib/site";
+import { faqFor } from "@/lib/category-faq-lib";
 import { ResourceCard } from "@/components/resource-card";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
@@ -26,27 +26,6 @@ const categoryIds = new Set(CATEGORIES.map((c) => c.id));
 // Reuse the canonical registry ranking (recommendedScore) so hub order matches /browse.
 // Cached per render pass so head() and the component don't each re-run the search.
 const topEntriesFor = cache((id: string) => search({ categories: [id as Category] }));
-
-function faqFor(id: string, label: string) {
-  return [
-    {
-      q: `What are Claude ${label}?`,
-      a:
-        categoryDescriptions[id] ??
-        `Claude ${label} are community-submitted resources curated in the HeyClaude directory.`,
-    },
-    {
-      q: `How do I use ${label} from HeyClaude?`,
-      a:
-        categoryUsageHints[id] ??
-        `Open any entry to see install or usage details, copy the snippet or config, and review the linked source before adding it to your Claude setup.`,
-    },
-    {
-      q: `Are HeyClaude ${label} reviewed before they are listed?`,
-      a: "Each entry is metadata-reviewed for source, trust, and safety/privacy signals before it appears. HeyClaude does not scan for malware, so always review the linked source before installing anything that touches your filesystem, network, or credentials.",
-    },
-  ];
-}
 
 export const Route = createFileRoute("/$category")({
   loader: ({ params }) => {
