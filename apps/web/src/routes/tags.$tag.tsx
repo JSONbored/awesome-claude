@@ -7,6 +7,7 @@ import { NewsletterInline } from "@/components/newsletter-inline";
 import { HubHighlights, HubSignalStats } from "@/components/hub-highlights";
 import { hubHighlights, hubStats, trustPosture } from "@/lib/hub-highlights";
 import { categorySpread } from "@/lib/category-spread-lib";
+import { joinList } from "@/lib/join-list-lib";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
@@ -14,12 +15,6 @@ import { getTagGroup, relatedTags } from "@/lib/tags";
 
 // The categories a tag's entries actually span — used to vary intro copy per tag so no
 // two indexable tag pages emit the same boilerplate sentence.
-
-function joinList(items: string[]): string {
-  if (items.length <= 1) return items[0] ?? "";
-  if (items.length === 2) return `${items[0]} and ${items[1]}`;
-  return `${items.slice(0, -1).join(", ")}, and ${items[items.length - 1]}`;
-}
 
 export const Route = createFileRoute("/tags/$tag")({
   loader: ({ params }) => {
