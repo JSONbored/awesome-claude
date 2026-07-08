@@ -55,6 +55,7 @@ import { StickyMetaBar } from "@/components/sticky-meta-bar";
 import { EntryDetailCommandCenter } from "@/components/entry-detail-command-center";
 import { EntryDetailMobileActionBar } from "@/components/entry-detail-mobile-action-bar";
 import { EntrySignalsPanel } from "@/components/entry-signals-panel";
+import { EntryDetailDecisionPlaybook } from "@/components/entry-detail-decision-playbook";
 import { EntryBrandMark } from "@/components/entry-brand-mark";
 import { PLATFORM_SUPPORT_LABEL, type Entry } from "@/types/registry";
 import {
@@ -77,6 +78,7 @@ import { useCopyPref, useHarnessPref, type CopyVariant } from "@/lib/dossier-pre
 import { variantsForEntry } from "@/components/copy-segmented";
 import type { Harness } from "@/types/registry";
 import { cn } from "@/lib/utils";
+import { entryDetailDecisionPlaybookState } from "@/lib/entry-detail-decision-playbook";
 
 const loadFullEntry = createServerFn({ method: "GET" })
   .inputValidator(z.object({ category: z.string().min(1), slug: z.string().min(1) }))
@@ -333,6 +335,10 @@ function Dossier() {
   );
   const quickLinks = useMemo(() => entryQuickLinks(entry), [entry]);
   const readinessRows = useMemo(() => entryReadinessRows(entry), [entry]);
+  const decisionPlaybook = useMemo(
+    () => entryDetailDecisionPlaybookState(entry, compare.items),
+    [entry, compare.items],
+  );
   const entryUrl = `/entry/${entry.category}/${entry.slug}`;
 
   return (
@@ -483,6 +489,7 @@ function Dossier() {
             </p>
             <CitationFacts entry={entry} />
           </DossierSection>
+          <EntryDetailDecisionPlaybook state={decisionPlaybook} />
           {entry.safetyNotes && (
             <DossierSection id="safety" icon={ShieldCheck} title="Safety notes" tone="trust">
               <NoteList value={entry.safetyNotesList ?? [entry.safetyNotes]} />
