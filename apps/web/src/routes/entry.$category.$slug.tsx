@@ -57,6 +57,7 @@ import { EntryDetailCommandCenter } from "@/components/entry-detail-command-cent
 import { EntryDetailMobileActionBar } from "@/components/entry-detail-mobile-action-bar";
 import { EntrySignalsPanel } from "@/components/entry-signals-panel";
 import { EntryDetailDecisionPlaybook } from "@/components/entry-detail-decision-playbook";
+import { EntryDecisionTimelinePanel } from "@/components/entry-decision-timeline-panel";
 import { EntryBrandMark } from "@/components/entry-brand-mark";
 import { EntryAdoptionPlanPanel } from "@/components/entry-adoption-plan-panel";
 import { EntryEvidenceReadinessMatrix } from "@/components/entry-evidence-readiness-matrix";
@@ -87,6 +88,7 @@ import {
   entryEvidenceReadinessMatrixState,
   type EvidenceMatrixPresetId,
 } from "@/lib/entry-evidence-readiness-matrix";
+import { entryDecisionTimelineState, type DecisionTimelinePresetId } from "@/lib/entry-decision-timeline";
 
 const loadFullEntry = createServerFn({ method: "GET" })
   .inputValidator(z.object({ category: z.string().min(1), slug: z.string().min(1) }))
@@ -286,6 +288,7 @@ function Dossier() {
   const compare = useCompare();
   const [adoptionPreset, setAdoptionPreset] = useState<AdoptionPlanPresetId>("balanced-rollout");
   const [evidencePreset, setEvidencePreset] = useState<EvidenceMatrixPresetId>("balanced");
+  const [timelinePreset, setTimelinePreset] = useState<DecisionTimelinePresetId>("balanced");
   const inCompare = useIsCompared(entry);
   const onToggleCompare = useCallback(() => {
     const wasIn = inCompare;
@@ -356,6 +359,9 @@ function Dossier() {
   const evidenceMatrix = useMemo(
     () => entryEvidenceReadinessMatrixState(entry, evidencePreset, compare.items),
     [entry, evidencePreset, compare.items],
+  const decisionTimeline = useMemo(
+    () => entryDecisionTimelineState(entry, timelinePreset, compare.items),
+    [entry, timelinePreset, compare.items],
   );
   const entryUrl = `/entry/${entry.category}/${entry.slug}`;
 
@@ -517,6 +523,11 @@ function Dossier() {
             state={evidenceMatrix}
             selectedPreset={evidencePreset}
             onSelectPreset={setEvidencePreset}
+          />
+          <EntryDecisionTimelinePanel
+            state={decisionTimeline}
+            selectedPreset={timelinePreset}
+            onSelectPreset={setTimelinePreset}
           />
           {entry.safetyNotes && (
             <DossierSection id="safety" icon={ShieldCheck} title="Safety notes" tone="trust">
