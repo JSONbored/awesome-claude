@@ -13,6 +13,7 @@ import {
 } from "@/types/registry";
 import { ENTRIES, QUALITY_STATS, REGISTRY_GENERATED_AT } from "@/data/entries";
 import { installMethodDistribution, notesCoverage } from "@/lib/ecosystem-stats";
+import { pctOf } from "@/lib/pct-of-lib";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl, OG_WIDTH, OG_HEIGHT } from "@/lib/og-image";
 import { stringifyJsonLd } from "@/lib/json-ld";
@@ -36,10 +37,6 @@ interface DistRow {
   label: string;
   count: number;
   pct: number;
-}
-
-function pctOf(n: number, total: number) {
-  return total ? Math.round((n / total) * 100) : 0;
 }
 
 const TOTAL = ENTRIES.length;
