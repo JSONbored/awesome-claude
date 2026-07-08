@@ -1,0 +1,214 @@
+---
+title: Xero MCP Server
+slug: xero-mcp-server
+category: mcp
+description: >-
+  The official Xero MCP server (@xeroapi/xero-mcp-server) that lets AI
+  assistants work with a Xero accounting organisation — managing contacts, chart
+  of accounts, invoices, credit notes, payments, bank transactions, manual
+  journals, quotes, items, and payroll, and reading financial reports — using
+  Xero OAuth2 custom connections or a bearer token.
+cardDescription: >-
+  Official Xero MCP server: manage contacts, invoices, payments, bank
+  transactions, journals, quotes, and payroll, and read financial reports via
+  Xero OAuth2.
+seoTitle: Xero MCP Server — Invoices, Payments & Reports for LLMs
+seoDescription: >-
+  The official Xero MCP server (@xeroapi/xero-mcp-server) gives LLMs tools to
+  manage Xero contacts, invoices, credit notes, payments, bank transactions,
+  manual journals, quotes, items, and payroll, and to read profit-and-loss,
+  balance-sheet, and aged reports via OAuth2 custom connections.
+author: XeroAPI
+authorProfileUrl: https://github.com/XeroAPI
+submittedBy: davion-knight
+submittedByUrl: "https://github.com/davion-knight"
+dateAdded: "2026-07-08"
+brandName: Xero MCP Server
+brandDomain: xero.com
+websiteUrl: https://www.xero.com/
+repoUrl: https://github.com/XeroAPI/xero-mcp-server
+documentationUrl: https://github.com/XeroAPI/xero-mcp-server/blob/main/README.md
+installable: true
+installCommand: npx -y @xeroapi/xero-mcp-server@latest
+usageSnippet: |
+  # Configured through your MCP client with Xero OAuth2 custom-connection
+  # credentials (client ID/secret) or a bearer token; runs over stdio via npx.
+  npx -y @xeroapi/xero-mcp-server@latest
+copySnippet: |
+  {
+    "mcpServers": {
+      "xero": {
+        "command": "npx",
+        "args": ["-y", "@xeroapi/xero-mcp-server@latest"],
+        "env": {
+          "XERO_CLIENT_ID": "your_client_id_here",
+          "XERO_CLIENT_SECRET": "your_client_secret_here",
+          "XERO_SCOPES": "accounting.invoices accounting.contacts accounting.settings"
+        }
+      }
+    }
+  }
+configSnippet: |
+  {
+    "mcpServers": {
+      "xero": {
+        "command": "npx",
+        "args": ["-y", "@xeroapi/xero-mcp-server@latest"],
+        "env": {
+          "XERO_CLIENT_BEARER_TOKEN": "your_bearer_token"
+        }
+      }
+    }
+  }
+prerequisites:
+  - Node.js 18 or newer and npm or pnpm (the server runs via `npx -y @xeroapi/xero-mcp-server@latest`)
+  - A Xero account and organisation (a Demo Company is recommended to start; free trial available)
+  - A Xero developer account with API credentials — a custom connection (client ID/secret) or a bearer token
+  - The OAuth2 scopes your workflow needs (optionally set via `XERO_SCOPES`); Payroll queries require an NZ or UK region
+  - An MCP-compatible client (Claude Desktop, Cursor, VS Code, etc.)
+safetyNotes:
+  - Write-capable tools create and update real accounting records — invoices, contacts, credit notes, payments, bank transactions, manual journals, quotes, items, tracking categories, and payroll timesheets in the connected organisation.
+  - Creating payments, invoices, credit notes, and manual journals affects real financial data and ledgers, so start with a Demo Company and review actions before connecting a production organisation.
+  - Access is bounded by the custom connection's OAuth2 scopes (optionally `XERO_SCOPES`); grant only the scopes the workflow needs rather than the full set.
+  - Payroll timesheet tools can create, update, approve, revert, and delete timesheets (NZ/UK regions), which affect real payroll data.
+  - Xero credentials (`XERO_CLIENT_ID`/`XERO_CLIENT_SECRET` or `XERO_CLIENT_BEARER_TOKEN`) grant API access to the organisation and must be treated as secrets.
+privacyNotes:
+  - The server calls the Xero API with your credentials; contact, invoice, payment, bank transaction, payroll, and report data it returns is passed to the LLM/MCP client.
+  - Accounting and payroll data includes personal and financial information (customer and employee details, amounts, bank and tax data), so avoid exposing a production organisation's data to the model unnecessarily.
+  - Financial reports (profit and loss, balance sheet, aged payables/receivables, trial balance) reveal aggregate business financials; treat that output as sensitive.
+  - Credentials live in your MCP client config's `env` block — keep that config out of version control and restrict access to it.
+sourceUrls:
+  - https://github.com/XeroAPI/xero-mcp-server/blob/main/README.md
+  - https://www.npmjs.com/package/@xeroapi/xero-mcp-server
+  - https://developer.xero.com/documentation/guides/oauth2/custom-connections/
+  - https://github.com/XeroAPI/xero-mcp-server/blob/main/LICENSE
+tags:
+  - mcp
+  - xero
+  - accounting
+  - finance
+  - invoicing
+  - payroll
+  - oauth2
+  - nodejs
+keywords:
+  - Xero MCP server
+  - "@xeroapi/xero-mcp-server"
+  - Xero accounting MCP
+  - Xero invoices MCP
+  - Xero API MCP
+  - Model Context Protocol Xero
+  - Xero payroll MCP
+  - accounting MCP server
+  - Xero OAuth2 custom connection
+  - XeroAPI MCP server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+The **Xero MCP Server** is the official Model Context Protocol server maintained by
+[Xero](https://github.com/XeroAPI). It bridges the MCP protocol and the [Xero](https://www.xero.com/)
+accounting API, giving LLMs and agentic clients standardized access to a Xero organisation's
+**accounting and business features** — managing **contacts**, the **chart of accounts**,
+**invoices**, **credit notes**, **payments**, **bank transactions**, **manual journals**, **quotes**,
+**items**, and **payroll**, and reading **financial reports**.
+
+The project is written in TypeScript, distributed as the npm package
+[`@xeroapi/xero-mcp-server`](https://www.npmjs.com/package/@xeroapi/xero-mcp-server) (v0.0.17), and
+licensed under MIT. It runs over `stdio` via `npx` and authenticates with **Xero OAuth2** — either a
+**custom connection** (client ID/secret) or a **bearer token** — with scopes controlling what it can
+access. Full setup and scope guidance lives in the
+[repository README](https://github.com/XeroAPI/xero-mcp-server/blob/main/README.md).
+
+## Source Review
+
+The following real repository and package sources were fetched and reviewed for this entry:
+
+- [README.md](https://github.com/XeroAPI/xero-mcp-server/blob/main/README.md) — prerequisites, the custom-connection and bearer-token auth methods, the client config blocks, the required OAuth2 scopes, and the Demo Company guidance.
+- [Repository tools](https://github.com/XeroAPI/xero-mcp-server/tree/main/src/tools) — the `list`/`create`/`update`/`delete`/`get` tool set across contacts, accounts, invoices, credit notes, payments, bank transactions, manual journals, quotes, items, tax rates, tracking categories, reports, and payroll.
+- [npm: @xeroapi/xero-mcp-server](https://www.npmjs.com/package/@xeroapi/xero-mcp-server) — package name and version (`0.0.17`), MIT license, and the `xero-mcp-server` bin entry.
+- [LICENSE](https://github.com/XeroAPI/xero-mcp-server/blob/main/LICENSE) — MIT License.
+
+Repository facts confirmed at review time: official `XeroAPI` organization, default branch `main`,
+not archived, actively maintained, and released as `@xeroapi/xero-mcp-server` v0.0.17 on npm.
+
+## Features
+
+- **Contacts & organisation** — list and manage contacts and contact groups; read organisation details (e.g. `list-contacts`, `create-contact`, `update-contact`).
+- **Chart of accounts & tax** — list accounts, tax rates, and tracking categories, and create/update tracking categories and options.
+- **Invoices & credit notes** — list, create, and update invoices and credit notes (e.g. `create-invoice`, `update-credit-note`).
+- **Payments & bank transactions** — list and create payments and list/create/update bank transactions.
+- **Manual journals & items** — list, create, and update manual journals and items.
+- **Quotes** — list, create, and update quotes.
+- **Financial reports** — read profit-and-loss, balance-sheet, aged payables/receivables, and related reports.
+- **Payroll (NZ/UK)** — list employees, leave, leave balances/types/periods, and timesheets, and create/update/approve/revert/delete payroll timesheets.
+- **OAuth2 auth** — custom connection (client ID/secret) or bearer token, with scopes (optionally `XERO_SCOPES`) bounding access.
+
+## Installation
+
+The server runs via `npx` and is configured through your MCP client with Xero OAuth2 credentials.
+
+Custom connection (client ID/secret) — add to your MCP client (e.g. Claude Desktop's
+`claude_desktop_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "xero": {
+      "command": "npx",
+      "args": ["-y", "@xeroapi/xero-mcp-server@latest"],
+      "env": {
+        "XERO_CLIENT_ID": "your_client_id_here",
+        "XERO_CLIENT_SECRET": "your_client_secret_here",
+        "XERO_SCOPES": "accounting.invoices accounting.contacts accounting.settings"
+      }
+    }
+  }
+}
+```
+
+Bearer token (takes precedence over `XERO_CLIENT_ID` if set):
+
+```json
+{
+  "mcpServers": {
+    "xero": {
+      "command": "npx",
+      "args": ["-y", "@xeroapi/xero-mcp-server@latest"],
+      "env": {
+        "XERO_CLIENT_BEARER_TOKEN": "your_bearer_token"
+      }
+    }
+  }
+}
+```
+
+Set up a custom connection following Xero's
+[OAuth2 custom-connections guide](https://developer.xero.com/documentation/guides/oauth2/custom-connections/).
+`XERO_SCOPES` is optional; if omitted, default scopes are used, and the server tries V1 scopes first
+and falls back to V2. Payroll queries require an NZ or UK region.
+
+## Use Cases
+
+- **Conversational bookkeeping** — inspect and update contacts, invoices, and payments in natural language.
+- **Invoice and quote authoring** — create and adjust invoices, credit notes, and quotes from an agentic workflow.
+- **Bank reconciliation support** — list and create bank transactions and manual journals.
+- **Financial reporting** — pull profit-and-loss, balance-sheet, and aged payables/receivables reports for analysis.
+- **Payroll operations (NZ/UK)** — review employees and leave and manage timesheets.
+
+## Safety and Privacy
+
+- **Acts on real accounting data.** Create/update tools change invoices, contacts, payments, bank transactions, journals, quotes, items, and payroll timesheets in the connected organisation.
+- **Financial impact.** Payments, invoices, credit notes, and manual journals affect real ledgers — start with a Demo Company and review before connecting production.
+- **Scope-gated.** The custom connection's OAuth2 scopes (optionally `XERO_SCOPES`) bound access; grant only what the workflow needs.
+- **Credentials are sensitive.** `XERO_CLIENT_ID`/`XERO_CLIENT_SECRET` or `XERO_CLIENT_BEARER_TOKEN` grant API access — keep config out of version control and restrict access.
+- **Data flows to the model.** Contact, invoice, payment, payroll, and report data (personal and financial) is returned to the LLM/MCP client, so avoid exposing production data unnecessarily.
+
+## Duplicate Check
+
+No existing entry in the directory matches this server. A search of all directory entries for "xero"
+across slugs, titles, repository URLs, and install commands returned no results, and there is no prior
+entry pointing at `github.com/XeroAPI/xero-mcp-server` or the npm package `@xeroapi/xero-mcp-server`.
+This is therefore a net-new, non-duplicate entry.
