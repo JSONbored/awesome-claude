@@ -117,6 +117,7 @@ describe("entry-detail-sidebar-lib", () => {
       "adoption-plan",
       "decision-playbook",
       "evidence-matrix",
+      "decision-timeline",
       "privacy",
       "prerequisites",
       "about",
