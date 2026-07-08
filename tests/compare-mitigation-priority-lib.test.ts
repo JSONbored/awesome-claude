@@ -131,9 +131,17 @@ describe("compare mitigation priority lib", () => {
       copySnippet: undefined,
       fullCopy: undefined,
     });
-    const security = compareMitigationPriorityState([installOnly], "security-first");
-    const rollout = compareMitigationPriorityState([installOnly], "rollout-first");
-    expect(security.entries[0].priorityScore).not.toBe(rollout.entries[0].priorityScore);
+    const security = compareMitigationPriorityState(
+      [installOnly],
+      "security-first",
+    );
+    const rollout = compareMitigationPriorityState(
+      [installOnly],
+      "rollout-first",
+    );
+    expect(security.entries[0].priorityScore).not.toBe(
+      rollout.entries[0].priorityScore,
+    );
   });
 
   it("uses reviewedBy as reviewed signal", () => {
