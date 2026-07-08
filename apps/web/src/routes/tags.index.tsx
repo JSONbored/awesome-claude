@@ -7,6 +7,7 @@ import { CategoryPill } from "@/components/badges";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl } from "@/lib/seo";
 import { getIndexableTagGroups } from "@/lib/tags";
+import { toTagView, type TagView } from "@/lib/tag-view-lib";
 import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
@@ -44,33 +45,8 @@ export const Route = createFileRoute("/tags/")({
   component: TagsIndex,
 });
 
-type TagView = {
-  slug: string;
-  name: string;
-  count: number;
-  topCategory: string;
-  categoryCount: number;
-};
-
 // Derive a lightweight, sorted view-model (by entry count desc) with the category
 // each tag mostly spans — enough context to make the index scannable.
-function buildTagViews(): TagView[] {
-  return getIndexableTagGroups().map((group) => {
-    const catCounts = new Map<string, number>();
-    for (const entry of group.entries) {
-      catCounts.set(entry.category, (catCounts.get(entry.category) ?? 0) + 1);
-    }
-    const sorted = [...catCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
-    return {
-      slug: group.slug,
-      name: group.name,
-      count: group.entries.length,
-      topCategory: sorted[0]?.[0] ?? "",
-      categoryCount: sorted.length,
-    };
-  });
-}
-
 function FeaturedTagCard({ tag }: { tag: TagView }) {
   return (
     <Link
@@ -113,7 +89,7 @@ function TagPill({ tag, strong }: { tag: TagView; strong?: boolean }) {
 }
 
 function TagsIndex() {
-  const all = React.useMemo(buildTagViews, []);
+  const all = React.useMemo(() => getIndexableTagGroups().map(toTagView), []);
   const [query, setQuery] = React.useState("");
   const q = query.trim().toLowerCase();
 
