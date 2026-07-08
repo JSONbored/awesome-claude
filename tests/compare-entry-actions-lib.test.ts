@@ -84,8 +84,15 @@ describe("resolveCompareEntryActions", () => {
         claimed: true,
       }),
     );
-    expect(actions.map((action) => action.id)).toEqual(["dossier", "source"]);
-    expect(actions[1]).toMatchObject({
+    expect(actions.map((action) => action.id)).toEqual([
+      "dossier",
+      "api-json",
+      "llms",
+      "mcp-feed",
+      "source",
+      "newsletter",
+    ]);
+    expect(actions.find((action) => action.id === "source")).toMatchObject({
       kind: "link",
       href: "https://github.com/org/repo",
       intentType: "open",
@@ -104,7 +111,16 @@ describe("resolveCompareEntryActions", () => {
           claimed: true,
         }),
       ).map((action) => action.id),
-    ).toEqual(["dossier", "install", "config", "source"]);
+    ).toEqual([
+      "dossier",
+      "install",
+      "config",
+      "api-json",
+      "llms",
+      "mcp-feed",
+      "source",
+      "newsletter",
+    ]);
   });
 
   it("preserves dossier → install → config → source → claim ordering", () => {
@@ -116,7 +132,17 @@ describe("resolveCompareEntryActions", () => {
         claimed: false,
       }),
     ).map((action) => action.id);
-    expect(ids).toEqual(["dossier", "install", "config", "source", "claim"]);
+    expect(ids).toEqual([
+      "dossier",
+      "install",
+      "config",
+      "api-json",
+      "llms",
+      "mcp-feed",
+      "source",
+      "newsletter",
+      "claim",
+    ]);
   });
 });
 
@@ -195,7 +221,11 @@ describe("action metadata", () => {
     const linkActions = actions.filter((action) => action.kind === "link");
     expect(linkActions.map((action) => action.id)).toEqual([
       "dossier",
+      "api-json",
+      "llms",
+      "mcp-feed",
       "source",
+      "newsletter",
       "claim",
     ]);
   });
@@ -241,7 +271,7 @@ describe("compareActionSignature", () => {
           claimed: true,
         }),
       ),
-    ).toBe("dossier|install|config|source");
+    ).toBe("dossier|install|config|api-json|llms|mcp-feed|source|newsletter");
   });
 
   it("changes when optional actions appear or disappear", () => {
@@ -267,7 +297,7 @@ describe("compareActionSignature", () => {
     [
       "source only",
       entry({ sourceUrl: "https://x", claimed: true }),
-      "dossier|source",
+      "dossier|api-json|llms|mcp-feed|source|newsletter",
     ],
     ["claimed sparse", entry({ claimed: true }), "dossier"],
   ] as const)("signature for %s is %s", (_label, e, signature) => {
@@ -448,7 +478,7 @@ describe("integration snapshots", () => {
         claimed: false,
       }),
     );
-    expect(actions).toHaveLength(5);
+    expect(actions).toHaveLength(9);
     expect(
       compareActionSignature(
         entry({
@@ -460,7 +490,9 @@ describe("integration snapshots", () => {
           claimed: false,
         }),
       ),
-    ).toBe("dossier|install|config|source|claim");
+    ).toBe(
+      "dossier|install|config|api-json|llms|mcp-feed|source|newsletter|claim",
+    );
   });
 
   it("builds a minimal skill entry action bundle", () => {

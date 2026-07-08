@@ -25,10 +25,18 @@ export type CompareAction = {
   external?: boolean;
 };
 
+function entryRegistryApiPath(category: string, slug: string): string {
+  return `/api/registry/entries/${category}/${slug}`;
+}
+
+function entryLlmsApiPath(category: string, slug: string): string {
+  return `${entryRegistryApiPath(category, slug)}/llms`;
+}
+
 export function resolveCompareEntryActions(
   entry: Pick<
     Entry,
-    "category" | "slug" | "installCommand" | "sourceUrl" | "claimed" | "configSnippet"
+    "category" | "slug" | "installCommand" | "sourceUrl" | "claimed" | "configSnippet" | "platforms"
   >,
 ): CompareAction[] {
   const actions: CompareAction[] = [
@@ -65,6 +73,47 @@ export function resolveCompareEntryActions(
 
   if (entry.sourceUrl) {
     actions.push({
+      id: "api-json",
+      label: "API JSON",
+      kind: "link",
+      href: entryRegistryApiPath(entry.category, entry.slug),
+      intentType: "open",
+      analyticsEvent: "compare_open_api_json",
+    });
+    actions.push({
+      id: "llms",
+      label: "Open LLM",
+      kind: "link",
+      href: entryLlmsApiPath(entry.category, entry.slug),
+      intentType: "open",
+      analyticsEvent: "compare_open_llms",
+    });
+    if (entry.category === "mcp") {
+      actions.push({
+        id: "mcp-feed",
+        label: "MCP feed",
+        kind: "link",
+        href: "/data/mcp-registry-feed.json",
+        intentType: "open",
+        analyticsEvent: "compare_open_mcp_feed",
+      });
+    }
+  }
+
+  if (entry.sourceUrl && (entry.platforms ?? []).includes("raycast")) {
+    actions.push({
+      id: "raycast",
+      label: "Open Raycast",
+      kind: "link",
+      href: "https://www.raycast.com/jsonbored/heyclaude",
+      intentType: "open",
+      analyticsEvent: "compare_open_raycast",
+      external: true,
+    });
+  }
+
+  if (entry.sourceUrl) {
+    actions.push({
       id: "source",
       label: "Open source",
       kind: "link",
@@ -72,6 +121,16 @@ export function resolveCompareEntryActions(
       intentType: "open",
       analyticsEvent: "compare_open_source",
       external: true,
+    });
+  }
+
+  if (entry.sourceUrl) {
+    actions.push({
+      id: "newsletter",
+      label: "Newsletter",
+      kind: "link",
+      href: "/subscriptions",
+      analyticsEvent: "compare_open_newsletter",
     });
   }
 

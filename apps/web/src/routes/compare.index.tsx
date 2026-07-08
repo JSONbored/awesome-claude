@@ -504,12 +504,12 @@ function CompareActionButton({ entry, action }: { entry: Entry; action: CompareA
       );
     }
 
-    if (action.href && action.external) {
+    if (action.href) {
       return (
         <a
           href={action.href}
-          target="_blank"
-          rel="noreferrer"
+          target={action.external ? "_blank" : undefined}
+          rel={action.external ? "noreferrer" : undefined}
           onClick={() => {
             if (action.analyticsEvent) {
               trackEvent(action.analyticsEvent, { entry: eventKey, surface: COMPARE_PAGE_SURFACE });
