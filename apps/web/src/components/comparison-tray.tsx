@@ -1,8 +1,24 @@
 import * as React from "react";
-import { BadgeCheck, GitCompare, X, ArrowRight, Shield, Lock, Link2, Package } from "lucide-react";
+import {
+  BadgeCheck,
+  GitCompare,
+  X,
+  ArrowRight,
+  Shield,
+  Lock,
+  Link2,
+  Package,
+  Trash2,
+} from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { useCompare } from "@/lib/compare";
-import { comparisonTrayChipSignals, comparisonTrayUiState } from "@/lib/comparison-tray-ui";
+import {
+  comparisonTrayChipSignals,
+  comparisonTrayClearAriaLabel,
+  comparisonTraySecondaryHint,
+  comparisonTrayTrustDivergenceBadgeLabel,
+  comparisonTrayUiState,
+} from "@/lib/comparison-tray-ui";
 import {
   comparisonTrayFullCompareAnalyticsData,
   comparisonTrayQuickCompareAnalyticsData,
@@ -64,6 +80,8 @@ function TrayChip({ entry, onRemove }: { entry: Entry; onRemove: () => void }) {
 export function ComparisonTray() {
   const { items, toggle, clear, open, setOpen } = useCompare();
   const tray = React.useMemo(() => comparisonTrayUiState(items), [items]);
+  const trustDivergenceBadge = comparisonTrayTrustDivergenceBadgeLabel(tray.hasTrustDivergence);
+  const secondaryHint = comparisonTraySecondaryHint(tray.hints);
 
   if (items.length === 0) return null;
 
@@ -75,13 +93,21 @@ export function ComparisonTray() {
             {tray.primaryHint}
           </p>
         ) : null}
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 text-sm font-medium text-ink">
-            <GitCompare className="h-4 w-4" />
-            Compare
+        {secondaryHint ? (
+          <p className="mb-2 line-clamp-2 text-[11px] text-ink-muted sm:hidden">{secondaryHint}</p>
+        ) : null}
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex min-w-0 items-center gap-2 text-sm font-medium text-ink">
+            <GitCompare className="h-4 w-4 shrink-0" />
+            <span className="hidden sm:inline">Compare</span>
             <span className="rounded bg-ink px-1.5 py-0.5 font-mono text-[10px] text-background">
               {tray.count}/{tray.maxCount}
             </span>
+            {trustDivergenceBadge ? (
+              <span className="rounded-full border border-amber-300/60 bg-amber-50 px-1.5 py-0.5 text-[10px] font-medium text-amber-900">
+                {trustDivergenceBadge}
+              </span>
+            ) : null}
           </div>
           <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto">
             {items.map((entry) => (
@@ -92,6 +118,14 @@ export function ComparisonTray() {
               />
             ))}
           </div>
+          <button
+            type="button"
+            onClick={clear}
+            aria-label={comparisonTrayClearAriaLabel(tray.count)}
+            className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border text-ink-muted hover:bg-surface-2 hover:text-ink sm:hidden"
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+          </button>
           <button
             type="button"
             onClick={clear}
@@ -108,7 +142,7 @@ export function ComparisonTray() {
                 });
                 setOpen(true);
               }}
-              className="inline-flex h-8 items-center gap-1 rounded-md border border-border bg-background px-3 text-xs font-medium text-ink hover:bg-surface-2"
+              className="hidden h-8 items-center gap-1 rounded-md border border-border bg-background px-3 text-xs font-medium text-ink hover:bg-surface-2 sm:inline-flex"
             >
               Quick compare
             </button>
@@ -123,17 +157,20 @@ export function ComparisonTray() {
                 });
                 setOpen(false);
               }}
-              className="inline-flex h-8 items-center gap-1 rounded-md bg-accent px-3 text-xs font-semibold text-accent-ink hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/40"
+              className="inline-flex h-8 shrink-0 items-center gap-1 rounded-md bg-accent px-2.5 text-xs font-semibold text-accent-ink hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/40 sm:px-3"
             >
-              Full compare <ArrowRight className="h-3 w-3" />
+              <span className="sm:hidden">Compare</span>
+              <span className="hidden sm:inline">Full compare</span>
+              <ArrowRight className="h-3 w-3" />
             </Link>
           ) : (
             <button
               type="button"
               onClick={() => setOpen(true)}
-              className="inline-flex h-8 items-center gap-1 rounded-md bg-accent px-3 text-xs font-semibold text-accent-ink hover:opacity-90"
+              className="inline-flex h-8 shrink-0 items-center gap-1 rounded-md bg-accent px-2.5 text-xs font-semibold text-accent-ink hover:opacity-90 sm:px-3"
             >
-              View selection
+              <span className="sm:hidden">View</span>
+              <span className="hidden sm:inline">View selection</span>
             </button>
           )}
           <span className="sr-only" aria-hidden>

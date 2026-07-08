@@ -2,7 +2,10 @@ import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
 import {
   comparisonTrayChipSignals,
+  comparisonTrayClearAriaLabel,
   comparisonTrayHintMessages,
+  comparisonTraySecondaryHint,
+  comparisonTrayTrustDivergenceBadgeLabel,
   comparisonTrayUiState,
 } from "@/lib/comparison-tray-ui-lib";
 
@@ -137,5 +140,20 @@ describe("comparison tray ui lib", () => {
       "1 trust signal differ across this comparison (Review status).",
       "Next steps differ across entries — open the interactive comparison to compare install/config copy, source links, API JSON, and LLM/MCP handoff links per resource.",
     ]);
+  });
+
+  it("builds mobile tray affordance labels from tray state", () => {
+    expect(comparisonTrayClearAriaLabel(1)).toBe("Clear 1 entry from compare");
+    expect(comparisonTrayClearAriaLabel(3)).toBe(
+      "Clear 3 entries from compare",
+    );
+    expect(comparisonTrayTrustDivergenceBadgeLabel(true)).toBe("Trust gap");
+    expect(comparisonTrayTrustDivergenceBadgeLabel(false)).toBeNull();
+    expect(
+      comparisonTraySecondaryHint([
+        "1 trust signal differ across this comparison (Review status).",
+        "Next steps differ across entries — open the interactive comparison to compare install/config copy, source links, API JSON, and LLM/MCP handoff links per resource.",
+      ]),
+    ).toContain("Next steps differ");
   });
 });
