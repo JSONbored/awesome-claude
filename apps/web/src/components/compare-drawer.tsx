@@ -36,6 +36,11 @@ import { CompareScenarioRankingPanel } from "@/components/compare-scenario-ranki
 import { compareEvidenceGapsState } from "@/lib/compare-evidence-gaps";
 import { CompareEvidenceGapsPanel } from "@/components/compare-evidence-gaps-panel";
 import {
+  compareRolloutReadinessState,
+  type RolloutPresetId,
+} from "@/lib/compare-rollout-readiness";
+import { CompareRolloutReadinessPanel } from "@/components/compare-rollout-readiness-panel";
+import {
   compareDrawerDecisionRows,
   compareSignalToneClass,
   type CompareSignalValue,
@@ -326,11 +331,13 @@ function SnippetCell({ entry }: { entry: Entry }) {
 export function CompareDrawer() {
   const { items, open, setOpen, toggle, clear, hydrate } = useCompare();
   const [scenario, setScenario] = React.useState<CompareScenarioId>("balanced");
+  const [rolloutPreset, setRolloutPreset] = React.useState<RolloutPresetId>("team");
   const { drawerUi, emptyHint, shareUrl, divergingDecisionLabels, actionRowDiverges, actionCells } =
     compareDrawerInteractiveUiState(items);
   const decisionBrief = compareDecisionBriefState(items);
   const scenarioRanking = compareScenarioRankingState(items, scenario);
   const evidenceGaps = compareEvidenceGapsState(items);
+  const rolloutReadiness = compareRolloutReadinessState(items, rolloutPreset);
   const { bannerTexts, fullViewSearch } = drawerUi;
 
   const onClear = () => {
@@ -439,6 +446,13 @@ export function CompareDrawer() {
               className="mx-3"
             />
             <CompareEvidenceGapsPanel state={evidenceGaps} compact className="m-3 mt-0" />
+            <CompareRolloutReadinessPanel
+              state={rolloutReadiness}
+              selectedPreset={rolloutPreset}
+              onSelectPreset={setRolloutPreset}
+              compact
+              className="m-3 mt-0"
+            />
             <div className="min-w-full">
               <table className="w-full border-collapse text-sm">
                 <thead className="sticky top-0 z-10 bg-surface">

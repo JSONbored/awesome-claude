@@ -21,6 +21,10 @@ import {
   type CompareScenarioId,
 } from "@/lib/compare-scenario-ranking";
 import { compareEvidenceGapsState } from "@/lib/compare-evidence-gaps";
+import {
+  compareRolloutReadinessState,
+  type RolloutPresetId,
+} from "@/lib/compare-rollout-readiness";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
 import { sameEntry } from "@/lib/entry-identity";
 import { search } from "@/data/search";
@@ -29,6 +33,7 @@ import type { Entry } from "@/types/registry";
 import { CompareDecisionBriefPanel } from "@/components/compare-decision-brief-panel";
 import { CompareScenarioRankingPanel } from "@/components/compare-scenario-ranking-panel";
 import { CompareEvidenceGapsPanel } from "@/components/compare-evidence-gaps-panel";
+import { CompareRolloutReadinessPanel } from "@/components/compare-rollout-readiness-panel";
 
 const defaultSearch = { ids: "" };
 
@@ -80,11 +85,16 @@ function ComparePage() {
   );
   const decisionBrief = React.useMemo(() => compareDecisionBriefState(items), [items]);
   const [scenario, setScenario] = React.useState<CompareScenarioId>("balanced");
+  const [rolloutPreset, setRolloutPreset] = React.useState<RolloutPresetId>("team");
   const scenarioRanking = React.useMemo(
     () => compareScenarioRankingState(items, scenario),
     [items, scenario],
   );
   const evidenceGaps = React.useMemo(() => compareEvidenceGapsState(items), [items]);
+  const rolloutReadiness = React.useMemo(
+    () => compareRolloutReadinessState(items, rolloutPreset),
+    [items, rolloutPreset],
+  );
 
   const pushIds = (next: Entry[]) => {
     const ids = serializeCompareItems(next);
@@ -209,6 +219,12 @@ function ComparePage() {
           className="m-3"
         />
         <CompareEvidenceGapsPanel state={evidenceGaps} className="m-3 mt-0" />
+        <CompareRolloutReadinessPanel
+          state={rolloutReadiness}
+          selectedPreset={rolloutPreset}
+          onSelectPreset={setRolloutPreset}
+          className="m-3 mt-0"
+        />
       </div>
 
       <div className="mt-4 overflow-auto rounded-xl border border-border">
