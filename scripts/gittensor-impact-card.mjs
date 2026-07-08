@@ -33,6 +33,17 @@ function compact(n) {
   return String(n);
 }
 
+// api.gittensor.io values (and the repo name) end up as SVG <text> content,
+// so escape XML special chars rather than trust they're clean numbers/strings.
+function escapeXml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#x27;");
+}
+
 async function fetchJson(url) {
   const res = await fetch(url, {
     headers: { "User-Agent": "gittensor-impact-card/1.0" },
@@ -165,8 +176,8 @@ function render({ repo, impact, buckets, gtLogoB64, repoIconB64 }) {
       );
     }
     statsSvg += `
-<text x="${x}" y="${sparkY + sparkH + 78}" font-family="${font}" font-size="60" font-weight="700" fill="${fg}">${s.value}</text>
-<text x="${x}" y="${sparkY + sparkH + 112}" font-family="${font}" font-size="21" font-weight="500" fill="${muted}">${s.label}</text>`;
+<text x="${x}" y="${sparkY + sparkH + 78}" font-family="${font}" font-size="60" font-weight="700" fill="${fg}">${escapeXml(s.value)}</text>
+<text x="${x}" y="${sparkY + sparkH + 112}" font-family="${font}" font-size="21" font-weight="500" fill="${muted}">${escapeXml(s.label)}</text>`;
   });
 
   const logoW = 48,
@@ -184,7 +195,7 @@ function render({ repo, impact, buckets, gtLogoB64, repoIconB64 }) {
 ${statsSvg}
 <text x="${pad}" y="396" font-family="${font}" font-size="19" font-weight="400" fill="${muted}">Updated weekly &#183; gittensor.io</text>
 <image href="data:image/svg+xml;base64,${repoIconB64}" x="${repoIconX}" y="${repoIconY}" width="${repoIconSize}" height="${repoIconSize}"/>
-<text x="${repoTextX}" y="396" font-family="${displayFont}" font-size="20" font-weight="500" letter-spacing="-0.01em" fill="${fg}" text-anchor="end">${repo}</text>
+<text x="${repoTextX}" y="396" font-family="${displayFont}" font-size="20" font-weight="500" letter-spacing="-0.01em" fill="${fg}" text-anchor="end">${escapeXml(repo)}</text>
 </svg>`;
 }
 
