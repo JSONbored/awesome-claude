@@ -12,6 +12,8 @@ export {
   comparisonTrayQuickCompareAnalyticsData,
   entryDetailCompareAnalyticsData,
   entryDetailCompareAnalyticsEvent,
+  entryDetailMobileCompareAnalyticsData,
+  entryDetailMobileCompareAnalyticsEvent,
   entryDetailCopyAnalyticsData,
   entryDetailCopyAnalyticsEvent,
   entryDetailCopyIntentType,

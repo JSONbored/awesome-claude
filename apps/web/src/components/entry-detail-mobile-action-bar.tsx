@@ -1,11 +1,12 @@
 import { useCallback } from "react";
 import { toast } from "sonner";
-import { Copy, ExternalLink, Package, FileText, Terminal } from "lucide-react";
+import { Copy, ExternalLink, Package, FileText, Terminal, GitCompare } from "lucide-react";
 import type { Entry } from "@/types/registry";
 import {
   ENTRY_COMMAND_CENTER_ID,
   resolveDetailMobileActions,
 } from "@/lib/entry-detail-command-center";
+import { entryDetailMobileCompareAction } from "@/lib/entry-detail-compare-ui";
 import { siteConfig } from "@/lib/site";
 import { absoluteUrl } from "@/lib/seo";
 import { trackEvent } from "@/lib/analytics";
@@ -21,11 +22,17 @@ import { cn } from "@/lib/utils";
 type EntryDetailMobileActionBarProps = {
   entry: Entry;
   copyPayload?: string;
+  compareCta: {
+    inCompare: boolean;
+    compareCount: number;
+    onToggle: () => void;
+  };
 };
 
 export function EntryDetailMobileActionBar({
   entry,
   copyPayload,
+  compareCta,
 }: EntryDetailMobileActionBarProps) {
   const entryPageUrl = absoluteUrl(`/entry/${entry.category}/${entry.slug}`);
   const actions = resolveDetailMobileActions(
@@ -34,6 +41,18 @@ export function EntryDetailMobileActionBar({
     entryPageUrl,
     siteConfig.githubUrl,
   );
+  const compareAction = entryDetailMobileCompareAction(
+    compareCta.inCompare,
+    compareCta.compareCount,
+  );
+
+  const onCompare = useCallback(() => {
+    if (compareAction.disabled) {
+      if (compareAction.hint) toast.error(compareAction.hint);
+      return;
+    }
+    compareCta.onToggle();
+  }, [compareAction.disabled, compareAction.hint, compareCta]);
 
   const onAction = useCallback(
     async (actionId: string) => {
@@ -82,6 +101,25 @@ export function EntryDetailMobileActionBar({
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 px-3 py-2 backdrop-blur lg:hidden">
       <div className="pointer-events-auto mx-auto flex max-w-[1200px] gap-2">
+        <button
+          type="button"
+          onClick={onCompare}
+          disabled={compareAction.disabled}
+          aria-label={compareAction.label}
+          className={cn(
+            "inline-flex h-10 min-w-0 flex-1 items-center justify-center gap-1.5 rounded-md px-2 text-xs font-medium",
+            compareAction.inCompare
+              ? "border border-accent/40 bg-accent/10 text-ink"
+              : "border border-border bg-surface text-ink hover:bg-surface-2",
+            compareAction.disabled && "cursor-not-allowed opacity-60",
+          )}
+        >
+          <GitCompare className="h-3.5 w-3.5" />
+          <span className="truncate">{compareAction.label}</span>
+          <span className="rounded bg-ink/10 px-1 font-mono text-[10px] text-ink-muted">
+            {compareAction.compareCount}/{compareAction.maxCount}
+          </span>
+        </button>
         {actions.map((action) => {
           const icon =
             action.id === "install" ? (

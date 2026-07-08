@@ -14,8 +14,22 @@ export type EntryDetailCompareCtaState = {
   showOpenCompare: boolean;
 };
 
+export type EntryDetailMobileCompareAction = {
+  id: "compare";
+  label: string;
+  disabled: boolean;
+  hint: string | null;
+  inCompare: boolean;
+  compareCount: number;
+  maxCount: number;
+};
+
 export function entryDetailCompareToggleLabel(inCompare: boolean): string {
   return inCompare ? "Remove from compare" : "Add to compare";
+}
+
+export function entryDetailMobileCompareLabel(inCompare: boolean): string {
+  return inCompare ? "In compare" : "Compare";
 }
 
 export function entryDetailCompareDisabledReason(
@@ -43,5 +57,23 @@ export function entryDetailCompareCtaState(
     disabled: Boolean(disabledReason),
     hint: disabledReason,
     showOpenCompare: entryDetailCompareDrawerEnabled(compareCount),
+  };
+}
+
+export function entryDetailMobileCompareAction(
+  inCompare: boolean,
+  compareCount: number,
+  maxCount = ENTRY_DETAIL_COMPARE_MAX,
+): EntryDetailMobileCompareAction {
+  const disabledReason = entryDetailCompareDisabledReason(inCompare, compareCount, maxCount);
+
+  return {
+    id: "compare",
+    label: entryDetailMobileCompareLabel(inCompare),
+    disabled: Boolean(disabledReason),
+    hint: disabledReason,
+    inCompare,
+    compareCount,
+    maxCount,
   };
 }

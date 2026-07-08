@@ -5,6 +5,8 @@ import {
   comparisonTrayQuickCompareAnalyticsData,
   entryDetailCompareAnalyticsData,
   entryDetailCompareAnalyticsEvent,
+  entryDetailMobileCompareAnalyticsData,
+  entryDetailMobileCompareAnalyticsEvent,
   entryDetailCopyAnalyticsData,
   entryDetailCopyAnalyticsEvent,
   entryDetailCopyIntentType,
@@ -39,6 +41,17 @@ describe("entry detail cta events lib", () => {
     expect(entryDetailCompareAnalyticsData("skills", "demo")).toEqual({
       entry: "skills/demo",
       surface: "detail-compare",
+    });
+    expect(entryDetailMobileCompareAnalyticsEvent(true)).toBe(
+      "detail_mobile_compare_add",
+    );
+    expect(entryDetailMobileCompareAnalyticsEvent(false)).toBe(
+      "detail_mobile_compare_remove",
+    );
+    expect(entryDetailMobileCompareAnalyticsData("skills", "demo", 2)).toEqual({
+      entry: "skills/demo",
+      surface: "detail-mobile",
+      compareCount: 2,
     });
   });
 

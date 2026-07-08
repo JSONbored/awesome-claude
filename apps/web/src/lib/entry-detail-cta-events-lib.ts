@@ -45,6 +45,22 @@ export function entryDetailCompareAnalyticsData(category: string, slug: string) 
   };
 }
 
+export function entryDetailMobileCompareAnalyticsEvent(adding: boolean): string {
+  return adding ? "detail_mobile_compare_add" : "detail_mobile_compare_remove";
+}
+
+export function entryDetailMobileCompareAnalyticsData(
+  category: string,
+  slug: string,
+  compareCount: number,
+) {
+  return {
+    entry: entryDetailEntryKey(category, slug),
+    surface: ENTRY_DETAIL_MOBILE_SURFACE,
+    compareCount,
+  };
+}
+
 export function browseCompareOpenAnalyticsData(selectedCount: number) {
   return {
     count: selectedCount,

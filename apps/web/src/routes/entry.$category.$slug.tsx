@@ -78,6 +78,8 @@ import { trackEvent } from "@/lib/analytics";
 import {
   entryDetailCompareAnalyticsData,
   entryDetailCompareAnalyticsEvent,
+  entryDetailMobileCompareAnalyticsData,
+  entryDetailMobileCompareAnalyticsEvent,
 } from "@/lib/entry-detail-cta-events";
 import { resourceCardCompareFullMessage } from "@/lib/resource-card-compare-ui";
 import { useCopyPref, useHarnessPref, type CopyVariant } from "@/lib/dossier-prefs";
@@ -310,6 +312,31 @@ function Dossier() {
     trackEvent(entryDetailCompareAnalyticsEvent(!wasIn), {
       ...entryDetailCompareAnalyticsData(entry.category, entry.slug),
       compareCount: wasIn ? Math.max(0, compare.items.length - 1) : compare.items.length + 1,
+    });
+    if (wasIn) {
+      toast(`Removed “${entry.title}” from compare`);
+    } else {
+      toast.success("Added to compare", {
+        action: {
+          label: "View",
+          onClick: () => compare.setOpen(true),
+        },
+      });
+    }
+  }, [compare, entry, inCompare]);
+  const onMobileToggleCompare = useCallback(() => {
+    const wasIn = inCompare;
+    const changed = compare.toggle(entry);
+    if (!changed) {
+      toast.error(resourceCardCompareFullMessage());
+      return;
+    }
+    trackEvent(entryDetailMobileCompareAnalyticsEvent(!wasIn), {
+      ...entryDetailMobileCompareAnalyticsData(
+        entry.category,
+        entry.slug,
+        wasIn ? Math.max(0, compare.items.length - 1) : compare.items.length + 1,
+      ),
     });
     if (wasIn) {
       toast(`Removed “${entry.title}” from compare`);
@@ -819,7 +846,15 @@ function Dossier() {
           readinessRows={readinessRows}
         />
       </div>
-      <EntryDetailMobileActionBar entry={entry} copyPayload={tabPayload} />
+      <EntryDetailMobileActionBar
+        entry={entry}
+        copyPayload={tabPayload}
+        compareCta={{
+          inCompare,
+          compareCount: compare.items.length,
+          onToggle: onMobileToggleCompare,
+        }}
+      />
       <div className="h-14 lg:hidden" aria-hidden />
     </div>
   );
