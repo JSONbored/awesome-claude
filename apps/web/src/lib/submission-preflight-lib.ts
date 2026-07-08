@@ -1,8 +1,27 @@
 import { parseGitHubRepoUrl } from "@heyclaude/registry/source-repo";
 import { canonicalizeSourceUrl } from "@heyclaude/registry/source-url";
+import type { analyzeSubmissionDraftRisk } from "@heyclaude/registry/submission-risk";
 
 import type { DirectoryEntry } from "@/lib/content.server";
 import { siteConfig } from "@/lib/site";
+
+type SubmissionRisk = ReturnType<typeof analyzeSubmissionDraftRisk>;
+type ClassificationWarning = NonNullable<SubmissionRisk["classificationWarnings"]>[number];
+
+/**
+ * Pick out the "missing safety notes" and "missing privacy notes" classification
+ * warnings (if present) from a submission draft's risk analysis. Each is
+ * `undefined` when the corresponding warning was not raised.
+ */
+export function missingNoteWarnings(risk: SubmissionRisk): {
+  safety: ClassificationWarning | undefined;
+  privacy: ClassificationWarning | undefined;
+} {
+  const warnings = risk.classificationWarnings ?? [];
+  const safety = warnings.find((item) => item.id === "missing_safety_notes");
+  const privacy = warnings.find((item) => item.id === "missing_privacy_notes");
+  return { safety, privacy };
+}
 
 export const TOOL_LISTING_FORM_URL = "https://heyclau.de/tools/submit";
 

@@ -6,18 +6,12 @@ import {
   buildPreflightIssues,
   buildSubmissionPrPreview,
   findDuplicateCandidates,
+  missingNoteWarnings,
   normalizePreflightError,
   normalizePreflightText,
   resolvePreflightRouteSuggestion,
   TOOL_LISTING_FORM_URL,
 } from "@/lib/submission-preflight-lib";
-
-function missingNoteWarnings(risk: ReturnType<typeof analyzeSubmissionDraftRisk>) {
-  const warnings = risk.classificationWarnings ?? [];
-  const safety = warnings.find((item) => item.id === "missing_safety_notes");
-  const privacy = warnings.find((item) => item.id === "missing_privacy_notes");
-  return { safety, privacy };
-}
 
 export async function buildSubmissionPreflight(fields: Record<string, unknown>) {
   const draft = buildSubmissionPrDraft({

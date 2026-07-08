@@ -9,6 +9,7 @@ import {
   isSimilarSubmissionTitle,
   isToolsRouteError,
   looksLikeCommercialListing,
+  missingNoteWarnings,
   normalizePreflightError,
   normalizePreflightText,
   preflightBlocker,
@@ -448,6 +449,34 @@ describe("submission preflight routing helpers", () => {
     ).toMatchObject({
       targetPath: "",
       branchHint: "",
+    });
+  });
+});
+
+describe("missingNoteWarnings", () => {
+  const risk = (ids: string[]) =>
+    ({
+      classificationWarnings: ids.map((id) => ({ id })),
+    }) as unknown as Parameters<typeof missingNoteWarnings>[0];
+
+  it("surfaces both note warnings when present", () => {
+    const result = missingNoteWarnings(
+      risk(["missing_safety_notes", "missing_privacy_notes"]),
+    );
+    expect(result.safety?.id).toBe("missing_safety_notes");
+    expect(result.privacy?.id).toBe("missing_privacy_notes");
+  });
+
+  it("returns undefined for a note type that was not flagged", () => {
+    const result = missingNoteWarnings(risk(["missing_safety_notes"]));
+    expect(result.safety?.id).toBe("missing_safety_notes");
+    expect(result.privacy).toBeUndefined();
+  });
+
+  it("returns both undefined when there are no classification warnings", () => {
+    expect(missingNoteWarnings(risk([]))).toEqual({
+      safety: undefined,
+      privacy: undefined,
     });
   });
 });
