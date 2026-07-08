@@ -26,6 +26,8 @@ import { trackEvent, entryEventKey } from "@/lib/analytics";
 import type { Entry, Harness } from "@/types/registry";
 import { cn } from "@/lib/utils";
 import { brandIdentityLabel } from "@/lib/brand-icons";
+import { compareDecisionBriefState } from "@/lib/compare-decision-brief";
+import { CompareDecisionBriefPanel } from "@/components/compare-decision-brief-panel";
 import {
   compareDrawerDecisionRows,
   compareSignalToneClass,
@@ -318,6 +320,7 @@ export function CompareDrawer() {
   const { items, open, setOpen, toggle, clear, hydrate } = useCompare();
   const { drawerUi, emptyHint, shareUrl, divergingDecisionLabels, actionRowDiverges, actionCells } =
     compareDrawerInteractiveUiState(items);
+  const decisionBrief = compareDecisionBriefState(items);
   const { bannerTexts, fullViewSearch } = drawerUi;
 
   const onClear = () => {
@@ -417,6 +420,7 @@ export function CompareDrawer() {
           </div>
         ) : (
           <div className="h-[calc(88vh-57px)] overflow-auto">
+            <CompareDecisionBriefPanel state={decisionBrief} compact className="m-3" />
             <div className="min-w-full">
               <table className="w-full border-collapse text-sm">
                 <thead className="sticky top-0 z-10 bg-surface">

@@ -15,11 +15,13 @@ import { recordCompareIntentEvent } from "@/lib/compare-entry-actions";
 import { COMPARE_PAGE_SURFACE, type CompareAction } from "@/lib/compare-page-actions-ui-lib";
 import { comparePageActionsForEntry } from "@/lib/compare-page-actions-interactive-ui-lib";
 import { comparePageInteractiveUiState } from "@/lib/compare-page-interactive-ui-lib";
+import { compareDecisionBriefState } from "@/lib/compare-decision-brief";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
 import { sameEntry } from "@/lib/entry-identity";
 import { search } from "@/data/search";
 import { cn } from "@/lib/utils";
 import type { Entry } from "@/types/registry";
+import { CompareDecisionBriefPanel } from "@/components/compare-decision-brief-panel";
 
 const defaultSearch = { ids: "" };
 
@@ -69,6 +71,7 @@ function ComparePage() {
     () => comparePageInteractiveUiState(items, sp.ids, COMPARISONS, ENTRIES),
     [items, sp.ids],
   );
+  const decisionBrief = React.useMemo(() => compareDecisionBriefState(items), [items]);
 
   const pushIds = (next: Entry[]) => {
     const ids = serializeCompareItems(next);
@@ -182,6 +185,10 @@ function ComparePage() {
             Clear all
           </button>
         </div>
+      </div>
+
+      <div className="mt-4 overflow-auto rounded-xl border border-border">
+        <CompareDecisionBriefPanel state={decisionBrief} className="m-3 mb-0" />
       </div>
 
       <div className="mt-4 overflow-auto rounded-xl border border-border">
