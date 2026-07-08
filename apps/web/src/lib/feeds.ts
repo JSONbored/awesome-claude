@@ -11,6 +11,7 @@
  * derived from the body bytes is stable across requests. The dispatcher helper
  * `respondFeed` handles `If-None-Match` and emits cache headers.
  */
+import { isFeedCurrent } from "@/lib/feed-freshness-lib";
 import { getGrowthSurfaces } from "@/lib/growth-surfaces";
 import { ifNoneMatchMatches } from "@/lib/http-cache";
 import { CATEGORIES } from "@/types/registry";
@@ -115,14 +116,6 @@ export interface FeedHealth {
   isCurrent: boolean;
 }
 
-const FRESHNESS_DAYS = 30;
-
-function isCurrent(latest: string | null): boolean {
-  if (!latest) return false;
-  const ageMs = Date.now() - new Date(latest).getTime();
-  return ageMs <= FRESHNESS_DAYS * 24 * 60 * 60 * 1000;
-}
-
 async function healthFor(
   id: string,
   title: string,
@@ -139,7 +132,7 @@ async function healthFor(
     latestItemAt: latest,
     lastBuilt: latest ?? new Date(0).toISOString(),
     etag: await etagFor(body),
-    isCurrent: isCurrent(latest),
+    isCurrent: isFeedCurrent(latest, Date.now()),
   };
 }
 
