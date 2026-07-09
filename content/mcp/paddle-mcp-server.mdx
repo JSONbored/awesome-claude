@@ -30,11 +30,10 @@ websiteUrl: https://www.paddle.com/
 repoUrl: https://github.com/PaddleHQ/paddle-mcp-server
 documentationUrl: https://github.com/PaddleHQ/paddle-mcp-server/blob/main/README.md
 installable: true
-installCommand: npx -y @paddle/paddle-mcp --api-key=YOUR_API_KEY --environment=sandbox
+installCommand: npx -y @paddle/paddle-mcp --environment=sandbox --tools=non-destructive
 usageSnippet: |
-  # Run directly from npm via npx (stdio transport); use a sandbox key first
+  # Configure PADDLE_API_KEY in your MCP client environment, not as a CLI argument.
   npx -y @paddle/paddle-mcp \
-    --api-key=YOUR_API_KEY \
     --environment=sandbox \
     --tools=non-destructive
 copySnippet: |
@@ -42,13 +41,12 @@ copySnippet: |
     "mcpServers": {
       "paddle": {
         "command": "npx",
-        "args": [
-          "-y",
-          "@paddle/paddle-mcp",
-          "--api-key=YOUR_API_KEY",
-          "--environment=sandbox",
-          "--tools=non-destructive"
-        ]
+        "args": ["-y", "@paddle/paddle-mcp"],
+        "env": {
+          "PADDLE_API_KEY": "YOUR_API_KEY",
+          "PADDLE_ENVIRONMENT": "sandbox",
+          "PADDLE_MCP_TOOLS": "non-destructive"
+        }
       }
     }
   }
@@ -82,7 +80,7 @@ privacyNotes:
   - The server sends requests to the Paddle Billing API using your API key; customer, business, subscription, transaction, and report data it returns is passed to the LLM/MCP client.
   - Billing data can include personal and financial information (names, emails, addresses, purchase history, payment metadata), so avoid exposing production data to the model unnecessarily.
   - Reports and customer/subscription tools can surface aggregate revenue and account details; treat that output as sensitive business data.
-  - The API key is provided via a command-line argument or the `PADDLE_API_KEY` environment variable in your MCP client config — keep that config out of version control and restrict access to it.
+  - Provide the API key with `PADDLE_API_KEY` in your MCP client environment; do not put real keys in command-line arguments, shell history, terminal logs, or version control.
 sourceUrls:
   - https://github.com/PaddleHQ/paddle-mcp-server/blob/main/README.md
   - https://www.npmjs.com/package/@paddle/paddle-mcp
@@ -152,33 +150,8 @@ not archived, and released as `@paddle/paddle-mcp` v0.1.6 on npm.
 
 ## Installation
 
-Run the published package with `npx`, passing your API key, environment, and tool mode as arguments
-(recommended):
+Configure the published package in your MCP client with environment variables (recommended). Do not pass a real Paddle API key as a command-line argument: process arguments can be exposed through local process inspection, shell history, terminal logs, and endpoint telemetry.
 
-```bash
-npx -y @paddle/paddle-mcp --api-key=YOUR_API_KEY --environment=sandbox --tools=non-destructive
-```
-
-Add it to an MCP client (e.g. Cursor / Claude Desktop) using command-line arguments:
-
-```json
-{
-  "mcpServers": {
-    "paddle": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@paddle/paddle-mcp",
-        "--api-key=YOUR_API_KEY",
-        "--environment=sandbox",
-        "--tools=non-destructive"
-      ]
-    }
-  }
-}
-```
-
-Or configure it with environment variables instead:
 
 ```json
 {
@@ -197,8 +170,9 @@ Or configure it with environment variables instead:
 ```
 
 Create and manage API keys in **Paddle > Developer tools > Authentication** (sandbox and live are
-separate). Accepted `--tools` / `PADDLE_MCP_TOOLS` values are `all`, `read-only`, `non-destructive`
-(default), or a comma-separated list of specific tool names.
+separate). For direct `npx` runs, set `PADDLE_API_KEY` in a secure environment before launch rather
+than embedding it in the command. Accepted `--tools` / `PADDLE_MCP_TOOLS` values are `all`,
+`read-only`, `non-destructive` (default), or a comma-separated list of specific tool names.
 
 ## Use Cases
 
@@ -213,7 +187,7 @@ separate). Accepted `--tools` / `PADDLE_MCP_TOOLS` values are `all`, `read-only`
 - **Acts on real billing data.** With write permissions the server can create and modify products, customers, subscriptions, and transactions; adjustment/transaction tools can move real money.
 - **Permission filter is a first-class control.** Use `--tools=read-only` or the default `non-destructive` unless a destructive action is intended; `all` enables every operation.
 - **Sandbox first.** Develop with `--environment=sandbox` and a sandbox key; switch to `production` only deliberately.
-- **API key is sensitive.** It grants broad account access — keep client config out of version control and restrict access.
+- **API key is sensitive.** It grants broad account access — provide it through `PADDLE_API_KEY`, never through command-line arguments, and keep client config out of version control.
 - **Data flows to the model.** Customer, business, subscription, transaction, and report data (including personal and financial details) is returned to the LLM/MCP client, so avoid exposing production data unnecessarily.
 
 ## Duplicate Check
