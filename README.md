@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>1352+ file-backed entries</strong> stay useful as both an
+        <strong>1354+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>1352</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>1354</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>AI-reviewed</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -84,7 +84,7 @@ Refreshed weekly by [`.github/workflows/gittensor-impact.yml`](.github/workflows
         </td>
 <td align="center" width="20%">
           <a href="#tools"><strong>🧰 Tools</strong></a><br>
-          <code>183</code><br>
+          <code>185</code><br>
           <sub>Apps, developer tools, services, and products for Claude-native builders.</sub>
         </td>
 <td align="center" width="20%">
@@ -791,7 +791,7 @@ packages use checksums and package trust metadata after review.
 
 Get a free API key on https://app.zyntra.app/
 
-## 🧰 Tools (183)
+## 🧰 Tools (185)
 
 - **[Activepieces](https://heyclau.de/entry/tools/activepieces)** - Open-source, self-hostable workflow automation platform with AI workflows, TypeScript pieces, human-in-the-loop steps, and a built-in MCP server.
 - **[AG2 Agent Framework](https://heyclau.de/entry/tools/ag2-agent-framework)** - Open-source Python AgentOS and multi-agent framework, evolved from AutoGen, for building conversable agents, group chats, swarms, human-in-the-loop workflows, tool use, RAG, code execution, and provider-backed agent systems.
@@ -861,6 +861,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Gradio](https://heyclau.de/entry/tools/gradio)** - Apache-2.0 Python framework for building and sharing machine-learning demos, AI web apps, model interfaces, chatbots, API front ends, and interactive evaluation tools.
 - **[Graphite Diamond](https://heyclau.de/entry/tools/graphite-diamond)** - AI code review assistant for pull requests, engineering feedback, and review workflow acceleration inside Graphite.
 - **[Great Expectations](https://heyclau.de/entry/tools/great-expectations)** - Apache-2.0 GX Core Python library for data quality Expectations, validation definitions, checkpoints, Data Docs, metadata stores, and pipeline quality checks.
+- **[Griptape](https://heyclau.de/entry/tools/griptape)** - Modular open-source Python framework for building AI agents and LLM workflows with structures, tools, memory, drivers, and RAG engines, from Griptape.
 - **[Grype](https://heyclau.de/entry/tools/grype)** - Apache-2.0 vulnerability scanner from Anchore for container images, filesystems, archives, SBOMs, PURLs, and CPEs, with risk scoring, VEX filtering, and CI-friendly output.
 - **[Guardrails AI](https://heyclau.de/entry/tools/guardrails-ai)** - Open-source Python framework for adding input and output guards, validators, structured generation, and policy checks to LLM applications.
 - **[Haystack](https://heyclau.de/entry/tools/haystack)** - Open-source AI orchestration framework for building production-ready agents, RAG pipelines, multimodal search, retrieval, and tool-using LLM applications.
@@ -896,6 +897,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Lovable](https://heyclau.de/entry/tools/lovable)** - AI app builder for generating and iterating on web applications from natural language product requests.
 - **[Make](https://heyclau.de/entry/tools/make)** - Visual automation platform for building integrations, scenarios, API workflows, and AI-connected business processes.
 - **[Marimo](https://heyclau.de/entry/tools/marimo)** - Apache-2.0 reactive Python notebook stored as pure Python for reproducible experiments, SQL-backed data workflows, script execution, app deployment, and AI-assisted editing.
+- **[Marvin](https://heyclau.de/entry/tools/marvin)** - Open-source Python framework from Prefect for structured outputs and agentic AI workflows, with tasks, specialized agents, threads, and extract/cast/classify/generate utilities.
 - **[Mastra](https://heyclau.de/entry/tools/mastra)** - TypeScript agent framework for building AI agents, workflows, memory, tool calling, and evaluation-backed applications.
 - **[mcp-agent](https://heyclau.de/entry/tools/mcp-agent)** - Apache-2.0 Python framework for building MCP-native agents with composable workflow patterns, full MCP server lifecycle management, durable Temporal execution, agent-as-MCP-server support, and provider plugins for major LLMs.
 - **[mcp-go](https://heyclau.de/entry/tools/mcp-go)** - MIT-licensed Go implementation of the Model Context Protocol for building MCP servers and clients with tools, resources, prompts, stdio, SSE, Streamable HTTP, hooks, session management, validation, sampling, roots, and tracing.
