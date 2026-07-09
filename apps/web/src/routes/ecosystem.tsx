@@ -19,6 +19,7 @@ import { CopyButton } from "@/components/copy-button";
 import { CountUp } from "@/components/count-up";
 import { cn } from "@/lib/utils";
 import { stringifyJsonLd } from "@/lib/json-ld";
+import { ecosystemIntegrationsJsonLd } from "@/lib/ecosystem-jsonld-lib";
 import { absoluteUrl } from "@/lib/seo";
 
 const CLIENTS = [
@@ -189,17 +190,7 @@ const SUB_NAV = [
 
 export const Route = createFileRoute("/ecosystem")({
   head: () => {
-    const ld = {
-      "@context": "https://schema.org",
-      "@type": "ItemList",
-      name: "HeyClaude integrations",
-      itemListElement: INTEGRATIONS.map((it, i) => ({
-        "@type": "ListItem",
-        position: i + 1,
-        name: it.name,
-        url: absoluteUrl(`/integrations/${it.slug}`),
-      })),
-    };
+    const ld = ecosystemIntegrationsJsonLd(INTEGRATIONS, absoluteUrl);
     return {
       meta: [
         { title: "Ecosystem — HeyClaude" },
