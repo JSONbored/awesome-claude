@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
-import { comparePagePresentationState } from "@/lib/compare-page-presentation-ui-lib";
+import {
+  comparePagePresentationActionRowDiverges,
+  comparePagePresentationState,
+} from "@/lib/compare-page-presentation-ui-lib";
 
 function entry(overrides: Partial<Entry> = {}): Entry {
   return {
@@ -38,11 +41,11 @@ describe("compare page presentation ui lib", () => {
   });
 
   it("highlights diverging next-action rows for mixed compare columns", () => {
-    expect(
-      comparePagePresentationState([
-        entry({ installCommand: "npm i fixture" }),
-        entry(),
-      ]).actionRowDiverges,
-    ).toBe(true);
+    const items = [entry({ installCommand: "npm i fixture" }), entry()];
+    const state = comparePagePresentationState(items);
+    expect(state.actionRowDiverges).toBe(true);
+    expect(state.actionRowDiverges).toBe(
+      comparePagePresentationActionRowDiverges(items),
+    );
   });
 });
