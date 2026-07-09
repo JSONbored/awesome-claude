@@ -11,6 +11,7 @@ import { NewsletterInline } from "@/components/newsletter-inline";
 import { HubHighlights, HubSignalStats } from "@/components/hub-highlights";
 import { hubHighlights, hubStats, trustPosture } from "@/lib/hub-highlights";
 import { stringifyJsonLd } from "@/lib/json-ld";
+import { breadcrumbListJsonLd } from "@/lib/breadcrumb-jsonld-lib";
 import { platformCategoryItemListJsonLd } from "@/lib/platform-category-itemlist-jsonld-lib";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
@@ -52,21 +53,12 @@ export const Route = createFileRoute("/for/$platform/$category")({
       entries,
       absoluteUrl,
     );
-    const breadcrumbs = {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Directory", item: absoluteUrl("/browse") },
-        { "@type": "ListItem", position: 2, name: "Platforms", item: absoluteUrl("/for") },
-        {
-          "@type": "ListItem",
-          position: 3,
-          name: pLabel,
-          item: absoluteUrl(`/for/${params.platform}`),
-        },
-        { "@type": "ListItem", position: 4, name: cLabel, item: url },
-      ],
-    };
+    const breadcrumbs = breadcrumbListJsonLd([
+      { name: "Directory", item: absoluteUrl("/browse") },
+      { name: "Platforms", item: absoluteUrl("/for") },
+      { name: pLabel, item: absoluteUrl(`/for/${params.platform}`) },
+      { name: cLabel, item: url },
+    ]);
     return {
       meta: [
         { title },
