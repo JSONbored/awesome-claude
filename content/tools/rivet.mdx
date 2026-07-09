@@ -1,0 +1,75 @@
+---
+title: Rivet
+slug: rivet
+category: tools
+description: Open-source visual AI programming environment from Ironclad for building, debugging, and embedding complex LLM agents and prompt-chaining graphs, with a desktop app and a TypeScript library.
+cardDescription: Open-source visual editor and TypeScript library for building and embedding LLM agent graphs.
+seoTitle: Rivet open-source visual AI programming environment
+seoDescription: Rivet is Ironclad's open-source visual AI programming environment for building, debugging, and embedding complex LLM agents and prompt-chaining graphs, with a desktop app and the @ironclad/rivet-core and @ironclad/rivet-node TypeScript libraries.
+author: Ironclad
+submittedBy: davion-knight
+submittedByUrl: "https://github.com/davion-knight"
+dateAdded: "2026-07-09"
+websiteUrl: "https://rivet.ironcladapp.com/"
+documentationUrl: "https://rivet.ironcladapp.com/docs"
+repoUrl: "https://github.com/Ironclad/rivet"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - agents
+  - typescript
+  - visual-programming
+  - prompt-chaining
+  - llm
+  - graphs
+keywords:
+  - rivet
+  - visual ai programming
+  - prompt chaining
+  - llm graph editor
+  - ironclad rivet
+  - rivet core
+robotsIndex: true
+robotsFollow: true
+prerequisites:
+  - The Rivet desktop application (for authoring graphs), or Node.js and npm to embed `@ironclad/rivet-core` or `@ironclad/rivet-node` in an application.
+  - Model-provider API keys for the LLM providers a graph uses, plus credentials for any integrations the graph calls.
+  - A clear boundary for which application functions and data sources Rivet graphs may call, and vice versa, before embedding.
+  - A plan for how graphs are versioned, reviewed, and promoted from local authoring to production use.
+  - Observability and retention decisions for prompts, node outputs, and debugging traces.
+safetyNotes:
+  - Rivet graphs can include nodes that call LLMs, run code, make HTTP requests, and call into your application's functions, so review what a graph and its nodes do before running it, especially graphs from untrusted sources.
+  - The desktop app and embedded graphs use the model-provider API keys and integration credentials you configure; scope those credentials to the minimum needed.
+  - When embedding Rivet Core in an application, treat graph inputs and node outputs as untrusted, and gate any node that performs writes or external actions.
+  - Node types that execute code or make network calls should run with least privilege and appropriate timeouts.
+  - Keep production graphs and their permissions narrower than example graphs.
+privacyNotes:
+  - Running a Rivet graph sends prompts, inputs, and node data to the configured model providers and any integrated services.
+  - Nodes that call your application's code, HTTP endpoints, or data sources can pass local or workspace data into the graph and the model.
+  - Prompts, node outputs, and debugging traces in the app or your logs can retain data, so apply normal retention and access-control policies.
+  - Model-provider and integration credentials live in the app configuration or your application's environment; keep them out of version control.
+---
+
+## Editorial notes
+
+Rivet is useful when Claude-adjacent teams want to build and debug complex LLM agents and prompt chains **visually**, then embed the resulting graphs in application code. The desktop app provides a node-based editor for authoring and debugging graphs, and the TypeScript libraries let those same graphs run inside your own application, with your app and the graph able to call into each other.
+
+This is distinct from existing agent-framework entries. CrewAI, LangGraph, Pydantic AI, Griptape, Marvin, and Atomic Agents are code-first Python or TypeScript frameworks. Rivet's differentiator is a **visual graph editor plus an embeddable TypeScript runtime** (`@ironclad/rivet-core` / `@ironclad/rivet-node`), maintained by Ironclad.
+
+## Source notes
+
+- The official repository describes Rivet as a desktop application for creating complex AI agents and prompt chaining, and embedding it in your application.
+- Rivet supports multiple LLM providers and additional integrations for building graphs.
+- Rivet Core is a TypeScript library for running graphs created in Rivet; it is used by the Rivet application and can also be embedded in your own applications so Rivet can call into your code and your code can call into Rivet graphs.
+- Rivet Core is published on npm as `@ironclad/rivet-core`, and Rivet Node as `@ironclad/rivet-node`, with API documentation on the Rivet website.
+- The GitHub repository is `Ironclad/rivet`, is MIT licensed, and is maintained by Ironclad.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, skills, hooks, rules, commands, guides, open pull requests, and repository-wide content for `Rivet`, `rivet`, `ironclad/rivet`, `rivet.ironcladapp.com`, `@ironclad/rivet-core`, `@ironclad/rivet-node`, and `visual ai programming`. Existing agent-framework entries such as CrewAI, LangGraph, Pydantic AI, Griptape, Marvin, and Atomic Agents cover code-first workflows, but no dedicated Rivet tools entry, Rivet source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.
