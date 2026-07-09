@@ -1,0 +1,99 @@
+---
+title: Portkey AI Gateway
+slug: portkey-ai-gateway
+category: tools
+description: Open-source AI gateway from Portkey for routing to 1600+ LLMs through one OpenAI-compatible API, with automatic retries, fallbacks, load balancing, conditional routing, guardrails, caching, and observability, self-hostable via npx, Docker, or edge deployments.
+cardDescription: Open-source AI gateway to 1600+ LLMs with retries, fallbacks, routing, guardrails, caching, and observability.
+seoTitle: Portkey AI Gateway open-source LLM gateway
+seoDescription: Portkey AI Gateway is an open-source, self-hostable gateway that routes to 1600+ LLMs through one OpenAI-compatible API, with automatic retries, fallbacks, load balancing, conditional routing, guardrails, caching, and observability.
+author: Portkey-AI
+submittedBy: davion-knight
+submittedByUrl: "https://github.com/davion-knight"
+dateAdded: "2026-07-09"
+websiteUrl: "https://portkey.ai/"
+documentationUrl: "https://portkey.ai/docs"
+repoUrl: "https://github.com/Portkey-AI/gateway"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - ai-gateway
+  - llm
+  - routing
+  - reliability
+  - observability
+  - guardrails
+keywords:
+  - portkey ai gateway
+  - open source ai gateway
+  - llm gateway
+  - llm routing fallbacks
+  - openai compatible gateway
+  - llm load balancing
+robotsIndex: true
+robotsFollow: true
+prerequisites:
+  - Node.js and npm to run the gateway locally with `npx @portkey-ai/gateway`, or Docker and a deployment target (including edge platforms) for self-hosting.
+  - Model-provider API keys for the LLM providers the gateway will route to, supplied per request or through the gateway configuration.
+  - A gateway configuration describing providers, routing strategy, retries, fallbacks, caching, and any guardrails you want applied.
+  - An application that can call an OpenAI-compatible endpoint, since the gateway exposes a unified API in front of many providers.
+  - A plan for where request logs, metrics, and traces are stored if you enable observability.
+safetyNotes:
+  - The gateway sits in the path of your LLM traffic and forwards requests to configured providers using the API keys you supply, so scope those provider keys to the minimum needed and store them securely.
+  - Self-hosting exposes a local or deployed endpoint; run it on a trusted network or behind authentication, and do not expose an unauthenticated gateway to the public internet.
+  - Guardrails, retries, fallbacks, and conditional routing change how and where requests are sent, so review the gateway configuration before using it for production traffic.
+  - Caching returns stored responses for matching requests; confirm that cached content is appropriate to reuse before enabling it for sensitive or per-user data.
+  - Treat provider responses returned through the gateway as untrusted input for any downstream action, and keep production configuration narrower than local examples.
+privacyNotes:
+  - Requests routed through the gateway, including prompts and inputs, are forwarded to the configured model providers, which process that data under their own terms.
+  - If observability or logging is enabled, prompts, responses, metadata, and metrics can be recorded in the store you configure, so choose a destination and retention policy deliberately.
+  - Caching stores request and response data to serve repeated calls; scope and expire the cache appropriately for the sensitivity of the traffic.
+  - Provider API keys, gateway configuration, and any request logs should be kept out of version control and access-controlled like other secrets and operational data.
+---
+
+## Editorial notes
+
+Portkey AI Gateway is useful when Claude-adjacent teams want a single, reliable entry point in front of many model providers instead of wiring provider SDKs, retries, and failover into every application. It is a lightweight, open-source gateway that exposes one OpenAI-compatible API and routes requests to 1600+ language, vision, audio, and image models, so application code can switch or combine providers through configuration rather than code changes.
+
+This is distinct from the agent frameworks and libraries in the directory: rather than defining agents or structured outputs, Portkey AI Gateway is the routing and reliability layer that those workflows send their model calls through. It is self-hostable and can run locally, in a container, or at the edge.
+
+## Key capabilities
+
+- **Unified API** — a single OpenAI-compatible endpoint that fronts many providers, so the same client code targets different models by configuration.
+- **Broad provider coverage** — routing to 1600+ language, vision, audio, and image models across many providers.
+- **Reliability** — automatic retries and provider fallbacks to prevent downtime when a provider errors or is unavailable.
+- **Scaling and routing** — load balancing across providers or keys, and conditional routing to send requests to different targets based on rules.
+- **Guardrails** — apply input and output guardrails to model traffic passing through the gateway.
+- **Caching** — return stored responses for matching requests to cut latency and cost where reuse is appropriate.
+- **Observability** — capture logs, metrics, and traces for the requests flowing through the gateway.
+- **Virtual keys and budgets** — manage provider credentials and usage controls centrally (in the broader Portkey product).
+- **MCP gateway** — an option to manage MCP servers with enterprise auth and observability.
+
+## How teams use it
+
+- **Provider failover** — keep an AI feature available by falling back to an alternate provider or model when the primary fails.
+- **Cost and latency control** — cache repeatable responses and route cheaper or faster models for suitable requests.
+- **Multi-provider experiments** — compare or load-balance across providers behind one API without changing application code.
+- **Policy enforcement** — apply guardrails and routing rules to every model call from a central place.
+- **Operational visibility** — collect logs and metrics for AI traffic to debug and monitor usage.
+
+## Running the gateway
+
+The gateway is open source and self-hostable. It can be run locally with `npx @portkey-ai/gateway`, which serves an OpenAI-compatible API and a console on local port 8787, and it can also be deployed with Docker or to edge platforms per the deployment guides. Applications then point an OpenAI-compatible client at the gateway and pass the target provider and model, and the gateway applies the configured routing, retries, fallbacks, guardrails, and caching.
+
+## Source notes
+
+- The official repository describes the AI Gateway as a lightweight, open-source, enterprise-ready solution for fast, reliable, and secure routing to 1600+ language, vision, audio, and image models through one API.
+- Documented capabilities include automatic retries and fallbacks, load balancing and conditional routing, guardrails, caching, a unified OpenAI-compatible API, and observability, plus an MCP gateway option for managing MCP servers with auth and observability.
+- The gateway runs locally with `npx @portkey-ai/gateway` on local port 8787 and can also be self-hosted via Docker or edge deployments.
+- The gateway is published on npm as `@portkey-ai/gateway`.
+- The GitHub repository is `Portkey-AI/gateway`, is MIT licensed, and is maintained by Portkey; a managed platform and hosted gateway are available separately from the open-source project.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, skills, hooks, rules, commands, guides, open pull requests, and repository-wide content for `Portkey`, `portkey`, `portkey.ai`, `github.com/Portkey-AI/gateway`, `@portkey-ai/gateway`, `AI Gateway`, and `LLM gateway`. Existing entries cover model libraries, agent frameworks, and observability tools, but no dedicated Portkey AI Gateway tools entry, Portkey source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.
