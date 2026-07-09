@@ -10,6 +10,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { getBestListEditorial } from "@/data/best-list-editorial";
 import { stringifyJsonLd } from "@/lib/json-ld";
+import { bestListItemListJsonLd } from "@/lib/best-list-jsonld-lib";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
 import { breadcrumbScript } from "@/lib/seo-jsonld";
@@ -26,22 +27,11 @@ export const Route = createFileRoute("/best/$slug")({
     const l = loaderData.list;
     const url = absoluteUrl(`/best/${params.slug}`);
     const ogImage = ogImageUrl({ title: l.title, eyebrow: "Best", description: l.seoDescription });
-    const ld = {
-      "@context": "https://schema.org",
-      "@type": "ItemList",
-      name: l.title,
-      description: l.subtitle,
-      numberOfItems: l.picks.length,
-      itemListElement: l.picks.map((p, i) => {
-        const entry = ENTRIES.find((e) => `${e.category}/${e.slug}` === p.ref);
-        return {
-          "@type": "ListItem",
-          position: i + 1,
-          name: entry?.title ?? p.ref,
-          url: absoluteUrl(`/entry/${p.ref}`),
-        };
-      }),
-    };
+    const ld = bestListItemListJsonLd(
+      l,
+      absoluteUrl,
+      (ref) => ENTRIES.find((e) => `${e.category}/${e.slug}` === ref)?.title ?? ref,
+    );
     return {
       meta: [
         { title: `${l.seoTitle} — HeyClaude` },
