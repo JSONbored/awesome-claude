@@ -12,33 +12,13 @@ import {
   entrySourceStatus,
   isFirstPartyPackage,
 } from "@/lib/registry-trending-entry-lib";
+import { entryPlatforms, matchesPlatform } from "@/lib/registry-trending-platform-lib";
 import { safeVoteCounts } from "@/lib/votes";
 
 type Entry = (typeof ENTRIES)[number];
 
 const entryKey = (entry: Entry) => `${entry.category}:${entry.slug}`;
 const communityTarget = (entry: Entry) => entryCommunityTarget(entry.category, entry.slug);
-const normalizePlatform = (value: string) => value.trim().toLowerCase();
-const platformAliases = (value: string) => {
-  const platform = normalizePlatform(value);
-  if (!platform) return [];
-  if (platform === "claude") return ["claude", "claude-code", "claude-desktop"];
-  if (platform === "vs code") return ["vscode"];
-  return [platform];
-};
-const entryPlatforms = (entry: Entry) => {
-  const values = new Set<string>();
-  for (const platform of entry.platforms ?? []) values.add(normalizePlatform(platform));
-  for (const item of entry.platformCompatibility ?? [])
-    values.add(normalizePlatform(item.platform));
-  return [...values];
-};
-const matchesPlatform = (entry: Entry, value: string) => {
-  const platforms = platformAliases(value);
-  if (!platforms.length) return true;
-  const supported = entryPlatforms(entry);
-  return platforms.some((platform) => supported.includes(platform));
-};
 
 const reasonCodes = (input: ReturnType<typeof trendInput>) =>
   [
