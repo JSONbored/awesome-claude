@@ -3,26 +3,12 @@ import { createApiFileRoute } from "@/lib/api/file-route";
 import { createApiHandler } from "@/lib/api/router";
 import { getRegistryManifest } from "@/lib/content.server";
 import { cachedJsonResponse } from "@/lib/http-cache";
-
-type Contract = { path: string; type: string; sha256: string };
-type ArtifactContract = Contract & { name: string };
-type IntegrityStatus = "snapshot" | "unknown" | "match" | "mismatch";
-
-const normalizeArtifact = (value: string) =>
-  value
-    .replace(/%2f/gi, "/")
-    .replace(/^\/+/, "")
-    .replace(/^data\//, "");
-
-function determineIntegrityStatus(
-  artifact: string,
-  current: ArtifactContract | null,
-  hash: string,
-): IntegrityStatus {
-  if (!artifact) return "snapshot";
-  if (!current) return "unknown";
-  return current.sha256 === hash ? "match" : "mismatch";
-}
+import {
+  determineIntegrityStatus,
+  normalizeArtifact,
+  type ArtifactContract,
+  type Contract,
+} from "@/lib/registry-integrity-lib";
 
 export const GET = createApiHandler("registry.integrity", async ({ request, query }) => {
   const { artifact = "", hash = "" } = query as {
