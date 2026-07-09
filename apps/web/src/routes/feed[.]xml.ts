@@ -1,16 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { buildRss, origin, respondFeed, SITE_NAME, SITE_TAGLINE, siteWideItems } from "@/lib/feeds";
+import { absolutizeFeedLinks, feedLastBuilt } from "@/lib/feed-items-lib";
 
 export const Route = createFileRoute("/feed.xml")({
   server: {
     handlers: {
       GET: async ({ request }) => {
         const base = origin(request);
-        const items = siteWideItems().map((i) => ({
-          ...i,
-          link: i.link.startsWith("http") ? i.link : `${base}${i.link}`,
-        }));
-        const lastBuilt = items.length ? items[0].pubDate : new Date(0).toISOString();
+        const items = absolutizeFeedLinks(siteWideItems(), base);
+        const lastBuilt = feedLastBuilt(items);
         const xml = buildRss({
           title: `${SITE_NAME} — registry changelog`,
           description: SITE_TAGLINE,
