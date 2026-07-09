@@ -7,9 +7,7 @@ export type CompareDrawerPresentationState = {
   actionRowDiverges: boolean;
 };
 
-export function compareDrawerPresentationDivergingDecisionLabels(
-  items: Entry[],
-): Set<string> {
+export function compareDrawerPresentationDivergingDecisionLabels(items: Entry[]): Set<string> {
   return new Set(compareDrawerDivergingDecisionLabels(items));
 }
 
