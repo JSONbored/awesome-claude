@@ -1,0 +1,190 @@
+---
+title: Reviewing MCP Sampling Requests
+slug: reviewing-mcp-sampling-requests
+category: guides
+description: >-
+  A human-in-the-loop review workflow for MCP sampling, where a connected
+  Model Context Protocol server asks your client to run its LLM on
+  server-supplied prompts. Covers the sampling/createMessage flow, includeContext
+  data exposure, and approval, validation, and rate-limiting controls before you
+  enable sampling.
+cardDescription: Gate MCP sampling requests with human approval, content validation, and rate limits.
+seoTitle: Reviewing MCP Sampling Requests
+seoDescription: >-
+  Review MCP sampling requests with a human in the loop. Understand the
+  sampling/createMessage flow, includeContext data exposure, model preferences,
+  and the approval, validation, rate-limiting, and sensitive-data controls the
+  MCP specification recommends.
+author: davion-knight
+authorProfileUrl: "https://github.com/davion-knight"
+submittedBy: davion-knight
+submittedByUrl: "https://github.com/davion-knight"
+dateAdded: "2026-07-09"
+documentationUrl: "https://modelcontextprotocol.io/specification/2025-06-18/client/sampling"
+retrievalSources:
+  - "https://modelcontextprotocol.io/specification/2025-06-18/client/sampling"
+  - "https://modelcontextprotocol.io/specification/2025-06-18/basic/security_best_practices"
+  - "https://code.claude.com/docs/en/mcp"
+usageSnippet: >-
+  Before enabling MCP sampling, confirm a human can review and deny each
+  sampling/createMessage request, validate the server's prompt and the generated
+  response, scope any includeContext data, and rate-limit and cap tokens so a
+  server cannot drive your model without oversight.
+prerequisites:
+  - An MCP client that supports sampling and lets you review or approve sampling requests before they run.
+  - A clear list of which connected servers you trust enough to request generations from your model.
+  - A policy for what conversation or server context may be attached when a request sets includeContext.
+  - Rate-limit, token-cap, and logging controls for sampling, plus a way to disable it per server.
+safetyNotes:
+  - Sampling lets a connected MCP server ask your client to run its LLM on server-supplied prompts, so a malicious or compromised server can drive your model, consume tokens and compute, and attempt prompt injection; the specification says there SHOULD always be a human in the loop able to deny each request.
+  - Approve sampling per request instead of granting blanket auto-approval, and review both the server's prompt and the generated response before the response is returned to the server.
+  - Rate-limit sampling requests and cap maxTokens so a server cannot loop or run expensive generations without oversight.
+  - Treat a server's systemPrompt, messages, and model hints as untrusted input that may contain injection payloads or attempts to override your instructions.
+  - Only expose sampling to servers you trust, and disable or gate it for servers whose behavior you have not reviewed.
+privacyNotes:
+  - When a sampling request sets includeContext, the client may attach conversation or MCP context to the request, which can expose that data to the model and, through the generated response, back to the requesting server.
+  - Generated responses can echo sensitive data from your prompt or context, so review responses before they are delivered to the server.
+  - Sampling uses your own model provider and credentials, so prompts, context, and outputs are processed under your provider's data-handling terms rather than the server's.
+  - Keep secrets, private files, and sensitive conversation history out of any context you allow a server to include in a sampling request.
+sourceUrls:
+  - "https://modelcontextprotocol.io/specification/2025-06-18/client/sampling"
+  - "https://modelcontextprotocol.io/specification/2025-06-18/basic/security_best_practices"
+  - "https://modelcontextprotocol.io/specification/2025-06-18/client/roots"
+  - "https://code.claude.com/docs/en/mcp"
+tags:
+  - mcp
+  - sampling
+  - security
+  - human-in-the-loop
+  - prompt-injection
+  - privacy
+  - claude
+keywords:
+  - mcp sampling
+  - reviewing mcp sampling requests
+  - sampling/createMessage
+  - human in the loop mcp
+  - mcp sampling security
+  - includeContext mcp
+  - mcp client sampling approval
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+MCP **sampling** inverts the usual flow: instead of your client calling a
+server's tool, a connected server asks **your client** to run **your LLM** on a
+prompt the server supplies. It lets servers add agentic behavior with no server
+API keys, because the generation runs on your model and your credentials.
+
+That power is also the risk. A malicious or compromised server can try to drive
+your model, burn tokens, exfiltrate context, or inject instructions. The MCP
+specification is explicit: for trust, safety, and security there **SHOULD always
+be a human in the loop** able to **deny** sampling requests. Treat sampling like
+any other privileged capability — approve it per request, validate the content,
+scope the context, and rate-limit it.
+
+## Prerequisites & Requirements
+
+- [ ] Client support: your MCP client implements sampling and can surface each request for review before it runs.
+- [ ] Trust list: you know which connected servers are trusted enough to request generations from your model.
+- [ ] Context policy: you have decided what conversation or MCP context may be attached when a request sets `includeContext`.
+- [ ] Guardrails: rate limits, a `maxTokens` cap, logging, and a per-server off switch for sampling are in place.
+
+## Core Concepts Explained
+
+### Sampling is a server-initiated request to your model
+
+Per the MCP specification, sampling provides a standardized way for **servers to
+request LLM generations via clients**, enabling agentic behavior "with no server
+API keys necessary." The server does not have its own model access; it borrows
+yours. Clients that support sampling declare the `sampling` capability during
+initialization.
+
+### The request: `sampling/createMessage`
+
+To request a generation, a server sends a `sampling/createMessage` request. It
+can include:
+
+- `messages` — the conversation to generate from, with text, image, or audio content.
+- `systemPrompt` — a system prompt the server wants applied.
+- `modelPreferences` — `costPriority`, `speedPriority`, and `intelligencePriority` values plus advisory model `hints` (substrings the client MAY map to its own models; the client makes the final model selection).
+- `maxTokens` — an upper bound on the generation.
+- `includeContext` — a request for the client to attach additional context (for example from connected MCP servers) to the generation.
+
+Every one of these fields is **server-controlled input**, so treat the system
+prompt, messages, and hints as untrusted.
+
+### `includeContext` is a data-exposure control
+
+`includeContext` is where a server can ask for more than a bare prompt. If the
+client honors it, conversation or server context can be attached to the request,
+sent to your model, and reflected back to the server in the response. Decide
+deliberately what, if anything, a given server may include.
+
+## Threats and Mitigations
+
+- **Model hijacking / compute abuse.** A server issues many or large sampling requests to run your model on its behalf. Mitigation: per-request human approval, rate limiting, and a `maxTokens` cap (all recommended by the spec).
+- **Prompt injection.** The server's `systemPrompt` and `messages` try to override your instructions or coerce a harmful response. Mitigation: validate message content (the spec says both parties SHOULD), and review the prompt before approving.
+- **Context exfiltration.** A request sets `includeContext` to pull sensitive conversation or server data into the generation and back to the server. Mitigation: scope or refuse `includeContext`; keep secrets and private history out of includable context.
+- **Sensitive data in responses.** The generated response echoes private data. Mitigation: present responses for review **before delivery** to the server, as the spec recommends.
+- **Untrusted servers.** A low-trust server should not drive your model at all. Mitigation: only expose sampling to trusted servers; disable it elsewhere.
+
+## Step-by-Step Review Workflow
+
+1. **Confirm the client keeps a human in the loop.** Verify your MCP client shows sampling requests and lets you deny them. If it silently auto-approves, do not enable sampling for untrusted servers.
+2. **Scope which servers may sample.** Enable sampling only for servers you trust; leave it off for the rest.
+3. **Review each request's prompt.** Inspect `systemPrompt` and `messages` for injection, data-exfiltration attempts, or unexpected instructions before approving.
+4. **Decide on `includeContext`.** Approve context inclusion only when necessary, and only for context that is safe to send to the model and back to the server.
+5. **Enforce limits.** Apply rate limiting and a `maxTokens` cap so a server cannot loop or run costly generations.
+6. **Review the response before delivery.** Check the generated response for sensitive data before it is returned to the server.
+7. **Log and monitor.** Keep a record of sampling requests, approvals, denials, and token usage per server so abuse is visible.
+
+## Approval Checklist
+
+- [ ] The request comes from a server you trust with model access.
+- [ ] The `systemPrompt` and `messages` were reviewed for injection and exfiltration.
+- [ ] `includeContext` is off, or scoped to data that is safe to expose to the server.
+- [ ] `maxTokens` and rate limits are enforced.
+- [ ] The generated response was reviewed before delivery.
+- [ ] The request, decision, and token usage are logged.
+
+## When to Reject or Delay
+
+- The client cannot show or deny sampling requests (no human in the loop).
+- The request comes from an untrusted, unreviewed, or newly added server.
+- The prompt attempts to override instructions, extract secrets, or escalate access.
+- `includeContext` would expose sensitive conversation or server data you have not cleared.
+- Request volume or `maxTokens` looks abusive relative to the task.
+
+## Troubleshooting
+
+**A server keeps requesting sampling and it is disruptive.** Disable sampling
+for that server or tighten rate limits; sampling is optional and a client is not
+obligated to honor every request.
+
+**A sampling request returns "User rejected sampling request."** That is the
+expected error when a human denies the request; the spec defines rejection as a
+normal outcome, so servers should handle it gracefully.
+
+**A model hint asked for a specific model you do not run.** Hints are advisory
+substrings; clients make the final model selection and MAY map a hint to an
+equivalent model, so a mismatch is expected behavior, not an error.
+
+## Duplicate Check
+
+No existing guide covers MCP sampling review as a dedicated topic. Existing MCP
+security guides address pre-installation threat modeling, OAuth and least
+privilege, transport and package provenance, and general prompt-injection
+defense for tool-connected agents, but none focuses on the server-initiated
+`sampling/createMessage` flow, `includeContext` data exposure, or the
+human-in-the-loop approval, validation, and rate-limiting controls specific to
+sampling. This guide is therefore net-new and non-duplicate.
+
+## References
+
+- [MCP specification — Sampling (2025-06-18)](https://modelcontextprotocol.io/specification/2025-06-18/client/sampling)
+- [MCP specification — Security best practices](https://modelcontextprotocol.io/specification/2025-06-18/basic/security_best_practices)
+- [MCP specification — Roots](https://modelcontextprotocol.io/specification/2025-06-18/client/roots)
+- [Claude Code — MCP](https://code.claude.com/docs/en/mcp)
