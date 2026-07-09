@@ -9,6 +9,7 @@ import { hubHighlights, hubStats, trustPosture } from "@/lib/hub-highlights";
 import { categorySpread } from "@/lib/category-spread-lib";
 import { joinList } from "@/lib/join-list-lib";
 import { stringifyJsonLd } from "@/lib/json-ld";
+import { breadcrumbListJsonLd } from "@/lib/breadcrumb-jsonld-lib";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
 import { getTagGroup, relatedTags } from "@/lib/tags";
@@ -41,15 +42,11 @@ export const Route = createFileRoute("/tags/$tag")({
         url: absoluteUrl(`/entry/${e.category}/${e.slug}`),
       })),
     };
-    const breadcrumbs = {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Directory", item: absoluteUrl("/browse") },
-        { "@type": "ListItem", position: 2, name: "Tags", item: absoluteUrl("/tags") },
-        { "@type": "ListItem", position: 3, name: group.name, item: url },
-      ],
-    };
+    const breadcrumbs = breadcrumbListJsonLd([
+      { name: "Directory", item: absoluteUrl("/browse") },
+      { name: "Tags", item: absoluteUrl("/tags") },
+      { name: group.name, item: url },
+    ]);
     return {
       meta: [
         { title },
