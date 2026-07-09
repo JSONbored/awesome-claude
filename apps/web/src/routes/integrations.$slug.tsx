@@ -7,6 +7,7 @@ import { LiveVersionBadge } from "@/components/live-version-badge";
 import { CopyButton } from "@/components/copy-button";
 import { absoluteUrl } from "@/lib/seo";
 import { stringifyJsonLd } from "@/lib/json-ld";
+import { integrationAppJsonLd } from "@/lib/integration-app-jsonld-lib";
 import { ogImageUrl } from "@/lib/og-image";
 
 export const Route = createFileRoute("/integrations/$slug")({
@@ -21,16 +22,11 @@ export const Route = createFileRoute("/integrations/$slug")({
     const url = absoluteUrl(`/integrations/${params.slug}`);
     const description = it.tagline;
     const ogImage = ogImageUrl({ title: it.name, eyebrow: "Integration", description });
-    const app = {
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      name: it.name,
-      description,
+    const app = integrationAppJsonLd(
+      { name: it.name, description, version: it.version },
       url,
-      applicationCategory: "DeveloperApplication",
-      ...(it.version ? { softwareVersion: it.version } : {}),
-      publisher: { "@type": "Organization", name: "HeyClaude", url: absoluteUrl("/") },
-    };
+      absoluteUrl,
+    );
     const breadcrumbs = {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
