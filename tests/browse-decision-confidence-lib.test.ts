@@ -87,6 +87,30 @@ describe("browse decision confidence lib", () => {
     ).toBe("low");
   });
 
+  it("prevents blocked entries from receiving high-confidence recommendations", () => {
+    const blocked = entry({
+      slug: "blocked",
+      title: "Blocked",
+      trust: "blocked",
+      source: "source-backed",
+      sourceUrl: "https://github.com/acme/blocked",
+      reviewed: true,
+      safetyNotes: "present",
+      privacyNotes: "present",
+      packageVerified: true,
+      downloadSha256: "abc",
+      installCommand: "npm i blocked",
+    });
+
+    const state = browseDecisionConfidenceState([blocked], "strict");
+
+    expect(state.entries[0].confidenceScore).toBe(76);
+    expect(state.entries[0].band).toBe("low");
+    expect(state.entries[0].recommendation).toContain("Hold adoption");
+    expect(state.highCount).toBe(0);
+    expect(state.lowRefs).toContain("tools/blocked");
+  });
+
   it("tracks band counters", () => {
     const state = browseDecisionConfidenceState([strong, weak], "balanced");
     expect(state.highCount).toBeGreaterThanOrEqual(0);

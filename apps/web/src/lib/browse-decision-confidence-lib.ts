@@ -115,7 +115,8 @@ function trustPenalty(entry: Entry): number {
   return 0;
 }
 
-function confidenceBand(score: number): BrowseConfidenceBand {
+function confidenceBand(score: number, entry: Entry): BrowseConfidenceBand {
+  if (entry.trust === "blocked") return "low";
   if (score >= 74) return "high";
   if (score >= 46) return "medium";
   return "low";
@@ -144,7 +145,8 @@ function scoreEntry(
   return Math.max(0, Math.min(100, points - trustPenalty(entry)));
 }
 
-function recommendationFor(score: number, missing: string[]): string {
+function recommendationFor(score: number, missing: string[], entry: Entry): string {
+  if (entry.trust === "blocked") return "Hold adoption until registry trust is restored.";
   if (score >= 74) return "Confident candidate for staged adoption.";
   if (score >= 46) {
     return missing.length > 0
@@ -184,7 +186,7 @@ export function browseDecisionConfidenceState(
         .filter((key) => !signalState[key])
         .map((key) => SIGNAL_LABELS[key]);
       const confidenceScore = scoreEntry(entry, preset, signalState);
-      const band = confidenceBand(confidenceScore);
+      const band = confidenceBand(confidenceScore, entry);
       return {
         entryRef: entryRef(entry),
         title: entry.title,
@@ -192,7 +194,7 @@ export function browseDecisionConfidenceState(
         confidenceScore,
         band,
         missingSignals,
-        recommendation: recommendationFor(confidenceScore, missingSignals),
+        recommendation: recommendationFor(confidenceScore, missingSignals, entry),
       } satisfies BrowseConfidenceEntry;
     })
     .sort((a, b) => b.confidenceScore - a.confidenceScore || a.title.localeCompare(b.title))
