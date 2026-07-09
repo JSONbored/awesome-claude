@@ -137,7 +137,13 @@ function scorePlan(signals: SignalMap, preset: RolloutPresetId): number {
   return score;
 }
 
-function tierFromScore(score: number): "ready" | "review" | "hold" {
+function tierForPlan(
+  score: number,
+  blockers: string[],
+  preset: RolloutPresetId,
+): "ready" | "review" | "hold" {
+  if (blockers.length > 0 && preset === "production") return "hold";
+  if (blockers.length > 0 && score >= 80) return "review";
   if (score >= 80) return "ready";
   if (score >= 55) return "review";
   return "hold";
@@ -229,7 +235,7 @@ export function compareRolloutReadinessState(
       const checklist = checklistForEntry(signals, preset);
       const blockers = blockersFromChecklist(checklist);
       const score = scorePlan(signals, preset);
-      const tier = tierFromScore(score);
+      const tier = tierForPlan(score, blockers, preset);
       return {
         entryRef: entryRef(entry),
         title: entry.title,

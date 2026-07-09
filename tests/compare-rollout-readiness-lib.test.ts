@@ -101,6 +101,32 @@ describe("compare rollout readiness lib", () => {
     expect(state.plans[0].tier).toBe("review");
   });
 
+  it("holds production entries with required blockers even when score is ready", () => {
+    const missingSafety = entry({
+      slug: "missing-safety",
+      title: "Missing safety",
+      source: "source-backed",
+      sourceUrl: "https://github.com/acme/missing-safety",
+      reviewed: true,
+      safetyNotes: undefined,
+      safetyNotesList: undefined,
+      privacyNotes: "Present",
+      packageVerified: true,
+      downloadSha256: "abc",
+      installCommand: "npm i missing-safety",
+    });
+
+    const state = compareRolloutReadinessState([missingSafety], "production");
+    const plan = state.plans[0];
+
+    expect(plan.score).toBe(80);
+    expect(plan.blockers).toContain("Safety notes missing");
+    expect(plan.tier).toBe("hold");
+    expect(plan.summary).toContain("Hold rollout");
+    expect(state.summary).toContain("1 entries currently blocked");
+    expect(state.highestRiskRefs).toContain("tools/missing-safety");
+  });
+
   it("marks missing required signals as blocked", () => {
     const state = compareRolloutReadinessState([weak], "production");
     const plan = state.plans[0];
