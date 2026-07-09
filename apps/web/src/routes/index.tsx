@@ -117,6 +117,9 @@ const POPULAR_SEARCHES = [
   "react rules",
 ];
 
+// Same card for og:image and twitter:image; the inputs are static.
+const OG_IMAGE = ogImageUrl({ title: "The directory for Claude workflows", eyebrow: "HeyClaude" });
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -135,14 +138,14 @@ export const Route = createFileRoute("/")({
       { property: "og:url", content: absoluteUrl("/") },
       {
         property: "og:image",
-        content: ogImageUrl({ title: "The directory for Claude workflows", eyebrow: "HeyClaude" }),
+        content: OG_IMAGE,
       },
       { property: "og:image:type", content: "image/png" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
       {
         name: "twitter:image",
-        content: ogImageUrl({ title: "The directory for Claude workflows", eyebrow: "HeyClaude" }),
+        content: OG_IMAGE,
       },
     ],
     links: [{ rel: "canonical", href: absoluteUrl("/") }],

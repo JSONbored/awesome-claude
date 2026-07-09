@@ -50,6 +50,9 @@ const REASON_LABELS: Record<string, string> = {
   source_backed_fallback: "source-backed fallback ranking",
 };
 
+// Same card for og:image and twitter:image; the inputs are static.
+const OG_IMAGE = ogImageUrl({ title: "Trending Claude workflows", eyebrow: "Trending" });
+
 export const Route = createFileRoute("/trending")({
   validateSearch: trendingSchema,
   search: {
@@ -66,14 +69,14 @@ export const Route = createFileRoute("/trending")({
       { property: "og:url", content: absoluteUrl("/trending") },
       {
         property: "og:image",
-        content: ogImageUrl({ title: "Trending Claude workflows", eyebrow: "Trending" }),
+        content: OG_IMAGE,
       },
       { property: "og:image:type", content: "image/png" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
       {
         name: "twitter:image",
-        content: ogImageUrl({ title: "Trending Claude workflows", eyebrow: "Trending" }),
+        content: OG_IMAGE,
       },
     ],
     links: [{ rel: "canonical", href: absoluteUrl("/trending") }],
