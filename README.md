@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>1360+ file-backed entries</strong> stay useful as both an
+        <strong>1363+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>1360</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>1363</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>AI-reviewed</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -84,7 +84,7 @@ Refreshed weekly by [`.github/workflows/gittensor-impact.yml`](.github/workflows
         </td>
 <td align="center" width="20%">
           <a href="#tools"><strong>🧰 Tools</strong></a><br>
-          <code>191</code><br>
+          <code>194</code><br>
           <sub>Apps, developer tools, services, and products for Claude-native builders.</sub>
         </td>
 <td align="center" width="20%">
@@ -791,7 +791,7 @@ packages use checksums and package trust metadata after review.
 
 Get a free API key on https://app.zyntra.app/
 
-## 🧰 Tools (191)
+## 🧰 Tools (194)
 
 - **[Activepieces](https://heyclau.de/entry/tools/activepieces)** - Open-source, self-hostable workflow automation platform with AI workflows, TypeScript pieces, human-in-the-loop steps, and a built-in MCP server.
 - **[AG2 Agent Framework](https://heyclau.de/entry/tools/ag2-agent-framework)** - Open-source Python AgentOS and multi-agent framework, evolved from AutoGen, for building conversable agents, group chats, swarms, human-in-the-loop workflows, tool use, RAG, code execution, and provider-backed agent systems.
@@ -833,6 +833,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Continue](https://heyclau.de/entry/tools/continue)** - Open-source AI coding assistant for custom model routing, editor chat, autocomplete, and development workflows.
 - **[CopilotKit](https://heyclau.de/entry/tools/copilotkit)** - MIT-licensed frontend stack for agent-native applications and generative UI, with React, Angular, Vue, React Native, Slack and Teams surfaces, AG-UI protocol support, shared state, human-in-the-loop workflows, backend tool rendering, coding-agent skills, and runtime packages for agent apps.
 - **[Cosign](https://heyclau.de/entry/tools/cosign)** - Apache-2.0 Sigstore CLI for signing, verifying, and attesting containers, blobs, binaries, SBOMs, and OCI artifacts with keyless OIDC, KMS keys, Fulcio, Rekor, bundles, and registry storage.
+- **[Crawl4AI](https://heyclau.de/entry/tools/crawl4ai)** - Open-source, LLM-friendly Python web crawler and scraper that turns web pages into clean, LLM-ready Markdown for RAG, agents, and data pipelines, with an async browser pool, caching, structured extraction, and adaptive deep crawling.
 - **[CrewAI](https://heyclau.de/entry/tools/crewai)** - Framework and platform for building multi-agent workflows, role-based agents, process automation, and AI crews.
 - **[Crush](https://heyclau.de/entry/tools/crush)** - Terminal-based agentic AI coding assistant from Charm that works with many LLM providers, uses LSP and MCP for context, manages per-project sessions, and asks permission before running tools by default.
 - **[Cua Computer-Use Agents](https://heyclau.de/entry/tools/cua-computer-use-agents)** - MIT-licensed infrastructure for computer-use agents: background desktop drivers, MCP server support, Python SDKs, local/cloud sandboxes, macOS, Windows, Linux, Android, Cua Bench, GUI automation skills, and Lume virtualization for agents that see, click, type, and verify real desktops.
@@ -883,6 +884,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Kubescape](https://heyclau.de/entry/tools/kubescape)** - Apache-2.0 CNCF-incubating Kubernetes security platform and CLI for scanning clusters, manifests, Helm charts, Kustomize projects, Git repositories, and container images for misconfigurations, compliance gaps, and vulnerabilities.
 - **[Label Studio](https://heyclau.de/entry/tools/label-studio)** - Open-source data labeling, annotation, and human-in-the-loop AI evaluation platform for text, images, audio, video, time series, and multimodal datasets.
 - **[Lakera Guard](https://heyclau.de/entry/tools/lakera-guard)** - AI security platform for detecting prompt injection, unsafe content, data leakage, and LLM application abuse.
+- **[Laminar](https://heyclau.de/entry/tools/laminar)** - Open-source observability platform purpose-built for AI agents, with OpenTelemetry-native tracing, plain-English signals, an evals SDK and CLI, SQL dashboards, dataset annotation, and MCP/CLI access, self-hostable with Apache-2.0 SDKs for Python and TypeScript.
 - **[LanceDB](https://heyclau.de/entry/tools/lancedb)** - Apache-2.0 multimodal AI lakehouse and embedded retrieval database for vector search, full-text search, SQL filtering, RAG, and AI/ML data workflows.
 - **[LangChain](https://heyclau.de/entry/tools/langchain)** - Open-source agent engineering framework for building LLM applications with agents, model abstractions, tools, middleware, RAG, streaming, memory, MCP adapters, LangGraph-backed execution, and LangSmith observability hooks.
 - **[LangChain4j](https://heyclau.de/entry/tools/langchain4j)** - Idiomatic Java/JVM library for building LLM-powered applications with unified model APIs, tool calling, agentic workflows, RAG, chat memory, embedding stores, MCP client support, and Spring Boot, Quarkus, Helidon, and Micronaut integrations.
@@ -907,6 +909,7 @@ Get a free API key on https://app.zyntra.app/
 - **[MCP Inspector](https://heyclau.de/entry/tools/mcp-inspector)** - Official visual testing and debugging tool for Model Context Protocol servers.
 - **[MCP Supergateway Hub](https://heyclau.de/entry/tools/mcp-supergateway-hub)** - Self-hostable hub that wraps stdio MCP servers as streamable HTTP endpoints via supergateway, so a fleet of Model Context Protocol servers can run on one machine and be reached from any MCP client over the network.
 - **[mcp-use](https://heyclau.de/entry/tools/mcp-use)** - Fullstack MCP framework for building MCP servers, MCP Apps, MCP agents, and MCP clients with TypeScript and Python SDKs, scaffolding, inspector tooling, hosted deployment, observability, OAuth, notifications, sampling, and agent integrations.
+- **[Mem0](https://heyclau.de/entry/tools/mem0)** - Open-source memory layer for AI agents and assistants that extracts, stores, and retrieves user, session, and agent memories so applications can personalize and remember across interactions, with Python and TypeScript SDKs and pluggable vector, graph, and key-value stores.
 - **[MetaGPT](https://heyclau.de/entry/tools/metagpt)** - Open-source Python multi-agent framework that assigns product manager, architect, project manager, engineer, and other software-company roles to LLM agents for natural-language programming, repo generation, data interpretation, research, debate, and custom agent workflows.
 - **[Microsoft Agent Framework](https://heyclau.de/entry/tools/microsoft-agent-framework)** - Microsoft framework for building, orchestrating, and deploying production AI agents and multi-agent workflows across Python and .NET, with workflows, middleware, OpenTelemetry, Foundry hosting, A2A, MCP, and Semantic Kernel migration support.
 - **[Microsoft AutoGen](https://heyclau.de/entry/tools/microsoft-autogen)** - Open-source framework for building multi-agent AI applications, conversations, workflows, and autonomous systems.
