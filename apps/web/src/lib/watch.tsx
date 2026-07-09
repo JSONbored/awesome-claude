@@ -4,8 +4,8 @@ import {
   activeInAppSavedSearches,
   buildSavedSearchAlerts,
   savedSearchAlertTargetId,
-  type SavedSearchAlertSearch,
 } from "@/lib/saved-search-alerts";
+import { savedSearchSignature } from "@/lib/saved-search-signature-lib";
 import { entryDetailUrl, eventTargetId, type RegistryEvent } from "@/lib/watch-events-lib";
 import type { RegistryEntry } from "@/data/entry-normalize";
 import type { Entry } from "@/types/registry";
@@ -95,24 +95,6 @@ function eventToAlert(event: RegistryEvent, target: WatchTarget): Alert | null {
     href: target.href,
     date: event.date,
   };
-}
-
-function savedSearchSignature(searches: SavedSearchAlertSearch[]) {
-  return searches
-    .map((search) =>
-      [
-        search.id,
-        search.label,
-        search.q,
-        search.category,
-        search.trust,
-        search.source,
-        search.platform,
-        search.alerts?.enabled ? "1" : "0",
-        search.alerts?.channels?.join(",") ?? "",
-      ].join("\t"),
-    )
-    .join("\n");
 }
 
 async function loadEventEntries(events: RegistryEvent[]) {
