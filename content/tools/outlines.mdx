@@ -1,0 +1,74 @@
+---
+title: Outlines
+slug: outlines
+category: tools
+description: Open-source Python library from dottxt for structured LLM generation, guaranteeing outputs that match a JSON schema, Pydantic model, regex, grammar, or multiple-choice set during generation across many model backends.
+cardDescription: Python library for guaranteed structured LLM outputs (JSON schema, regex, grammar) during generation.
+seoTitle: Outlines structured generation library for LLMs
+seoDescription: Outlines is an open-source Python library for structured LLM generation that guarantees outputs matching a JSON schema, Pydantic model, regex, grammar, or choice set during generation, working across OpenAI, Ollama, vLLM, Transformers, and more.
+author: dottxt-ai
+submittedBy: davion-knight
+submittedByUrl: "https://github.com/davion-knight"
+dateAdded: "2026-07-09"
+websiteUrl: "https://dottxt-ai.github.io/outlines/"
+documentationUrl: "https://dottxt-ai.github.io/outlines/"
+repoUrl: "https://github.com/dottxt-ai/outlines"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - structured-output
+  - python
+  - llm
+  - json-schema
+  - constrained-generation
+  - pydantic
+keywords:
+  - outlines
+  - structured generation
+  - constrained decoding
+  - json schema llm
+  - guaranteed json output
+  - dottxt outlines
+robotsIndex: true
+robotsFollow: true
+prerequisites:
+  - Python 3.10+ project and a dependency manager to install `outlines` from PyPI.
+  - A model backend to run generation against, such as Transformers, llama.cpp, or vLLM locally, or a hosted API like OpenAI or Ollama.
+  - Backend credentials or local model files and enough compute for the chosen backend.
+  - The target output shape defined as a JSON schema, Pydantic model, regex, grammar, or choice set.
+safetyNotes:
+  - Outlines constrains the structure of a model's output, but it does not verify that the content is correct, complete, or safe; a schema-valid response can still be wrong for a downstream action.
+  - Generation runs through the model backend you configure, so it uses that backend's credentials and compute; local backends run models on your machine and hosted backends send prompts to the provider.
+  - Complex grammars or schemas can affect latency and cost, so test constraints before relying on them in production.
+  - Treat prompt template inputs and generated outputs as untrusted, and validate any values used to take account, billing, data, or infrastructure actions.
+  - Keep production usage and permissions narrower than notebook or example code.
+privacyNotes:
+  - Prompts and any data placed into prompt templates are sent to the configured model backend, which may be a local model or a hosted API.
+  - Hosted backends process prompts and outputs under their own data-handling terms, while local backends keep inference on your machine.
+  - Generated outputs, schemas, and templates can contain personal or proprietary data, so apply normal retention and access-control policies.
+  - Logs, traces, or caches produced by your backend or application can retain prompts and outputs outside the library itself.
+---
+
+## Editorial notes
+
+Outlines is useful when Claude-adjacent Python teams need model outputs that reliably match a defined shape instead of parsing and repairing free text after the fact. It guarantees structured outputs during generation, so an agent, extractor, or classifier returns valid JSON, a matching regex, a grammar-conformant string, or a specific choice.
+
+This is distinct from existing agent-framework entries: rather than orchestrating agents, Outlines is the structured-generation layer those workflows can build on. It works across model backends (for example OpenAI, Ollama, vLLM, and Transformers) so the same code can target different models.
+
+## Source notes
+
+- The official repository describes Outlines as a library for structured outputs from LLMs, guaranteeing structured outputs during generation directly from any model.
+- Outlines supports output shapes including JSON schema, Pydantic models, regular expressions, grammars, and multiple-choice sets.
+- The library is model-agnostic and is documented as working across backends such as OpenAI, Ollama, vLLM, and Transformers, so the same code runs across different models.
+- Outlines also provides reusable prompt templating, and the repository notes adoption by organizations including NVIDIA, Cohere, Hugging Face, and vLLM.
+- The GitHub repository is `dottxt-ai/outlines`, is Apache-2.0 licensed, is installed from PyPI with `pip install outlines`, and targets Python 3.10+.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, skills, hooks, rules, commands, guides, open pull requests, and repository-wide content for `Outlines`, `outlines`, `dottxt`, `dottxt-ai`, `dottxt-ai.github.io/outlines`, `github.com/dottxt-ai/outlines`, `structured generation`, and `constrained decoding`. Existing entries reference structured output in passing, and DSPy and Instructor-style tools cover adjacent needs, but no dedicated Outlines tools entry, Outlines source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.
