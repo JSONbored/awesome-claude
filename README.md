@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>1351+ file-backed entries</strong> stay useful as both an
+        <strong>1352+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>1351</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>1352</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>AI-reviewed</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -79,7 +79,7 @@ Refreshed weekly by [`.github/workflows/gittensor-impact.yml`](.github/workflows
         </td>
 <td align="center" width="20%">
           <a href="#mcp-servers"><strong>🔌 MCP Servers</strong></a><br>
-          <code>478</code><br>
+          <code>479</code><br>
           <sub>Model Context Protocol servers and integrations.</sub>
         </td>
 <td align="center" width="20%">
@@ -307,7 +307,7 @@ packages use checksums and package trust metadata after review.
 - **[Web Async Agent Coordinator - Agents](https://heyclau.de/entry/agents/web-async-agent-coordinator)** - System-prompt agent that helps you drive Claude Code on the web: submitting long-running coding tasks to Anthropic's cloud, running independent sessions in parallel, linking GitHub repositories, tracking progress, and turning finished work into pull requests from the browser.
 - **[Zero Data Retention Compliance Agent](https://heyclau.de/entry/agents/zero-data-retention-compliance-agent)** - Community reusable agent prompt for mapping Claude Code deployments to zero data retention requirements using official ZDR docs: logging boundaries, MCP data flows, session storage, and compliance evidence checklists for security review.
 
-## 🔌 MCP Servers (478)
+## 🔌 MCP Servers (479)
 
 - **[Ableton MCP Extended](https://heyclau.de/entry/mcp/ableton-mcp-extended)** - Source-install MCP server for controlling Ableton Live from Claude, including session inspection, track and clip creation, MIDI note editing, tempo and transport control, browser item loading, arrangement workflows, device parameters, automation, external plugins, audio imports, and optional ElevenLabs.
 - **[ABMeter MCP Server](https://heyclau.de/entry/mcp/abmeter-mcp-server)** - ABMeter MCP exposes experimentation and analytics tooling over streamable HTTP for MCP clients.
@@ -742,6 +742,7 @@ packages use checksums and package trust metadata after review.
 - **[Telnyx MCP Server](https://heyclau.de/entry/mcp/telnyx-mcp-server)** - The official Telnyx MCP server (@telnyx/mcp) that lets AI assistants use Telnyx's communications APIs through function calling — messaging (SMS/MMS), voice and call control, phone-number management, SIP connections, verification, and wireless. The npx package proxies to Telnyx's hosted MCP server over HTTPS and authenticates with a Telnyx API key.
 - **[Teradata MCP Server for Claude](https://heyclau.de/entry/mcp/teradata-mcp-server)** - Connect Claude to Teradata — list databases and tables, inspect DDL, run SQL queries, preview data, analyze column quality, and explore DBA diagnostics — with the official Teradata MCP server supporting optional ML tool expansion via the teradataml Python package.
 - **[Terraform MCP Server for Claude](https://heyclau.de/entry/mcp/terraform-mcp-server)** - Connect Claude to Terraform Registry, HCP Terraform, and Terraform Enterprise context through HashiCorp's MCP server.
+- **[Tigris MCP Server](https://heyclau.de/entry/mcp/tigris-mcp-server)** - The official Tigris MCP server (@tigrisdata/tigris-mcp-server) that connects AI agents to Tigris, a high-performance S3-compatible object storage system — listing, creating, and deleting buckets; listing, uploading, and deleting objects; creating folders and files; and generating shareable links — using S3-style access keys against the Tigris endpoint.
 - **[Time MCP Server](https://heyclau.de/entry/mcp/time-mcp-server)** - Official MCP server that gives Claude current time and timezone conversion tools using IANA timezone names.
 - **[Tinybird MCP Server for Claude](https://heyclau.de/entry/mcp/tinybird-mcp-server)** - Connect Claude to your Tinybird workspace — query real-time data sources, run text-to-SQL, call published API endpoints as tools, explore datasources, and analyze analytics data — with the official Tinybird hosted MCP server.
 - **[Todoist MCP Server](https://heyclau.de/entry/mcp/todoist-mcp-server)** - MCP server for Todoist task and project management, with tools for tasks, subtasks, projects, sections, labels, comments, reminders, filters, activity, backups, collaboration, bulk operations, and dry-run testing.
