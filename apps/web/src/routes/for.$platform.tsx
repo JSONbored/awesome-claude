@@ -15,6 +15,7 @@ import { breadcrumbListJsonLd } from "@/lib/breadcrumb-jsonld-lib";
 import { platformItemListJsonLd } from "@/lib/platform-itemlist-jsonld-lib";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
+import { ogImageMetaTags } from "@/lib/og-meta-lib";
 
 const PLATFORM_IDS = new Set(Object.keys(PLATFORM_LABEL));
 
@@ -47,12 +48,7 @@ export const Route = createFileRoute("/for/$platform")({
         { property: "og:title", content: title },
         { property: "og:description", content: description },
         { property: "og:url", content: url },
-        { property: "og:image", content: ogImage },
-        { property: "og:image:type", content: "image/png" },
-        { property: "og:image:width", content: "1200" },
-        { property: "og:image:height", content: "630" },
-        { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:image", content: ogImage },
+        ...ogImageMetaTags(ogImage),
       ],
       links: [{ rel: "canonical", href: url }],
       scripts: [

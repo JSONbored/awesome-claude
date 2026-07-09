@@ -22,6 +22,7 @@ import { breadcrumbListJsonLd } from "@/lib/breadcrumb-jsonld-lib";
 import { categoryItemListJsonLd } from "@/lib/category-itemlist-jsonld-lib";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl, categoryAccent } from "@/lib/og-image";
+import { ogImageMetaTags } from "@/lib/og-meta-lib";
 
 const categoryIds = new Set(CATEGORIES.map((c) => c.id));
 
@@ -66,13 +67,7 @@ export const Route = createFileRoute("/$category")({
         { property: "og:title", content: title },
         { property: "og:description", content: description },
         { property: "og:url", content: url },
-        { property: "og:image", content: ogImage },
-        { property: "og:image:type", content: "image/png" },
-        { property: "og:image:width", content: "1200" },
-        { property: "og:image:height", content: "630" },
-        { property: "og:type", content: "website" },
-        { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:image", content: ogImage },
+        ...ogImageMetaTags(ogImage, "website"),
       ],
       links: [
         { rel: "canonical", href: url },

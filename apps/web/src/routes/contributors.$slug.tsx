@@ -25,6 +25,7 @@ import { stringifyJsonLd } from "@/lib/json-ld";
 import { breadcrumbListJsonLd } from "@/lib/breadcrumb-jsonld-lib";
 import { contributorPersonJsonLd } from "@/lib/contributor-person-jsonld-lib";
 import { ogImageUrl } from "@/lib/og-image";
+import { ogImageMetaTags } from "@/lib/og-meta-lib";
 import { submitterAttribution } from "@/lib/contributor-profile-summary";
 import type { Category, Contributor, Entry } from "@/types/registry";
 import { categoryBreakdown } from "@/lib/contributor-category-breakdown-lib";
@@ -61,13 +62,7 @@ export const Route = createFileRoute("/contributors/$slug")({
         { property: "og:title", content: `${name} — HeyClaude` },
         { property: "og:description", content: description },
         { property: "og:url", content: url },
-        { property: "og:image", content: ogImage },
-        { property: "og:image:type", content: "image/png" },
-        { property: "og:image:width", content: "1200" },
-        { property: "og:image:height", content: "630" },
-        { property: "og:type", content: "profile" },
-        { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:image", content: ogImage },
+        ...ogImageMetaTags(ogImage, "profile"),
       ],
       links: [{ rel: "canonical", href: url }],
       scripts: [
