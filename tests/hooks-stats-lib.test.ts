@@ -131,6 +131,33 @@ describe("hooks-stats-lib buildHooksReport (deterministic)", () => {
     expect(a.stats.find((s) => s.key === "total")?.value).toBe(4);
   });
 
+  it("counts hooks disclosing BOTH safety and privacy, not the min of each", () => {
+    // Disjoint coverage: 2 disclose safety only, 2 privacy only, 0 disclose both.
+    // The old Math.min(pct(safety), pct(privacy)) reported 50%; the truth is 0%.
+    const disjoint = [
+      hook({ trigger: "PostToolUse", safetyNotes: "runs shell" }),
+      hook({ trigger: "Stop", safetyNotes: "writes files" }),
+      hook({ trigger: "PreToolUse", privacyNotes: "reads env" }),
+      hook({ trigger: "Notification", privacyNotes: "sends telemetry" }),
+    ];
+    const disjointModel = buildHooksReport(disjoint, "2026-06-20");
+    expect(
+      disjointModel.stats.find((s) => s.key === "safety-privacy")?.value,
+    ).toBe(0);
+
+    // Overlapping coverage: exactly 1 of 4 discloses both -> 25%.
+    const mixed = [
+      hook({ trigger: "PostToolUse", safetyNotes: "s", privacyNotes: "p" }),
+      hook({ trigger: "Stop", safetyNotes: "s" }),
+      hook({ trigger: "PreToolUse", privacyNotes: "p" }),
+      hook({ trigger: "Notification" }),
+    ];
+    const mixedModel = buildHooksReport(mixed, "2026-06-20");
+    expect(
+      mixedModel.stats.find((s) => s.key === "safety-privacy")?.value,
+    ).toBe(25);
+  });
+
   it("drops degenerate single-bucket dimensions", () => {
     const uniform = [
       hook({ trigger: "PostToolUse" }),
