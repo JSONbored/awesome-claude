@@ -4,18 +4,9 @@ import { registryDiffQuerySchema } from "@/lib/api/contracts";
 import { createApiHandler, type InferApiQuery } from "@/lib/api/router";
 import { getRegistryChangelog } from "@/lib/content.server";
 import { cachedJsonResponse } from "@/lib/http-cache";
+import { looksLikeHash, parseSinceDate } from "@/lib/registry-diff-lib";
 
 type ChangelogEntry = Awaited<ReturnType<typeof getRegistryChangelog>>["entries"][number];
-
-function parseSinceDate(value: string | null) {
-  if (!value) return null;
-  const parsed = Date.parse(value);
-  return Number.isFinite(parsed) ? parsed : null;
-}
-
-function looksLikeHash(value: string | null) {
-  return Boolean(value && /^[a-f0-9]{32,128}$/i.test(value));
-}
 
 export const GET = createApiHandler("registry.diff", async ({ request, query: parsedQuery }) => {
   const { since, limit } = parsedQuery as InferApiQuery<typeof registryDiffQuerySchema>;
