@@ -29,6 +29,7 @@ import {
 } from "@/lib/content-artifact-lib";
 import {
   buildCategorySummaries,
+  createResettablePromiseCache,
   entryDetailCacheKey,
   MAX_ENTRY_DETAIL_CACHE_SIZE,
   pruneEntryDetailCache,
@@ -47,7 +48,6 @@ export {
   normalizeRegistryEntries,
 } from "@/lib/content-artifact-lib";
 
-let directoryIndexPromise: Promise<DirectoryEntry[]> | null = null;
 const entryDetailPromises = new Map<string, Promise<ContentEntry | null>>();
 
 type EntryDetailPayload = {
@@ -108,13 +108,19 @@ export async function loadTextDataFile(fileName: string): Promise<string> {
   }
 }
 
-const loadDirectoryIndex = cache(async (): Promise<DirectoryEntry[]> => {
-  directoryIndexPromise ??=
+// Persist the directory index across requests in a single-flight cache that
+// heals after a transient load failure (see createResettablePromiseCache); a
+// plain `??=` singleton would pin the first rejected promise forever and take
+// down every directory-backed surface for the isolate's lifetime. `cache()`
+// layers per-request deduplication on top.
+const loadDirectoryIndexOnce = createResettablePromiseCache(
+  (): Promise<DirectoryEntry[]> =>
     loadJsonDataFile<import("@heyclaude/registry").RegistryEnvelope<DirectoryEntry>>(
       "directory-index.json",
-    ).then(normalizeRegistryEntries);
-  return directoryIndexPromise;
-});
+    ).then(normalizeRegistryEntries),
+);
+
+const loadDirectoryIndex = cache(loadDirectoryIndexOnce);
 
 const loadSearchIndex = cache(async () => {
   return loadJsonDataFile<import("@heyclaude/registry").RegistryEnvelope<SearchDocument>>(

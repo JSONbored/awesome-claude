@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   MAX_ENTRY_DETAIL_CACHE_SIZE,
   buildCategorySummaries,
+  createResettablePromiseCache,
   entryDetailCacheKey,
   pruneEntryDetailCache,
   sortRecentDirectoryEntries,
@@ -3234,5 +3235,57 @@ describe("content-query-lib sortRecentDirectoryEntries", () => {
     }));
     const sorted = sortRecentDirectoryEntries(entries, 8);
     expect(sorted.length).toBeLessThanOrEqual(8);
+  });
+});
+
+describe("content-query-lib createResettablePromiseCache", () => {
+  it("shares a single in-flight load across concurrent callers", async () => {
+    let calls = 0;
+    const load = createResettablePromiseCache(async () => {
+      calls += 1;
+      return calls;
+    });
+    const [a, b] = await Promise.all([load(), load()]);
+    expect(calls).toBe(1);
+    expect(a).toBe(1);
+    expect(b).toBe(1);
+  });
+
+  it("memoizes the resolved value on subsequent calls", async () => {
+    let calls = 0;
+    const load = createResettablePromiseCache(async () => {
+      calls += 1;
+      return calls;
+    });
+    expect(await load()).toBe(1);
+    expect(await load()).toBe(1);
+    expect(calls).toBe(1);
+  });
+
+  it("retries after a rejection instead of pinning the rejected promise", async () => {
+    let calls = 0;
+    const load = createResettablePromiseCache(async () => {
+      calls += 1;
+      if (calls === 1) throw new Error("transient failure");
+      return "recovered";
+    });
+
+    await expect(load()).rejects.toThrow("transient failure");
+    // Without reset-on-reject the second call would resurface the same
+    // rejected promise; with it, the loader re-runs and heals.
+    expect(await load()).toBe("recovered");
+    expect(calls).toBe(2);
+  });
+
+  it("propagates the rejection to every concurrent caller of a failed load", async () => {
+    let calls = 0;
+    const load = createResettablePromiseCache(async () => {
+      calls += 1;
+      throw new Error("boom");
+    });
+    const results = await Promise.allSettled([load(), load()]);
+    expect(results.every((r) => r.status === "rejected")).toBe(true);
+    // One shared in-flight attempt for the two concurrent callers.
+    expect(calls).toBe(1);
   });
 });
