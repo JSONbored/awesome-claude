@@ -31,14 +31,17 @@ export function timeAgo(iso: string | undefined | null): string {
   if (Number.isNaN(d)) return "—";
   const diff = Date.now() - d;
   if (diff < 0) return "—";
-  const min = Math.round(diff / 60_000);
+  // Floor (not round) each unit: rounding pushes a value that is short of the next boundary up
+  // into the higher unit, defeating the `< 60`/`< 24`/`< 30` guard below it — e.g. 23h30m would
+  // render "1d ago" and 45s would render "1m ago" instead of "just now".
+  const min = Math.floor(diff / 60_000);
   if (min < 1) return "just now";
   if (min < 60) return `${min}m ago`;
-  const h = Math.round(min / 60);
+  const h = Math.floor(min / 60);
   if (h < 24) return `${h}h ago`;
-  const day = Math.round(h / 24);
+  const day = Math.floor(h / 24);
   if (day < 30) return `${day}d ago`;
-  const mo = Math.round(day / 30);
+  const mo = Math.floor(day / 30);
   if (mo < 12) return `${mo}mo ago`;
-  return `${Math.round(mo / 12)}y ago`;
+  return `${Math.floor(mo / 12)}y ago`;
 }

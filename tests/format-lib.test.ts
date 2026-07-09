@@ -103,4 +103,15 @@ describe("timeAgo", () => {
     expect(timeAgo(ago(400 * DAY))).toBe("1y ago");
     expect(timeAgo(ago(800 * DAY))).toBe("2y ago");
   });
+
+  it("floors each unit at sub-boundary values instead of rounding up", () => {
+    // Regression: these all sit just short of the next unit's boundary. With Math.round they
+    // rounded up into the wrong bucket ("just now"->"1m", "1h"->"2h", "23h"->"1d", "29d"->"1mo").
+    expect(timeAgo(ago(45 * SECOND))).toBe("just now");
+    expect(timeAgo(ago(59 * MINUTE + 59 * SECOND))).toBe("59m ago");
+    expect(timeAgo(ago(90 * MINUTE))).toBe("1h ago");
+    expect(timeAgo(ago(23 * HOUR + 30 * MINUTE))).toBe("23h ago");
+    expect(timeAgo(ago(29 * DAY + 12 * HOUR))).toBe("29d ago");
+    expect(timeAgo(ago(345 * DAY))).toBe("11mo ago");
+  });
 });
