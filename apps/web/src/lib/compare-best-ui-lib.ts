@@ -31,7 +31,7 @@ export type CompareBestUiState = {
 export function compareBestUiState(entries: Entry[]): CompareBestUiState {
   return {
     showCompareSection: compareBestShowCompareSection(entries),
-    bannerTexts: compareBestBannerTexts(entries),
+    bannerTexts: compareBestHeaderBannerTexts(entries),
     interactiveSearch: compareInteractiveSearch(entries),
     interactiveLinkLabel: compareInteractiveLinkLabel(entries.length),
   };

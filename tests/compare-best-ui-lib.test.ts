@@ -102,6 +102,7 @@ describe("compare best ui lib", () => {
     expect(bundled.showCompareSection).toBe(
       compareBestShowCompareSection(entries),
     );
+    expect(bundled.bannerTexts).toEqual(compareBestHeaderBannerTexts(entries));
     expect(
       compareBestUiState([
         entry(),
