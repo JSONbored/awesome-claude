@@ -22,6 +22,7 @@ import { CategoryPill, SourceBadge, TrustBadge } from "@/components/badges";
 import { Monogram } from "@/components/monogram";
 import { absoluteUrl } from "@/lib/seo";
 import { stringifyJsonLd } from "@/lib/json-ld";
+import { contributorPersonJsonLd } from "@/lib/contributor-person-jsonld-lib";
 import { ogImageUrl } from "@/lib/og-image";
 import { submitterAttribution } from "@/lib/contributor-profile-summary";
 import type { Category, Contributor, Entry } from "@/types/registry";
@@ -41,16 +42,7 @@ export const Route = createFileRoute("/contributors/$slug")({
     const description =
       c.bio ?? `Resources contributed to the HeyClaude registry by ${name} (@${c.handle}).`;
     const ogImage = ogImageUrl({ title: name, eyebrow: "Contributor", description });
-    const person = {
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "@id": `${url}#person`,
-      name,
-      url,
-      ...(c.handle ? { alternateName: `@${c.handle}` } : {}),
-      ...(c.bio ? { description: c.bio } : {}),
-      ...(c.github ? { sameAs: [c.github] } : {}),
-    };
+    const person = contributorPersonJsonLd(c, url, name);
     const profilePage = {
       "@context": "https://schema.org",
       "@type": "ProfilePage",
