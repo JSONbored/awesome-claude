@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>1350+ file-backed entries</strong> stay useful as both an
+        <strong>1351+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>1350</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>1351</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>AI-reviewed</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -79,7 +79,7 @@ Refreshed weekly by [`.github/workflows/gittensor-impact.yml`](.github/workflows
         </td>
 <td align="center" width="20%">
           <a href="#mcp-servers"><strong>🔌 MCP Servers</strong></a><br>
-          <code>477</code><br>
+          <code>478</code><br>
           <sub>Model Context Protocol servers and integrations.</sub>
         </td>
 <td align="center" width="20%">
@@ -307,7 +307,7 @@ packages use checksums and package trust metadata after review.
 - **[Web Async Agent Coordinator - Agents](https://heyclau.de/entry/agents/web-async-agent-coordinator)** - System-prompt agent that helps you drive Claude Code on the web: submitting long-running coding tasks to Anthropic's cloud, running independent sessions in parallel, linking GitHub repositories, tracking progress, and turning finished work into pull requests from the browser.
 - **[Zero Data Retention Compliance Agent](https://heyclau.de/entry/agents/zero-data-retention-compliance-agent)** - Community reusable agent prompt for mapping Claude Code deployments to zero data retention requirements using official ZDR docs: logging boundaries, MCP data flows, session storage, and compliance evidence checklists for security review.
 
-## 🔌 MCP Servers (477)
+## 🔌 MCP Servers (478)
 
 - **[Ableton MCP Extended](https://heyclau.de/entry/mcp/ableton-mcp-extended)** - Source-install MCP server for controlling Ableton Live from Claude, including session inspection, track and clip creation, MIDI note editing, tempo and transport control, browser item loading, arrangement workflows, device parameters, automation, external plugins, audio imports, and optional ElevenLabs.
 - **[ABMeter MCP Server](https://heyclau.de/entry/mcp/abmeter-mcp-server)** - ABMeter MCP exposes experimentation and analytics tooling over streamable HTTP for MCP clients.
@@ -424,6 +424,7 @@ packages use checksums and package trust metadata after review.
 - **[Cloudflare MCP Server - MCP Servers](https://heyclau.de/entry/mcp/cloudflare-mcp-server)** - Build applications, analyze traffic, and manage security settings through Cloudflare
 - **[Cloudinary MCP Server - MCP Servers](https://heyclau.de/entry/mcp/cloudinary-mcp-server)** - Upload, manage, transform, and analyze media assets in the cloud
 - **[CockroachDB Cloud MCP Server for Claude](https://heyclau.de/entry/mcp/cockroachdb-mcp-server)** - Manage CockroachDB Cloud clusters from Claude — list databases and tables, inspect schemas, run SELECT queries, explain query plans, monitor running queries, and optionally create tables and insert data — with the official CockroachDB Cloud MCP server.
+- **[Codacy MCP Server](https://heyclau.de/entry/mcp/codacy-mcp-server)** - The official Codacy MCP server (@codacy/codacy-mcp) that gives AI assistants access to the Codacy API for code quality, security, and coverage — listing repository and pull-request issues, retrieving file coverage and duplication, searching security (SRM) findings, inspecting analysis tools and patterns, and running local analysis with the Codacy CLI.
 - **[Code Index MCP Server](https://heyclau.de/entry/mcp/code-index-mcp-server)** - Local code indexing MCP server that lets AI assistants search repositories, build symbol indexes, inspect file summaries, monitor changes, and navigate multi-language codebases.
 - **[Codebase Memory MCP Server](https://heyclau.de/entry/mcp/codebase-memory-mcp-server)** - High-performance MCP server that indexes codebases into a persistent knowledge graph for structural search, call tracing, architecture summaries, dead-code detection, and cross-repo analysis.
 - **[CodeDB MCP Server](https://heyclau.de/entry/mcp/codedb-mcp-server)** - Code intelligence MCP server with a Zig core for local project indexing, structural outlines, symbol lookup, search, dependency graphs, snapshots, remote public-repo queries, and fallback edits.
