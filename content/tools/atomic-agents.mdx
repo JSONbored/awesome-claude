@@ -1,0 +1,71 @@
+---
+title: Atomic Agents
+slug: atomic-agents
+category: tools
+description: Lightweight, modular open-source Python framework for building agentic AI pipelines from atomic, composable components (agents, tools, context providers), built on Instructor and Pydantic.
+cardDescription: Lightweight modular Python framework for building agentic AI pipelines from atomic components.
+seoTitle: Atomic Agents modular Python agent framework
+seoDescription: Atomic Agents is a lightweight, modular open-source Python framework for building agentic AI pipelines from atomic, composable components (agents, tools, context providers) using input/output schemas, built on Instructor and Pydantic.
+author: Eigenwise
+submittedBy: davion-knight
+submittedByUrl: "https://github.com/davion-knight"
+dateAdded: "2026-07-09"
+websiteUrl: "https://eigenwise.github.io/atomic-agents/"
+documentationUrl: "https://eigenwise.github.io/atomic-agents/"
+repoUrl: "https://github.com/Eigenwise/atomic-agents"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - agents
+  - python
+  - modular
+  - structured-output
+  - pydantic
+keywords:
+  - atomic agents
+  - python agent framework
+  - modular ai agents
+  - agentic pipelines
+  - instructor pydantic agents
+prerequisites:
+  - Python 3.12+ project and a dependency manager to install `atomic-agents` from PyPI, plus the matching Instructor provider extra (for example `instructor[anthropic]`).
+  - Model-provider credentials or local model configuration for the provider the agents use.
+  - Clear input and output schemas for each agent, and defined tool and context-provider boundaries before chaining components.
+  - A plan for how agents, tools, and context providers connect to databases, APIs, files, or other systems.
+  - Observability and retention decisions for any run data, tool outputs, or logged interactions.
+safetyNotes:
+  - Atomic Agents components can include tools that run code, call external APIs, query databases, or read and write files; review each tool's side effects before adding it to a pipeline.
+  - Input and output schemas make component contracts explicit and reduce parsing errors, but they do not prove a model response is correct or safe for a downstream action.
+  - Tool descriptions, schemas, context-provider content, and prior outputs become model-facing context, so treat them as untrusted input that can influence agent behavior.
+  - Add human review, timeouts, and rollback policies before agents take account, billing, data, or infrastructure actions.
+  - Keep production permissions narrower than example or notebook pipelines, and scope model-provider and tool credentials to the minimum needed.
+privacyNotes:
+  - Atomic Agents runs send prompts, schema instructions, inputs, tool arguments, tool results, and context-provider content to the configured model provider through Instructor.
+  - Tools and context providers can pass local files, database records, API responses, or proprietary data into the model and pipeline if they are made available to a component.
+  - Any observability, logging, or storage destinations you add can retain prompts, outputs, and metadata outside the application runtime.
+  - Apply normal retention and access-control policies to run logs, chained-agent outputs, and any persisted context.
+---
+
+## Editorial notes
+
+Atomic Agents is useful when Claude-adjacent Python teams want to build agentic pipelines from small, composable pieces rather than a monolithic framework. It is designed around the idea of atomicity: each component (agent, tool, context provider) is a self-contained building block with explicit input and output schemas, so pipelines can be assembled and maintained like normal typed application code.
+
+This is distinct from existing agent-framework entries. CrewAI focuses on role-based multi-agent crews, LangGraph focuses on graph and stateful workflows, Pydantic AI is the Pydantic team's type-safe framework, Griptape centers on structures and off-prompt memory, and Marvin pairs structured-output utilities with a task/agent/thread model. Atomic Agents is a lightweight, modular framework built on Instructor and Pydantic that composes agents, tools, and context providers through schemas.
+
+## Source notes
+
+- The official repository describes Atomic Agents as a lightweight and modular framework for building agentic AI pipelines and applications, designed around atomicity.
+- Each component (agent, tool, context provider) is a self-contained building block, and components are chained through explicit Pydantic input and output schemas.
+- Atomic Agents is built on Instructor and Pydantic, so it uses the same structured-output and validation patterns those libraries provide.
+- It is installed from PyPI with `pip install atomic-agents`, plus a matching Instructor provider extra (for example `instructor[anthropic]`, `instructor[groq]`, or `instructor[google-genai]`), and targets Python 3.12+.
+- The GitHub repository is `Eigenwise/atomic-agents`, is MIT licensed, and publishes documentation and examples for building and chaining components.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, skills, hooks, rules, commands, guides, open pull requests, and repository-wide content for `Atomic Agents`, `atomic-agents`, `eigenwise/atomic-agents`, `eigenwise.github.io/atomic-agents`, `github.com/Eigenwise/atomic-agents`, and `agentic pipelines`. Existing agent-framework entries such as CrewAI, LangGraph, Pydantic AI, Griptape, and Marvin cover adjacent workflows, but no dedicated Atomic Agents tools entry, Atomic Agents source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.
