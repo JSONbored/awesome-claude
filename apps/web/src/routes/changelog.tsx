@@ -6,6 +6,7 @@ import { FilterChip, FilterChipGroup } from "@/components/filter-chip";
 import { PageContainer } from "@/components/page-container";
 import { cn } from "@/lib/utils";
 import { stringifyJsonLd } from "@/lib/json-ld";
+import { changelogItemListJsonLd } from "@/lib/changelog-jsonld-lib";
 import { absoluteUrl } from "@/lib/seo";
 
 export const Route = createFileRoute("/changelog")({
@@ -43,23 +44,7 @@ export const Route = createFileRoute("/changelog")({
     scripts: [
       {
         type: "application/ld+json",
-        children: stringifyJsonLd({
-          "@context": "https://schema.org",
-          "@type": "ItemList",
-          name: "HeyClaude registry changelog",
-          itemListElement: RELEASE_NOTES.map((n, i) => ({
-            "@type": "ListItem",
-            position: i + 1,
-            item: {
-              "@type": "NewsArticle",
-              headline: n.title,
-              datePublished: n.date,
-              articleSection:
-                n.stream === "release" ? "Releases" : n.stream === "policy" ? "Policy" : "Security",
-              description: n.body,
-            },
-          })),
-        }),
+        children: stringifyJsonLd(changelogItemListJsonLd(RELEASE_NOTES)),
       },
     ],
   }),
