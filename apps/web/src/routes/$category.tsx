@@ -18,6 +18,7 @@ import { HubHighlights, HubSignalStats } from "@/components/hub-highlights";
 import { CategoryRankingTable } from "@/components/category-ranking-table";
 import { hubHighlights, hubStats } from "@/lib/hub-highlights";
 import { stringifyJsonLd } from "@/lib/json-ld";
+import { categoryItemListJsonLd } from "@/lib/category-itemlist-jsonld-lib";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl, categoryAccent } from "@/lib/og-image";
 
@@ -51,19 +52,7 @@ export const Route = createFileRoute("/$category")({
       accent: categoryAccent(id),
     });
 
-    const itemList = {
-      "@context": "https://schema.org",
-      "@type": "ItemList",
-      name: `Claude ${label}`,
-      description,
-      numberOfItems: entries.length,
-      itemListElement: entries.slice(0, 30).map((e, i) => ({
-        "@type": "ListItem",
-        position: i + 1,
-        name: e.title,
-        url: absoluteUrl(`/entry/${e.category}/${e.slug}`),
-      })),
-    };
+    const itemList = categoryItemListJsonLd(label, description, entries, absoluteUrl);
     const breadcrumbs = {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
