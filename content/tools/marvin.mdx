@@ -1,0 +1,71 @@
+---
+title: Marvin
+slug: marvin
+category: tools
+description: Open-source Python framework from Prefect for structured outputs and agentic AI workflows, with tasks, specialized agents, threads, and extract/cast/classify/generate utilities.
+cardDescription: Python framework for structured outputs and agentic workflows with tasks, agents, and threads.
+seoTitle: Marvin Python framework for structured outputs and AI agents
+seoDescription: Marvin is an open-source Python framework from Prefect for structured outputs and agentic AI workflows, with tasks, specialized agents, threads, and extract, cast, classify, and generate utilities.
+author: PrefectHQ
+submittedBy: davion-knight
+submittedByUrl: "https://github.com/davion-knight"
+dateAdded: "2026-07-09"
+websiteUrl: "https://askmarvin.ai/"
+documentationUrl: "https://askmarvin.ai/"
+repoUrl: "https://github.com/PrefectHQ/marvin"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - agents
+  - python
+  - structured-output
+  - workflows
+  - llm
+keywords:
+  - marvin
+  - python ai framework
+  - structured output
+  - ai agents
+  - prefect marvin
+prerequisites:
+  - Python 3.10+ project and a dependency manager to install `marvin` (for example `uv add marvin` or `pip install marvin`) from PyPI.
+  - Model-provider credentials or local model configuration for the LLM the tasks and agents use.
+  - Clear task objectives, output types, and agent boundaries before delegating work to LLMs in application code.
+  - A plan for tools, memory, and thread state if orchestrating multi-step or multi-agent workflows.
+  - Observability and retention decisions for any run data, tool outputs, or persisted thread history.
+safetyNotes:
+  - Marvin agents can be given tools that run code, call external APIs, query databases, or take other actions; review each tool's side effects before assigning it to a task.
+  - Structured outputs (extract, cast, classify, generate) reduce parsing errors but do not prove that a model response is correct, complete, or safe for a downstream decision.
+  - Tool names, descriptions, task instructions, and thread history become model-facing context, so treat them as untrusted input that can steer agent behavior.
+  - Add human-in-the-loop approval, timeouts, and rollback policies before agents perform account, billing, data, or infrastructure actions.
+  - Keep production permissions narrower than notebook or demo examples, and scope model-provider and tool credentials to least privilege.
+privacyNotes:
+  - Marvin sends prompts, task instructions, inputs, tool arguments, tool results, and thread history to configured model providers when running tasks and agents.
+  - Extract, cast, and classify calls pass whatever unstructured input you provide to the model, which can include personal, customer, or proprietary data.
+  - Threads, memory, tool outputs, and any observability or logging destinations can retain prompts, outputs, and metadata outside the application runtime.
+  - Tools that read files, databases, or APIs can surface local or workspace data into prompts, outputs, and stored thread state, so apply normal retention and access-control policies.
+---
+
+## Editorial notes
+
+Marvin is useful when Claude-adjacent Python teams want to get structured results and small agentic workflows out of LLMs with an intuitive, typed API. It provides structured-output utilities (extract, cast, classify, generate) alongside Tasks, Agents, and Threads so developers can describe objectives, assign specialized agents, and orchestrate multi-step behavior in normal Python code.
+
+This is distinct from existing agent-framework entries. CrewAI focuses on role-based multi-agent crews, LangGraph focuses on graph and stateful workflows, Pydantic AI is the Pydantic team's type-safe framework, Griptape centers on structures and off-prompt memory, and DSPy focuses on programming and optimizing prompts. Marvin, from the Prefect team, pairs structured-output utilities with a task/agent/thread model for agentic workflows.
+
+## Source notes
+
+- The official repository describes Marvin as a Python framework for producing structured outputs and building agentic AI workflows.
+- Marvin provides an API for defining workflows and delegating work to LLMs: cast, classify, extract, and generate structured data; discrete observable Tasks that describe objectives; one or more specialized AI Agents per task; and Threads that combine tasks to orchestrate more complex behavior.
+- The structured-output utilities (`marvin.extract`, `marvin.cast`, `marvin.classify`, `marvin.generate`) are available at the top level of the package.
+- Marvin is installed from PyPI (for example `uv add marvin` or `pip install marvin`) and targets Python 3.10+.
+- The GitHub repository is `PrefectHQ/marvin`, is Apache-2.0 licensed, and is maintained by the Prefect team.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, skills, hooks, rules, commands, guides, open pull requests, and repository-wide content for `Marvin`, `marvin`, `askmarvin.ai`, `github.com/PrefectHQ/marvin`, `PrefectHQ/marvin`, `marvin.extract`, `marvin.classify`, and `structured outputs framework`. Existing agent-framework entries such as CrewAI, LangGraph, Pydantic AI, Griptape, and DSPy cover adjacent workflows, but no dedicated Marvin tools entry, Marvin source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.
