@@ -1,0 +1,75 @@
+---
+title: Docling
+slug: docling
+category: tools
+description: Open-source toolkit from the Docling project for parsing PDF, DOCX, PPTX, XLSX, HTML, images, and more into a unified DoclingDocument, with advanced PDF understanding, OCR, and exports to Markdown and JSON for gen AI and RAG workflows.
+cardDescription: Open-source document parser that converts PDF, Office, HTML, and images to Markdown/JSON for gen AI.
+seoTitle: Docling open-source document parsing toolkit for gen AI
+seoDescription: Docling is an open-source toolkit for parsing PDF, DOCX, PPTX, XLSX, HTML, and images into a unified DoclingDocument, with advanced PDF layout and table understanding, OCR, and Markdown/JSON export for gen AI and RAG pipelines.
+author: docling-project
+submittedBy: davion-knight
+submittedByUrl: "https://github.com/davion-knight"
+dateAdded: "2026-07-09"
+websiteUrl: "https://www.docling.ai/"
+documentationUrl: "https://docling-project.github.io/docling/"
+repoUrl: "https://github.com/docling-project/docling"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - documents
+  - rag
+  - pdf
+  - ocr
+  - python
+  - data-preparation
+keywords:
+  - docling
+  - document parsing
+  - pdf to markdown
+  - rag document preparation
+  - doclingdocument
+  - gen ai document processing
+robotsIndex: true
+robotsFollow: true
+prerequisites:
+  - Python 3.10+ project and a dependency manager to install `docling` from PyPI (a CLI and SDK are both provided).
+  - Enough local compute for the parsing models; advanced PDF understanding, OCR, and Visual Language Model features download model weights on first use.
+  - Network access for the initial model download, or a pre-fetched model cache for air-gapped and offline environments.
+  - A decision on which downstream gen AI or RAG pipeline will consume the exported Markdown, JSON, or DocTags output.
+safetyNotes:
+  - Docling parses documents you supply, including untrusted PDF, Office, HTML, and image files, so run it in an appropriate environment when processing files from unknown sources.
+  - Advanced understanding, OCR, and Visual Language Model or speech features download and run AI models; the first run fetches model weights over the network unless a cache is pre-provisioned.
+  - The optional Docling API server (docling-serve) exposes a network service, so secure and authenticate it before making it reachable beyond localhost.
+  - Local execution supports air-gapped and sensitive-data workflows, but exported content still flows into whatever downstream pipeline, model, or store you send it to.
+  - Pin the Docling version and review model sources when using it in automated pipelines.
+privacyNotes:
+  - Parsed documents can contain personal, confidential, or proprietary data; the DoclingDocument and exported Markdown, HTML, or JSON reproduce that content.
+  - Local execution keeps parsing on your machine, but downstream steps such as LLM calls, RAG stores, and logs that receive the exported content follow their own data-handling policies.
+  - First-run model downloads contact the model host (for example Hugging Face), so air-gapped setups should pre-fetch models to avoid outbound requests.
+  - Apply normal retention and access-control policies to exported documents, intermediate artifacts, and any logs produced by a parsing pipeline.
+---
+
+## Editorial notes
+
+Docling is useful when Claude-adjacent teams need to turn real-world documents into clean, structured text for gen AI and RAG. It parses many formats — including advanced PDF understanding — into a unified DoclingDocument, then exports to Markdown, HTML, DocTags, or lossless JSON that downstream models and pipelines can consume.
+
+This is distinct from existing agent-framework and workflow entries: rather than orchestrating agents, Docling focuses on the document-ingestion step that feeds them. It offers a CLI and Python SDK, plug-and-play integrations with LangChain, LlamaIndex, Crew AI, and Haystack, and local execution for sensitive or air-gapped data.
+
+## Source notes
+
+- The official repository describes Docling as simplifying document processing by parsing diverse formats, including advanced PDF understanding, and integrating with the generative AI ecosystem.
+- Supported inputs include PDF, DOCX, PPTX, XLSX, HTML, EPUB, images (PNG, TIFF, JPEG), audio, email formats, and more; advanced PDF understanding covers page layout, reading order, table structure, code, formulas, and image classification.
+- Output uses a unified DoclingDocument representation and can export to Markdown, HTML, DocTags, and lossless JSON.
+- Docling provides local execution for sensitive data and air-gapped environments, extensive OCR for scanned documents, support for Visual Language Models, and audio ASR.
+- Docling also ships an MCP server and an API server (docling-serve), and a simple CLI, alongside the Python SDK installed with `pip install docling`.
+- The GitHub repository is `docling-project/docling`, is MIT licensed, and targets Python 3.10+.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, skills, hooks, rules, commands, guides, open pull requests, and repository-wide content for `Docling`, `docling`, `docling-project`, `docling.ai`, `github.com/docling-project/docling`, `DoclingDocument`, and `document parsing for gen AI`. An existing tools entry lists Docling only as one supported document loader among many, and no dedicated Docling tools entry, Docling source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.
