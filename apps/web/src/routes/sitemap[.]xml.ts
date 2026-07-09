@@ -11,15 +11,7 @@ import { getIndexableTagGroups } from "@/lib/tags";
 import { isSitemapIndexableEntry } from "@/lib/sitemap-policy";
 import { COMPARISONS } from "@/data/comparisons";
 import { REPORT_PATHS } from "@/lib/data-reports";
-
-function escapeXml(value: string) {
-  return value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&apos;");
-}
+import { escapeXml } from "@/lib/xml-escape-lib";
 
 function urlItem(pathname: string, priority: string, changefreq = "weekly", lastmodInput?: string) {
   const lastmod = String(lastmodInput || atlasRegistry.generatedAt || "").slice(0, 10);
