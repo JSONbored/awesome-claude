@@ -11,6 +11,7 @@ import { NewsletterInline } from "@/components/newsletter-inline";
 import { HubHighlights, HubSignalStats } from "@/components/hub-highlights";
 import { hubHighlights, hubStats, trustPosture } from "@/lib/hub-highlights";
 import { stringifyJsonLd } from "@/lib/json-ld";
+import { platformCategoryItemListJsonLd } from "@/lib/platform-category-itemlist-jsonld-lib";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
 
@@ -44,19 +45,13 @@ export const Route = createFileRoute("/for/$platform/$category")({
     const title = `Claude ${cLabel} for ${pLabel} — HeyClaude`;
     const description = `${entries.length} source-backed Claude ${cLabel} that work with ${pLabel}, curated and metadata-reviewed in HeyClaude.`;
     const ogImage = ogImageUrl({ title: `${cLabel} for ${pLabel}`, eyebrow: pLabel, description });
-    const itemList = {
-      "@context": "https://schema.org",
-      "@type": "ItemList",
-      name: `Claude ${cLabel} for ${pLabel}`,
+    const itemList = platformCategoryItemListJsonLd(
+      pLabel,
+      cLabel,
       description,
-      numberOfItems: entries.length,
-      itemListElement: entries.slice(0, 30).map((e, i) => ({
-        "@type": "ListItem",
-        position: i + 1,
-        name: e.title,
-        url: absoluteUrl(`/entry/${e.category}/${e.slug}`),
-      })),
-    };
+      entries,
+      absoluteUrl,
+    );
     const breadcrumbs = {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
