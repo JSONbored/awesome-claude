@@ -1,12 +1,8 @@
 // Pure builder for a tag page's schema.org ItemList JSON-LD, split out of the
 // route head() so the name/count and the first-30 slice cap can be unit-tested.
-// The absolute-URL resolver is injected.
+// The ListItem mapping is delegated to the shared entry ItemList builder.
 
-type TagEntryLike = {
-  title: string;
-  category: string;
-  slug: string;
-};
+import { entryItemListJsonLd, type ItemListEntryRef } from "@/lib/entry-itemlist-jsonld-lib";
 
 /**
  * schema.org ItemList JSON-LD for a tag's resources. numberOfItems reflects the
@@ -15,20 +11,13 @@ type TagEntryLike = {
 export function tagItemListJsonLd(
   tagName: string,
   description: string,
-  entries: TagEntryLike[],
+  entries: ItemListEntryRef[],
   absoluteUrl: (path: string) => string,
 ) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    name: `Claude resources tagged ${tagName}`,
+  return entryItemListJsonLd(
+    `Claude resources tagged ${tagName}`,
     description,
-    numberOfItems: entries.length,
-    itemListElement: entries.slice(0, 30).map((entry, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      name: entry.title,
-      url: absoluteUrl(`/entry/${entry.category}/${entry.slug}`),
-    })),
-  };
+    entries,
+    absoluteUrl,
+  );
 }
