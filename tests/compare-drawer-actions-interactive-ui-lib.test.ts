@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
 import {
   compareDrawerActionsForEntry,
+  compareDrawerActionsInteractiveActionCells,
+  compareDrawerActionsInteractiveActionRowDiverges,
   compareDrawerActionsInteractiveUiState,
 } from "@/lib/compare-drawer-actions-interactive-ui-lib";
 
@@ -62,12 +64,16 @@ describe("compare drawer actions interactive ui lib", () => {
   });
 
   it("highlights diverging next-action rows for mixed compare columns", () => {
-    const state = compareDrawerActionsInteractiveUiState([
-      entry({ installCommand: "npm i fixture" }),
-      entry(),
-    ]);
+    const entries = [entry({ installCommand: "npm i fixture" }), entry()];
+    const state = compareDrawerActionsInteractiveUiState(entries);
     expect(state.actionRowDiverges).toBe(true);
     expect(state.actionCells).toHaveLength(2);
+    expect(state.actionRowDiverges).toBe(
+      compareDrawerActionsInteractiveActionRowDiverges(entries),
+    );
+    expect(state.actionCells).toEqual(
+      compareDrawerActionsInteractiveActionCells(entries),
+    );
     expect(compareDrawerActionsForEntry(entry(), state.actionCells)).toEqual(
       expect.arrayContaining([expect.objectContaining({ id: "dossier" })]),
     );

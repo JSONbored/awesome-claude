@@ -1,21 +1,31 @@
 import type { Entry } from "@/types/registry";
 import {
   compareDrawerActionCells,
-  compareDrawerActionsDiverge,
   type CompareDrawerActionCell,
 } from "@/lib/compare-drawer-actions-ui-lib";
+import { compareDrawerPresentationActionRowDiverges } from "@/lib/compare-drawer-presentation-ui-lib";
 
 export type CompareDrawerActionsInteractiveUiState = {
   actionRowDiverges: boolean;
   actionCells: CompareDrawerActionCell[];
 };
 
+export function compareDrawerActionsInteractiveActionRowDiverges(entries: Entry[]): boolean {
+  return compareDrawerPresentationActionRowDiverges(entries);
+}
+
+export function compareDrawerActionsInteractiveActionCells(
+  entries: Entry[],
+): CompareDrawerActionCell[] {
+  return compareDrawerActionCells(entries);
+}
+
 export function compareDrawerActionsInteractiveUiState(
   entries: Entry[],
 ): CompareDrawerActionsInteractiveUiState {
   return {
-    actionRowDiverges: compareDrawerActionsDiverge(entries),
-    actionCells: compareDrawerActionCells(entries),
+    actionRowDiverges: compareDrawerActionsInteractiveActionRowDiverges(entries),
+    actionCells: compareDrawerActionsInteractiveActionCells(entries),
   };
 }
 
