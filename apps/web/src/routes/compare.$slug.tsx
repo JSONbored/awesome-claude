@@ -5,6 +5,7 @@ import { ComparisonTable } from "@/components/comparison-table";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { stringifyJsonLd } from "@/lib/json-ld";
+import { breadcrumbListJsonLd } from "@/lib/breadcrumb-jsonld-lib";
 import { comparisonItemListJsonLd } from "@/lib/comparison-itemlist-jsonld-lib";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
@@ -34,15 +35,11 @@ export const Route = createFileRoute("/compare/$slug")({
       description: comparison.seoDescription,
     });
     const itemList = comparisonItemListJsonLd(comparison, entries, absoluteUrl);
-    const breadcrumbs = {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Directory", item: absoluteUrl("/browse") },
-        { "@type": "ListItem", position: 2, name: "Compare", item: absoluteUrl("/compare") },
-        { "@type": "ListItem", position: 3, name: comparison.heading, item: url },
-      ],
-    };
+    const breadcrumbs = breadcrumbListJsonLd([
+      { name: "Directory", item: absoluteUrl("/browse") },
+      { name: "Compare", item: absoluteUrl("/compare") },
+      { name: comparison.heading, item: url },
+    ]);
     return {
       meta: [
         { title: `${comparison.title} — HeyClaude` },
