@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { OG_TEXT_LIMITS, clampOgText, safeAccent } from "@/lib/og-image";
+import { resolveOgQueryFields } from "@/lib/og-query-fields-lib";
 import { renderOgPng } from "@/lib/og-render.server";
 import { siteConfig } from "@/lib/site";
 
@@ -14,22 +14,13 @@ export const Route = createFileRoute("/og/")({
     handlers: {
       GET: async ({ request }) => {
         const url = new URL(request.url);
-        const title = clampOgText(
-          url.searchParams.get("title") ?? "HeyClaude",
-          OG_TEXT_LIMITS.title,
+        // Defaults live in resolveOgQueryFields: title/eyebrow -> "HeyClaude",
+        // description -> subtitle -> the site tagline, all clamped; accent is
+        // user-controlled and clamped to a safe hex before it reaches the card.
+        const { title, description, eyebrow, accent } = resolveOgQueryFields(
+          url.searchParams,
+          siteConfig.description,
         );
-        // Default the description to the site tagline so a bare /og card (e.g. the homepage og:image)
-        // says what HeyClaude IS, not just its name. A caller that passes its own description/subtitle
-        // (hub/list pages) overrides it.
-        const rawDescription =
-          url.searchParams.get("description") ?? url.searchParams.get("subtitle") ?? siteConfig.description;
-        const description = clampOgText(rawDescription, OG_TEXT_LIMITS.description);
-        const eyebrow = clampOgText(
-          url.searchParams.get("eyebrow") ?? "HeyClaude",
-          OG_TEXT_LIMITS.eyebrow,
-        );
-        // accent is user-controlled; clamp to a safe hex before it reaches the card markup.
-        const accent = safeAccent(url.searchParams.get("accent"));
 
         const image = await renderOgPng({
           eyebrow,
