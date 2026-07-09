@@ -11,6 +11,7 @@ import { NewsletterInline } from "@/components/newsletter-inline";
 import { HubHighlights, HubSignalStats } from "@/components/hub-highlights";
 import { hubHighlights, hubStats, trustPosture } from "@/lib/hub-highlights";
 import { stringifyJsonLd } from "@/lib/json-ld";
+import { breadcrumbListJsonLd } from "@/lib/breadcrumb-jsonld-lib";
 import { platformItemListJsonLd } from "@/lib/platform-itemlist-jsonld-lib";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
@@ -34,15 +35,11 @@ export const Route = createFileRoute("/for/$platform")({
     const description = `${entries.length} source-backed Claude resources that work with ${label}: MCP servers, agents, skills, hooks, commands, and rules, curated in HeyClaude.`;
     const ogImage = ogImageUrl({ title: `Claude for ${label}`, eyebrow: "Platform", description });
     const itemList = platformItemListJsonLd(label, description, entries, absoluteUrl);
-    const breadcrumbs = {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Directory", item: absoluteUrl("/browse") },
-        { "@type": "ListItem", position: 2, name: "Platforms", item: absoluteUrl("/for") },
-        { "@type": "ListItem", position: 3, name: label, item: url },
-      ],
-    };
+    const breadcrumbs = breadcrumbListJsonLd([
+      { name: "Directory", item: absoluteUrl("/browse") },
+      { name: "Platforms", item: absoluteUrl("/for") },
+      { name: label, item: url },
+    ]);
     return {
       meta: [
         { title },
