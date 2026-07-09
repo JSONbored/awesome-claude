@@ -23,18 +23,13 @@ submittedAt: "2026-07-08"
 repoUrl: "https://github.com/TerminallyLazy/Tree-Ring-Memory"
 documentationUrl: "https://github.com/TerminallyLazy/Tree-Ring-Memory/blob/main/docs/integrations/agent-skill.md"
 websiteUrl: "https://terminallylazy.github.io/Tree-Ring-Memory/"
-downloadUrl: "https://github.com/TerminallyLazy/Tree-Ring-Memory/archive/refs/heads/main.zip"
-installable: true
-installCommand: "cargo install --git https://github.com/TerminallyLazy/Tree-Ring-Memory tree-ring-memory-cli --locked"
+installable: false
 usageSnippet: >-
   Use Tree Ring Memory when an agent needs project-scoped recall, explicit
   memory capture, source-linked evidence, privacy-aware forgetting, DOX/Revolve
   import previews, or a portable memory skill for another agent host.
 copySnippet: |-
-  # Install the Rust-native CLI from source with Cargo
-  cargo install --git https://github.com/TerminallyLazy/Tree-Ring-Memory tree-ring-memory-cli --locked
-
-  # Initialize local project memory and try recall
+  # Initialize local project memory after reviewing the upstream source and install guidance
   tree-ring init
   tree-ring remember "Use project-scoped recall before risky release changes." --event-type lesson --scope project
   tree-ring recall "release changes"
@@ -59,11 +54,12 @@ testedPlatforms:
   - OpenCode
   - Generic AGENTS
 prerequisites:
-  - "Rust/Cargo for source installs unless using a future verified release archive path."
+  - "Review upstream source, release, and install guidance before installing the Rust CLI; this listing does not provide a verified package artifact."
   - "A project or agent workflow where durable memory should be explicit, scoped, and auditable."
   - "A local memory root such as `.tree-ring/` for project-scoped stores, skill guidance, and CLI references."
   - "Review of generated `.tree-ring/SKILL.md`, `.tree-ring/AGENTS.md`, and `.tree-ring/CLI.md` before wiring them into an agent host."
 safetyNotes:
+  - "This listing intentionally does not provide a copy-paste install command or mutable branch archive; review and pin upstream source or use a verified release before installing executable code."
   - "The repository includes an optional shell installer; review `install.sh` before running it in locked-down or production environments."
   - "Memory writes are explicit through commands such as `remember`, `evidence`, `import`, consolidation, maintenance, TUI actions, or deliberate agent calls; do not configure agents to store everything by default."
   - "Run `tree-ring dox sync` and `tree-ring revolve sync` with `--dry-run` first because adapters summarize source artifacts into memory events."
@@ -132,13 +128,9 @@ re-check the release and CLI help before production integration.
 
 ## Core Workflow
 
-Install the CLI from source with Cargo:
+Review the upstream repository and install guidance before installing the CLI. This listing does not provide a copy-paste source install command or mutable branch archive because executable package sources should be pinned to a reviewed revision or distributed as verified release artifacts.
 
-```bash
-cargo install --git https://github.com/TerminallyLazy/Tree-Ring-Memory tree-ring-memory-cli --locked
-```
-
-Initialize local memory and try recall:
+After installing from a source you have reviewed, initialize local memory and try recall:
 
 ```bash
 tree-ring init
