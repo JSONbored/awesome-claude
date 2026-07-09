@@ -6,32 +6,13 @@ import {
   savedSearchAlertTargetId,
 } from "@/lib/saved-search-alerts";
 import { savedSearchSignature } from "@/lib/saved-search-signature-lib";
+import { eventToAlert } from "@/lib/watch-alert-lib";
 import { entryDetailUrl, eventTargetId, type RegistryEvent } from "@/lib/watch-events-lib";
+import type { Alert, AlertSeverity, WatchKind, WatchTarget } from "@/lib/watch-types-lib";
 import type { RegistryEntry } from "@/data/entry-normalize";
 import type { Entry } from "@/types/registry";
 
-export type WatchKind = "entry" | "validator" | "changelog-stream" | "integration" | "saved-search";
-
-export interface WatchTarget {
-  id: string;
-  kind: WatchKind;
-  label: string;
-  href?: string;
-  addedAt: string;
-}
-
-export type AlertSeverity = "info" | "warning" | "blocker";
-
-export interface Alert {
-  id: string;
-  targetId: string;
-  kind: WatchKind;
-  title: string;
-  body: string;
-  severity: AlertSeverity;
-  href?: string;
-  date: string;
-}
+export type { Alert, AlertSeverity, WatchKind, WatchTarget };
 
 interface WatchCtx {
   targets: WatchTarget[];
@@ -74,27 +55,6 @@ function saveState(state: StoredState) {
   } catch {
     /* noop */
   }
-}
-
-function eventToAlert(event: RegistryEvent, target: WatchTarget): Alert | null {
-  const targetId = eventTargetId(event);
-  if (!targetId || targetId !== target.id || !event.date) return null;
-  const action =
-    event.action === "removed" ? "removed" : event.action === "added" ? "added" : "updated";
-  const label = event.title || target.label;
-  return {
-    id: event.id || `${target.id}:${event.date}:${action}`,
-    targetId: target.id,
-    kind: target.kind,
-    title: `${label} ${action}`,
-    body:
-      action === "removed"
-        ? "This watched registry entry was removed from the source content."
-        : "This watched registry entry changed in the source content.",
-    severity: action === "removed" ? "warning" : "info",
-    href: target.href,
-    date: event.date,
-  };
 }
 
 async function loadEventEntries(events: RegistryEvent[]) {
