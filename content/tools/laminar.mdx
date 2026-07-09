@@ -1,0 +1,102 @@
+---
+title: Laminar
+slug: laminar
+category: tools
+description: Open-source observability platform purpose-built for AI agents, with OpenTelemetry-native tracing, plain-English signals, an evals SDK and CLI, SQL dashboards, dataset annotation, and MCP/CLI access, self-hostable with Apache-2.0 SDKs for Python and TypeScript.
+cardDescription: Open-source AI-agent observability with tracing, evals, signals, SQL dashboards, and datasets.
+seoTitle: Laminar open-source observability platform for AI agents
+seoDescription: Laminar is an open-source observability platform purpose-built for AI agents, with OpenTelemetry-native tracing, plain-English signals, an evals SDK and CLI, SQL dashboards, dataset annotation, and MCP/CLI access for coding agents.
+author: lmnr-ai
+submittedBy: davion-knight
+submittedByUrl: "https://github.com/davion-knight"
+dateAdded: "2026-07-09"
+websiteUrl: "https://laminar.sh/"
+documentationUrl: "https://laminar.sh/docs"
+repoUrl: "https://github.com/lmnr-ai/lmnr"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - observability
+  - tracing
+  - evals
+  - ai-agents
+  - opentelemetry
+  - datasets
+keywords:
+  - laminar
+  - ai agent observability
+  - llm tracing
+  - opentelemetry llm
+  - agent evals
+  - lmnr
+robotsIndex: true
+robotsFollow: true
+prerequisites:
+  - Python or TypeScript project and a package manager to install the SDK (`lmnr` for Python or `@lmnr-ai/lmnr` for TypeScript).
+  - A Laminar destination for traces and data, either a self-hosted instance or Laminar Cloud, plus the project key it expects.
+  - The frameworks or SDKs you want traced (for example Vercel AI SDK, LangChain, OpenAI, Anthropic, Gemini, Browser Use, or Stagehand).
+  - For self-hosting, Docker and a place to run the platform and store trace and event data.
+  - A plan for who can query traces, run evals, and view dashboards, and how long trace data is retained.
+safetyNotes:
+  - Laminar captures traces of your AI application, including prompts, tool calls, and outputs, so decide what to instrument and keep sensitive fields out of traces where they are not needed.
+  - Self-hosting exposes a platform endpoint and console; run it on a trusted network or behind authentication, and do not expose an unauthenticated instance publicly.
+  - SQL dashboards and MCP/CLI access let agents and users query trace and event data; scope who can run those queries and connect a coding agent only to data it should see.
+  - Signals evaluate agent runs and can send alerts (for example to Slack), so confirm alert destinations and the data included in them before enabling.
+  - Treat trace data and eval results as inputs for review, not proof that an agent is correct or safe, and keep production access narrower than local examples.
+privacyNotes:
+  - Traces can contain prompts, inputs, tool arguments, outputs, and metadata from your AI application; this data is sent to the Laminar instance or cloud you configure.
+  - Datasets and data-annotation features store selected trace data for evals, so apply retention and access-control policies to those datasets.
+  - If you use Laminar Cloud rather than self-hosting, trace and eval data is processed under its terms; self-hosting keeps that data in your own environment.
+  - Project keys, dashboard queries, and exported eval reports should be kept out of version control and access-controlled like other operational data.
+---
+
+## Editorial notes
+
+Laminar is useful when Claude-adjacent teams need to see what their AI agents actually did — the traces, tool calls, and outcomes across a run — and to evaluate and debug that behavior over time. It is an open-source observability platform purpose-built for AI agents, with OpenTelemetry-native tracing, evaluations, and dashboards, and it is self-hostable with Apache-2.0 SDKs for Python and TypeScript.
+
+This is distinct from the agent frameworks, structured-output libraries, and gateway in the directory: rather than building or routing agents, Laminar is the observability and evaluation layer those workflows report into. It also exposes MCP and CLI access so a coding agent can query traces directly.
+
+## Key capabilities
+
+- **OpenTelemetry-native tracing** — an OTel-based SDK that can auto-trace popular frameworks (Vercel AI SDK, LangChain, OpenAI, Anthropic, Gemini, Browser Use, Stagehand, and more) with minimal setup.
+- **Signals** — describe agent behavior you want to watch in plain English (for example, an agent stuck in a loop); Laminar reads runs and can alert you (for example in Slack) when it happens.
+- **Evals** — an unopinionated, extensible SDK and CLI for running evaluations locally or in CI/CD, with a UI to visualize and compare results.
+- **SQL dashboards** — a dashboard builder for traces, metrics, and events, including custom SQL queries.
+- **Datasets and annotation** — a data-annotation UI to build datasets from traces for evaluations.
+- **MCP and CLI access** — query traces, spans, metrics, and events with SQL, so a coding agent can investigate and debug issues from your trace data.
+- **Performance** — trace compression, a realtime engine for viewing traces as they happen, full-text search over span data, and a gRPC exporter for tracing data.
+- **Self-hostable** — run the platform yourself, or use Laminar Cloud.
+
+## How teams use it
+
+- **Agent debugging** — inspect the trace of a failed or surprising agent run to see the exact tool calls and outputs.
+- **Regression evals** — run evaluations in CI/CD to catch quality regressions before shipping agent changes.
+- **Behavior monitoring** — use signals to get alerted when an agent exhibits a defined failure mode in production.
+- **Operational dashboards** — build SQL-backed dashboards over traces, metrics, and events for ongoing visibility.
+- **Dataset curation** — annotate real traces to build datasets that feed evaluations and improvements.
+
+## Getting started
+
+Laminar is open source and works with a self-hosted instance or Laminar Cloud. Add the SDK to your
+project — `lmnr` for Python or `@lmnr-ai/lmnr` for TypeScript — and initialize it so the
+OpenTelemetry-native tracer sends spans to your Laminar destination. From there you can auto-instrument
+supported frameworks, run evals with the SDK or CLI, define signals, and build SQL dashboards. For
+self-hosting, run the platform with Docker per the documentation and point the SDK at your instance.
+
+## Source notes
+
+- The official repository describes Laminar as an open-source observability platform purpose-built for AI agents.
+- Documented capabilities include OpenTelemetry-native tracing with one-line auto-instrumentation for frameworks such as Vercel AI SDK, Browser Use, Stagehand, LangChain, OpenAI, Anthropic, and Gemini; plain-English signals with alerting; an evals SDK and CLI with a comparison UI; SQL dashboards; dataset annotation; and MCP/CLI access for querying traces with SQL.
+- The repository also notes performance features including trace compression, a realtime trace-viewing engine, full-text span search, and a gRPC exporter.
+- The SDKs are published as `lmnr` on PyPI and `@lmnr-ai/lmnr` on npm, both Apache-2.0 licensed, with documentation at laminar.sh.
+- The GitHub repository is `lmnr-ai/lmnr`, and a managed Laminar Cloud is available separately from the self-hosted open-source platform.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, skills, hooks, rules, commands, guides, open pull requests, and repository-wide content for `Laminar`, `lmnr`, `lmnr-ai`, `laminar.sh`, `github.com/lmnr-ai/lmnr`, `@lmnr-ai/lmnr`, `agent observability`, and `llm tracing`. Existing entries cover agent frameworks, structured-output libraries, and gateways, and reference observability in passing, but no dedicated Laminar tools entry, Laminar source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.
