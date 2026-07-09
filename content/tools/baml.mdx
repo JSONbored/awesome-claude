@@ -1,0 +1,75 @@
+---
+title: BAML
+slug: baml
+category: tools
+description: Open-source domain-specific language from BoundaryML for writing typed LLM functions with structured inputs and outputs, a VSCode playground, and generated clients you can call from Python, TypeScript, Go, and more.
+cardDescription: Open-source language for typed LLM functions with structured I/O and generated clients for many languages.
+seoTitle: BAML typed language for LLM functions from BoundaryML
+seoDescription: BAML is an open-source domain-specific language from BoundaryML for writing typed LLM functions with structured inputs and outputs, static analysis, a VSCode playground, and generated clients callable from Python, TypeScript, Go, and more.
+author: BoundaryML
+submittedBy: davion-knight
+submittedByUrl: "https://github.com/davion-knight"
+dateAdded: "2026-07-09"
+websiteUrl: "https://www.boundaryml.com/"
+documentationUrl: "https://docs.boundaryml.com/"
+repoUrl: "https://github.com/BoundaryML/baml"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - dsl
+  - structured-output
+  - llm
+  - typed
+  - codegen
+  - agents
+keywords:
+  - baml
+  - boundaryml
+  - typed llm functions
+  - structured output dsl
+  - llm prompt language
+  - baml playground
+robotsIndex: true
+robotsFollow: true
+prerequisites:
+  - A way to install the BAML toolchain (for example the CLI via Homebrew) and, for embedding, the language SDK such as `@boundaryml/baml` for TypeScript or `baml-py` for Python.
+  - Model-provider credentials for the LLM providers your BAML functions call.
+  - Defined input and output types for each BAML function before generating clients.
+  - A build step to regenerate BAML clients when function definitions change, and a place to review the generated code.
+safetyNotes:
+  - BAML functions call LLM providers using the credentials you configure, so scope those provider keys to the minimum needed and keep them out of source control.
+  - BAML generates client code that runs inside your application; review generated clients before shipping, and treat typed outputs as untrusted input for account, billing, data, or infrastructure actions.
+  - Static typing and schema validation reduce parsing errors, but they do not guarantee that a model's answer is correct, complete, or safe.
+  - The BAML CLI and VSCode extension run locally and write generated code into your project; run them in an environment where writing those files is expected.
+  - Keep production usage and permissions narrower than playground or example projects.
+privacyNotes:
+  - BAML functions send prompts and inputs to the configured model providers, which process that data under their own data-handling terms.
+  - Prompt templates, test inputs, and example data can contain personal or proprietary information, so keep them and provider credentials out of version control.
+  - Generated outputs, and any logging or tracing you add around BAML calls, can retain prompts and results outside the library.
+  - Apply normal retention and access-control policies to BAML source files, generated clients, and test fixtures that include real data.
+---
+
+## Editorial notes
+
+BAML is useful when Claude-adjacent teams want LLM calls to behave like typed functions rather than loose prompt strings. You define a function's inputs, output schema, and prompt in BAML, then generate clients that your application code calls in Python, TypeScript, Go, and more, so structured outputs and types are part of the toolchain instead of hand-written parsing.
+
+This is distinct from existing entries: rather than an agent framework or a runtime library, BAML is a domain-specific language and toolchain (with a VSCode playground and generated clients) for authoring and testing typed LLM functions that other frameworks and application code can call.
+
+## Source notes
+
+- The official repository describes BAML ("Basically A Made-up Language") as the programming language for agents, designed so agents make fewer mistakes.
+- BAML looks like TypeScript, is statically typed, and provides typed, statically analyzed errors for LLM function definitions.
+- BAML can run standalone or be called from other languages, including Python, TypeScript, and Go.
+- The toolchain includes a CLI (installable via Homebrew), project scaffolding (`baml init`), and a VSCode extension / playground for editing and testing functions.
+- Language SDKs are published as `@boundaryml/baml` on npm and `baml-py` on PyPI, with documentation at docs.boundaryml.com.
+- The GitHub repository is `BoundaryML/baml`, is Apache-2.0 licensed per its LICENSE file, and is maintained by BoundaryML.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, skills, hooks, rules, commands, guides, open pull requests, and repository-wide content for `BAML`, `baml`, `boundaryml`, `boundaryml.com`, `github.com/BoundaryML/baml`, `@boundaryml/baml`, `baml-py`, and `typed llm functions`. Existing entries such as Instructor-style and DSPy-style tools cover adjacent structured-output needs, but no dedicated BAML tools entry, BAML source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.
