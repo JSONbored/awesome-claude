@@ -1,10 +1,6 @@
 import * as React from "react";
 
-type Theme = "light" | "dark";
-
-function isTheme(value: string | null): value is Theme {
-  return value === "light" || value === "dark";
-}
+import { isTheme, type Theme } from "@/lib/theme-lib";
 
 function readStoredTheme(): Theme | null {
   if (typeof window === "undefined") return null;
