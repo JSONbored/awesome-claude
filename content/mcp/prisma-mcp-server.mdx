@@ -1,0 +1,151 @@
+---
+title: Prisma MCP Server for Claude
+slug: prisma-mcp-server
+category: mcp
+description: >-
+  Manage Prisma Postgres databases directly from Claude — create and list databases, manage
+  backups and connection strings, run SQL queries, introspect schemas, and search Prisma docs —
+  with the official Prisma remote MCP server.
+cardDescription: "Official Prisma MCP: manage Prisma Postgres databases, run SQL, and search docs inside Claude."
+seoTitle: "Prisma MCP Server for Claude — Manage Prisma Postgres from Claude"
+seoDescription: "Connect Claude to Prisma's official remote MCP server: create and manage Prisma Postgres databases, backups, and connection strings, run SQL, introspect schemas, and search Prisma documentation — directly in Claude Code or Desktop."
+author: Prisma
+authorProfileUrl: "https://github.com/prisma"
+dateAdded: "2026-07-09"
+documentationUrl: "https://www.prisma.io/docs/postgres/integrations/mcp-server"
+websiteUrl: "https://www.prisma.io"
+repoUrl: "https://github.com/prisma/prisma"
+retrievalSources:
+  - "https://www.prisma.io/docs/postgres/integrations/mcp-server"
+  - "https://github.com/prisma/prisma"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add --transport http prisma https://mcp.prisma.io/mcp"
+usageSnippet: >-
+  Ask Claude to spin up a new Prisma Postgres database, list your existing databases, create a
+  backup, or run a SQL query — Claude calls the Prisma MCP tools against the workspace you authorize.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "Prisma": {
+        "url": "https://mcp.prisma.io/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "Prisma": {
+        "url": "https://mcp.prisma.io/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A Prisma Console account — the server authenticates on first use so Claude can access the workspace you choose."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The server can perform account-write actions on Prisma Postgres: creating and deleting databases, managing backups and recovery, and creating or deleting connection strings. Review Claude's proposed tool calls before approving them."
+  - "The ExecuteSqlQuery tool runs SQL against your database and can modify data. Scope access to the workspace you intend Claude to manage."
+privacyNotes:
+  - "On first connection the server authenticates with Prisma Console and you select which workspace to grant access to; requests are sent to Prisma's hosted infrastructure at mcp.prisma.io."
+  - "Connection strings returned by the server contain database credentials — handle them like any other secret."
+tags:
+  - prisma
+  - postgres
+  - database
+  - orm
+  - developer-tools
+  - backend
+keywords:
+  - prisma mcp server
+  - prisma postgres claude
+  - manage database from claude
+  - prisma mcp claude code
+  - run sql from claude mcp
+  - prisma orm mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Prisma MCP Server** is the official Model Context Protocol server from Prisma. It lets AI
+coding assistants — Claude, Cursor, and other MCP clients — manage
+[Prisma Postgres](https://www.prisma.io/postgres) databases through natural language. Instead of
+switching to a dashboard or CLI, you can ask Claude to provision a database, take a backup, or run
+a query, and it calls the corresponding Prisma tool against the workspace you authorize.
+
+The server is hosted remotely at `https://mcp.prisma.io/mcp` and uses the standard HTTP transport.
+On first use it authenticates with the Prisma Console so Claude can act on the workspace you select.
+
+## Key capabilities
+
+The server exposes tools across five areas:
+
+- **Database management** — `CreateDatabaseTool`, `ListDatabasesTool`, `DeleteDatabaseTool`.
+- **Backups & recovery** — `CreateBackupTool`, `ListBackupsTool`, `CreateRecoveryTool`.
+- **Connection strings** — `CreateConnectionStringTool`, `ListConnectionStringsTool`,
+  `DeleteConnectionStringTool`.
+- **Queries & schema** — `ExecuteSqlQueryTool`, `IntrospectSchemaTool`.
+- **Documentation** — `search_prisma_documentation` for up-to-date Prisma docs.
+
+## How it compares
+
+| Server | Manages hosted DB | Run SQL | Backups | Docs search | Hosted |
+|---|---|---|---|---|---|
+| **Prisma MCP** | Yes (Prisma Postgres) | Yes | Yes | Yes | Yes |
+| Supabase MCP | Yes (Supabase) | Yes | Limited | No | Yes |
+| Neon MCP | Yes (Neon) | Yes | Yes | No | Yes |
+
+Prisma's MCP is notable for pairing full Prisma Postgres lifecycle management (create, back up,
+recover, delete) with schema introspection and first-party documentation search in one server.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add --transport http prisma https://mcp.prisma.io/mcp
+```
+
+Then run `/mcp` in a Claude Code session to complete authentication and verify the connection.
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "Prisma": {
+      "url": "https://mcp.prisma.io/mcp"
+    }
+  }
+}
+```
+
+Restart Claude Desktop after saving, then authenticate with Prisma Console when prompted.
+
+## Requirements
+
+- A Prisma Console account (authenticated on first connection).
+- An MCP client (Claude Code or Claude Desktop).
+
+## Security
+
+- The server performs real account-write actions — creating and deleting databases, managing
+  backups, and running SQL — so review each proposed tool call before approving it.
+- Access is scoped to the workspace you select during authentication.
+
+## Source Verification Notes
+
+Verified on **2026-07-09**:
+
+- Prisma's official documentation at `prisma.io/docs/postgres/integrations/mcp-server` confirms the
+  remote endpoint `https://mcp.prisma.io/mcp`, the HTTP transport, the Claude/Cursor JSON config and
+  `claude mcp add --transport http` command, and that the server authenticates with Prisma Console
+  on first use.
+- The documentation enumerates the tool set (database management, backups/recovery, connection
+  strings, SQL execution, schema introspection, and documentation search).
+- The `github.com/prisma/prisma` repository (Apache-2.0) is Prisma's official toolkit, confirming
+  the organization behind the server.
