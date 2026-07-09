@@ -38,6 +38,7 @@ import { ComparisonTable } from "@/components/comparison-table";
 import { compareEntryInteractiveUiState } from "@/lib/compare-entry-interactive-ui-lib";
 import { buildEntryJsonLd } from "@heyclaude/registry";
 import { stringifyJsonLd } from "@/lib/json-ld";
+import { entryBreadcrumbJsonLd } from "@/lib/entry-breadcrumb-jsonld-lib";
 import { entryWebPageJsonLd } from "@/lib/entry-webpage-jsonld-lib";
 import { hasSchemaDetails } from "@/lib/entry-schema-details-lib";
 import { booleanLabel } from "@/lib/boolean-label-lib";
@@ -164,20 +165,7 @@ export const Route = createFileRoute("/entry/$category/$slug")({
     const path = `/entry/${params.category}/${params.slug}`;
     const url = absoluteUrl(path);
     const ld = entryWebPageJsonLd(e, url);
-    const breadcrumbs = {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Directory", item: absoluteUrl("/browse") },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: e.category,
-          item: absoluteUrl(`/${e.category}`),
-        },
-        { "@type": "ListItem", position: 3, name: e.title, item: url },
-      ],
-    };
+    const breadcrumbs = entryBreadcrumbJsonLd(e, url, absoluteUrl);
     const ogUrl = absoluteUrl(`/og/${params.category}/${params.slug}`);
     const ogTitle = `${e.title} — HeyClaude`;
     const metaDescription = clampDescription(e.seoDescription ?? e.description);
