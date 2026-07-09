@@ -5,6 +5,7 @@ import { ComparisonTable } from "@/components/comparison-table";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { stringifyJsonLd } from "@/lib/json-ld";
+import { comparisonItemListJsonLd } from "@/lib/comparison-itemlist-jsonld-lib";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
 import { getComparison } from "@/data/comparisons";
@@ -32,19 +33,7 @@ export const Route = createFileRoute("/compare/$slug")({
       eyebrow: "Compare",
       description: comparison.seoDescription,
     });
-    const itemList = {
-      "@context": "https://schema.org",
-      "@type": "ItemList",
-      name: comparison.heading,
-      description: comparison.seoDescription,
-      numberOfItems: entries.length,
-      itemListElement: entries.map((e, i) => ({
-        "@type": "ListItem",
-        position: i + 1,
-        name: e.title,
-        url: absoluteUrl(`/entry/${e.category}/${e.slug}`),
-      })),
-    };
+    const itemList = comparisonItemListJsonLd(comparison, entries, absoluteUrl);
     const breadcrumbs = {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
