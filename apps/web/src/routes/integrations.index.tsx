@@ -7,6 +7,9 @@ import { breadcrumbScript, itemListScript } from "@/lib/seo-jsonld";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
 
+// Same card for og:image and twitter:image; the inputs are static.
+const OG_IMAGE = ogImageUrl({ title: "HeyClaude integrations", eyebrow: "Integrations" });
+
 export const Route = createFileRoute("/integrations/")({
   head: () => ({
     meta: [
@@ -24,14 +27,14 @@ export const Route = createFileRoute("/integrations/")({
       { property: "og:url", content: absoluteUrl("/integrations") },
       {
         property: "og:image",
-        content: ogImageUrl({ title: "HeyClaude integrations", eyebrow: "Integrations" }),
+        content: OG_IMAGE,
       },
       { property: "og:image:type", content: "image/png" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
       {
         name: "twitter:image",
-        content: ogImageUrl({ title: "HeyClaude integrations", eyebrow: "Integrations" }),
+        content: OG_IMAGE,
       },
     ],
     links: [{ rel: "canonical", href: absoluteUrl("/integrations") }],
