@@ -10,6 +10,7 @@ import { categorySpread } from "@/lib/category-spread-lib";
 import { joinList } from "@/lib/join-list-lib";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { breadcrumbListJsonLd } from "@/lib/breadcrumb-jsonld-lib";
+import { tagItemListJsonLd } from "@/lib/tag-itemlist-jsonld-lib";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
 import { getTagGroup, relatedTags } from "@/lib/tags";
@@ -29,19 +30,7 @@ export const Route = createFileRoute("/tags/$tag")({
     const title = `Claude ${group.name} resources — HeyClaude`;
     const description = `${group.entries.length} Claude Code resources tagged "${group.name}" — MCP servers, agents, skills, hooks, commands, rules, and more, curated in HeyClaude.`;
     const ogImage = ogImageUrl({ title: `Tagged "${group.name}"`, eyebrow: "Tag", description });
-    const itemList = {
-      "@context": "https://schema.org",
-      "@type": "ItemList",
-      name: `Claude resources tagged ${group.name}`,
-      description,
-      numberOfItems: group.entries.length,
-      itemListElement: group.entries.slice(0, 30).map((e, i) => ({
-        "@type": "ListItem",
-        position: i + 1,
-        name: e.title,
-        url: absoluteUrl(`/entry/${e.category}/${e.slug}`),
-      })),
-    };
+    const itemList = tagItemListJsonLd(group.name, description, group.entries, absoluteUrl);
     const breadcrumbs = breadcrumbListJsonLd([
       { name: "Directory", item: absoluteUrl("/browse") },
       { name: "Tags", item: absoluteUrl("/tags") },
