@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>1356+ file-backed entries</strong> stay useful as both an
+        <strong>1360+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>1356</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>1360</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>AI-reviewed</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -84,7 +84,7 @@ Refreshed weekly by [`.github/workflows/gittensor-impact.yml`](.github/workflows
         </td>
 <td align="center" width="20%">
           <a href="#tools"><strong>🧰 Tools</strong></a><br>
-          <code>187</code><br>
+          <code>191</code><br>
           <sub>Apps, developer tools, services, and products for Claude-native builders.</sub>
         </td>
 <td align="center" width="20%">
@@ -791,7 +791,7 @@ packages use checksums and package trust metadata after review.
 
 Get a free API key on https://app.zyntra.app/
 
-## 🧰 Tools (187)
+## 🧰 Tools (191)
 
 - **[Activepieces](https://heyclau.de/entry/tools/activepieces)** - Open-source, self-hostable workflow automation platform with AI workflows, TypeScript pieces, human-in-the-loop steps, and a built-in MCP server.
 - **[AG2 Agent Framework](https://heyclau.de/entry/tools/ag2-agent-framework)** - Open-source Python AgentOS and multi-agent framework, evolved from AutoGen, for building conversable agents, group chats, swarms, human-in-the-loop workflows, tool use, RAG, code execution, and provider-backed agent systems.
@@ -810,6 +810,7 @@ Get a free API key on https://app.zyntra.app/
 - **[ast-grep](https://heyclau.de/entry/tools/ast-grep)** - Open-source CLI for structural code search, linting, and rewriting with abstract syntax tree patterns.
 - **[Atomic Agents](https://heyclau.de/entry/tools/atomic-agents)** - Lightweight, modular open-source Python framework for building agentic AI pipelines from atomic, composable components (agents, tools, context providers), built on Instructor and Pydantic.
 - **[Authsome](https://heyclau.de/entry/tools/authsome)** - Local credential broker for AI agents. Log in once via OAuth2 or API key, encrypted local vault stores credentials, and a local proxy injects them at request time so agents never see raw secret values.
+- **[BAML](https://heyclau.de/entry/tools/baml)** - Open-source domain-specific language from BoundaryML for writing typed LLM functions with structured inputs and outputs, a VSCode playground, and generated clients you can call from Python, TypeScript, Go, and more.
 - **[BentoML](https://heyclau.de/entry/tools/bentoml)** - Apache-2.0 Python framework for building, packaging, serving, containerizing, and deploying AI model inference APIs and multi-model serving systems.
 - **[Bolt](https://heyclau.de/entry/tools/bolt-new)** - Browser-based AI app builder for creating, editing, running, and deploying web projects from prompts.
 - **[Braintrust](https://heyclau.de/entry/tools/braintrust)** - Evaluation, prompt experimentation, logging, and data platform for production AI application development.
@@ -843,6 +844,7 @@ Get a free API key on https://app.zyntra.app/
 - **[DeerFlow](https://heyclau.de/entry/tools/deerflow)** - ByteDance long-horizon super-agent harness for research, coding, creation, subagents, skills, memory, sandboxes, MCP server support, messaging channels, LangGraph workflows, and Docker or local development.
 - **[Devin](https://heyclau.de/entry/tools/devin)** - AI software engineering agent for planning, coding, debugging, and executing development tasks with autonomous workflows.
 - **[Dify](https://heyclau.de/entry/tools/dify)** - Production-ready LLM app and agentic workflow platform with visual workflows, RAG pipelines, agent capabilities, model management, observability, prompt IDE, APIs, Dify Cloud, and self-hosted Docker Compose deployment.
+- **[Docling](https://heyclau.de/entry/tools/docling)** - Open-source toolkit from the Docling project for parsing PDF, DOCX, PPTX, XLSX, HTML, images, and more into a unified DoclingDocument, with advanced PDF understanding, OCR, and exports to Markdown and JSON for gen AI and RAG workflows.
 - **[DSPy](https://heyclau.de/entry/tools/dspy)** - Python framework from Stanford NLP for programming language-model systems with signatures, modules, tools, metrics, and optimizers instead of hand-written prompts.
 - **[DuckDB](https://heyclau.de/entry/tools/duckdb)** - MIT-licensed embedded analytical SQL database for local OLAP workloads, data files, notebooks, Python and R clients, extensions, and single-file analytics workflows.
 - **[DVC](https://heyclau.de/entry/tools/dvc)** - Open-source data and model versioning tool for tracking datasets, ML artifacts, pipelines, experiments, metrics, and remote storage alongside Git.
@@ -936,8 +938,10 @@ Get a free API key on https://app.zyntra.app/
 - **[OpenCode](https://heyclau.de/entry/tools/opencode)** - Terminal-first AI coding agent for local development workflows, codebase edits, and model-flexible automation.
 - **[OpenHands](https://heyclau.de/entry/tools/openhands)** - AI-driven software development platform with a local GUI, CLI, Software Agent SDK, agent sandboxes, terminal/browser tools, and hosted cloud options.
 - **[OpenSandbox](https://heyclau.de/entry/tools/opensandbox)** - Apache-2.0 sandbox runtime and SDK suite for AI agents, with Python, Java/Kotlin, JavaScript/TypeScript, C#/.NET, and Go SDKs, Docker and Kubernetes runtimes, OpenSandbox MCP server, CLI, code interpreter, filesystem and command tools, network policy, credential vault, and secure container runtime guidance.
+- **[Outlines](https://heyclau.de/entry/tools/outlines)** - Open-source Python library from dottxt for structured LLM generation, guaranteeing outputs that match a JSON schema, Pydantic model, regex, grammar, or multiple-choice set during generation across many model backends.
 - **[Pipedream](https://heyclau.de/entry/tools/pipedream)** - Workflow automation platform for connecting APIs, building event-driven automations, and integrating developer tools.
 - **[Polars](https://heyclau.de/entry/tools/polars)** - MIT-licensed DataFrame query engine written in Rust for Python, Rust, Node.js, R, and SQL workflows with lazy execution, streaming, Arrow integration, and file, database, and cloud I/O.
+- **[Portkey AI Gateway](https://heyclau.de/entry/tools/portkey-ai-gateway)** - Open-source AI gateway from Portkey for routing to 1600+ LLMs through one OpenAI-compatible API, with automatic retries, fallbacks, load balancing, conditional routing, guardrails, caching, and observability, self-hostable via npx, Docker, or edge deployments.
 - **[Prefect](https://heyclau.de/entry/tools/prefect)** - Apache-2.0 Python workflow orchestration framework for resilient data pipelines with flows, tasks, deployments, schedules, retries, caching, workers, work pools, and observability.
 - **[Promptfoo](https://heyclau.de/entry/tools/promptfoo)** - Open-source prompt testing and red-teaming framework for LLM outputs, regressions, evaluations, and security checks.
 - **[Protect AI](https://heyclau.de/entry/tools/protect-ai)** - AI security platform for securing machine learning and LLM supply chains, models, applications, and infrastructure.
