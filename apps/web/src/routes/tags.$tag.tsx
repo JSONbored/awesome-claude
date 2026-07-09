@@ -13,6 +13,7 @@ import { breadcrumbListJsonLd } from "@/lib/breadcrumb-jsonld-lib";
 import { tagItemListJsonLd } from "@/lib/tag-itemlist-jsonld-lib";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
+import { ogImageMetaTags } from "@/lib/og-meta-lib";
 import { getTagGroup, relatedTags } from "@/lib/tags";
 
 // The categories a tag's entries actually span — used to vary intro copy per tag so no
@@ -43,12 +44,7 @@ export const Route = createFileRoute("/tags/$tag")({
         { property: "og:title", content: title },
         { property: "og:description", content: description },
         { property: "og:url", content: url },
-        { property: "og:image", content: ogImage },
-        { property: "og:image:type", content: "image/png" },
-        { property: "og:image:width", content: "1200" },
-        { property: "og:image:height", content: "630" },
-        { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:image", content: ogImage },
+        ...ogImageMetaTags(ogImage),
         // Single-entry tag pages are thin and excluded from the sitemap; keep them usable for
         // in-page tag links but out of the index to match the sitemap policy.
         ...(group.entries.length < 2 ? [{ name: "robots", content: "noindex, follow" }] : []),
