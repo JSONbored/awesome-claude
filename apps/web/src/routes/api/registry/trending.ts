@@ -7,14 +7,14 @@ import { entryCommunityTarget, safeCommunitySignalCounts } from "@/lib/community
 import { communityDiscoveryScore } from "@/lib/growth-ranking";
 import { cachedJsonResponse } from "@/lib/http-cache";
 import { safeIntentEventCounts } from "@/lib/intent-events";
+import {
+  entryCanonicalUrl,
+  entrySourceStatus,
+  isFirstPartyPackage,
+} from "@/lib/registry-trending-entry-lib";
 import { safeVoteCounts } from "@/lib/votes";
 
 type Entry = (typeof ENTRIES)[number];
-type LegacyGeneratedFields = {
-  canonicalUrl?: unknown;
-  downloadTrust?: unknown;
-  trustSignals?: { sourceStatus?: unknown };
-};
 
 const entryKey = (entry: Entry) => `${entry.category}:${entry.slug}`;
 const communityTarget = (entry: Entry) => entryCommunityTarget(entry.category, entry.slug);
@@ -45,24 +45,6 @@ const reasonCodes = (input: ReturnType<typeof trendInput>) =>
     input.firstPartyPackage ? "first_party_package" : "",
     input.productionVerified ? "production_verified" : "",
   ].filter(Boolean);
-
-function entryCanonicalUrl(entry: Entry) {
-  const embedded = (entry as LegacyGeneratedFields).canonicalUrl;
-  return typeof embedded === "string" && embedded.trim()
-    ? embedded
-    : `https://heyclau.de/entry/${entry.category}/${entry.slug}`;
-}
-
-function entrySourceStatus(entry: Entry) {
-  const embedded = (entry as LegacyGeneratedFields).trustSignals?.sourceStatus;
-  if (typeof embedded === "string" && embedded.trim()) return embedded;
-  return entry.source === "unverified" ? "missing" : "available";
-}
-
-function isFirstPartyPackage(entry: Entry) {
-  const legacyTrust = (entry as LegacyGeneratedFields).downloadTrust;
-  return legacyTrust === "first-party" || Boolean(entry.downloadUrl && entry.packageVerified);
-}
 
 function trendInput(entry: Entry, states: Awaited<ReturnType<typeof readStates>>) {
   return {
