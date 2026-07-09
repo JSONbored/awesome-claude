@@ -1,35 +1,25 @@
 // Pure builder for a comparison page's schema.org ItemList JSON-LD, split out of
-// the route head() so the entry mapping can be unit-tested. The absolute-URL
-// resolver is injected to keep the builder pure.
+// the route head(). The ListItem mapping is delegated to the shared entry
+// ItemList builder; a comparison lists every entry, so no cap is applied.
+
+import { entryItemListJsonLd, type ItemListEntryRef } from "@/lib/entry-itemlist-jsonld-lib";
 
 type ComparisonLike = {
   heading: string;
   seoDescription: string;
 };
 
-type ComparisonEntryLike = {
-  title: string;
-  category: string;
-  slug: string;
-};
-
-/** schema.org ItemList JSON-LD for a comparison's resolved entries. */
+/** schema.org ItemList JSON-LD for a comparison's resolved entries (uncapped). */
 export function comparisonItemListJsonLd(
   comparison: ComparisonLike,
-  entries: ComparisonEntryLike[],
+  entries: ItemListEntryRef[],
   absoluteUrl: (path: string) => string,
 ) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    name: comparison.heading,
-    description: comparison.seoDescription,
-    numberOfItems: entries.length,
-    itemListElement: entries.map((entry, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      name: entry.title,
-      url: absoluteUrl(`/entry/${entry.category}/${entry.slug}`),
-    })),
-  };
+  return entryItemListJsonLd(
+    comparison.heading,
+    comparison.seoDescription,
+    entries,
+    absoluteUrl,
+    Infinity,
+  );
 }

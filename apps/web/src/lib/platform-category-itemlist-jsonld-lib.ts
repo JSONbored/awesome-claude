@@ -1,13 +1,8 @@
 // Pure builder for a platform+category ("for/<platform>/<category>") page's
-// schema.org ItemList JSON-LD, split out of the route head() so the name/count
-// and the first-30 slice cap can be unit-tested. The absolute-URL resolver is
-// injected.
+// schema.org ItemList JSON-LD, split out of the route head(). The ListItem
+// mapping and the item cap are delegated to the shared entry ItemList builder.
 
-type PlatformCategoryEntryLike = {
-  title: string;
-  category: string;
-  slug: string;
-};
+import { entryItemListJsonLd, type ItemListEntryRef } from "@/lib/entry-itemlist-jsonld-lib";
 
 /**
  * schema.org ItemList JSON-LD for a platform+category's resources.
@@ -17,20 +12,13 @@ export function platformCategoryItemListJsonLd(
   platformLabel: string,
   categoryLabel: string,
   description: string,
-  entries: PlatformCategoryEntryLike[],
+  entries: ItemListEntryRef[],
   absoluteUrl: (path: string) => string,
 ) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    name: `Claude ${categoryLabel} for ${platformLabel}`,
+  return entryItemListJsonLd(
+    `Claude ${categoryLabel} for ${platformLabel}`,
     description,
-    numberOfItems: entries.length,
-    itemListElement: entries.slice(0, 30).map((entry, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      name: entry.title,
-      url: absoluteUrl(`/entry/${entry.category}/${entry.slug}`),
-    })),
-  };
+    entries,
+    absoluteUrl,
+  );
 }
