@@ -1,0 +1,102 @@
+---
+title: Mem0
+slug: mem0
+category: tools
+description: Open-source memory layer for AI agents and assistants that extracts, stores, and retrieves user, session, and agent memories so applications can personalize and remember across interactions, with Python and TypeScript SDKs and pluggable vector, graph, and key-value stores.
+cardDescription: Open-source memory layer for AI agents with multi-level memory, extraction, and retrieval.
+seoTitle: Mem0 open-source memory layer for AI agents
+seoDescription: Mem0 is an open-source memory layer for AI agents and assistants that extracts, stores, and retrieves user, session, and agent memories for personalized interactions, with Python and TypeScript SDKs and pluggable vector, graph, and key-value backends.
+author: mem0ai
+submittedBy: davion-knight
+submittedByUrl: "https://github.com/davion-knight"
+dateAdded: "2026-07-09"
+websiteUrl: "https://mem0.ai/"
+documentationUrl: "https://docs.mem0.ai/"
+repoUrl: "https://github.com/mem0ai/mem0"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - memory
+  - ai-agents
+  - personalization
+  - rag
+  - python
+  - typescript
+keywords:
+  - mem0
+  - ai agent memory
+  - llm memory layer
+  - personalized ai
+  - long-term memory
+  - mem0ai
+robotsIndex: true
+robotsFollow: true
+prerequisites:
+  - Python or TypeScript project and a package manager to install the SDK (`mem0ai` for Python or the TypeScript SDK for Node).
+  - A model provider for the extraction and embedding steps, or local models if you prefer to run them yourself.
+  - A backing store for memories (a supported vector store, and optionally a graph or key-value store) for self-hosted use, or a Mem0 platform key.
+  - Stable identifiers for the user, session, or agent whose memories you are storing and retrieving.
+  - A retention and access-control plan for the memory store, since it holds accumulated user data.
+safetyNotes:
+  - Stored memories influence future agent behavior, so treat memories written from external or user content as untrusted input and constrain what an agent may do based on retrieved memories.
+  - Scope memory by a per-user or per-agent identifier so one user's memories are not retrieved for another, and review which content is eligible to become a stored memory.
+  - The memory-extraction step calls a model provider with conversation content; use credentials scoped to the minimum needed and keep them out of source control.
+  - Self-hosting keeps memories in your own stores, while the managed platform processes them under its terms; choose the deployment that matches your data requirements.
+  - Keep production memory stores and permissions narrower than quickstart examples, and set retention rules for accumulated memories.
+privacyNotes:
+  - Mem0 stores user preferences, facts, and history as memories, which can include personal or sensitive data extracted from conversations.
+  - Memory extraction and embedding send conversation content to the configured model and embedding providers, which process it under their own terms; local models keep that on your machine.
+  - Stored memories persist in the vector, graph, or key-value backend you configure, so apply retention, deletion, and access-control policies to that store.
+  - Provider keys, memory data, and any exports should be treated as sensitive and kept out of version control.
+---
+
+## Editorial notes
+
+Mem0 ("mem-zero") is useful when Claude-adjacent teams want their assistants and agents to remember users and context across sessions instead of starting cold each time. It provides an intelligent memory layer that extracts memories from interactions, stores them, and retrieves the relevant ones later, so applications can personalize responses and carry state forward.
+
+This is distinct from the agent frameworks, gateways, and observability tools in the directory: rather than building, routing, or tracing agents, Mem0 is the memory layer those workflows read from and write to, with SDKs and pluggable storage backends.
+
+## Key capabilities
+
+- **Multi-level memory** — retains User, Session, and Agent state, so personalization can be scoped to the right level.
+- **Memory extraction** — extracts facts and preferences from conversations and stores agent-confirmed information as first-class memories.
+- **Entity linking** — extracts and links entities across memories to improve later retrieval.
+- **Multi-signal retrieval** — combines semantic, keyword, and entity matching to surface the most relevant memories.
+- **Temporal reasoning** — time-aware retrieval that can distinguish current state, past events, and upcoming plans.
+- **Pluggable storage** — works with supported vector stores, plus graph and key-value backends, for self-hosted deployments.
+- **SDKs** — Python (`mem0ai`) and TypeScript SDKs for adding and searching memories from application code.
+- **Self-host or managed** — run the open-source layer yourself, or use the managed Mem0 platform.
+
+## How teams use it
+
+- **Personalized assistants** — remember a user's preferences and history to tailor responses over time.
+- **Customer support** — recall past tickets and context for more relevant help.
+- **Long-running agents** — carry state and learned facts across sessions for autonomous workflows.
+- **Adaptive products** — adjust workflows or experiences based on remembered user behavior.
+- **Context efficiency** — retrieve only the relevant memories instead of resending full history each turn.
+
+## Getting started
+
+Mem0 is open source and can run self-hosted or against the managed platform. Add the SDK to your
+project — `mem0ai` for Python or the TypeScript SDK for Node — configure a model provider and a
+backing store, then add memories from interactions and search them by a user, session, or agent
+identifier. Retrieved memories are supplied to your prompts so the assistant can personalize and
+maintain context across sessions.
+
+## Source notes
+
+- The official repository describes Mem0 as an intelligent memory layer that enhances AI assistants and agents with personalized memory, remembering user preferences and adapting over time.
+- Documented capabilities include multi-level memory (user, session, agent), memory extraction with agent-confirmed facts as first-class entries, entity linking, multi-signal retrieval (semantic, keyword, and entity), and temporal reasoning.
+- Mem0 provides Python (`mem0ai`) and TypeScript SDKs and supports pluggable vector, graph, and key-value backends for self-hosting.
+- A managed Mem0 platform is available with additional optimizations, separate from the open-source SDK; the project also open-sources its evaluation framework.
+- The GitHub repository is `mem0ai/mem0`, is Apache-2.0 licensed, is installed from PyPI as `mem0ai`, and targets Python 3.10+.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, skills, hooks, rules, commands, guides, open pull requests, and repository-wide content for `Mem0`, `mem0`, `mem0ai`, `mem0.ai`, `github.com/mem0ai/mem0`, `memory layer`, and `agent memory`. Existing entries reference memory in passing and cover adjacent RAG and storage tools, but no dedicated Mem0 tools entry, Mem0 source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.
