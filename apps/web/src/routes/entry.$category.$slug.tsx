@@ -38,6 +38,7 @@ import { ComparisonTable } from "@/components/comparison-table";
 import { compareEntryInteractiveUiState } from "@/lib/compare-entry-interactive-ui-lib";
 import { buildEntryJsonLd } from "@heyclaude/registry";
 import { stringifyJsonLd } from "@/lib/json-ld";
+import { entryWebPageJsonLd } from "@/lib/entry-webpage-jsonld-lib";
 import { hasSchemaDetails } from "@/lib/entry-schema-details-lib";
 import { booleanLabel } from "@/lib/boolean-label-lib";
 import { absoluteUrl, clampDescription } from "@/lib/seo";
@@ -162,18 +163,7 @@ export const Route = createFileRoute("/entry/$category/$slug")({
     const e = loaderData.entry;
     const path = `/entry/${params.category}/${params.slug}`;
     const url = absoluteUrl(path);
-    const ld = {
-      "@context": "https://schema.org",
-      "@type": "WebPage",
-      name: e.title,
-      description: e.description,
-      url,
-      datePublished: e.dateAdded,
-      dateModified: e.reviewedAt ?? e.dateAdded,
-      about: e.category,
-      author: { "@type": "Person", name: e.author },
-      ...(e.sourceUrl ? { isBasedOn: e.sourceUrl } : {}),
-    };
+    const ld = entryWebPageJsonLd(e, url);
     const breadcrumbs = {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
