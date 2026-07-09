@@ -32,7 +32,7 @@ export function compareBestUiState(entries: Entry[]): CompareBestUiState {
   return {
     showCompareSection: compareBestShowCompareSection(entries),
     bannerTexts: compareBestHeaderBannerTexts(entries),
-    interactiveSearch: compareInteractiveSearch(entries),
-    interactiveLinkLabel: compareInteractiveLinkLabel(entries.length),
+    interactiveSearch: compareBestInteractiveSearch(entries),
+    interactiveLinkLabel: compareBestInteractiveLinkLabel(entries.length),
   };
 }
