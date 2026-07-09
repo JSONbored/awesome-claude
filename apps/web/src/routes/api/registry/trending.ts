@@ -13,18 +13,13 @@ import {
   isFirstPartyPackage,
 } from "@/lib/registry-trending-entry-lib";
 import { entryPlatforms, matchesPlatform } from "@/lib/registry-trending-platform-lib";
+import { trendingReasonCodes } from "@/lib/trending-reason-codes-lib";
 import { safeVoteCounts } from "@/lib/votes";
 
 type Entry = (typeof ENTRIES)[number];
 
 const entryKey = (entry: Entry) => `${entry.category}:${entry.slug}`;
 const communityTarget = (entry: Entry) => entryCommunityTarget(entry.category, entry.slug);
-
-const reasonCodes = (input: ReturnType<typeof trendInput>) =>
-  [
-    input.firstPartyPackage ? "first_party_package" : "",
-    input.productionVerified ? "production_verified" : "",
-  ].filter(Boolean);
 
 function trendInput(entry: Entry, states: Awaited<ReturnType<typeof readStates>>) {
   return {
@@ -58,7 +53,7 @@ export const GET = createApiHandler("registry.trending", async ({ request, query
   const ranked = scopedEntries
     .map((entry) => {
       const input = trendInput(entry, states);
-      return { entry, score: communityDiscoveryScore(input), reasons: reasonCodes(input) };
+      return { entry, score: communityDiscoveryScore(input), reasons: trendingReasonCodes(input) };
     })
     .filter((item) => item.score > 0)
     .sort(
