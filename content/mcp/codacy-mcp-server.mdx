@@ -1,0 +1,195 @@
+---
+title: Codacy MCP Server
+slug: codacy-mcp-server
+category: mcp
+description: >-
+  The official Codacy MCP server (@codacy/codacy-mcp) that gives AI assistants
+  access to the Codacy API for code quality, security, and coverage — listing
+  repository and pull-request issues, retrieving file coverage and duplication,
+  searching security (SRM) findings, inspecting analysis tools and patterns, and
+  running local analysis with the Codacy CLI.
+cardDescription: >-
+  Official Codacy MCP server: inspect code-quality and security (SRM) findings,
+  file/PR coverage and duplication, and run local Codacy CLI analysis.
+seoTitle: Codacy MCP Server — Code Quality, Security & Coverage for LLMs
+seoDescription: >-
+  The official Codacy MCP server (@codacy/codacy-mcp) gives LLMs tools to inspect
+  code-quality issues, security (SRM) findings, file and pull-request coverage,
+  duplication, and analysis patterns, and to run local Codacy CLI analysis, over
+  the Codacy API.
+author: codacy
+authorProfileUrl: https://github.com/codacy
+submittedBy: davion-knight
+submittedByUrl: "https://github.com/davion-knight"
+dateAdded: "2026-07-08"
+brandName: Codacy MCP Server
+brandDomain: codacy.com
+websiteUrl: https://www.codacy.com/
+repoUrl: https://github.com/codacy/codacy-mcp-server
+documentationUrl: https://github.com/codacy/codacy-mcp-server/blob/master/README.md
+installable: true
+installCommand: npx -y @codacy/codacy-mcp
+usageSnippet: |
+  # Run directly from npm via npx (stdio transport)
+  export CODACY_ACCOUNT_TOKEN="your_codacy_account_token"
+  npx -y @codacy/codacy-mcp
+copySnippet: |
+  {
+    "mcpServers": {
+      "codacy": {
+        "command": "npx",
+        "args": ["-y", "@codacy/codacy-mcp"],
+        "env": {
+          "CODACY_ACCOUNT_TOKEN": "<YOUR_TOKEN>"
+        }
+      }
+    }
+  }
+configSnippet: |
+  {
+    "mcpServers": {
+      "codacy": {
+        "command": "npx",
+        "args": ["-y", "@codacy/codacy-mcp"],
+        "env": {
+          "CODACY_ACCOUNT_TOKEN": "<YOUR_TOKEN>"
+        }
+      }
+    }
+  }
+prerequisites:
+  - Node.js and npm, with the `npx` command working (the server runs via `npx -y @codacy/codacy-mcp`)
+  - A Codacy account and an Account API Token from Codacy Account access management
+  - For local analysis, the Codacy CLI v2 (macOS/Linux/Windows via WSL); the server installs it if it is missing
+  - An MCP-compatible client (Claude Desktop, Cursor, VS Code, Windsurf, etc.)
+safetyNotes:
+  - The `codacy_cli_analyze` tool runs Codacy CLI analysis locally on files or directories, and if the CLI is not installed the server will attempt to download and install it, so it can execute and install software on your machine.
+  - The Codacy Account API Token grants API access to the organizations and repositories your account can see, including private ones, so treat it as a secret and scope it to least privilege.
+  - Most tools are read-only analysis (issues, coverage, duplication, security findings), but `codacy_setup_repository` adds or follows a repository in Codacy, which is an account-write action.
+  - Security (SRM) tools surface real vulnerabilities and findings for your code, so handle that output carefully and avoid leaking it.
+  - Prefer a token scoped to the intended organization and a non-sensitive repository when an agent acts autonomously.
+privacyNotes:
+  - The server calls the Codacy API with your token; repository metadata, code-quality issues, coverage, duplication, security findings, and pull-request data it returns are passed to the LLM/MCP client.
+  - Some tools return source-derived content — for example `codacy_get_pull_request_git_diff` returns a PR's Git diff and file-analysis tools return issue context — which can include real source code.
+  - Security findings can reveal sensitive vulnerability details about your codebase; review before sharing that output.
+  - The account token is provided via the `CODACY_ACCOUNT_TOKEN` environment variable in your MCP client config — keep that config out of version control and restrict access to it.
+sourceUrls:
+  - https://github.com/codacy/codacy-mcp-server/blob/master/README.md
+  - https://www.npmjs.com/package/@codacy/codacy-mcp
+  - https://github.com/codacy/codacy-mcp-server/blob/master/LICENSE
+tags:
+  - mcp
+  - codacy
+  - code-quality
+  - security
+  - static-analysis
+  - code-coverage
+  - devtools
+  - nodejs
+keywords:
+  - Codacy MCP server
+  - "@codacy/codacy-mcp"
+  - Codacy API MCP
+  - code quality MCP
+  - static analysis MCP
+  - security analysis MCP
+  - code coverage MCP
+  - Model Context Protocol Codacy
+  - SRM security findings MCP
+  - Codacy CLI analysis MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+The **Codacy MCP Server** is the official Model Context Protocol server maintained by
+[Codacy](https://github.com/codacy). It exposes the [Codacy](https://www.codacy.com/) API to LLMs
+and agentic clients for **code quality, security, and coverage** — listing **repository and
+pull-request issues**, retrieving **file coverage and duplication**, searching **security (SRM)
+findings**, inspecting **analysis tools and patterns**, and running **local analysis with the Codacy
+CLI**.
+
+It ships as the npm package [`@codacy/codacy-mcp`](https://www.npmjs.com/package/@codacy/codacy-mcp)
+(v0.6.22, MIT), runs over `stdio` via `npx`, and authenticates with a **Codacy Account API Token**
+(`CODACY_ACCOUNT_TOKEN`). For local analysis it uses the
+[Codacy CLI v2](https://github.com/codacy/codacy-cli-v2), installing it automatically if it is not
+already present. Setup details live in the
+[repository README](https://github.com/codacy/codacy-mcp-server/blob/master/README.md).
+
+## Source Review
+
+The following real repository and package sources were fetched and reviewed for this entry:
+
+- [README.md](https://github.com/codacy/codacy-mcp-server/blob/master/README.md) — the `npx` install command, the `CODACY_ACCOUNT_TOKEN` env var and client config blocks, the Codacy CLI requirement for local analysis, and the full tool catalog (repository, quality, security, coverage, pull-request, and pattern tools).
+- [npm: @codacy/codacy-mcp](https://www.npmjs.com/package/@codacy/codacy-mcp) — package name and version (`0.6.22`), MIT license, and the `codacy-mcp-server` bin entry.
+- [LICENSE](https://github.com/codacy/codacy-mcp-server/blob/master/LICENSE) — MIT License (Codacy).
+
+Repository facts confirmed at review time: official `codacy` organization, repository
+`codacy/codacy-mcp-server`, default branch `master`, not archived, actively maintained, and released
+as `@codacy/codacy-mcp` v0.6.22 on npm.
+
+## Features
+
+- **Repository & organization** — `codacy_setup_repository`, `codacy_list_organizations`, `codacy_list_organization_repositories`, and `codacy_get_repository_with_analysis` (Grade, Issues, Duplication, Complexity, Coverage).
+- **Code-quality issues** — `codacy_list_repository_issues` and `codacy_get_issue` investigate best-practice, performance, complexity, and style issues.
+- **File analysis** — `codacy_list_files`, `codacy_get_file_issues`, `codacy_get_file_coverage`, `codacy_get_file_clones`, and `codacy_get_file_with_analysis`.
+- **Security (SRM)** — `codacy_search_organization_srm_items` and `codacy_search_repository_srm_items` list security findings across SAST, DAST, SCA, secrets, and IaC.
+- **Pull requests** — list PRs and PR issues, and get PR file coverage and the Git diff (`codacy_get_pull_request_files_coverage`, `codacy_get_pull_request_git_diff`).
+- **Tools & patterns** — `codacy_list_tools`, `codacy_list_repository_tools`, `codacy_get_pattern`, and `codacy_list_repository_tool_patterns`.
+- **Local CLI analysis** — `codacy_cli_analyze` runs Codacy CLI analysis on files or directories locally.
+- **Account-token auth** — authenticates with a single Codacy Account API Token over HTTPS.
+- **One-command install** — runs via `npx -y @codacy/codacy-mcp` with no clone or build step.
+
+## Installation
+
+Run the published package with `npx`, providing your Codacy Account API Token:
+
+```bash
+export CODACY_ACCOUNT_TOKEN="your_codacy_account_token"
+npx -y @codacy/codacy-mcp
+```
+
+Add it to an MCP client (e.g. Cursor / Claude Desktop):
+
+```json
+{
+  "mcpServers": {
+    "codacy": {
+      "command": "npx",
+      "args": ["-y", "@codacy/codacy-mcp"],
+      "env": {
+        "CODACY_ACCOUNT_TOKEN": "<YOUR_TOKEN>"
+      }
+    }
+  }
+}
+```
+
+Create an Account API Token in **Codacy Account → Access management**. For local analysis the server
+uses the [Codacy CLI v2](https://github.com/codacy/codacy-cli-v2) and installs it automatically if it
+is not present. Supported IDEs (VS Code, Cursor, Windsurf) can also add the server from the Codacy
+extension.
+
+## Use Cases
+
+- **Code-quality triage** — ask an agent to list and explain a repository's or file's quality issues.
+- **Security review** — surface SAST/DAST/SCA/secrets/IaC findings from Codacy's security dashboard.
+- **Coverage inspection** — check file and pull-request coverage, including diff coverage on a PR.
+- **Duplication analysis** — find duplicated code segments (clones) in a file.
+- **Local analysis** — run Codacy CLI analysis on files or directories during development.
+
+## Safety and Privacy
+
+- **Runs and installs software locally.** `codacy_cli_analyze` runs Codacy CLI analysis on your files and will download/install the CLI if it is missing.
+- **Token is broad.** The Account API Token can read the organizations and repositories your account sees (including private ones); scope it tightly and treat it as a secret.
+- **Mostly read, one write.** Most tools are read-only analysis, but `codacy_setup_repository` adds or follows a repository in Codacy.
+- **Source and findings flow to the model.** PR Git diffs, file analysis, and security findings are returned to the LLM/MCP client and can include real source code and vulnerability details.
+- **Credential hygiene.** `CODACY_ACCOUNT_TOKEN` lives in your MCP client config — keep it out of version control and restrict access.
+
+## Duplicate Check
+
+No existing entry in the directory matches this server. A search of all directory entries for "codacy"
+across slugs, titles, repository URLs, and install commands returned no results, and there is no prior
+entry pointing at `github.com/codacy/codacy-mcp-server` or the npm package `@codacy/codacy-mcp`. This
+is therefore a net-new, non-duplicate entry.
