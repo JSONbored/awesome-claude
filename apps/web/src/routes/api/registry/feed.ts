@@ -1,11 +1,10 @@
 import { createApiFileRoute } from "@/lib/api/file-route";
 
-import { platformFeedSlug } from "@heyclaude/registry/artifacts";
-
 import { createApiHandler } from "@/lib/api/router";
 import { getCategorySummaries, getRegistryManifest } from "@/lib/content.server";
 import { cachedJsonResponse } from "@/lib/http-cache";
 import { getPlatformPageDefinitions } from "@/lib/platform-pages";
+import { categoryFeedAliases, platformFeedAliases } from "@/lib/registry-feed-aliases-lib";
 import { siteConfig } from "@/lib/site";
 
 const JOBS_API_PATH = "/api/jobs?limit=100";
@@ -13,25 +12,10 @@ const QUALITY_METHODOLOGY_PATH = "/quality#methodology";
 const CATEGORY_FEED_PATH = "/data/feeds/categories/{category}.json";
 const PLATFORM_FEED_PATH = "/data/feeds/platforms/{platform}.json";
 
-function categoryFeedAliases(categories: Array<{ category: string }>) {
-  return Object.fromEntries(
-    categories.map(({ category }) => [category, `/data/feeds/categories/${category}.json`]),
-  );
-}
-
-function platformFeedAliases() {
-  return Object.fromEntries(
-    getPlatformPageDefinitions().map(({ platform, slug }) => [
-      slug,
-      `/data/feeds/platforms/${platformFeedSlug(platform)}.json`,
-    ]),
-  );
-}
-
 export const GET = createApiHandler("registry.feed", async ({ request }) => {
   const [manifest, categories] = await Promise.all([getRegistryManifest(), getCategorySummaries()]);
   const categoryFeeds = categoryFeedAliases(categories);
-  const platformFeeds = platformFeedAliases();
+  const platformFeeds = platformFeedAliases(getPlatformPageDefinitions());
 
   return cachedJsonResponse(request, {
     schemaVersion: 1,
