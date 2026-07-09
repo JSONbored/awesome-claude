@@ -1,0 +1,205 @@
+---
+title: Tigris MCP Server
+slug: tigris-mcp-server
+category: mcp
+description: >-
+  The official Tigris MCP server (@tigrisdata/tigris-mcp-server) that connects AI
+  agents to Tigris, a high-performance S3-compatible object storage system —
+  listing, creating, and deleting buckets; listing, uploading, and deleting
+  objects; creating folders and files; and generating shareable links — using
+  S3-style access keys against the Tigris endpoint.
+cardDescription: >-
+  Official Tigris MCP server: manage S3-compatible buckets and objects — list,
+  create, upload, delete, and generate shareable links — with S3-style keys.
+seoTitle: Tigris MCP Server — S3-Compatible Object Storage for LLMs
+seoDescription: >-
+  The official Tigris MCP server (@tigrisdata/tigris-mcp-server) gives LLMs tools
+  to manage Tigris S3-compatible object storage — list/create/delete buckets,
+  list/upload/delete objects, create folders and files, and generate shareable
+  links — using S3-style access keys.
+author: tigrisdata
+authorProfileUrl: https://github.com/tigrisdata
+submittedBy: davion-knight
+submittedByUrl: "https://github.com/davion-knight"
+dateAdded: "2026-07-08"
+brandName: Tigris MCP Server
+brandDomain: tigrisdata.com
+websiteUrl: https://www.tigrisdata.com/
+repoUrl: https://github.com/tigrisdata/tigris-mcp-server
+documentationUrl: https://github.com/tigrisdata/tigris-mcp-server/blob/main/README.md
+installable: true
+installCommand: npx -y @tigrisdata/tigris-mcp-server run
+usageSnippet: |
+  # Run directly from npm via npx (stdio transport)
+  export AWS_ACCESS_KEY_ID="your_access_key_id"
+  export AWS_SECRET_ACCESS_KEY="your_secret_access_key"
+  export AWS_ENDPOINT_URL_S3="https://fly.storage.tigris.dev"
+  npx -y @tigrisdata/tigris-mcp-server run
+copySnippet: |
+  {
+    "mcpServers": {
+      "tigris-mcp-server": {
+        "command": "npx",
+        "args": ["-y", "@tigrisdata/tigris-mcp-server", "run"],
+        "env": {
+          "AWS_ACCESS_KEY_ID": "YOUR_AWS_ACCESS_KEY_ID",
+          "AWS_SECRET_ACCESS_KEY": "YOUR_AWS_SECRET_ACCESS_KEY",
+          "AWS_ENDPOINT_URL_S3": "https://fly.storage.tigris.dev"
+        }
+      }
+    }
+  }
+configSnippet: |
+  {
+    "mcpServers": {
+      "tigris-mcp-server": {
+        "command": "npx",
+        "args": ["-y", "@tigrisdata/tigris-mcp-server", "run"],
+        "env": {
+          "AWS_ACCESS_KEY_ID": "YOUR_AWS_ACCESS_KEY_ID",
+          "AWS_SECRET_ACCESS_KEY": "YOUR_AWS_SECRET_ACCESS_KEY",
+          "AWS_ENDPOINT_URL_S3": "https://fly.storage.tigris.dev"
+        }
+      }
+    }
+  }
+prerequisites:
+  - Node.js and npm (the server runs via `npx -y @tigrisdata/tigris-mcp-server run`), or Docker (recommended for sandboxing)
+  - A Tigris account and an S3 access key pair from the Tigris console
+  - The `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `AWS_ENDPOINT_URL_S3` values for your account
+  - An MCP-compatible client (Claude Desktop, Cursor, VS Code, etc.)
+safetyNotes:
+  - The server can create and delete buckets and objects, so tools like bucket deletion and object deletion permanently remove data from your Tigris storage.
+  - The upload tool reads a local file path and writes it to a bucket, so it can access files on your machine and copy them to remote storage.
+  - Generating a shareable link produces a URL that grants access to an object; be careful sharing it, as anyone with the link may read that object.
+  - The S3 access key and secret grant access to your Tigris storage; scope the key's permissions and treat the credentials as secrets.
+  - Tigris recommends the Docker runtime over npx for better sandboxing, since the server holds your credentials and can read local files for upload.
+privacyNotes:
+  - The server accesses your Tigris buckets with your keys; object listings, contents, and metadata it returns are passed to the LLM/MCP client.
+  - Stored objects can include AI models, training data, database backups, logs, or user uploads, which may be sensitive, so avoid exposing production data to the model unnecessarily.
+  - The upload tool reads local files by path; shareable links can expose object contents beyond the current session.
+  - Credentials (`AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`) live in your MCP client config env block — keep that config out of version control and restrict access to it.
+sourceUrls:
+  - https://github.com/tigrisdata/tigris-mcp-server/blob/main/README.md
+  - https://www.npmjs.com/package/@tigrisdata/tigris-mcp-server
+  - https://www.tigrisdata.com/docs/
+  - https://github.com/tigrisdata/tigris-mcp-server/blob/main/LICENSE
+tags:
+  - mcp
+  - tigris
+  - object-storage
+  - s3
+  - storage
+  - cloud
+  - aws-compatible
+  - nodejs
+keywords:
+  - Tigris MCP server
+  - "@tigrisdata/tigris-mcp-server"
+  - Tigris object storage MCP
+  - S3-compatible MCP
+  - bucket management MCP
+  - object storage MCP server
+  - Model Context Protocol Tigris
+  - Tigris buckets MCP
+  - S3 MCP server
+  - Tigris Data MCP server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+The **Tigris MCP Server** is the official Model Context Protocol server maintained by
+[Tigris Data](https://github.com/tigrisdata). It connects AI agents to
+[Tigris](https://www.tigrisdata.com/) — a high-performance, **S3-compatible object storage** system
+for multi-cloud and AI workloads — for **bucket and object management**: listing, creating, and
+deleting **buckets**; listing, uploading, and deleting **objects**; creating **folders and files**;
+and generating **shareable links**.
+
+It ships as the npm package
+[`@tigrisdata/tigris-mcp-server`](https://www.npmjs.com/package/@tigrisdata/tigris-mcp-server)
+(v1.14.0, MIT), runs over `stdio` via `npx` (or Docker, which the project recommends for better
+sandboxing), and authenticates with **S3-style access keys** (`AWS_ACCESS_KEY_ID` /
+`AWS_SECRET_ACCESS_KEY`) against the Tigris endpoint (`AWS_ENDPOINT_URL_S3`). Setup details live in
+the [repository README](https://github.com/tigrisdata/tigris-mcp-server/blob/main/README.md).
+
+## Source Review
+
+The following real repository and package sources were fetched and reviewed for this entry:
+
+- [README.md](https://github.com/tigrisdata/tigris-mcp-server/blob/main/README.md) — the `npx`/Docker install commands, the `AWS_ACCESS_KEY_ID`/`AWS_SECRET_ACCESS_KEY`/`AWS_ENDPOINT_URL_S3` env vars, the client config blocks, and the bucket/object capabilities (list, create, delete, upload, create folder/file, shareable link).
+- [npm: @tigrisdata/tigris-mcp-server](https://www.npmjs.com/package/@tigrisdata/tigris-mcp-server) — package name and version (`1.14.0`), MIT license, and the `tigris-mcp-server` bin entry.
+- [LICENSE](https://github.com/tigrisdata/tigris-mcp-server/blob/main/LICENSE) — MIT License.
+
+Repository facts confirmed at review time: official `tigrisdata` organization, repository
+`tigrisdata/tigris-mcp-server`, default branch `main`, not archived, and released as
+`@tigrisdata/tigris-mcp-server` v1.14.0 on npm.
+
+## Features
+
+- **Bucket management** — list buckets, create a new bucket, and delete a bucket.
+- **Object listing** — list the objects in a bucket.
+- **Uploads** — upload a local file to a bucket by path.
+- **Folders & files** — create a folder in a bucket and create a file with inline content.
+- **Deletion** — delete an object from a bucket.
+- **Shareable links** — generate a link to share an object.
+- **S3-compatible** — works against Tigris's S3 API, so standard S3 tools and libraries apply.
+- **npx or Docker** — run via `npx` or a Docker image (recommended by Tigris for better sandboxing).
+- **S3-key auth** — authenticates with `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` over HTTPS.
+
+## Installation
+
+Run the published package with `npx`, providing your Tigris S3 credentials and endpoint:
+
+```bash
+export AWS_ACCESS_KEY_ID="your_access_key_id"
+export AWS_SECRET_ACCESS_KEY="your_secret_access_key"
+export AWS_ENDPOINT_URL_S3="https://fly.storage.tigris.dev"
+npx -y @tigrisdata/tigris-mcp-server run
+```
+
+Add it to an MCP client (e.g. Cursor / Claude Desktop):
+
+```json
+{
+  "mcpServers": {
+    "tigris-mcp-server": {
+      "command": "npx",
+      "args": ["-y", "@tigrisdata/tigris-mcp-server", "run"],
+      "env": {
+        "AWS_ACCESS_KEY_ID": "YOUR_AWS_ACCESS_KEY_ID",
+        "AWS_SECRET_ACCESS_KEY": "YOUR_AWS_SECRET_ACCESS_KEY",
+        "AWS_ENDPOINT_URL_S3": "https://fly.storage.tigris.dev"
+      }
+    }
+  }
+}
+```
+
+Get an access key from the [Tigris console](https://console.tigris.dev/). Tigris also offers a
+Docker-based setup, which it recommends over `npx` for better sandboxing, and a hosted MCP server
+with OAuth support.
+
+## Use Cases
+
+- **Conversational storage management** — list, create, and delete buckets and objects in natural language.
+- **Uploading assets** — push local files (models, datasets, backups, logs) to a Tigris bucket from an agent workflow.
+- **Content authoring** — create folders and files with inline content directly in a bucket.
+- **Sharing** — generate a shareable link to an object.
+- **S3 workflows** — use Tigris's S3-compatible API within AI editor workflows.
+
+## Safety and Privacy
+
+- **Destructive operations.** The server can delete buckets and objects, permanently removing data from your storage.
+- **Reads local files.** The upload tool reads a local file path and copies it to remote storage; Tigris recommends the Docker runtime over npx for better sandboxing.
+- **Shareable links expose data.** Generating a link produces a URL that grants access to an object — share it carefully.
+- **Keys are broad.** The S3 access key and secret grant access to your Tigris storage; scope the key and treat credentials as secrets.
+- **Data flows to the model.** Object listings, contents, and metadata are returned to the LLM/MCP client and can include sensitive stored data.
+
+## Duplicate Check
+
+No existing entry in the directory matches this server. A search of all directory entries for "tigris"
+across slugs, titles, repository URLs, and install commands returned no results, and there is no prior
+entry pointing at `github.com/tigrisdata/tigris-mcp-server` or the npm package
+`@tigrisdata/tigris-mcp-server`. This is therefore a net-new, non-duplicate entry.
