@@ -1,5 +1,5 @@
 import type { Entry } from "@/types/registry";
-import { compareDrawerActionsDiverge } from "@/lib/compare-drawer-actions";
+import { compareDrawerUiActionsDiverge } from "@/lib/compare-drawer-ui-lib";
 import { compareDrawerDivergingDecisionLabels } from "@/lib/compare-drawer-signals-ui-lib";
 
 export type CompareDrawerPresentationState = {
@@ -7,9 +7,19 @@ export type CompareDrawerPresentationState = {
   actionRowDiverges: boolean;
 };
 
+export function compareDrawerPresentationDivergingDecisionLabels(
+  items: Entry[],
+): Set<string> {
+  return new Set(compareDrawerDivergingDecisionLabels(items));
+}
+
+export function compareDrawerPresentationActionRowDiverges(items: Entry[]): boolean {
+  return compareDrawerUiActionsDiverge(items);
+}
+
 export function compareDrawerPresentationState(items: Entry[]): CompareDrawerPresentationState {
   return {
-    divergingDecisionLabels: new Set(compareDrawerDivergingDecisionLabels(items)),
-    actionRowDiverges: compareDrawerActionsDiverge(items),
+    divergingDecisionLabels: compareDrawerPresentationDivergingDecisionLabels(items),
+    actionRowDiverges: compareDrawerPresentationActionRowDiverges(items),
   };
 }
