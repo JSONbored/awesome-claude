@@ -1,0 +1,73 @@
+---
+title: Griptape
+slug: griptape
+category: tools
+description: Modular open-source Python framework for building AI agents and LLM workflows with structures, tools, memory, drivers, and RAG engines, from Griptape.
+cardDescription: Modular Python framework for AI agents and LLM workflows with tools, memory, and RAG.
+seoTitle: Griptape Python AI agent and LLM workflow framework
+seoDescription: Griptape is a modular open-source Python framework for building AI agents and LLM workflows with structures, tasks, tools, off-prompt memory, drivers, and RAG engines.
+author: Griptape
+submittedBy: davion-knight
+submittedByUrl: "https://github.com/davion-knight"
+dateAdded: "2026-07-09"
+websiteUrl: "https://www.griptape.ai/"
+documentationUrl: "https://docs.griptape.ai/"
+repoUrl: "https://github.com/griptape-ai/griptape"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - agents
+  - python
+  - llm-workflows
+  - rag
+  - memory
+keywords:
+  - griptape
+  - python agent framework
+  - llm workflow framework
+  - griptape tools
+  - off-prompt memory
+prerequisites:
+  - Python 3.10+ project and a dependency manager to install `griptape` (optionally with extras such as `griptape[all]`) from PyPI.
+  - Model-provider credentials or local model configuration for the prompt, embedding, and vector-store drivers the agent uses.
+  - Clear tool, driver, and memory boundaries before connecting structures to databases, APIs, files, web scraping, or code-execution tools.
+  - A decision on self-hosting the open-source framework versus using the managed Griptape Cloud, with the matching data and secret handling plan.
+  - Observability and retention plans if run data, tool outputs, or memory are persisted to external stores or the managed platform.
+safetyNotes:
+  - Griptape structures (Agent, Pipeline, Workflow) can call tools that run code, execute shell or Python, query databases, scrape the web, call external APIs, and read or write files; review each tool's side effects before enabling it.
+  - Tool names, descriptions, schemas, rulesets, and retrieved documents become model-facing context, so treat them as untrusted input that can influence the agent.
+  - Off-prompt Task Memory keeps large or sensitive tool outputs out of the prompt by default, but data returned to the LLM, other tools, or downstream tasks still needs review.
+  - Human-in-the-loop approval, rate limits, timeouts, and rollback policies belong on any tool that performs account, billing, data, or infrastructure actions.
+  - Keep production permissions narrower than notebook or demo examples, and scope model-provider and tool credentials to least privilege.
+privacyNotes:
+  - Griptape runs can send prompts, instructions, conversation memory, tool arguments, tool results, and retrieved context to configured model providers and embedding services.
+  - Tools and drivers can expose local files, database records, API responses, secrets, or proprietary business data to the model and workflow if they are made available to a structure.
+  - Conversation memory, task memory, vector stores, and any observability or run-logging destinations can retain prompts, outputs, embeddings, and metadata outside the application runtime.
+  - The managed Griptape Cloud processes data you send to it; review its data-handling terms before sending production or customer data.
+  - RAG and web/file loaders can pull third-party or workspace content into prompts, memory, and stored artifacts, so apply normal retention and access-control policies.
+---
+
+## Editorial notes
+
+Griptape is useful when Claude-adjacent Python teams want to build agents and LLM workflows as structured, modular application code rather than ad hoc prompt scripts. It provides Structures (Agents, Pipelines, and Workflows), Tasks, Tools, Memory, Drivers, and RAG Engines so developers can compose agent behavior, tool use, and retrieval with explicit building blocks.
+
+This is distinct from existing agent-framework entries. CrewAI focuses on role-based multi-agent crews, LangGraph focuses on graph and stateful workflows, Mastra is a TypeScript agent framework, Pydantic AI is the Pydantic team's type-safe Python framework, and AutoGen is Microsoft's multi-agent framework. Griptape is a modular Python framework centered on structures, tools, drivers, and off-prompt memory for building and deploying LLM workflows.
+
+## Source notes
+
+- The official repository describes Griptape as a modular Python framework for LLM workflows, tools, memory, and data.
+- The Griptape documentation organizes the framework around Structures (Agent, Pipeline, Workflow), Tasks, Tools, Memory, Drivers, Engines, and Loaders for composing agent and workflow behavior.
+- Griptape emphasizes off-prompt Task Memory, which stores large or sensitive tool outputs outside the prompt and passes references between tools and tasks to control context size and data exposure.
+- Drivers provide swappable integrations for prompt models, embeddings, vector stores, conversation memory, and related services, so the same structure can target different providers.
+- Griptape also offers Griptape Cloud, a managed platform for hosting and running structures and data, separate from the open-source framework.
+- The GitHub repository is `griptape-ai/griptape`, is Apache-2.0 licensed, and is distributed as the `griptape` package on PyPI.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, skills, hooks, rules, commands, guides, open pull requests, and repository-wide content for `Griptape`, `griptape`, `griptape-ai`, `griptape.ai`, `docs.griptape.ai`, `github.com/griptape-ai/griptape`, `Griptape Cloud`, `off-prompt memory`, and `LLM workflow framework`. Existing agent-framework entries such as CrewAI, LangGraph, Mastra, Pydantic AI, and AutoGen cover adjacent workflows, but no dedicated Griptape tools entry, Griptape source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.
