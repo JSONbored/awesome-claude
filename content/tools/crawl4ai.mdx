@@ -1,0 +1,101 @@
+---
+title: Crawl4AI
+slug: crawl4ai
+category: tools
+description: Open-source, LLM-friendly Python web crawler and scraper that turns web pages into clean, LLM-ready Markdown for RAG, agents, and data pipelines, with an async browser pool, caching, structured extraction, and adaptive deep crawling.
+cardDescription: Open-source LLM-friendly web crawler that turns pages into clean Markdown for RAG and agents.
+seoTitle: Crawl4AI open-source LLM-friendly web crawler
+seoDescription: Crawl4AI is an open-source Python web crawler and scraper that turns web pages into clean, LLM-ready Markdown for RAG, agents, and data pipelines, with an async browser pool, caching, structured CSS/XPath/LLM extraction, and adaptive deep crawling.
+author: unclecode
+submittedBy: davion-knight
+submittedByUrl: "https://github.com/davion-knight"
+dateAdded: "2026-07-09"
+websiteUrl: "https://crawl4ai.com/"
+documentationUrl: "https://docs.crawl4ai.com/"
+repoUrl: "https://github.com/unclecode/crawl4ai"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - web-crawling
+  - scraping
+  - rag
+  - markdown
+  - python
+  - data-preparation
+keywords:
+  - crawl4ai
+  - llm web crawler
+  - web to markdown
+  - rag data ingestion
+  - web scraping for ai
+  - structured extraction
+robotsIndex: true
+robotsFollow: true
+prerequisites:
+  - Python 3.10+ project and a dependency manager to install `crawl4ai` from PyPI, followed by the `crawl4ai-setup` step that prepares the browser.
+  - Enough local resources to run a headless browser, or Docker if you deploy the crawler as a server.
+  - Target URLs or sites to crawl, and awareness of each site's terms of service, robots rules, and rate limits.
+  - For LLM-based extraction, a model-provider key or local model for the extraction strategy you configure.
+  - A downstream destination (for example a RAG store or data pipeline) for the Markdown or structured output.
+safetyNotes:
+  - Crawl4AI fetches and renders web pages you point it at, running a headless browser that executes page scripts, so crawl only sites you trust to run and process.
+  - Crawled content is untrusted input; when its Markdown or extracted text is fed to an LLM or agent, treat it as a prompt-injection surface and constrain what the agent may do with it.
+  - Respect each site's terms of service, robots directives, and rate limits, and avoid crawling content you are not permitted to access.
+  - If you run the Docker API server, keep authentication enabled and do not expose it on a public interface without protection; recent releases harden it as secure-by-default.
+  - Keep production crawling permissions and scope narrower than quickstart examples, and set timeouts and limits for long or deep crawls.
+privacyNotes:
+  - Crawled pages, extracted text, and generated Markdown can contain personal or proprietary data from the sites you visit; handle that output under normal data-handling policies.
+  - LLM-based extraction sends page content to the configured model provider, which processes it under its own terms; local models keep that processing on your machine.
+  - Caches, saved crawl outputs, and logs can retain fetched content and metadata, so choose retention and access controls deliberately.
+  - Model-provider keys, crawl configurations, and stored outputs should be kept out of version control and access-controlled like other operational data.
+---
+
+## Editorial notes
+
+Crawl4AI is useful when Claude-adjacent teams need to turn real web pages into clean, structured text that an LLM or agent can actually use. It is an open-source, LLM-friendly crawler and scraper that produces LLM-ready Markdown — with headings, tables, code, and citation hints — for RAG, agents, and data pipelines, and it runs without API keys via a CLI or Docker.
+
+This is distinct from the document-ingestion and framework entries in the directory: rather than parsing local files or orchestrating agents, Crawl4AI is the web-ingestion step that feeds them, handling browser rendering, extraction, and crawling at scale.
+
+## Key capabilities
+
+- **LLM-ready Markdown** — converts pages into clean Markdown with headings, tables, code, and citation hints suitable for RAG and prompts.
+- **Async browser pool** — a fast, concurrent headless-browser pool with caching and minimal hops for practical throughput.
+- **Structured extraction** — extract structured data with CSS or XPath selectors, or with LLM-based extraction strategies.
+- **Adaptive and deep crawling** — learns site patterns to explore what matters, with deep-crawl support including crash recovery for long-running crawls.
+- **Prefetch mode** — a mode for faster URL discovery on large crawls.
+- **Deploy anywhere** — usable as a Python library, a CLI, or a Docker API server, with no keys required for basic use.
+- **Content controls** — content filtering and pruning options to keep only the relevant parts of a page.
+- **Media and links** — extraction of links and media alongside text.
+
+## How teams use it
+
+- **RAG ingestion** — crawl documentation or knowledge sources into Markdown for retrieval-augmented generation.
+- **Agent web access** — give an agent clean, structured web content instead of raw HTML.
+- **Data pipelines** — build repeatable web-to-Markdown or web-to-structured-data pipelines.
+- **Competitive and research crawls** — gather and structure public web data for analysis.
+- **Site-to-dataset** — turn a site's pages into a dataset for downstream processing or evaluation.
+
+## Getting started
+
+Crawl4AI is open source and runs without API keys for basic crawling. Install it with `pip install -U crawl4ai`
+and run the `crawl4ai-setup` step to prepare the browser, then use the async crawler from Python, the CLI,
+or a Docker deployment. Point it at a URL to get LLM-ready Markdown, or configure a CSS, XPath, or
+LLM-based extraction strategy to pull structured data, and enable deep crawling for multi-page sources.
+
+## Source notes
+
+- The official repository describes Crawl4AI as an open-source, LLM-friendly web crawler and scraper that turns the web into clean, LLM-ready Markdown for RAG, agents, and data pipelines.
+- Documented capabilities include LLM-ready Markdown generation, an async browser pool with caching, CSS/XPath and LLM-based structured extraction, adaptive and deep crawling with crash recovery, a prefetch mode for faster URL discovery, and content filtering.
+- Crawl4AI can be used as a Python library, a CLI, or a Docker API server; recent releases harden the Docker server as secure-by-default with authentication.
+- It is installed from PyPI with `pip install -U crawl4ai` and a `crawl4ai-setup` step, targets Python 3.10+, and is documented at docs.crawl4ai.com.
+- The GitHub repository is `unclecode/crawl4ai`, is Apache-2.0 licensed, and is one of the most-starred web crawlers on GitHub; a hosted cloud API is noted as separate from the open-source project.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, skills, hooks, rules, commands, guides, open pull requests, and repository-wide content for `Crawl4AI`, `crawl4ai`, `unclecode/crawl4ai`, `crawl4ai.com`, `github.com/unclecode/crawl4ai`, `web to markdown`, and `llm web crawler`. Existing entries reference web scraping in passing and cover document ingestion such as Docling, but no dedicated Crawl4AI tools entry, Crawl4AI source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.
