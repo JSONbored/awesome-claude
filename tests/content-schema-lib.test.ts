@@ -675,6 +675,12 @@ describe("inferSectionBooleans", () => {
       "## Prerequisites\n\nA\n\n## Troubleshooting Guide\n\nB",
       { hasPrerequisites: true, hasTroubleshooting: true },
     ],
+    // A Prerequisites heading anywhere in the body must be detected, not only at
+    // offset 0 — real entry bodies open with a title/intro before their sections.
+    [
+      "# Title\n\nIntro.\n\n## Prerequisites\n\nNeed tool",
+      { hasPrerequisites: true, hasTroubleshooting: false },
+    ],
     [
       "### Not prerequisites",
       { hasPrerequisites: false, hasTroubleshooting: false },
@@ -691,7 +697,7 @@ describe("inferSectionBooleans", () => {
     ],
     [
       "## Troubleshooting\n\n## Prerequisites",
-      { hasPrerequisites: false, hasTroubleshooting: true },
+      { hasPrerequisites: true, hasTroubleshooting: true },
     ],
   ])("detects guide sections in %j", (body, expected) => {
     expect(inferSectionBooleans(body)).toEqual(expected);
