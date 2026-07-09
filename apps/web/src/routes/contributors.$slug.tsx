@@ -22,6 +22,7 @@ import { CategoryPill, SourceBadge, TrustBadge } from "@/components/badges";
 import { Monogram } from "@/components/monogram";
 import { absoluteUrl } from "@/lib/seo";
 import { stringifyJsonLd } from "@/lib/json-ld";
+import { breadcrumbListJsonLd } from "@/lib/breadcrumb-jsonld-lib";
 import { contributorPersonJsonLd } from "@/lib/contributor-person-jsonld-lib";
 import { ogImageUrl } from "@/lib/og-image";
 import { submitterAttribution } from "@/lib/contributor-profile-summary";
@@ -49,19 +50,10 @@ export const Route = createFileRoute("/contributors/$slug")({
       url,
       mainEntity: { "@id": `${url}#person` },
     };
-    const breadcrumbs = {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Contributors",
-          item: absoluteUrl("/contributors"),
-        },
-        { "@type": "ListItem", position: 2, name, item: url },
-      ],
-    };
+    const breadcrumbs = breadcrumbListJsonLd([
+      { name: "Contributors", item: absoluteUrl("/contributors") },
+      { name, item: url },
+    ]);
     return {
       meta: [
         { title: `${name} — HeyClaude contributor` },
