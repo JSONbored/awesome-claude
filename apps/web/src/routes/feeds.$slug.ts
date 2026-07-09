@@ -11,6 +11,7 @@ import {
   trendingItems,
   type SavedSearchQuery,
 } from "@/lib/feeds";
+import { absolutizeFeedLinks, feedLastBuilt } from "@/lib/feed-items-lib";
 import type { Category } from "@/types/registry";
 
 const CHANGELOG_STREAMS = ["release", "policy", "security"] as const;
@@ -60,11 +61,8 @@ export const Route = createFileRoute("/feeds/$slug")({
           throw notFound();
         }
 
-        const linked = items.map((i) => ({
-          ...i,
-          link: i.link.startsWith("http") ? i.link : `${base}${i.link}`,
-        }));
-        const lastBuilt = linked.length ? linked[0].pubDate : new Date(0).toISOString();
+        const linked = absolutizeFeedLinks(items, base);
+        const lastBuilt = feedLastBuilt(linked);
         const xml = buildRss({
           title,
           description,
