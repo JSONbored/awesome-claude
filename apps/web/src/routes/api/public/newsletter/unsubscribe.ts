@@ -19,6 +19,7 @@ import {
 } from "@/lib/api-security";
 import { logApiError, logApiWarn, redactEmail } from "@/lib/api-logs";
 import { getEnvString } from "@/lib/cloudflare-env.server";
+import { resendSegmentEnvKey } from "@/lib/resend-segment-lib";
 
 const BODY_LIMIT_BYTES = 8 * 1024;
 const RATE_LIMIT = {
@@ -52,8 +53,7 @@ function getRequestId(request: Request) {
 }
 
 function envSegmentId(followId: string): string | undefined {
-  const key = `RESEND_SEGMENT_${followId.toUpperCase().replace(/[^A-Z0-9]/g, "_")}`;
-  return getEnvString(key) || undefined;
+  return getEnvString(resendSegmentEnvKey(followId)) || undefined;
 }
 
 async function parsePayload(request: Request): Promise<UnsubscribePayload> {

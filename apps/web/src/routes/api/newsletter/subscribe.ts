@@ -6,6 +6,7 @@ import { logApiError, logApiInfo, redactEmail } from "@/lib/api-logs";
 import { getEnvString } from "@/lib/cloudflare-env.server";
 import { signConfirmToken } from "@/lib/newsletter-token.server";
 import { buildNewsletterConfirmEmail } from "@/lib/newsletter-emails";
+import { resendSegmentEnvKey } from "@/lib/resend-segment-lib";
 import { siteConfig } from "@/lib/site";
 
 const CONFIRM_TTL_MS = 48 * 60 * 60 * 1000;
@@ -13,8 +14,7 @@ const CONFIRM_TTL_MS = 48 * 60 * 60 * 1000;
 const DEFAULT_FROM = "HeyClaude <newsletter@mail.heyclau.de>";
 
 function envSegmentId(followId: string): string | undefined {
-  const key = `RESEND_SEGMENT_${followId.toUpperCase().replace(/[^A-Z0-9]/g, "_")}`;
-  return getEnvString(key) || undefined;
+  return getEnvString(resendSegmentEnvKey(followId)) || undefined;
 }
 
 /**
