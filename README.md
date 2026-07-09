@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>1348+ file-backed entries</strong> stay useful as both an
+        <strong>1350+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>1348</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>1350</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>AI-reviewed</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -79,7 +79,7 @@ Refreshed weekly by [`.github/workflows/gittensor-impact.yml`](.github/workflows
         </td>
 <td align="center" width="20%">
           <a href="#mcp-servers"><strong>🔌 MCP Servers</strong></a><br>
-          <code>475</code><br>
+          <code>477</code><br>
           <sub>Model Context Protocol servers and integrations.</sub>
         </td>
 <td align="center" width="20%">
@@ -307,7 +307,7 @@ packages use checksums and package trust metadata after review.
 - **[Web Async Agent Coordinator - Agents](https://heyclau.de/entry/agents/web-async-agent-coordinator)** - System-prompt agent that helps you drive Claude Code on the web: submitting long-running coding tasks to Anthropic's cloud, running independent sessions in parallel, linking GitHub repositories, tracking progress, and turning finished work into pull requests from the browser.
 - **[Zero Data Retention Compliance Agent](https://heyclau.de/entry/agents/zero-data-retention-compliance-agent)** - Community reusable agent prompt for mapping Claude Code deployments to zero data retention requirements using official ZDR docs: logging boundaries, MCP data flows, session storage, and compliance evidence checklists for security review.
 
-## 🔌 MCP Servers (475)
+## 🔌 MCP Servers (477)
 
 - **[Ableton MCP Extended](https://heyclau.de/entry/mcp/ableton-mcp-extended)** - Source-install MCP server for controlling Ableton Live from Claude, including session inspection, track and clip creation, MIDI note editing, tempo and transport control, browser item loading, arrangement workflows, device parameters, automation, external plugins, audio imports, and optional ElevenLabs.
 - **[ABMeter MCP Server](https://heyclau.de/entry/mcp/abmeter-mcp-server)** - ABMeter MCP exposes experimentation and analytics tooling over streamable HTTP for MCP clients.
@@ -548,6 +548,7 @@ packages use checksums and package trust metadata after review.
 - **[iMCP MCP Server](https://heyclau.de/entry/mcp/imcp-mcp-server)** - macOS app and bundled stdio MCP server that lets Claude access selected local services such as Calendar, Contacts, Messages, Location, Maps, Reminders, camera, microphone, screenshots, Shortcuts, utilities, and Weather.
 - **[inference.sh MCP Server](https://heyclau.de/entry/mcp/inference-sh-mcp-server)** - Hosted streamable-HTTP MCP server that exposes inference.sh platform tools for running apps, managing tasks, proxying external MCP connectors, and calling hundreds of hosted AI models from Claude Code, Cursor, and other MCP clients.
 - **[Inferventis MCP Server for Claude](https://heyclau.de/entry/mcp/inferventis-mcp-server)** - Inferventis hosted MCP server with 20 financial tools for FX rates, stocks, crypto, news, and URL reading over streamable HTTP, with many free tools and optional premium API keys.
+- **[Infisical MCP Server](https://heyclau.de/entry/mcp/infisical-mcp-server)** - The official Infisical MCP server (@infisical/mcp) that lets AI assistants work with Infisical's secrets-management API through function calling — reading, creating, updating, and deleting secrets, and managing projects, environments, folders, and project members — authenticating with a Machine Identity (universal auth) or an access token against Infisical Cloud or a self-hosted instance.
 - **[InfluxDB 3 MCP Server](https://heyclau.de/entry/mcp/influxdb-3-mcp-server)** - The official InfluxData MCP server for InfluxDB 3 (Core, Enterprise, Cloud Dedicated, Clustered, and Cloud Serverless). It lets LLMs run SQL queries, write line-protocol data, inspect databases and measurement schemas, manage databases and tokens, and check cluster health over the Model Context Protocol.
 - **[Inngest MCP Server for Claude](https://heyclau.de/entry/mcp/inngest-mcp-server)** - Connect Claude to your local Inngest Dev Server — list functions, send events, invoke functions, monitor run status, and search Inngest documentation — with the built-in Inngest Model Context Protocol server that ships with the Inngest dev environment.
 - **[Intercom MCP Server for Claude](https://heyclau.de/entry/mcp/intercom-mcp-server)** - Access customer conversations, tickets, and user data in real-time
@@ -737,6 +738,7 @@ packages use checksums and package trust metadata after review.
 - **[Tavily MCP Server for Claude](https://heyclau.de/entry/mcp/tavily-mcp-server)** - Official Tavily MCP server that gives Claude agent-optimized web search and page extraction, returning concise, source-cited results designed for LLM reasoning rather than raw search engine pages.
 - **[tbxark MCP Proxy Server](https://heyclau.de/entry/mcp/tbxark-mcp-proxy-server)** - MIT-licensed MCP proxy server that aggregates multiple downstream MCP servers behind one HTTP service, exposing each configured server through SSE or Streamable HTTP endpoints with auth tokens and tool filtering.
 - **[Telegram MCP Server](https://heyclau.de/entry/mcp/telegram-mcp-server)** - Telethon-powered MCP server for connecting Claude to Telegram accounts, chats, messages, contacts, media, folders, groups, channels, profile settings, and read-only or full account workflows.
+- **[Telnyx MCP Server](https://heyclau.de/entry/mcp/telnyx-mcp-server)** - The official Telnyx MCP server (@telnyx/mcp) that lets AI assistants use Telnyx's communications APIs through function calling — messaging (SMS/MMS), voice and call control, phone-number management, SIP connections, verification, and wireless. The npx package proxies to Telnyx's hosted MCP server over HTTPS and authenticates with a Telnyx API key.
 - **[Teradata MCP Server for Claude](https://heyclau.de/entry/mcp/teradata-mcp-server)** - Connect Claude to Teradata — list databases and tables, inspect DDL, run SQL queries, preview data, analyze column quality, and explore DBA diagnostics — with the official Teradata MCP server supporting optional ML tool expansion via the teradataml Python package.
 - **[Terraform MCP Server for Claude](https://heyclau.de/entry/mcp/terraform-mcp-server)** - Connect Claude to Terraform Registry, HCP Terraform, and Terraform Enterprise context through HashiCorp's MCP server.
 - **[Time MCP Server](https://heyclau.de/entry/mcp/time-mcp-server)** - Official MCP server that gives Claude current time and timezone conversion tools using IANA timezone names.
