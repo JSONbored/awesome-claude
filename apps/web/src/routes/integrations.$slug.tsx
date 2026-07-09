@@ -7,6 +7,7 @@ import { LiveVersionBadge } from "@/components/live-version-badge";
 import { CopyButton } from "@/components/copy-button";
 import { absoluteUrl } from "@/lib/seo";
 import { stringifyJsonLd } from "@/lib/json-ld";
+import { breadcrumbListJsonLd } from "@/lib/breadcrumb-jsonld-lib";
 import { integrationAppJsonLd } from "@/lib/integration-app-jsonld-lib";
 import { ogImageUrl } from "@/lib/og-image";
 
@@ -27,19 +28,10 @@ export const Route = createFileRoute("/integrations/$slug")({
       url,
       absoluteUrl,
     );
-    const breadcrumbs = {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Integrations",
-          item: absoluteUrl("/integrations"),
-        },
-        { "@type": "ListItem", position: 2, name: it.name, item: url },
-      ],
-    };
+    const breadcrumbs = breadcrumbListJsonLd([
+      { name: "Integrations", item: absoluteUrl("/integrations") },
+      { name: it.name, item: url },
+    ]);
     return {
       meta: [
         { title: `${it.name} — HeyClaude integration` },
