@@ -98,6 +98,15 @@ describe("compare dossier ui lib", () => {
     expect(bundled.showCompareSection).toBe(
       compareDossierShowCompareSection(alternatives),
     );
+    expect(bundled.bannerTexts).toEqual(
+      compareDossierHeaderBannerTexts(primary, alternatives),
+    );
+    expect(bundled.interactiveSearch).toEqual(
+      compareDossierInteractiveCompareSearch(primary, alternatives),
+    );
+    expect(bundled.interactiveLinkLabel).toBe(
+      compareDossierInteractiveLinkLabel(alternatives.length + 1),
+    );
     expect(
       compareDossierUiState(primary, [
         entry({

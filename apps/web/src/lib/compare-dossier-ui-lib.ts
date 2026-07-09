@@ -35,8 +35,8 @@ export function compareDossierUiState(entry: Entry, alternatives: Entry[]): Comp
   const comparedCount = alternatives.length + 1;
   return {
     showCompareSection: compareDossierShowCompareSection(alternatives),
-    bannerTexts: compareDossierBannerTexts(entry, alternatives),
-    interactiveSearch: compareDossierInteractiveSearch(entry, alternatives),
-    interactiveLinkLabel: compareInteractiveLinkLabel(comparedCount),
+    bannerTexts: compareDossierHeaderBannerTexts(entry, alternatives),
+    interactiveSearch: compareDossierInteractiveCompareSearch(entry, alternatives),
+    interactiveLinkLabel: compareDossierInteractiveLinkLabel(comparedCount),
   };
 }
