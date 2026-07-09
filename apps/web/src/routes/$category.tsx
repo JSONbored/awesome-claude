@@ -18,6 +18,7 @@ import { HubHighlights, HubSignalStats } from "@/components/hub-highlights";
 import { CategoryRankingTable } from "@/components/category-ranking-table";
 import { hubHighlights, hubStats } from "@/lib/hub-highlights";
 import { stringifyJsonLd } from "@/lib/json-ld";
+import { breadcrumbListJsonLd } from "@/lib/breadcrumb-jsonld-lib";
 import { categoryItemListJsonLd } from "@/lib/category-itemlist-jsonld-lib";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl, categoryAccent } from "@/lib/og-image";
@@ -53,14 +54,10 @@ export const Route = createFileRoute("/$category")({
     });
 
     const itemList = categoryItemListJsonLd(label, description, entries, absoluteUrl);
-    const breadcrumbs = {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Directory", item: absoluteUrl("/browse") },
-        { "@type": "ListItem", position: 2, name: label, item: url },
-      ],
-    };
+    const breadcrumbs = breadcrumbListJsonLd([
+      { name: "Directory", item: absoluteUrl("/browse") },
+      { name: label, item: url },
+    ]);
 
     return {
       meta: [
