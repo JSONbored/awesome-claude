@@ -10,33 +10,14 @@ import {
 } from "@/lib/api-security";
 import { logApiError, logApiWarn } from "@/lib/api-logs";
 import { getCloudflareBinding } from "@/lib/cloudflare-env.server";
+import { applyMcpHeaders } from "@/lib/mcp-headers-lib";
 import { createMcpArtifactReaders } from "@/lib/mcp-artifact-readers-lib";
-import { applySecurityHeaders } from "@/lib/security-headers";
 
 const route = getApiRouteDefinition("mcp.streamable");
 
 type StaticAssetsBinding = {
   fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
 };
-
-const mcpCorsHeaders = {
-  "access-control-allow-origin": "*",
-  "access-control-allow-methods": "POST, DELETE, OPTIONS",
-  "access-control-allow-headers":
-    "content-type, accept, mcp-session-id, mcp-protocol-version, mcp-method, mcp-name, last-event-id",
-  "access-control-expose-headers": "mcp-session-id, mcp-protocol-version",
-};
-
-function applyMcpHeaders(response: Response) {
-  const headers = applySecurityHeaders(new Headers(response.headers));
-  for (const [key, value] of Object.entries(mcpCorsHeaders)) headers.set(key, value);
-  headers.set("cache-control", "no-store");
-  return new Response(response.body, {
-    status: response.status,
-    statusText: response.statusText,
-    headers,
-  });
-}
 
 function mcpError(
   request: Request,
