@@ -11,6 +11,7 @@ import { NewsletterInline } from "@/components/newsletter-inline";
 import { HubHighlights, HubSignalStats } from "@/components/hub-highlights";
 import { hubHighlights, hubStats, trustPosture } from "@/lib/hub-highlights";
 import { stringifyJsonLd } from "@/lib/json-ld";
+import { platformItemListJsonLd } from "@/lib/platform-itemlist-jsonld-lib";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
 
@@ -32,19 +33,7 @@ export const Route = createFileRoute("/for/$platform")({
     const title = `Claude resources for ${label} — HeyClaude`;
     const description = `${entries.length} source-backed Claude resources that work with ${label}: MCP servers, agents, skills, hooks, commands, and rules, curated in HeyClaude.`;
     const ogImage = ogImageUrl({ title: `Claude for ${label}`, eyebrow: "Platform", description });
-    const itemList = {
-      "@context": "https://schema.org",
-      "@type": "ItemList",
-      name: `Claude resources for ${label}`,
-      description,
-      numberOfItems: entries.length,
-      itemListElement: entries.slice(0, 30).map((e, i) => ({
-        "@type": "ListItem",
-        position: i + 1,
-        name: e.title,
-        url: absoluteUrl(`/entry/${e.category}/${e.slug}`),
-      })),
-    };
+    const itemList = platformItemListJsonLd(label, description, entries, absoluteUrl);
     const breadcrumbs = {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
