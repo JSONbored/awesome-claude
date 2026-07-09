@@ -14,6 +14,24 @@ describe("ogImageMetaTags", () => {
     ]);
   });
 
+  it("inserts og:type between the image tags and the twitter card when given", () => {
+    const tags = ogImageMetaTags("https://x.dev/card.png", "article");
+    expect(tags).toHaveLength(7);
+    expect(tags[4]).toEqual({ property: "og:type", content: "article" });
+    expect(tags[5]).toEqual({
+      name: "twitter:card",
+      content: "summary_large_image",
+    });
+  });
+
+  it("omits og:type when not given", () => {
+    const tags = ogImageMetaTags("https://x.dev/card.png");
+    expect(tags).toHaveLength(6);
+    expect(tags.some((t) => "property" in t && t.property === "og:type")).toBe(
+      false,
+    );
+  });
+
   it("uses the same image url for og:image and twitter:image", () => {
     const tags = ogImageMetaTags("https://x.dev/card.png");
     const urls = tags

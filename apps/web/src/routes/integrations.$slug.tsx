@@ -10,6 +10,7 @@ import { stringifyJsonLd } from "@/lib/json-ld";
 import { breadcrumbListJsonLd } from "@/lib/breadcrumb-jsonld-lib";
 import { integrationAppJsonLd } from "@/lib/integration-app-jsonld-lib";
 import { ogImageUrl } from "@/lib/og-image";
+import { ogImageMetaTags } from "@/lib/og-meta-lib";
 
 export const Route = createFileRoute("/integrations/$slug")({
   loader: ({ params }) => {
@@ -39,13 +40,7 @@ export const Route = createFileRoute("/integrations/$slug")({
         { property: "og:title", content: `${it.name} — HeyClaude` },
         { property: "og:description", content: description },
         { property: "og:url", content: url },
-        { property: "og:image", content: ogImage },
-        { property: "og:image:type", content: "image/png" },
-        { property: "og:image:width", content: "1200" },
-        { property: "og:image:height", content: "630" },
-        { property: "og:type", content: "website" },
-        { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:image", content: ogImage },
+        ...ogImageMetaTags(ogImage, "website"),
       ],
       links: [{ rel: "canonical", href: url }],
       scripts: [

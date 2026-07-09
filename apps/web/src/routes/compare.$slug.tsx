@@ -9,6 +9,7 @@ import { breadcrumbListJsonLd } from "@/lib/breadcrumb-jsonld-lib";
 import { comparisonItemListJsonLd } from "@/lib/comparison-itemlist-jsonld-lib";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
+import { ogImageMetaTags } from "@/lib/og-meta-lib";
 import { getComparison } from "@/data/comparisons";
 import {
   compareCuratedInteractivePageRenderable,
@@ -47,13 +48,7 @@ export const Route = createFileRoute("/compare/$slug")({
         { property: "og:title", content: comparison.title },
         { property: "og:description", content: comparison.seoDescription },
         { property: "og:url", content: url },
-        { property: "og:image", content: ogImage },
-        { property: "og:image:type", content: "image/png" },
-        { property: "og:image:width", content: "1200" },
-        { property: "og:image:height", content: "630" },
-        { property: "og:type", content: "article" },
-        { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:image", content: ogImage },
+        ...ogImageMetaTags(ogImage, "article"),
       ],
       links: [{ rel: "canonical", href: url }],
       scripts: [
