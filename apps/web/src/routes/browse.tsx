@@ -57,6 +57,7 @@ import {
 } from "lucide-react";
 import { useCompare } from "@/lib/compare";
 import { browseCompareInteractiveUiState } from "@/lib/compare-browse-interactive-ui-lib";
+import { browseCompareUrlSelectedCount } from "@/lib/compare-browse-share-link";
 import {
   browseCompareOpenAnalyticsData,
   browseCompareOpenAnalyticsEvent,
@@ -305,7 +306,16 @@ function Browse() {
   // Hydrate from URL on mount + whenever the param changes externally
   React.useEffect(() => {
     compare.hydrate(compareParam);
-    if (compareParam) compare.setOpen(true);
+    if (compareParam) {
+      compare.setOpen(true);
+      const selectedCount = browseCompareUrlSelectedCount(compareParam);
+      if (selectedCount > 0) {
+        trackEvent(
+          browseCompareOpenAnalyticsEvent(),
+          browseCompareOpenAnalyticsData(selectedCount, "browse-compare-url"),
+        );
+      }
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [compareParam]);
   // Push selection changes back into the URL (debounced via effect)

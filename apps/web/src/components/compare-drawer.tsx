@@ -23,6 +23,12 @@ import { compareDrawerActionsForEntry } from "@/lib/compare-drawer-actions-inter
 import { compareDrawerInteractiveUiState } from "@/lib/compare-drawer-interactive-ui-lib";
 import { recordCompareIntentEvent } from "@/lib/compare-entry-actions";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
+import {
+  compareDrawerClearAnalyticsData,
+  compareDrawerClearAnalyticsEvent,
+  compareDrawerUndoRestoreAnalyticsData,
+  compareDrawerUndoRestoreAnalyticsEvent,
+} from "@/lib/compare-drawer-cta-events";
 import { claimCtaAnalyticsData, claimCtaAnalyticsEvent } from "@/lib/conversion-cta-events";
 import type { Entry, Harness } from "@/types/registry";
 import { cn } from "@/lib/utils";
@@ -371,14 +377,20 @@ export function CompareDrawer() {
   const onClear = () => {
     const snapshot = items.map((e) => `${e.category}/${e.slug}`).join(",");
     if (!snapshot) return clear();
+    const clearedCount = items.length;
+    trackEvent(compareDrawerClearAnalyticsEvent(), compareDrawerClearAnalyticsData(clearedCount));
     clear();
     toast("Compare cleared", {
-      description: `${items.length} item${items.length === 1 ? "" : "s"} removed`,
+      description: `${clearedCount} item${clearedCount === 1 ? "" : "s"} removed`,
       action: {
         label: "Undo",
         onClick: () => {
           hydrate(snapshot);
           setOpen(true);
+          trackEvent(
+            compareDrawerUndoRestoreAnalyticsEvent(),
+            compareDrawerUndoRestoreAnalyticsData(clearedCount),
+          );
         },
       },
     });

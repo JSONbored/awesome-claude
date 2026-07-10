@@ -18,3 +18,9 @@ export function compareBrowseShareUrlFromEntries(entries: EntryIdentity[], origi
 export function compareBrowseShareUrlForWindow(entries: EntryIdentity[]): string {
   return compareBrowseShareUrlFromEntries(entries, compareShareOrigin());
 }
+
+export function browseCompareUrlSelectedCount(compareParam: string | undefined | null): number {
+  const raw = String(compareParam ?? "").trim();
+  if (!raw) return 0;
+  return raw.split(",").filter((part) => part.trim().length > 0).length;
+}

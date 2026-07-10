@@ -19,7 +19,8 @@ export const COMPARE_TRAY_SURFACE = "compare-tray";
 export type BrowseCompareOpenSurface =
   | "browse-toolbar"
   | "browse-compare-selection-banner"
-  | "browse-trust-panel";
+  | "browse-trust-panel"
+  | "browse-compare-url";
 
 export function entryDetailEntryKey(category: string, slug: string): string {
   return `${category}/${slug}`;

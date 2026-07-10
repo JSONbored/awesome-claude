@@ -128,6 +128,10 @@ describe("entry detail cta events lib", () => {
       count: 4,
       surface: "browse-trust-panel",
     });
+    expect(browseCompareOpenAnalyticsData(2, "browse-compare-url")).toEqual({
+      count: 2,
+      surface: "browse-compare-url",
+    });
     expect(comparisonTrayQuickCompareAnalyticsEvent()).toBe(
       "compare_tray_quick_compare",
     );
