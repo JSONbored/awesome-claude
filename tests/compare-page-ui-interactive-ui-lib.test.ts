@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
-import { comparePageUiInteractiveUiState } from "@/lib/compare-page-ui-interactive-ui-lib";
+import {
+  comparePageUiInteractiveActionRowDiverges,
+  comparePageUiInteractiveUiState,
+} from "@/lib/compare-page-ui-interactive-ui-lib";
 
 function entry(overrides: Partial<Entry> = {}): Entry {
   return {
@@ -41,11 +44,14 @@ describe("compare page ui interactive ui lib", () => {
   });
 
   it("highlights diverging next actions in bundled page presentation state", () => {
-    expect(
-      comparePageUiInteractiveUiState([
-        entry({ installCommand: "npm i fixture" }),
-        entry({ slug: "other" }),
-      ]).actionRowDiverges,
-    ).toBe(true);
+    const items = [
+      entry({ installCommand: "npm i fixture" }),
+      entry({ slug: "other" }),
+    ];
+    const state = comparePageUiInteractiveUiState(items);
+    expect(state.actionRowDiverges).toBe(true);
+    expect(state.actionRowDiverges).toBe(
+      comparePageUiInteractiveActionRowDiverges(items),
+    );
   });
 });

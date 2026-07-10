@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
-import { compareTableInteractiveUiState } from "@/lib/compare-table-interactive-ui-lib";
+import {
+  compareTableInteractiveActionCells,
+  compareTableInteractiveActionRowDiverges,
+  compareTableInteractiveDivergingDecisionLabels,
+  compareTableInteractiveRenderNextActions,
+  compareTableInteractiveUiState,
+} from "@/lib/compare-table-interactive-ui-lib";
 
 function entry(overrides: Partial<Entry> = {}): Entry {
   return {
@@ -67,5 +73,21 @@ describe("compare table interactive ui lib", () => {
     expect(state.renderNextActions).toBe(true);
     expect(state.actionRowDiverges).toBe(true);
     expect(state.actionCells).toHaveLength(2);
+    const entries = [
+      entry({ reviewedBy: "maintainer", reviewedAt: "2026-01-02" }),
+      entry({ slug: "other", installCommand: "npm i fixture" }),
+    ];
+    expect(state.divergingDecisionLabels).toEqual(
+      compareTableInteractiveDivergingDecisionLabels(entries, true),
+    );
+    expect(state.renderNextActions).toBe(
+      compareTableInteractiveRenderNextActions(entries, true),
+    );
+    expect(state.actionRowDiverges).toBe(
+      compareTableInteractiveActionRowDiverges(entries, true),
+    );
+    expect(state.actionCells).toEqual(
+      compareTableInteractiveActionCells(entries, true),
+    );
   });
 });

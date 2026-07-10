@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
-import { comparePageInteractiveUiState } from "@/lib/compare-page-interactive-ui-lib";
+import {
+  comparePageInteractiveActionCells,
+  comparePageInteractiveActionRowDiverges,
+  comparePageInteractiveUiState,
+} from "@/lib/compare-page-interactive-ui-lib";
 
 function entry(overrides: Partial<Entry> = {}): Entry {
   return {
@@ -89,6 +93,14 @@ describe("compare page interactive ui lib", () => {
     );
     expect(state.actionRowDiverges).toBe(true);
     expect(state.actionCells).toHaveLength(2);
+    const items = [
+      entry({ installCommand: "npm i fixture" }),
+      entry({ slug: "other" }),
+    ];
+    expect(state.actionRowDiverges).toBe(
+      comparePageInteractiveActionRowDiverges(items),
+    );
+    expect(state.actionCells).toEqual(comparePageInteractiveActionCells(items));
     expect(state.actionCells[0]).toEqual(
       expect.objectContaining({ entryKey: "mcp:fixture" }),
     );

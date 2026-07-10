@@ -6,11 +6,19 @@ export type CompareDrawerEmptyInteractiveUiState = {
   shareUrl: string;
 };
 
+export function compareDrawerEmptyInteractiveEmptyHint(): string {
+  return compareDrawerEmptyStateHint();
+}
+
+export function compareDrawerEmptyInteractiveShareUrl(items: Entry[]): string {
+  return compareDrawerShareUrl(items);
+}
+
 export function compareDrawerEmptyInteractiveUiState(
   items: Entry[],
 ): CompareDrawerEmptyInteractiveUiState {
   return {
-    emptyHint: compareDrawerEmptyStateHint(),
-    shareUrl: compareDrawerShareUrl(items),
+    emptyHint: compareDrawerEmptyInteractiveEmptyHint(),
+    shareUrl: compareDrawerEmptyInteractiveShareUrl(items),
   };
 }

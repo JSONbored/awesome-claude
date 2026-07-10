@@ -7,8 +7,14 @@ import {
 export type { CompareDrawerPresentationState };
 export type CompareDrawerPresentationUiInteractiveUiState = CompareDrawerPresentationState;
 
-export function compareDrawerPresentationUiInteractiveUiState(
+export function compareDrawerPresentationUiInteractivePresentationState(
   items: Entry[],
 ): CompareDrawerPresentationUiInteractiveUiState {
   return compareDrawerPresentationState(items);
+}
+
+export function compareDrawerPresentationUiInteractiveUiState(
+  items: Entry[],
+): CompareDrawerPresentationUiInteractiveUiState {
+  return compareDrawerPresentationUiInteractivePresentationState(items);
 }

@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
-import { compareDrawerEmptyInteractiveUiState } from "@/lib/compare-drawer-empty-interactive-ui-lib";
+import {
+  compareDrawerEmptyInteractiveEmptyHint,
+  compareDrawerEmptyInteractiveShareUrl,
+  compareDrawerEmptyInteractiveUiState,
+} from "@/lib/compare-drawer-empty-interactive-ui-lib";
 
 function entry(overrides: Partial<Entry> = {}): Entry {
   return {
@@ -28,15 +32,17 @@ describe("compare drawer empty interactive ui lib", () => {
   });
 
   it("builds browse share URLs for multi-item drawer selections", () => {
-    expect(
-      compareDrawerEmptyInteractiveUiState([
-        entry({ category: "skills", slug: "alpha" }),
-        entry({ category: "hooks", slug: "beta" }),
-      ]),
-    ).toEqual({
+    const items = [
+      entry({ category: "skills", slug: "alpha" }),
+      entry({ category: "hooks", slug: "beta" }),
+    ];
+    const state = compareDrawerEmptyInteractiveUiState(items);
+    expect(state).toEqual({
       emptyHint: expect.stringContaining("Compare"),
       shareUrl: "/browse?compare=skills%2Falpha%2Chooks%2Fbeta",
     });
+    expect(state.emptyHint).toBe(compareDrawerEmptyInteractiveEmptyHint());
+    expect(state.shareUrl).toBe(compareDrawerEmptyInteractiveShareUrl(items));
   });
 
   it("preserves single-entry drawer share URLs", () => {

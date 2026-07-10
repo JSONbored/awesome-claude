@@ -7,8 +7,14 @@ import {
 export type { ComparePagePresentationState };
 export type ComparePagePresentationUiInteractiveUiState = ComparePagePresentationState;
 
-export function comparePagePresentationUiInteractiveUiState(
+export function comparePagePresentationUiInteractivePresentationState(
   items: Entry[],
 ): ComparePagePresentationUiInteractiveUiState {
   return comparePagePresentationState(items);
+}
+
+export function comparePagePresentationUiInteractiveUiState(
+  items: Entry[],
+): ComparePagePresentationUiInteractiveUiState {
+  return comparePagePresentationUiInteractivePresentationState(items);
 }

@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
-import { compareDrawerPresentationUiInteractiveUiState } from "@/lib/compare-drawer-presentation-ui-interactive-ui-lib";
+import {
+  compareDrawerPresentationUiInteractivePresentationState,
+  compareDrawerPresentationUiInteractiveUiState,
+} from "@/lib/compare-drawer-presentation-ui-interactive-ui-lib";
 
 function entry(overrides: Partial<Entry> = {}): Entry {
   return {
@@ -34,5 +37,12 @@ describe("compare drawer presentation ui interactive ui lib", () => {
     ]);
     expect(state.divergingDecisionLabels).toEqual(new Set(["Review status"]));
     expect(state.actionRowDiverges).toBe(true);
+    const items = [
+      entry({ reviewedBy: "maintainer", reviewedAt: "2026-01-02" }),
+      entry({ slug: "other", installCommand: "npm i fixture" }),
+    ];
+    expect(state).toEqual(
+      compareDrawerPresentationUiInteractivePresentationState(items),
+    );
   });
 });

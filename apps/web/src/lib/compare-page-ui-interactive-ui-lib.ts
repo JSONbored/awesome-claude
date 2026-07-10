@@ -1,15 +1,18 @@
 import type { Entry } from "@/types/registry";
-import { comparePagePresentationState } from "@/lib/compare-page-presentation-ui-lib";
+import { comparePagePresentationActionRowDiverges } from "@/lib/compare-page-presentation-ui-lib";
 import { comparePageUiState, type ComparePageUiState } from "@/lib/compare-page-ui-lib";
 
 export type { ComparePageUiState };
 export type ComparePageUiInteractiveUiState = ComparePageUiState;
 
+export function comparePageUiInteractiveActionRowDiverges(items: Entry[]): boolean {
+  return comparePagePresentationActionRowDiverges(items);
+}
+
 export function comparePageUiInteractiveUiState(items: Entry[]): ComparePageUiInteractiveUiState {
   const pageUi = comparePageUiState(items);
-  const presentation = comparePagePresentationState(items);
   return {
     ...pageUi,
-    actionRowDiverges: presentation.actionRowDiverges,
+    actionRowDiverges: comparePageUiInteractiveActionRowDiverges(items),
   };
 }

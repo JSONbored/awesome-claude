@@ -6,25 +6,25 @@ export type CompareContextInteractiveUiState = {
   shareUrl: string;
 };
 
+export function compareContextInteractiveSelectionParam(items: Entry[]): string {
+  return compareContextSelectionParam(items);
+}
+
+export function compareContextInteractiveShareUrl(items: Entry[]): string {
+  return compareContextShareUrl(items);
+}
+
 export function compareContextInteractiveUiState(items: Entry[]): CompareContextInteractiveUiState {
   return {
-    selectionParam: compareContextSelectionParam(items),
-    shareUrl: compareContextShareUrl(items),
+    selectionParam: compareContextInteractiveSelectionParam(items),
+    shareUrl: compareContextInteractiveShareUrl(items),
   };
 }
 
 /** True when hydrated selection differs from the live compare tray selection. */
 export function compareContextSelectionChanged(next: Entry[], current: Entry[]): boolean {
   return (
-    compareContextInteractiveUiState(next).selectionParam !==
-    compareContextInteractiveUiState(current).selectionParam
+    compareContextInteractiveSelectionParam(next) !==
+    compareContextInteractiveSelectionParam(current)
   );
-}
-
-export function compareContextInteractiveSelectionParam(items: Entry[]): string {
-  return compareContextInteractiveUiState(items).selectionParam;
-}
-
-export function compareContextInteractiveShareUrl(items: Entry[]): string {
-  return compareContextInteractiveUiState(items).shareUrl;
 }

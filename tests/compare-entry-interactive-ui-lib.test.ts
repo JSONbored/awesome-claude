@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
 import {
+  compareEntryInteractiveDossierUi,
+  compareEntryInteractiveFeaturedUi,
   compareEntryInteractiveShowsDossierCompareSection,
   compareEntryInteractiveShowsFeaturedLinks,
   compareEntryInteractiveUiState,
@@ -117,6 +119,23 @@ describe("compare entry interactive ui lib", () => {
       compareEntryInteractiveShowsDossierCompareSection(primary, [
         entry({ category: "hooks", slug: "alt" }),
       ]),
+    );
+    expect(bundled.dossierUi).toEqual(
+      compareEntryInteractiveDossierUi(primary, [
+        entry({ category: "hooks", slug: "alt" }),
+      ]),
+    );
+    expect(bundled.featuredUi).toEqual(
+      compareEntryInteractiveFeaturedUi(
+        [{ slug: "pair", refs: ["skills/alpha", "hooks/beta"] }],
+        [
+          {
+            slug: "top-picks",
+            picks: [{ ref: "skills/alpha" }, { ref: "hooks/beta" }],
+          },
+        ],
+        catalog,
+      ),
     );
   });
 

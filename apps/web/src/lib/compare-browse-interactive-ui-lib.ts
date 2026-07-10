@@ -8,16 +8,23 @@ export type BrowseCompareInteractiveUiState = NonNullable<
   showHint: boolean;
 };
 
+export function browseCompareInteractiveUiShowsHint(items: Entry[]): boolean {
+  return shouldShowBrowseCompareHint(items);
+}
+
+export function browseCompareInteractiveBundledState(
+  items: Entry[],
+): ReturnType<typeof browseCompareUiState> {
+  return browseCompareUiState(items);
+}
+
 export function browseCompareInteractiveUiState(
   items: Entry[],
 ): BrowseCompareInteractiveUiState | null {
-  if (!shouldShowBrowseCompareHint(items)) return null;
+  const bundled = browseCompareInteractiveBundledState(items);
+  if (!bundled) return null;
   return {
-    ...browseCompareUiState(items)!,
+    ...bundled,
     showHint: browseCompareInteractiveUiShowsHint(items),
   };
-}
-
-export function browseCompareInteractiveUiShowsHint(items: Entry[]): boolean {
-  return shouldShowBrowseCompareHint(items);
 }

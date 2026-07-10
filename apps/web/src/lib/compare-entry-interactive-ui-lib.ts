@@ -19,6 +19,21 @@ export type CompareEntryInteractiveUiState = {
   showDossierCompareSection: boolean;
 };
 
+export function compareEntryInteractiveDossierUi(
+  entry: Entry,
+  alternatives: Entry[],
+): CompareDossierInteractiveUiState {
+  return compareDossierInteractiveUiState(entry, alternatives);
+}
+
+export function compareEntryInteractiveFeaturedUi(
+  comparisons: ReadonlyArray<{ slug: string; refs: string[] }>,
+  lists: ReadonlyArray<{ slug: string; picks: BestListPickRef[] }>,
+  catalog: EntryIdentity[],
+): CompareEntryFeaturedInteractiveUiState {
+  return compareEntryFeaturedInteractiveUiState(comparisons, lists, catalog);
+}
+
 export function compareEntryInteractiveUiState(
   entry: Entry,
   alternatives: Entry[],
@@ -26,17 +41,14 @@ export function compareEntryInteractiveUiState(
   lists: ReadonlyArray<{ slug: string; picks: BestListPickRef[] }>,
   catalog: EntryIdentity[],
 ): CompareEntryInteractiveUiState {
-  const dossierUi = compareDossierInteractiveUiState(entry, alternatives);
-  const featuredUi = compareEntryFeaturedInteractiveUiState(comparisons, lists, catalog);
   return {
-    dossierUi,
-    featuredUi,
-    hasFeaturedLinks: compareEntryFeaturedInteractiveShowsFeaturedLinks(
-      comparisons,
-      lists,
-      catalog,
+    dossierUi: compareEntryInteractiveDossierUi(entry, alternatives),
+    featuredUi: compareEntryInteractiveFeaturedUi(comparisons, lists, catalog),
+    hasFeaturedLinks: compareEntryInteractiveShowsFeaturedLinks(comparisons, lists, catalog),
+    showDossierCompareSection: compareEntryInteractiveShowsDossierCompareSection(
+      entry,
+      alternatives,
     ),
-    showDossierCompareSection: compareDossierInteractiveShowCompareSection(entry, alternatives),
   };
 }
 

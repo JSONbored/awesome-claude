@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
 import {
+  browseCompareInteractiveBundledState,
   browseCompareInteractiveUiShowsHint,
   browseCompareInteractiveUiState,
 } from "@/lib/compare-browse-interactive-ui-lib";
@@ -52,6 +53,10 @@ describe("compare browse interactive ui lib", () => {
     expect(browseCompareInteractiveUiShowsHint(five)).toBe(true);
     const bundled = browseCompareInteractiveUiState(five);
     expect(bundled?.showHint).toBe(browseCompareInteractiveUiShowsHint(five));
+    expect(bundled).toEqual({
+      ...browseCompareInteractiveBundledState(five)!,
+      showHint: true,
+    });
   });
 
   it("surfaces divergence hints in browse compare CTA state", () => {

@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
 import {
+  compareCuratedHeaderBannerTexts,
+  compareCuratedInteractiveLinkLabel,
+  compareCuratedInteractiveSearch,
+  compareCuratedResolvedEntries,
+} from "@/lib/compare-curated-ui-lib";
+import {
   compareCuratedInteractivePageRenderable,
   compareCuratedInteractiveUiState,
 } from "@/lib/compare-curated-interactive-ui-lib";
@@ -99,5 +105,15 @@ describe("compare curated interactive ui lib", () => {
     ).toEqual([
       "1 trust signal differ across this comparison (Review status).",
     ]);
+    const entries = compareCuratedResolvedEntries(refs, extendedCatalog);
+    expect(compareCuratedHeaderBannerTexts(entries)).toEqual([
+      "1 trust signal differ across this comparison (Review status).",
+    ]);
+    expect(compareCuratedInteractiveSearch(entries)).toEqual({
+      ids: refs.join(","),
+    });
+    expect(compareCuratedInteractiveLinkLabel(entries.length)).toBe(
+      "Open in the interactive comparison tool",
+    );
   });
 });
