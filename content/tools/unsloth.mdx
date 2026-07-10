@@ -1,0 +1,102 @@
+---
+title: Unsloth
+slug: unsloth
+category: tools
+description: Open-source library for fast, memory-efficient fine-tuning, reinforcement learning, and training of open LLMs — train 500+ models up to 2x faster with up to 70% less VRAM and no accuracy loss, with LoRA/QLoRA support and export to GGUF, safetensors, vLLM, and Ollama.
+cardDescription: Open-source library for fast, low-VRAM LLM fine-tuning and RL with export to GGUF, vLLM, and Ollama.
+seoTitle: Unsloth open-source fast LLM fine-tuning library
+seoDescription: Unsloth is an open-source library for fast, memory-efficient fine-tuning, reinforcement learning, and training of open LLMs, training models up to 2x faster with up to 70% less VRAM using LoRA/QLoRA and exporting to GGUF, safetensors, vLLM, and Ollama.
+author: unslothai
+submittedBy: davion-knight
+submittedByUrl: "https://github.com/davion-knight"
+dateAdded: "2026-07-10"
+websiteUrl: "https://unsloth.ai/"
+documentationUrl: "https://docs.unsloth.ai/"
+repoUrl: "https://github.com/unslothai/unsloth"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - fine-tuning
+  - llm-training
+  - reinforcement-learning
+  - lora
+  - python
+  - open-models
+keywords:
+  - unsloth
+  - llm fine-tuning
+  - qlora training
+  - low vram fine-tuning
+  - reinforcement learning llm
+  - gguf export
+robotsIndex: true
+robotsFollow: true
+prerequisites:
+  - Python project and a package manager to install `unsloth` from PyPI (Unsloth Studio is a separate local UI).
+  - A supported GPU with enough VRAM for the model and training method you choose, or a free notebook environment such as Colab or Kaggle.
+  - A base open model (for example Llama, Qwen, Gemma, Mistral, or Phi) and a training dataset with the license and permissions to fine-tune on it.
+  - A destination for exported models (GGUF, safetensors, or a serving runtime such as vLLM or Ollama).
+  - A plan for where checkpoints, datasets, and exported weights are stored and who can access them.
+safetyNotes:
+  - Fine-tuning and RL run models with your compute and data; use a base model and dataset you are permitted to train on, and verify the licenses of both.
+  - Unsloth Studio includes tool-calling and code-execution features that let a model run code in a sandbox and call tools; review and constrain those features before enabling them on untrusted prompts.
+  - If you deploy an inference endpoint or connect external API providers, keep endpoints authenticated and scope provider credentials to the minimum needed.
+  - Exported weights (GGUF, safetensors) inherit the base model's license and any restrictions; confirm you may distribute or serve them.
+  - Treat model outputs as untrusted for downstream actions, and keep production training and serving permissions narrower than notebook examples.
+privacyNotes:
+  - Training data you fine-tune on can contain personal or proprietary information; it is incorporated into model weights, so treat the dataset and resulting model as sensitive.
+  - Running locally keeps training and inference on your machine, while connected API providers process any prompts or data you send under their terms.
+  - Checkpoints, exported weights, logs, and datasets should be stored with appropriate retention and access controls.
+  - Provider keys and any inference-endpoint configuration should be kept out of version control and access-controlled like other secrets.
+---
+
+## Editorial notes
+
+Unsloth is useful when Claude-adjacent teams want to fine-tune or reinforcement-learn open models efficiently — on modest hardware or free notebooks — instead of needing large GPU budgets. It reworks the training path with custom kernels so fine-tuning and RL run faster and use far less memory, while keeping accuracy, and it can export the result into common serving formats.
+
+This is distinct from the agent frameworks, gateways, memory, and search tools in the directory: Unsloth is the model-training layer, focused on making fine-tuning, reinforcement learning, and export practical for open models, and it also ships Unsloth Studio, a local UI for running and training models.
+
+## Key capabilities
+
+- **Fast, low-memory training** — train and RL 500+ open models up to 2x faster with up to 70% less VRAM and no accuracy loss.
+- **Fine-tuning methods** — LoRA and QLoRA support for efficient adaptation, plus full fine-tuning and reinforcement learning.
+- **Broad model support** — works with Llama, Qwen, Gemma, Mistral, Phi, DeepSeek, and other open models, including text, vision, audio, and embedding models.
+- **Export** — save or export to GGUF, 16-bit safetensors, and other formats for serving with vLLM, Ollama, and more.
+- **Custom kernels** — Triton and mathematical kernels behind the speed and memory gains, developed with collaborators.
+- **Unsloth Studio** — a local UI to search, download, run, and train models on Windows, Linux, and macOS.
+- **Serving and integration** — an API inference endpoint and connections to run local models with coding tools, plus provider connections (for example OpenAI, Anthropic) and servers (vLLM, Ollama).
+- **Notebook-friendly** — runs on free environments such as Colab and Kaggle.
+
+## How teams use it
+
+- **Efficient fine-tuning** — adapt an open model to a domain or task on limited GPU memory.
+- **Reinforcement learning** — run RL methods on open models with lower resource requirements.
+- **Local model serving** — export a fine-tuned model to GGUF or safetensors and serve it with Ollama or vLLM.
+- **Prototyping on notebooks** — fine-tune in Colab or Kaggle before scaling up.
+- **Local model runs** — use Unsloth Studio to run and train models on a workstation.
+
+## Getting started
+
+Unsloth is open source. Install the training library with `pip install unsloth`, load a supported base
+model, and fine-tune or RL it with LoRA/QLoRA on your dataset; a supported GPU or a free notebook such
+as Colab or Kaggle works for many models. When training is done, export the model to GGUF or safetensors
+and serve it with vLLM or Ollama. Unsloth Studio is available separately as a local UI for running and
+training models.
+
+## Source notes
+
+- The official repository describes Unsloth as providing 2-5x faster training, reinforcement learning, and fine-tuning for open models, and states it trains and RLs 500+ models up to 2x faster with up to 70% less VRAM and no accuracy loss.
+- Documented capabilities include LoRA/QLoRA and full fine-tuning, reinforcement learning, support for many open models across text, vision, audio, and embeddings, custom Triton kernels, and export to GGUF and 16-bit safetensors for serving with runtimes such as vLLM and Ollama.
+- Unsloth Studio is a separate local UI for searching, downloading, running, and training models on Windows, Linux, and macOS, with features including tool calling, code execution, and an API inference endpoint.
+- The training library is installed from PyPI as `unsloth` and is built on the open-source model-training ecosystem; documentation is at docs.unsloth.ai.
+- The GitHub repository is `unslothai/unsloth`, is Apache-2.0 licensed, and is maintained by Unsloth AI.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, skills, hooks, rules, commands, guides, open pull requests, and repository-wide content for `Unsloth`, `unsloth`, `unslothai`, `unsloth.ai`, `github.com/unslothai/unsloth`, `LLM fine-tuning`, and `QLoRA training`. Existing entries cover agent frameworks, RAG, and serving-adjacent tools, but no dedicated Unsloth tools entry, Unsloth source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.
