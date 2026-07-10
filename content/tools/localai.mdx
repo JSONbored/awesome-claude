@@ -79,11 +79,12 @@ This is distinct from the agent frameworks, memory, search, and training tools i
 
 ## Getting started
 
-LocalAI is open source and self-hosted. The quickest path is a container: run `docker run -ti --name
-local-ai -p 8080:8080 localai/localai:latest`, which serves the API on local port 8080; native
-binaries and a desktop app are also available. Pull a model from the gallery or provide your own,
-then point an OpenAI-, Anthropic-, or ElevenLabs-compatible client at your LocalAI endpoint. Backends
-are pulled on demand, so you only install what your models need.
+LocalAI is open source and self-hosted. The quickest path is a container for local-only use: run
+`docker run -ti --name local-ai -p 127.0.0.1:8080:8080 localai/localai:latest`, which binds
+the API to loopback on port 8080; native binaries and a desktop app are also available. Pull a model
+from the gallery or provide your own, then point an OpenAI-, Anthropic-, or ElevenLabs-compatible
+client at your LocalAI endpoint. Configure API-key authentication before binding LocalAI to a LAN or
+public interface. Backends are pulled on demand, so you only install what your models need.
 
 ## Source notes
 
