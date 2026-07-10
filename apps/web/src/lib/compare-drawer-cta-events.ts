@@ -11,4 +11,10 @@ export {
   compareDrawerSourceAnalyticsEvent,
   compareDrawerShareLinkCopyAnalyticsData,
   compareDrawerShareLinkCopyAnalyticsEvent,
+  compareDrawerRemoveAnalyticsData,
+  compareDrawerRemoveAnalyticsEvent,
+  compareDrawerFullViewAnalyticsData,
+  compareDrawerFullViewAnalyticsEvent,
+  compareDrawerOpenDossierAnalyticsData,
+  compareDrawerOpenDossierAnalyticsEvent,
 } from "@/lib/compare-drawer-cta-events-lib";

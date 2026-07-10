@@ -32,6 +32,12 @@ import {
   compareDrawerSourceAnalyticsEvent,
   compareDrawerShareLinkCopyAnalyticsData,
   compareDrawerShareLinkCopyAnalyticsEvent,
+  compareDrawerRemoveAnalyticsData,
+  compareDrawerRemoveAnalyticsEvent,
+  compareDrawerFullViewAnalyticsData,
+  compareDrawerFullViewAnalyticsEvent,
+  compareDrawerOpenDossierAnalyticsData,
+  compareDrawerOpenDossierAnalyticsEvent,
 } from "@/lib/compare-drawer-cta-events";
 import {
   compareDrawerDecisionPresetAnalyticsData,
@@ -44,6 +50,7 @@ import {
 import { claimCtaAnalyticsData, claimCtaAnalyticsEvent } from "@/lib/conversion-cta-events";
 import type { Entry, Harness } from "@/types/registry";
 import { cn } from "@/lib/utils";
+import { sameEntry } from "@/lib/entry-identity";
 import { brandIdentityLabel } from "@/lib/brand-icons";
 import { compareDecisionBriefState } from "@/lib/compare-decision-brief";
 import { CompareDecisionBriefPanel } from "@/components/compare-decision-brief-panel";
@@ -481,8 +488,28 @@ export function CompareDrawer() {
   };
 
   const onRemove = (e: Entry) => {
+    const remainingCount = items.filter((item) => !sameEntry(item, e)).length;
+    trackEvent(
+      compareDrawerRemoveAnalyticsEvent(),
+      compareDrawerRemoveAnalyticsData(e.category, e.slug, remainingCount),
+    );
     toggle(e);
     toast(`Removed “${e.title}” from compare`);
+  };
+
+  const onOpenDossier = (entry: Entry) => {
+    trackEvent(
+      compareDrawerOpenDossierAnalyticsEvent(),
+      compareDrawerOpenDossierAnalyticsData(entry.category, entry.slug),
+    );
+  };
+
+  const onOpenFullView = () => {
+    trackEvent(
+      compareDrawerFullViewAnalyticsEvent(),
+      compareDrawerFullViewAnalyticsData(items.length),
+    );
+    setOpen(false);
   };
 
   return (
@@ -536,7 +563,7 @@ export function CompareDrawer() {
                 <Link
                   to="/compare"
                   search={fullViewSearch}
-                  onClick={() => setOpen(false)}
+                  onClick={onOpenFullView}
                   className="inline-flex h-8 items-center gap-1 rounded-md border border-border bg-surface px-2.5 text-xs text-ink hover:bg-surface-2"
                 >
                   Open full view <ArrowRight className="h-3 w-3" />
@@ -625,6 +652,7 @@ export function CompareDrawer() {
                             <Link
                               to="/entry/$category/$slug"
                               params={{ category: e.category, slug: e.slug }}
+                              onClick={() => onOpenDossier(e)}
                               className="min-w-0 font-display text-sm font-semibold text-ink hover:underline"
                             >
                               {e.title}
@@ -642,6 +670,7 @@ export function CompareDrawer() {
                         <Link
                           to="/entry/$category/$slug"
                           params={{ category: e.category, slug: e.slug }}
+                          onClick={() => onOpenDossier(e)}
                           className="mt-1 inline-flex items-center gap-1 text-[11px] text-ink-muted hover:text-ink"
                         >
                           Open dossier <ArrowRight className="h-3 w-3" />

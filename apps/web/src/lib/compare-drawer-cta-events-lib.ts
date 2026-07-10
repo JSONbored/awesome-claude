@@ -53,3 +53,41 @@ export function compareDrawerShareLinkCopyAnalyticsData(compareCount: number) {
     compareCount,
   };
 }
+
+export function compareDrawerRemoveAnalyticsEvent(): string {
+  return "compare_drawer_remove";
+}
+
+export function compareDrawerRemoveAnalyticsData(
+  category: string,
+  slug: string,
+  remainingCount: number,
+) {
+  return {
+    entry: `${category}/${slug}`,
+    surface: COMPARE_DRAWER_SURFACE,
+    count: remainingCount,
+  };
+}
+
+export function compareDrawerFullViewAnalyticsEvent(): string {
+  return "compare_drawer_full_view";
+}
+
+export function compareDrawerFullViewAnalyticsData(count: number) {
+  return {
+    count,
+    surface: COMPARE_DRAWER_SURFACE,
+  };
+}
+
+export function compareDrawerOpenDossierAnalyticsEvent(): string {
+  return "compare_open_dossier";
+}
+
+export function compareDrawerOpenDossierAnalyticsData(category: string, slug: string) {
+  return {
+    entry: `${category}/${slug}`,
+    surface: COMPARE_DRAWER_SURFACE,
+  };
+}

@@ -50,6 +50,18 @@ import {
   comparePageShareLinkCopyAnalyticsData,
   comparePageShareLinkCopyAnalyticsEvent,
 } from "@/lib/compare-page-share-link-cta-events";
+import {
+  comparePageAddOpenAnalyticsData,
+  comparePageAddOpenAnalyticsEvent,
+  comparePageAddSelectAnalyticsData,
+  comparePageAddSelectAnalyticsEvent,
+  comparePageClearAnalyticsData,
+  comparePageClearAnalyticsEvent,
+  comparePageOpenDossierAnalyticsData,
+  comparePageOpenDossierAnalyticsEvent,
+  comparePageRemoveAnalyticsData,
+  comparePageRemoveAnalyticsEvent,
+} from "@/lib/compare-page-selection-cta-events";
 import { claimCtaAnalyticsData, claimCtaAnalyticsEvent } from "@/lib/conversion-cta-events";
 import { sameEntry } from "@/lib/entry-identity";
 import { search } from "@/data/search";
@@ -204,6 +216,10 @@ function ComparePage() {
 
   const removeItem = (e: Entry) => {
     const next = items.filter((x) => !sameEntry(x, e));
+    trackEvent(
+      comparePageRemoveAnalyticsEvent(),
+      comparePageRemoveAnalyticsData(e.category, e.slug, next.length),
+    );
     compare.toggle(e);
     pushIds(next);
   };
@@ -211,9 +227,34 @@ function ComparePage() {
   const addItem = (e: Entry) => {
     if (items.length >= 4) return;
     if (items.some((x) => sameEntry(x, e))) return;
+    const nextCount = items.length + 1;
+    trackEvent(
+      comparePageAddSelectAnalyticsEvent(),
+      comparePageAddSelectAnalyticsData(e.category, e.slug, nextCount),
+    );
     compare.toggle(e);
     pushIds([...items, e]);
     setPickerOpen(false);
+  };
+
+  const onClearAll = () => {
+    const clearedCount = items.length;
+    if (clearedCount === 0) return;
+    trackEvent(comparePageClearAnalyticsEvent(), comparePageClearAnalyticsData(clearedCount));
+    compare.clear();
+    navigate({ search: { ids: "" } });
+  };
+
+  const onAddOpen = () => {
+    trackEvent(comparePageAddOpenAnalyticsEvent(), comparePageAddOpenAnalyticsData(items.length));
+    setPickerOpen(true);
+  };
+
+  const onOpenDossier = (entry: Entry) => {
+    trackEvent(
+      comparePageOpenDossierAnalyticsEvent(),
+      comparePageOpenDossierAnalyticsData(entry.category, entry.slug),
+    );
   };
 
   const copyShare = () => pageUi.shareUrl;
@@ -305,10 +346,7 @@ function ComparePage() {
           />
           <button
             type="button"
-            onClick={() => {
-              compare.clear();
-              navigate({ search: { ids: "" } });
-            }}
+            onClick={onClearAll}
             className="inline-flex h-8 items-center rounded-md border border-border bg-surface px-3 text-xs text-ink-muted hover:bg-surface-2 hover:text-ink"
           >
             Clear all
@@ -371,6 +409,7 @@ function ComparePage() {
                     <Link
                       to="/entry/$category/$slug"
                       params={{ category: e.category, slug: e.slug }}
+                      onClick={() => onOpenDossier(e)}
                       className="font-display text-sm font-semibold text-ink hover:underline"
                     >
                       {e.title}
@@ -388,6 +427,7 @@ function ComparePage() {
                   <Link
                     to="/entry/$category/$slug"
                     params={{ category: e.category, slug: e.slug }}
+                    onClick={() => onOpenDossier(e)}
                     className="mt-2 inline-flex items-center gap-1 text-[11px] text-ink-muted hover:text-ink"
                   >
                     Open dossier <ArrowRight className="h-3 w-3" />
@@ -402,6 +442,7 @@ function ComparePage() {
                   <AddColumn
                     open={pickerOpen}
                     setOpen={setPickerOpen}
+                    onOpen={onAddOpen}
                     onPick={addItem}
                     exclude={items}
                   />
@@ -624,11 +665,13 @@ function Skeleton({ ids }: { ids: string }) {
 function AddColumn({
   open,
   setOpen,
+  onOpen,
   onPick,
   exclude,
 }: {
   open: boolean;
   setOpen: (v: boolean) => void;
+  onOpen: () => void;
   onPick: (e: Entry) => void;
   exclude: Entry[];
 }) {
@@ -642,7 +685,7 @@ function AddColumn({
     return (
       <button
         type="button"
-        onClick={() => setOpen(true)}
+        onClick={onOpen}
         className="inline-flex h-8 items-center gap-1.5 rounded-md border border-dashed border-border bg-background px-3 text-xs text-ink-muted hover:bg-surface-2 hover:text-ink"
       >
         <Plus className="h-3.5 w-3.5" />
