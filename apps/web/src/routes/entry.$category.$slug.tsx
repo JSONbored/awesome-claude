@@ -95,6 +95,10 @@ import {
   entryDetailPlaybookActionAnalyticsData,
   entryDetailPlaybookActionAnalyticsEvent,
 } from "@/lib/entry-detail-cta-events";
+import {
+  detailDecisionPresetAnalyticsData,
+  detailDecisionPresetAnalyticsEvent,
+} from "@/lib/entry-detail-decision-preset-cta-events";
 import { resourceCardCompareFullMessage } from "@/lib/resource-card-compare-ui";
 import { useCopyPref, useHarnessPref, type CopyVariant } from "@/lib/dossier-prefs";
 import { variantsForEntry } from "@/components/copy-segmented";
@@ -414,6 +418,50 @@ function Dossier() {
   const onPlaybookOpenCompareTray = useCallback(() => {
     compare.setOpen(true);
   }, [compare]);
+  const onAdoptionPresetSelect = useCallback(
+    (preset: AdoptionPlanPresetId) => {
+      if (preset === adoptionPreset) return;
+      trackEvent(
+        detailDecisionPresetAnalyticsEvent(),
+        detailDecisionPresetAnalyticsData(entry.category, entry.slug, "adoption-plan", preset),
+      );
+      setAdoptionPreset(preset);
+    },
+    [adoptionPreset, entry.category, entry.slug],
+  );
+  const onEvidencePresetSelect = useCallback(
+    (preset: EvidenceMatrixPresetId) => {
+      if (preset === evidencePreset) return;
+      trackEvent(
+        detailDecisionPresetAnalyticsEvent(),
+        detailDecisionPresetAnalyticsData(entry.category, entry.slug, "evidence-matrix", preset),
+      );
+      setEvidencePreset(preset);
+    },
+    [entry.category, entry.slug, evidencePreset],
+  );
+  const onTimelinePresetSelect = useCallback(
+    (preset: DecisionTimelinePresetId) => {
+      if (preset === timelinePreset) return;
+      trackEvent(
+        detailDecisionPresetAnalyticsEvent(),
+        detailDecisionPresetAnalyticsData(entry.category, entry.slug, "decision-timeline", preset),
+      );
+      setTimelinePreset(preset);
+    },
+    [entry.category, entry.slug, timelinePreset],
+  );
+  const onBenchmarkPresetSelect = useCallback(
+    (preset: CompareBenchmarkPresetId) => {
+      if (preset === benchmarkPreset) return;
+      trackEvent(
+        detailDecisionPresetAnalyticsEvent(),
+        detailDecisionPresetAnalyticsData(entry.category, entry.slug, "compare-benchmark", preset),
+      );
+      setBenchmarkPreset(preset);
+    },
+    [benchmarkPreset, entry.category, entry.slug],
+  );
 
   const risk = installRiskLevel(entry);
   const hasSchema = hasSchemaDetails(entry);
@@ -626,22 +674,22 @@ function Dossier() {
           <EntryAdoptionPlanPanel
             state={adoptionPlan}
             selectedPreset={adoptionPreset}
-            onSelectPreset={setAdoptionPreset}
+            onSelectPreset={onAdoptionPresetSelect}
           />
           <EntryEvidenceReadinessMatrix
             state={evidenceMatrix}
             selectedPreset={evidencePreset}
-            onSelectPreset={setEvidencePreset}
+            onSelectPreset={onEvidencePresetSelect}
           />
           <EntryDecisionTimelinePanel
             state={decisionTimeline}
             selectedPreset={timelinePreset}
-            onSelectPreset={setTimelinePreset}
+            onSelectPreset={onTimelinePresetSelect}
           />
           <EntryCompareBenchmarkPanel
             state={compareBenchmark}
             selectedPreset={benchmarkPreset}
-            onSelectPreset={setBenchmarkPreset}
+            onSelectPreset={onBenchmarkPresetSelect}
           />
           <EntryPrerequisiteReadinessPanel
             state={prerequisiteReadiness}
