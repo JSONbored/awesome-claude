@@ -2,6 +2,17 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import {
+  collapseWhitespace,
+  combinedTextOf,
+  introOf,
+  jaccard,
+  normalizeForCompare,
+  round,
+  shinglesOf,
+  tokenize,
+} from "./lib/thin-content-text.mjs";
+
 /*
  * Thin-content & duplicate-intro report.
  *
@@ -171,79 +182,6 @@ const allEntries = Array.isArray(registry?.entries) ? registry.entries : [];
 if (allEntries.length === 0) {
   fail("Registry has no entries to analyze.");
 }
-
-// --- text extraction ---
-
-// Fields the registry exposes to crawlers / LLMs, in priority order. These are
-// the "intro/body" surface of an entry inside atlas-registry.json.
-const TEXT_FIELDS = [
-  "description",
-  "cardDescription",
-  "seoDescription",
-  "trigger",
-  "usageSnippet",
-];
-
-const collapseWhitespace = (value) => String(value ?? "").trim();
-
-// The primary "intro" we de-duplicate on: the description is what shows up in
-// listings and meta tags, so duplicate descriptions are the real SEO risk.
-const introOf = (entry) =>
-  collapseWhitespace(entry.description) ||
-  collapseWhitespace(entry.cardDescription) ||
-  collapseWhitespace(entry.seoDescription);
-
-// Combined text used for the thin / low-uniqueness signals.
-const combinedTextOf = (entry) => {
-  const seen = new Set();
-  const parts = [];
-  for (const field of TEXT_FIELDS) {
-    const text = collapseWhitespace(entry[field]);
-    if (text && !seen.has(text)) {
-      seen.add(text);
-      parts.push(text);
-    }
-  }
-  return parts.join(" ");
-};
-
-const tokenize = (text) =>
-  collapseWhitespace(text)
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, " ")
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean);
-
-const normalizeForCompare = (text) => tokenize(text).join(" ");
-
-const shinglesOf = (tokens, size) => {
-  const set = new Set();
-  if (tokens.length === 0) return set;
-  if (tokens.length < size) {
-    set.add(tokens.join(" "));
-    return set;
-  }
-  for (let i = 0; i + size <= tokens.length; i += 1) {
-    set.add(tokens.slice(i, i + size).join(" "));
-  }
-  return set;
-};
-
-const jaccard = (a, b) => {
-  if (a.size === 0 && b.size === 0) return 0;
-  let intersection = 0;
-  const [small, large] = a.size <= b.size ? [a, b] : [b, a];
-  for (const item of small) {
-    if (large.has(item)) intersection += 1;
-  }
-  return intersection / (a.size + b.size - intersection);
-};
-
-const round = (value, digits = 3) => {
-  const factor = 10 ** digits;
-  return Math.round(value * factor) / factor;
-};
 
 // --- build per-entry analysis ---
 
