@@ -23,9 +23,13 @@ import {
   comparisonTrayClearAnalyticsData,
   comparisonTrayClearAnalyticsEvent,
   comparisonTrayFullCompareAnalyticsData,
+  comparisonTrayFullCompareAnalyticsEvent,
   comparisonTrayQuickCompareAnalyticsData,
+  comparisonTrayQuickCompareAnalyticsEvent,
   comparisonTrayRemoveAnalyticsData,
   comparisonTrayRemoveAnalyticsEvent,
+  comparisonTrayViewSelectionAnalyticsData,
+  comparisonTrayViewSelectionAnalyticsEvent,
 } from "@/lib/entry-detail-cta-events";
 import { trackEvent } from "@/lib/analytics";
 import { TrustBadge, SourceBadge, ReadinessDot } from "./badges";
@@ -106,6 +110,14 @@ export function ComparisonTray() {
     clear();
   }, [clear, tray.count]);
 
+  const onViewSelection = React.useCallback(() => {
+    trackEvent(
+      comparisonTrayViewSelectionAnalyticsEvent(),
+      comparisonTrayViewSelectionAnalyticsData(tray.count),
+    );
+    setOpen(true);
+  }, [setOpen, tray.count]);
+
   if (items.length === 0) return null;
 
   return (
@@ -161,9 +173,10 @@ export function ComparisonTray() {
             <button
               type="button"
               onClick={() => {
-                trackEvent("compare_tray_quick_compare", {
-                  ...comparisonTrayQuickCompareAnalyticsData(tray.count),
-                });
+                trackEvent(
+                  comparisonTrayQuickCompareAnalyticsEvent(),
+                  comparisonTrayQuickCompareAnalyticsData(tray.count),
+                );
                 setOpen(true);
               }}
               className="hidden h-8 items-center gap-1 rounded-md border border-border bg-background px-3 text-xs font-medium text-ink hover:bg-surface-2 sm:inline-flex"
@@ -176,9 +189,10 @@ export function ComparisonTray() {
               to="/compare"
               search={{ ids: tray.compareIds }}
               onClick={() => {
-                trackEvent("compare_tray_full_compare", {
-                  ...comparisonTrayFullCompareAnalyticsData(tray.count),
-                });
+                trackEvent(
+                  comparisonTrayFullCompareAnalyticsEvent(),
+                  comparisonTrayFullCompareAnalyticsData(tray.count),
+                );
                 setOpen(false);
               }}
               className="inline-flex h-8 shrink-0 items-center gap-1 rounded-md bg-accent px-2.5 text-xs font-semibold text-accent-ink hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/40 sm:px-3"
@@ -190,7 +204,7 @@ export function ComparisonTray() {
           ) : (
             <button
               type="button"
-              onClick={() => setOpen(true)}
+              onClick={onViewSelection}
               className="inline-flex h-8 shrink-0 items-center gap-1 rounded-md bg-accent px-2.5 text-xs font-semibold text-accent-ink hover:opacity-90 sm:px-3"
             >
               <span className="sm:hidden">View</span>
