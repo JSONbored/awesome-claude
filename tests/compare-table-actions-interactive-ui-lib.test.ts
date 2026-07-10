@@ -2,6 +2,9 @@ import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
 import {
   compareTableActionsForEntry,
+  compareTableActionsInteractiveActionCells,
+  compareTableActionsInteractiveActionRowDiverges,
+  compareTableActionsInteractiveRenderNextActions,
   compareTableActionsInteractiveUiState,
 } from "@/lib/compare-table-actions-interactive-ui-lib";
 
@@ -59,12 +62,22 @@ describe("compare table actions interactive ui lib", () => {
   });
 
   it("highlights diverging next-action rows when enabled for mixed columns", () => {
-    const state = compareTableActionsInteractiveUiState(
-      [entry({ installCommand: "npm i fixture" }), entry({ slug: "other" })],
-      true,
-    );
+    const entries = [
+      entry({ installCommand: "npm i fixture" }),
+      entry({ slug: "other" }),
+    ];
+    const state = compareTableActionsInteractiveUiState(entries, true);
     expect(state.renderNextActions).toBe(true);
     expect(state.actionRowDiverges).toBe(true);
     expect(state.actionCells).toHaveLength(2);
+    expect(state.renderNextActions).toBe(
+      compareTableActionsInteractiveRenderNextActions(entries, true),
+    );
+    expect(state.actionRowDiverges).toBe(
+      compareTableActionsInteractiveActionRowDiverges(entries, true),
+    );
+    expect(state.actionCells).toEqual(
+      compareTableActionsInteractiveActionCells(entries),
+    );
   });
 });

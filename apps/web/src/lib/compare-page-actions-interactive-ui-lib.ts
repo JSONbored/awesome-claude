@@ -1,21 +1,31 @@
 import type { Entry } from "@/types/registry";
 import {
   comparePageActionCells,
-  comparePageActionsDiverge,
   type ComparePageActionCell,
 } from "@/lib/compare-page-actions-ui-lib";
+import { comparePagePresentationActionRowDiverges } from "@/lib/compare-page-presentation-ui-lib";
 
 export type ComparePageActionsInteractiveUiState = {
   actionRowDiverges: boolean;
   actionCells: ComparePageActionCell[];
 };
 
+export function comparePageActionsInteractiveActionRowDiverges(entries: Entry[]): boolean {
+  return comparePagePresentationActionRowDiverges(entries);
+}
+
+export function comparePageActionsInteractiveActionCells(
+  entries: Entry[],
+): ComparePageActionCell[] {
+  return comparePageActionCells(entries);
+}
+
 export function comparePageActionsInteractiveUiState(
   entries: Entry[],
 ): ComparePageActionsInteractiveUiState {
   return {
-    actionRowDiverges: comparePageActionsDiverge(entries),
-    actionCells: comparePageActionCells(entries),
+    actionRowDiverges: comparePageActionsInteractiveActionRowDiverges(entries),
+    actionCells: comparePageActionsInteractiveActionCells(entries),
   };
 }
 

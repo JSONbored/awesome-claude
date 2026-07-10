@@ -1,13 +1,20 @@
 import type { BestListPickRef } from "@/lib/compare-best-summary";
 import type { EntryIdentity } from "@/lib/entry-identity";
 import {
-  compareEntryFeaturedBestListLinks,
-  compareEntryFeaturedComparisonLinks,
+  compareEntryFeaturedShowsFeaturedLinks,
   compareEntryFeaturedUiState,
   type CompareEntryFeaturedUiState,
 } from "@/lib/compare-entry-featured-ui-lib";
 
 export type CompareEntryFeaturedInteractiveUiState = CompareEntryFeaturedUiState;
+
+export function compareEntryFeaturedInteractiveShowsFeaturedLinks(
+  comparisons: ReadonlyArray<{ slug: string; refs: string[] }>,
+  lists: ReadonlyArray<{ slug: string; picks: BestListPickRef[] }>,
+  catalog: EntryIdentity[],
+): boolean {
+  return compareEntryFeaturedShowsFeaturedLinks(comparisons, lists, catalog);
+}
 
 export function compareEntryFeaturedInteractiveUiState(
   comparisons: ReadonlyArray<{ slug: string; refs: string[] }>,
@@ -23,15 +30,4 @@ export function compareEntryFeaturedInteractiveUiState(
       catalog,
     ),
   };
-}
-
-export function compareEntryFeaturedInteractiveShowsFeaturedLinks(
-  comparisons: ReadonlyArray<{ slug: string; refs: string[] }>,
-  lists: ReadonlyArray<{ slug: string; picks: BestListPickRef[] }>,
-  catalog: EntryIdentity[],
-): boolean {
-  return (
-    compareEntryFeaturedComparisonLinks(comparisons, catalog).length > 0 ||
-    compareEntryFeaturedBestListLinks(lists, catalog).length > 0
-  );
 }

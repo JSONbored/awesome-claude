@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
-import { compareTableSignalsInteractiveUiState } from "@/lib/compare-table-signals-interactive-ui-lib";
+import {
+  compareTableSignalsInteractiveDivergingDecisionLabels,
+  compareTableSignalsInteractiveUiState,
+} from "@/lib/compare-table-signals-interactive-ui-lib";
 
 function entry(overrides: Partial<Entry> = {}): Entry {
   return {
@@ -35,14 +38,17 @@ describe("compare table signals interactive ui lib", () => {
   });
 
   it("highlights diverging review status decision rows", () => {
-    expect(
-      compareTableSignalsInteractiveUiState([
-        entry(),
-        entry({ reviewedBy: "maintainer", reviewedAt: "2026-01-02" }),
-      ]),
-    ).toEqual({
+    const entries = [
+      entry(),
+      entry({ reviewedBy: "maintainer", reviewedAt: "2026-01-02" }),
+    ];
+    const state = compareTableSignalsInteractiveUiState(entries);
+    expect(state).toEqual({
       divergingDecisionLabels: new Set(["Review status"]),
     });
+    expect(state.divergingDecisionLabels).toEqual(
+      compareTableSignalsInteractiveDivergingDecisionLabels(entries),
+    );
   });
 
   it("returns an empty label set when no entries are compared", () => {

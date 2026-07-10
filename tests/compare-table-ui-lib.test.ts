@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
-import { compareTablePresentationState } from "@/lib/compare-table-ui-lib";
+import {
+  compareTablePresentationActionRowDiverges,
+  compareTablePresentationDivergingDecisionLabels,
+  compareTablePresentationRenderNextActions,
+  compareTablePresentationState,
+} from "@/lib/compare-table-ui-lib";
 
 function entry(overrides: Partial<Entry> = {}): Entry {
   return {
@@ -49,15 +54,22 @@ describe("compare table ui lib", () => {
   });
 
   it("highlights diverging decision rows and next actions", () => {
-    const state = compareTablePresentationState(
-      [
-        entry({ reviewedBy: "maintainer", reviewedAt: "2026-01-02" }),
-        entry({ slug: "other", installCommand: "npm i fixture" }),
-      ],
-      true,
-    );
+    const entries = [
+      entry({ reviewedBy: "maintainer", reviewedAt: "2026-01-02" }),
+      entry({ slug: "other", installCommand: "npm i fixture" }),
+    ];
+    const state = compareTablePresentationState(entries, true);
     expect(state.divergingDecisionLabels).toEqual(new Set(["Review status"]));
     expect(state.renderNextActions).toBe(true);
     expect(state.actionRowDiverges).toBe(true);
+    expect(state.divergingDecisionLabels).toEqual(
+      compareTablePresentationDivergingDecisionLabels(entries),
+    );
+    expect(state.renderNextActions).toBe(
+      compareTablePresentationRenderNextActions(entries, true),
+    );
+    expect(state.actionRowDiverges).toBe(
+      compareTablePresentationActionRowDiverges(entries, true),
+    );
   });
 });

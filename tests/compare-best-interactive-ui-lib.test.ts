@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
 import {
+  compareBestHeaderBannerTexts,
+  compareBestInteractiveLinkLabel,
+  compareBestInteractiveSearch,
+  compareBestShowCompareSection,
+} from "@/lib/compare-best-ui-lib";
+import {
   compareBestInteractiveShowCompareSection,
   compareBestInteractiveUiState,
 } from "@/lib/compare-best-interactive-ui-lib";
@@ -58,6 +64,16 @@ describe("compare best interactive ui lib", () => {
     const bundled = compareBestInteractiveUiState(entries);
     expect(bundled.showCompareSection).toBe(
       compareBestInteractiveShowCompareSection(entries),
+    );
+    expect(bundled.showCompareSection).toBe(
+      compareBestShowCompareSection(entries),
+    );
+    expect(bundled.bannerTexts).toEqual(compareBestHeaderBannerTexts(entries));
+    expect(bundled.interactiveSearch).toEqual(
+      compareBestInteractiveSearch(entries),
+    );
+    expect(bundled.interactiveLinkLabel).toBe(
+      compareBestInteractiveLinkLabel(entries.length),
     );
   });
 

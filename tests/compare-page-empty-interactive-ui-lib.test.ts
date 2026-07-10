@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
-import { comparePageEmptyInteractiveUiState } from "@/lib/compare-page-empty-interactive-ui-lib";
+import {
+  comparePageEmptyInteractiveDescription,
+  comparePageEmptyInteractiveInvalidUrlHint,
+  comparePageEmptyInteractivePopularComparisonLinks,
+  comparePageEmptyInteractiveUiState,
+} from "@/lib/compare-page-empty-interactive-ui-lib";
 
 function entry(overrides: Partial<Entry> = {}): Entry {
   return {
@@ -26,19 +31,15 @@ const catalog = [
 
 describe("compare page empty interactive ui lib", () => {
   it("bundles empty-state copy, invalid URL hints, and popular comparison links", () => {
-    expect(
-      comparePageEmptyInteractiveUiState(
-        "",
-        [
-          {
-            slug: "pair",
-            heading: "Alpha vs Beta",
-            refs: ["skills/alpha", "hooks/beta"],
-          },
-        ],
-        catalog,
-      ),
-    ).toEqual({
+    const comparisons = [
+      {
+        slug: "pair",
+        heading: "Alpha vs Beta",
+        refs: ["skills/alpha", "hooks/beta"],
+      },
+    ];
+    const state = comparePageEmptyInteractiveUiState("", comparisons, catalog);
+    expect(state).toEqual({
       description: expect.stringContaining("directory"),
       invalidUrlHint: null,
       popularComparisonLinks: [
@@ -50,6 +51,13 @@ describe("compare page empty interactive ui lib", () => {
         },
       ],
     });
+    expect(state.description).toBe(comparePageEmptyInteractiveDescription());
+    expect(state.invalidUrlHint).toBe(
+      comparePageEmptyInteractiveInvalidUrlHint(""),
+    );
+    expect(state.popularComparisonLinks).toEqual(
+      comparePageEmptyInteractivePopularComparisonLinks(comparisons, catalog),
+    );
   });
 
   it("surfaces invalid URL hints when ids cannot be resolved", () => {

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
+import { compareEntryFeaturedShowsFeaturedLinks } from "@/lib/compare-entry-featured-ui-lib";
 import {
   compareEntryFeaturedInteractiveShowsFeaturedLinks,
   compareEntryFeaturedInteractiveUiState,
@@ -81,6 +82,40 @@ describe("compare entry featured interactive ui lib", () => {
         catalog,
       ),
     ).toBe(true);
+    const bundled = compareEntryFeaturedInteractiveUiState(
+      [{ slug: "pair", refs: ["skills/alpha", "hooks/beta"] }],
+      [
+        {
+          slug: "top-picks",
+          picks: [{ ref: "skills/alpha" }, { ref: "hooks/beta" }],
+        },
+      ],
+      catalog,
+    );
+    expect(bundled.hasFeaturedLinks).toBe(
+      compareEntryFeaturedInteractiveShowsFeaturedLinks(
+        [{ slug: "pair", refs: ["skills/alpha", "hooks/beta"] }],
+        [
+          {
+            slug: "top-picks",
+            picks: [{ ref: "skills/alpha" }, { ref: "hooks/beta" }],
+          },
+        ],
+        catalog,
+      ),
+    );
+    expect(bundled.hasFeaturedLinks).toBe(
+      compareEntryFeaturedShowsFeaturedLinks(
+        [{ slug: "pair", refs: ["skills/alpha", "hooks/beta"] }],
+        [
+          {
+            slug: "top-picks",
+            picks: [{ ref: "skills/alpha" }, { ref: "hooks/beta" }],
+          },
+        ],
+        catalog,
+      ),
+    );
   });
 
   it("formats overflow labels for wide featured best lists", () => {

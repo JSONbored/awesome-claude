@@ -1,10 +1,12 @@
 import type { Entry } from "@/types/registry";
 import {
   compareTableActionCells,
-  compareTableActionsDiverge,
-  shouldRenderCompareTableActions,
   type CompareTableActionCell,
 } from "@/lib/compare-table-actions-ui-lib";
+import {
+  compareTablePresentationActionRowDiverges,
+  compareTablePresentationRenderNextActions,
+} from "@/lib/compare-table-ui-lib";
 
 export type CompareTableActionsInteractiveUiState = {
   renderNextActions: boolean;
@@ -12,15 +14,34 @@ export type CompareTableActionsInteractiveUiState = {
   actionCells: CompareTableActionCell[];
 };
 
+export function compareTableActionsInteractiveRenderNextActions(
+  entries: Entry[],
+  showNextActions: boolean,
+): boolean {
+  return compareTablePresentationRenderNextActions(entries, showNextActions);
+}
+
+export function compareTableActionsInteractiveActionRowDiverges(
+  entries: Entry[],
+  showNextActions: boolean,
+): boolean {
+  return compareTablePresentationActionRowDiverges(entries, showNextActions);
+}
+
+export function compareTableActionsInteractiveActionCells(
+  entries: Entry[],
+): CompareTableActionCell[] {
+  return compareTableActionCells(entries);
+}
+
 export function compareTableActionsInteractiveUiState(
   entries: Entry[],
   showNextActions: boolean,
 ): CompareTableActionsInteractiveUiState {
-  const renderNextActions = shouldRenderCompareTableActions(entries, showNextActions);
   return {
-    renderNextActions,
-    actionRowDiverges: renderNextActions && compareTableActionsDiverge(entries),
-    actionCells: compareTableActionCells(entries),
+    renderNextActions: compareTableActionsInteractiveRenderNextActions(entries, showNextActions),
+    actionRowDiverges: compareTableActionsInteractiveActionRowDiverges(entries, showNextActions),
+    actionCells: compareTableActionsInteractiveActionCells(entries),
   };
 }
 

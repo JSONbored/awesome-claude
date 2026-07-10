@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
 import {
   comparePageActionsForEntry,
+  comparePageActionsInteractiveActionCells,
+  comparePageActionsInteractiveActionRowDiverges,
   comparePageActionsInteractiveUiState,
 } from "@/lib/compare-page-actions-interactive-ui-lib";
 
@@ -62,12 +64,16 @@ describe("compare page actions interactive ui lib", () => {
   });
 
   it("highlights diverging next-action rows for mixed compare columns", () => {
-    const state = comparePageActionsInteractiveUiState([
-      entry({ installCommand: "npm i fixture" }),
-      entry(),
-    ]);
+    const entries = [entry({ installCommand: "npm i fixture" }), entry()];
+    const state = comparePageActionsInteractiveUiState(entries);
     expect(state.actionRowDiverges).toBe(true);
     expect(state.actionCells).toHaveLength(2);
+    expect(state.actionRowDiverges).toBe(
+      comparePageActionsInteractiveActionRowDiverges(entries),
+    );
+    expect(state.actionCells).toEqual(
+      comparePageActionsInteractiveActionCells(entries),
+    );
     expect(comparePageActionsForEntry(entry(), state.actionCells)).toEqual(
       expect.arrayContaining([expect.objectContaining({ id: "dossier" })]),
     );

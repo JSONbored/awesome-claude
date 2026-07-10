@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 import type { Entry } from "@/types/registry";
 import {
+  compareDossierHeaderBannerTexts,
+  compareDossierInteractiveCompareSearch,
+  compareDossierInteractiveLinkLabel,
+} from "@/lib/compare-dossier-ui-lib";
+import {
   compareDossierInteractiveShowCompareSection,
   compareDossierInteractiveUiState,
 } from "@/lib/compare-dossier-interactive-ui-lib";
@@ -51,6 +56,15 @@ describe("compare dossier interactive ui lib", () => {
     const bundled = compareDossierInteractiveUiState(primary, alternatives);
     expect(bundled.showCompareSection).toBe(
       compareDossierInteractiveShowCompareSection(primary, alternatives),
+    );
+    expect(bundled.bannerTexts).toEqual(
+      compareDossierHeaderBannerTexts(primary, alternatives),
+    );
+    expect(bundled.interactiveSearch).toEqual(
+      compareDossierInteractiveCompareSearch(primary, alternatives),
+    );
+    expect(bundled.interactiveLinkLabel).toBe(
+      compareDossierInteractiveLinkLabel(alternatives.length + 1),
     );
   });
 
