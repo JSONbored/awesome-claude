@@ -257,7 +257,8 @@ describe("action metadata", () => {
     expect(
       actions.every((action) => {
         if (!action.analyticsEvent) return false;
-        if (action.id === "claim") return action.analyticsEvent === claimCtaAnalyticsEvent();
+        if (action.id === "claim")
+          return action.analyticsEvent === claimCtaAnalyticsEvent();
         return action.analyticsEvent.startsWith("compare_");
       }),
     ).toBe(true);
