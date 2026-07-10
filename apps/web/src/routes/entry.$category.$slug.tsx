@@ -66,6 +66,7 @@ import { EntryAdoptionPlanPanel } from "@/components/entry-adoption-plan-panel";
 import { EntryEvidenceReadinessMatrix } from "@/components/entry-evidence-readiness-matrix";
 import { EntryCompareBenchmarkPanel } from "@/components/entry-compare-benchmark-panel";
 import { EntryPrerequisiteReadinessPanel } from "@/components/entry-prerequisite-readiness-panel";
+import { EntrySetupSnapshotPanel } from "@/components/entry-setup-snapshot-panel";
 import { PLATFORM_SUPPORT_LABEL, type Entry } from "@/types/registry";
 import {
   buildEntryTocItems,
@@ -675,6 +676,7 @@ function Dossier() {
             onOpenCompareTray={onPlaybookOpenCompareTray}
             onAction={onPlaybookAction}
           />
+          <EntrySetupSnapshotPanel entry={entry} />
           <EntryAdoptionPlanPanel
             state={adoptionPlan}
             selectedPreset={adoptionPreset}
