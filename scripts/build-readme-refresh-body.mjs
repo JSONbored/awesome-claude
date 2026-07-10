@@ -6,6 +6,12 @@ import { pathToFileURL } from "node:url";
 import categorySpec from "@heyclaude/registry/category-spec";
 import { parseSafeFrontmatter } from "@heyclaude/registry/frontmatter";
 
+import {
+  escapeMarkdownText,
+  formatGithubProfileLink,
+  formatPullRequestLink,
+} from "./lib/readme-refresh-format.mjs";
+
 const categoryOrder = categorySpec.categoryOrder;
 const categoryRank = new Map(
   categoryOrder.map((category, index) => [category, index]),
@@ -14,75 +20,6 @@ const readmeLinePrefix = "- **[";
 const readmeUrlPrefix = "https://heyclau.de/";
 const readmeEntryRoutePrefix = "entry/";
 const readmeUrlSuffix = ")** - ";
-const githubUrlPrefix = "https://github.com/";
-const githubLoginPattern =
-  /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?(?:\[bot\])?$/;
-const repositoryPattern = /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/;
-
-function escapeMarkdownText(value) {
-  return String(value || "")
-    .replace(/@/g, "&#64;")
-    .replace(/(^|\s)#(?=\d)/g, "$1&#35;")
-    .replace(/([\\`*_{}\[\]()#+\-.!|>])/g, "\\$1")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function cleanGithubHandle(value) {
-  const raw = String(value || "").trim();
-  if (!raw) return "";
-
-  let handle = raw.replace(/^@/, "");
-  try {
-    const parsed = new URL(raw);
-    if (parsed.hostname.toLowerCase() === "github.com") {
-      handle = parsed.pathname.split("/").filter(Boolean)[0] ?? "";
-    }
-  } catch {
-    // Treat non-URL values as GitHub logins.
-  }
-
-  return githubLoginPattern.test(handle) ? `@${handle}` : "";
-}
-
-function cleanGithubLogin(value) {
-  return cleanGithubHandle(value).replace(/^@/, "");
-}
-
-function cleanRepository(value) {
-  const repository = String(value || "").trim();
-  return repositoryPattern.test(repository) ? repository : "";
-}
-
-function formatGithubProfileLink(login) {
-  const cleanLogin = cleanGithubLogin(login);
-  if (!cleanLogin) return "";
-  return `[@${cleanLogin}](${githubUrlPrefix}${cleanLogin})`;
-}
-
-function formatPullRequestLink({ number, repository, htmlUrl }) {
-  if (!number) return "";
-
-  const numericNumber = Number(number);
-  const label = Number.isFinite(numericNumber) ? `#${numericNumber}` : "";
-  if (!label) return "";
-
-  if (htmlUrl) {
-    try {
-      const parsed = new URL(htmlUrl);
-      if (parsed.hostname.toLowerCase() === "github.com") {
-        return `[${label}](${parsed.href})`;
-      }
-    } catch {
-      // Fall back to repository-based links below.
-    }
-  }
-
-  const cleanRepo = cleanRepository(repository);
-  return cleanRepo
-    ? `[${label}](${githubUrlPrefix}${cleanRepo}/pull/${numericNumber})`
-    : label;
-}
 
 function formatReadmeEntryLink(change, frontmatter = {}) {
   const title = escapeMarkdownText(frontmatter.title || change.title);
