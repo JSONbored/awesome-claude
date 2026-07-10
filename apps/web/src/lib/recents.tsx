@@ -1,63 +1,32 @@
 import * as React from "react";
 
+import { emptyRecentsState, parseRecentsState } from "@/lib/recents-storage-lib";
+import type {
+  AlertCadence,
+  AlertChannel,
+  AlertSchedule,
+  Follow,
+  RecentEntry,
+  RecentsState,
+  SavedSearch,
+  Segment,
+} from "@/lib/recents-types-lib";
+
+export type {
+  AlertCadence,
+  AlertChannel,
+  AlertSchedule,
+  Follow,
+  RecentEntry,
+  RecentsState,
+  SavedSearch,
+  Segment,
+};
+
 const STORAGE_KEY = "hc.recents.v1";
 const MAX_RECENT = 8;
 
-export interface RecentEntry {
-  category: string;
-  slug: string;
-  title: string;
-  visitedAt: string;
-}
-
-export type AlertChannel = "inapp" | "email" | "rss";
-export type AlertCadence = "instant" | "daily" | "weekly";
-
-export interface AlertSchedule {
-  enabled: boolean;
-  channels: AlertChannel[];
-  cadence: AlertCadence;
-  email?: string;
-  lastNotifiedAt?: string;
-}
-
-export interface SavedSearch {
-  id: string;
-  label: string;
-  q: string;
-  category?: string;
-  trust?: string;
-  source?: string;
-  signal?: string;
-  platform?: string;
-  sort?: string;
-  savedAt: string;
-  alerts?: AlertSchedule;
-}
-
-export interface Follow {
-  id: string; // local id
-  label: string; // display label (rename-able)
-  followId: string; // e.g. "category:mcp"
-  source?: string;
-  email?: string;
-  segmentId?: string; // resolved Resend segment id (optional)
-  createdAt: string;
-}
-
-export interface Segment {
-  id: string; // Resend segment id or follow id
-  label: string;
-  email: string;
-  subscribedAt: string;
-}
-
-interface State {
-  entries: RecentEntry[];
-  saved: SavedSearch[];
-  follows: Follow[];
-  segments: Segment[];
-}
+type State = RecentsState;
 
 interface RecentsCtx extends State {
   pushEntry: (e: Omit<RecentEntry, "visitedAt">) => void;
@@ -77,20 +46,13 @@ interface RecentsCtx extends State {
 const Ctx = React.createContext<RecentsCtx | null>(null);
 
 function load(): State {
-  const empty: State = { entries: [], saved: [], follows: [], segments: [] };
-  if (typeof window === "undefined") return empty;
+  if (typeof window === "undefined") return emptyRecentsState();
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return empty;
-    const p = JSON.parse(raw) as Partial<State>;
-    return {
-      entries: Array.isArray(p.entries) ? p.entries : [],
-      saved: Array.isArray(p.saved) ? p.saved : [],
-      follows: Array.isArray(p.follows) ? p.follows : [],
-      segments: Array.isArray(p.segments) ? p.segments : [],
-    };
+    // The storage read stays inside the try/catch: the getter itself can throw
+    // (SecurityError) in sandboxed / storage-blocked contexts.
+    return parseRecentsState(window.localStorage.getItem(STORAGE_KEY));
   } catch {
-    return empty;
+    return emptyRecentsState();
   }
 }
 
