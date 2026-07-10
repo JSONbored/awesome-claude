@@ -12,7 +12,13 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 
-const WEEKS = 12;
+import {
+  bucketWeekly,
+  compact,
+  escapeXml,
+  WEEKS,
+} from "./lib/impact-card-core.mjs";
+
 const THEME = {
   cardBg: "#121212",
   fg: "#f3f2ee",
@@ -27,54 +33,12 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, "..");
 const repoIconPath = path.join(repoRoot, "apps/web/public/favicon.svg");
 
-function compact(n) {
-  if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + "M";
-  if (n >= 1000) return (n / 1000).toFixed(0) + "k";
-  return String(n);
-}
-
-// api.gittensor.io values (and the repo name) end up as SVG <text> content,
-// so escape XML special chars rather than trust they're clean numbers/strings.
-function escapeXml(value) {
-  return String(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#x27;");
-}
-
 async function fetchJson(url) {
   const res = await fetch(url, {
     headers: { "User-Agent": "gittensor-impact-card/1.0" },
   });
   if (!res.ok) throw new Error(`fetch failed: ${url} (${res.status})`);
   return res.json();
-}
-
-function bucketWeekly(prs, now) {
-  const weekMs = 7 * 24 * 60 * 60 * 1000;
-  const bucketStart = new Date(now.getTime() - WEEKS * weekMs);
-  const prBuckets = Array(WEEKS).fill(0);
-  const locBuckets = Array(WEEKS).fill(0);
-  const seenByBucket = Array.from({ length: WEEKS }, () => new Set());
-  const contributorBuckets = Array(WEEKS).fill(0);
-
-  for (const pr of prs) {
-    const t = new Date(pr.mergedAt);
-    if (Number.isNaN(t.getTime()) || t < bucketStart || t > now) continue;
-    const idx = Math.min(WEEKS - 1, Math.floor((t - bucketStart) / weekMs));
-    prBuckets[idx] += 1;
-    locBuckets[idx] += (pr.additions || 0) + (pr.deletions || 0);
-    seenByBucket[idx].add(pr.author);
-  }
-
-  const seenSoFar = new Set();
-  for (let i = 0; i < WEEKS; i++) {
-    for (const a of seenByBucket[i]) seenSoFar.add(a);
-    contributorBuckets[i] = seenSoFar.size;
-  }
-  return { prBuckets, locBuckets, contributorBuckets };
 }
 
 function sparkline(x, y, w, h, values, mutedColor, accentColor, cardBg) {
