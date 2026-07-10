@@ -1,0 +1,102 @@
+---
+title: LocalAI
+slug: localai
+category: tools
+description: Open-source, self-hostable AI engine that runs LLMs, vision, voice, image, and video models on your own hardware behind one API, with drop-in OpenAI, Anthropic, and ElevenLabs API compatibility, composable on-demand backends, and no GPU required.
+cardDescription: Open-source self-hosted AI engine with drop-in OpenAI/Anthropic API compatibility, no GPU required.
+seoTitle: LocalAI open-source self-hosted AI engine
+seoDescription: LocalAI is an open-source, self-hostable AI engine that runs LLMs, vision, voice, image, and video models on any hardware behind one API, with drop-in OpenAI, Anthropic, and ElevenLabs API compatibility and composable on-demand backends.
+author: mudler
+submittedBy: davion-knight
+submittedByUrl: "https://github.com/davion-knight"
+dateAdded: "2026-07-10"
+websiteUrl: "https://localai.io/"
+documentationUrl: "https://localai.io/"
+repoUrl: "https://github.com/mudler/LocalAI"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - local-inference
+  - self-hosted
+  - openai-compatible
+  - llm-serving
+  - multimodal
+  - privacy
+keywords:
+  - localai
+  - self-hosted ai
+  - openai compatible api
+  - local llm inference
+  - run models locally
+  - anthropic compatible
+robotsIndex: true
+robotsFollow: true
+prerequisites:
+  - A machine to run LocalAI (via a container such as Docker or Podman, a native binary, or the desktop app); a GPU is optional since it also runs CPU-only.
+  - Models to serve, pulled from the model gallery or provided yourself, and enough disk and memory for them.
+  - An application that can call an OpenAI-, Anthropic-, or ElevenLabs-compatible API endpoint.
+  - For multi-user setups, a plan for API keys, quotas, and role-based access.
+  - A decision on which backends (for example llama.cpp, vLLM, whisper.cpp, stable-diffusion) your models need, since backends are pulled on demand.
+safetyNotes:
+  - LocalAI runs a server that exposes an API; run it on a trusted network or behind authentication, and do not expose an unauthenticated endpoint on a public interface.
+  - It uses API-key auth, user quotas, and role-based access for multi-user setups; enable and scope these before sharing an instance.
+  - Backends are pulled on demand and run model code locally; pull backends and models from sources you trust, and verify model licenses before serving them.
+  - Treat model outputs as untrusted input for any downstream action, and keep production configuration and exposed ports narrower than local quickstart examples.
+  - When installing from a downloaded artifact, follow the project's platform notes and verify the source before running it.
+privacyNotes:
+  - Running LocalAI keeps inference on your own hardware, so prompts and data do not leave your environment unless you configure it to call external services.
+  - Requests, prompts, and generated outputs can be logged depending on your configuration; choose logging and retention settings deliberately, especially for sensitive data.
+  - Served models and any stored inputs or outputs should be kept with appropriate access controls, particularly on multi-user instances.
+  - If you connect LocalAI to external providers or expose it to other services, apply normal credential hygiene and keep configuration out of version control.
+---
+
+## Editorial notes
+
+LocalAI is useful when Claude-adjacent teams want to run models on their own hardware behind a familiar API instead of sending everything to a hosted provider. It is a self-hostable AI engine that serves LLMs, vision, voice, image, and video models through one API, and it is drop-in compatible with the OpenAI, Anthropic, and ElevenLabs APIs, so existing clients can point at it with minimal changes. It runs without a GPU.
+
+This is distinct from the agent frameworks, memory, search, and training tools in the directory: LocalAI is the local inference and serving layer that those workflows can call, with a small core and composable backends pulled on demand.
+
+## Key capabilities
+
+- **Drop-in API compatibility** — exposes OpenAI-, Anthropic-, and ElevenLabs-compatible APIs across every backend, so existing clients work with minimal changes.
+- **Any model, any modality** — serve LLMs, vision, voice, image, and video models behind one API.
+- **No GPU required** — runs on consumer hardware and CPU-only setups, with GPU acceleration when available.
+- **Composable backends** — a small core with separate backends (llama.cpp, vLLM, whisper.cpp, stable-diffusion, MLX, and more) pulled on demand, so you install only what a model needs.
+- **Open and extensible** — load any model or build your own backend against an open interface.
+- **Model gallery** — search, download, and run models from a gallery.
+- **Multi-user ready** — API-key authentication, user quotas, and role-based access.
+- **Flexible deployment** — run via containers (Docker or Podman), native binaries, or a desktop app.
+
+## How teams use it
+
+- **Private inference** — serve models on-premises so prompts and data stay in your environment.
+- **OpenAI/Anthropic drop-in** — point existing clients at a local endpoint without rewriting integrations.
+- **Multimodal serving** — run text, image, audio, and video models behind one API.
+- **Cost control** — run open models locally instead of paying per-token for hosted APIs.
+- **Edge and offline** — deploy where cloud access is limited, including CPU-only hardware.
+
+## Getting started
+
+LocalAI is open source and self-hosted. The quickest path is a container: run `docker run -ti --name
+local-ai -p 8080:8080 localai/localai:latest`, which serves the API on local port 8080; native
+binaries and a desktop app are also available. Pull a model from the gallery or provide your own,
+then point an OpenAI-, Anthropic-, or ElevenLabs-compatible client at your LocalAI endpoint. Backends
+are pulled on demand, so you only install what your models need.
+
+## Source notes
+
+- The official repository describes LocalAI as the open-source AI engine that runs any model — LLMs, vision, voice, image, and video — on any hardware, with no GPU required.
+- LocalAI is designed as a small core with composable backends (such as llama.cpp, vLLM, whisper.cpp, stable-diffusion, and MLX) that are pulled on demand, so you install only what a model needs.
+- Documented features include drop-in OpenAI, Anthropic, and ElevenLabs API compatibility across every backend, any-modality serving, an open and extensible backend interface, a model gallery, and multi-user support with API-key auth, quotas, and role-based access.
+- LocalAI can be deployed via containers (Docker, Podman), native binaries, or a desktop app, and the container serves the API on port 8080 by default.
+- The GitHub repository is `mudler/LocalAI`, is MIT licensed, was created by Ettore Di Giacinto, and is maintained by the LocalAI team.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, skills, hooks, rules, commands, guides, open pull requests, and repository-wide content for `LocalAI`, `localai`, `mudler/LocalAI`, `localai.io`, `github.com/mudler/LocalAI`, `self-hosted AI engine`, and `OpenAI compatible local`. An existing tools entry mentions LocalAI only as one supported local provider among others, and no dedicated LocalAI tools entry, LocalAI source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.
