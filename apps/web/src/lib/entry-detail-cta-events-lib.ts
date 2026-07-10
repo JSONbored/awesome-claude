@@ -275,6 +275,36 @@ export function entryDetailSuggestChangeAnalyticsData(category: string, slug: st
   };
 }
 
+export function entryDetailBrowseCategoryAnalyticsEvent(): string {
+  return "detail_browse_category_open";
+}
+
+export function entryDetailBrowseCategoryAnalyticsData(category: string, slug: string) {
+  return {
+    entry: entryDetailEntryKey(category, slug),
+    surface: ENTRY_DETAIL_COMMAND_CENTER_SURFACE,
+    category,
+  };
+}
+
+export function entryDetailCommunityAnchorAnalyticsEvent(): string {
+  return "detail_community_anchor_click";
+}
+
+export function entryDetailCommunityAnchorAnalyticsData(
+  category: string,
+  slug: string,
+  anchorId: string,
+  count?: number,
+) {
+  return {
+    entry: entryDetailEntryKey(category, slug),
+    surface: ENTRY_DETAIL_COMMAND_CENTER_SURFACE,
+    anchor: anchorId,
+    ...(typeof count === "number" ? { count } : {}),
+  };
+}
+
 export function entryDetailMobileLlmsAnalyticsData(category: string, slug: string) {
   return {
     entry: entryDetailEntryKey(category, slug),

@@ -44,6 +44,10 @@ import {
   entryDetailDocsAnalyticsEvent,
   entryDetailSuggestChangeAnalyticsData,
   entryDetailSuggestChangeAnalyticsEvent,
+  entryDetailBrowseCategoryAnalyticsData,
+  entryDetailBrowseCategoryAnalyticsEvent,
+  entryDetailCommunityAnchorAnalyticsData,
+  entryDetailCommunityAnchorAnalyticsEvent,
 } from "@/lib/entry-detail-cta-events";
 import {
   detailIntegrationLinkIcon,
@@ -297,6 +301,17 @@ export function EntryDetailCommandCenter({
                 <li key={anchor.id}>
                   <a
                     href={`#${anchor.targetId}`}
+                    onClick={() => {
+                      trackEvent(
+                        entryDetailCommunityAnchorAnalyticsEvent(),
+                        entryDetailCommunityAnchorAnalyticsData(
+                          entry.category,
+                          entry.slug,
+                          anchor.id,
+                          anchor.count,
+                        ),
+                      );
+                    }}
                     className="inline-flex items-center gap-1.5 text-ink-muted hover:text-ink"
                   >
                     {anchor.label}
@@ -481,6 +496,12 @@ export function EntryDetailCommandCenter({
                 key={link.id}
                 to={link.href}
                 search={{ category: entry.category }}
+                onClick={() => {
+                  trackEvent(
+                    entryDetailBrowseCategoryAnalyticsEvent(),
+                    entryDetailBrowseCategoryAnalyticsData(entry.category, entry.slug),
+                  );
+                }}
                 className="inline-flex items-center gap-1.5 text-ink-muted hover:text-ink"
               >
                 <Code2 className="h-3.5 w-3.5" /> {link.label}

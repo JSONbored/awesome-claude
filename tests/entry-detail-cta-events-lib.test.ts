@@ -35,6 +35,10 @@ import {
   entryDetailDocsAnalyticsEvent,
   entryDetailSuggestChangeAnalyticsData,
   entryDetailSuggestChangeAnalyticsEvent,
+  entryDetailBrowseCategoryAnalyticsData,
+  entryDetailBrowseCategoryAnalyticsEvent,
+  entryDetailCommunityAnchorAnalyticsData,
+  entryDetailCommunityAnchorAnalyticsEvent,
   entryDetailMobileActionAnalyticsData,
   entryDetailMobileActionAnalyticsEvent,
   entryDetailMobileCopyIntentType,
@@ -225,6 +229,25 @@ describe("entry detail cta events lib", () => {
     expect(entryDetailSuggestChangeAnalyticsData("skills", "demo")).toEqual({
       entry: "skills/demo",
       surface: "detail-command-center",
+    });
+    expect(entryDetailBrowseCategoryAnalyticsEvent()).toBe(
+      "detail_browse_category_open",
+    );
+    expect(entryDetailBrowseCategoryAnalyticsData("mcp", "browser")).toEqual({
+      entry: "mcp/browser",
+      surface: "detail-command-center",
+      category: "mcp",
+    });
+    expect(entryDetailCommunityAnchorAnalyticsEvent()).toBe(
+      "detail_community_anchor_click",
+    );
+    expect(
+      entryDetailCommunityAnchorAnalyticsData("skills", "demo", "related", 3),
+    ).toEqual({
+      entry: "skills/demo",
+      surface: "detail-command-center",
+      anchor: "related",
+      count: 3,
     });
     expect(entryDetailMobileLlmsAnalyticsData("skills", "demo")).toEqual({
       entry: "skills/demo",
