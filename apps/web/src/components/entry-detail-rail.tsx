@@ -40,7 +40,7 @@ export function EntryDetailRail({
         </div>
       ) : null}
       <div className="hidden lg:block lg:sticky lg:top-20">
-        <DossierTOC items={tocItems} />
+        <DossierTOC entry={entry} items={tocItems} />
       </div>
       <ProvenanceBlock entry={entry} />
       <div className="rounded-xl border border-border bg-surface p-4 text-xs text-ink-muted">
