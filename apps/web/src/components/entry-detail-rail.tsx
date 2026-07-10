@@ -36,7 +36,7 @@ export function EntryDetailRail({
       {quickLinks && quickLinks.length > 0 ? (
         <div className="rounded-xl border border-border bg-surface p-4">
           <div className="eyebrow mb-2">Resource links</div>
-          <EntryDetailQuickLinks links={quickLinks} className="mt-0" />
+          <EntryDetailQuickLinks entry={entry} links={quickLinks} className="mt-0" />
         </div>
       ) : null}
       <div className="hidden lg:block lg:sticky lg:top-20">

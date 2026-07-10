@@ -37,6 +37,8 @@ import {
   entryDetailSuggestChangeAnalyticsEvent,
   entryDetailBrowseCategoryAnalyticsData,
   entryDetailBrowseCategoryAnalyticsEvent,
+  entryDetailRegistryJsonAnalyticsData,
+  entryDetailRegistryJsonAnalyticsEvent,
   entryDetailCommunityAnchorAnalyticsData,
   entryDetailCommunityAnchorAnalyticsEvent,
   entryDetailTrustSectionAnalyticsData,
@@ -224,6 +226,25 @@ describe("entry detail cta events lib", () => {
       entry: "mcp/browser",
       surface: "detail-command-center",
       host: "docs.example.com",
+    });
+    expect(
+      entryDetailDocsAnalyticsData(
+        "mcp",
+        "browser",
+        "docs.example.com",
+        "detail-rail",
+      ),
+    ).toEqual({
+      entry: "mcp/browser",
+      surface: "detail-rail",
+      host: "docs.example.com",
+    });
+    expect(entryDetailRegistryJsonAnalyticsEvent()).toBe(
+      "detail_registry_json_open",
+    );
+    expect(entryDetailRegistryJsonAnalyticsData("skills", "demo")).toEqual({
+      entry: "skills/demo",
+      surface: "detail-rail",
     });
     expect(entryDetailSuggestChangeAnalyticsEvent()).toBe(
       "detail_suggest_change_open",

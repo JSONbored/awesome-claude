@@ -10,6 +10,7 @@ import type { IntentEventClientType } from "@/lib/intent-event-client-lib";
 import type { Entry } from "@/types/registry";
 
 export const ENTRY_DETAIL_COMMAND_CENTER_SURFACE = "detail-command-center";
+export const ENTRY_DETAIL_RAIL_SURFACE = "detail-rail";
 export const ENTRY_DETAIL_COMPARE_SURFACE = "detail-compare";
 export const ENTRY_DETAIL_DECISION_PLAYBOOK_SURFACE = "detail-decision-playbook";
 export const ENTRY_DETAIL_MOBILE_SURFACE = "detail-mobile";
@@ -244,10 +245,15 @@ export function entryDetailSourceAnalyticsEvent(): string {
   return "detail_source_open";
 }
 
-export function entryDetailSourceAnalyticsData(category: string, slug: string, host: string) {
+export function entryDetailSourceAnalyticsData(
+  category: string,
+  slug: string,
+  host: string,
+  surface: string = ENTRY_DETAIL_COMMAND_CENTER_SURFACE,
+) {
   return {
     entry: entryDetailEntryKey(category, slug),
-    surface: ENTRY_DETAIL_COMMAND_CENTER_SURFACE,
+    surface,
     host,
   };
 }
@@ -256,11 +262,31 @@ export function entryDetailDocsAnalyticsEvent(): string {
   return "detail_docs_open";
 }
 
-export function entryDetailDocsAnalyticsData(category: string, slug: string, host: string) {
+export function entryDetailDocsAnalyticsData(
+  category: string,
+  slug: string,
+  host: string,
+  surface: string = ENTRY_DETAIL_COMMAND_CENTER_SURFACE,
+) {
   return {
     entry: entryDetailEntryKey(category, slug),
-    surface: ENTRY_DETAIL_COMMAND_CENTER_SURFACE,
+    surface,
     host,
+  };
+}
+
+export function entryDetailRegistryJsonAnalyticsEvent(): string {
+  return "detail_registry_json_open";
+}
+
+export function entryDetailRegistryJsonAnalyticsData(
+  category: string,
+  slug: string,
+  surface: string = ENTRY_DETAIL_RAIL_SURFACE,
+) {
+  return {
+    entry: entryDetailEntryKey(category, slug),
+    surface,
   };
 }
 
