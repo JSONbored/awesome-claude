@@ -38,10 +38,11 @@ export function EntryDetailQuickLinks({
       {links.map((link) => {
         const Icon = QUICK_LINK_ICONS[link.id as keyof typeof QUICK_LINK_ICONS] ?? Code2;
         if (link.href) {
+          const href = link.href;
           return (
             <a
               key={link.id}
-              href={link.href}
+              href={href}
               target="_blank"
               rel="noreferrer"
               onClick={() => {
@@ -51,7 +52,7 @@ export function EntryDetailQuickLinks({
                     entryDetailDocsAnalyticsData(
                       entry.category,
                       entry.slug,
-                      outboundHost(link.href),
+                      outboundHost(href),
                       ENTRY_DETAIL_RAIL_SURFACE,
                     ),
                   );
@@ -61,7 +62,7 @@ export function EntryDetailQuickLinks({
                     entryDetailSourceAnalyticsData(
                       entry.category,
                       entry.slug,
-                      outboundHost(link.href),
+                      outboundHost(href),
                       ENTRY_DETAIL_RAIL_SURFACE,
                     ),
                   );
