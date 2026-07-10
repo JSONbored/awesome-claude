@@ -38,6 +38,10 @@ import {
   type MitigationPriorityPresetId,
 } from "@/lib/compare-mitigation-priority";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
+import {
+  comparePageDecisionPresetAnalyticsData,
+  comparePageDecisionPresetAnalyticsEvent,
+} from "@/lib/compare-page-decision-preset-cta-events";
 import { claimCtaAnalyticsData, claimCtaAnalyticsEvent } from "@/lib/conversion-cta-events";
 import { sameEntry } from "@/lib/entry-identity";
 import { search } from "@/data/search";
@@ -127,6 +131,51 @@ function ComparePage() {
   const mitigationPriority = React.useMemo(
     () => compareMitigationPriorityState(items, mitigationPreset),
     [items, mitigationPreset],
+  );
+
+  const onRolloutPresetSelect = React.useCallback(
+    (preset: RolloutPresetId) => {
+      if (preset === rolloutPreset) return;
+      trackEvent(
+        comparePageDecisionPresetAnalyticsEvent(),
+        comparePageDecisionPresetAnalyticsData("rollout-readiness", preset, items.length),
+      );
+      setRolloutPreset(preset);
+    },
+    [items.length, rolloutPreset],
+  );
+  const onFitPresetSelect = React.useCallback(
+    (preset: OperationalFitPresetId) => {
+      if (preset === fitPreset) return;
+      trackEvent(
+        comparePageDecisionPresetAnalyticsEvent(),
+        comparePageDecisionPresetAnalyticsData("operational-fit", preset, items.length),
+      );
+      setFitPreset(preset);
+    },
+    [fitPreset, items.length],
+  );
+  const onRiskPresetSelect = React.useCallback(
+    (preset: DeploymentRiskPresetId) => {
+      if (preset === riskPreset) return;
+      trackEvent(
+        comparePageDecisionPresetAnalyticsEvent(),
+        comparePageDecisionPresetAnalyticsData("deployment-risk", preset, items.length),
+      );
+      setRiskPreset(preset);
+    },
+    [items.length, riskPreset],
+  );
+  const onMitigationPresetSelect = React.useCallback(
+    (preset: MitigationPriorityPresetId) => {
+      if (preset === mitigationPreset) return;
+      trackEvent(
+        comparePageDecisionPresetAnalyticsEvent(),
+        comparePageDecisionPresetAnalyticsData("mitigation-priority", preset, items.length),
+      );
+      setMitigationPreset(preset);
+    },
+    [items.length, mitigationPreset],
   );
 
   const pushIds = (next: Entry[]) => {
@@ -255,25 +304,25 @@ function ComparePage() {
         <CompareRolloutReadinessPanel
           state={rolloutReadiness}
           selectedPreset={rolloutPreset}
-          onSelectPreset={setRolloutPreset}
+          onSelectPreset={onRolloutPresetSelect}
           className="m-3 mt-0"
         />
         <CompareOperationalFitHeatmapPanel
           state={operationalFitHeatmap}
           selectedPreset={fitPreset}
-          onSelectPreset={setFitPreset}
+          onSelectPreset={onFitPresetSelect}
           className="m-3 mt-0"
         />
         <CompareDeploymentRiskMapPanel
           state={deploymentRiskMap}
           selectedPreset={riskPreset}
-          onSelectPreset={setRiskPreset}
+          onSelectPreset={onRiskPresetSelect}
           className="m-3 mt-0"
         />
         <CompareMitigationPriorityPanel
           state={mitigationPriority}
           selectedPreset={mitigationPreset}
-          onSelectPreset={setMitigationPreset}
+          onSelectPreset={onMitigationPresetSelect}
           className="m-3 mt-0"
         />
       </div>
