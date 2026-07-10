@@ -556,6 +556,7 @@ function Dossier() {
               label={entry.title}
               href={`/entry/${entry.category}/${entry.slug}`}
               size="sm"
+              analyticsEntry={{ category: entry.category, slug: entry.slug }}
             />
             <ShareMenu
               url={entryUrl}
