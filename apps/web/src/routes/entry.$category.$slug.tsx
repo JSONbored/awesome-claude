@@ -563,6 +563,7 @@ function Dossier() {
               description={entry.description}
               ogUrl={`/og/${entry.category}/${entry.slug}`}
               llmsUrl={`/api/registry/entries/${entry.category}/${entry.slug}/llms`}
+              analyticsEntry={{ category: entry.category, slug: entry.slug }}
             />
           </div>
 

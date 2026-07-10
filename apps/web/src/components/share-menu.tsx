@@ -9,6 +9,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { trackEvent } from "@/lib/analytics";
+import {
+  entryDetailShareAnalyticsData,
+  entryDetailShareAnalyticsEvent,
+  type EntryDetailShareAction,
+} from "@/lib/entry-detail-share-cta-events";
 import { absoluteShareUrl } from "@/lib/share-url-lib";
 
 export interface ShareMenuProps {
@@ -22,6 +28,8 @@ export interface ShareMenuProps {
   ogUrl?: string;
   /** Optional raycast deeplink (e.g. raycast://extensions/...). */
   raycastUrl?: string;
+  /** When set, emits detail share analytics for dropdown actions. */
+  analyticsEntry?: { category: string; slug: string };
 }
 
 async function copy(value: string, label: string) {
@@ -33,7 +41,15 @@ async function copy(value: string, label: string) {
   }
 }
 
-export function ShareMenu({ url, title, description, llmsUrl, ogUrl, raycastUrl }: ShareMenuProps) {
+export function ShareMenu({
+  url,
+  title,
+  description,
+  llmsUrl,
+  ogUrl,
+  raycastUrl,
+  analyticsEntry,
+}: ShareMenuProps) {
   const absolute = absoluteShareUrl(
     url,
     typeof window === "undefined" ? "" : window.location.origin,
@@ -42,7 +58,19 @@ export function ShareMenu({ url, title, description, llmsUrl, ogUrl, raycastUrl 
     ? `[${title}](${absolute}) — ${description}`
     : `[${title}](${absolute})`;
 
+  const trackShare = React.useCallback(
+    (action: EntryDetailShareAction) => {
+      if (!analyticsEntry) return;
+      trackEvent(
+        entryDetailShareAnalyticsEvent(),
+        entryDetailShareAnalyticsData(analyticsEntry.category, analyticsEntry.slug, action),
+      );
+    },
+    [analyticsEntry],
+  );
+
   const onNativeShare = async () => {
+    trackShare("system-share");
     if (typeof navigator !== "undefined" && navigator.share) {
       try {
         await navigator.share({ title, text: description, url: absolute });
@@ -69,17 +97,32 @@ export function ShareMenu({ url, title, description, llmsUrl, ogUrl, raycastUrl 
       <DropdownMenuContent align="end" className="w-60">
         <DropdownMenuLabel className="text-xs">Share this resource</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onSelect={() => copy(absolute, "Link copied")}>
+        <DropdownMenuItem
+          onSelect={() => {
+            trackShare("copy-link");
+            void copy(absolute, "Link copied");
+          }}
+        >
           <Link2 className="mr-2 h-3.5 w-3.5" />
           Copy link
         </DropdownMenuItem>
-        <DropdownMenuItem onSelect={() => copy(citation, "Markdown citation copied")}>
+        <DropdownMenuItem
+          onSelect={() => {
+            trackShare("copy-markdown");
+            void copy(citation, "Markdown citation copied");
+          }}
+        >
           <FileText className="mr-2 h-3.5 w-3.5" />
           Copy as markdown
         </DropdownMenuItem>
         {llmsUrl && (
           <DropdownMenuItem asChild>
-            <a href={llmsUrl} target="_blank" rel="noreferrer">
+            <a
+              href={llmsUrl}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => trackShare("open-llms")}
+            >
               <Code2 className="mr-2 h-3.5 w-3.5" />
               Open llms.txt
             </a>
@@ -87,7 +130,7 @@ export function ShareMenu({ url, title, description, llmsUrl, ogUrl, raycastUrl 
         )}
         {ogUrl && (
           <DropdownMenuItem asChild>
-            <a href={ogUrl} target="_blank" rel="noreferrer">
+            <a href={ogUrl} target="_blank" rel="noreferrer" onClick={() => trackShare("view-og")}>
               <ImageIcon className="mr-2 h-3.5 w-3.5" />
               View share image
             </a>
@@ -95,7 +138,7 @@ export function ShareMenu({ url, title, description, llmsUrl, ogUrl, raycastUrl 
         )}
         {raycastUrl && (
           <DropdownMenuItem asChild>
-            <a href={raycastUrl}>
+            <a href={raycastUrl} onClick={() => trackShare("open-raycast")}>
               <Share2 className="mr-2 h-3.5 w-3.5" />
               Open in Raycast
             </a>
