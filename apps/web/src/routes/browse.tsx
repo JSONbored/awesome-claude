@@ -7,7 +7,7 @@ import {
   useNavigate,
 } from "@tanstack/react-router";
 import { z } from "zod";
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
 import { toast } from "sonner";
 import { ResourceCard } from "@/components/resource-card";
 import { FilterChip, FilterChipGroup } from "@/components/filter-chip";
@@ -62,6 +62,10 @@ import {
   browseCompareOpenAnalyticsData,
   browseCompareOpenAnalyticsEvent,
 } from "@/lib/entry-detail-cta-events";
+import {
+  browseDecisionPresetAnalyticsData,
+  browseDecisionPresetAnalyticsEvent,
+} from "@/lib/browse-decision-preset-cta-events";
 import { trackEvent } from "@/lib/analytics";
 import { useRecents, type SavedSearch } from "@/lib/recents";
 import { entryByRef } from "@/data/entries";
@@ -372,6 +376,28 @@ function Browse() {
   const browseDecisionConfidence = useMemo(
     () => browseDecisionConfidenceState(results, confidencePreset, 8),
     [results, confidencePreset],
+  );
+  const onAdoptionPresetSelect = useCallback(
+    (preset: BrowseAdoptionPresetId) => {
+      if (preset === adoptionPreset) return;
+      trackEvent(
+        browseDecisionPresetAnalyticsEvent(),
+        browseDecisionPresetAnalyticsData("adoption-queue", preset, results.length),
+      );
+      setAdoptionPreset(preset);
+    },
+    [adoptionPreset, results.length],
+  );
+  const onConfidencePresetSelect = useCallback(
+    (preset: BrowseConfidencePresetId) => {
+      if (preset === confidencePreset) return;
+      trackEvent(
+        browseDecisionPresetAnalyticsEvent(),
+        browseDecisionPresetAnalyticsData("decision-confidence", preset, results.length),
+      );
+      setConfidencePreset(preset);
+    },
+    [confidencePreset, results.length],
   );
   const nowIso = useMemo(() => new Date().toISOString(), []);
   const browseFreshness = useMemo(
@@ -859,13 +885,13 @@ function Browse() {
           <BrowseAdoptionQueuePanel
             state={browseAdoptionQueue}
             selectedPreset={adoptionPreset}
-            onSelectPreset={setAdoptionPreset}
+            onSelectPreset={onAdoptionPresetSelect}
             className="mt-3"
           />
           <BrowseDecisionConfidencePanel
             state={browseDecisionConfidence}
             selectedPreset={confidencePreset}
-            onSelectPreset={setConfidencePreset}
+            onSelectPreset={onConfidencePresetSelect}
             className="mt-3"
           />
           <BrowseFreshnessDistributionPanel state={browseFreshness} className="mt-3" />
