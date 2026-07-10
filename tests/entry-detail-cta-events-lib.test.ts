@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   browseCompareOpenAnalyticsData,
+  browseCompareOpenAnalyticsEvent,
   comparisonTrayClearAnalyticsData,
   comparisonTrayClearAnalyticsEvent,
   comparisonTrayFullCompareAnalyticsData,
@@ -72,9 +73,20 @@ describe("entry detail cta events lib", () => {
   });
 
   it("builds browse and compare tray analytics data without entry payloads", () => {
-    expect(browseCompareOpenAnalyticsData(3)).toEqual({
+    expect(browseCompareOpenAnalyticsEvent()).toBe("browse_compare_open");
+    expect(browseCompareOpenAnalyticsData(3, "browse-toolbar")).toEqual({
       count: 3,
-      surface: "browse-compare",
+      surface: "browse-toolbar",
+    });
+    expect(
+      browseCompareOpenAnalyticsData(2, "browse-compare-selection-banner"),
+    ).toEqual({
+      count: 2,
+      surface: "browse-compare-selection-banner",
+    });
+    expect(browseCompareOpenAnalyticsData(4, "browse-trust-panel")).toEqual({
+      count: 4,
+      surface: "browse-trust-panel",
     });
     expect(comparisonTrayQuickCompareAnalyticsData(2)).toEqual({
       count: 2,

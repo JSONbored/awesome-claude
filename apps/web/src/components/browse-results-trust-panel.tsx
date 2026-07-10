@@ -1,7 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import { GitCompare, Shield, Lock, BadgeCheck, GitBranch, UserCheck } from "lucide-react";
 import type { BrowseResultsTrustDecisionUiState } from "@/lib/browse-results-trust-decision";
-import { browseCompareOpenAnalyticsData } from "@/lib/entry-detail-cta-events";
+import {
+  browseCompareOpenAnalyticsData,
+  browseCompareOpenAnalyticsEvent,
+} from "@/lib/entry-detail-cta-events";
 import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
@@ -61,10 +64,10 @@ export function BrowseResultsTrustPanel({
             to="/compare"
             search={compareLink.search}
             onClick={() => {
-              trackEvent("browse_compare_open", {
-                ...browseCompareOpenAnalyticsData(compareLink.selectedCount),
-                surface: "browse-trust-panel",
-              });
+              trackEvent(
+                browseCompareOpenAnalyticsEvent(),
+                browseCompareOpenAnalyticsData(compareLink.selectedCount, "browse-trust-panel"),
+              );
             }}
             className="inline-flex shrink-0 items-center gap-1.5 self-start rounded-full border border-accent bg-accent/10 px-3 py-1.5 text-xs font-medium text-ink hover:bg-accent/15"
           >

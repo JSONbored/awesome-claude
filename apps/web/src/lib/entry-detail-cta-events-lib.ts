@@ -16,6 +16,11 @@ export const ENTRY_DETAIL_MOBILE_SURFACE = "detail-mobile";
 export const BROWSE_COMPARE_SURFACE = "browse-compare";
 export const COMPARE_TRAY_SURFACE = "compare-tray";
 
+export type BrowseCompareOpenSurface =
+  | "browse-toolbar"
+  | "browse-compare-selection-banner"
+  | "browse-trust-panel";
+
 export function entryDetailEntryKey(category: string, slug: string): string {
   return `${category}/${slug}`;
 }
@@ -78,10 +83,17 @@ export function entryDetailMobileCompareAnalyticsData(
   };
 }
 
-export function browseCompareOpenAnalyticsData(selectedCount: number) {
+export function browseCompareOpenAnalyticsEvent(): string {
+  return "browse_compare_open";
+}
+
+export function browseCompareOpenAnalyticsData(
+  selectedCount: number,
+  surface: BrowseCompareOpenSurface,
+) {
   return {
     count: selectedCount,
-    surface: BROWSE_COMPARE_SURFACE,
+    surface,
   };
 }
 

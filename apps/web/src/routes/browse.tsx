@@ -55,7 +55,10 @@ import {
 } from "lucide-react";
 import { useCompare } from "@/lib/compare";
 import { browseCompareInteractiveUiState } from "@/lib/compare-browse-interactive-ui-lib";
-import { browseCompareOpenAnalyticsData } from "@/lib/entry-detail-cta-events";
+import {
+  browseCompareOpenAnalyticsData,
+  browseCompareOpenAnalyticsEvent,
+} from "@/lib/entry-detail-cta-events";
 import { trackEvent } from "@/lib/analytics";
 import { useRecents, type SavedSearch } from "@/lib/recents";
 import { entryByRef } from "@/data/entries";
@@ -706,9 +709,13 @@ function Browse() {
                       to="/compare"
                       search={browseCompareUi.search}
                       onClick={() => {
-                        trackEvent("browse_compare_open", {
-                          ...browseCompareOpenAnalyticsData(browseCompareUi.selectedCount),
-                        });
+                        trackEvent(
+                          browseCompareOpenAnalyticsEvent(),
+                          browseCompareOpenAnalyticsData(
+                            browseCompareUi.selectedCount,
+                            "browse-toolbar",
+                          ),
+                        );
                       }}
                       className="inline-flex items-center gap-1.5 rounded-full border border-accent bg-accent/10 px-2.5 py-1 text-[11px] font-medium text-ink hover:bg-accent/15"
                     >

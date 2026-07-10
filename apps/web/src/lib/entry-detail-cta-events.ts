@@ -9,6 +9,8 @@ export {
   ENTRY_DETAIL_DECISION_PLAYBOOK_SURFACE,
   ENTRY_DETAIL_MOBILE_SURFACE,
   browseCompareOpenAnalyticsData,
+  browseCompareOpenAnalyticsEvent,
+  type BrowseCompareOpenSurface,
   comparisonTrayFullCompareAnalyticsData,
   comparisonTrayQuickCompareAnalyticsData,
   comparisonTrayRemoveAnalyticsData,

@@ -2,7 +2,10 @@ import { Link } from "@tanstack/react-router";
 import { GitCompare } from "lucide-react";
 import type { BrowseCompareSelectionContextState } from "@/lib/resource-card-trust-decision";
 import { browseCompareSelectionDivergingLine } from "@/lib/resource-card-trust-decision";
-import { browseCompareOpenAnalyticsData } from "@/lib/entry-detail-cta-events";
+import {
+  browseCompareOpenAnalyticsData,
+  browseCompareOpenAnalyticsEvent,
+} from "@/lib/entry-detail-cta-events";
 import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
@@ -38,10 +41,13 @@ export function BrowseCompareSelectionBanner({
           to="/compare"
           search={compareSearch}
           onClick={() => {
-            trackEvent("browse_compare_open", {
-              ...browseCompareOpenAnalyticsData(state.selectedCount),
-              surface: "browse-compare-selection-banner",
-            });
+            trackEvent(
+              browseCompareOpenAnalyticsEvent(),
+              browseCompareOpenAnalyticsData(
+                state.selectedCount,
+                "browse-compare-selection-banner",
+              ),
+            );
           }}
           className="inline-flex shrink-0 items-center gap-1.5 self-start rounded-full border border-accent bg-background px-3 py-1.5 text-xs font-medium text-ink hover:bg-surface"
         >
