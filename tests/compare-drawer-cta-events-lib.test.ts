@@ -8,6 +8,12 @@ import {
   compareDrawerSourceAnalyticsEvent,
   compareDrawerShareLinkCopyAnalyticsData,
   compareDrawerShareLinkCopyAnalyticsEvent,
+  compareDrawerRemoveAnalyticsData,
+  compareDrawerRemoveAnalyticsEvent,
+  compareDrawerFullViewAnalyticsData,
+  compareDrawerFullViewAnalyticsEvent,
+  compareDrawerOpenDossierAnalyticsData,
+  compareDrawerOpenDossierAnalyticsEvent,
 } from "@/lib/compare-drawer-cta-events-lib";
 
 describe("compare drawer cta events lib", () => {
@@ -40,6 +46,26 @@ describe("compare drawer cta events lib", () => {
     expect(compareDrawerShareLinkCopyAnalyticsData(3)).toEqual({
       surface: "compare-drawer",
       compareCount: 3,
+    });
+    expect(compareDrawerRemoveAnalyticsEvent()).toBe("compare_drawer_remove");
+    expect(compareDrawerRemoveAnalyticsData("mcp", "browser", 1)).toEqual({
+      entry: "mcp/browser",
+      surface: "compare-drawer",
+      count: 1,
+    });
+    expect(compareDrawerFullViewAnalyticsEvent()).toBe(
+      "compare_drawer_full_view",
+    );
+    expect(compareDrawerFullViewAnalyticsData(4)).toEqual({
+      count: 4,
+      surface: "compare-drawer",
+    });
+    expect(compareDrawerOpenDossierAnalyticsEvent()).toBe(
+      "compare_open_dossier",
+    );
+    expect(compareDrawerOpenDossierAnalyticsData("skills", "review")).toEqual({
+      entry: "skills/review",
+      surface: "compare-drawer",
     });
   });
 });
