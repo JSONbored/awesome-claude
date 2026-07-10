@@ -1,0 +1,102 @@
+---
+title: txtai
+slug: txtai
+category: tools
+description: Open-source all-in-one AI framework for semantic search, LLM orchestration, and language-model workflows, built around an embeddings database that unions sparse and dense vector indexes, graph networks, and relational databases, with pipelines, workflows, agents, and web and MCP APIs.
+cardDescription: Open-source embeddings database and AI framework for semantic search, RAG, workflows, and agents.
+seoTitle: txtai open-source embeddings database and AI framework
+seoDescription: txtai is an open-source all-in-one AI framework for semantic search, LLM orchestration, and workflows, built around an embeddings database that unions vector indexes, graph networks, and relational databases, with pipelines, agents, and web and MCP APIs.
+author: neuml
+submittedBy: davion-knight
+submittedByUrl: "https://github.com/davion-knight"
+dateAdded: "2026-07-10"
+websiteUrl: "https://neuml.github.io/txtai/"
+documentationUrl: "https://neuml.github.io/txtai/"
+repoUrl: "https://github.com/neuml/txtai"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - embeddings
+  - semantic-search
+  - rag
+  - llm-orchestration
+  - vector-search
+  - python
+keywords:
+  - txtai
+  - embeddings database
+  - semantic search
+  - llm orchestration
+  - vector search sql
+  - rag framework
+robotsIndex: true
+robotsFollow: true
+prerequisites:
+  - Python 3.10+ project and a dependency manager to install `txtai` from PyPI (bindings for JavaScript, Java, Rust, and Go are also available).
+  - A model source for embeddings and language-model pipelines, either local models (via Hugging Face Transformers and Sentence Transformers) or hosted APIs.
+  - Enough local compute for the models you run, or container orchestration if you scale out.
+  - The data you want to index (text, documents, audio, images, or video) and a place to store the embeddings database.
+  - A plan for who can query the index and, if you expose the web or MCP API, how that endpoint is secured.
+safetyNotes:
+  - txtai can run language-model pipelines and agents that call tools and execute multi-step workflows, so review what a pipeline, workflow, or agent does before running it on untrusted input.
+  - When you expose the web or MCP API, run it on a trusted network or behind authentication, and do not expose an unauthenticated endpoint publicly.
+  - Local models keep inference on your machine, while hosted model APIs receive your prompts and data; scope any provider credentials to the minimum needed and keep them out of source control.
+  - Treat indexed content and model outputs as untrusted input for downstream actions, and gate any workflow step that writes data or calls external services.
+  - Keep production indexes, pipelines, and permissions narrower than notebook or example configurations.
+privacyNotes:
+  - The embeddings database stores your indexed content and vectors, which can include personal or proprietary data, so apply retention and access-control policies to that store.
+  - Embedding and language-model pipelines send content to the models you configure; hosted APIs process it under their terms, while local models keep it on your machine.
+  - Multimodal indexing can include documents, audio, images, and video, so treat those inputs and any derived embeddings as sensitive where appropriate.
+  - Model-provider keys, index data, and any exports should be kept out of version control and access-controlled like other operational data.
+---
+
+## Editorial notes
+
+txtai is useful when Claude-adjacent teams want one Python-native foundation for semantic search and LLM applications rather than stitching a vector store, a search layer, and an orchestration framework together. Its core is an embeddings database — a union of vector indexes, graph networks, and relational databases — that powers vector search and serves as a knowledge source for retrieval-augmented generation, workflows, and agents.
+
+This is distinct from the agent frameworks, gateways, memory, and ingestion tools in the directory: txtai is the embeddings-database and orchestration layer that combines search, pipelines, and agents in one framework, and it also exposes a Model Context Protocol (MCP) API.
+
+## Key capabilities
+
+- **Embeddings database** — a union of sparse and dense vector indexes, graph networks, and relational databases for search and as an LLM knowledge source.
+- **Vector search** — vector search with SQL, object storage, topic modeling, graph analysis, and multimodal indexing.
+- **Multimodal embeddings** — create embeddings for text, documents, audio, images, and video.
+- **LLM pipelines** — pipelines that run LLM prompts, question-answering, labeling, transcription, translation, and summarization.
+- **Workflows** — join pipelines together and aggregate logic, from simple microservices to multi-model workflows.
+- **Agents** — agents that connect embeddings, pipelines, workflows, and other agents to solve multi-step problems.
+- **Web and MCP APIs** — a web API and a Model Context Protocol API, with bindings for JavaScript, Java, Rust, and Go.
+- **Local or scale-out** — run locally or scale out with container orchestration.
+
+## How teams use it
+
+- **Semantic search** — index a corpus and search by meaning with vector plus SQL filtering.
+- **RAG** — use the embeddings database as the knowledge source for retrieval-augmented generation.
+- **Language workflows** — build pipelines for summarization, transcription, translation, and labeling.
+- **Autonomous agents** — connect search, pipelines, and workflows into agents that solve tasks.
+- **Multimodal indexing** — index and search text, documents, audio, images, and video together.
+
+## Getting started
+
+txtai is open source and built with Python 3.10+, Hugging Face Transformers, Sentence Transformers, and
+FastAPI. Install it with `pip install txtai`, create an embeddings instance, index your content, and
+search it by meaning; from there you can add LLM pipelines, join them into workflows, build agents, and
+expose a web or MCP API. It runs locally or scales out with container orchestration, and bindings are
+available for JavaScript, Java, Rust, and Go.
+
+## Source notes
+
+- The official repository describes txtai as an all-in-one AI framework for semantic search, LLM orchestration, and language-model workflows.
+- The core component is an embeddings database that unions sparse and dense vector indexes, graph networks, and relational databases, enabling vector search and serving as a knowledge source for LLM applications.
+- Documented features include vector search with SQL, object storage, topic modeling, graph analysis, and multimodal indexing; embeddings for text, documents, audio, images, and video; LLM-powered pipelines; workflows; agents; and web and MCP APIs with bindings for JavaScript, Java, Rust, and Go.
+- txtai is built with Python 3.10+, Hugging Face Transformers, Sentence Transformers, and FastAPI, and can run locally or scale out with container orchestration.
+- The GitHub repository is `neuml/txtai`, is Apache-2.0 licensed, is installed from PyPI as `txtai`, and is maintained by NeuML.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, skills, hooks, rules, commands, guides, open pull requests, and repository-wide content for `txtai`, `neuml`, `neuml.github.io/txtai`, `github.com/neuml/txtai`, `embeddings database`, and `semantic search framework`. Existing entries cover adjacent RAG, memory, and search tools, but no dedicated txtai tools entry, txtai source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.
