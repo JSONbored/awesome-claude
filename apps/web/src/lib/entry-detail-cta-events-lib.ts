@@ -51,6 +51,22 @@ export function entryDetailCompareAnalyticsData(category: string, slug: string) 
   };
 }
 
+export function entryDetailCompareOpenTrayAnalyticsEvent(): string {
+  return "detail_compare_open_tray";
+}
+
+export function entryDetailCompareOpenTrayAnalyticsData(
+  category: string,
+  slug: string,
+  compareCount: number,
+) {
+  return {
+    entry: entryDetailEntryKey(category, slug),
+    surface: ENTRY_DETAIL_COMPARE_SURFACE,
+    compareCount,
+  };
+}
+
 export function entryDetailCompareFullAnalyticsEvent(): string {
   return "detail_compare_open_full";
 }

@@ -16,6 +16,8 @@ import {
   entryDetailCompareAnalyticsEvent,
   entryDetailCompareFullAnalyticsData,
   entryDetailCompareFullAnalyticsEvent,
+  entryDetailCompareOpenTrayAnalyticsData,
+  entryDetailCompareOpenTrayAnalyticsEvent,
   entryDetailMobileCompareAnalyticsData,
   entryDetailMobileCompareAnalyticsEvent,
   entryDetailCopyAnalyticsData,
@@ -54,6 +56,16 @@ describe("entry detail cta events lib", () => {
     expect(entryDetailCompareAnalyticsData("skills", "demo")).toEqual({
       entry: "skills/demo",
       surface: "detail-compare",
+    });
+    expect(entryDetailCompareOpenTrayAnalyticsEvent()).toBe(
+      "detail_compare_open_tray",
+    );
+    expect(
+      entryDetailCompareOpenTrayAnalyticsData("skills", "demo", 2),
+    ).toEqual({
+      entry: "skills/demo",
+      surface: "detail-compare",
+      compareCount: 2,
     });
     expect(entryDetailCompareFullAnalyticsEvent()).toBe(
       "detail_compare_open_full",

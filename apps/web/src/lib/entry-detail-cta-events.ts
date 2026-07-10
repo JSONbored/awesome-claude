@@ -23,6 +23,8 @@ export {
   comparisonTrayClearAnalyticsEvent,
   entryDetailCompareAnalyticsData,
   entryDetailCompareAnalyticsEvent,
+  entryDetailCompareOpenTrayAnalyticsData,
+  entryDetailCompareOpenTrayAnalyticsEvent,
   entryDetailCompareFullAnalyticsData,
   entryDetailCompareFullAnalyticsEvent,
   entryDetailMobileCompareAnalyticsData,

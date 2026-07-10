@@ -84,6 +84,8 @@ import {
   entryDetailCompareAnalyticsEvent,
   entryDetailCompareFullAnalyticsData,
   entryDetailCompareFullAnalyticsEvent,
+  entryDetailCompareOpenTrayAnalyticsData,
+  entryDetailCompareOpenTrayAnalyticsEvent,
   entryDetailMobileCompareAnalyticsData,
   entryDetailMobileCompareAnalyticsEvent,
   entryDetailPlaybookActionAnalyticsData,
@@ -336,10 +338,10 @@ function Dossier() {
   }, [compare, entry, inCompare]);
   const onOpenCompare = useCallback(() => {
     compare.setOpen(true);
-    trackEvent("detail_compare_open_tray", {
-      ...entryDetailCompareAnalyticsData(entry.category, entry.slug),
-      compareCount: compare.items.length,
-    });
+    trackEvent(
+      entryDetailCompareOpenTrayAnalyticsEvent(),
+      entryDetailCompareOpenTrayAnalyticsData(entry.category, entry.slug, compare.items.length),
+    );
   }, [compare, entry.category, entry.slug]);
 
   const onOpenFullCompare = useCallback(() => {
