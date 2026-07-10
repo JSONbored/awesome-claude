@@ -35,6 +35,8 @@ import {
   type BrowseConfidencePresetId,
 } from "@/lib/browse-decision-confidence";
 import { BrowseDecisionConfidencePanel } from "@/components/browse-decision-confidence-panel";
+import { browseFreshnessDistributionState } from "@/lib/browse-freshness-distribution";
+import { BrowseFreshnessDistributionPanel } from "@/components/browse-freshness-distribution-panel";
 import {
   CATEGORIES,
   type Category,
@@ -360,6 +362,11 @@ function Browse() {
   const browseDecisionConfidence = useMemo(
     () => browseDecisionConfidenceState(results, confidencePreset, 8),
     [results, confidencePreset],
+  );
+  const nowIso = useMemo(() => new Date().toISOString(), []);
+  const browseFreshness = useMemo(
+    () => browseFreshnessDistributionState(results, nowIso, 12),
+    [results, nowIso],
   );
 
   const activeCount =
@@ -851,6 +858,7 @@ function Browse() {
             onSelectPreset={setConfidencePreset}
             className="mt-3"
           />
+          <BrowseFreshnessDistributionPanel state={browseFreshness} className="mt-3" />
 
           {sp.category &&
             (() => {
