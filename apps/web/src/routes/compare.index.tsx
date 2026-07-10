@@ -46,6 +46,10 @@ import {
   comparePageScenarioAnalyticsData,
   comparePageScenarioAnalyticsEvent,
 } from "@/lib/compare-page-scenario-cta-events";
+import {
+  comparePageShareLinkCopyAnalyticsData,
+  comparePageShareLinkCopyAnalyticsEvent,
+} from "@/lib/compare-page-share-link-cta-events";
 import { claimCtaAnalyticsData, claimCtaAnalyticsEvent } from "@/lib/conversion-cta-events";
 import { sameEntry } from "@/lib/entry-identity";
 import { search } from "@/data/search";
@@ -293,7 +297,12 @@ function ComparePage() {
           ) : null}
         </div>
         <div className="flex items-center gap-2">
-          <CopyButton value={copyShare()} label="Copy share link" />
+          <CopyButton
+            value={copyShare()}
+            label="Copy share link"
+            event={comparePageShareLinkCopyAnalyticsEvent()}
+            eventData={comparePageShareLinkCopyAnalyticsData(items.length)}
+          />
           <button
             type="button"
             onClick={() => {

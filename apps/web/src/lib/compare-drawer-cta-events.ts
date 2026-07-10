@@ -9,4 +9,6 @@ export {
   compareDrawerUndoRestoreAnalyticsEvent,
   compareDrawerSourceAnalyticsData,
   compareDrawerSourceAnalyticsEvent,
+  compareDrawerShareLinkCopyAnalyticsData,
+  compareDrawerShareLinkCopyAnalyticsEvent,
 } from "@/lib/compare-drawer-cta-events-lib";

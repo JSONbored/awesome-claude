@@ -42,3 +42,14 @@ export function compareDrawerSourceAnalyticsData(category: string, slug: string,
     host,
   };
 }
+
+export function compareDrawerShareLinkCopyAnalyticsEvent(): string {
+  return "compare_drawer_share_link_copy";
+}
+
+export function compareDrawerShareLinkCopyAnalyticsData(compareCount: number) {
+  return {
+    surface: COMPARE_DRAWER_SURFACE,
+    compareCount,
+  };
+}

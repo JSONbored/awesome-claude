@@ -6,6 +6,8 @@ import {
   compareDrawerUndoRestoreAnalyticsEvent,
   compareDrawerSourceAnalyticsData,
   compareDrawerSourceAnalyticsEvent,
+  compareDrawerShareLinkCopyAnalyticsData,
+  compareDrawerShareLinkCopyAnalyticsEvent,
 } from "@/lib/compare-drawer-cta-events-lib";
 
 describe("compare drawer cta events lib", () => {
@@ -31,6 +33,13 @@ describe("compare drawer cta events lib", () => {
       entry: "mcp/browser",
       surface: "compare-drawer",
       host: "github.com",
+    });
+    expect(compareDrawerShareLinkCopyAnalyticsEvent()).toBe(
+      "compare_drawer_share_link_copy",
+    );
+    expect(compareDrawerShareLinkCopyAnalyticsData(3)).toEqual({
+      surface: "compare-drawer",
+      compareCount: 3,
     });
   });
 });

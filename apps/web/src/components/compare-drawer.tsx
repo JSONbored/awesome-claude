@@ -30,6 +30,8 @@ import {
   compareDrawerUndoRestoreAnalyticsEvent,
   compareDrawerSourceAnalyticsData,
   compareDrawerSourceAnalyticsEvent,
+  compareDrawerShareLinkCopyAnalyticsData,
+  compareDrawerShareLinkCopyAnalyticsEvent,
 } from "@/lib/compare-drawer-cta-events";
 import {
   compareDrawerDecisionPresetAnalyticsData,
@@ -544,6 +546,8 @@ export function CompareDrawer() {
                 value={shareUrl}
                 label="Copy compare link"
                 disabled={items.length === 0}
+                event={compareDrawerShareLinkCopyAnalyticsEvent()}
+                eventData={compareDrawerShareLinkCopyAnalyticsData(items.length)}
               />
               <button
                 type="button"
