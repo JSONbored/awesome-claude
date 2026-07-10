@@ -305,6 +305,24 @@ export function entryDetailCommunityAnchorAnalyticsData(
   };
 }
 
+export type EntryDetailTrustSection = "safety" | "privacy";
+
+export function entryDetailTrustSectionAnalyticsEvent(): string {
+  return "detail_trust_section_click";
+}
+
+export function entryDetailTrustSectionAnalyticsData(
+  category: string,
+  slug: string,
+  section: EntryDetailTrustSection,
+) {
+  return {
+    entry: entryDetailEntryKey(category, slug),
+    surface: ENTRY_DETAIL_COMMAND_CENTER_SURFACE,
+    section,
+  };
+}
+
 export function entryDetailMobileLlmsAnalyticsData(category: string, slug: string) {
   return {
     entry: entryDetailEntryKey(category, slug),

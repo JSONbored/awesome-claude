@@ -48,6 +48,8 @@ import {
   entryDetailBrowseCategoryAnalyticsEvent,
   entryDetailCommunityAnchorAnalyticsData,
   entryDetailCommunityAnchorAnalyticsEvent,
+  entryDetailTrustSectionAnalyticsData,
+  entryDetailTrustSectionAnalyticsEvent,
 } from "@/lib/entry-detail-cta-events";
 import {
   detailIntegrationLinkIcon,
@@ -203,6 +205,16 @@ export function EntryDetailCommandCenter({
                   {entry.safetyNotes && (
                     <a
                       href="#safety"
+                      onClick={() => {
+                        trackEvent(
+                          entryDetailTrustSectionAnalyticsEvent(),
+                          entryDetailTrustSectionAnalyticsData(
+                            entry.category,
+                            entry.slug,
+                            "safety",
+                          ),
+                        );
+                      }}
                       className="font-medium text-ink underline-offset-2 hover:underline"
                     >
                       Safety notes
@@ -211,6 +223,16 @@ export function EntryDetailCommandCenter({
                   {entry.privacyNotes && (
                     <a
                       href="#privacy"
+                      onClick={() => {
+                        trackEvent(
+                          entryDetailTrustSectionAnalyticsEvent(),
+                          entryDetailTrustSectionAnalyticsData(
+                            entry.category,
+                            entry.slug,
+                            "privacy",
+                          ),
+                        );
+                      }}
                       className="font-medium text-ink underline-offset-2 hover:underline"
                     >
                       Privacy notes

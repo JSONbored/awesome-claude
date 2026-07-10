@@ -39,6 +39,8 @@ import {
   entryDetailBrowseCategoryAnalyticsEvent,
   entryDetailCommunityAnchorAnalyticsData,
   entryDetailCommunityAnchorAnalyticsEvent,
+  entryDetailTrustSectionAnalyticsData,
+  entryDetailTrustSectionAnalyticsEvent,
   entryDetailMobileActionAnalyticsData,
   entryDetailMobileActionAnalyticsEvent,
   entryDetailMobileCopyIntentType,
@@ -248,6 +250,16 @@ describe("entry detail cta events lib", () => {
       surface: "detail-command-center",
       anchor: "related",
       count: 3,
+    });
+    expect(entryDetailTrustSectionAnalyticsEvent()).toBe(
+      "detail_trust_section_click",
+    );
+    expect(
+      entryDetailTrustSectionAnalyticsData("mcp", "browser", "safety"),
+    ).toEqual({
+      entry: "mcp/browser",
+      surface: "detail-command-center",
+      section: "safety",
     });
     expect(entryDetailMobileLlmsAnalyticsData("skills", "demo")).toEqual({
       entry: "skills/demo",
