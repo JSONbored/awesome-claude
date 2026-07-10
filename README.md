@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>1364+ file-backed entries</strong> stay useful as both an
+        <strong>1369+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>1364</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>1369</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>AI-reviewed</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -84,12 +84,12 @@ Refreshed weekly by [`.github/workflows/gittensor-impact.yml`](.github/workflows
         </td>
 <td align="center" width="20%">
           <a href="#tools"><strong>🧰 Tools</strong></a><br>
-          <code>195</code><br>
+          <code>199</code><br>
           <sub>Apps, developer tools, services, and products for Claude-native builders.</sub>
         </td>
 <td align="center" width="20%">
           <a href="#skills"><strong>🧠 Skills</strong></a><br>
-          <code>176</code><br>
+          <code>177</code><br>
           <sub>Source-backed skill packs and reusable capabilities.</sub>
         </td>
 <td align="center" width="20%">
@@ -791,7 +791,7 @@ packages use checksums and package trust metadata after review.
 
 Get a free API key on https://app.zyntra.app/
 
-## 🧰 Tools (195)
+## 🧰 Tools (199)
 
 - **[Activepieces](https://heyclau.de/entry/tools/activepieces)** - Open-source, self-hostable workflow automation platform with AI workflows, TypeScript pieces, human-in-the-loop steps, and a built-in MCP server.
 - **[AG2 Agent Framework](https://heyclau.de/entry/tools/ag2-agent-framework)** - Open-source Python AgentOS and multi-agent framework, evolved from AutoGen, for building conversable agents, group chats, swarms, human-in-the-loop workflows, tool use, RAG, code execution, and provider-backed agent systems.
@@ -900,6 +900,7 @@ Get a free API key on https://app.zyntra.app/
 - **[llama.cpp](https://heyclau.de/entry/tools/llama-cpp)** - MIT-licensed C/C++ LLM inference runtime for running GGUF models locally or through a lightweight OpenAI-compatible llama-server.
 - **[LlamaIndex](https://heyclau.de/entry/tools/llamaindex)** - Open-source framework for building agentic LLM applications over private data with ingestion, indexes, retrieval, RAG, tools, workflows, and evaluation.
 - **[LobeHub (formerly LobeChat)](https://heyclau.de/entry/tools/lobehub)** - Self-hostable AI agent workspace formerly known as LobeChat, with agent builder, agent groups, personal memory, model-provider routing, skills, MCP-compatible plugins, Docker deployment, Vercel deployment, and IM gateway workflows.
+- **[LocalAI](https://heyclau.de/entry/tools/localai)** - Open-source, self-hostable AI engine that runs LLMs, vision, voice, image, and video models on your own hardware behind one API, with drop-in OpenAI, Anthropic, and ElevenLabs API compatibility, composable on-demand backends, and no GPU required.
 - **[Lovable](https://heyclau.de/entry/tools/lovable)** - AI app builder for generating and iterating on web applications from natural language product requests.
 - **[Make](https://heyclau.de/entry/tools/make)** - Visual automation platform for building integrations, scenarios, API workflows, and AI-connected business processes.
 - **[Marimo](https://heyclau.de/entry/tools/marimo)** - Apache-2.0 reactive Python notebook stored as pure Python for reproducible experiments, SQL-backed data workflows, script execution, app deployment, and AI-assisted editing.
@@ -947,6 +948,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Polars](https://heyclau.de/entry/tools/polars)** - MIT-licensed DataFrame query engine written in Rust for Python, Rust, Node.js, R, and SQL workflows with lazy execution, streaming, Arrow integration, and file, database, and cloud I/O.
 - **[Portkey AI Gateway](https://heyclau.de/entry/tools/portkey-ai-gateway)** - Open-source AI gateway from Portkey for routing to 1600+ LLMs through one OpenAI-compatible API, with automatic retries, fallbacks, load balancing, conditional routing, guardrails, caching, and observability, self-hostable via npx, Docker, or edge deployments.
 - **[Prefect](https://heyclau.de/entry/tools/prefect)** - Apache-2.0 Python workflow orchestration framework for resilient data pipelines with flows, tasks, deployments, schedules, retries, caching, workers, work pools, and observability.
+- **[Prompt flow](https://heyclau.de/entry/tools/prompt-flow)** - Open-source suite of development tools from Microsoft for building LLM applications end to end — create executable flows that link LLMs, prompts, Python, and tools, trace and debug them, evaluate quality against datasets in CI/CD, and deploy to a serving platform.
 - **[Promptfoo](https://heyclau.de/entry/tools/promptfoo)** - Open-source prompt testing and red-teaming framework for LLM outputs, regressions, evaluations, and security checks.
 - **[Protect AI](https://heyclau.de/entry/tools/protect-ai)** - AI security platform for securing machine learning and LLM supply chains, models, applications, and infrastructure.
 - **[Pydantic AI](https://heyclau.de/entry/tools/pydantic-ai)** - Python agent framework from the Pydantic team for type-safe GenAI apps, tools, structured outputs, MCP, evals, and durable workflows.
@@ -977,6 +979,8 @@ Get a free API key on https://app.zyntra.app/
 - **[Temporal](https://heyclau.de/entry/tools/temporal)** - MIT-licensed durable execution platform for building resilient applications with Workflows, Activities, Workers, Task Queues, Namespaces, retries, schedules, and event history.
 - **[Trigger.dev](https://heyclau.de/entry/tools/trigger-dev)** - Background job and workflow platform for TypeScript applications, long-running tasks, schedules, and durable automation.
 - **[TruLens](https://heyclau.de/entry/tools/trulens)** - Open-source evaluation and tracing framework for measuring AI agents, RAG systems, LLM apps, retrieval quality, feedback metrics, and trace-level regressions.
+- **[txtai](https://heyclau.de/entry/tools/txtai)** - Open-source all-in-one AI framework for semantic search, LLM orchestration, and language-model workflows, built around an embeddings database that unions sparse and dense vector indexes, graph networks, and relational databases, with pipelines, workflows, agents, and web and MCP APIs.
+- **[Unsloth](https://heyclau.de/entry/tools/unsloth)** - Open-source library for fast, memory-efficient fine-tuning, reinforcement learning, and training of open LLMs — train 500+ models up to 2x faster with up to 70% less VRAM and no accuracy loss, with LoRA/QLoRA support and export to GGUF, safetensors, vLLM, and Ollama.
 - **[Upsonic](https://heyclau.de/entry/tools/upsonic)** - Python framework for autonomous AI agents, traditional agents, custom tools, MCP tools, prebuilt autonomous agents, workspace-restricted file and shell operations, E2B sandbox execution, OCR, document processing, and vector storage integrations.
 - **[Vercel AI SDK](https://heyclau.de/entry/tools/vercel-ai-sdk)** - TypeScript toolkit for building AI applications with model providers, streaming UI, tools, agents, and framework adapters.
 - **[v0](https://heyclau.de/entry/tools/vercel-v0)** - Vercel AI interface builder for generating, editing, and iterating on React and web UI from prompts.
@@ -989,7 +993,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Zapier AI](https://heyclau.de/entry/tools/zapier-ai)** - Automation platform with AI-assisted workflows, app integrations, agents, actions, and business process automation.
 - **[Zed](https://heyclau.de/entry/tools/zed)** - Collaborative code editor with AI assistance, fast native performance, and developer-focused collaboration workflows.
 
-## 🧠 Skills (176)
+## 🧠 Skills (177)
 
 - **[Addy Osmani Agent Skills](https://heyclau.de/entry/skills/addy-osmani-agent-skills)** - Addy Osmani's production-grade Agent Skills pack for AI coding agents, with lifecycle slash commands, engineering workflow skills, review personas, quality gates, and cross-agent setup guidance for Claude Code, Cursor, Gemini CLI, Antigravity CLI, OpenCode, GitHub Copilot, and other agents.
 - **[Agent Evals Regression Gate Skill](https://heyclau.de/entry/skills/agent-evals-regression-gate)** - Build repeatable eval suites that catch quality regressions in AI agent behavior before merge or release.
@@ -1087,6 +1091,7 @@ Get a free API key on https://app.zyntra.app/
 - **[LiveKit Agent Skills](https://heyclau.de/entry/skills/livekit-agent-skills)** - Official LiveKit Agent Skills for AI coding agents building low-latency voice AI, LiveKit Agents workflows, handoffs, mandatory tests, and simulation scenario suites.
 - **[LLMs.txt Search Artifact Validation Capability Pack Skill](https://heyclau.de/entry/skills/llms-search-artifact-validation-capability-pack)** - Expert validation skill for reviewing /llms.txt, search discovery artifacts, canonical signals, structured data, and LLM-ready documentation links.
 - **[Log Parsing + Incident Timeline Skill](https://heyclau.de/entry/skills/log-parsing-incident-timeline)** - Parse web, application, and system logs into structured incidents and timelines with anomaly detection.
+- **[Maoxuan Product Agent](https://heyclau.de/entry/skills/maoxuan-product-agent)** - Chinese product-decision skill that distills the reasoning structure of On Contradiction and On Practice into bottleneck diagnosis, stage-aware prioritization, minimal validation, and evidence-driven strategy updates.
 - **[Markdown Knowledge Base Composer Skill](https://heyclau.de/entry/skills/markdown-knowledge-base-composer)** - Aggregate Markdown folders into cohesive knowledge bases with automated table of contents generation, cross-link validation and rewriting, heading normalization, and multi-format export (HTML, PDF, DOCX, EPUB).
 - **[MCP Client Config Audit Capability Pack Skill](https://heyclau.de/entry/skills/mcp-client-config-audit-capability-pack)** - Expert MCP client config audit capability pack for reviewing Claude Code MCP server entries, scope placement, tool approval settings, env var secrets, and startup context load before enabling servers in production repositories.
 - **[MCP OAuth Server Hardening Capability Pack Skill](https://heyclau.de/entry/skills/mcp-oauth-server-hardening-capability-pack)** - Expert MCP OAuth server hardening capability pack applying documented Dynamic Client Registration, oauth.scopes pins, callback ports, keychain token storage, and least-privilege scope review from official MCP documentation.
