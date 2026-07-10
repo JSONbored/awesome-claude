@@ -16,6 +16,10 @@ describe("conversion cta events lib", () => {
       surface: "detail-command-center",
       entry: "mcp/browser",
     });
+    expect(claimCtaAnalyticsData("detail-mobile", "skills", "demo")).toEqual({
+      surface: "detail-mobile",
+      entry: "skills/demo",
+    });
     expect(claimCtaAnalyticsData("compare-table")).toEqual({
       surface: "compare-table",
     });

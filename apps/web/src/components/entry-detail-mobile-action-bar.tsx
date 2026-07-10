@@ -10,6 +10,7 @@ import { entryDetailMobileCompareAction } from "@/lib/entry-detail-compare-ui";
 import { siteConfig } from "@/lib/site";
 import { absoluteUrl } from "@/lib/seo";
 import { trackEvent } from "@/lib/analytics";
+import { claimCtaAnalyticsData, claimCtaAnalyticsEvent } from "@/lib/conversion-cta-events";
 import {
   entryDetailMobileActionAnalyticsData,
   entryDetailMobileActionAnalyticsEvent,
@@ -85,7 +86,14 @@ export function EntryDetailMobileActionBar({
       }
 
       if (action.kind === "link" && action.href) {
-        trackEvent(entryDetailMobileActionAnalyticsEvent(actionId), analyticsData);
+        if (actionId === "claim") {
+          trackEvent(
+            claimCtaAnalyticsEvent(),
+            claimCtaAnalyticsData("detail-mobile", entry.category, entry.slug),
+          );
+        } else {
+          trackEvent(entryDetailMobileActionAnalyticsEvent(actionId), analyticsData);
+        }
         const intentType = entryDetailMobileLinkIntentType(actionId);
         if (intentType) void recordIntentEvent(intentType, entry);
         if (action.external) {
