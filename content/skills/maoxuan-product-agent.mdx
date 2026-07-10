@@ -1,0 +1,260 @@
+---
+title: Maoxuan Product Agent
+slug: maoxuan-product-agent
+category: skills
+description: >-
+  Chinese product-decision skill that distills the reasoning structure of On
+  Contradiction and On Practice into bottleneck diagnosis, stage-aware
+  prioritization, minimal validation, and evidence-driven strategy updates.
+cardDescription: >-
+  Diagnose the current product bottleneck, choose the next action, define a
+  stop list, and validate the decision in Simplified Chinese.
+seoTitle: Maoxuan Product Agent | Chinese AI Product Manager Skill for Claude Code, Codex, and Cursor
+seoDescription: >-
+  Install Maoxuan Product Agent, a Chinese AI product manager skill for
+  prioritization, growth, metrics, operations, delivery, and cross-team
+  decisions, with evidence checks and explicit validation signals.
+author: atdy
+authorProfileUrl: "https://github.com/atdy"
+submittedBy: atdy
+submittedByUrl: "https://github.com/atdy"
+dateAdded: "2026-07-10"
+submittedAt: "2026-07-10"
+repoUrl: "https://github.com/atdy/maoxuan-product-agent"
+documentationUrl: "https://github.com/atdy/maoxuan-product-agent#readme"
+websiteUrl: "https://atdy.github.io/maoxuan-product-agent/"
+downloadUrl: "https://github.com/atdy/maoxuan-product-agent/releases/download/v1.0.3/product-decision-agent-v1.0.3.zip"
+installable: true
+installCommand: "npx skills add atdy/maoxuan-product-agent --skill product-decision-agent --agent codex claude-code cursor -g -y"
+usageSnippet: >-
+  Use product-decision-agent for a real product, growth, operations, analytics,
+  commercialization, delivery, or cross-team problem that needs a direct
+  Simplified Chinese judgment, next action, stop list, and validation signal.
+copySnippet: |-
+  npx skills add atdy/maoxuan-product-agent --skill product-decision-agent --agent codex claude-code cursor -g -y
+
+  # Example after installation
+  /product-decision-agent We have 20 requests competing for two engineers. What should the next version include?
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-07-10"
+retrievalSources:
+  - "https://github.com/atdy/maoxuan-product-agent"
+  - "https://github.com/atdy/maoxuan-product-agent/blob/main/product-decision-agent/SKILL.md"
+  - "https://github.com/atdy/maoxuan-product-agent/blob/main/product-decision-agent/references/reasoning-engine.md"
+  - "https://github.com/atdy/maoxuan-product-agent/blob/main/product-decision-agent/references/product-playbooks.md"
+  - "https://github.com/atdy/maoxuan-product-agent/blob/main/evaluation/source_reading_audit.md"
+  - "https://github.com/atdy/maoxuan-product-agent/blob/main/evaluation/self_test_report.md"
+  - "https://atdy.github.io/maoxuan-product-agent/cases/"
+  - "https://skillstore.io/skills/atdy-product-decision-agent"
+sourceUrls:
+  - "https://github.com/atdy/maoxuan-product-agent/blob/main/product-decision-agent/SKILL.md"
+  - "https://github.com/atdy/maoxuan-product-agent/blob/main/product-decision-agent/references/reasoning-engine.md"
+  - "https://github.com/atdy/maoxuan-product-agent/blob/main/product-decision-agent/references/product-playbooks.md"
+  - "https://github.com/atdy/maoxuan-product-agent/blob/main/evaluation/source_reading_audit.md"
+  - "https://github.com/atdy/maoxuan-product-agent/blob/main/evaluation/self_test_report.md"
+testedPlatforms:
+  - Claude Code
+  - Codex
+  - Cursor
+  - Generic Agent Skills
+prerequisites:
+  - "A compatible Agent Skills host, or an agent that can load a local SKILL.md instruction package."
+  - "Node.js and npm for the `npx skills add` path; the repository also documents manual installation without Node.js."
+  - "Enough product context to distinguish observed facts from assumptions, such as the affected user segment, business stage, constraints, or recent metric movement."
+safetyNotes:
+  - "The recommended `npx` command executes the third-party open-source Skills CLI and installs files into user-level agent directories; review the CLI and target paths before running it on a managed workstation."
+  - "The repository also includes an optional shell installer and Python quality-gate scripts. Review scripts before execution and use explicit destination paths for project-scoped installs."
+  - "The skill provides decision support rather than authority. Require accountable human approval before high-impact launches, pricing changes, rollbacks, staffing decisions, or customer commitments."
+privacyNotes:
+  - "Product prompts may contain unreleased strategy, customer feedback, metrics, incident details, or team information that is sent to the configured model provider as agent context."
+  - "Redact customer identities, credentials, private URLs, regulated data, and commercially sensitive details unless the model provider and retention policy are approved for that data."
+  - "The skill package itself has no telemetry, background worker, account write, or third-party API integration; its local quality gate only reads the output file supplied by the user."
+tags:
+  - product-management
+  - decision-making
+  - chinese
+  - ai-product-manager
+  - growth
+  - operations
+  - analytics
+  - claude-code
+  - codex
+  - cursor
+keywords:
+  - Maoxuan Product Agent
+  - Chinese AI product manager skill
+  - Chinese product decision agent
+  - Claude Code product management skill
+  - Codex product manager skill
+  - Cursor product management skill
+  - product bottleneck diagnosis
+  - requirements prioritization skill
+  - growth retention analytics decision
+  - mainland China product operations
+readingTime: 6
+difficultyScore: 68
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# Maoxuan Product Agent
+
+Maoxuan Product Agent is a Chinese-first decision skill for product managers,
+product operations, growth teams, founders, and delivery leads working in
+mainland China internet-product contexts. It converts a real work problem into
+a prioritized judgment instead of producing a long list of equally weighted
+tactics.
+
+The reasoning engine was designed from complete readings of _On
+Contradiction_, _On Practice_, and related Volume I essays. The default user
+experience does not quote those texts, teach philosophy, discuss history, or
+perform political role-play. Source reasoning is translated into modern
+product language such as bottlenecks, constraints, product stage, MVP, gray
+release, A/B testing, evidence quality, and strategy updates.
+
+## Knowledge Freshness
+
+This listing was verified on **2026-07-10** against release `v1.0.3`, the
+public skill package, reasoning reference, 36-scenario evaluation report,
+source-reading audit, case library, installation instructions, and independent
+Skillstore listing.
+
+The repository is actively versioned. Re-check the latest release and
+`product-decision-agent/SKILL.md` before distributing a pinned copy inside a
+team.
+
+## Retrieval Sources
+
+- https://github.com/atdy/maoxuan-product-agent
+- https://github.com/atdy/maoxuan-product-agent/blob/main/product-decision-agent/SKILL.md
+- https://github.com/atdy/maoxuan-product-agent/blob/main/product-decision-agent/references/reasoning-engine.md
+- https://github.com/atdy/maoxuan-product-agent/blob/main/product-decision-agent/references/product-playbooks.md
+- https://github.com/atdy/maoxuan-product-agent/blob/main/evaluation/source_reading_audit.md
+- https://github.com/atdy/maoxuan-product-agent/blob/main/evaluation/self_test_report.md
+- https://atdy.github.io/maoxuan-product-agent/cases/
+- https://skillstore.io/skills/atdy-product-decision-agent
+
+## Core Workflow
+
+1. Separate observed facts, user behavior, and business data from assumptions
+   or second-hand opinions.
+2. Identify the current bottleneck whose removal is most likely to change the
+   outcome.
+3. Diagnose the product or business stage, the mechanism currently dominating
+   the result, and the constraints that limit available actions.
+4. Choose one to three minimal, reversible actions with an owner, time window,
+   metric, or decision rule.
+5. State what not to do yet, then use actual results to continue, stop, roll
+   back, or update the strategy.
+
+When decisive facts are missing, the skill asks no more than three questions
+and explains why each answer can change the decision. If waiting is more
+expensive than acting, it provides a provisional action and names the
+assumption being tested.
+
+## Capability Scope
+
+| Area                       | Coverage                                                                                                                             |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Product planning           | Requirements prioritization, version scope, Roadmap, MVP, gray release, enterprise requests, and strategy shifts                     |
+| Growth and operations      | Acquisition, activation, retention, conversion, campaigns, communities, content supply, creators, and user operations                |
+| Data and commercialization | DAU/MAU, metric anomalies, tracking definitions, A/B tests, CAC, LTV, ROI, pricing, and memberships                                  |
+| Delivery and organization  | Resource conflicts, executive interruptions, project delays, changing requirements, cross-team work, OKRs, KPIs, and retrospectives  |
+| Decision quality           | Fact-versus-assumption checks, bottleneck diagnosis, stage analysis, stop lists, reversible tests, and explicit switching conditions |
+
+## Installation
+
+Install the skill globally for Codex, Claude Code, and Cursor:
+
+```bash
+npx skills add atdy/maoxuan-product-agent --skill product-decision-agent --agent codex claude-code cursor -g -y
+```
+
+The repository also documents a shell installer, manual installation paths,
+and a standalone release archive. Review the source and destination directory
+before using an installer on a managed or shared workstation.
+
+## Usage
+
+Ask a real work question in Simplified Chinese or explicitly invoke the skill:
+
+```text
+/product-decision-agent We have 20 requests competing for two engineers. What should the next version include?
+```
+
+Typical outputs contain:
+
+1. A one-sentence problem judgment.
+2. The mechanism and evidence behind that judgment.
+3. One to three ordered actions with an owner, time window, metric, or decision
+   rule.
+4. A risk warning and stop list.
+5. Up to three missing facts only when they can change the decision.
+
+## Evaluation Evidence
+
+The public repository includes:
+
+- A 36-scenario regression matrix covering prioritization, growth, retention,
+  operations, metrics, experiments, delays, executive requests, and team
+  conflicts.
+- Four independent forward sessions that test behavior outside the original
+  authoring conversation.
+- A deliberately poor answer that must fail the quality gate.
+- Python tests for source-language leakage, vague advice, missing decisions,
+  missing metrics, missing stop guidance, and overly thin output.
+- Twelve standalone decision cases with visible judgments, actions, stop lists,
+  and switching conditions.
+- Continuous validation through GitHub Actions and an MIT license.
+
+## Production Rules
+
+- Treat model output as a decision proposal, not an accountable decision.
+- Verify the evidence and metric definition before acting on an anomaly.
+- Use a reversible test when the underlying mechanism is still uncertain.
+- Keep product strategy, customer identities, incidents, and internal metrics
+  within an approved model and retention boundary.
+- Preserve the stop list and switching condition when turning an answer into a
+  project plan.
+- Do not ask the skill to manufacture certainty from missing business context.
+
+## Troubleshooting
+
+**Issue:** The installed skill does not trigger automatically
+
+**Fix:** invoke `/product-decision-agent` explicitly and provide a concrete
+product, growth, operations, data, or collaboration question.
+
+**Issue:** The answer quotes source material or explains theory
+
+**Fix:** confirm the current `product-decision-agent/SKILL.md` is installed and
+ask for a product decision rather than source-text interpretation.
+
+**Issue:** `npx` is unavailable or user-level installation is not allowed
+
+**Fix:** use the documented manual installation path or extract the standalone
+release archive into a project-scoped Skills directory after reviewing it.
+
+## Duplicate Review
+
+The directory already contains `product-management-ai-agent` in the `agents`
+category. That entry is a generic code-heavy template for user stories,
+analytics, roadmap prioritization, and A/B testing. Maoxuan Product Agent is an
+installable `SKILL.md` package focused on Chinese product-work diagnosis,
+current-bottleneck selection, stage-aware tradeoffs, minimal validation, and
+explicit stop and switching conditions. A search of `content/skills` found no
+existing Chinese product-decision skill or equivalent methodology-backed
+diagnosis workflow.
+
+## Editorial Disclosure
+
+Submitted by the project owner as a source-backed community skill. The project
+is MIT-licensed and free to use. It has no hosted service, paid dependency,
+telemetry, or affiliate link. Its source methodology is visible for audit, but
+default outputs intentionally use modern product language rather than source
+quotations or political framing.
