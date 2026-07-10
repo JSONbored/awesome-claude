@@ -8,6 +8,12 @@ import {
 import { savedSearchSignature } from "@/lib/saved-search-signature-lib";
 import { eventToAlert } from "@/lib/watch-alert-lib";
 import { entryDetailUrl, eventTargetId, type RegistryEvent } from "@/lib/watch-events-lib";
+import {
+  emptyWatchState,
+  parseWatchState,
+  WATCH_EPOCH,
+  type StoredWatchState,
+} from "@/lib/watch-storage-lib";
 import type { Alert, AlertSeverity, WatchKind, WatchTarget } from "@/lib/watch-types-lib";
 import type { RegistryEntry } from "@/data/entry-normalize";
 import type { Entry } from "@/types/registry";
@@ -28,27 +34,18 @@ interface WatchCtx {
 const STORAGE_KEY = "hc.watch.v1";
 const Ctx = React.createContext<WatchCtx | null>(null);
 
-interface StoredState {
-  targets: WatchTarget[];
-  lastSeenAt: string;
-}
-
-function loadState(): StoredState {
-  if (typeof window === "undefined") return { targets: [], lastSeenAt: "1970-01-01" };
+function loadState(): StoredWatchState {
+  if (typeof window === "undefined") return emptyWatchState();
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return { targets: [], lastSeenAt: "1970-01-01" };
-    const parsed = JSON.parse(raw) as StoredState;
-    return {
-      targets: Array.isArray(parsed.targets) ? parsed.targets : [],
-      lastSeenAt: typeof parsed.lastSeenAt === "string" ? parsed.lastSeenAt : "1970-01-01",
-    };
+    // The storage read stays inside the try/catch: the getter itself can throw
+    // (SecurityError) in sandboxed / storage-blocked contexts.
+    return parseWatchState(window.localStorage.getItem(STORAGE_KEY));
   } catch {
-    return { targets: [], lastSeenAt: "1970-01-01" };
+    return emptyWatchState();
   }
 }
 
-function saveState(state: StoredState) {
+function saveState(state: StoredWatchState) {
   if (typeof window === "undefined") return;
   try {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -95,7 +92,7 @@ export function WatchProvider({ children }: { children: React.ReactNode }) {
   const recents = useRecents();
   const [hydrated, setHydrated] = React.useState(false);
   const [targets, setTargets] = React.useState<WatchTarget[]>([]);
-  const [lastSeenAt, setLastSeenAt] = React.useState("1970-01-01");
+  const [lastSeenAt, setLastSeenAt] = React.useState(WATCH_EPOCH);
   const [remoteEvents, setRemoteEvents] = React.useState<RegistryEvent[]>([]);
   const [eventEntriesByRef, setEventEntriesByRef] = React.useState<Map<string, Entry>>(
     () => new Map(),
