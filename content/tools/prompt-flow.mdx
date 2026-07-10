@@ -1,0 +1,101 @@
+---
+title: Prompt flow
+slug: prompt-flow
+category: tools
+description: Open-source suite of development tools from Microsoft for building LLM applications end to end — create executable flows that link LLMs, prompts, Python, and tools, trace and debug them, evaluate quality against datasets in CI/CD, and deploy to a serving platform.
+cardDescription: Open-source Microsoft toolkit to build, trace, evaluate, and deploy LLM app flows.
+seoTitle: Prompt flow open-source LLM app development toolkit
+seoDescription: Prompt flow is an open-source suite of development tools from Microsoft for building LLM applications, letting you create executable flows linking LLMs, prompts, Python, and tools, trace and debug them, evaluate quality in CI/CD, and deploy.
+author: microsoft
+submittedBy: davion-knight
+submittedByUrl: "https://github.com/davion-knight"
+dateAdded: "2026-07-10"
+websiteUrl: "https://microsoft.github.io/promptflow/"
+documentationUrl: "https://microsoft.github.io/promptflow/"
+repoUrl: "https://github.com/microsoft/promptflow"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - llm-apps
+  - evaluation
+  - tracing
+  - prompt-engineering
+  - python
+  - workflows
+keywords:
+  - prompt flow
+  - promptflow
+  - llm app development
+  - llm evaluation
+  - prompt engineering toolkit
+  - microsoft promptflow
+robotsIndex: true
+robotsFollow: true
+prerequisites:
+  - Python project and a package manager to install the `promptflow` SDK and CLI from PyPI (a VS Code extension is also available).
+  - Model-provider credentials configured as connections for the LLMs your flows call.
+  - Test and evaluation datasets with expected outputs if you want to measure flow quality.
+  - A serving target or application codebase for deployment, and optionally an Azure AI workspace for the cloud version.
+  - A plan for who can run flows, view traces, and access connections and evaluation data.
+safetyNotes:
+  - Flows execute nodes that run LLM prompts, Python code, and tools, so review what a flow does before running it, especially flows from untrusted sources or over untrusted input.
+  - Connections store model-provider credentials; scope them to the minimum needed and keep connection configuration out of source control.
+  - Treat flow inputs and LLM outputs as untrusted for downstream actions, and gate any node that writes data or calls external services.
+  - Evaluation and tracing capture prompts, inputs, and outputs; confirm what is recorded and where before running on sensitive data.
+  - Keep production flows, connections, and permissions narrower than sample flows and notebooks.
+privacyNotes:
+  - Running a flow sends prompts and inputs to the configured model providers, which process that data under their own terms.
+  - Traces, batch runs, and evaluation results can record prompts, inputs, outputs, and metadata, so choose retention and access controls for where those are stored.
+  - Connection secrets, evaluation datasets, and exported run data should be treated as sensitive and kept out of version control.
+  - The optional Azure AI cloud version processes flow and run data under its terms; running locally keeps that data in your environment.
+---
+
+## Editorial notes
+
+Prompt flow is useful when Claude-adjacent teams want to treat LLM features like real software — building them as testable flows, tracing what the model did, and measuring quality before shipping. It is a suite of development tools from Microsoft that streamlines the end-to-end lifecycle of LLM applications, from prototyping through evaluation to deployment and monitoring.
+
+This is distinct from the agent frameworks, memory, and search tools in the directory: rather than a runtime agent library, Prompt flow is the development, evaluation, and deployment toolkit for LLM app flows, with a VS Code experience and CI/CD-friendly evaluation.
+
+## Key capabilities
+
+- **Executable flows** — create flows that link LLMs, prompts, Python code, and other tools into a runnable graph.
+- **Tracing and debugging** — trace interactions with LLMs to debug and iterate on flows.
+- **Evaluation** — evaluate flow quality and performance against larger datasets, with metrics you can extend.
+- **CI/CD integration** — fold testing and evaluation into a CI/CD pipeline to guard flow quality over time.
+- **Deployment** — deploy a flow to a serving platform or integrate it into an application's codebase.
+- **Connections** — manage model-provider and tool credentials as connections used by flows.
+- **VS Code experience** — a VS Code extension for authoring, running, and visualizing flows.
+- **Local or cloud** — run locally, with an optional Azure AI cloud version for team collaboration.
+
+## How teams use it
+
+- **Prototype to production** — take an LLM feature from a first prototype to a tested, deployable flow.
+- **Quality gates** — run evaluations in CI/CD so prompt or model changes cannot silently regress quality.
+- **Debugging** — trace a flow's LLM calls to understand and fix unexpected behavior.
+- **Prompt engineering** — iterate on prompts and flow structure with a visual, testable workflow.
+- **Deployment** — serve a flow as an endpoint or embed it in an application.
+
+## Getting started
+
+Prompt flow is open source and runs locally. Install the SDK and CLI with `pip install promptflow`,
+optionally add the VS Code extension, and configure connections for your model providers. Author a
+flow that links prompts, LLMs, and Python nodes, trace and debug it, evaluate it against a dataset,
+and then deploy it to a serving target or integrate it into your app; an Azure AI cloud version is
+available for team collaboration.
+
+## Source notes
+
+- The official repository describes Prompt flow as a suite of development tools for the end-to-end development cycle of LLM-based AI applications, from ideation and prototyping through testing, evaluation, deployment, and monitoring.
+- Documented capabilities include creating executable flows that link LLMs, prompts, Python code, and tools; debugging and iterating with tracing of LLM interactions; evaluating flow quality and performance against larger datasets; integrating testing and evaluation into CI/CD; and deploying flows to a serving platform or an application codebase.
+- Prompt flow provides a Python SDK and CLI and a VS Code extension, and offers an optional cloud version through Azure AI for team collaboration.
+- The GitHub repository is `microsoft/promptflow`, is MIT licensed, is installed from PyPI as `promptflow`, and is maintained by Microsoft.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, skills, hooks, rules, commands, guides, open pull requests, and repository-wide content for `Prompt flow`, `promptflow`, `microsoft/promptflow`, `microsoft.github.io/promptflow`, `LLM app development`, and `LLM evaluation`. Existing entries cover adjacent agent frameworks and evaluation tools, but no dedicated Prompt flow tools entry, Prompt flow source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.
