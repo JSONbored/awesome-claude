@@ -1,8 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
   browseCompareOpenAnalyticsData,
+  comparisonTrayClearAnalyticsData,
+  comparisonTrayClearAnalyticsEvent,
   comparisonTrayFullCompareAnalyticsData,
   comparisonTrayQuickCompareAnalyticsData,
+  comparisonTrayRemoveAnalyticsData,
+  comparisonTrayRemoveAnalyticsEvent,
   entryDetailCompareAnalyticsData,
   entryDetailCompareAnalyticsEvent,
   entryDetailCompareFullAnalyticsData,
@@ -78,6 +82,17 @@ describe("entry detail cta events lib", () => {
     });
     expect(comparisonTrayFullCompareAnalyticsData(4)).toEqual({
       count: 4,
+      surface: "compare-tray",
+    });
+    expect(comparisonTrayRemoveAnalyticsEvent()).toBe("compare_tray_remove");
+    expect(comparisonTrayRemoveAnalyticsData("mcp", "browser", 1)).toEqual({
+      entry: "mcp/browser",
+      surface: "compare-tray",
+      count: 1,
+    });
+    expect(comparisonTrayClearAnalyticsEvent()).toBe("compare_tray_clear");
+    expect(comparisonTrayClearAnalyticsData(3)).toEqual({
+      count: 3,
       surface: "compare-tray",
     });
   });

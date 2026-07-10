@@ -93,6 +93,33 @@ export function comparisonTrayFullCompareAnalyticsData(count: number) {
   return { count, surface: COMPARE_TRAY_SURFACE };
 }
 
+export function comparisonTrayRemoveAnalyticsEvent(): string {
+  return "compare_tray_remove";
+}
+
+export function comparisonTrayRemoveAnalyticsData(
+  category: string,
+  slug: string,
+  remainingCount: number,
+) {
+  return {
+    entry: entryDetailEntryKey(category, slug),
+    surface: COMPARE_TRAY_SURFACE,
+    count: remainingCount,
+  };
+}
+
+export function comparisonTrayClearAnalyticsEvent(): string {
+  return "compare_tray_clear";
+}
+
+export function comparisonTrayClearAnalyticsData(clearedCount: number) {
+  return {
+    count: clearedCount,
+    surface: COMPARE_TRAY_SURFACE,
+  };
+}
+
 export function entryDetailMobileActionAnalyticsEvent(actionId: string): string {
   return `detail_mobile_${actionId.replace(/-/g, "_")}`;
 }

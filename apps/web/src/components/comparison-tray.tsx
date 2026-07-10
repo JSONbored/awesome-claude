@@ -20,8 +20,12 @@ import {
   comparisonTrayUiState,
 } from "@/lib/comparison-tray-ui";
 import {
+  comparisonTrayClearAnalyticsData,
+  comparisonTrayClearAnalyticsEvent,
   comparisonTrayFullCompareAnalyticsData,
   comparisonTrayQuickCompareAnalyticsData,
+  comparisonTrayRemoveAnalyticsData,
+  comparisonTrayRemoveAnalyticsEvent,
 } from "@/lib/entry-detail-cta-events";
 import { trackEvent } from "@/lib/analytics";
 import { TrustBadge, SourceBadge, ReadinessDot } from "./badges";
@@ -29,7 +33,15 @@ import { compareSignalToneClass } from "@/lib/compare-entry-signals";
 import { cn } from "@/lib/utils";
 import type { Entry } from "@/types/registry";
 
-function TrayChip({ entry, onRemove }: { entry: Entry; onRemove: () => void }) {
+function TrayChip({
+  entry,
+  remainingAfterRemove,
+  onRemove,
+}: {
+  entry: Entry;
+  remainingAfterRemove: number;
+  onRemove: () => void;
+}) {
   const signals = comparisonTrayChipSignals(entry);
 
   return (
@@ -67,7 +79,13 @@ function TrayChip({ entry, onRemove }: { entry: Entry; onRemove: () => void }) {
       </span>
       <button
         type="button"
-        onClick={onRemove}
+        onClick={() => {
+          trackEvent(
+            comparisonTrayRemoveAnalyticsEvent(),
+            comparisonTrayRemoveAnalyticsData(entry.category, entry.slug, remainingAfterRemove),
+          );
+          onRemove();
+        }}
         className="text-ink-subtle hover:text-ink"
         aria-label={`Remove ${entry.title} from compare`}
       >
@@ -82,6 +100,11 @@ export function ComparisonTray() {
   const tray = React.useMemo(() => comparisonTrayUiState(items), [items]);
   const trustDivergenceBadge = comparisonTrayTrustDivergenceBadgeLabel(tray.hasTrustDivergence);
   const secondaryHint = comparisonTraySecondaryHint(tray.hints);
+
+  const onClear = React.useCallback(() => {
+    trackEvent(comparisonTrayClearAnalyticsEvent(), comparisonTrayClearAnalyticsData(tray.count));
+    clear();
+  }, [clear, tray.count]);
 
   if (items.length === 0) return null;
 
@@ -114,13 +137,14 @@ export function ComparisonTray() {
               <TrayChip
                 key={`${entry.category}/${entry.slug}`}
                 entry={entry}
+                remainingAfterRemove={tray.count - 1}
                 onRemove={() => toggle(entry)}
               />
             ))}
           </div>
           <button
             type="button"
-            onClick={clear}
+            onClick={onClear}
             aria-label={comparisonTrayClearAriaLabel(tray.count)}
             className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border text-ink-muted hover:bg-surface-2 hover:text-ink sm:hidden"
           >
@@ -128,7 +152,7 @@ export function ComparisonTray() {
           </button>
           <button
             type="button"
-            onClick={clear}
+            onClick={onClear}
             className="hidden text-xs text-ink-muted hover:text-ink sm:inline"
           >
             Clear
