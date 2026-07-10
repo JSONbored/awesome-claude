@@ -49,6 +49,7 @@ import { CompareRolloutReadinessPanel } from "@/components/compare-rollout-readi
 import { CompareOperationalFitHeatmapPanel } from "@/components/compare-operational-fit-heatmap-panel";
 import { CompareDeploymentRiskMapPanel } from "@/components/compare-deployment-risk-map-panel";
 import { CompareMitigationPriorityPanel } from "@/components/compare-mitigation-priority-panel";
+import { NewsletterInline } from "@/components/newsletter-inline";
 
 const defaultSearch = { ids: "" };
 
@@ -430,6 +431,14 @@ function ComparePage() {
       <p className="mt-3 text-xs text-ink-subtle">
         Share this comparison by copying the link above — the selection is encoded in the URL.
       </p>
+
+      <NewsletterInline
+        variant="quiet"
+        title="More comparisons, weekly"
+        description="A short, calm digest of reviewed Claude resources. Unsubscribe any time."
+        source={sp.ids ? `compare:ids:${sp.ids}` : "compare:interactive"}
+        className="mt-14"
+      />
     </div>
   );
 }
