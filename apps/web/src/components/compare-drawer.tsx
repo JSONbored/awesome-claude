@@ -31,6 +31,10 @@ import {
   compareDrawerSourceAnalyticsData,
   compareDrawerSourceAnalyticsEvent,
 } from "@/lib/compare-drawer-cta-events";
+import {
+  compareDrawerDecisionPresetAnalyticsData,
+  compareDrawerDecisionPresetAnalyticsEvent,
+} from "@/lib/compare-drawer-decision-preset-cta-events";
 import { claimCtaAnalyticsData, claimCtaAnalyticsEvent } from "@/lib/conversion-cta-events";
 import type { Entry, Harness } from "@/types/registry";
 import { cn } from "@/lib/utils";
@@ -392,6 +396,51 @@ export function CompareDrawer() {
   const mitigationPriority = compareMitigationPriorityState(items, mitigationPreset);
   const { bannerTexts, fullViewSearch } = drawerUi;
 
+  const onRolloutPresetSelect = React.useCallback(
+    (preset: RolloutPresetId) => {
+      if (preset === rolloutPreset) return;
+      trackEvent(
+        compareDrawerDecisionPresetAnalyticsEvent(),
+        compareDrawerDecisionPresetAnalyticsData("rollout-readiness", preset, items.length),
+      );
+      setRolloutPreset(preset);
+    },
+    [items.length, rolloutPreset],
+  );
+  const onFitPresetSelect = React.useCallback(
+    (preset: OperationalFitPresetId) => {
+      if (preset === fitPreset) return;
+      trackEvent(
+        compareDrawerDecisionPresetAnalyticsEvent(),
+        compareDrawerDecisionPresetAnalyticsData("operational-fit", preset, items.length),
+      );
+      setFitPreset(preset);
+    },
+    [fitPreset, items.length],
+  );
+  const onRiskPresetSelect = React.useCallback(
+    (preset: DeploymentRiskPresetId) => {
+      if (preset === riskPreset) return;
+      trackEvent(
+        compareDrawerDecisionPresetAnalyticsEvent(),
+        compareDrawerDecisionPresetAnalyticsData("deployment-risk", preset, items.length),
+      );
+      setRiskPreset(preset);
+    },
+    [items.length, riskPreset],
+  );
+  const onMitigationPresetSelect = React.useCallback(
+    (preset: MitigationPriorityPresetId) => {
+      if (preset === mitigationPreset) return;
+      trackEvent(
+        compareDrawerDecisionPresetAnalyticsEvent(),
+        compareDrawerDecisionPresetAnalyticsData("mitigation-priority", preset, items.length),
+      );
+      setMitigationPreset(preset);
+    },
+    [items.length, mitigationPreset],
+  );
+
   const onClear = () => {
     const snapshot = items.map((e) => `${e.category}/${e.slug}`).join(",");
     if (!snapshot) return clear();
@@ -510,28 +559,28 @@ export function CompareDrawer() {
             <CompareRolloutReadinessPanel
               state={rolloutReadiness}
               selectedPreset={rolloutPreset}
-              onSelectPreset={setRolloutPreset}
+              onSelectPreset={onRolloutPresetSelect}
               compact
               className="m-3 mt-0"
             />
             <CompareOperationalFitHeatmapPanel
               state={operationalFitHeatmap}
               selectedPreset={fitPreset}
-              onSelectPreset={setFitPreset}
+              onSelectPreset={onFitPresetSelect}
               compact
               className="m-3 mt-0"
             />
             <CompareDeploymentRiskMapPanel
               state={deploymentRiskMap}
               selectedPreset={riskPreset}
-              onSelectPreset={setRiskPreset}
+              onSelectPreset={onRiskPresetSelect}
               compact
               className="m-3 mt-0"
             />
             <CompareMitigationPriorityPanel
               state={mitigationPriority}
               selectedPreset={mitigationPreset}
-              onSelectPreset={setMitigationPreset}
+              onSelectPreset={onMitigationPresetSelect}
               compact
               className="m-3 mt-0"
             />
