@@ -5,9 +5,13 @@ import {
   comparisonTrayClearAnalyticsData,
   comparisonTrayClearAnalyticsEvent,
   comparisonTrayFullCompareAnalyticsData,
+  comparisonTrayFullCompareAnalyticsEvent,
   comparisonTrayQuickCompareAnalyticsData,
+  comparisonTrayQuickCompareAnalyticsEvent,
   comparisonTrayRemoveAnalyticsData,
   comparisonTrayRemoveAnalyticsEvent,
+  comparisonTrayViewSelectionAnalyticsData,
+  comparisonTrayViewSelectionAnalyticsEvent,
   entryDetailCompareAnalyticsData,
   entryDetailCompareAnalyticsEvent,
   entryDetailCompareFullAnalyticsData,
@@ -88,12 +92,25 @@ describe("entry detail cta events lib", () => {
       count: 4,
       surface: "browse-trust-panel",
     });
+    expect(comparisonTrayQuickCompareAnalyticsEvent()).toBe(
+      "compare_tray_quick_compare",
+    );
     expect(comparisonTrayQuickCompareAnalyticsData(2)).toEqual({
       count: 2,
       surface: "compare-tray",
     });
+    expect(comparisonTrayFullCompareAnalyticsEvent()).toBe(
+      "compare_tray_full_compare",
+    );
     expect(comparisonTrayFullCompareAnalyticsData(4)).toEqual({
       count: 4,
+      surface: "compare-tray",
+    });
+    expect(comparisonTrayViewSelectionAnalyticsEvent()).toBe(
+      "compare_tray_view_selection",
+    );
+    expect(comparisonTrayViewSelectionAnalyticsData(1)).toEqual({
+      count: 1,
       surface: "compare-tray",
     });
     expect(comparisonTrayRemoveAnalyticsEvent()).toBe("compare_tray_remove");

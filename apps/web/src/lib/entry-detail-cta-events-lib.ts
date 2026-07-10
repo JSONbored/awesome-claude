@@ -97,11 +97,27 @@ export function browseCompareOpenAnalyticsData(
   };
 }
 
+export function comparisonTrayQuickCompareAnalyticsEvent(): string {
+  return "compare_tray_quick_compare";
+}
+
 export function comparisonTrayQuickCompareAnalyticsData(count: number) {
   return { count, surface: COMPARE_TRAY_SURFACE };
 }
 
+export function comparisonTrayFullCompareAnalyticsEvent(): string {
+  return "compare_tray_full_compare";
+}
+
 export function comparisonTrayFullCompareAnalyticsData(count: number) {
+  return { count, surface: COMPARE_TRAY_SURFACE };
+}
+
+export function comparisonTrayViewSelectionAnalyticsEvent(): string {
+  return "compare_tray_view_selection";
+}
+
+export function comparisonTrayViewSelectionAnalyticsData(count: number) {
   return { count, surface: COMPARE_TRAY_SURFACE };
 }
 
