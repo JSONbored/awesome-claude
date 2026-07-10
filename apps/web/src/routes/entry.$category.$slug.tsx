@@ -99,6 +99,10 @@ import {
   detailDecisionPresetAnalyticsData,
   detailDecisionPresetAnalyticsEvent,
 } from "@/lib/entry-detail-decision-preset-cta-events";
+import {
+  entryDetailBadgeCopyAnalyticsData,
+  entryDetailBadgeCopyAnalyticsEvent,
+} from "@/lib/entry-detail-badge-cta-events";
 import { resourceCardCompareFullMessage } from "@/lib/resource-card-compare-ui";
 import { useCopyPref, useHarnessPref, type CopyVariant } from "@/lib/dossier-prefs";
 import { variantsForEntry } from "@/components/copy-segmented";
@@ -1013,6 +1017,8 @@ function BadgeSection({
           iconOnly
           size="md"
           toastLabel="Badge Markdown copied"
+          event={entryDetailBadgeCopyAnalyticsEvent()}
+          eventData={entryDetailBadgeCopyAnalyticsData(category, slug)}
         />
       </div>
     </DossierSection>
