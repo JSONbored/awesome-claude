@@ -35,6 +35,10 @@ import {
   compareDrawerDecisionPresetAnalyticsData,
   compareDrawerDecisionPresetAnalyticsEvent,
 } from "@/lib/compare-drawer-decision-preset-cta-events";
+import {
+  compareDrawerScenarioAnalyticsData,
+  compareDrawerScenarioAnalyticsEvent,
+} from "@/lib/compare-drawer-scenario-cta-events";
 import { claimCtaAnalyticsData, claimCtaAnalyticsEvent } from "@/lib/conversion-cta-events";
 import type { Entry, Harness } from "@/types/registry";
 import { cn } from "@/lib/utils";
@@ -396,6 +400,17 @@ export function CompareDrawer() {
   const mitigationPriority = compareMitigationPriorityState(items, mitigationPreset);
   const { bannerTexts, fullViewSearch } = drawerUi;
 
+  const onScenarioSelect = React.useCallback(
+    (next: CompareScenarioId) => {
+      if (next === scenario) return;
+      trackEvent(
+        compareDrawerScenarioAnalyticsEvent(),
+        compareDrawerScenarioAnalyticsData(next, items.length),
+      );
+      setScenario(next);
+    },
+    [items.length, scenario],
+  );
   const onRolloutPresetSelect = React.useCallback(
     (preset: RolloutPresetId) => {
       if (preset === rolloutPreset) return;
@@ -551,7 +566,7 @@ export function CompareDrawer() {
             <CompareScenarioRankingPanel
               state={scenarioRanking}
               selectedScenario={scenario}
-              onSelectScenario={setScenario}
+              onSelectScenario={onScenarioSelect}
               compact
               className="mx-3"
             />

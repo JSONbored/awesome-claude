@@ -42,6 +42,10 @@ import {
   comparePageDecisionPresetAnalyticsData,
   comparePageDecisionPresetAnalyticsEvent,
 } from "@/lib/compare-page-decision-preset-cta-events";
+import {
+  comparePageScenarioAnalyticsData,
+  comparePageScenarioAnalyticsEvent,
+} from "@/lib/compare-page-scenario-cta-events";
 import { claimCtaAnalyticsData, claimCtaAnalyticsEvent } from "@/lib/conversion-cta-events";
 import { sameEntry } from "@/lib/entry-identity";
 import { search } from "@/data/search";
@@ -133,6 +137,17 @@ function ComparePage() {
     [items, mitigationPreset],
   );
 
+  const onScenarioSelect = React.useCallback(
+    (next: CompareScenarioId) => {
+      if (next === scenario) return;
+      trackEvent(
+        comparePageScenarioAnalyticsEvent(),
+        comparePageScenarioAnalyticsData(next, items.length),
+      );
+      setScenario(next);
+    },
+    [items.length, scenario],
+  );
   const onRolloutPresetSelect = React.useCallback(
     (preset: RolloutPresetId) => {
       if (preset === rolloutPreset) return;
@@ -297,7 +312,7 @@ function ComparePage() {
         <CompareScenarioRankingPanel
           state={scenarioRanking}
           selectedScenario={scenario}
-          onSelectScenario={setScenario}
+          onSelectScenario={onScenarioSelect}
           className="m-3"
         />
         <CompareEvidenceGapsPanel state={evidenceGaps} className="m-3 mt-0" />
