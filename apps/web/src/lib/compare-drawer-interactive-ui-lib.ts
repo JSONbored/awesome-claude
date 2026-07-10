@@ -2,6 +2,7 @@ import type { Entry } from "@/types/registry";
 import type { CompareDrawerActionCell } from "@/lib/compare-drawer-actions-ui-lib";
 import { compareDrawerActionsInteractiveUiState } from "@/lib/compare-drawer-actions-interactive-ui-lib";
 import { compareDrawerEmptyInteractiveUiState } from "@/lib/compare-drawer-empty-interactive-ui-lib";
+import { compareSingleItemHintText } from "@/lib/compare-empty-guidance-lib";
 import {
   compareDrawerUiInteractiveUiState,
   type CompareDrawerUiState,
@@ -10,6 +11,7 @@ import {
 export type CompareDrawerInteractiveUiState = {
   drawerUi: CompareDrawerUiState;
   emptyHint: string;
+  singleItemHint: string | null;
   shareUrl: string;
   divergingDecisionLabels: Set<string>;
   actionRowDiverges: boolean;
@@ -23,6 +25,7 @@ export function compareDrawerInteractiveUiState(items: Entry[]): CompareDrawerIn
   return {
     drawerUi,
     emptyHint: emptyUi.emptyHint,
+    singleItemHint: compareSingleItemHintText(items.length),
     shareUrl: emptyUi.shareUrl,
     divergingDecisionLabels,
     actionRowDiverges: drawerUi.actionRowDiverges,

@@ -351,8 +351,15 @@ export function CompareDrawer() {
   const [riskPreset, setRiskPreset] = React.useState<DeploymentRiskPresetId>("balanced");
   const [mitigationPreset, setMitigationPreset] =
     React.useState<MitigationPriorityPresetId>("balanced");
-  const { drawerUi, emptyHint, shareUrl, divergingDecisionLabels, actionRowDiverges, actionCells } =
-    compareDrawerInteractiveUiState(items);
+  const {
+    drawerUi,
+    emptyHint,
+    singleItemHint,
+    shareUrl,
+    divergingDecisionLabels,
+    actionRowDiverges,
+    actionCells,
+  } = compareDrawerInteractiveUiState(items);
   const decisionBrief = compareDecisionBriefState(items);
   const scenarioRanking = compareScenarioRankingState(items, scenario);
   const evidenceGaps = compareEvidenceGapsState(items);
@@ -402,6 +409,9 @@ export function CompareDrawer() {
                   </p>
                 ))}
               </div>
+            ) : null}
+            {singleItemHint ? (
+              <p className="w-full text-xs text-ink-muted">{singleItemHint}</p>
             ) : null}
             <div className="flex flex-wrap items-center gap-2">
               {items.length > 0 && (

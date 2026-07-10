@@ -28,11 +28,24 @@ describe("compare drawer interactive ui lib", () => {
         fullViewSearch: null,
       },
       emptyHint: expect.stringContaining("Compare"),
+      singleItemHint: null,
       shareUrl: "/browse",
       divergingDecisionLabels: new Set(),
       actionRowDiverges: false,
       actionCells: [],
     });
+  });
+
+  it("surfaces single-item guidance when only one resource is selected", () => {
+    expect(compareDrawerInteractiveUiState([entry()]).singleItemHint).toBe(
+      "Add one more resource to unlock trust and next-step comparisons across the full table.",
+    );
+    expect(
+      compareDrawerInteractiveUiState([
+        entry(),
+        entry({ slug: "other", category: "skills" }),
+      ]).singleItemHint,
+    ).toBeNull();
   });
 
   it("surfaces full-view search and share URLs for multi-item selections", () => {
