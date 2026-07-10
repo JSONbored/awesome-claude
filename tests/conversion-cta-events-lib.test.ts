@@ -19,6 +19,10 @@ describe("conversion cta events lib", () => {
     expect(claimCtaAnalyticsData("compare-table")).toEqual({
       surface: "compare-table",
     });
+    expect(claimCtaAnalyticsData("compare-page", "mcp", "browser")).toEqual({
+      surface: "compare-page",
+      entry: "mcp/browser",
+    });
   });
 
   it("builds newsletter subscribe analytics without email or PII", () => {

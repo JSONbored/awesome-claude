@@ -38,6 +38,7 @@ import {
   type MitigationPriorityPresetId,
 } from "@/lib/compare-mitigation-priority";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
+import { claimCtaAnalyticsData, claimCtaAnalyticsEvent } from "@/lib/conversion-cta-events";
 import { sameEntry } from "@/lib/entry-identity";
 import { search } from "@/data/search";
 import { cn } from "@/lib/utils";
@@ -502,9 +503,10 @@ function CompareActionButton({ entry, action }: { entry: Entry; action: CompareA
         <Link
           to="/claim"
           onClick={() => {
-            if (action.analyticsEvent) {
-              trackEvent(action.analyticsEvent, { entry: eventKey, surface: COMPARE_PAGE_SURFACE });
-            }
+            trackEvent(
+              claimCtaAnalyticsEvent(),
+              claimCtaAnalyticsData("compare-page", entry.category, entry.slug),
+            );
           }}
           className="inline-flex h-7 items-center rounded-md border border-border bg-surface px-2 text-xs font-medium text-ink hover:bg-surface-2"
         >

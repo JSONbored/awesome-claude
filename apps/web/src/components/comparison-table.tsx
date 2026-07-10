@@ -22,6 +22,7 @@ import { compareTableActionsForEntry } from "@/lib/compare-table-actions-interac
 import { compareTableInteractiveUiState } from "@/lib/compare-table-interactive-ui-lib";
 import { recordCompareIntentEvent } from "@/lib/compare-entry-actions";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
+import { claimCtaAnalyticsData, claimCtaAnalyticsEvent } from "@/lib/conversion-cta-events";
 import { cn } from "@/lib/utils";
 import type { Entry } from "@/types/registry";
 import { EntryBrandMark } from "./entry-brand-mark";
@@ -112,12 +113,10 @@ function TableActionButton({ entry, action }: { entry: Entry; action: CompareAct
         <Link
           to="/claim"
           onClick={() => {
-            if (action.analyticsEvent) {
-              trackEvent(action.analyticsEvent, {
-                entry: eventKey,
-                surface: COMPARE_TABLE_SURFACE,
-              });
-            }
+            trackEvent(
+              claimCtaAnalyticsEvent(),
+              claimCtaAnalyticsData("compare-table", entry.category, entry.slug),
+            );
           }}
           className="inline-flex h-7 items-center rounded-md border border-border bg-surface px-2 text-xs font-medium text-ink hover:bg-surface-2"
         >

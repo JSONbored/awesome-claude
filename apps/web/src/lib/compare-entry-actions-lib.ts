@@ -11,6 +11,7 @@
  */
 
 import type { Entry } from "@/types/registry";
+import { claimCtaAnalyticsEvent } from "@/lib/conversion-cta-events-lib";
 
 export type CompareActionKind = "link" | "copy";
 
@@ -139,7 +140,7 @@ export function resolveCompareEntryActions(
       id: "claim",
       label: "Claim listing",
       kind: "link",
-      analyticsEvent: "compare_claim_cta",
+      analyticsEvent: claimCtaAnalyticsEvent(),
     });
   }
 

@@ -7,6 +7,7 @@ import {
   resolveCompareEntryActions,
   type CompareAction,
 } from "../apps/web/src/lib/compare-entry-actions-lib";
+import { claimCtaAnalyticsEvent } from "../apps/web/src/lib/conversion-cta-events-lib";
 
 function entry(overrides: Partial<Entry> = {}): Entry {
   return {
@@ -254,7 +255,11 @@ describe("action metadata", () => {
       }),
     );
     expect(
-      actions.every((action) => action.analyticsEvent?.startsWith("compare_")),
+      actions.every((action) => {
+        if (!action.analyticsEvent) return false;
+        if (action.id === "claim") return action.analyticsEvent === claimCtaAnalyticsEvent();
+        return action.analyticsEvent.startsWith("compare_");
+      }),
     ).toBe(true);
   });
 });
@@ -445,7 +450,7 @@ describe("claim CTA", () => {
       id: "claim",
       label: "Claim listing",
       kind: "link",
-      analyticsEvent: "compare_claim_cta",
+      analyticsEvent: claimCtaAnalyticsEvent(),
     });
   });
 
@@ -683,7 +688,7 @@ describe("analytics event coverage", () => {
     ["install", "compare_copy_install"],
     ["config", "compare_copy_config"],
     ["source", "compare_open_source"],
-    ["claim", "compare_claim_cta"],
+    ["claim", claimCtaAnalyticsEvent()],
   ] as const)("maps %s to %s", (id, analyticsEvent) => {
     const action = resolveCompareEntryActions(
       entry({

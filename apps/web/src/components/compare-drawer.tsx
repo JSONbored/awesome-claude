@@ -23,6 +23,7 @@ import { compareDrawerActionsForEntry } from "@/lib/compare-drawer-actions-inter
 import { compareDrawerInteractiveUiState } from "@/lib/compare-drawer-interactive-ui-lib";
 import { recordCompareIntentEvent } from "@/lib/compare-entry-actions";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
+import { claimCtaAnalyticsData, claimCtaAnalyticsEvent } from "@/lib/conversion-cta-events";
 import type { Entry, Harness } from "@/types/registry";
 import { cn } from "@/lib/utils";
 import { brandIdentityLabel } from "@/lib/brand-icons";
@@ -261,12 +262,10 @@ function DrawerActionButton({ entry, action }: { entry: Entry; action: CompareAc
         <Link
           to="/claim"
           onClick={() => {
-            if (action.analyticsEvent) {
-              trackEvent(action.analyticsEvent, {
-                entry: eventKey,
-                surface: COMPARE_DRAWER_SURFACE,
-              });
-            }
+            trackEvent(
+              claimCtaAnalyticsEvent(),
+              claimCtaAnalyticsData("compare-drawer", entry.category, entry.slug),
+            );
           }}
           className="inline-flex h-7 items-center rounded-md border border-border bg-surface px-2 text-xs font-medium text-ink hover:bg-surface-2"
         >

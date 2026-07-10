@@ -10,7 +10,8 @@ export type ClaimCtaSurface =
   | "detail-command-center"
   | "detail-mobile"
   | "compare-table"
-  | "compare-drawer";
+  | "compare-drawer"
+  | "compare-page";
 
 export function claimCtaAnalyticsEvent(): string {
   return "claim_cta_click";
