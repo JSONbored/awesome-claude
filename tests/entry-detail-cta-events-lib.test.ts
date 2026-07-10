@@ -5,6 +5,8 @@ import {
   comparisonTrayQuickCompareAnalyticsData,
   entryDetailCompareAnalyticsData,
   entryDetailCompareAnalyticsEvent,
+  entryDetailCompareFullAnalyticsData,
+  entryDetailCompareFullAnalyticsEvent,
   entryDetailMobileCompareAnalyticsData,
   entryDetailMobileCompareAnalyticsEvent,
   entryDetailCopyAnalyticsData,
@@ -43,6 +45,14 @@ describe("entry detail cta events lib", () => {
     expect(entryDetailCompareAnalyticsData("skills", "demo")).toEqual({
       entry: "skills/demo",
       surface: "detail-compare",
+    });
+    expect(entryDetailCompareFullAnalyticsEvent()).toBe(
+      "detail_compare_open_full",
+    );
+    expect(entryDetailCompareFullAnalyticsData("skills", "demo", 3)).toEqual({
+      entry: "skills/demo",
+      surface: "detail-compare",
+      compareCount: 3,
     });
     expect(entryDetailMobileCompareAnalyticsEvent(true)).toBe(
       "detail_mobile_compare_add",

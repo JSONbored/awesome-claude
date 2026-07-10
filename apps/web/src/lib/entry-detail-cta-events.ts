@@ -13,6 +13,8 @@ export {
   comparisonTrayQuickCompareAnalyticsData,
   entryDetailCompareAnalyticsData,
   entryDetailCompareAnalyticsEvent,
+  entryDetailCompareFullAnalyticsData,
+  entryDetailCompareFullAnalyticsEvent,
   entryDetailMobileCompareAnalyticsData,
   entryDetailMobileCompareAnalyticsEvent,
   entryDetailCopyAnalyticsData,

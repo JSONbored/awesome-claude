@@ -12,6 +12,8 @@ export type EntryDetailCompareCtaState = {
   disabled: boolean;
   hint: string | null;
   showOpenCompare: boolean;
+  showOpenFullCompare: boolean;
+  compareSearch: { ids: string } | null;
 };
 
 export type EntryDetailMobileCompareAction = {
@@ -45,18 +47,29 @@ export function entryDetailCompareDrawerEnabled(compareCount: number): boolean {
   return compareCount >= 2;
 }
 
+export function entryDetailCompareFullSearch(compareIds: string): { ids: string } | null {
+  const count = compareIds.split(",").filter((id) => id.trim()).length;
+  if (count < 2) return null;
+  return { ids: compareIds };
+}
+
 export function entryDetailCompareCtaState(
   inCompare: boolean,
   compareCount: number,
+  compareIds = "",
   maxCount = ENTRY_DETAIL_COMPARE_MAX,
 ): EntryDetailCompareCtaState {
   const disabledReason = entryDetailCompareDisabledReason(inCompare, compareCount, maxCount);
+  const showOpenCompare = entryDetailCompareDrawerEnabled(compareCount);
+  const compareSearch = showOpenCompare ? entryDetailCompareFullSearch(compareIds) : null;
 
   return {
     label: entryDetailCompareToggleLabel(inCompare),
     disabled: Boolean(disabledReason),
     hint: disabledReason,
-    showOpenCompare: entryDetailCompareDrawerEnabled(compareCount),
+    showOpenCompare,
+    showOpenFullCompare: Boolean(compareSearch),
+    compareSearch,
   };
 }
 

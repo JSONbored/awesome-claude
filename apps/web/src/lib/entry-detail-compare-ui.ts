@@ -10,6 +10,7 @@ export {
   entryDetailCompareCtaState,
   entryDetailCompareDisabledReason,
   entryDetailCompareDrawerEnabled,
+  entryDetailCompareFullSearch,
   entryDetailCompareToggleLabel,
   entryDetailMobileCompareAction,
   entryDetailMobileCompareLabel,

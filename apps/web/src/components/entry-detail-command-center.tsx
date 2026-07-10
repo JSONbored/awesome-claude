@@ -68,8 +68,10 @@ type EntryDetailCommandCenterProps = {
   compareCta: {
     inCompare: boolean;
     compareCount: number;
+    compareIds: string;
     onToggle: () => void;
     onOpenCompare: () => void;
+    onOpenFullCompare: () => void;
   };
 };
 
@@ -123,7 +125,11 @@ export function EntryDetailCommandCenter({
   const quickLinks = resolveDetailQuickLinks(entry);
   const integrationLinks = resolveDetailIntegrationLinks(entry);
   const communityAnchors = resolveDetailCommunityAnchors(relatedCount, guideCount, true);
-  const compareState = entryDetailCompareCtaState(compareCta.inCompare, compareCta.compareCount);
+  const compareState = entryDetailCompareCtaState(
+    compareCta.inCompare,
+    compareCta.compareCount,
+    compareCta.compareIds,
+  );
   const safetyGate = detailSafetyGateMessage(risk, entry);
   const elevateSafety = shouldElevateDetailSafetyGate(risk, entry);
   const suggestUrl = entryDetailSuggestChangeUrl(
@@ -322,6 +328,16 @@ export function EntryDetailCommandCenter({
               >
                 Open compare tray
               </button>
+            ) : null}
+            {compareState.showOpenFullCompare && compareState.compareSearch ? (
+              <Link
+                to="/compare"
+                search={compareState.compareSearch}
+                onClick={compareCta.onOpenFullCompare}
+                className="inline-flex items-center gap-1.5 text-ink-muted hover:text-ink"
+              >
+                Open full compare
+              </Link>
             ) : null}
           </div>
         </div>

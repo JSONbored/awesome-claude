@@ -4,6 +4,7 @@ import {
   entryDetailCompareCtaState,
   entryDetailCompareDisabledReason,
   entryDetailCompareDrawerEnabled,
+  entryDetailCompareFullSearch,
   entryDetailCompareToggleLabel,
   entryDetailMobileCompareAction,
   entryDetailMobileCompareLabel,
@@ -40,17 +41,30 @@ describe("entry detail compare ui lib", () => {
       disabled: false,
       hint: null,
       showOpenCompare: false,
+      showOpenFullCompare: false,
+      compareSearch: null,
     });
-    expect(entryDetailCompareCtaState(true, 3)).toEqual({
+    expect(entryDetailCompareCtaState(true, 3, "mcp/a,mcp/b")).toEqual({
       label: "Remove from compare",
       disabled: false,
       hint: null,
       showOpenCompare: true,
+      showOpenFullCompare: true,
+      compareSearch: { ids: "mcp/a,mcp/b" },
     });
     expect(entryDetailCompareCtaState(false, 4)).toMatchObject({
       label: "Add to compare",
       disabled: true,
       showOpenCompare: true,
+      showOpenFullCompare: false,
+      compareSearch: null,
+    });
+  });
+
+  it("builds full compare search only when two or more ids are present", () => {
+    expect(entryDetailCompareFullSearch("mcp/a")).toBeNull();
+    expect(entryDetailCompareFullSearch("mcp/a,mcp/b")).toEqual({
+      ids: "mcp/a,mcp/b",
     });
   });
 

@@ -81,6 +81,8 @@ import { trackEvent } from "@/lib/analytics";
 import {
   entryDetailCompareAnalyticsData,
   entryDetailCompareAnalyticsEvent,
+  entryDetailCompareFullAnalyticsData,
+  entryDetailCompareFullAnalyticsEvent,
   entryDetailMobileCompareAnalyticsData,
   entryDetailMobileCompareAnalyticsEvent,
   entryDetailPlaybookActionAnalyticsData,
@@ -338,6 +340,12 @@ function Dossier() {
     });
   }, [compare, entry.category, entry.slug]);
 
+  const onOpenFullCompare = useCallback(() => {
+    trackEvent(entryDetailCompareFullAnalyticsEvent(), {
+      ...entryDetailCompareFullAnalyticsData(entry.category, entry.slug, compare.items.length),
+    });
+  }, [compare.items.length, entry.category, entry.slug]);
+
   const compareIds = useMemo(() => serializeCompareItems(compare.items), [compare.items]);
   const onPlaybookAction = useCallback(
     (actionId: string) => {
@@ -524,8 +532,10 @@ function Dossier() {
           compareCta={{
             inCompare,
             compareCount: compare.items.length,
+            compareIds,
             onToggle: onToggleCompare,
             onOpenCompare,
+            onOpenFullCompare,
           }}
         />
       </header>
