@@ -65,6 +65,7 @@ import { EntryBrandMark } from "@/components/entry-brand-mark";
 import { EntryAdoptionPlanPanel } from "@/components/entry-adoption-plan-panel";
 import { EntryEvidenceReadinessMatrix } from "@/components/entry-evidence-readiness-matrix";
 import { EntryCompareBenchmarkPanel } from "@/components/entry-compare-benchmark-panel";
+import { EntryPrerequisiteReadinessPanel } from "@/components/entry-prerequisite-readiness-panel";
 import { PLATFORM_SUPPORT_LABEL, type Entry } from "@/types/registry";
 import {
   buildEntryTocItems,
@@ -94,6 +95,7 @@ import { variantsForEntry } from "@/components/copy-segmented";
 import type { Harness } from "@/types/registry";
 import { cn } from "@/lib/utils";
 import { entryAdoptionPlanState, type AdoptionPlanPresetId } from "@/lib/entry-adoption-plan";
+import { entryPrerequisiteReadinessState } from "@/lib/entry-prerequisite-readiness";
 import { entryDetailDecisionPlaybookState } from "@/lib/entry-detail-decision-playbook";
 import {
   entryEvidenceReadinessMatrixState,
@@ -410,6 +412,7 @@ function Dossier() {
   );
   const quickLinks = useMemo(() => entryQuickLinks(entry), [entry]);
   const readinessRows = useMemo(() => entryReadinessRows(entry), [entry]);
+  const prerequisiteReadiness = useMemo(() => entryPrerequisiteReadinessState(entry), [entry]);
   const adoptionPlan = useMemo(
     () => entryAdoptionPlanState(entry, adoptionPreset, compare.items),
     [entry, adoptionPreset, compare.items],
@@ -608,6 +611,11 @@ function Dossier() {
             state={compareBenchmark}
             selectedPreset={benchmarkPreset}
             onSelectPreset={setBenchmarkPreset}
+          />
+          <EntryPrerequisiteReadinessPanel
+            state={prerequisiteReadiness}
+            category={entry.category}
+            slug={entry.slug}
           />
           {entry.safetyNotes && (
             <DossierSection id="safety" icon={ShieldCheck} title="Safety notes" tone="trust">
