@@ -1,0 +1,102 @@
+---
+title: Cognee
+slug: cognee
+category: tools
+description: Open-source AI memory platform that gives agents persistent long-term memory by ingesting data in any format and building a self-hosted knowledge graph, combining vector embeddings, graph reasoning, and ontology generation for meaning-based and relationship-based retrieval.
+cardDescription: Open-source AI memory platform that builds a knowledge graph for agent long-term memory.
+seoTitle: Cognee open-source AI memory and knowledge-graph platform
+seoDescription: Cognee is an open-source AI memory platform that gives agents persistent long-term memory by ingesting data into a self-hosted knowledge graph, combining vector embeddings, graph reasoning, and ontology generation for semantic and relationship-based retrieval.
+author: topoteretes
+submittedBy: davion-knight
+submittedByUrl: "https://github.com/davion-knight"
+dateAdded: "2026-07-09"
+websiteUrl: "https://www.cognee.ai/"
+documentationUrl: "https://docs.cognee.ai/"
+repoUrl: "https://github.com/topoteretes/cognee"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - memory
+  - knowledge-graph
+  - rag
+  - ai-agents
+  - ontology
+  - python
+keywords:
+  - cognee
+  - ai memory knowledge graph
+  - agent long-term memory
+  - graph rag
+  - semantic layer for llms
+  - ontology generation
+robotsIndex: true
+robotsFollow: true
+prerequisites:
+  - Python 3.10+ project and a dependency manager to install `cognee` from PyPI (TypeScript and Rust clients are also available).
+  - A model provider for extraction and embeddings, or local models if you prefer to run them yourself.
+  - Backing stores for the knowledge graph and vectors (Cognee runs self-hosted with supported graph and vector databases).
+  - The data sources you want to ingest, and stable tenant or user identifiers if you need isolation between them.
+  - A retention and access-control plan for the knowledge graph, since it accumulates ingested data.
+safetyNotes:
+  - Cognee ingests your data and builds a knowledge graph that agents read from, so treat graph content derived from external or user data as untrusted input and constrain what an agent may do based on it.
+  - Use tenant or user isolation so one tenant's knowledge is not retrieved for another, and review which sources are eligible for ingestion.
+  - The extraction and cognify steps call a model provider with ingested content; scope credentials to the minimum needed and keep them out of source control.
+  - Cognee runs self-hosted, so secure the graph and vector stores and their endpoints, and do not expose them on a public interface without protection.
+  - Keep production ingestion and permissions narrower than quickstart examples, and set retention rules for the accumulating graph.
+privacyNotes:
+  - Ingested documents and the resulting knowledge graph can contain personal, confidential, or proprietary data; apply retention, deletion, and access-control policies to the graph and vector stores.
+  - Extraction, ontology generation, and embedding send ingested content to the configured model and embedding providers, which process it under their own terms; local models keep that on your machine.
+  - Because Cognee is self-hosted, ingested data stays in the stores you configure, but any external providers used for processing follow their own data-handling policies.
+  - Provider keys, ingested data, and graph exports should be treated as sensitive and kept out of version control.
+---
+
+## Editorial notes
+
+Cognee is useful when Claude-adjacent teams want agents to build durable, connected memory from their own data rather than re-reading raw documents each time. It ingests data in many formats and continuously builds a self-hosted knowledge graph, so agents can recall facts by meaning and follow the relationships between them across sessions. Cognee also ships integrations, including a Claude Code plugin.
+
+Its approach is distinct from conversation-memory tools: rather than extracting individual memories from chat turns, Cognee builds a knowledge graph over ingested data with vector embeddings, graph reasoning, and ontology generation, so retrieval is both semantic and relationship-aware.
+
+## Key capabilities
+
+- **Knowledge-graph memory** — ingests data and continuously builds a self-hosted knowledge graph for long-term, connected recall.
+- **ECL pipelines** — an Extract, Cognify, Load flow that turns raw sources into graph and vector representations.
+- **Graph plus vector retrieval** — combines vector embeddings and graph reasoning so results are searchable by meaning and by relationships.
+- **Ontology generation** — cognitive-science-grounded ontology generation to structure and connect knowledge.
+- **Multimodal ingestion** — unify data from various sources and formats into one knowledge layer.
+- **Isolation and traceability** — tenant and user isolation, traceability, an OpenTelemetry collector, and audit traits for reliability.
+- **Multiple clients** — Python (`cognee`), TypeScript, and Rust clients, plus a Claude Code plugin and other integrations.
+- **Self-hosted** — runs locally with supported graph and vector databases.
+
+## How teams use it
+
+- **Company brain** — unify data from many sources into one knowledge layer that agents can query.
+- **Persistent agents** — give agents long-term memory that connects facts and evolves as knowledge changes.
+- **Graph-augmented retrieval** — retrieve by meaning and by relationships for more complex reasoning than plain vector search.
+- **Cross-agent knowledge** — share a common knowledge graph across multiple agents.
+- **Domain grounding** — ground agents in your domain data with ontology-structured context.
+
+## Getting started
+
+Cognee is open source and runs self-hosted. Install it with `pip install cognee` (TypeScript and Rust
+clients are also available), configure a model provider and backing graph and vector stores, then
+ingest your data so Cognee builds the knowledge graph through its Extract, Cognify, and Load steps.
+Agents query the graph to recall facts and relationships with full context; a Claude Code plugin is
+available for that workflow.
+
+## Source notes
+
+- The official repository describes Cognee as an open-source AI memory platform that gives agents persistent long-term memory by ingesting data in any format and building a self-hosted knowledge graph.
+- Documented capabilities include combining vector embeddings, graph reasoning, and cognitive-science-grounded ontology generation so documents are searchable by meaning and connected by relationships that evolve over time.
+- Cognee provides unified ingestion, graph and vector search, tenant and user isolation, traceability, an OpenTelemetry collector, and audit traits.
+- Clients are available for Python (`cognee`), TypeScript (`@cognee/cognee-ts`), and Rust, and integrations include a Claude Code plugin.
+- The GitHub repository is `topoteretes/cognee`, is Apache-2.0 licensed, is installed from PyPI as `cognee`, and targets Python 3.10+.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, skills, hooks, rules, commands, guides, open pull requests, and repository-wide content for `Cognee`, `cognee`, `topoteretes`, `cognee.ai`, `github.com/topoteretes/cognee`, `AI memory platform`, and `knowledge graph memory`. Existing entries cover adjacent memory, RAG, and storage tools, but Cognee's knowledge-graph and ontology approach is distinct, and no dedicated Cognee tools entry, Cognee source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.
