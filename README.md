@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>1363+ file-backed entries</strong> stay useful as both an
+        <strong>1364+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>1363</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>1364</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>AI-reviewed</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -84,7 +84,7 @@ Refreshed weekly by [`.github/workflows/gittensor-impact.yml`](.github/workflows
         </td>
 <td align="center" width="20%">
           <a href="#tools"><strong>🧰 Tools</strong></a><br>
-          <code>194</code><br>
+          <code>195</code><br>
           <sub>Apps, developer tools, services, and products for Claude-native builders.</sub>
         </td>
 <td align="center" width="20%">
@@ -791,7 +791,7 @@ packages use checksums and package trust metadata after review.
 
 Get a free API key on https://app.zyntra.app/
 
-## 🧰 Tools (194)
+## 🧰 Tools (195)
 
 - **[Activepieces](https://heyclau.de/entry/tools/activepieces)** - Open-source, self-hostable workflow automation platform with AI workflows, TypeScript pieces, human-in-the-loop steps, and a built-in MCP server.
 - **[AG2 Agent Framework](https://heyclau.de/entry/tools/ag2-agent-framework)** - Open-source Python AgentOS and multi-agent framework, evolved from AutoGen, for building conversable agents, group chats, swarms, human-in-the-loop workflows, tool use, RAG, code execution, and provider-backed agent systems.
@@ -829,6 +829,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Cline](https://heyclau.de/entry/tools/cline)** - Open-source autonomous coding agent extension for planning, editing, running commands, and using tools from VS Code.
 - **[Cloudflare Agents SDK](https://heyclau.de/entry/tools/cloudflare-agents-sdk)** - Cloudflare framework for building, deploying, and running AI agents on Workers with durable platform primitives.
 - **[CodeRabbit](https://heyclau.de/entry/tools/coderabbit)** - AI code review platform for pull request summaries, review comments, repository context, and engineering feedback loops.
+- **[Cognee](https://heyclau.de/entry/tools/cognee)** - Open-source AI memory platform that gives agents persistent long-term memory by ingesting data in any format and building a self-hosted knowledge graph, combining vector embeddings, graph reasoning, and ontology generation for meaning-based and relationship-based retrieval.
 - **[Composio](https://heyclau.de/entry/tools/composio)** - Integration platform for connecting AI agents and applications to external tools, APIs, auth, and workflows.
 - **[Continue](https://heyclau.de/entry/tools/continue)** - Open-source AI coding assistant for custom model routing, editor chat, autocomplete, and development workflows.
 - **[CopilotKit](https://heyclau.de/entry/tools/copilotkit)** - MIT-licensed frontend stack for agent-native applications and generative UI, with React, Angular, Vue, React Native, Slack and Teams surfaces, AG-UI protocol support, shared state, human-in-the-loop workflows, backend tool rendering, coding-agent skills, and runtime packages for agent apps.
