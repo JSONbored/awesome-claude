@@ -252,6 +252,29 @@ export function entryDetailSourceAnalyticsData(category: string, slug: string, h
   };
 }
 
+export function entryDetailDocsAnalyticsEvent(): string {
+  return "detail_docs_open";
+}
+
+export function entryDetailDocsAnalyticsData(category: string, slug: string, host: string) {
+  return {
+    entry: entryDetailEntryKey(category, slug),
+    surface: ENTRY_DETAIL_COMMAND_CENTER_SURFACE,
+    host,
+  };
+}
+
+export function entryDetailSuggestChangeAnalyticsEvent(): string {
+  return "detail_suggest_change_open";
+}
+
+export function entryDetailSuggestChangeAnalyticsData(category: string, slug: string) {
+  return {
+    entry: entryDetailEntryKey(category, slug),
+    surface: ENTRY_DETAIL_COMMAND_CENTER_SURFACE,
+  };
+}
+
 export function entryDetailMobileLlmsAnalyticsData(category: string, slug: string) {
   return {
     entry: entryDetailEntryKey(category, slug),

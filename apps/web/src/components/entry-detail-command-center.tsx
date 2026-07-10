@@ -40,6 +40,10 @@ import {
   entryDetailIntegrationAnalyticsEvent,
   entryDetailSourceAnalyticsData,
   entryDetailSourceAnalyticsEvent,
+  entryDetailDocsAnalyticsData,
+  entryDetailDocsAnalyticsEvent,
+  entryDetailSuggestChangeAnalyticsData,
+  entryDetailSuggestChangeAnalyticsEvent,
 } from "@/lib/entry-detail-cta-events";
 import {
   detailIntegrationLinkIcon,
@@ -389,6 +393,13 @@ export function EntryDetailCommandCenter({
               href={suggestUrl}
               target="_blank"
               rel="noreferrer"
+              onClick={() => {
+                trackEvent(
+                  entryDetailSuggestChangeAnalyticsEvent(),
+                  entryDetailSuggestChangeAnalyticsData(entry.category, entry.slug),
+                );
+                void recordIntentEvent("open", entry);
+              }}
               className="inline-flex items-center gap-1.5 text-ink-muted hover:text-ink"
             >
               <FileText className="h-3.5 w-3.5" /> Suggest a metadata change{" "}
@@ -421,6 +432,17 @@ export function EntryDetailCommandCenter({
                 href={link.href}
                 target="_blank"
                 rel="noreferrer"
+                onClick={() => {
+                  trackEvent(
+                    entryDetailDocsAnalyticsEvent(),
+                    entryDetailDocsAnalyticsData(
+                      entry.category,
+                      entry.slug,
+                      outboundHost(link.href),
+                    ),
+                  );
+                  void recordIntentEvent("open", entry);
+                }}
                 className="inline-flex items-center gap-1.5 text-ink-muted hover:text-ink"
               >
                 <BookOpen className="h-3.5 w-3.5" /> {link.label}{" "}
@@ -435,6 +457,17 @@ export function EntryDetailCommandCenter({
                 href={link.href}
                 target="_blank"
                 rel="noreferrer"
+                onClick={() => {
+                  trackEvent(
+                    entryDetailSourceAnalyticsEvent(),
+                    entryDetailSourceAnalyticsData(
+                      entry.category,
+                      entry.slug,
+                      outboundHost(link.href),
+                    ),
+                  );
+                  void recordIntentEvent("open", entry);
+                }}
                 className="inline-flex items-center gap-1.5 text-ink-muted hover:text-ink"
               >
                 <GitBranch className="h-3.5 w-3.5" /> {link.label}{" "}

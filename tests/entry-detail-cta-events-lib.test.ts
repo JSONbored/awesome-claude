@@ -31,6 +31,10 @@ import {
   entryDetailIntegrationAnalyticsEvent,
   entryDetailSourceAnalyticsData,
   entryDetailSourceAnalyticsEvent,
+  entryDetailDocsAnalyticsData,
+  entryDetailDocsAnalyticsEvent,
+  entryDetailSuggestChangeAnalyticsData,
+  entryDetailSuggestChangeAnalyticsEvent,
   entryDetailMobileActionAnalyticsData,
   entryDetailMobileActionAnalyticsEvent,
   entryDetailMobileCopyIntentType,
@@ -206,6 +210,21 @@ describe("entry detail cta events lib", () => {
       entry: "mcp/browser",
       surface: "detail-command-center",
       host: "github.com",
+    });
+    expect(entryDetailDocsAnalyticsEvent()).toBe("detail_docs_open");
+    expect(
+      entryDetailDocsAnalyticsData("mcp", "browser", "docs.example.com"),
+    ).toEqual({
+      entry: "mcp/browser",
+      surface: "detail-command-center",
+      host: "docs.example.com",
+    });
+    expect(entryDetailSuggestChangeAnalyticsEvent()).toBe(
+      "detail_suggest_change_open",
+    );
+    expect(entryDetailSuggestChangeAnalyticsData("skills", "demo")).toEqual({
+      entry: "skills/demo",
+      surface: "detail-command-center",
     });
     expect(entryDetailMobileLlmsAnalyticsData("skills", "demo")).toEqual({
       entry: "skills/demo",
