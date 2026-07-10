@@ -274,7 +274,7 @@ export const COMPARISON_ROWS: RowDef[] = [
     label: "Citations",
     render: (e) => (
       <div className="text-xs">
-        <SourceCitations entry={e} />
+        <SourceCitations entry={e} surface={COMPARE_TABLE_SURFACE} />
       </div>
     ),
   },
