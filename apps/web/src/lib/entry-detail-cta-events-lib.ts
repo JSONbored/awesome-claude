@@ -67,6 +67,22 @@ export function entryDetailCompareOpenTrayAnalyticsData(
   };
 }
 
+export function entryDetailCompareToastOpenAnalyticsEvent(): string {
+  return "detail_compare_toast_open";
+}
+
+export function entryDetailCompareToastOpenAnalyticsData(
+  category: string,
+  slug: string,
+  compareCount: number,
+) {
+  return {
+    entry: entryDetailEntryKey(category, slug),
+    surface: ENTRY_DETAIL_COMPARE_SURFACE,
+    compareCount,
+  };
+}
+
 export function entryDetailCompareFullAnalyticsEvent(): string {
   return "detail_compare_open_full";
 }
@@ -88,6 +104,22 @@ export function entryDetailMobileCompareAnalyticsEvent(adding: boolean): string 
 }
 
 export function entryDetailMobileCompareAnalyticsData(
+  category: string,
+  slug: string,
+  compareCount: number,
+) {
+  return {
+    entry: entryDetailEntryKey(category, slug),
+    surface: ENTRY_DETAIL_MOBILE_SURFACE,
+    compareCount,
+  };
+}
+
+export function entryDetailMobileCompareToastOpenAnalyticsEvent(): string {
+  return "detail_mobile_compare_toast_open";
+}
+
+export function entryDetailMobileCompareToastOpenAnalyticsData(
   category: string,
   slug: string,
   compareCount: number,

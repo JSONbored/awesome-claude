@@ -18,8 +18,12 @@ import {
   entryDetailCompareFullAnalyticsEvent,
   entryDetailCompareOpenTrayAnalyticsData,
   entryDetailCompareOpenTrayAnalyticsEvent,
+  entryDetailCompareToastOpenAnalyticsData,
+  entryDetailCompareToastOpenAnalyticsEvent,
   entryDetailMobileCompareAnalyticsData,
   entryDetailMobileCompareAnalyticsEvent,
+  entryDetailMobileCompareToastOpenAnalyticsData,
+  entryDetailMobileCompareToastOpenAnalyticsEvent,
   entryDetailCopyAnalyticsData,
   entryDetailCopyAnalyticsEvent,
   entryDetailCopyIntentType,
@@ -67,6 +71,16 @@ describe("entry detail cta events lib", () => {
       surface: "detail-compare",
       compareCount: 2,
     });
+    expect(entryDetailCompareToastOpenAnalyticsEvent()).toBe(
+      "detail_compare_toast_open",
+    );
+    expect(
+      entryDetailCompareToastOpenAnalyticsData("skills", "demo", 3),
+    ).toEqual({
+      entry: "skills/demo",
+      surface: "detail-compare",
+      compareCount: 3,
+    });
     expect(entryDetailCompareFullAnalyticsEvent()).toBe(
       "detail_compare_open_full",
     );
@@ -85,6 +99,16 @@ describe("entry detail cta events lib", () => {
       entry: "skills/demo",
       surface: "detail-mobile",
       compareCount: 2,
+    });
+    expect(entryDetailMobileCompareToastOpenAnalyticsEvent()).toBe(
+      "detail_mobile_compare_toast_open",
+    );
+    expect(
+      entryDetailMobileCompareToastOpenAnalyticsData("skills", "demo", 4),
+    ).toEqual({
+      entry: "skills/demo",
+      surface: "detail-mobile",
+      compareCount: 4,
     });
   });
 

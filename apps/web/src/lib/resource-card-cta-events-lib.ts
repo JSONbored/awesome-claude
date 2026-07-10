@@ -41,3 +41,19 @@ export function resourceCardCompareAnalyticsData(category: string, slug: string)
     surface: RESOURCE_CARD_SURFACE,
   };
 }
+
+export function resourceCardCompareToastOpenAnalyticsEvent(): string {
+  return "browse_card_compare_toast_open";
+}
+
+export function resourceCardCompareToastOpenAnalyticsData(
+  category: string,
+  slug: string,
+  compareCount: number,
+) {
+  return {
+    entry: resourceCardEntryKey(category, slug),
+    surface: RESOURCE_CARD_SURFACE,
+    compareCount,
+  };
+}

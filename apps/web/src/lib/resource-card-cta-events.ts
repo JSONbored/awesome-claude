@@ -5,6 +5,8 @@ export {
   RESOURCE_CARD_SURFACE,
   resourceCardCompareAnalyticsData,
   resourceCardCompareAnalyticsEvent,
+  resourceCardCompareToastOpenAnalyticsData,
+  resourceCardCompareToastOpenAnalyticsEvent,
   resourceCardEntryKey,
   resourceCardInstallAnalyticsData,
   resourceCardInstallAnalyticsEvent,

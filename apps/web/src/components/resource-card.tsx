@@ -22,6 +22,8 @@ import { recordIntentEvent } from "@/lib/intent-event-client";
 import {
   resourceCardCompareAnalyticsData,
   resourceCardCompareAnalyticsEvent,
+  resourceCardCompareToastOpenAnalyticsData,
+  resourceCardCompareToastOpenAnalyticsEvent,
   resourceCardInstallAnalyticsData,
   resourceCardInstallAnalyticsEvent,
   resourceCardInstallIntentType,
@@ -102,9 +104,19 @@ function ResourceCardInner({
     if (wasIn) {
       toast(`Removed “${entry.title}” from compare`);
     } else {
+      const compareCount = compareItems.length + 1;
       toast.success("Added to compare", {
         description: entry.title,
-        action: { label: "View", onClick: () => setOpen(true) },
+        action: {
+          label: "View",
+          onClick: () => {
+            setOpen(true);
+            trackEvent(
+              resourceCardCompareToastOpenAnalyticsEvent(),
+              resourceCardCompareToastOpenAnalyticsData(entry.category, entry.slug, compareCount),
+            );
+          },
+        },
       });
     }
   };

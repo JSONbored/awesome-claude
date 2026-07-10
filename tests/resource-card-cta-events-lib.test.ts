@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import {
   resourceCardCompareAnalyticsData,
   resourceCardCompareAnalyticsEvent,
+  resourceCardCompareToastOpenAnalyticsData,
+  resourceCardCompareToastOpenAnalyticsEvent,
   resourceCardInstallAnalyticsData,
   resourceCardInstallAnalyticsEvent,
   resourceCardInstallIntentType,
@@ -32,6 +34,16 @@ describe("resource card cta events lib", () => {
     expect(resourceCardCompareAnalyticsData("skills", "demo")).toEqual({
       entry: "skills/demo",
       surface: "browse-card",
+    });
+    expect(resourceCardCompareToastOpenAnalyticsEvent()).toBe(
+      "browse_card_compare_toast_open",
+    );
+    expect(
+      resourceCardCompareToastOpenAnalyticsData("skills", "demo", 2),
+    ).toEqual({
+      entry: "skills/demo",
+      surface: "browse-card",
+      compareCount: 2,
     });
   });
 });

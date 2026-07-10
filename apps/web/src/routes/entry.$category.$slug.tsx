@@ -86,8 +86,12 @@ import {
   entryDetailCompareFullAnalyticsEvent,
   entryDetailCompareOpenTrayAnalyticsData,
   entryDetailCompareOpenTrayAnalyticsEvent,
+  entryDetailCompareToastOpenAnalyticsData,
+  entryDetailCompareToastOpenAnalyticsEvent,
   entryDetailMobileCompareAnalyticsData,
   entryDetailMobileCompareAnalyticsEvent,
+  entryDetailMobileCompareToastOpenAnalyticsData,
+  entryDetailMobileCompareToastOpenAnalyticsEvent,
   entryDetailPlaybookActionAnalyticsData,
   entryDetailPlaybookActionAnalyticsEvent,
 } from "@/lib/entry-detail-cta-events";
@@ -303,10 +307,17 @@ function Dossier() {
     if (wasIn) {
       toast(`Removed “${entry.title}” from compare`);
     } else {
+      const compareCount = compare.items.length + 1;
       toast.success("Added to compare", {
         action: {
           label: "View",
-          onClick: () => compare.setOpen(true),
+          onClick: () => {
+            compare.setOpen(true);
+            trackEvent(
+              entryDetailCompareToastOpenAnalyticsEvent(),
+              entryDetailCompareToastOpenAnalyticsData(entry.category, entry.slug, compareCount),
+            );
+          },
         },
       });
     }
@@ -328,10 +339,21 @@ function Dossier() {
     if (wasIn) {
       toast(`Removed “${entry.title}” from compare`);
     } else {
+      const compareCount = compare.items.length + 1;
       toast.success("Added to compare", {
         action: {
           label: "View",
-          onClick: () => compare.setOpen(true),
+          onClick: () => {
+            compare.setOpen(true);
+            trackEvent(
+              entryDetailMobileCompareToastOpenAnalyticsEvent(),
+              entryDetailMobileCompareToastOpenAnalyticsData(
+                entry.category,
+                entry.slug,
+                compareCount,
+              ),
+            );
+          },
         },
       });
     }
@@ -374,10 +396,17 @@ function Dossier() {
     if (wasIn) {
       toast(`Removed “${entry.title}” from compare`);
     } else {
+      const compareCount = compare.items.length + 1;
       toast.success("Added to compare", {
         action: {
           label: "View",
-          onClick: () => compare.setOpen(true),
+          onClick: () => {
+            compare.setOpen(true);
+            trackEvent(
+              entryDetailCompareToastOpenAnalyticsEvent(),
+              entryDetailCompareToastOpenAnalyticsData(entry.category, entry.slug, compareCount),
+            );
+          },
         },
       });
     }
