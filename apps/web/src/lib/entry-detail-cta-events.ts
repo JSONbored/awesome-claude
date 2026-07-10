@@ -39,6 +39,8 @@ export {
   entryDetailEntryKey,
   entryDetailIntegrationAnalyticsData,
   entryDetailIntegrationAnalyticsEvent,
+  entryDetailSourceAnalyticsData,
+  entryDetailSourceAnalyticsEvent,
   entryDetailMobileActionAnalyticsData,
   entryDetailMobileActionAnalyticsEvent,
   entryDetailMobileCopyIntentType,

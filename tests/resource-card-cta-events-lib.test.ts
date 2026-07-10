@@ -4,6 +4,8 @@ import {
   resourceCardCompareAnalyticsEvent,
   resourceCardCompareToastOpenAnalyticsData,
   resourceCardCompareToastOpenAnalyticsEvent,
+  resourceCardSourceAnalyticsData,
+  resourceCardSourceAnalyticsEvent,
   resourceCardInstallAnalyticsData,
   resourceCardInstallAnalyticsEvent,
   resourceCardInstallIntentType,
@@ -44,6 +46,14 @@ describe("resource card cta events lib", () => {
       entry: "skills/demo",
       surface: "browse-card",
       compareCount: 2,
+    });
+    expect(resourceCardSourceAnalyticsEvent()).toBe("browse_card_source_open");
+    expect(
+      resourceCardSourceAnalyticsData("skills", "demo", "github.com"),
+    ).toEqual({
+      entry: "skills/demo",
+      surface: "browse-card",
+      host: "github.com",
     });
   });
 });

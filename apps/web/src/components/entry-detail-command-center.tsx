@@ -38,6 +38,8 @@ import {
   entryDetailCopyIntentType,
   entryDetailIntegrationAnalyticsData,
   entryDetailIntegrationAnalyticsEvent,
+  entryDetailSourceAnalyticsData,
+  entryDetailSourceAnalyticsEvent,
 } from "@/lib/entry-detail-cta-events";
 import {
   detailIntegrationLinkIcon,
@@ -45,7 +47,7 @@ import {
   type DetailIntegrationLinkIcon,
 } from "@/lib/entry-detail-integration-links";
 import { recordIntentEvent } from "@/lib/intent-event-client";
-import { trackEvent } from "@/lib/analytics";
+import { trackEvent, outboundHost } from "@/lib/analytics";
 import { claimCtaAnalyticsData, claimCtaAnalyticsEvent } from "@/lib/conversion-cta-events";
 import { INSTALL_RISK_LABEL } from "@/lib/trust";
 import type { InstallRisk } from "@/lib/trust-lib";
@@ -151,6 +153,17 @@ export function EntryDetailCommandCenter({
               href={entry.sourceUrl}
               target="_blank"
               rel="noreferrer"
+              onClick={() => {
+                trackEvent(
+                  entryDetailSourceAnalyticsEvent(),
+                  entryDetailSourceAnalyticsData(
+                    entry.category,
+                    entry.slug,
+                    outboundHost(entry.sourceUrl!),
+                  ),
+                );
+                void recordIntentEvent("open", entry);
+              }}
               className="inline-flex items-center gap-1 text-xs text-ink-muted hover:text-ink"
             >
               Source <ArrowUpRight className="h-3 w-3" />

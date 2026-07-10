@@ -22,12 +22,14 @@ import { COMPARE_DRAWER_SURFACE, type CompareAction } from "@/lib/compare-drawer
 import { compareDrawerActionsForEntry } from "@/lib/compare-drawer-actions-interactive-ui-lib";
 import { compareDrawerInteractiveUiState } from "@/lib/compare-drawer-interactive-ui-lib";
 import { recordCompareIntentEvent } from "@/lib/compare-entry-actions";
-import { trackEvent, entryEventKey } from "@/lib/analytics";
+import { trackEvent, entryEventKey, outboundHost } from "@/lib/analytics";
 import {
   compareDrawerClearAnalyticsData,
   compareDrawerClearAnalyticsEvent,
   compareDrawerUndoRestoreAnalyticsData,
   compareDrawerUndoRestoreAnalyticsEvent,
+  compareDrawerSourceAnalyticsData,
+  compareDrawerSourceAnalyticsEvent,
 } from "@/lib/compare-drawer-cta-events";
 import { claimCtaAnalyticsData, claimCtaAnalyticsEvent } from "@/lib/conversion-cta-events";
 import type { Entry, Harness } from "@/types/registry";
@@ -71,6 +73,34 @@ import {
 interface RowDef {
   label: string;
   render: (e: Entry) => React.ReactNode;
+}
+
+function CompareDrawerSourceCell({ entry }: { entry: Entry }) {
+  if (!entry.sourceUrl) {
+    return <span className="text-xs text-ink-subtle">—</span>;
+  }
+
+  return (
+    <a
+      href={entry.sourceUrl}
+      target="_blank"
+      rel="noreferrer"
+      onClick={() => {
+        trackEvent(
+          compareDrawerSourceAnalyticsEvent(),
+          compareDrawerSourceAnalyticsData(
+            entry.category,
+            entry.slug,
+            outboundHost(entry.sourceUrl!),
+          ),
+        );
+        void recordCompareIntentEvent("open", entry);
+      }}
+      className="inline-flex items-center gap-1 text-xs text-ink-muted hover:text-ink"
+    >
+      Repository <ExternalLink className="h-3 w-3" />
+    </a>
+  );
 }
 
 const ROWS: RowDef[] = [
@@ -173,19 +203,7 @@ const ROWS: RowDef[] = [
   },
   {
     label: "Source",
-    render: (e) =>
-      e.sourceUrl ? (
-        <a
-          href={e.sourceUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex items-center gap-1 text-xs text-ink-muted hover:text-ink"
-        >
-          Repository <ExternalLink className="h-3 w-3" />
-        </a>
-      ) : (
-        <span className="text-xs text-ink-subtle">—</span>
-      ),
+    render: (e) => <CompareDrawerSourceCell entry={e} />,
   },
   {
     label: "Claim",

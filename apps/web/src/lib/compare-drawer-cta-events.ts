@@ -7,4 +7,6 @@ export {
   compareDrawerClearAnalyticsEvent,
   compareDrawerUndoRestoreAnalyticsData,
   compareDrawerUndoRestoreAnalyticsEvent,
+  compareDrawerSourceAnalyticsData,
+  compareDrawerSourceAnalyticsEvent,
 } from "@/lib/compare-drawer-cta-events-lib";

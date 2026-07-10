@@ -24,6 +24,8 @@ import {
   resourceCardCompareAnalyticsEvent,
   resourceCardCompareToastOpenAnalyticsData,
   resourceCardCompareToastOpenAnalyticsEvent,
+  resourceCardSourceAnalyticsData,
+  resourceCardSourceAnalyticsEvent,
   resourceCardInstallAnalyticsData,
   resourceCardInstallAnalyticsEvent,
   resourceCardInstallIntentType,
@@ -352,11 +354,14 @@ function ResourceCardInner({
                 target="_blank"
                 rel="noreferrer"
                 onClick={() =>
-                  trackEvent("source-click", {
-                    entry: resourceCardInstallAnalyticsData(entry.category, entry.slug).entry,
-                    host: outboundHost(entry.sourceUrl!),
-                    surface: installAnalyticsData.surface,
-                  })
+                  trackEvent(
+                    resourceCardSourceAnalyticsEvent(),
+                    resourceCardSourceAnalyticsData(
+                      entry.category,
+                      entry.slug,
+                      outboundHost(entry.sourceUrl!),
+                    ),
+                  )
                 }
                 className="inline-flex h-7 w-full items-center justify-center gap-1 rounded-md border border-border bg-surface px-2 text-xs font-medium text-ink hover:border-border-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60"
               >

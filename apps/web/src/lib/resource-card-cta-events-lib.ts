@@ -57,3 +57,15 @@ export function resourceCardCompareToastOpenAnalyticsData(
     compareCount,
   };
 }
+
+export function resourceCardSourceAnalyticsEvent(): string {
+  return "browse_card_source_open";
+}
+
+export function resourceCardSourceAnalyticsData(category: string, slug: string, host: string) {
+  return {
+    entry: resourceCardEntryKey(category, slug),
+    surface: RESOURCE_CARD_SURFACE,
+    host,
+  };
+}

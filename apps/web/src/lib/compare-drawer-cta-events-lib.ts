@@ -30,3 +30,15 @@ export function compareDrawerUndoRestoreAnalyticsData(count: number) {
     surface: COMPARE_DRAWER_SURFACE,
   };
 }
+
+export function compareDrawerSourceAnalyticsEvent(): string {
+  return "compare_drawer_source_open";
+}
+
+export function compareDrawerSourceAnalyticsData(category: string, slug: string, host: string) {
+  return {
+    entry: `${category}/${slug}`,
+    surface: COMPARE_DRAWER_SURFACE,
+    host,
+  };
+}

@@ -240,6 +240,18 @@ export function entryDetailIntegrationAnalyticsData(
   };
 }
 
+export function entryDetailSourceAnalyticsEvent(): string {
+  return "detail_source_open";
+}
+
+export function entryDetailSourceAnalyticsData(category: string, slug: string, host: string) {
+  return {
+    entry: entryDetailEntryKey(category, slug),
+    surface: ENTRY_DETAIL_COMMAND_CENTER_SURFACE,
+    host,
+  };
+}
+
 export function entryDetailMobileLlmsAnalyticsData(category: string, slug: string) {
   return {
     entry: entryDetailEntryKey(category, slug),

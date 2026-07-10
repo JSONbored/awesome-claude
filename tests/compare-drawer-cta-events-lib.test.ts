@@ -4,6 +4,8 @@ import {
   compareDrawerClearAnalyticsEvent,
   compareDrawerUndoRestoreAnalyticsData,
   compareDrawerUndoRestoreAnalyticsEvent,
+  compareDrawerSourceAnalyticsData,
+  compareDrawerSourceAnalyticsEvent,
 } from "@/lib/compare-drawer-cta-events-lib";
 
 describe("compare drawer cta events lib", () => {
@@ -19,6 +21,16 @@ describe("compare drawer cta events lib", () => {
     expect(compareDrawerUndoRestoreAnalyticsData(2)).toEqual({
       count: 2,
       surface: "compare-drawer",
+    });
+    expect(compareDrawerSourceAnalyticsEvent()).toBe(
+      "compare_drawer_source_open",
+    );
+    expect(
+      compareDrawerSourceAnalyticsData("mcp", "browser", "github.com"),
+    ).toEqual({
+      entry: "mcp/browser",
+      surface: "compare-drawer",
+      host: "github.com",
     });
   });
 });

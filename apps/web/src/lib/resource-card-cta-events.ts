@@ -7,6 +7,8 @@ export {
   resourceCardCompareAnalyticsEvent,
   resourceCardCompareToastOpenAnalyticsData,
   resourceCardCompareToastOpenAnalyticsEvent,
+  resourceCardSourceAnalyticsData,
+  resourceCardSourceAnalyticsEvent,
   resourceCardEntryKey,
   resourceCardInstallAnalyticsData,
   resourceCardInstallAnalyticsEvent,
