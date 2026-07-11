@@ -250,7 +250,15 @@ export const COMPARISON_ROWS: RowDef[] = [
           <pre className="max-h-24 overflow-auto rounded-md bg-background p-2 font-mono text-[11px] text-ink">
             <code>{e.installCommand}</code>
           </pre>
-          <CopyButton value={e.installCommand} label="Copy install" />
+          <CopyButton
+            value={e.installCommand}
+            label="Copy install"
+            event="compare_copy_install"
+            eventData={{
+              entry: entryEventKey(e.category, e.slug),
+              surface: COMPARE_TABLE_SURFACE,
+            }}
+          />
         </div>
       ) : (
         <span className="text-xs text-ink-subtle">—</span>
@@ -264,7 +272,15 @@ export const COMPARISON_ROWS: RowDef[] = [
           <pre className="max-h-24 overflow-auto rounded-md bg-background p-2 font-mono text-[11px] text-ink">
             <code>{e.configSnippet}</code>
           </pre>
-          <CopyButton value={e.configSnippet} label="Copy config" />
+          <CopyButton
+            value={e.configSnippet}
+            label="Copy config"
+            event="compare_copy_config"
+            eventData={{
+              entry: entryEventKey(e.category, e.slug),
+              surface: COMPARE_TABLE_SURFACE,
+            }}
+          />
         </div>
       ) : (
         <span className="text-xs text-ink-subtle">—</span>
