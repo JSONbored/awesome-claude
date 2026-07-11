@@ -42,6 +42,8 @@ export {
   entryDetailCopyTabSelectAnalyticsEvent,
   entryDetailStickyCopyVariantSelectAnalyticsData,
   entryDetailStickyCopyVariantSelectAnalyticsEvent,
+  entryDetailStickyBackToTopAnalyticsData,
+  entryDetailStickyBackToTopAnalyticsEvent,
   entryDetailEntryKey,
   entryDetailIntegrationAnalyticsData,
   entryDetailIntegrationAnalyticsEvent,

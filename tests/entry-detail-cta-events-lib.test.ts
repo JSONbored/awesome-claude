@@ -33,6 +33,8 @@ import {
   ENTRY_DETAIL_STICKY_META_SURFACE,
   entryDetailStickyCopyVariantSelectAnalyticsData,
   entryDetailStickyCopyVariantSelectAnalyticsEvent,
+  entryDetailStickyBackToTopAnalyticsData,
+  entryDetailStickyBackToTopAnalyticsEvent,
   entryDetailIntegrationAnalyticsData,
   entryDetailIntegrationAnalyticsEvent,
   entryDetailSourceAnalyticsData,
@@ -96,6 +98,16 @@ describe("entry detail cta events lib", () => {
       entry: "skills/demo",
       variant: "config",
       surface: "detail-sticky-meta",
+    });
+    expect(entryDetailStickyBackToTopAnalyticsEvent()).toBe(
+      "detail_sticky_back_to_top_click",
+    );
+    expect(
+      entryDetailStickyBackToTopAnalyticsData("mcp", "browser", 72.4),
+    ).toEqual({
+      entry: "mcp/browser",
+      surface: "detail-sticky-meta",
+      scrollProgress: 72,
     });
     expect(entryDetailCopyTabSelectAnalyticsEvent()).toBe(
       "detail_copy_tab_select",
@@ -345,6 +357,17 @@ describe("entry detail cta events lib", () => {
     expect(entryDetailBrowseCategoryAnalyticsData("mcp", "browser")).toEqual({
       entry: "mcp/browser",
       surface: "detail-command-center",
+      category: "mcp",
+    });
+    expect(
+      entryDetailBrowseCategoryAnalyticsData(
+        "mcp",
+        "browser",
+        ENTRY_DETAIL_STICKY_META_SURFACE,
+      ),
+    ).toEqual({
+      entry: "mcp/browser",
+      surface: "detail-sticky-meta",
       category: "mcp",
     });
     expect(entryDetailCommunityAnchorAnalyticsEvent()).toBe(

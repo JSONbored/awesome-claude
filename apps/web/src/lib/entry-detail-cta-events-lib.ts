@@ -63,6 +63,22 @@ export function entryDetailStickyCopyVariantSelectAnalyticsData(
   };
 }
 
+export function entryDetailStickyBackToTopAnalyticsEvent(): string {
+  return "detail_sticky_back_to_top_click";
+}
+
+export function entryDetailStickyBackToTopAnalyticsData(
+  category: string,
+  slug: string,
+  scrollProgress: number,
+) {
+  return {
+    entry: entryDetailEntryKey(category, slug),
+    surface: ENTRY_DETAIL_STICKY_META_SURFACE,
+    scrollProgress: Math.round(scrollProgress),
+  };
+}
+
 export function entryDetailCopyTabSelectAnalyticsEvent(): string {
   return "detail_copy_tab_select";
 }
@@ -349,10 +365,14 @@ export function entryDetailBrowseCategoryAnalyticsEvent(): string {
   return "detail_browse_category_open";
 }
 
-export function entryDetailBrowseCategoryAnalyticsData(category: string, slug: string) {
+export function entryDetailBrowseCategoryAnalyticsData(
+  category: string,
+  slug: string,
+  surface: string = ENTRY_DETAIL_COMMAND_CENTER_SURFACE,
+) {
   return {
     entry: entryDetailEntryKey(category, slug),
-    surface: ENTRY_DETAIL_COMMAND_CENTER_SURFACE,
+    surface,
     category,
   };
 }

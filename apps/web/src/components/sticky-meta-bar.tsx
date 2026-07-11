@@ -17,9 +17,13 @@ import { trackEvent } from "@/lib/analytics";
 import { recordIntentEvent } from "@/lib/intent-event-client";
 import {
   ENTRY_DETAIL_STICKY_META_SURFACE,
+  entryDetailBrowseCategoryAnalyticsData,
+  entryDetailBrowseCategoryAnalyticsEvent,
   entryDetailCopyAnalyticsData,
   entryDetailCopyAnalyticsEvent,
   entryDetailCopyIntentType,
+  entryDetailStickyBackToTopAnalyticsData,
+  entryDetailStickyBackToTopAnalyticsEvent,
   entryDetailStickyCopyVariantSelectAnalyticsData,
   entryDetailStickyCopyVariantSelectAnalyticsEvent,
 } from "@/lib/entry-detail-cta-events";
@@ -67,6 +71,23 @@ export function StickyMetaBar({
     },
     [entry.category, entry.slug],
   );
+  const onStickyBrowseCategory = useCallback(() => {
+    trackEvent(
+      entryDetailBrowseCategoryAnalyticsEvent(),
+      entryDetailBrowseCategoryAnalyticsData(
+        entry.category,
+        entry.slug,
+        ENTRY_DETAIL_STICKY_META_SURFACE,
+      ),
+    );
+  }, [entry.category, entry.slug]);
+  const onStickyBackToTop = useCallback(() => {
+    trackEvent(
+      entryDetailStickyBackToTopAnalyticsEvent(),
+      entryDetailStickyBackToTopAnalyticsData(entry.category, entry.slug, progress),
+    );
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [entry.category, entry.slug, progress]);
 
   // Visibility observer on the header sentinel.
   useEffect(() => {
@@ -139,6 +160,7 @@ export function StickyMetaBar({
               search={{ category: entry.category }}
               className="shrink-0"
               aria-label={`Back to ${entry.category}`}
+              onClick={onStickyBrowseCategory}
             >
               <CategoryPill>{entry.category}</CategoryPill>
             </Link>
@@ -171,7 +193,7 @@ export function StickyMetaBar({
             </span>
             <button
               type="button"
-              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              onClick={onStickyBackToTop}
               className="hidden h-7 shrink-0 items-center gap-1 rounded-md border border-border bg-surface px-2 text-[11px] text-ink-muted hover:border-border-strong hover:text-ink sm:inline-flex"
               aria-label="Back to top"
             >
@@ -200,7 +222,7 @@ export function StickyMetaBar({
               {/* Mobile: only a single copy button, no segmented control */}
               <button
                 type="button"
-                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                onClick={onStickyBackToTop}
                 className="inline-flex h-7 shrink-0 items-center gap-1 rounded-md border border-border bg-surface px-2 text-[11px] text-ink-muted hover:border-border-strong hover:text-ink sm:hidden"
                 aria-label="Back to top"
               >
