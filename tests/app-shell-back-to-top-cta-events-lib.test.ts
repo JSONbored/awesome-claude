@@ -18,7 +18,7 @@ describe("app shell back to top cta events lib", () => {
   });
 
   it("computes scroll progress from viewport metrics", () => {
-    expect(appShellBackToTopScrollProgress(400, 2000, 800)).toBe(29);
+    expect(appShellBackToTopScrollProgress(400, 2000, 800)).toBe(33);
     expect(appShellBackToTopScrollProgress(1200, 2000, 800)).toBe(100);
     expect(appShellBackToTopScrollProgress(0, 800, 800)).toBe(0);
   });
