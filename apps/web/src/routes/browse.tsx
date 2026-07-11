@@ -87,8 +87,14 @@ import {
   browseEmptySuggestionApplyAnalyticsEvent,
   browseLoadMoreAnalyticsData,
   browseLoadMoreAnalyticsEvent,
+  browseRecentEntryClickAnalyticsData,
+  browseRecentEntryClickAnalyticsEvent,
   browseSavedSearchApplyAnalyticsData,
   browseSavedSearchApplyAnalyticsEvent,
+  browseSavedSearchLinkClickAnalyticsData,
+  browseSavedSearchLinkClickAnalyticsEvent,
+  browseSavedSearchRemoveAnalyticsData,
+  browseSavedSearchRemoveAnalyticsEvent,
   browseSavedSearchSaveAnalyticsData,
   browseSavedSearchSaveAnalyticsEvent,
 } from "@/lib/browse-saved-search-cta-events";
@@ -1177,12 +1183,22 @@ function Browse() {
                               compare: sp.compare,
                             }}
                             className="text-ink hover:underline"
+                            onClick={() =>
+                              trackEvent(
+                                browseSavedSearchLinkClickAnalyticsEvent(),
+                                browseSavedSearchLinkClickAnalyticsData(s),
+                              )
+                            }
                           >
                             {s.label}
                           </Link>
                           <button
                             type="button"
                             onClick={() => {
+                              trackEvent(
+                                browseSavedSearchRemoveAnalyticsEvent(),
+                                browseSavedSearchRemoveAnalyticsData(recents.saved.length),
+                              );
                               recents.removeSaved(s.id);
                               toast(`Removed “${s.label}”`);
                             }}
@@ -1200,12 +1216,18 @@ function Browse() {
                   <div className="flex items-start gap-2">
                     <Clock className="mt-1 h-3.5 w-3.5 shrink-0 text-ink-subtle" aria-hidden />
                     <div className="flex flex-wrap gap-1.5">
-                      {recentEntries.map((e) => (
+                      {recentEntries.map((e, index) => (
                         <Link
                           key={`${e.category}/${e.slug}`}
                           to="/entry/$category/$slug"
                           params={{ category: e.category, slug: e.slug }}
                           className="inline-flex items-center rounded-md border border-border bg-background px-2 py-0.5 text-xs text-ink-muted hover:text-ink"
+                          onClick={() =>
+                            trackEvent(
+                              browseRecentEntryClickAnalyticsEvent(),
+                              browseRecentEntryClickAnalyticsData(index, recentEntries.length),
+                            )
+                          }
                         >
                           {e.title}
                         </Link>

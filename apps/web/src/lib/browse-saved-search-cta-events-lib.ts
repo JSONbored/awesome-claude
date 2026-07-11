@@ -8,6 +8,7 @@
 import type { SavedSearch } from "@/lib/recents-types-lib";
 
 export const BROWSE_SAVED_SEARCH_SURFACE = "browse-saved-search";
+export const BROWSE_RECENTS_PANEL_SURFACE = "browse-recents-panel";
 export const BROWSE_RESULTS_SURFACE = "browse-results";
 
 export function savedSearchFilterCount(
@@ -71,5 +72,44 @@ export function browseEmptySuggestionApplyAnalyticsData(matchCount: number) {
   return {
     surface: BROWSE_RESULTS_SURFACE,
     matchCount,
+  };
+}
+
+export function browseSavedSearchLinkClickAnalyticsEvent(): string {
+  return "browse_saved_search_link_click";
+}
+
+export function browseSavedSearchLinkClickAnalyticsData(
+  search: Pick<SavedSearch, "q" | "category" | "trust" | "source" | "signal" | "platform"> & {
+    alerts?: SavedSearch["alerts"];
+  },
+) {
+  return {
+    surface: BROWSE_RECENTS_PANEL_SURFACE,
+    filterCount: savedSearchFilterCount(search),
+    hasAlerts: Boolean(search.alerts?.enabled),
+  };
+}
+
+export function browseSavedSearchRemoveAnalyticsEvent(): string {
+  return "browse_saved_search_remove";
+}
+
+export function browseSavedSearchRemoveAnalyticsData(savedCount: number) {
+  return {
+    surface: BROWSE_RECENTS_PANEL_SURFACE,
+    savedCount,
+  };
+}
+
+export function browseRecentEntryClickAnalyticsEvent(): string {
+  return "browse_recent_entry_click";
+}
+
+export function browseRecentEntryClickAnalyticsData(position: number, recentCount: number) {
+  return {
+    surface: BROWSE_RECENTS_PANEL_SURFACE,
+    position,
+    recentCount,
   };
 }

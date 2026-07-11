@@ -1,13 +1,20 @@
 import { describe, expect, it } from "vitest";
 import {
+  BROWSE_RECENTS_PANEL_SURFACE,
   BROWSE_RESULTS_SURFACE,
   BROWSE_SAVED_SEARCH_SURFACE,
   browseEmptySuggestionApplyAnalyticsData,
   browseEmptySuggestionApplyAnalyticsEvent,
   browseLoadMoreAnalyticsData,
   browseLoadMoreAnalyticsEvent,
+  browseRecentEntryClickAnalyticsData,
+  browseRecentEntryClickAnalyticsEvent,
   browseSavedSearchApplyAnalyticsData,
   browseSavedSearchApplyAnalyticsEvent,
+  browseSavedSearchLinkClickAnalyticsData,
+  browseSavedSearchLinkClickAnalyticsEvent,
+  browseSavedSearchRemoveAnalyticsData,
+  browseSavedSearchRemoveAnalyticsEvent,
   browseSavedSearchSaveAnalyticsData,
   browseSavedSearchSaveAnalyticsEvent,
   savedSearchFilterCount,
@@ -24,6 +31,15 @@ describe("browse saved search cta events lib", () => {
     expect(browseLoadMoreAnalyticsEvent()).toBe("browse_load_more");
     expect(browseEmptySuggestionApplyAnalyticsEvent()).toBe(
       "browse_empty_suggestion_apply",
+    );
+    expect(browseSavedSearchLinkClickAnalyticsEvent()).toBe(
+      "browse_saved_search_link_click",
+    );
+    expect(browseSavedSearchRemoveAnalyticsEvent()).toBe(
+      "browse_saved_search_remove",
+    );
+    expect(browseRecentEntryClickAnalyticsEvent()).toBe(
+      "browse_recent_entry_click",
     );
     expect(
       savedSearchFilterCount({
@@ -73,6 +89,30 @@ describe("browse saved search cta events lib", () => {
     expect(browseEmptySuggestionApplyAnalyticsData(8)).toEqual({
       surface: BROWSE_RESULTS_SURFACE,
       matchCount: 8,
+    });
+    expect(
+      browseSavedSearchLinkClickAnalyticsData({
+        q: "hooks",
+        category: "",
+        trust: "",
+        source: "",
+        signal: "",
+        platform: "",
+        alerts: { enabled: false, channels: ["inapp"], cadence: "weekly" },
+      }),
+    ).toEqual({
+      surface: BROWSE_RECENTS_PANEL_SURFACE,
+      filterCount: 1,
+      hasAlerts: false,
+    });
+    expect(browseSavedSearchRemoveAnalyticsData(3)).toEqual({
+      surface: BROWSE_RECENTS_PANEL_SURFACE,
+      savedCount: 3,
+    });
+    expect(browseRecentEntryClickAnalyticsData(1, 6)).toEqual({
+      surface: BROWSE_RECENTS_PANEL_SURFACE,
+      position: 1,
+      recentCount: 6,
     });
   });
 });
