@@ -39,7 +39,12 @@ import {
   peekPanelOpenAnalyticsEvent,
   peekSnippetVariantSelectAnalyticsData,
   peekSnippetVariantSelectAnalyticsEvent,
+  PEEK_PANEL_SURFACE,
 } from "@/lib/peek-panel-cta-events";
+import {
+  harnessVariantSelectAnalyticsData,
+  harnessVariantSelectAnalyticsEvent,
+} from "@/lib/harness-variant-cta-events";
 import { recordIntentEvent } from "@/lib/intent-event-client";
 
 export interface PeekHandle {
@@ -216,6 +221,17 @@ function PeekBody({ entry, peekId }: { entry: Entry; peekId: string }) {
             value={harness as Harness | null}
             onChange={setHarness}
             labelId={`peek-harness-${peekId}`}
+            onVariantSelect={(nextHarness) =>
+              trackEvent(
+                harnessVariantSelectAnalyticsEvent(),
+                harnessVariantSelectAnalyticsData(
+                  entry.category,
+                  entry.slug,
+                  PEEK_PANEL_SURFACE,
+                  nextHarness,
+                ),
+              )
+            }
           />
         </div>
       )}

@@ -53,6 +53,10 @@ import {
   compareDrawerSnippetVariantAnalyticsData,
   compareDrawerSnippetVariantAnalyticsEvent,
 } from "@/lib/compare-drawer-snippet-cta-events";
+import {
+  harnessVariantSelectAnalyticsData,
+  harnessVariantSelectAnalyticsEvent,
+} from "@/lib/harness-variant-cta-events";
 import { claimCtaAnalyticsData, claimCtaAnalyticsEvent } from "@/lib/conversion-cta-events";
 import type { Entry, Harness } from "@/types/registry";
 import { cn } from "@/lib/utils";
@@ -369,6 +373,17 @@ function SnippetCell({ entry }: { entry: Entry }) {
           available={harnessAvailable}
           value={harness as Harness | null}
           onChange={setHarness}
+          onVariantSelect={(nextHarness) =>
+            trackEvent(
+              harnessVariantSelectAnalyticsEvent(),
+              harnessVariantSelectAnalyticsData(
+                entry.category,
+                entry.slug,
+                COMPARE_DRAWER_SURFACE,
+                nextHarness,
+              ),
+            )
+          }
         />
       )}
       {payload ? (

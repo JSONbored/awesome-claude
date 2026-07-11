@@ -50,7 +50,12 @@ import {
   entryDetailCommunityAnchorAnalyticsEvent,
   entryDetailTrustSectionAnalyticsData,
   entryDetailTrustSectionAnalyticsEvent,
+  ENTRY_DETAIL_COMMAND_CENTER_SURFACE,
 } from "@/lib/entry-detail-cta-events";
+import {
+  harnessVariantSelectAnalyticsData,
+  harnessVariantSelectAnalyticsEvent,
+} from "@/lib/harness-variant-cta-events";
 import {
   detailIntegrationLinkIcon,
   resolveDetailIntegrationLinks,
@@ -255,6 +260,17 @@ export function EntryDetailCommandCenter({
                 available={harnessAvailable}
                 value={harness}
                 onChange={onHarnessChange}
+                onVariantSelect={(nextHarness) =>
+                  trackEvent(
+                    harnessVariantSelectAnalyticsEvent(),
+                    harnessVariantSelectAnalyticsData(
+                      entry.category,
+                      entry.slug,
+                      ENTRY_DETAIL_COMMAND_CENTER_SURFACE,
+                      nextHarness,
+                    ),
+                  )
+                }
               />
             </div>
           )}
