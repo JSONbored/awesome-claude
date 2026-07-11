@@ -51,6 +51,10 @@ import {
   comparePageShareLinkCopyAnalyticsEvent,
 } from "@/lib/compare-page-share-link-cta-events";
 import {
+  comparePageEmptyEgressAnalyticsData,
+  comparePageEmptyEgressAnalyticsEvent,
+} from "@/lib/compare-page-empty-egress-cta-events";
+import {
   comparePageAddOpenAnalyticsData,
   comparePageAddOpenAnalyticsEvent,
   comparePageAddSelectAnalyticsData,
@@ -285,29 +289,49 @@ function ComparePage() {
           <div className="mt-6">
             <div className="eyebrow mb-2">Popular comparisons</div>
             <div className="flex flex-wrap justify-center gap-2">
-              {emptyUi.popularComparisonLinks.map((comparison) => (
-                <div
-                  key={comparison.slug}
-                  className="inline-flex flex-wrap items-center justify-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5"
-                >
-                  <Link
-                    to="/compare/$slug"
-                    params={{ slug: comparison.slug }}
-                    className="text-xs text-ink-muted hover:text-ink"
+              {emptyUi.popularComparisonLinks.map((comparison) => {
+                const refCount =
+                  COMPARISONS.find((item) => item.slug === comparison.slug)?.refs.length ?? 0;
+                return (
+                  <div
+                    key={comparison.slug}
+                    className="inline-flex flex-wrap items-center justify-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5"
                   >
-                    {comparison.heading}
-                  </Link>
-                  {comparison.interactiveSearch ? (
                     <Link
-                      to="/compare"
-                      search={comparison.interactiveSearch}
-                      className="text-[10px] text-ink-subtle hover:text-ink"
+                      to="/compare/$slug"
+                      params={{ slug: comparison.slug }}
+                      className="text-xs text-ink-muted hover:text-ink"
+                      onClick={() =>
+                        trackEvent(
+                          comparePageEmptyEgressAnalyticsEvent(),
+                          comparePageEmptyEgressAnalyticsData(
+                            "curated-page",
+                            refCount,
+                            Boolean(comparison.interactiveSearch),
+                          ),
+                        )
+                      }
                     >
-                      {comparison.interactiveLabel}
+                      {comparison.heading}
                     </Link>
-                  ) : null}
-                </div>
-              ))}
+                    {comparison.interactiveSearch ? (
+                      <Link
+                        to="/compare"
+                        search={comparison.interactiveSearch}
+                        className="text-[10px] text-ink-subtle hover:text-ink"
+                        onClick={() =>
+                          trackEvent(
+                            comparePageEmptyEgressAnalyticsEvent(),
+                            comparePageEmptyEgressAnalyticsData("interactive", refCount, true),
+                          )
+                        }
+                      >
+                        {comparison.interactiveLabel}
+                      </Link>
+                    ) : null}
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
