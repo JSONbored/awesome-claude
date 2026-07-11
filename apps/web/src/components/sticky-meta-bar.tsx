@@ -1,12 +1,28 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { Link } from "@tanstack/react-router";
 import type { Entry, Harness } from "@/types/registry";
 import { CategoryPill, TrustBadge, InstallRiskBadge, NotesPresenceChips } from "./badges";
 import { Star, ArrowUp, Shield, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useHarnessPref, readScrollPos, writeScrollPos, clearScrollPos } from "@/lib/dossier-prefs";
+import {
+  useHarnessPref,
+  readScrollPos,
+  writeScrollPos,
+  clearScrollPos,
+  type CopyVariant,
+} from "@/lib/dossier-prefs";
 import { CopySegmented, variantsForEntry } from "./copy-segmented";
 import { EntryBrandMark } from "./entry-brand-mark";
+import { trackEvent } from "@/lib/analytics";
+import { recordIntentEvent } from "@/lib/intent-event-client";
+import {
+  ENTRY_DETAIL_STICKY_META_SURFACE,
+  entryDetailCopyAnalyticsData,
+  entryDetailCopyAnalyticsEvent,
+  entryDetailCopyIntentType,
+  entryDetailStickyCopyVariantSelectAnalyticsData,
+  entryDetailStickyCopyVariantSelectAnalyticsEvent,
+} from "@/lib/entry-detail-cta-events";
 
 /**
  * Appears once the user scrolls past the dossier header.
@@ -32,6 +48,25 @@ export function StickyMetaBar({
   );
   const [harness] = useHarnessPref(entry.category, entry.slug, harnessAvailable);
   const variants = useMemo(() => variantsForEntry(entry, harness), [entry, harness]);
+  const onStickyCopy = useCallback(
+    (variant: CopyVariant) => {
+      trackEvent(
+        entryDetailCopyAnalyticsEvent(variant),
+        entryDetailCopyAnalyticsData(entry.category, entry.slug, ENTRY_DETAIL_STICKY_META_SURFACE),
+      );
+      void recordIntentEvent(entryDetailCopyIntentType(variant), entry);
+    },
+    [entry],
+  );
+  const onStickyVariantSelect = useCallback(
+    (variant: CopyVariant) => {
+      trackEvent(
+        entryDetailStickyCopyVariantSelectAnalyticsEvent(),
+        entryDetailStickyCopyVariantSelectAnalyticsData(entry.category, entry.slug, variant),
+      );
+    },
+    [entry.category, entry.slug],
+  );
 
   // Visibility observer on the header sentinel.
   useEffect(() => {
@@ -155,7 +190,12 @@ export function StickyMetaBar({
 
             <div className="ml-auto inline-flex items-center gap-1.5">
               <span className="hidden sm:inline-flex">
-                <CopySegmented variants={variants} entryTitle={entry.title} />
+                <CopySegmented
+                  variants={variants}
+                  entryTitle={entry.title}
+                  onCopied={onStickyCopy}
+                  onVariantSelect={onStickyVariantSelect}
+                />
               </span>
               {/* Mobile: only a single copy button, no segmented control */}
               <button

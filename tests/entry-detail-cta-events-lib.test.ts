@@ -28,6 +28,9 @@ import {
   entryDetailCopyAnalyticsData,
   entryDetailCopyAnalyticsEvent,
   entryDetailCopyIntentType,
+  ENTRY_DETAIL_STICKY_META_SURFACE,
+  entryDetailStickyCopyVariantSelectAnalyticsData,
+  entryDetailStickyCopyVariantSelectAnalyticsEvent,
   entryDetailIntegrationAnalyticsData,
   entryDetailIntegrationAnalyticsEvent,
   entryDetailSourceAnalyticsData,
@@ -67,6 +70,30 @@ describe("entry detail cta events lib", () => {
     expect(entryDetailCopyAnalyticsData("mcp", "browser")).toEqual({
       entry: "mcp/browser",
       surface: "detail-command-center",
+    });
+    expect(
+      entryDetailCopyAnalyticsData(
+        "mcp",
+        "browser",
+        ENTRY_DETAIL_STICKY_META_SURFACE,
+      ),
+    ).toEqual({
+      entry: "mcp/browser",
+      surface: "detail-sticky-meta",
+    });
+    expect(entryDetailStickyCopyVariantSelectAnalyticsEvent()).toBe(
+      "detail_sticky_copy_variant_select",
+    );
+    expect(
+      entryDetailStickyCopyVariantSelectAnalyticsData(
+        "skills",
+        "demo",
+        "config",
+      ),
+    ).toEqual({
+      entry: "skills/demo",
+      variant: "config",
+      surface: "detail-sticky-meta",
     });
     expect(entryDetailCompareAnalyticsEvent(true)).toBe("detail_compare_add");
     expect(entryDetailCompareAnalyticsEvent(false)).toBe(

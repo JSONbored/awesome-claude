@@ -10,6 +10,7 @@ import type { IntentEventClientType } from "@/lib/intent-event-client-lib";
 import type { Entry } from "@/types/registry";
 
 export const ENTRY_DETAIL_COMMAND_CENTER_SURFACE = "detail-command-center";
+export const ENTRY_DETAIL_STICKY_META_SURFACE = "detail-sticky-meta";
 export const ENTRY_DETAIL_RAIL_SURFACE = "detail-rail";
 export const ENTRY_DETAIL_COMPARE_SURFACE = "detail-compare";
 export const ENTRY_DETAIL_DECISION_PLAYBOOK_SURFACE = "detail-decision-playbook";
@@ -35,10 +36,30 @@ export function entryDetailCopyAnalyticsEvent(tab: CopyVariant): string {
   return `detail_copy_${tab}`;
 }
 
-export function entryDetailCopyAnalyticsData(category: string, slug: string) {
+export function entryDetailCopyAnalyticsData(
+  category: string,
+  slug: string,
+  surface: string = ENTRY_DETAIL_COMMAND_CENTER_SURFACE,
+) {
   return {
     entry: entryDetailEntryKey(category, slug),
-    surface: ENTRY_DETAIL_COMMAND_CENTER_SURFACE,
+    surface,
+  };
+}
+
+export function entryDetailStickyCopyVariantSelectAnalyticsEvent(): string {
+  return "detail_sticky_copy_variant_select";
+}
+
+export function entryDetailStickyCopyVariantSelectAnalyticsData(
+  category: string,
+  slug: string,
+  variant: CopyVariant,
+) {
+  return {
+    entry: entryDetailEntryKey(category, slug),
+    variant,
+    surface: ENTRY_DETAIL_STICKY_META_SURFACE,
   };
 }
 
