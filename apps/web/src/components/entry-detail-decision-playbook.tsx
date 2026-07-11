@@ -93,9 +93,9 @@ function PlaybookActionButton({
   onAction,
 }: {
   action: DecisionPlaybookAction;
-  onToggleCompare: () => void;
+  onToggleCompare: () => boolean | undefined;
   onOpenCompareTray: () => void;
-  onAction: (actionId: string) => void;
+  onAction: (actionId: string, meta?: { adding?: boolean }) => void;
 }) {
   const className = cn(
     "inline-flex h-8 items-center rounded-md px-3 text-xs font-medium",
@@ -144,7 +144,12 @@ function PlaybookActionButton({
       title={action.hint ?? undefined}
       onClick={() => {
         if (action.disabled) return;
-        if (action.kind === "compare-toggle") onToggleCompare();
+        if (action.kind === "compare-toggle") {
+          const adding = onToggleCompare();
+          if (typeof adding !== "boolean") return;
+          onAction(action.id, { adding });
+          return;
+        }
         if (action.kind === "open-compare-tray") onOpenCompareTray();
         onAction(action.id);
       }}
@@ -164,9 +169,9 @@ export function EntryDetailDecisionPlaybook({
 }: {
   state: EntryDetailDecisionPlaybookState;
   compareIds: string;
-  onToggleCompare: () => void;
+  onToggleCompare: () => boolean | undefined;
   onOpenCompareTray: () => void;
-  onAction: (actionId: string) => void;
+  onAction: (actionId: string, meta?: { adding?: boolean }) => void;
   className?: string;
 }) {
   const actions = entryDetailDecisionPlaybookActions(

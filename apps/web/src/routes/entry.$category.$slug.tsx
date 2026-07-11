@@ -81,6 +81,7 @@ import { useCompare, useIsCompared } from "@/lib/compare";
 import { serializeCompareItems } from "@/lib/compare-selection";
 import { trackEvent } from "@/lib/analytics";
 import {
+  ENTRY_DETAIL_DECISION_PLAYBOOK_SURFACE,
   entryDetailCompareAnalyticsData,
   entryDetailCompareAnalyticsEvent,
   entryDetailCompareFullAnalyticsData,
@@ -413,29 +414,39 @@ function Dossier() {
 
   const compareIds = useMemo(() => serializeCompareItems(compare.items), [compare.items]);
   const onPlaybookAction = useCallback(
-    (actionId: string) => {
+    (actionId: string, meta?: { adding?: boolean }) => {
       trackEvent(entryDetailPlaybookActionAnalyticsEvent(actionId), {
         ...entryDetailPlaybookActionAnalyticsData(
           entry.category,
           entry.slug,
           actionId,
           compare.items.length,
+          meta?.adding,
         ),
       });
     },
     [compare.items.length, entry.category, entry.slug],
   );
-  const onPlaybookToggleCompare = useCallback(() => {
+  const onPlaybookToggleCompare = useCallback((): boolean | undefined => {
     const wasIn = inCompare;
     const changed = compare.toggle(entry);
     if (!changed) {
       toast.error(resourceCardCompareFullMessage());
-      return;
+      return undefined;
     }
+    const adding = !wasIn;
+    const compareCount = wasIn ? Math.max(0, compare.items.length - 1) : compare.items.length + 1;
+    trackEvent(entryDetailCompareAnalyticsEvent(adding), {
+      ...entryDetailCompareAnalyticsData(
+        entry.category,
+        entry.slug,
+        ENTRY_DETAIL_DECISION_PLAYBOOK_SURFACE,
+      ),
+      compareCount,
+    });
     if (wasIn) {
       toast(`Removed “${entry.title}” from compare`);
     } else {
-      const compareCount = compare.items.length + 1;
       toast.success("Added to compare", {
         action: {
           label: "View",
@@ -443,16 +454,31 @@ function Dossier() {
             compare.setOpen(true);
             trackEvent(
               entryDetailCompareToastOpenAnalyticsEvent(),
-              entryDetailCompareToastOpenAnalyticsData(entry.category, entry.slug, compareCount),
+              entryDetailCompareToastOpenAnalyticsData(
+                entry.category,
+                entry.slug,
+                compareCount,
+                ENTRY_DETAIL_DECISION_PLAYBOOK_SURFACE,
+              ),
             );
           },
         },
       });
     }
+    return adding;
   }, [compare, entry, inCompare]);
   const onPlaybookOpenCompareTray = useCallback(() => {
     compare.setOpen(true);
-  }, [compare]);
+    trackEvent(
+      entryDetailCompareOpenTrayAnalyticsEvent(),
+      entryDetailCompareOpenTrayAnalyticsData(
+        entry.category,
+        entry.slug,
+        compare.items.length,
+        ENTRY_DETAIL_DECISION_PLAYBOOK_SURFACE,
+      ),
+    );
+  }, [compare, entry.category, entry.slug]);
   const onAdoptionPresetSelect = useCallback(
     (preset: AdoptionPlanPresetId) => {
       if (preset === adoptionPreset) return;

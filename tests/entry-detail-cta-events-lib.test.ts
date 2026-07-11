@@ -14,6 +14,7 @@ import {
   comparisonTrayViewSelectionAnalyticsEvent,
   entryDetailCompareAnalyticsData,
   entryDetailCompareAnalyticsEvent,
+  ENTRY_DETAIL_DECISION_PLAYBOOK_SURFACE,
   entryDetailCompareFullAnalyticsData,
   entryDetailCompareFullAnalyticsEvent,
   entryDetailCompareOpenTrayAnalyticsData,
@@ -75,6 +76,16 @@ describe("entry detail cta events lib", () => {
       entry: "skills/demo",
       surface: "detail-compare",
     });
+    expect(
+      entryDetailCompareAnalyticsData(
+        "skills",
+        "demo",
+        ENTRY_DETAIL_DECISION_PLAYBOOK_SURFACE,
+      ),
+    ).toEqual({
+      entry: "skills/demo",
+      surface: "detail-decision-playbook",
+    });
     expect(entryDetailCompareOpenTrayAnalyticsEvent()).toBe(
       "detail_compare_open_tray",
     );
@@ -85,6 +96,18 @@ describe("entry detail cta events lib", () => {
       surface: "detail-compare",
       compareCount: 2,
     });
+    expect(
+      entryDetailCompareOpenTrayAnalyticsData(
+        "skills",
+        "demo",
+        2,
+        ENTRY_DETAIL_DECISION_PLAYBOOK_SURFACE,
+      ),
+    ).toEqual({
+      entry: "skills/demo",
+      surface: "detail-decision-playbook",
+      compareCount: 2,
+    });
     expect(entryDetailCompareToastOpenAnalyticsEvent()).toBe(
       "detail_compare_toast_open",
     );
@@ -93,6 +116,18 @@ describe("entry detail cta events lib", () => {
     ).toEqual({
       entry: "skills/demo",
       surface: "detail-compare",
+      compareCount: 3,
+    });
+    expect(
+      entryDetailCompareToastOpenAnalyticsData(
+        "skills",
+        "demo",
+        3,
+        ENTRY_DETAIL_DECISION_PLAYBOOK_SURFACE,
+      ),
+    ).toEqual({
+      entry: "skills/demo",
+      surface: "detail-decision-playbook",
       compareCount: 3,
     });
     expect(entryDetailCompareFullAnalyticsEvent()).toBe(
@@ -305,6 +340,21 @@ describe("entry detail cta events lib", () => {
       action: "compare-toggle",
       surface: "detail-decision-playbook",
       compareCount: 2,
+    });
+    expect(
+      entryDetailPlaybookActionAnalyticsData(
+        "skills",
+        "demo",
+        "compare-toggle",
+        3,
+        true,
+      ),
+    ).toEqual({
+      entry: "skills/demo",
+      action: "compare-toggle",
+      surface: "detail-decision-playbook",
+      compareCount: 3,
+      adding: true,
     });
   });
 });

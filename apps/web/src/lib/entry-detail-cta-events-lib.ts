@@ -46,10 +46,14 @@ export function entryDetailCompareAnalyticsEvent(adding: boolean): string {
   return adding ? "detail_compare_add" : "detail_compare_remove";
 }
 
-export function entryDetailCompareAnalyticsData(category: string, slug: string) {
+export function entryDetailCompareAnalyticsData(
+  category: string,
+  slug: string,
+  surface: string = ENTRY_DETAIL_COMPARE_SURFACE,
+) {
   return {
     entry: entryDetailEntryKey(category, slug),
-    surface: ENTRY_DETAIL_COMPARE_SURFACE,
+    surface,
   };
 }
 
@@ -61,10 +65,11 @@ export function entryDetailCompareOpenTrayAnalyticsData(
   category: string,
   slug: string,
   compareCount: number,
+  surface: string = ENTRY_DETAIL_COMPARE_SURFACE,
 ) {
   return {
     entry: entryDetailEntryKey(category, slug),
-    surface: ENTRY_DETAIL_COMPARE_SURFACE,
+    surface,
     compareCount,
   };
 }
@@ -77,10 +82,11 @@ export function entryDetailCompareToastOpenAnalyticsData(
   category: string,
   slug: string,
   compareCount: number,
+  surface: string = ENTRY_DETAIL_COMPARE_SURFACE,
 ) {
   return {
     entry: entryDetailEntryKey(category, slug),
-    surface: ENTRY_DETAIL_COMPARE_SURFACE,
+    surface,
     compareCount,
   };
 }
@@ -366,11 +372,13 @@ export function entryDetailPlaybookActionAnalyticsData(
   slug: string,
   actionId: string,
   compareCount: number,
+  adding?: boolean,
 ) {
   return {
     entry: entryDetailEntryKey(category, slug),
     action: actionId,
     surface: ENTRY_DETAIL_DECISION_PLAYBOOK_SURFACE,
     compareCount,
+    ...(typeof adding === "boolean" ? { adding } : {}),
   };
 }
