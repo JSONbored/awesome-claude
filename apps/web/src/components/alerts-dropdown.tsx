@@ -5,6 +5,15 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { useWatch } from "@/lib/watch";
 import { groupAlertsByBucket } from "@/lib/alerts-group-lib";
 import { cn } from "@/lib/utils";
+import { trackEvent } from "@/lib/analytics";
+import {
+  alertsDropdownItemClickAnalyticsData,
+  alertsDropdownItemClickAnalyticsEvent,
+  alertsDropdownMarkAllReadAnalyticsData,
+  alertsDropdownMarkAllReadAnalyticsEvent,
+  alertsDropdownOpenAnalyticsData,
+  alertsDropdownOpenAnalyticsEvent,
+} from "@/lib/alerts-dropdown-cta-events";
 
 const SEV_ICON = {
   info: { Icon: Info, cls: "text-ink-muted" },
@@ -19,9 +28,39 @@ export function AlertsDropdown() {
     () => groupAlertsByBucket(alerts, Date.now()),
     [alerts, lastSeenAt],
   );
+  const [open, setOpen] = React.useState(false);
+  const openRef = React.useRef(open);
+  openRef.current = open;
+
+  const handleOpenChange = React.useCallback(
+    (next: boolean) => {
+      if (next && !openRef.current) {
+        trackEvent(
+          alertsDropdownOpenAnalyticsEvent(),
+          alertsDropdownOpenAnalyticsData(
+            unreadCount,
+            alerts.length,
+            targets.length,
+            savedSearchAlertCount,
+          ),
+        );
+      }
+      setOpen(next);
+    },
+    [alerts.length, savedSearchAlertCount, targets.length, unreadCount],
+  );
+
+  const onMarkAllRead = React.useCallback(() => {
+    if (unreadCount === 0) return;
+    trackEvent(
+      alertsDropdownMarkAllReadAnalyticsEvent(),
+      alertsDropdownMarkAllReadAnalyticsData(unreadCount),
+    );
+    markAllRead();
+  }, [markAllRead, unreadCount]);
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
         <button
           type="button"
@@ -49,7 +88,7 @@ export function AlertsDropdown() {
           </div>
           <button
             type="button"
-            onClick={markAllRead}
+            onClick={onMarkAllRead}
             disabled={unreadCount === 0}
             className="inline-flex items-center gap-1 text-[11px] font-medium text-ink-muted hover:text-ink disabled:opacity-40"
           >
@@ -97,7 +136,21 @@ export function AlertsDropdown() {
                           className="border-b border-border last:border-0 hover:bg-surface-2"
                         >
                           {a.href ? (
-                            <Link to={a.href} className="block">
+                            <Link
+                              to={a.href}
+                              className="block"
+                              onClick={() =>
+                                trackEvent(
+                                  alertsDropdownItemClickAnalyticsEvent(),
+                                  alertsDropdownItemClickAnalyticsData(
+                                    a.severity,
+                                    k,
+                                    a.kind,
+                                    unread,
+                                  ),
+                                )
+                              }
+                            >
                               {body}
                             </Link>
                           ) : (
