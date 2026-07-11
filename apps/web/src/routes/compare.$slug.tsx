@@ -16,6 +16,11 @@ import {
   compareCuratedInteractiveUiState,
 } from "@/lib/compare-curated-interactive-ui-lib";
 import { compareCuratedResolvedEntries } from "@/lib/compare-curated-ui-lib";
+import { trackEvent } from "@/lib/analytics";
+import {
+  compareCuratedEgressAnalyticsData,
+  compareCuratedEgressAnalyticsEvent,
+} from "@/lib/compare-curated-egress-cta-events";
 
 export const Route = createFileRoute("/compare/$slug")({
   loader: ({ params }) => {
@@ -104,6 +109,12 @@ function ComparisonPage() {
             to="/compare"
             search={interactiveSearch}
             className="mt-4 inline-flex items-center gap-1.5 text-sm text-ink-muted hover:text-ink"
+            onClick={() =>
+              trackEvent(
+                compareCuratedEgressAnalyticsEvent(),
+                compareCuratedEgressAnalyticsData("interactive", entries.length, true),
+              )
+            }
           >
             <ArrowLeft className="h-4 w-4" /> {interactiveLinkLabel}
           </Link>
