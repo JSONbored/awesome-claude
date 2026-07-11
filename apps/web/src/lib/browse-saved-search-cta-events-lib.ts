@@ -5,9 +5,10 @@
  * names without embedding search labels or query strings.
  */
 
-import type { SavedSearch } from "@/lib/recents-types-lib";
+import type { AlertCadence, SavedSearch } from "@/lib/recents-types-lib";
 
 export const BROWSE_SAVED_SEARCH_SURFACE = "browse-saved-search";
+export const BROWSE_SAVED_SEARCH_MANAGER_SURFACE = "browse-saved-search-manager";
 export const BROWSE_RECENTS_PANEL_SURFACE = "browse-recents-panel";
 export const BROWSE_RESULTS_SURFACE = "browse-results";
 
@@ -111,5 +112,97 @@ export function browseRecentEntryClickAnalyticsData(position: number, recentCoun
     surface: BROWSE_RECENTS_PANEL_SURFACE,
     position,
     recentCount,
+  };
+}
+
+export function browseSavedSearchManagerOpenAnalyticsEvent(): string {
+  return "browse_saved_search_manager_open";
+}
+
+export function browseSavedSearchManagerOpenAnalyticsData(savedCount: number) {
+  return {
+    surface: BROWSE_SAVED_SEARCH_MANAGER_SURFACE,
+    savedCount,
+  };
+}
+
+export function browseSavedSearchManagerApplyAnalyticsEvent(): string {
+  return "browse_saved_search_manager_apply";
+}
+
+export function browseSavedSearchManagerApplyAnalyticsData(
+  search: Pick<SavedSearch, "q" | "category" | "trust" | "source" | "signal" | "platform"> & {
+    alerts?: SavedSearch["alerts"];
+  },
+) {
+  return {
+    surface: BROWSE_SAVED_SEARCH_MANAGER_SURFACE,
+    filterCount: savedSearchFilterCount(search),
+    hasAlerts: Boolean(search.alerts?.enabled),
+  };
+}
+
+export function browseSavedSearchManagerRenameAnalyticsEvent(): string {
+  return "browse_saved_search_manager_rename";
+}
+
+export function browseSavedSearchManagerRenameAnalyticsData(savedCount: number) {
+  return {
+    surface: BROWSE_SAVED_SEARCH_MANAGER_SURFACE,
+    savedCount,
+  };
+}
+
+export function browseSavedSearchManagerAlertsToggleAnalyticsEvent(): string {
+  return "browse_saved_search_manager_alerts_toggle";
+}
+
+export function browseSavedSearchManagerAlertsToggleAnalyticsData(
+  enabled: boolean,
+  filterCount: number,
+) {
+  return {
+    surface: BROWSE_SAVED_SEARCH_MANAGER_SURFACE,
+    enabled,
+    filterCount,
+  };
+}
+
+export function browseSavedSearchManagerAlertsSaveAnalyticsEvent(): string {
+  return "browse_saved_search_manager_alerts_save";
+}
+
+export function browseSavedSearchManagerAlertsSaveAnalyticsData(
+  channelCount: number,
+  cadence: AlertCadence,
+  hasEmail: boolean,
+) {
+  return {
+    surface: BROWSE_SAVED_SEARCH_MANAGER_SURFACE,
+    channelCount,
+    cadence,
+    hasEmail,
+  };
+}
+
+export function browseSavedSearchManagerFeedCopyAnalyticsEvent(): string {
+  return "browse_saved_search_manager_feed_copy";
+}
+
+export function browseSavedSearchManagerFeedCopyAnalyticsData(filterCount: number) {
+  return {
+    surface: BROWSE_SAVED_SEARCH_MANAGER_SURFACE,
+    filterCount,
+  };
+}
+
+export function browseSavedSearchManagerRemoveAnalyticsEvent(): string {
+  return "browse_saved_search_manager_remove";
+}
+
+export function browseSavedSearchManagerRemoveAnalyticsData(savedCount: number) {
+  return {
+    surface: BROWSE_SAVED_SEARCH_MANAGER_SURFACE,
+    savedCount,
   };
 }

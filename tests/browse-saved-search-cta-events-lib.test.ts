@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   BROWSE_RECENTS_PANEL_SURFACE,
   BROWSE_RESULTS_SURFACE,
+  BROWSE_SAVED_SEARCH_MANAGER_SURFACE,
   BROWSE_SAVED_SEARCH_SURFACE,
   browseEmptySuggestionApplyAnalyticsData,
   browseEmptySuggestionApplyAnalyticsEvent,
@@ -13,6 +14,20 @@ import {
   browseSavedSearchApplyAnalyticsEvent,
   browseSavedSearchLinkClickAnalyticsData,
   browseSavedSearchLinkClickAnalyticsEvent,
+  browseSavedSearchManagerAlertsSaveAnalyticsData,
+  browseSavedSearchManagerAlertsSaveAnalyticsEvent,
+  browseSavedSearchManagerAlertsToggleAnalyticsData,
+  browseSavedSearchManagerAlertsToggleAnalyticsEvent,
+  browseSavedSearchManagerApplyAnalyticsData,
+  browseSavedSearchManagerApplyAnalyticsEvent,
+  browseSavedSearchManagerFeedCopyAnalyticsData,
+  browseSavedSearchManagerFeedCopyAnalyticsEvent,
+  browseSavedSearchManagerOpenAnalyticsData,
+  browseSavedSearchManagerOpenAnalyticsEvent,
+  browseSavedSearchManagerRemoveAnalyticsData,
+  browseSavedSearchManagerRemoveAnalyticsEvent,
+  browseSavedSearchManagerRenameAnalyticsData,
+  browseSavedSearchManagerRenameAnalyticsEvent,
   browseSavedSearchRemoveAnalyticsData,
   browseSavedSearchRemoveAnalyticsEvent,
   browseSavedSearchSaveAnalyticsData,
@@ -40,6 +55,27 @@ describe("browse saved search cta events lib", () => {
     );
     expect(browseRecentEntryClickAnalyticsEvent()).toBe(
       "browse_recent_entry_click",
+    );
+    expect(browseSavedSearchManagerOpenAnalyticsEvent()).toBe(
+      "browse_saved_search_manager_open",
+    );
+    expect(browseSavedSearchManagerApplyAnalyticsEvent()).toBe(
+      "browse_saved_search_manager_apply",
+    );
+    expect(browseSavedSearchManagerRenameAnalyticsEvent()).toBe(
+      "browse_saved_search_manager_rename",
+    );
+    expect(browseSavedSearchManagerAlertsToggleAnalyticsEvent()).toBe(
+      "browse_saved_search_manager_alerts_toggle",
+    );
+    expect(browseSavedSearchManagerAlertsSaveAnalyticsEvent()).toBe(
+      "browse_saved_search_manager_alerts_save",
+    );
+    expect(browseSavedSearchManagerFeedCopyAnalyticsEvent()).toBe(
+      "browse_saved_search_manager_feed_copy",
+    );
+    expect(browseSavedSearchManagerRemoveAnalyticsEvent()).toBe(
+      "browse_saved_search_manager_remove",
     );
     expect(
       savedSearchFilterCount({
@@ -113,6 +149,49 @@ describe("browse saved search cta events lib", () => {
       surface: BROWSE_RECENTS_PANEL_SURFACE,
       position: 1,
       recentCount: 6,
+    });
+    expect(browseSavedSearchManagerOpenAnalyticsData(5)).toEqual({
+      surface: BROWSE_SAVED_SEARCH_MANAGER_SURFACE,
+      savedCount: 5,
+    });
+    expect(
+      browseSavedSearchManagerApplyAnalyticsData({
+        q: "mcp",
+        category: "mcp",
+        trust: "",
+        source: "",
+        signal: "",
+        platform: "",
+      }),
+    ).toEqual({
+      surface: BROWSE_SAVED_SEARCH_MANAGER_SURFACE,
+      filterCount: 2,
+      hasAlerts: false,
+    });
+    expect(browseSavedSearchManagerRenameAnalyticsData(4)).toEqual({
+      surface: BROWSE_SAVED_SEARCH_MANAGER_SURFACE,
+      savedCount: 4,
+    });
+    expect(browseSavedSearchManagerAlertsToggleAnalyticsData(true, 3)).toEqual({
+      surface: BROWSE_SAVED_SEARCH_MANAGER_SURFACE,
+      enabled: true,
+      filterCount: 3,
+    });
+    expect(
+      browseSavedSearchManagerAlertsSaveAnalyticsData(2, "weekly", true),
+    ).toEqual({
+      surface: BROWSE_SAVED_SEARCH_MANAGER_SURFACE,
+      channelCount: 2,
+      cadence: "weekly",
+      hasEmail: true,
+    });
+    expect(browseSavedSearchManagerFeedCopyAnalyticsData(1)).toEqual({
+      surface: BROWSE_SAVED_SEARCH_MANAGER_SURFACE,
+      filterCount: 1,
+    });
+    expect(browseSavedSearchManagerRemoveAnalyticsData(2)).toEqual({
+      surface: BROWSE_SAVED_SEARCH_MANAGER_SURFACE,
+      savedCount: 2,
     });
   });
 });
