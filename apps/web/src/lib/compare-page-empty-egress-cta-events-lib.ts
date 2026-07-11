@@ -7,7 +7,7 @@
 
 export const COMPARE_PAGE_EMPTY_SURFACE = "compare-page-empty";
 
-export type ComparePageEmptyEgressLinkKind = "curated-page" | "interactive";
+export type ComparePageEmptyEgressLinkKind = "curated-page" | "interactive" | "browse-directory";
 
 export function comparePageEmptyEgressAnalyticsEvent(): string {
   return "compare_page_empty_egress_click";
@@ -15,12 +15,18 @@ export function comparePageEmptyEgressAnalyticsEvent(): string {
 
 export function comparePageEmptyEgressAnalyticsData(
   linkKind: ComparePageEmptyEgressLinkKind,
-  refCount: number,
-  hasInteractive: boolean,
+  refCount = 0,
+  hasInteractive = false,
 ) {
-  return {
+  const base = {
     surface: COMPARE_PAGE_EMPTY_SURFACE,
     linkKind,
+  };
+  if (linkKind === "browse-directory") {
+    return base;
+  }
+  return {
+    ...base,
     refCount,
     hasInteractive,
   };

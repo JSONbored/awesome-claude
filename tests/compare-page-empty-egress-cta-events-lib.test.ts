@@ -26,5 +26,9 @@ describe("compare page empty egress cta events lib", () => {
         hasInteractive: true,
       },
     );
+    expect(comparePageEmptyEgressAnalyticsData("browse-directory")).toEqual({
+      surface: COMPARE_PAGE_EMPTY_SURFACE,
+      linkKind: "browse-directory",
+    });
   });
 });

@@ -282,6 +282,12 @@ function ComparePage() {
             <Link
               to="/browse"
               className="inline-flex h-9 items-center rounded-md bg-ink px-4 text-sm font-medium text-background hover:bg-ink/90"
+              onClick={() =>
+                trackEvent(
+                  comparePageEmptyEgressAnalyticsEvent(),
+                  comparePageEmptyEgressAnalyticsData("browse-directory"),
+                )
+              }
             >
               Browse the directory
             </Link>
