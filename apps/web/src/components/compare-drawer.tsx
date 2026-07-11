@@ -17,7 +17,7 @@ import { TrustDrilldown } from "./trust-drilldown";
 import { CopyButton } from "./copy-button";
 import { CopySegmented, variantsForEntry } from "./copy-segmented";
 import { EntryBrandMark } from "./entry-brand-mark";
-import { useCopyPref, useHarnessPref } from "@/lib/dossier-prefs";
+import { useCopyPref, useHarnessPref, type CopyVariant } from "@/lib/dossier-prefs";
 import { COMPARE_DRAWER_SURFACE, type CompareAction } from "@/lib/compare-drawer-actions-ui-lib";
 import { compareDrawerActionsForEntry } from "@/lib/compare-drawer-actions-interactive-ui-lib";
 import { compareDrawerInteractiveUiState } from "@/lib/compare-drawer-interactive-ui-lib";
@@ -47,6 +47,12 @@ import {
   compareDrawerScenarioAnalyticsData,
   compareDrawerScenarioAnalyticsEvent,
 } from "@/lib/compare-drawer-scenario-cta-events";
+import {
+  compareDrawerSnippetCopyAnalyticsData,
+  compareDrawerSnippetCopyAnalyticsEvent,
+  compareDrawerSnippetVariantAnalyticsData,
+  compareDrawerSnippetVariantAnalyticsEvent,
+} from "@/lib/compare-drawer-snippet-cta-events";
 import { claimCtaAnalyticsData, claimCtaAnalyticsEvent } from "@/lib/conversion-cta-events";
 import type { Entry, Harness } from "@/types/registry";
 import { cn } from "@/lib/utils";
@@ -374,6 +380,12 @@ function SnippetCell({ entry }: { entry: Entry }) {
             value={payload}
             label={`Copy ${active}`}
             toastLabel={`Copied ${active} — ${entry.title}`}
+            event={compareDrawerSnippetCopyAnalyticsEvent(active as CopyVariant)}
+            eventData={compareDrawerSnippetCopyAnalyticsData(
+              entry.category,
+              entry.slug,
+              active as CopyVariant,
+            )}
           />
         </>
       ) : (
@@ -463,6 +475,16 @@ export function CompareDrawer() {
       setMitigationPreset(preset);
     },
     [items.length, mitigationPreset],
+  );
+
+  const onSnippetVariantSelect = React.useCallback(
+    (variant: CopyVariant) => {
+      trackEvent(
+        compareDrawerSnippetVariantAnalyticsEvent(),
+        compareDrawerSnippetVariantAnalyticsData(variant, items.length),
+      );
+    },
+    [items.length],
   );
 
   const onClear = () => {
@@ -556,6 +578,7 @@ export function CompareDrawer() {
                       { id: "full", label: "Full", value: items.find((e) => e.fullCopy)?.fullCopy },
                     ]}
                     hideCopy
+                    onVariantSelect={onSnippetVariantSelect}
                   />
                 </div>
               )}
