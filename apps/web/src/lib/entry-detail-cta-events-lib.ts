@@ -63,6 +63,23 @@ export function entryDetailStickyCopyVariantSelectAnalyticsData(
   };
 }
 
+export function entryDetailCopyTabSelectAnalyticsEvent(): string {
+  return "detail_copy_tab_select";
+}
+
+export function entryDetailCopyTabSelectAnalyticsData(
+  category: string,
+  slug: string,
+  variant: CopyVariant,
+  surface: string = ENTRY_DETAIL_COMMAND_CENTER_SURFACE,
+) {
+  return {
+    entry: entryDetailEntryKey(category, slug),
+    surface,
+    variant,
+  };
+}
+
 export function entryDetailCompareAnalyticsEvent(adding: boolean): string {
   return adding ? "detail_compare_add" : "detail_compare_remove";
 }

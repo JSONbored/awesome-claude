@@ -90,6 +90,8 @@ import {
   entryDetailCompareOpenTrayAnalyticsEvent,
   entryDetailCompareToastOpenAnalyticsData,
   entryDetailCompareToastOpenAnalyticsEvent,
+  entryDetailCopyTabSelectAnalyticsData,
+  entryDetailCopyTabSelectAnalyticsEvent,
   entryDetailMobileCompareAnalyticsData,
   entryDetailMobileCompareAnalyticsEvent,
   entryDetailMobileCompareToastOpenAnalyticsData,
@@ -301,7 +303,17 @@ function Dossier() {
   const [pref, setPref] = useCopyPref();
   const variantHas = (v: CopyVariant) => !!liveVariants.find((x) => x.id === v)?.value;
   const tab: CopyVariant = pref && variantHas(pref) ? pref : firstAvailable;
-  const setTab = (v: CopyVariant) => setPref(v);
+  const onTabChange = useCallback(
+    (v: CopyVariant) => {
+      if (v === tab) return;
+      trackEvent(
+        entryDetailCopyTabSelectAnalyticsEvent(),
+        entryDetailCopyTabSelectAnalyticsData(entry.category, entry.slug, v),
+      );
+      setPref(v);
+    },
+    [entry.category, entry.slug, setPref, tab],
+  );
 
   const tabPayload = liveVariants.find((v) => v.id === tab)?.value;
 
@@ -670,7 +682,7 @@ function Dossier() {
           onHarnessChange={(h) => setHarness(h)}
           liveVariants={liveVariants}
           tab={tab}
-          onTabChange={setTab}
+          onTabChange={onTabChange}
           tabPayload={tabPayload}
           relatedCount={rel.length}
           guideCount={guides.length}

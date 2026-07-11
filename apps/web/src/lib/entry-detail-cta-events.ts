@@ -38,6 +38,8 @@ export {
   entryDetailCopyAnalyticsData,
   entryDetailCopyAnalyticsEvent,
   entryDetailCopyIntentType,
+  entryDetailCopyTabSelectAnalyticsData,
+  entryDetailCopyTabSelectAnalyticsEvent,
   entryDetailStickyCopyVariantSelectAnalyticsData,
   entryDetailStickyCopyVariantSelectAnalyticsEvent,
   entryDetailEntryKey,
