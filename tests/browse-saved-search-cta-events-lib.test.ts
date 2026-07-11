@@ -3,14 +3,28 @@ import {
   BROWSE_RESULTS_SURFACE,
   BROWSE_SAVED_SEARCH_SURFACE,
   browseEmptySuggestionApplyAnalyticsData,
+  browseEmptySuggestionApplyAnalyticsEvent,
   browseLoadMoreAnalyticsData,
+  browseLoadMoreAnalyticsEvent,
   browseSavedSearchApplyAnalyticsData,
+  browseSavedSearchApplyAnalyticsEvent,
   browseSavedSearchSaveAnalyticsData,
+  browseSavedSearchSaveAnalyticsEvent,
   savedSearchFilterCount,
 } from "@/lib/browse-saved-search-cta-events-lib";
 
 describe("browse saved search cta events lib", () => {
   it("builds privacy-light browse saved search analytics", () => {
+    expect(browseSavedSearchApplyAnalyticsEvent()).toBe(
+      "browse_saved_search_apply",
+    );
+    expect(browseSavedSearchSaveAnalyticsEvent()).toBe(
+      "browse_saved_search_save",
+    );
+    expect(browseLoadMoreAnalyticsEvent()).toBe("browse_load_more");
+    expect(browseEmptySuggestionApplyAnalyticsEvent()).toBe(
+      "browse_empty_suggestion_apply",
+    );
     expect(
       savedSearchFilterCount({
         q: "mcp",
@@ -21,6 +35,16 @@ describe("browse saved search cta events lib", () => {
         platform: "",
       }),
     ).toBe(2);
+    expect(
+      savedSearchFilterCount({
+        q: "",
+        category: "",
+        trust: "verified",
+        source: "community",
+        signal: "trending",
+        platform: "claude-code",
+      }),
+    ).toBe(4);
     expect(
       browseSavedSearchApplyAnalyticsData({
         q: "",
