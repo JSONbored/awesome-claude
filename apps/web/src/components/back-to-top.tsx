@@ -1,6 +1,12 @@
 import * as React from "react";
 import { ArrowUp } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { trackEvent } from "@/lib/analytics";
+import {
+  appShellBackToTopAnalyticsData,
+  appShellBackToTopAnalyticsEvent,
+  appShellBackToTopScrollProgress,
+} from "@/lib/app-shell-back-to-top-cta-events";
 
 /**
  * Floating "back to top" button. Appears after the user scrolls past
@@ -17,11 +23,21 @@ export function BackToTop({ threshold = 800 }: { threshold?: number }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, [threshold]);
 
+  const onBackToTop = React.useCallback(() => {
+    const scrollProgress = appShellBackToTopScrollProgress(
+      window.scrollY,
+      document.documentElement.scrollHeight,
+      window.innerHeight,
+    );
+    trackEvent(appShellBackToTopAnalyticsEvent(), appShellBackToTopAnalyticsData(scrollProgress));
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
   return (
     <button
       type="button"
       aria-label="Back to top"
-      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      onClick={onBackToTop}
       className={cn(
         "fixed bottom-5 right-5 z-40 inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-surface text-ink shadow-sm transition-[opacity,transform,background-color,border-color] duration-200 ease-out hover:bg-surface-2",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
