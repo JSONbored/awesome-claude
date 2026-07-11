@@ -82,6 +82,16 @@ import {
   browseViewSelectAnalyticsEvent,
   type BrowseFilterAxis,
 } from "@/lib/browse-filter-cta-events";
+import {
+  browseEmptySuggestionApplyAnalyticsData,
+  browseEmptySuggestionApplyAnalyticsEvent,
+  browseLoadMoreAnalyticsData,
+  browseLoadMoreAnalyticsEvent,
+  browseSavedSearchApplyAnalyticsData,
+  browseSavedSearchApplyAnalyticsEvent,
+  browseSavedSearchSaveAnalyticsData,
+  browseSavedSearchSaveAnalyticsEvent,
+} from "@/lib/browse-saved-search-cta-events";
 import { trackEvent } from "@/lib/analytics";
 import { useRecents, type SavedSearch } from "@/lib/recents";
 import { entryByRef } from "@/data/entries";
@@ -95,30 +105,15 @@ function SavedSearchChipRow({
   currentLabel,
   canSave,
   onSave,
+  onApplySaved,
 }: {
   currentLabel: string;
   canSave: boolean;
   onSave: () => void;
+  onApplySaved: (search: SavedSearch) => void;
 }) {
   const recents = useRecents();
-  const navigate = useNavigate();
   const [managerOpen, setManagerOpen] = React.useState(false);
-
-  const apply = (s: SavedSearch) =>
-    navigate({
-      to: "/browse",
-      search: {
-        q: s.q ?? "",
-        category: s.category ?? "",
-        trust: s.trust ?? "",
-        source: s.source ?? "",
-        signal: s.signal ?? "",
-        platform: s.platform ?? "",
-        sort: (s.sort as "popular" | "newest" | "title") ?? "popular",
-        view: "row" as const,
-        compare: "",
-      },
-    });
 
   if (recents.saved.length === 0 && !canSave) return null;
 
@@ -131,7 +126,7 @@ function SavedSearchChipRow({
           <button
             key={s.id}
             type="button"
-            onClick={() => apply(s)}
+            onClick={() => onApplySaved(s)}
             className="inline-flex h-6 items-center gap-1 rounded-full border border-border bg-surface px-2 text-[11px] text-ink hover:bg-surface-2"
             title={`Open: ${s.label}`}
           >
@@ -575,8 +570,36 @@ function Browse() {
     clearAll();
   }, [activeCount, countForSlice, sp]);
 
+  const applySavedSearch = useCallback(
+    (search: SavedSearch) => {
+      trackEvent(
+        browseSavedSearchApplyAnalyticsEvent(),
+        browseSavedSearchApplyAnalyticsData(search),
+      );
+      navigate({
+        to: "/browse",
+        search: {
+          q: search.q ?? "",
+          category: search.category ?? "",
+          trust: search.trust ?? "",
+          source: search.source ?? "",
+          signal: search.signal ?? "",
+          platform: search.platform ?? "",
+          sort: (search.sort as "popular" | "newest" | "title") ?? "popular",
+          view: "row" as const,
+          compare: "",
+        },
+      });
+    },
+    [navigate],
+  );
+
   const saveCurrent = () => {
     if (activeCount === 0) return;
+    trackEvent(
+      browseSavedSearchSaveAnalyticsEvent(),
+      browseSavedSearchSaveAnalyticsData(activeCount),
+    );
     const label = sp.q
       ? `“${sp.q}”${sp.category ? ` · ${sp.category}` : ""}`
       : `${sp.category || sp.trust || sp.source || browseTrustSignalLabel(sp.signal) || sp.platform || "Filter"}`;
@@ -599,6 +622,15 @@ function Browse() {
   React.useEffect(() => {
     setShown(PAGE);
   }, [sp.q, sp.category, sp.trust, sp.source, sp.signal, sp.platform, sp.sort]);
+
+  const onLoadMore = useCallback(() => {
+    const loadCount = Math.min(PAGE, results.length - shown);
+    trackEvent(
+      browseLoadMoreAnalyticsEvent(),
+      browseLoadMoreAnalyticsData(shown, results.length, loadCount),
+    );
+    setShown((n) => n + PAGE);
+  }, [results.length, shown]);
 
   // Per-axis facet counts: how many results if this value were the only filter
   // in its axis. Memoized on the search params and counted without sorting so
@@ -977,6 +1009,7 @@ function Browse() {
               }
               canSave={activeCount > 0}
               onSave={saveCurrent}
+              onApplySaved={applySavedSearch}
             />
             <FilterChipGroup label="Trust signal quick filters" multi={false}>
               {BROWSE_TRUST_SIGNAL_OPTIONS.map((option) => (
@@ -1206,7 +1239,13 @@ function Browse() {
                     <li key={s.label}>
                       <button
                         type="button"
-                        onClick={s.apply}
+                        onClick={() => {
+                          trackEvent(
+                            browseEmptySuggestionApplyAnalyticsEvent(),
+                            browseEmptySuggestionApplyAnalyticsData(s.count),
+                          );
+                          s.apply();
+                        }}
                         className="inline-flex w-full items-center justify-between gap-3 rounded-md border border-border bg-surface px-3 py-1.5 text-ink transition-colors duration-200 ease-out hover:bg-surface-2 motion-safe:active:scale-[0.99]"
                       >
                         <span>{s.label}</span>
@@ -1295,7 +1334,7 @@ function Browse() {
                 <div className="mt-4 flex justify-center">
                   <button
                     type="button"
-                    onClick={() => setShown((n) => n + PAGE)}
+                    onClick={onLoadMore}
                     className="inline-flex h-9 items-center gap-1.5 rounded-md border border-border bg-surface px-4 text-sm font-medium text-ink transition-colors duration-200 ease-out hover:bg-surface-2 motion-safe:active:scale-[0.98]"
                   >
                     Load {Math.min(PAGE, results.length - shown)} more · {results.length - shown}{" "}
