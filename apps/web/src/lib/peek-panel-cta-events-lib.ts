@@ -29,6 +29,22 @@ export function peekCopyAnalyticsData(category: string, slug: string, variant: C
   };
 }
 
+export function peekSnippetVariantSelectAnalyticsEvent(): string {
+  return "peek_snippet_variant_select";
+}
+
+export function peekSnippetVariantSelectAnalyticsData(
+  category: string,
+  slug: string,
+  variant: CopyVariant,
+) {
+  return {
+    entry: peekPanelEntryKey(category, slug),
+    variant,
+    surface: PEEK_PANEL_SURFACE,
+  };
+}
+
 export function peekPanelActionAnalyticsEvent(action: PeekPanelAction): string {
   return `peek_${action}`;
 }

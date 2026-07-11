@@ -7,6 +7,8 @@ import {
   peekPanelActionAnalyticsEvent,
   peekPanelOpenAnalyticsData,
   peekPanelOpenAnalyticsEvent,
+  peekSnippetVariantSelectAnalyticsData,
+  peekSnippetVariantSelectAnalyticsEvent,
 } from "@/lib/peek-panel-cta-events-lib";
 
 describe("peek panel cta events lib", () => {
@@ -31,6 +33,16 @@ describe("peek panel cta events lib", () => {
     expect(peekPanelOpenAnalyticsEvent()).toBe("peek_open");
     expect(peekPanelOpenAnalyticsData("mcp", "browser")).toEqual({
       entry: "mcp/browser",
+      surface: "peek-panel",
+    });
+    expect(peekSnippetVariantSelectAnalyticsEvent()).toBe(
+      "peek_snippet_variant_select",
+    );
+    expect(
+      peekSnippetVariantSelectAnalyticsData("skills", "demo", "config"),
+    ).toEqual({
+      entry: "skills/demo",
+      variant: "config",
       surface: "peek-panel",
     });
   });

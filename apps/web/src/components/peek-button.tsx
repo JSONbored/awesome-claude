@@ -37,6 +37,8 @@ import {
   peekPanelActionAnalyticsEvent,
   peekPanelOpenAnalyticsData,
   peekPanelOpenAnalyticsEvent,
+  peekSnippetVariantSelectAnalyticsData,
+  peekSnippetVariantSelectAnalyticsEvent,
 } from "@/lib/peek-panel-cta-events";
 import { recordIntentEvent } from "@/lib/intent-event-client";
 
@@ -139,6 +141,16 @@ function PeekBody({ entry, peekId }: { entry: Entry; peekId: string }) {
     [entry],
   );
 
+  const onPeekVariantSelect = React.useCallback(
+    (variant: CopyVariant) => {
+      trackEvent(
+        peekSnippetVariantSelectAnalyticsEvent(),
+        peekSnippetVariantSelectAnalyticsData(entry.category, entry.slug, variant),
+      );
+    },
+    [entry.category, entry.slug],
+  );
+
   const onPeekAction = React.useCallback(
     (action: "dossier" | "source" | "docs") => {
       trackEvent(
@@ -218,6 +230,7 @@ function PeekBody({ entry, peekId }: { entry: Entry; peekId: string }) {
             entryTitle={entry.title}
             labelId={`peek-snippet-${peekId}`}
             onCopied={onPeekCopy}
+            onVariantSelect={onPeekVariantSelect}
           />
         </div>
         {variants.find((v) => v.id === variants.find((x) => x.value)?.id)?.value && (

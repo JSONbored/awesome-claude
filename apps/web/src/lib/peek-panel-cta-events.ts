@@ -7,6 +7,8 @@ export {
   peekCopyAnalyticsData,
   peekCopyAnalyticsEvent,
   peekCopyIntentType,
+  peekSnippetVariantSelectAnalyticsData,
+  peekSnippetVariantSelectAnalyticsEvent,
   peekPanelActionAnalyticsData,
   peekPanelActionAnalyticsEvent,
   peekPanelEntryKey,
