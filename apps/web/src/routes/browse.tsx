@@ -11,7 +11,12 @@ import { useMemo, useCallback } from "react";
 import { toast } from "sonner";
 import { ResourceCard } from "@/components/resource-card";
 import { FilterChip, FilterChipGroup } from "@/components/filter-chip";
-import { countSearchResults, normalizeSearchQuery, search } from "@/data/search";
+import {
+  countSearchResults,
+  normalizeSearchQuery,
+  search,
+  type TrustSignalFilter,
+} from "@/data/search";
 import {
   BROWSE_TRUST_SIGNAL_OPTIONS,
   browseTrustRelaxationTrials,
@@ -66,6 +71,17 @@ import {
   browseDecisionPresetAnalyticsData,
   browseDecisionPresetAnalyticsEvent,
 } from "@/lib/browse-decision-preset-cta-events";
+import {
+  browseFilterClearAllAnalyticsData,
+  browseFilterClearAllAnalyticsEvent,
+  browseFilterSelectAnalyticsData,
+  browseFilterSelectAnalyticsEvent,
+  browseSortSelectAnalyticsData,
+  browseSortSelectAnalyticsEvent,
+  browseViewSelectAnalyticsData,
+  browseViewSelectAnalyticsEvent,
+  type BrowseFilterAxis,
+} from "@/lib/browse-filter-cta-events";
 import { trackEvent } from "@/lib/analytics";
 import { useRecents, type SavedSearch } from "@/lib/recents";
 import { entryByRef } from "@/data/entries";
@@ -305,6 +321,117 @@ function Browse() {
     navigate({ search: (prev: typeof sp) => ({ ...prev, ...patch }) });
   };
 
+  const countForSlice = useCallback(
+    (slice: typeof sp) =>
+      countSearchResults({
+        q: slice.q,
+        categories: slice.category ? [slice.category as Category] : undefined,
+        trust: slice.trust ? [slice.trust as TrustLevel] : undefined,
+        source: slice.source ? [slice.source as SourceStatus] : undefined,
+        signal: isBrowseTrustSignalFilter(slice.signal) ? slice.signal : "",
+        platforms: slice.platform ? [slice.platform as Platform] : undefined,
+        sort: slice.sort,
+      }),
+    [],
+  );
+
+  const onCategoryFilter = useCallback(
+    (value: string) => {
+      if (value === sp.category) return;
+      const patch = { category: value };
+      trackEvent(
+        browseFilterSelectAnalyticsEvent(),
+        browseFilterSelectAnalyticsData(
+          "category",
+          value || "all",
+          value !== "",
+          countForSlice({ ...sp, ...patch }),
+        ),
+      );
+      set(patch);
+    },
+    [countForSlice, sp],
+  );
+
+  const onToggleAxisFilter = useCallback(
+    (axis: Exclude<BrowseFilterAxis, "category" | "signal">, value: string) => {
+      const current = sp[axis];
+      const next = current === value ? "" : value;
+      if (next === current) return;
+      const patch = { [axis]: next } as Partial<typeof sp>;
+      trackEvent(
+        browseFilterSelectAnalyticsEvent(),
+        browseFilterSelectAnalyticsData(
+          axis,
+          value,
+          next !== "",
+          countForSlice({ ...sp, ...patch }),
+        ),
+      );
+      set(patch);
+    },
+    [countForSlice, sp],
+  );
+
+  const onTrustSignalFilter = useCallback(
+    (optionId: TrustSignalFilter) => {
+      const next = toggleBrowseTrustSignal(sp.signal, optionId);
+      if (next === sp.signal) return;
+      const patch = { signal: next };
+      trackEvent(
+        browseFilterSelectAnalyticsEvent(),
+        browseFilterSelectAnalyticsData(
+          "signal",
+          optionId,
+          next !== "",
+          countForSlice({ ...sp, ...patch }),
+        ),
+      );
+      set(patch);
+    },
+    [countForSlice, sp],
+  );
+
+  const onTrustUtilityFilter = useCallback(
+    (value: string) => {
+      if (value === sp.signal) return;
+      const patch = { signal: value };
+      trackEvent(
+        browseFilterSelectAnalyticsEvent(),
+        browseFilterSelectAnalyticsData(
+          "signal",
+          value || "all",
+          value !== "",
+          countForSlice({ ...sp, ...patch }),
+        ),
+      );
+      set(patch);
+    },
+    [countForSlice, sp],
+  );
+
+  const onSortSelect = useCallback(
+    (sort: typeof sp.sort) => {
+      if (sort === sp.sort) return;
+      const patch = { sort };
+      trackEvent(
+        browseSortSelectAnalyticsEvent(),
+        browseSortSelectAnalyticsData(sort, countForSlice({ ...sp, ...patch })),
+      );
+      set(patch);
+    },
+    [countForSlice, sp],
+  );
+
+  const onViewSelect = useCallback(
+    (view: typeof sp.view) => {
+      if (view === sp.view) return;
+      trackEvent(browseViewSelectAnalyticsEvent(), browseViewSelectAnalyticsData(view));
+      set({ view });
+    },
+    [sp.view],
+  );
+
   // --- Compare URL <-> context round-trip ----------------------------------
   const compareParam = sp.compare;
   // Hydrate from URL on mount + whenever the param changes externally
@@ -427,6 +554,26 @@ function Browse() {
         compare: sp.compare,
       },
     });
+
+  const onClearAllFilters = useCallback(() => {
+    if (activeCount === 0) return;
+    trackEvent(
+      browseFilterClearAllAnalyticsEvent(),
+      browseFilterClearAllAnalyticsData(
+        activeCount,
+        countForSlice({
+          ...sp,
+          q: "",
+          category: "",
+          trust: "",
+          source: "",
+          signal: "",
+          platform: "",
+        }),
+      ),
+    );
+    clearAll();
+  }, [activeCount, countForSlice, sp]);
 
   const saveCurrent = () => {
     if (activeCount === 0) return;
@@ -593,11 +740,7 @@ function Browse() {
           <div className="sticky top-20 flex flex-col gap-6">
             <FilterSection title="Category">
               <FilterChipGroup label="Filter by category" multi={false}>
-                <FilterChip
-                  role="radio"
-                  active={!sp.category}
-                  onClick={() => set({ category: "" })}
-                >
+                <FilterChip role="radio" active={!sp.category} onClick={() => onCategoryFilter("")}>
                   All
                 </FilterChip>
                 {CATEGORIES.map((c) => (
@@ -605,7 +748,7 @@ function Browse() {
                     key={c.id}
                     role="radio"
                     active={sp.category === c.id}
-                    onClick={() => set({ category: c.id })}
+                    onClick={() => onCategoryFilter(c.id)}
                     count={axisCount("category", c.id)}
                   >
                     {c.label}
@@ -620,7 +763,7 @@ function Browse() {
                   <FilterChip
                     key={t}
                     active={sp.trust === t}
-                    onClick={() => set({ trust: sp.trust === t ? "" : t })}
+                    onClick={() => onToggleAxisFilter("trust", t)}
                     count={axisCount("trust", t)}
                   >
                     {t}
@@ -635,7 +778,7 @@ function Browse() {
                   <FilterChip
                     key={s}
                     active={sp.source === s}
-                    onClick={() => set({ source: sp.source === s ? "" : s })}
+                    onClick={() => onToggleAxisFilter("source", s)}
                     count={axisCount("source", s)}
                   >
                     {s}
@@ -650,7 +793,7 @@ function Browse() {
                   <FilterChip
                     key={p}
                     active={sp.platform === p}
-                    onClick={() => set({ platform: sp.platform === p ? "" : p })}
+                    onClick={() => onToggleAxisFilter("platform", p)}
                     count={axisCount("platform", p)}
                   >
                     {p}
@@ -666,7 +809,7 @@ function Browse() {
                 </span>
                 <button
                   type="button"
-                  onClick={clearAll}
+                  onClick={onClearAllFilters}
                   className="inline-flex items-center gap-1 text-xs text-ink-muted hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60"
                 >
                   <X className="h-3 w-3" /> Clear {activeCount}{" "}
@@ -774,7 +917,7 @@ function Browse() {
                   Utility
                   <select
                     value={sp.signal}
-                    onChange={(e) => set({ signal: e.target.value })}
+                    onChange={(e) => onTrustUtilityFilter(e.target.value)}
                     aria-label="Trust signal utility filter"
                     className="h-7 max-w-44 rounded-md border border-border bg-surface px-2 text-xs text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
                   >
@@ -790,7 +933,7 @@ function Browse() {
                   Sort
                   <select
                     value={sp.sort}
-                    onChange={(e) => set({ sort: e.target.value as typeof sp.sort })}
+                    onChange={(e) => onSortSelect(e.target.value as typeof sp.sort)}
                     className="h-7 rounded-md border border-border bg-surface px-2 text-xs text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
                   >
                     <option value="popular">Popular</option>
@@ -806,7 +949,7 @@ function Browse() {
                   {(["compact", "row", "grid"] as const).map((v) => (
                     <button
                       key={v}
-                      onClick={() => set({ view: v })}
+                      onClick={() => onViewSelect(v)}
                       aria-pressed={sp.view === v}
                       className={cn(
                         "px-2 py-1 text-xs capitalize transition-colors duration-200 ease-out motion-safe:active:scale-[0.97]",
@@ -841,7 +984,7 @@ function Browse() {
                   key={option.id}
                   role="radio"
                   active={sp.signal === option.id}
-                  onClick={() => set({ signal: toggleBrowseTrustSignal(sp.signal, option.id) })}
+                  onClick={() => onTrustSignalFilter(option.id)}
                   count={axisCount("signal", option.id)}
                 >
                   {option.label}
@@ -858,7 +1001,11 @@ function Browse() {
           </div>
 
           {activeFilters.length > 0 && (
-            <FilterSummaryBar filters={activeFilters} onClearAll={clearAll} className="mt-3" />
+            <FilterSummaryBar
+              filters={activeFilters}
+              onClearAll={onClearAllFilters}
+              className="mt-3"
+            />
           )}
 
           {browseFilterDecision.hint ? (
@@ -946,7 +1093,7 @@ function Browse() {
                   <FilterChip
                     role="radio"
                     active={sp.signal === option.id}
-                    onClick={() => set({ signal: toggleBrowseTrustSignal(sp.signal, option.id) })}
+                    onClick={() => onTrustSignalFilter(option.id)}
                     count={axisCount("signal", option.id)}
                   >
                     {option.label}
@@ -1094,7 +1241,7 @@ function Browse() {
               {activeCount > 0 && (
                 <button
                   type="button"
-                  onClick={clearAll}
+                  onClick={onClearAllFilters}
                   className="mt-2 inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-surface px-3 text-xs font-medium text-ink hover:bg-surface-2"
                 >
                   <X className="h-3.5 w-3.5" /> Clear all filters
