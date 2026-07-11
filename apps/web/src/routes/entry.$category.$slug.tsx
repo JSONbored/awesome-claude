@@ -104,6 +104,14 @@ import {
   entryDetailBadgeCopyAnalyticsData,
   entryDetailBadgeCopyAnalyticsEvent,
 } from "@/lib/entry-detail-badge-cta-events";
+import {
+  ENTRY_DETAIL_COMPARE_EGRESS_SURFACE_COMPARE,
+  ENTRY_DETAIL_COMPARE_EGRESS_SURFACE_FEATURED,
+  entryDetailCompareEgressAnalyticsData,
+  entryDetailCompareEgressAnalyticsEvent,
+  type EntryDetailCompareEgressLinkKind,
+  type EntryDetailCompareEgressSurface,
+} from "@/lib/entry-detail-compare-egress-cta-events";
 import { resourceCardCompareFullMessage } from "@/lib/resource-card-compare-ui";
 import { useCopyPref, useHarnessPref, type CopyVariant } from "@/lib/dossier-prefs";
 import { variantsForEntry } from "@/components/copy-segmented";
@@ -380,6 +388,28 @@ function Dossier() {
       ...entryDetailCompareFullAnalyticsData(entry.category, entry.slug, compare.items.length),
     });
   }, [compare.items.length, entry.category, entry.slug]);
+
+  const trackCompareEgress = useCallback(
+    (
+      surface: EntryDetailCompareEgressSurface,
+      linkKind: EntryDetailCompareEgressLinkKind,
+      refCount: number,
+      hasInteractive: boolean,
+    ) => {
+      trackEvent(
+        entryDetailCompareEgressAnalyticsEvent(),
+        entryDetailCompareEgressAnalyticsData(
+          entry.category,
+          entry.slug,
+          surface,
+          linkKind,
+          refCount,
+          hasInteractive,
+        ),
+      );
+    },
+    [entry.category, entry.slug],
+  );
 
   const compareIds = useMemo(() => serializeCompareItems(compare.items), [compare.items]);
   const onPlaybookAction = useCallback(
@@ -837,6 +867,14 @@ function Dossier() {
                   to="/compare"
                   search={dossierCompareUi.interactiveSearch}
                   className="mt-4 inline-flex items-center gap-1.5 text-sm text-ink-muted hover:text-ink"
+                  onClick={() =>
+                    trackCompareEgress(
+                      ENTRY_DETAIL_COMPARE_EGRESS_SURFACE_COMPARE,
+                      "dossier-interactive",
+                      alternatives.length + 1,
+                      true,
+                    )
+                  }
                 >
                   <ArrowLeft className="h-4 w-4" />
                   {dossierCompareUi.interactiveLinkLabel}
@@ -908,6 +946,14 @@ function Dossier() {
                         to="/best/$slug"
                         params={{ slug: l.slug }}
                         className="story-link text-ink"
+                        onClick={() =>
+                          trackCompareEgress(
+                            ENTRY_DETAIL_COMPARE_EGRESS_SURFACE_FEATURED,
+                            "best-list",
+                            l.picks.length,
+                            Boolean(bestListLink?.search),
+                          )
+                        }
                       >
                         Best list: {l.title}
                       </Link>
@@ -916,6 +962,14 @@ function Dossier() {
                           to="/compare"
                           search={bestListLink.search}
                           className="text-xs text-ink-muted hover:text-ink"
+                          onClick={() =>
+                            trackCompareEgress(
+                              ENTRY_DETAIL_COMPARE_EGRESS_SURFACE_FEATURED,
+                              "best-list-interactive",
+                              l.picks.length,
+                              true,
+                            )
+                          }
                         >
                           {bestListLink.label}
                         </Link>
@@ -936,6 +990,14 @@ function Dossier() {
                         to="/compare/$slug"
                         params={{ slug: c.slug }}
                         className="story-link text-ink"
+                        onClick={() =>
+                          trackCompareEgress(
+                            ENTRY_DETAIL_COMPARE_EGRESS_SURFACE_FEATURED,
+                            "comparison-page",
+                            c.refs.length,
+                            Boolean(featuredLink?.search),
+                          )
+                        }
                       >
                         Comparison: {c.title}
                       </Link>
@@ -944,6 +1006,14 @@ function Dossier() {
                           to="/compare"
                           search={featuredLink.search}
                           className="text-xs text-ink-muted hover:text-ink"
+                          onClick={() =>
+                            trackCompareEgress(
+                              ENTRY_DETAIL_COMPARE_EGRESS_SURFACE_FEATURED,
+                              "comparison-interactive",
+                              c.refs.length,
+                              true,
+                            )
+                          }
                         >
                           {featuredLink.label}
                         </Link>
