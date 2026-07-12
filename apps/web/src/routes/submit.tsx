@@ -26,6 +26,12 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { cn } from "@/lib/utils";
 import { absoluteUrl } from "@/lib/seo";
 import { trackEvent } from "@/lib/analytics";
+import {
+  submitStartAnalyticsData,
+  submitStartAnalyticsEvent,
+  submitSuccessAnalyticsData,
+  submitSuccessAnalyticsEvent,
+} from "@/lib/submit-cta-events";
 
 export const Route = createFileRoute("/submit")({
   head: () => ({
@@ -153,10 +159,13 @@ function SubmitPage() {
     if (!category || submitBusy) return;
     setSubmitBusy(true);
     setSubmitError("");
-    trackEvent("submit-start", { category });
+    trackEvent(
+      submitStartAnalyticsEvent(),
+      submitStartAnalyticsData(category, Boolean(siteConfig.submissionGateUrl)),
+    );
     try {
       if (!siteConfig.submissionGateUrl) {
-        trackEvent("submit-success", { category, path: "manual" });
+        trackEvent(submitSuccessAnalyticsEvent(), submitSuccessAnalyticsData(category, "manual"));
         setDone({
           manualPr: {
             targetPath: prTarget,
@@ -187,7 +196,7 @@ function SubmitPage() {
       if (!response.ok || !payload?.ok) {
         throw new Error(payload?.error || "The private submission gate rejected the draft.");
       }
-      trackEvent("submit-success", { category, path: "gate" });
+      trackEvent(submitSuccessAnalyticsEvent(), submitSuccessAnalyticsData(category, "gate"));
       const authUrl = payload.authUrl ? safeGitHubAuthUrl(payload.authUrl) : "";
       if (payload.authUrl && !authUrl) {
         throw new Error("The submission gate returned an invalid GitHub auth URL.");
