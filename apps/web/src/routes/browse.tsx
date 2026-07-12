@@ -42,6 +42,8 @@ import {
 import { BrowseDecisionConfidencePanel } from "@/components/browse-decision-confidence-panel";
 import { browseFreshnessDistributionState } from "@/lib/browse-freshness-distribution";
 import { BrowseFreshnessDistributionPanel } from "@/components/browse-freshness-distribution-panel";
+import { browseThemeDistributionState } from "@/lib/browse-theme-distribution";
+import { BrowseThemeDistributionPanel } from "@/components/browse-theme-distribution-panel";
 import {
   CATEGORIES,
   type Category,
@@ -528,6 +530,7 @@ function Browse() {
     [confidencePreset, results.length],
   );
   const nowIso = useMemo(() => new Date().toISOString(), []);
+  const browseThemes = useMemo(() => browseThemeDistributionState(results, 24), [results]);
   const browseFreshness = useMemo(
     () => browseFreshnessDistributionState(results, nowIso, 12),
     [results, nowIso],
@@ -1081,6 +1084,7 @@ function Browse() {
             className="mt-3"
           />
           <BrowseFreshnessDistributionPanel state={browseFreshness} className="mt-3" />
+          <BrowseThemeDistributionPanel state={browseThemes} className="mt-3" />
 
           {sp.category &&
             (() => {
