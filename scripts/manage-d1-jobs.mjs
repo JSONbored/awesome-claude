@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 import fs from "node:fs";
 
+import { getBaseUrl, getToken, parseArgs } from "./lib/d1-jobs-cli.mjs";
+
 function usage() {
   console.log(`Usage:
   pnpm jobs:admin health --base-url https://dev.example.com
@@ -9,44 +11,6 @@ function usage() {
   pnpm jobs:admin transition --base-url https://dev.example.com --slug job-slug --action activate
 
 Requires ADMIN_API_TOKEN, LEADS_ADMIN_TOKEN, or ADMIN_LEADS_TOKEN.`);
-}
-
-function parseArgs(argv) {
-  const [command = ""] = argv;
-  const args = { command };
-  for (let index = 1; index < argv.length; index += 1) {
-    const arg = argv[index];
-    if (!arg.startsWith("--")) continue;
-    const key = arg.slice(2);
-    const next = argv[index + 1];
-    args[key] = next && !next.startsWith("--") ? next : "1";
-    if (args[key] === next) index += 1;
-  }
-  return args;
-}
-
-function getToken() {
-  return String(
-    process.env.ADMIN_API_TOKEN ||
-      process.env.LEADS_ADMIN_TOKEN ||
-      process.env.ADMIN_LEADS_TOKEN ||
-      "",
-  ).trim();
-}
-
-function getBaseUrl(args) {
-  const baseUrl = String(
-    args["base-url"] ||
-      process.env.HEYCLAUDE_ADMIN_BASE_URL ||
-      process.env.HEYCLAUDE_BASE_URL ||
-      process.env.HEYCLOUD_ADMIN_BASE_URL ||
-      process.env.HEYCLOUD_BASE_URL ||
-      "",
-  ).trim();
-  if (!baseUrl) {
-    throw new Error("Missing --base-url or HEYCLOUD_ADMIN_BASE_URL.");
-  }
-  return baseUrl.replace(/\/$/, "");
 }
 
 async function requestJson(pathname, options = {}) {
