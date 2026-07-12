@@ -23,6 +23,14 @@ import { useShortcuts } from "./shortcuts-dialog";
 import { cn } from "@/lib/utils";
 import { filterCommandActions } from "@/lib/command-bar-actions-lib";
 import { trackEvent } from "@/lib/analytics";
+import {
+  commandBarActionSelectAnalyticsData,
+  commandBarActionSelectAnalyticsEvent,
+  commandBarResultSelectAnalyticsData,
+  commandBarResultSelectAnalyticsEvent,
+  commandBarScopeSelectAnalyticsData,
+  commandBarScopeSelectAnalyticsEvent,
+} from "@/lib/command-bar-cta-events";
 
 const EXAMPLES = [
   "postgres MCP",
@@ -194,6 +202,25 @@ export function CommandBar({
     navigate({ to: "/browse", search: { q } });
   };
 
+  const queryLength = q.trim().length;
+
+  const trackResultSelect = React.useCallback(
+    (category: string, slug: string, resultIndex: number) => {
+      trackEvent(
+        commandBarResultSelectAnalyticsEvent(),
+        commandBarResultSelectAnalyticsData(
+          category,
+          slug,
+          resultIndex,
+          results.length,
+          quickCat,
+          queryLength,
+        ),
+      );
+    },
+    [queryLength, quickCat, results.length],
+  );
+
   const handleBlur = (e: React.FocusEvent<HTMLDivElement>) => {
     const next = e.relatedTarget as Node | null;
     if (next && wrapperRef.current?.contains(next)) return;
@@ -204,11 +231,16 @@ export function CommandBar({
     const opt = options[i];
     if (!opt) return submit();
     if (opt.kind === "result") {
+      trackResultSelect(opt.r.category, opt.r.slug, i);
       navigate({
         to: "/entry/$category/$slug",
         params: { category: opt.r.category, slug: opt.r.slug },
       });
     } else {
+      trackEvent(
+        commandBarActionSelectAnalyticsEvent(),
+        commandBarActionSelectAnalyticsData(opt.a.id, queryLength, results.length),
+      );
       opt.a.run();
     }
     setOpen(false);
@@ -315,6 +347,12 @@ export function CommandBar({
                 type="button"
                 onMouseDown={(e) => {
                   e.preventDefault();
+                  if (quickCat !== c.id) {
+                    trackEvent(
+                      commandBarScopeSelectAnalyticsEvent(),
+                      commandBarScopeSelectAnalyticsData(c.id, queryLength),
+                    );
+                  }
                   setQuickCat(c.id);
                 }}
                 className={cn(
@@ -359,6 +397,7 @@ export function CommandBar({
                     to="/entry/$category/$slug"
                     params={{ category: r.category, slug: r.slug }}
                     onMouseEnter={() => setActive(i)}
+                    onClick={() => trackResultSelect(r.category, r.slug, i)}
                     className={cn(
                       "flex flex-col gap-1 px-4 py-2 text-sm focus-visible:outline-none",
                       active === i && "bg-surface-2",
