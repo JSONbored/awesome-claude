@@ -2,6 +2,7 @@ import { execFileSync } from "node:child_process";
 import path from "node:path";
 
 import { enumerateContentVoteKeys } from "./lib/enumerate-content-vote-keys.mjs";
+import { expectedKeyExclusionPredicate } from "./lib/d1-prune-predicate.mjs";
 
 const repoRoot = process.cwd();
 const d1Binding = process.env.SITE_D1_BINDING || "SITE_DB";
@@ -75,30 +76,6 @@ function runWranglerQuery(args) {
     return statement?.results ?? [];
   }
   return Array.isArray(payload?.results) ? payload.results : [];
-}
-
-function sqlString(value) {
-  return `'${value.replaceAll("'", "''")}'`;
-}
-
-function expectedKeyExclusionPredicate(keys) {
-  const chunkSize = 200;
-  const sortedKeys = [...keys].sort();
-  if (sortedKeys.length === 0) {
-    throw new Error(
-      "Refusing to build prune predicate for empty content key set",
-    );
-  }
-
-  const clauses = [];
-  for (let index = 0; index < sortedKeys.length; index += chunkSize) {
-    const inList = sortedKeys
-      .slice(index, index + chunkSize)
-      .map(sqlString)
-      .join(", ");
-    clauses.push(`entry_key NOT IN (${inList})`);
-  }
-  return clauses.join(" AND ");
 }
 
 function pruneTableOrphans(runMode, tableName, whereClause) {
