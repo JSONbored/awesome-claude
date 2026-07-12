@@ -1,4 +1,10 @@
+import { Link } from "@tanstack/react-router";
 import type { BrowseThemeDistributionState } from "@/lib/browse-theme-distribution";
+import {
+  browseThemeDistributionSelectAnalyticsData,
+  browseThemeDistributionSelectAnalyticsEvent,
+} from "@/lib/browse-distribution-cta-events";
+import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 const CONCENTRATION_LABEL: Record<BrowseThemeDistributionState["concentration"], string> = {
@@ -29,11 +35,28 @@ export function BrowseThemeDistributionPanel({
       </div>
 
       <ul className="mt-3 space-y-1.5">
-        {state.topThemes.map((theme) => (
+        {state.topThemes.map((theme, index) => (
           <li key={theme.slug} className="flex items-center gap-2">
-            <span className="w-28 shrink-0 truncate text-xs text-ink" title={theme.tag}>
+            <Link
+              to="/tags/$tag"
+              params={{ tag: theme.slug }}
+              onClick={() =>
+                trackEvent(
+                  browseThemeDistributionSelectAnalyticsEvent(),
+                  browseThemeDistributionSelectAnalyticsData(
+                    theme.slug,
+                    theme.percent,
+                    index + 1,
+                    state.concentration,
+                    state.scannedCount,
+                  ),
+                )
+              }
+              className="w-28 shrink-0 truncate text-xs text-ink underline-offset-2 hover:text-accent hover:underline"
+              title={`Browse ${theme.tag} tag hub`}
+            >
               {theme.tag}
-            </span>
+            </Link>
             <span className="relative h-2 flex-1 overflow-hidden rounded-full bg-background">
               <span
                 className="absolute inset-y-0 left-0 rounded-full bg-accent/60"

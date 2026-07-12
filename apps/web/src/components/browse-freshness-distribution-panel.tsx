@@ -1,5 +1,12 @@
+import { Link } from "@tanstack/react-router";
 import { toneClass } from "@/lib/browse-rollout-tone-lib";
 import type { BrowseFreshnessDistributionState } from "@/lib/browse-freshness-distribution";
+import {
+  browseFreshnessStaleEntryAnalyticsData,
+  browseFreshnessStaleEntryAnalyticsEvent,
+  parseBrowseFreshnessEntryRef,
+} from "@/lib/browse-distribution-cta-events";
+import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 export function BrowseFreshnessDistributionPanel({
@@ -51,20 +58,46 @@ export function BrowseFreshnessDistributionPanel({
         <div className="mt-3 rounded-md border border-border bg-background p-2.5">
           <p className="text-[11px] font-medium text-ink">Oldest entries in this view</p>
           <ul className="mt-1.5 space-y-1.5">
-            {state.staleEntries.map((entry) => (
-              <li
-                key={entry.entryRef}
-                className="flex items-start justify-between gap-2 text-[11px]"
-              >
+            {state.staleEntries.map((entry) => {
+              const parsed = parseBrowseFreshnessEntryRef(entry.entryRef);
+              const title = (
                 <div className="min-w-0">
                   <p className="truncate text-ink">{entry.title}</p>
                   <p className="truncate text-ink-subtle">
                     {entry.verified ? "Verified previously" : "Not yet verified"}
                   </p>
                 </div>
-                <span className="shrink-0 font-mono text-ink-muted">{entry.ageDays}d</span>
-              </li>
-            ))}
+              );
+              return (
+                <li
+                  key={entry.entryRef}
+                  className="flex items-start justify-between gap-2 text-[11px]"
+                >
+                  {parsed ? (
+                    <Link
+                      to="/entry/$category/$slug"
+                      params={{ category: parsed.category, slug: parsed.slug }}
+                      onClick={() =>
+                        trackEvent(
+                          browseFreshnessStaleEntryAnalyticsEvent(),
+                          browseFreshnessStaleEntryAnalyticsData(
+                            entry.entryRef,
+                            entry.ageDays,
+                            entry.verified,
+                          ),
+                        )
+                      }
+                      className="min-w-0 flex-1 underline-offset-2 hover:text-accent hover:underline"
+                    >
+                      {title}
+                    </Link>
+                  ) : (
+                    title
+                  )}
+                  <span className="shrink-0 font-mono text-ink-muted">{entry.ageDays}d</span>
+                </li>
+              );
+            })}
           </ul>
         </div>
       ) : null}
