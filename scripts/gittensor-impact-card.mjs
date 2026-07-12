@@ -18,6 +18,7 @@ import {
   escapeXml,
   WEEKS,
 } from "./lib/impact-card-core.mjs";
+import { meter, sparkline } from "./lib/impact-card-svg.mjs";
 
 const THEME = {
   cardBg: "#121212",
@@ -39,36 +40,6 @@ async function fetchJson(url) {
   });
   if (!res.ok) throw new Error(`fetch failed: ${url} (${res.status})`);
   return res.json();
-}
-
-function sparkline(x, y, w, h, values, mutedColor, accentColor, cardBg) {
-  const max = Math.max(...values, 1);
-  const min = Math.min(...values, 0);
-  const range = max - min || 1;
-  const n = values.length;
-  const stepX = w / (n - 1);
-  const pts = values.map((v, i) => [
-    x + i * stepX,
-    y + h - ((v - min) / range) * h,
-  ]);
-  const svgPath = pts
-    .map(
-      ([px, py], i) =>
-        `${i === 0 ? "M" : "L"}${px.toFixed(1)},${py.toFixed(1)}`,
-    )
-    .join(" ");
-  const [lastX, lastY] = pts[pts.length - 1];
-  return `
-<path d="${svgPath}" fill="none" stroke="${mutedColor}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
-<circle cx="${lastX.toFixed(1)}" cy="${lastY.toFixed(1)}" r="6" fill="${cardBg}"/>
-<circle cx="${lastX.toFixed(1)}" cy="${lastY.toFixed(1)}" r="4" fill="${accentColor}"/>`;
-}
-
-function meter(x, y, w, h, value, max, accentColor, trackColor) {
-  const fillW = Math.max(h, Math.min(value / max, 1) * w);
-  return `
-<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${h / 2}" fill="${trackColor}"/>
-<rect x="${x}" y="${y}" width="${fillW.toFixed(1)}" height="${h}" rx="${h / 2}" fill="${accentColor}"/>`;
 }
 
 function render({ repo, impact, buckets, gtLogoB64, repoIconB64 }) {
