@@ -15,6 +15,13 @@ import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
 import { ogImageMetaTags } from "@/lib/og-meta-lib";
 import { getTagGroup, relatedTags } from "@/lib/tags";
+import { trackEvent } from "@/lib/analytics";
+import {
+  tagsDetailNotFoundEgressAnalyticsData,
+  tagsDetailNotFoundEgressAnalyticsEvent,
+  tagsDetailRelatedSelectAnalyticsData,
+  tagsDetailRelatedSelectAnalyticsEvent,
+} from "@/lib/tags-detail-cta-events";
 
 // The categories a tag's entries actually span — used to vary intro copy per tag so no
 // two indexable tag pages emit the same boilerplate sentence.
@@ -64,6 +71,12 @@ export const Route = createFileRoute("/tags/$tag")({
       <Link
         to="/tags"
         className="mt-6 inline-flex h-9 items-center gap-1.5 rounded-md bg-ink px-4 font-medium text-background hover:opacity-90"
+        onClick={() =>
+          trackEvent(
+            tagsDetailNotFoundEgressAnalyticsEvent(),
+            tagsDetailNotFoundEgressAnalyticsData(),
+          )
+        }
       >
         Browse all tags <ArrowRight className="h-4 w-4" />
       </Link>
@@ -121,6 +134,12 @@ function TagHub() {
               key={g.slug}
               to="/tags/$tag"
               params={{ tag: g.slug }}
+              onClick={() =>
+                trackEvent(
+                  tagsDetailRelatedSelectAnalyticsEvent(),
+                  tagsDetailRelatedSelectAnalyticsData(tag, g.slug, g.entries.length),
+                )
+              }
               className="rounded-md border border-border bg-surface px-2 py-0.5 text-xs text-ink-muted transition-colors hover:border-ink/20 hover:text-ink"
             >
               {g.name}
