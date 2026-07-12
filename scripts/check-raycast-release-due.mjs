@@ -9,13 +9,14 @@ import {
   buildRaycastReleaseReport,
   isTrustedReleaseWatchIssue,
   latestSemverTag,
+  parseReleaseWatchArgs,
   RAYCAST_RELEASE_DUE_MARKER,
 } from "./lib/release-watch-core.mjs";
 
 const PACKAGE_JSON_PATH = "integrations/raycast/package.json";
 
 async function main() {
-  const args = parseArgs(process.argv.slice(2));
+  const args = parseReleaseWatchArgs(process.argv.slice(2));
   const packageJson = JSON.parse(readFileSync(PACKAGE_JSON_PATH, "utf8"));
   const latestTag = latestSemverTag(readTags("raycast-v*"), "raycast-v");
   const commits = readCommits(latestTag ? `${latestTag.tag}..HEAD` : "HEAD");
@@ -42,23 +43,6 @@ async function main() {
         : "No Raycast upstream update due.\n",
     );
   }
-}
-
-function parseArgs(argv) {
-  const args = { json: false, output: null, upsertIssue: false };
-  for (let index = 0; index < argv.length; index += 1) {
-    const arg = argv[index];
-    if (arg === "--json") {
-      args.json = true;
-    } else if (arg === "--output") {
-      args.output = argv[++index];
-    } else if (arg === "--upsert-issue") {
-      args.upsertIssue = true;
-    } else {
-      throw new Error(`Unknown option: ${arg}`);
-    }
-  }
-  return args;
 }
 
 function readTags(pattern) {

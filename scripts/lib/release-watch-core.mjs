@@ -6,6 +6,27 @@ export const RAYCAST_RELEASE_DUE_MARKER =
   "<!-- heyclaude:raycast-release-due -->";
 const RELEASE_WATCH_CONFIG_PATH = ".github/release-watch.json";
 
+/**
+ * Parse the shared release-watch CLI flags (--json, --output <path>,
+ * --upsert-issue) into an options object. Throws on any unknown option.
+ */
+export function parseReleaseWatchArgs(argv) {
+  const args = { json: false, output: null, upsertIssue: false };
+  for (let index = 0; index < argv.length; index += 1) {
+    const arg = argv[index];
+    if (arg === "--json") {
+      args.json = true;
+    } else if (arg === "--output") {
+      args.output = argv[++index];
+    } else if (arg === "--upsert-issue") {
+      args.upsertIssue = true;
+    } else {
+      throw new Error(`Unknown option: ${arg}`);
+    }
+  }
+  return args;
+}
+
 export function readReleaseWatchConfig({ repoRoot = process.cwd() } = {}) {
   const configPath = resolve(repoRoot, RELEASE_WATCH_CONFIG_PATH);
   let parsed;
