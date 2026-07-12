@@ -3,6 +3,11 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
+import {
+  hasDependencyManifest,
+  parseUnzipSummary,
+} from "./lib/download-package-scan.mjs";
+
 const repoRoot = process.cwd();
 const contentRoot = path.join(repoRoot, "content");
 const failures = [];
@@ -39,18 +44,6 @@ const executableExtensions = new Set([
   ".so",
 ]);
 const scriptExtensions = new Set([".bat", ".cmd", ".ps1", ".sh"]);
-const dependencyFiles = new Set([
-  "package-lock.json",
-  "pnpm-lock.yaml",
-  "yarn.lock",
-  "npm-shrinkwrap.json",
-  "go.sum",
-  "Cargo.lock",
-  "Gemfile.lock",
-  "requirements.txt",
-  "poetry.lock",
-  "Pipfile.lock",
-]);
 
 function rel(filePath) {
   return path.relative(repoRoot, filePath);
@@ -70,20 +63,9 @@ function unzipList(archivePath) {
 }
 
 function unzipSummary(archivePath) {
-  const output = execFileSync("unzip", ["-Z", "-l", archivePath], {
-    encoding: "utf8",
-  });
-  const summary = output.trim().split("\n").at(-1) || "";
-  const match = summary.match(
-    /(\d+)\s+files?,\s+(\d+)\s+bytes uncompressed,\s+(\d+)\s+bytes compressed/i,
+  return parseUnzipSummary(
+    execFileSync("unzip", ["-Z", "-l", archivePath], { encoding: "utf8" }),
   );
-  return match
-    ? {
-        fileCount: Number(match[1]),
-        uncompressedBytes: Number(match[2]),
-        compressedBytes: Number(match[3]),
-      }
-    : { fileCount: 0, uncompressedBytes: 0, compressedBytes: 0 };
 }
 
 function unzipLongList(archivePath) {
@@ -116,10 +98,6 @@ function archivePathsInDirectory(dir) {
     }
   }
   return paths;
-}
-
-function hasDependencyManifest(names) {
-  return names.some((name) => dependencyFiles.has(path.basename(name)));
 }
 
 function runScanner(command, args, label, archivePath) {
