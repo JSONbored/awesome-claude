@@ -17,6 +17,7 @@ import {
 } from "@heyclaude/registry/content-builder";
 
 import { pickAtlasEntry } from "./lib/atlas-entry.mjs";
+import { artifactOutputPath } from "./lib/artifact-output-path.mjs";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "..");
@@ -169,20 +170,6 @@ function writeFileIfChanged(filePath, content) {
   fs.writeFileSync(tempFile, content);
   fs.renameSync(tempFile, filePath);
   return true;
-}
-
-function artifactOutputPath(artifactPath) {
-  const dataRoot = path.resolve(publicDataDir);
-  const outputPath = path.resolve(dataRoot, artifactPath);
-  const dataRootPrefix = `${dataRoot}${path.sep}`;
-
-  if (outputPath !== dataRoot && !outputPath.startsWith(dataRootPrefix)) {
-    throw new Error(
-      `Refusing to write artifact outside public data dir: ${artifactPath}`,
-    );
-  }
-
-  return outputPath;
 }
 
 function writeJsonFile(filePath, value) {
@@ -440,7 +427,7 @@ async function main() {
       "The Claude directory for agents, MCP servers, skills, commands, hooks, rules, guides, collections, and statuslines.",
   });
   const artifactResults = artifactFiles.map((file) => {
-    const outputPath = artifactOutputPath(file.path);
+    const outputPath = artifactOutputPath(file.path, publicDataDir);
     const wrote =
       file.type === "json"
         ? writeJsonFile(outputPath, file.value)
