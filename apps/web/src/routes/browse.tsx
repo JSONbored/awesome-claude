@@ -44,6 +44,8 @@ import { browseFreshnessDistributionState } from "@/lib/browse-freshness-distrib
 import { BrowseFreshnessDistributionPanel } from "@/components/browse-freshness-distribution-panel";
 import { browseThemeDistributionState } from "@/lib/browse-theme-distribution";
 import { BrowseThemeDistributionPanel } from "@/components/browse-theme-distribution-panel";
+import { browseAuthorConcentrationState } from "@/lib/browse-author-concentration";
+import { BrowseAuthorConcentrationPanel } from "@/components/browse-author-concentration-panel";
 import {
   CATEGORIES,
   type Category,
@@ -531,6 +533,7 @@ function Browse() {
   );
   const nowIso = useMemo(() => new Date().toISOString(), []);
   const browseThemes = useMemo(() => browseThemeDistributionState(results, 24), [results]);
+  const browseAuthors = useMemo(() => browseAuthorConcentrationState(results, 24), [results]);
   const browseFreshness = useMemo(
     () => browseFreshnessDistributionState(results, nowIso, 12),
     [results, nowIso],
@@ -1085,6 +1088,7 @@ function Browse() {
           />
           <BrowseFreshnessDistributionPanel state={browseFreshness} className="mt-3" />
           <BrowseThemeDistributionPanel state={browseThemes} className="mt-3" />
+          <BrowseAuthorConcentrationPanel state={browseAuthors} className="mt-3" />
 
           {sp.category &&
             (() => {
