@@ -39,7 +39,8 @@ describe("emitAiReferralEvent", () => {
     expect(emitAiReferralEvent("claude", "/agents")).toBe(true);
     expect(track).toHaveBeenCalledWith("ai-referral", {
       source: "claude",
-      landing: "/agents",
+      surface: "ai-referral",
+      landingSegment: "agents",
     });
     expect(sessionStorage.setItem).toHaveBeenCalledWith(
       "ai-referral-tracked",
