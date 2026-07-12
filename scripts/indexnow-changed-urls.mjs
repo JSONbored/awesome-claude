@@ -5,6 +5,7 @@ import {
   normalizeSiteUrl,
 } from "./lib/indexnow.mjs";
 import { entryHubUrls } from "./lib/indexnow-hubs.mjs";
+import { parseRefs } from "./lib/indexnow-refs.mjs";
 
 // Expand changed entry refs ("category/slug", passed as CLI args) into the set
 // of URLs to notify IndexNow about: each entry plus the generated hubs whose
@@ -13,21 +14,6 @@ import { entryHubUrls } from "./lib/indexnow-hubs.mjs";
 // build or extra dependency is needed; tag hubs are simply skipped when that
 // JSON has not propagated yet (the daily cron re-catches them). The workflow
 // validates every emitted URL (HTTP 200) before submitting.
-
-function parseRefs(argv) {
-  const refs = [];
-  for (const raw of argv) {
-    const ref = String(raw).trim();
-    if (!ref) continue;
-    const slash = ref.indexOf("/");
-    if (slash < 0) continue;
-    const category = ref.slice(0, slash);
-    const slug = ref.slice(slash + 1);
-    if (!category || !slug || slug.includes("/")) continue;
-    refs.push({ category, slug });
-  }
-  return refs;
-}
 
 async function fetchTags(base, ref) {
   try {
