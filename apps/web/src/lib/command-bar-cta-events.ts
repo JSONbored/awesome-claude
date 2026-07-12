@@ -9,4 +9,6 @@ export {
   commandBarResultSelectAnalyticsEvent,
   commandBarScopeSelectAnalyticsData,
   commandBarScopeSelectAnalyticsEvent,
+  commandBarSearchSubmitAnalyticsData,
+  commandBarSearchSubmitAnalyticsEvent,
 } from "@/lib/command-bar-cta-events-lib";

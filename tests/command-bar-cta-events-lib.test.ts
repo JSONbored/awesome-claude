@@ -7,6 +7,8 @@ import {
   commandBarResultSelectAnalyticsEvent,
   commandBarScopeSelectAnalyticsData,
   commandBarScopeSelectAnalyticsEvent,
+  commandBarSearchSubmitAnalyticsData,
+  commandBarSearchSubmitAnalyticsEvent,
 } from "@/lib/command-bar-cta-events-lib";
 
 describe("command bar cta events lib", () => {
@@ -45,6 +47,15 @@ describe("command bar cta events lib", () => {
       actionId: "go-browse",
       queryLength: 0,
       resultCount: 0,
+    });
+    expect(commandBarSearchSubmitAnalyticsEvent()).toBe(
+      "command_bar_search_submit",
+    );
+    expect(commandBarSearchSubmitAnalyticsData(11, 4, "mcp")).toEqual({
+      surface: COMMAND_BAR_SURFACE,
+      queryLength: 11,
+      resultCount: 4,
+      scopeCategory: "mcp",
     });
   });
 });

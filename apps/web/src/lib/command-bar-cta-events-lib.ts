@@ -57,3 +57,20 @@ export function commandBarActionSelectAnalyticsData(
     resultCount,
   };
 }
+
+export function commandBarSearchSubmitAnalyticsEvent(): string {
+  return "command_bar_search_submit";
+}
+
+export function commandBarSearchSubmitAnalyticsData(
+  queryLength: number,
+  resultCount: number,
+  scopeCategory: string,
+) {
+  return {
+    surface: COMMAND_BAR_SURFACE,
+    queryLength,
+    resultCount,
+    scopeCategory: scopeCategory || "all",
+  };
+}

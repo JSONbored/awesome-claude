@@ -30,6 +30,8 @@ import {
   commandBarResultSelectAnalyticsEvent,
   commandBarScopeSelectAnalyticsData,
   commandBarScopeSelectAnalyticsEvent,
+  commandBarSearchSubmitAnalyticsData,
+  commandBarSearchSubmitAnalyticsEvent,
 } from "@/lib/command-bar-cta-events";
 
 const EXAMPLES = [
@@ -198,7 +200,10 @@ export function CommandBar({
   const submit = () => {
     const query = q.trim();
     if (!query) return;
-    trackEvent("search", { q: query.slice(0, 64) });
+    trackEvent(
+      commandBarSearchSubmitAnalyticsEvent(),
+      commandBarSearchSubmitAnalyticsData(query.length, results.length, quickCat),
+    );
     navigate({ to: "/browse", search: { q } });
   };
 
