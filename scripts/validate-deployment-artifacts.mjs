@@ -1,3 +1,10 @@
+import {
+  canonicalOrigin,
+  isCanonicalSubmitUrl,
+  normalizeBaseUrl,
+  readEntries,
+} from "./lib/deployment-artifact-checks.mjs";
+
 const requiredPaths = [
   "/data/directory-index.json",
   "/data/search-index.json",
@@ -13,7 +20,6 @@ const requiredRenderedPaths = [
   "/api/jobs",
   "/openapi.yaml",
 ];
-const canonicalOrigin = "https://heyclau.de";
 
 function parseArgs(argv) {
   const args = new Map();
@@ -30,21 +36,6 @@ function parseArgs(argv) {
 function fail(message) {
   console.error(message);
   process.exitCode = 1;
-}
-
-function normalizeBaseUrl(value) {
-  const trimmed = String(value || "").trim();
-  if (!trimmed) return "";
-  return trimmed.replace(/\/+$/, "");
-}
-
-function isCanonicalSubmitUrl(value) {
-  try {
-    const url = new URL(String(value || ""));
-    return url.origin === canonicalOrigin && url.pathname === "/submit";
-  } catch {
-    return false;
-  }
 }
 
 async function fetchJson(baseUrl, pathname) {
@@ -78,11 +69,6 @@ async function fetchMcpJson(baseUrl, body) {
     throw new Error(`/api/mcp returned ${response.status}`);
   }
   return response.json();
-}
-
-function readEntries(payload) {
-  if (payload && Array.isArray(payload.entries)) return payload.entries;
-  return null;
 }
 
 const args = parseArgs(process.argv.slice(2));
