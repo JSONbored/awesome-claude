@@ -9,6 +9,15 @@ import { absoluteUrl } from "@/lib/seo";
 import { getIndexableTagGroups } from "@/lib/tags";
 import { toTagView, type TagView } from "@/lib/tag-view-lib";
 import { trackEvent } from "@/lib/analytics";
+import {
+  tagsIndexBrowseEgressAnalyticsData,
+  tagsIndexBrowseEgressAnalyticsEvent,
+  tagsIndexFilterAnalyticsData,
+  tagsIndexFilterAnalyticsEvent,
+  tagsIndexTagSelectAnalyticsData,
+  tagsIndexTagSelectAnalyticsEvent,
+  type TagsIndexTagVariant,
+} from "@/lib/tags-index-cta-events";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/tags/")({
@@ -47,11 +56,12 @@ export const Route = createFileRoute("/tags/")({
 
 // Derive a lightweight, sorted view-model (by entry count desc) with the category
 // each tag mostly spans — enough context to make the index scannable.
-function FeaturedTagCard({ tag }: { tag: TagView }) {
+function FeaturedTagCard({ tag, onSelect }: { tag: TagView; onSelect: () => void }) {
   return (
     <Link
       to="/tags/$tag"
       params={{ tag: tag.slug }}
+      onClick={onSelect}
       className="group flex flex-col rounded-xl border border-border bg-surface p-4 transition-colors duration-200 ease-out hover:border-border-strong hover:bg-surface-2"
     >
       <div className="flex items-baseline justify-between gap-2">
@@ -70,11 +80,20 @@ function FeaturedTagCard({ tag }: { tag: TagView }) {
   );
 }
 
-function TagPill({ tag, strong }: { tag: TagView; strong?: boolean }) {
+function TagPill({
+  tag,
+  strong,
+  onSelect,
+}: {
+  tag: TagView;
+  strong?: boolean;
+  onSelect: () => void;
+}) {
   return (
     <Link
       to="/tags/$tag"
       params={{ tag: tag.slug }}
+      onClick={onSelect}
       className={cn(
         "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition-colors duration-200 ease-out",
         strong
@@ -102,6 +121,13 @@ function TagsIndex() {
   // Subtle weighting: tags at/above the featured cutoff read as "strong" pills.
   const strongCutoff = featured[featured.length - 1]?.count ?? 0;
 
+  const onTagSelect = React.useCallback((tag: TagView, variant: TagsIndexTagVariant) => {
+    trackEvent(
+      tagsIndexTagSelectAnalyticsEvent(),
+      tagsIndexTagSelectAnalyticsData(tag.slug, tag.count, variant, tag.topCategory || undefined),
+    );
+  }, []);
+
   return (
     <PageContainer>
       <PageHeader
@@ -122,7 +148,17 @@ function TagsIndex() {
           onChange={(e) => {
             const next = e.target.value;
             setQuery(next);
-            if (next.trim().length >= 2) trackEvent("tag-filter", { q: next.trim().slice(0, 64) });
+            const trimmed = next.trim();
+            if (trimmed.length >= 2) {
+              const needle = trimmed.toLowerCase();
+              const matchCount = all.filter(
+                (t) => t.name.toLowerCase().includes(needle) || t.slug.includes(needle),
+              ).length;
+              trackEvent(
+                tagsIndexFilterAnalyticsEvent(),
+                tagsIndexFilterAnalyticsData(trimmed.length, matchCount),
+              );
+            }
           }}
           placeholder="Filter topics…"
           aria-label="Filter topics"
@@ -135,7 +171,11 @@ function TagsIndex() {
           <div className="eyebrow">Popular topics</div>
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {featured.map((tag) => (
-              <FeaturedTagCard key={tag.slug} tag={tag} />
+              <FeaturedTagCard
+                key={tag.slug}
+                tag={tag}
+                onSelect={() => onTagSelect(tag, "featured")}
+              />
             ))}
           </div>
         </section>
@@ -146,13 +186,27 @@ function TagsIndex() {
         {filtered.length > 0 ? (
           <div className="mt-4 flex flex-wrap gap-2">
             {filtered.map((tag) => (
-              <TagPill key={tag.slug} tag={tag} strong={tag.count >= strongCutoff} />
+              <TagPill
+                key={tag.slug}
+                tag={tag}
+                strong={tag.count >= strongCutoff}
+                onSelect={() => onTagSelect(tag, "pill")}
+              />
             ))}
           </div>
         ) : (
           <p className="mt-4 text-sm text-ink-muted">
             No topics match “{query}”. Try a broader term, or{" "}
-            <Link to="/browse" className="text-ink underline">
+            <Link
+              to="/browse"
+              className="text-ink underline"
+              onClick={() =>
+                trackEvent(
+                  tagsIndexBrowseEgressAnalyticsEvent(),
+                  tagsIndexBrowseEgressAnalyticsData(),
+                )
+              }
+            >
               browse the full directory
             </Link>
             .
