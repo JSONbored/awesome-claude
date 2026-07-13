@@ -775,7 +775,11 @@ function Dossier() {
             category={entry.category}
             slug={entry.slug}
           />
-          <EntrySafetySurfacePanel state={safetySurface} />
+          <EntrySafetySurfacePanel
+            state={safetySurface}
+            category={entry.category}
+            slug={entry.slug}
+          />
           {entry.safetyNotes && (
             <DossierSection id="safety" icon={ShieldCheck} title="Safety notes" tone="trust">
               <NoteList value={entry.safetyNotesList ?? [entry.safetyNotes]} />
