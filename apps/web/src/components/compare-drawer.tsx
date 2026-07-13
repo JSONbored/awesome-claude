@@ -42,6 +42,7 @@ import {
 import {
   compareDrawerDecisionPresetAnalyticsData,
   compareDrawerDecisionPresetAnalyticsEvent,
+  compareDrawerDecisionPresetSurface,
 } from "@/lib/compare-drawer-decision-preset-cta-events";
 import {
   compareDrawerScenarioAnalyticsData,
@@ -650,6 +651,7 @@ export function CompareDrawer() {
             <CompareEvidenceGapsPanel state={evidenceGaps} compact className="m-3 mt-0" />
             <CompareRolloutReadinessPanel
               state={rolloutReadiness}
+              surface={compareDrawerDecisionPresetSurface("rollout-readiness")}
               selectedPreset={rolloutPreset}
               onSelectPreset={onRolloutPresetSelect}
               compact
@@ -657,6 +659,7 @@ export function CompareDrawer() {
             />
             <CompareOperationalFitHeatmapPanel
               state={operationalFitHeatmap}
+              surface={compareDrawerDecisionPresetSurface("operational-fit")}
               selectedPreset={fitPreset}
               onSelectPreset={onFitPresetSelect}
               compact
@@ -664,6 +667,7 @@ export function CompareDrawer() {
             />
             <CompareDeploymentRiskMapPanel
               state={deploymentRiskMap}
+              surface={compareDrawerDecisionPresetSurface("deployment-risk")}
               selectedPreset={riskPreset}
               onSelectPreset={onRiskPresetSelect}
               compact
@@ -671,6 +675,7 @@ export function CompareDrawer() {
             />
             <CompareMitigationPriorityPanel
               state={mitigationPriority}
+              surface={compareDrawerDecisionPresetSurface("mitigation-priority")}
               selectedPreset={mitigationPreset}
               onSelectPreset={onMitigationPresetSelect}
               compact

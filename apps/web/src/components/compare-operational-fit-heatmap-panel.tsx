@@ -1,8 +1,15 @@
+import { Link } from "@tanstack/react-router";
 import type {
   CompareOperationalFitHeatmapState,
   OperationalFitPresetId,
 } from "@/lib/compare-operational-fit-heatmap";
 import { operationalFitToneClass } from "@/lib/compare-operational-fit-heatmap-lib";
+import {
+  compareOperationalFitEntryAnalyticsData,
+  compareOperationalFitEntryAnalyticsEvent,
+  parseComparePanelEntryRef,
+} from "@/lib/compare-panel-entry-cta-events";
+import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 const PRESETS: { id: OperationalFitPresetId; label: string }[] = [
@@ -13,12 +20,14 @@ const PRESETS: { id: OperationalFitPresetId; label: string }[] = [
 
 export function CompareOperationalFitHeatmapPanel({
   state,
+  surface,
   selectedPreset,
   onSelectPreset,
   compact = false,
   className,
 }: {
   state: CompareOperationalFitHeatmapState;
+  surface: string;
   selectedPreset: OperationalFitPresetId;
   onSelectPreset: (preset: OperationalFitPresetId) => void;
   compact?: boolean;
@@ -58,48 +67,76 @@ export function CompareOperationalFitHeatmapPanel({
       </div>
 
       <div className="mt-3 grid gap-2">
-        {state.entries.map((entry) => (
-          <article
-            key={entry.entryRef}
-            className="rounded-md border border-border bg-background p-3"
-          >
-            <div className="flex flex-wrap items-start justify-between gap-2">
-              <div className="min-w-0">
-                <h4 className="text-sm font-semibold text-ink">{entry.title}</h4>
-                <p className="mt-0.5 text-[11px] text-ink-muted">{entry.recommendation}</p>
-              </div>
-              <div className="text-right">
-                <span
-                  className={cn(
-                    "inline-flex rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-wide",
-                    operationalFitToneClass(entry.fitTone),
+        {state.entries.map((entry) => {
+          const parsed = parseComparePanelEntryRef(entry.entryRef);
+          const title = <h4 className="text-sm font-semibold text-ink">{entry.title}</h4>;
+          return (
+            <article
+              key={entry.entryRef}
+              className="rounded-md border border-border bg-background p-3"
+            >
+              <div className="flex flex-wrap items-start justify-between gap-2">
+                <div className="min-w-0">
+                  {parsed ? (
+                    <Link
+                      to="/entry/$category/$slug"
+                      params={{ category: parsed.category, slug: parsed.slug }}
+                      onClick={() =>
+                        trackEvent(
+                          compareOperationalFitEntryAnalyticsEvent(),
+                          compareOperationalFitEntryAnalyticsData(
+                            surface,
+                            entry.entryRef,
+                            selectedPreset,
+                            entry.fitTone,
+                            entry.totalScore,
+                            entry.confidence,
+                            state.entries.length,
+                          ),
+                        )
+                      }
+                      className="underline-offset-2 hover:text-accent hover:underline"
+                    >
+                      {title}
+                    </Link>
+                  ) : (
+                    title
                   )}
-                >
-                  {entry.fitTone}
-                </span>
-                <p className="mt-1 font-mono text-xs text-ink">{entry.totalScore}/100</p>
-              </div>
-            </div>
-
-            {!compact ? (
-              <div className="mt-2 grid gap-1.5 sm:grid-cols-2">
-                {entry.cells.map((cell) => (
-                  <div
-                    key={`${entry.entryRef}-${cell.axisId}`}
-                    className="rounded border border-border px-2 py-1"
+                  <p className="mt-0.5 text-[11px] text-ink-muted">{entry.recommendation}</p>
+                </div>
+                <div className="text-right">
+                  <span
+                    className={cn(
+                      "inline-flex rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-wide",
+                      operationalFitToneClass(entry.fitTone),
+                    )}
                   >
-                    <p className="text-[10px] uppercase tracking-wide text-ink-subtle">
-                      {cell.axisId}
-                    </p>
-                    <p className="text-[11px] text-ink-muted">{cell.reason}</p>
-                  </div>
-                ))}
+                    {entry.fitTone}
+                  </span>
+                  <p className="mt-1 font-mono text-xs text-ink">{entry.totalScore}/100</p>
+                </div>
               </div>
-            ) : null}
 
-            <p className="mt-2 text-[11px] text-ink-subtle">Confidence {entry.confidence}%</p>
-          </article>
-        ))}
+              {!compact ? (
+                <div className="mt-2 grid gap-1.5 sm:grid-cols-2">
+                  {entry.cells.map((cell) => (
+                    <div
+                      key={`${entry.entryRef}-${cell.axisId}`}
+                      className="rounded border border-border px-2 py-1"
+                    >
+                      <p className="text-[10px] uppercase tracking-wide text-ink-subtle">
+                        {cell.axisId}
+                      </p>
+                      <p className="text-[11px] text-ink-muted">{cell.reason}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+
+              <p className="mt-2 text-[11px] text-ink-subtle">Confidence {entry.confidence}%</p>
+            </article>
+          );
+        })}
       </div>
     </section>
   );

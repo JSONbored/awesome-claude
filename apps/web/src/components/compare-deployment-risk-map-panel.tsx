@@ -1,8 +1,15 @@
+import { Link } from "@tanstack/react-router";
 import type {
   CompareDeploymentRiskMapState,
   DeploymentRiskPresetId,
 } from "@/lib/compare-deployment-risk-map";
 import { deploymentRiskBandClass } from "@/lib/compare-deployment-risk-map-lib";
+import {
+  compareDeploymentRiskEntryAnalyticsData,
+  compareDeploymentRiskEntryAnalyticsEvent,
+  parseComparePanelEntryRef,
+} from "@/lib/compare-panel-entry-cta-events";
+import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 const PRESETS: { id: DeploymentRiskPresetId; label: string }[] = [
@@ -13,12 +20,14 @@ const PRESETS: { id: DeploymentRiskPresetId; label: string }[] = [
 
 export function CompareDeploymentRiskMapPanel({
   state,
+  surface,
   selectedPreset,
   onSelectPreset,
   compact = false,
   className,
 }: {
   state: CompareDeploymentRiskMapState;
+  surface: string;
   selectedPreset: DeploymentRiskPresetId;
   onSelectPreset: (preset: DeploymentRiskPresetId) => void;
   compact?: boolean;
@@ -58,38 +67,66 @@ export function CompareDeploymentRiskMapPanel({
       </div>
 
       <div className="mt-3 grid gap-2">
-        {state.entries.map((entry) => (
-          <article
-            key={entry.entryRef}
-            className="rounded-md border border-border bg-background p-3"
-          >
-            <div className="flex flex-wrap items-start justify-between gap-2">
-              <div className="min-w-0">
-                <h4 className="text-sm font-semibold text-ink">{entry.title}</h4>
-                <p className="mt-0.5 text-[11px] text-ink-muted">{entry.mitigationSummary}</p>
-              </div>
-              <div className="text-right">
-                <span
-                  className={cn(
-                    "inline-flex rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-wide",
-                    deploymentRiskBandClass(entry.riskBand),
+        {state.entries.map((entry) => {
+          const parsed = parseComparePanelEntryRef(entry.entryRef);
+          const title = <h4 className="text-sm font-semibold text-ink">{entry.title}</h4>;
+          return (
+            <article
+              key={entry.entryRef}
+              className="rounded-md border border-border bg-background p-3"
+            >
+              <div className="flex flex-wrap items-start justify-between gap-2">
+                <div className="min-w-0">
+                  {parsed ? (
+                    <Link
+                      to="/entry/$category/$slug"
+                      params={{ category: parsed.category, slug: parsed.slug }}
+                      onClick={() =>
+                        trackEvent(
+                          compareDeploymentRiskEntryAnalyticsEvent(),
+                          compareDeploymentRiskEntryAnalyticsData(
+                            surface,
+                            entry.entryRef,
+                            selectedPreset,
+                            entry.riskBand,
+                            entry.riskScore,
+                            entry.confidenceScore,
+                            state.entries.length,
+                          ),
+                        )
+                      }
+                      className="underline-offset-2 hover:text-accent hover:underline"
+                    >
+                      {title}
+                    </Link>
+                  ) : (
+                    title
                   )}
-                >
-                  {entry.riskBand}
-                </span>
-                <p className="mt-1 font-mono text-xs text-ink">risk {entry.riskScore}</p>
+                  <p className="mt-0.5 text-[11px] text-ink-muted">{entry.mitigationSummary}</p>
+                </div>
+                <div className="text-right">
+                  <span
+                    className={cn(
+                      "inline-flex rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-wide",
+                      deploymentRiskBandClass(entry.riskBand),
+                    )}
+                  >
+                    {entry.riskBand}
+                  </span>
+                  <p className="mt-1 font-mono text-xs text-ink">risk {entry.riskScore}</p>
+                </div>
               </div>
-            </div>
 
-            {!compact && entry.topRiskReasons.length > 0 ? (
-              <p className="mt-2 text-[11px] text-ink-subtle">
-                Top reasons: {entry.topRiskReasons.join(", ")}
-              </p>
-            ) : null}
+              {!compact && entry.topRiskReasons.length > 0 ? (
+                <p className="mt-2 text-[11px] text-ink-subtle">
+                  Top reasons: {entry.topRiskReasons.join(", ")}
+                </p>
+              ) : null}
 
-            <p className="mt-1 text-[11px] text-ink-muted">Confidence {entry.confidenceScore}%</p>
-          </article>
-        ))}
+              <p className="mt-1 text-[11px] text-ink-muted">Confidence {entry.confidenceScore}%</p>
+            </article>
+          );
+        })}
       </div>
     </section>
   );

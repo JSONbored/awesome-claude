@@ -1,8 +1,15 @@
+import { Link } from "@tanstack/react-router";
 import type {
   CompareMitigationPriorityState,
   MitigationPriorityPresetId,
 } from "@/lib/compare-mitigation-priority";
 import { mitigationPriorityTierClass } from "@/lib/compare-mitigation-priority";
+import {
+  compareMitigationPriorityEntryAnalyticsData,
+  compareMitigationPriorityEntryAnalyticsEvent,
+  parseComparePanelEntryRef,
+} from "@/lib/compare-panel-entry-cta-events";
+import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 const PRESETS: { id: MitigationPriorityPresetId; label: string }[] = [
@@ -13,12 +20,14 @@ const PRESETS: { id: MitigationPriorityPresetId; label: string }[] = [
 
 export function CompareMitigationPriorityPanel({
   state,
+  surface,
   selectedPreset,
   onSelectPreset,
   compact = false,
   className,
 }: {
   state: CompareMitigationPriorityState;
+  surface: string;
   selectedPreset: MitigationPriorityPresetId;
   onSelectPreset: (preset: MitigationPriorityPresetId) => void;
   compact?: boolean;
@@ -66,50 +75,78 @@ export function CompareMitigationPriorityPanel({
       </div>
 
       <div className="mt-3 grid gap-2">
-        {state.entries.map((entry) => (
-          <article
-            key={entry.entryRef}
-            className="rounded-lg border border-border bg-background p-3"
-          >
-            <div className="flex flex-wrap items-start justify-between gap-2">
-              <div className="min-w-0">
-                <h4 className="text-sm font-semibold text-ink">{entry.title}</h4>
-                <p className="mt-0.5 text-[11px] text-ink-muted">{entry.rationale}</p>
-              </div>
-              <div className="text-right">
-                <span
-                  className={cn(
-                    "inline-flex rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-wide",
-                    mitigationPriorityTierClass(entry.tier),
+        {state.entries.map((entry) => {
+          const parsed = parseComparePanelEntryRef(entry.entryRef);
+          const title = <h4 className="text-sm font-semibold text-ink">{entry.title}</h4>;
+          return (
+            <article
+              key={entry.entryRef}
+              className="rounded-lg border border-border bg-background p-3"
+            >
+              <div className="flex flex-wrap items-start justify-between gap-2">
+                <div className="min-w-0">
+                  {parsed ? (
+                    <Link
+                      to="/entry/$category/$slug"
+                      params={{ category: parsed.category, slug: parsed.slug }}
+                      onClick={() =>
+                        trackEvent(
+                          compareMitigationPriorityEntryAnalyticsEvent(),
+                          compareMitigationPriorityEntryAnalyticsData(
+                            surface,
+                            entry.entryRef,
+                            selectedPreset,
+                            entry.tier,
+                            entry.priorityScore,
+                            entry.actions.length,
+                            state.entries.length,
+                          ),
+                        )
+                      }
+                      className="underline-offset-2 hover:text-accent hover:underline"
+                    >
+                      {title}
+                    </Link>
+                  ) : (
+                    title
                   )}
-                >
-                  {entry.tier}
-                </span>
-                <p className="mt-1 font-mono text-xs text-ink">{entry.priorityScore}/100</p>
-              </div>
-            </div>
-
-            {!compact && entry.actions.length > 0 ? (
-              <div className="mt-2 grid gap-1.5 sm:grid-cols-2">
-                {entry.actions.map((action) => (
-                  <div
-                    key={`${entry.entryRef}-${action.signalId}`}
-                    className="rounded border border-border px-2 py-1"
+                  <p className="mt-0.5 text-[11px] text-ink-muted">{entry.rationale}</p>
+                </div>
+                <div className="text-right">
+                  <span
+                    className={cn(
+                      "inline-flex rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-wide",
+                      mitigationPriorityTierClass(entry.tier),
+                    )}
                   >
-                    <p className="text-[10px] uppercase tracking-wide text-ink-subtle">
-                      {action.label}
-                    </p>
-                    <p className="text-[11px] text-ink-muted">{action.detail}</p>
-                  </div>
-                ))}
+                    {entry.tier}
+                  </span>
+                  <p className="mt-1 font-mono text-xs text-ink">{entry.priorityScore}/100</p>
+                </div>
               </div>
-            ) : null}
 
-            <p className="mt-2 text-[11px] text-ink-subtle">
-              Trust {entry.trust} · {entry.actions.length} mitigation items
-            </p>
-          </article>
-        ))}
+              {!compact && entry.actions.length > 0 ? (
+                <div className="mt-2 grid gap-1.5 sm:grid-cols-2">
+                  {entry.actions.map((action) => (
+                    <div
+                      key={`${entry.entryRef}-${action.signalId}`}
+                      className="rounded border border-border px-2 py-1"
+                    >
+                      <p className="text-[10px] uppercase tracking-wide text-ink-subtle">
+                        {action.label}
+                      </p>
+                      <p className="text-[11px] text-ink-muted">{action.detail}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+
+              <p className="mt-2 text-[11px] text-ink-subtle">
+                Trust {entry.trust} · {entry.actions.length} mitigation items
+              </p>
+            </article>
+          );
+        })}
       </div>
     </section>
   );

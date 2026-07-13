@@ -1,8 +1,15 @@
+import { Link } from "@tanstack/react-router";
 import { tierClass } from "@/lib/compare-rollout-tier-lib";
 import type {
   CompareRolloutReadinessState,
   RolloutPresetId,
 } from "@/lib/compare-rollout-readiness";
+import {
+  compareRolloutReadinessEntryAnalyticsData,
+  compareRolloutReadinessEntryAnalyticsEvent,
+  parseComparePanelEntryRef,
+} from "@/lib/compare-panel-entry-cta-events";
+import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 const PRESETS: { id: RolloutPresetId; label: string }[] = [
@@ -13,12 +20,14 @@ const PRESETS: { id: RolloutPresetId; label: string }[] = [
 
 export function CompareRolloutReadinessPanel({
   state,
+  surface,
   selectedPreset,
   onSelectPreset,
   compact = false,
   className,
 }: {
   state: CompareRolloutReadinessState;
+  surface: string;
   selectedPreset: RolloutPresetId;
   onSelectPreset: (preset: RolloutPresetId) => void;
   compact?: boolean;
@@ -60,55 +69,84 @@ export function CompareRolloutReadinessPanel({
       </div>
 
       <div className="mt-3 grid gap-2.5">
-        {state.plans.map((plan) => (
-          <article
-            key={plan.entryRef}
-            className="rounded-lg border border-border bg-background p-3"
-          >
-            <div className="flex flex-wrap items-start justify-between gap-2">
-              <div>
-                <h4 className="text-sm font-semibold text-ink">{plan.title}</h4>
-                <p className="mt-0.5 text-[11px] text-ink-muted">{plan.summary}</p>
-              </div>
-              <div className="text-right">
-                <span
-                  className={cn(
-                    "inline-flex rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-wide",
-                    tierClass(plan.tier),
+        {state.plans.map((plan) => {
+          const parsed = parseComparePanelEntryRef(plan.entryRef);
+          const title = <h4 className="text-sm font-semibold text-ink">{plan.title}</h4>;
+          return (
+            <article
+              key={plan.entryRef}
+              className="rounded-lg border border-border bg-background p-3"
+            >
+              <div className="flex flex-wrap items-start justify-between gap-2">
+                <div>
+                  {parsed ? (
+                    <Link
+                      to="/entry/$category/$slug"
+                      params={{ category: parsed.category, slug: parsed.slug }}
+                      onClick={() =>
+                        trackEvent(
+                          compareRolloutReadinessEntryAnalyticsEvent(),
+                          compareRolloutReadinessEntryAnalyticsData(
+                            surface,
+                            plan.entryRef,
+                            selectedPreset,
+                            plan.tier,
+                            plan.score,
+                            plan.blockers.length,
+                            state.comparedCount,
+                          ),
+                        )
+                      }
+                      className="underline-offset-2 hover:text-accent hover:underline"
+                    >
+                      {title}
+                    </Link>
+                  ) : (
+                    title
                   )}
-                >
-                  {plan.tier}
-                </span>
-                <p className="mt-1 font-mono text-xs text-ink">{plan.score}/100</p>
+                  <p className="mt-0.5 text-[11px] text-ink-muted">{plan.summary}</p>
+                </div>
+                <div className="text-right">
+                  <span
+                    className={cn(
+                      "inline-flex rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-wide",
+                      tierClass(plan.tier),
+                    )}
+                  >
+                    {plan.tier}
+                  </span>
+                  <p className="mt-1 font-mono text-xs text-ink">{plan.score}/100</p>
+                </div>
               </div>
-            </div>
 
-            {!compact && plan.blockers.length > 0 ? (
-              <p className="mt-2 text-[11px] text-trust-blocked">
-                Blockers: {plan.blockers.join(", ")}
-              </p>
-            ) : null}
+              {!compact && plan.blockers.length > 0 ? (
+                <p className="mt-2 text-[11px] text-trust-blocked">
+                  Blockers: {plan.blockers.join(", ")}
+                </p>
+              ) : null}
 
-            <div className="mt-2 flex flex-wrap gap-1.5">
-              {plan.checklist.map((item) => (
-                <span
-                  key={`${plan.entryRef}-${item.id}`}
-                  className={cn(
-                    "rounded border px-2 py-0.5 text-[10px]",
-                    item.tone === "complete" &&
-                      "border-trust-trusted/30 bg-trust-trusted/5 text-trust-trusted",
-                    item.tone === "warning" && "border-amber-500/30 bg-amber-500/5 text-amber-900",
-                    item.tone === "blocked" &&
-                      "border-trust-blocked/30 bg-trust-blocked/5 text-trust-blocked",
-                  )}
-                >
-                  {item.label}
-                  {item.required ? " (required)" : ""}
-                </span>
-              ))}
-            </div>
-          </article>
-        ))}
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {plan.checklist.map((item) => (
+                  <span
+                    key={`${plan.entryRef}-${item.id}`}
+                    className={cn(
+                      "rounded border px-2 py-0.5 text-[10px]",
+                      item.tone === "complete" &&
+                        "border-trust-trusted/30 bg-trust-trusted/5 text-trust-trusted",
+                      item.tone === "warning" &&
+                        "border-amber-500/30 bg-amber-500/5 text-amber-900",
+                      item.tone === "blocked" &&
+                        "border-trust-blocked/30 bg-trust-blocked/5 text-trust-blocked",
+                    )}
+                  >
+                    {item.label}
+                    {item.required ? " (required)" : ""}
+                  </span>
+                ))}
+              </div>
+            </article>
+          );
+        })}
       </div>
     </section>
   );

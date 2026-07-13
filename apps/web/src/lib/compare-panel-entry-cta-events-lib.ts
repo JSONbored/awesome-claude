@@ -6,7 +6,14 @@
  */
 
 import type { CompareBriefTone } from "@/lib/compare-decision-brief-lib";
+import type { DeploymentRiskBand } from "@/lib/compare-deployment-risk-map-lib";
+import type { MitigationPriorityTier } from "@/lib/compare-mitigation-priority-lib";
+import type { OperationalFitTone } from "@/lib/compare-operational-fit-heatmap-lib";
+import type { RolloutPresetId } from "@/lib/compare-rollout-readiness-lib";
 import type { CompareScenarioId } from "@/lib/compare-scenario-ranking-lib";
+import type { DeploymentRiskPresetId } from "@/lib/compare-deployment-risk-map-lib";
+import type { MitigationPriorityPresetId } from "@/lib/compare-mitigation-priority-lib";
+import type { OperationalFitPresetId } from "@/lib/compare-operational-fit-heatmap-lib";
 
 export function comparePageDecisionBriefSurface(): string {
   return "compare-page-decision-brief";
@@ -56,6 +63,102 @@ export function compareScenarioRankingEntryAnalyticsData(
     rank,
     score,
     scenario,
+    comparedCount,
+  };
+}
+
+export function compareRolloutReadinessEntryAnalyticsEvent(): string {
+  return "compare_rollout_readiness_entry_click";
+}
+
+export function compareRolloutReadinessEntryAnalyticsData(
+  surface: string,
+  entryRef: string,
+  preset: RolloutPresetId,
+  tier: "ready" | "review" | "hold",
+  score: number,
+  blockerCount: number,
+  comparedCount: number,
+) {
+  return {
+    surface,
+    entry: entryRef,
+    preset,
+    tier,
+    score,
+    blockerCount,
+    comparedCount,
+  };
+}
+
+export function compareOperationalFitEntryAnalyticsEvent(): string {
+  return "compare_operational_fit_entry_click";
+}
+
+export function compareOperationalFitEntryAnalyticsData(
+  surface: string,
+  entryRef: string,
+  preset: OperationalFitPresetId,
+  fitTone: OperationalFitTone,
+  totalScore: number,
+  confidence: number,
+  comparedCount: number,
+) {
+  return {
+    surface,
+    entry: entryRef,
+    preset,
+    fitTone,
+    totalScore,
+    confidence,
+    comparedCount,
+  };
+}
+
+export function compareDeploymentRiskEntryAnalyticsEvent(): string {
+  return "compare_deployment_risk_entry_click";
+}
+
+export function compareDeploymentRiskEntryAnalyticsData(
+  surface: string,
+  entryRef: string,
+  preset: DeploymentRiskPresetId,
+  riskBand: DeploymentRiskBand,
+  riskScore: number,
+  confidenceScore: number,
+  comparedCount: number,
+) {
+  return {
+    surface,
+    entry: entryRef,
+    preset,
+    riskBand,
+    riskScore,
+    confidenceScore,
+    comparedCount,
+  };
+}
+
+export function compareMitigationPriorityEntryAnalyticsEvent(): string {
+  return "compare_mitigation_priority_entry_click";
+}
+
+export function compareMitigationPriorityEntryAnalyticsData(
+  surface: string,
+  entryRef: string,
+  preset: MitigationPriorityPresetId,
+  tier: MitigationPriorityTier,
+  priorityScore: number,
+  actionCount: number,
+  comparedCount: number,
+) {
+  return {
+    surface,
+    entry: entryRef,
+    preset,
+    tier,
+    priorityScore,
+    actionCount,
     comparedCount,
   };
 }

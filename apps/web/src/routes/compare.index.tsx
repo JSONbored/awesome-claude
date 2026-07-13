@@ -41,6 +41,7 @@ import { trackEvent, entryEventKey } from "@/lib/analytics";
 import {
   comparePageDecisionPresetAnalyticsData,
   comparePageDecisionPresetAnalyticsEvent,
+  comparePageDecisionPresetSurface,
 } from "@/lib/compare-page-decision-preset-cta-events";
 import {
   comparePageScenarioAnalyticsData,
@@ -402,24 +403,28 @@ function ComparePage() {
         <CompareEvidenceGapsPanel state={evidenceGaps} className="m-3 mt-0" />
         <CompareRolloutReadinessPanel
           state={rolloutReadiness}
+          surface={comparePageDecisionPresetSurface("rollout-readiness")}
           selectedPreset={rolloutPreset}
           onSelectPreset={onRolloutPresetSelect}
           className="m-3 mt-0"
         />
         <CompareOperationalFitHeatmapPanel
           state={operationalFitHeatmap}
+          surface={comparePageDecisionPresetSurface("operational-fit")}
           selectedPreset={fitPreset}
           onSelectPreset={onFitPresetSelect}
           className="m-3 mt-0"
         />
         <CompareDeploymentRiskMapPanel
           state={deploymentRiskMap}
+          surface={comparePageDecisionPresetSurface("deployment-risk")}
           selectedPreset={riskPreset}
           onSelectPreset={onRiskPresetSelect}
           className="m-3 mt-0"
         />
         <CompareMitigationPriorityPanel
           state={mitigationPriority}
+          surface={comparePageDecisionPresetSurface("mitigation-priority")}
           selectedPreset={mitigationPreset}
           onSelectPreset={onMitigationPresetSelect}
           className="m-3 mt-0"
