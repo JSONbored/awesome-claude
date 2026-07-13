@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { buildWorklist, trustGaps } from "../scripts/lib/growth-dashboard.mjs";
+import {
+  buildWorklist,
+  parseGrowthDashboardArgs,
+  trustGaps,
+} from "../scripts/lib/growth-dashboard.mjs";
 
 function entry(partial: Record<string, unknown>) {
   return {
@@ -75,5 +79,35 @@ describe("buildWorklist", () => {
     const first = buildWorklist(entries, new Map(), { limit: 2 });
     expect(first.items).toHaveLength(2);
     expect(first).toEqual(buildWorklist(entries, new Map(), { limit: 2 }));
+  });
+});
+
+describe("parseGrowthDashboardArgs", () => {
+  it("defaults to json off, no gsc, and limit 50", () => {
+    expect(parseGrowthDashboardArgs([])).toEqual({
+      json: false,
+      gsc: "",
+      limit: 50,
+    });
+  });
+
+  it("reads --json, --gsc and --limit", () => {
+    expect(
+      parseGrowthDashboardArgs(["--json", "--gsc", "gsc.csv", "--limit", "10"]),
+    ).toEqual({ json: true, gsc: "gsc.csv", limit: 10 });
+  });
+
+  it("falls back to '' for --gsc and 50 for a non-numeric/zero --limit", () => {
+    expect(parseGrowthDashboardArgs(["--gsc"]).gsc).toBe("");
+    expect(parseGrowthDashboardArgs(["--limit", "nope"]).limit).toBe(50);
+    expect(parseGrowthDashboardArgs(["--limit", "0"]).limit).toBe(50);
+  });
+
+  it("ignores unrecognized tokens", () => {
+    expect(parseGrowthDashboardArgs(["--nope", "stray"])).toEqual({
+      json: false,
+      gsc: "",
+      limit: 50,
+    });
   });
 });

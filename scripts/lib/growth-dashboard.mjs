@@ -17,6 +17,20 @@ function hasText(value) {
   return String(value ?? "").trim().length > 0;
 }
 
+/**
+ * Parse the growth-dashboard CLI flags (--json, --gsc <path>, --limit <n>) into
+ * an options object. A non-numeric or zero --limit falls back to 50.
+ */
+export function parseGrowthDashboardArgs(argv) {
+  const args = { json: false, gsc: "", limit: 50 };
+  for (let i = 0; i < argv.length; i += 1) {
+    if (argv[i] === "--json") args.json = true;
+    else if (argv[i] === "--gsc") args.gsc = argv[++i] || "";
+    else if (argv[i] === "--limit") args.limit = Number(argv[++i]) || 50;
+  }
+  return args;
+}
+
 /** Trust/coverage gaps for an entry (missing safety/privacy/source signals). */
 export function trustGaps(entry) {
   const gaps = [];

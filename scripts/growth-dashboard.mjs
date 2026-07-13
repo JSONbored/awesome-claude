@@ -17,7 +17,10 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { parseGscImpressions } from "./audit-seo-snippets.mjs";
-import { buildWorklist } from "./lib/growth-dashboard.mjs";
+import {
+  buildWorklist,
+  parseGrowthDashboardArgs,
+} from "./lib/growth-dashboard.mjs";
 
 const repoRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -34,16 +37,6 @@ function loadEntries() {
   return atlas.entries ?? [];
 }
 
-function parseArgs(argv) {
-  const args = { json: false, gsc: "", limit: 50 };
-  for (let i = 0; i < argv.length; i += 1) {
-    if (argv[i] === "--json") args.json = true;
-    else if (argv[i] === "--gsc") args.gsc = argv[++i] || "";
-    else if (argv[i] === "--limit") args.limit = Number(argv[++i]) || 50;
-  }
-  return args;
-}
-
 function loadGsc(file) {
   if (!file) return new Map();
   const absolute = path.isAbsolute(file) ? file : path.join(repoRoot, file);
@@ -51,7 +44,7 @@ function loadGsc(file) {
 }
 
 function main(argv = process.argv.slice(2)) {
-  const args = parseArgs(argv);
+  const args = parseGrowthDashboardArgs(argv);
   const report = buildWorklist(loadEntries(), loadGsc(args.gsc), {
     limit: args.limit,
   });
