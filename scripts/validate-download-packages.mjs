@@ -4,22 +4,16 @@ import { execFileSync } from "node:child_process";
 
 import { parseSafeFrontmatter } from "@heyclaude/registry/frontmatter";
 
+import {
+  isFirstPartyPackage,
+  isLocalDownloadUrl,
+  normalizeDownloadUrl,
+} from "./lib/download-package-url.mjs";
+
 const repoRoot = process.cwd();
 const contentRoot = path.join(repoRoot, "content");
 const failures = [];
 const warnings = [];
-
-function isFirstPartyPackage(data = {}) {
-  return data.packageVerified === true;
-}
-
-function normalizeDownloadUrl(downloadUrl) {
-  return String(downloadUrl ?? "").trim();
-}
-
-function isLocalDownloadUrl(downloadUrl) {
-  return normalizeDownloadUrl(downloadUrl).startsWith("/downloads/");
-}
 
 function unzipList(archivePath) {
   try {
