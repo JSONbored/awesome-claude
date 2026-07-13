@@ -8,6 +8,10 @@ export {
   detailDecisionPresetAnalyticsEvent,
   detailDecisionPresetEntryKey,
   detailDecisionPresetSurface,
+  detailDecisionTimelineBenchmarkEntryAnalyticsData,
+  detailDecisionTimelineBenchmarkEntryAnalyticsEvent,
+  detailEvidenceMatrixBenchmarkEntryAnalyticsData,
+  detailEvidenceMatrixBenchmarkEntryAnalyticsEvent,
   parseDetailEntryRef,
   type DetailDecisionPanelId,
 } from "@/lib/entry-detail-decision-preset-cta-events-lib";

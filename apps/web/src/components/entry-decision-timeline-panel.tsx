@@ -1,8 +1,15 @@
+import { Link } from "@tanstack/react-router";
 import type {
   DecisionTimelinePresetId,
   EntryDecisionTimelineState,
 } from "@/lib/entry-decision-timeline";
 import { decisionRiskClass, decisionStepToneClass } from "@/lib/entry-decision-timeline-lib";
+import {
+  detailDecisionTimelineBenchmarkEntryAnalyticsData,
+  detailDecisionTimelineBenchmarkEntryAnalyticsEvent,
+  parseDetailEntryRef,
+} from "@/lib/entry-detail-decision-preset-cta-events";
+import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 const PRESETS: { id: DecisionTimelinePresetId; label: string }[] = [
@@ -13,11 +20,15 @@ const PRESETS: { id: DecisionTimelinePresetId; label: string }[] = [
 
 export function EntryDecisionTimelinePanel({
   state,
+  category,
+  slug,
   selectedPreset,
   onSelectPreset,
   className,
 }: {
   state: EntryDecisionTimelineState;
+  category: string;
+  slug: string;
   selectedPreset: DecisionTimelinePresetId;
   onSelectPreset: (preset: DecisionTimelinePresetId) => void;
   className?: string;
@@ -107,18 +118,47 @@ export function EntryDecisionTimelinePanel({
         <div className="mt-2 rounded-md border border-border bg-background px-3 py-2">
           <p className="text-[11px] font-medium text-ink">Compare benchmark deltas</p>
           <ul className="mt-1.5 space-y-1">
-            {state.benchmarks.map((benchmark) => (
-              <li
-                key={benchmark.entryRef}
-                className="flex items-center justify-between gap-2 text-[11px]"
-              >
-                <span className="truncate text-ink">{benchmark.title}</span>
-                <span className="font-mono text-ink-muted">
-                  {benchmark.score} ({benchmark.delta >= 0 ? "+" : ""}
-                  {benchmark.delta})
-                </span>
-              </li>
-            ))}
+            {state.benchmarks.map((benchmark) => {
+              const parsed = parseDetailEntryRef(benchmark.entryRef);
+              const title = benchmark.title;
+
+              return (
+                <li
+                  key={benchmark.entryRef}
+                  className="flex items-center justify-between gap-2 text-[11px]"
+                >
+                  {parsed ? (
+                    <Link
+                      to="/entry/$category/$slug"
+                      params={{ category: parsed.category, slug: parsed.slug }}
+                      onClick={() =>
+                        trackEvent(
+                          detailDecisionTimelineBenchmarkEntryAnalyticsEvent(),
+                          detailDecisionTimelineBenchmarkEntryAnalyticsData(
+                            category,
+                            slug,
+                            benchmark.entryRef,
+                            selectedPreset,
+                            benchmark.score,
+                            benchmark.delta,
+                            state.benchmarks.length,
+                          ),
+                        )
+                      }
+                      className="truncate underline-offset-2 hover:text-accent hover:underline"
+                    >
+                      {title}
+                    </Link>
+                  ) : (
+                    <span className="truncate text-ink">{title}</span>
+                  )}
+                  <span className="font-mono text-ink-muted">
+                    {benchmark.score} ({benchmark.delta >= 0 ? "+" : ""}
+                    {benchmark.delta})
+                  </span>
+                </li>
+              );
+            })}
           </ul>
         </div>
       ) : null}

@@ -5,6 +5,10 @@ import {
   detailDecisionPresetAnalyticsData,
   detailDecisionPresetAnalyticsEvent,
   detailDecisionPresetSurface,
+  detailDecisionTimelineBenchmarkEntryAnalyticsData,
+  detailDecisionTimelineBenchmarkEntryAnalyticsEvent,
+  detailEvidenceMatrixBenchmarkEntryAnalyticsData,
+  detailEvidenceMatrixBenchmarkEntryAnalyticsEvent,
   parseDetailEntryRef,
 } from "@/lib/entry-detail-decision-preset-cta-events-lib";
 
@@ -71,5 +75,49 @@ describe("entry detail decision preset cta events lib", () => {
       slug: "browser",
     });
     expect(parseDetailEntryRef("invalid")).toBeNull();
+    expect(detailDecisionTimelineBenchmarkEntryAnalyticsEvent()).toBe(
+      "detail_decision_timeline_benchmark_entry_click",
+    );
+    expect(
+      detailDecisionTimelineBenchmarkEntryAnalyticsData(
+        "mcp",
+        "browser",
+        "agents/foo",
+        "balanced",
+        72,
+        -4,
+        2,
+      ),
+    ).toEqual({
+      entry: "mcp/browser",
+      surface: "detail-decision-timeline",
+      peer: "agents/foo",
+      preset: "balanced",
+      score: 72,
+      delta: -4,
+      peerCount: 2,
+    });
+    expect(detailEvidenceMatrixBenchmarkEntryAnalyticsEvent()).toBe(
+      "detail_evidence_matrix_benchmark_entry_click",
+    );
+    expect(
+      detailEvidenceMatrixBenchmarkEntryAnalyticsData(
+        "skills",
+        "demo",
+        "mcp/bar",
+        "strict",
+        88,
+        true,
+        4,
+      ),
+    ).toEqual({
+      entry: "skills/demo",
+      surface: "detail-evidence-matrix",
+      peer: "mcp/bar",
+      preset: "strict",
+      score: 88,
+      strongerThanTarget: true,
+      peerCount: 4,
+    });
   });
 });

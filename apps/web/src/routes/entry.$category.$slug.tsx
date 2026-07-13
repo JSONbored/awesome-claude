@@ -757,11 +757,15 @@ function Dossier() {
           />
           <EntryEvidenceReadinessMatrix
             state={evidenceMatrix}
+            category={entry.category}
+            slug={entry.slug}
             selectedPreset={evidencePreset}
             onSelectPreset={onEvidencePresetSelect}
           />
           <EntryDecisionTimelinePanel
             state={decisionTimeline}
+            category={entry.category}
+            slug={entry.slug}
             selectedPreset={timelinePreset}
             onSelectPreset={onTimelinePresetSelect}
           />

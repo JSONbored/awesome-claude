@@ -7,6 +7,8 @@
 
 import type { CompareBenchmarkPresetId } from "@/lib/entry-compare-benchmark-lib";
 import type { CompareBenchmarkVerdict } from "@/lib/entry-compare-benchmark-lib";
+import type { DecisionTimelinePresetId } from "@/lib/entry-decision-timeline-lib";
+import type { EvidenceMatrixPresetId } from "@/lib/entry-evidence-readiness-matrix-lib";
 
 export type DetailDecisionPanelId =
   | "adoption-plan"
@@ -62,6 +64,54 @@ export function detailCompareBenchmarkEntryAnalyticsData(
     verdict,
     totalScore,
     delta,
+    peerCount,
+  };
+}
+
+export function detailDecisionTimelineBenchmarkEntryAnalyticsEvent(): string {
+  return "detail_decision_timeline_benchmark_entry_click";
+}
+
+export function detailDecisionTimelineBenchmarkEntryAnalyticsData(
+  fromCategory: string,
+  fromSlug: string,
+  peerEntryRef: string,
+  preset: DecisionTimelinePresetId,
+  score: number,
+  delta: number,
+  peerCount: number,
+) {
+  return {
+    entry: detailDecisionPresetEntryKey(fromCategory, fromSlug),
+    surface: detailDecisionPresetSurface("decision-timeline"),
+    peer: peerEntryRef,
+    preset,
+    score,
+    delta,
+    peerCount,
+  };
+}
+
+export function detailEvidenceMatrixBenchmarkEntryAnalyticsEvent(): string {
+  return "detail_evidence_matrix_benchmark_entry_click";
+}
+
+export function detailEvidenceMatrixBenchmarkEntryAnalyticsData(
+  fromCategory: string,
+  fromSlug: string,
+  peerEntryRef: string,
+  preset: EvidenceMatrixPresetId,
+  score: number,
+  strongerThanTarget: boolean,
+  peerCount: number,
+) {
+  return {
+    entry: detailDecisionPresetEntryKey(fromCategory, fromSlug),
+    surface: detailDecisionPresetSurface("evidence-matrix"),
+    peer: peerEntryRef,
+    preset,
+    score,
+    strongerThanTarget,
     peerCount,
   };
 }

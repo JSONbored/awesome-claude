@@ -1,8 +1,15 @@
+import { Link } from "@tanstack/react-router";
 import { cellToneClass, riskTone } from "@/lib/entry-evidence-tone-lib";
 import {
   type EntryEvidenceReadinessMatrixState,
   type EvidenceMatrixPresetId,
 } from "@/lib/entry-evidence-readiness-matrix";
+import {
+  detailEvidenceMatrixBenchmarkEntryAnalyticsData,
+  detailEvidenceMatrixBenchmarkEntryAnalyticsEvent,
+  parseDetailEntryRef,
+} from "@/lib/entry-detail-decision-preset-cta-events";
+import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 const PRESETS: { id: EvidenceMatrixPresetId; label: string }[] = [
@@ -13,11 +20,15 @@ const PRESETS: { id: EvidenceMatrixPresetId; label: string }[] = [
 
 export function EntryEvidenceReadinessMatrix({
   state,
+  category,
+  slug,
   selectedPreset,
   onSelectPreset,
   className,
 }: {
   state: EntryEvidenceReadinessMatrixState;
+  category: string;
+  slug: string;
   selectedPreset: EvidenceMatrixPresetId;
   onSelectPreset: (preset: EvidenceMatrixPresetId) => void;
   className?: string;
@@ -101,15 +112,44 @@ export function EntryEvidenceReadinessMatrix({
         <div className="mt-2 rounded-md border border-border bg-background px-3 py-2">
           <p className="text-[11px] font-medium text-ink">Compare benchmark snapshot</p>
           <ul className="mt-1.5 space-y-1">
-            {state.benchmarks.map((benchmark) => (
-              <li
-                key={benchmark.entryRef}
-                className="flex items-center justify-between gap-2 text-[11px]"
-              >
-                <span className="truncate text-ink">{benchmark.title}</span>
-                <span className="font-mono text-ink-muted">{benchmark.score}</span>
-              </li>
-            ))}
+            {state.benchmarks.map((benchmark) => {
+              const parsed = parseDetailEntryRef(benchmark.entryRef);
+              const title = benchmark.title;
+
+              return (
+                <li
+                  key={benchmark.entryRef}
+                  className="flex items-center justify-between gap-2 text-[11px]"
+                >
+                  {parsed ? (
+                    <Link
+                      to="/entry/$category/$slug"
+                      params={{ category: parsed.category, slug: parsed.slug }}
+                      onClick={() =>
+                        trackEvent(
+                          detailEvidenceMatrixBenchmarkEntryAnalyticsEvent(),
+                          detailEvidenceMatrixBenchmarkEntryAnalyticsData(
+                            category,
+                            slug,
+                            benchmark.entryRef,
+                            selectedPreset,
+                            benchmark.score,
+                            benchmark.strongerThanTarget,
+                            state.benchmarks.length,
+                          ),
+                        )
+                      }
+                      className="truncate underline-offset-2 hover:text-accent hover:underline"
+                    >
+                      {title}
+                    </Link>
+                  ) : (
+                    <span className="truncate text-ink">{title}</span>
+                  )}
+                  <span className="font-mono text-ink-muted">{benchmark.score}</span>
+                </li>
+              );
+            })}
           </ul>
         </div>
       ) : null}
