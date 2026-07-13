@@ -1,8 +1,15 @@
+import { Link } from "@tanstack/react-router";
 import type {
   BrowseConfidencePresetId,
   BrowseDecisionConfidenceState,
 } from "@/lib/browse-decision-confidence";
 import { browseConfidenceBandClass } from "@/lib/browse-decision-confidence";
+import {
+  browseDecisionConfidenceEntryAnalyticsData,
+  browseDecisionConfidenceEntryAnalyticsEvent,
+  parseBrowseDecisionPanelEntryRef,
+} from "@/lib/browse-decision-panel-cta-events";
+import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 const PRESETS: { id: BrowseConfidencePresetId; label: string }[] = [
@@ -67,51 +74,77 @@ export function BrowseDecisionConfidencePanel({
       </div>
 
       <div className="mt-3 grid gap-2">
-        {state.entries.map((entry) => (
-          <article
-            key={entry.entryRef}
-            className="rounded-lg border border-border bg-background p-3"
-          >
-            <div className="flex flex-wrap items-start justify-between gap-2">
-              <div className="min-w-0">
-                <h4 className="text-sm font-semibold text-ink">{entry.title}</h4>
-                <p className="mt-0.5 text-[11px] text-ink-muted">{entry.recommendation}</p>
-              </div>
-              <div className="text-right">
-                <span
-                  className={cn(
-                    "inline-flex rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-wide",
-                    browseConfidenceBandClass(entry.band),
+        {state.entries.map((entry) => {
+          const parsed = parseBrowseDecisionPanelEntryRef(entry.entryRef);
+          const title = <h4 className="text-sm font-semibold text-ink">{entry.title}</h4>;
+          return (
+            <article
+              key={entry.entryRef}
+              className="rounded-lg border border-border bg-background p-3"
+            >
+              <div className="flex flex-wrap items-start justify-between gap-2">
+                <div className="min-w-0">
+                  {parsed ? (
+                    <Link
+                      to="/entry/$category/$slug"
+                      params={{ category: parsed.category, slug: parsed.slug }}
+                      onClick={() =>
+                        trackEvent(
+                          browseDecisionConfidenceEntryAnalyticsEvent(),
+                          browseDecisionConfidenceEntryAnalyticsData(
+                            entry.entryRef,
+                            selectedPreset,
+                            entry.band,
+                            entry.confidenceScore,
+                            entry.missingSignals.length,
+                          ),
+                        )
+                      }
+                      className="underline-offset-2 hover:text-accent hover:underline"
+                    >
+                      {title}
+                    </Link>
+                  ) : (
+                    title
                   )}
-                >
-                  {entry.band}
-                </span>
-                <p className="mt-1 font-mono text-xs text-ink">{entry.confidenceScore}/100</p>
-              </div>
-            </div>
-
-            <div className="mt-2 flex flex-wrap gap-1.5">
-              {entry.missingSignals.length > 0 ? (
-                entry.missingSignals.slice(0, 3).map((signal) => (
+                  <p className="mt-0.5 text-[11px] text-ink-muted">{entry.recommendation}</p>
+                </div>
+                <div className="text-right">
                   <span
-                    key={`${entry.entryRef}-${signal}`}
-                    className="rounded border border-border bg-surface px-2 py-0.5 text-[10px] text-ink-muted"
+                    className={cn(
+                      "inline-flex rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-wide",
+                      browseConfidenceBandClass(entry.band),
+                    )}
                   >
-                    Missing: {signal}
+                    {entry.band}
                   </span>
-                ))
-              ) : (
-                <span className="rounded border border-border bg-surface px-2 py-0.5 text-[10px] text-ink-muted">
-                  All key signals present
-                </span>
-              )}
-            </div>
+                  <p className="mt-1 font-mono text-xs text-ink">{entry.confidenceScore}/100</p>
+                </div>
+              </div>
 
-            <p className="mt-2 text-[11px] text-ink-subtle">
-              {entry.entryRef} · trust {entry.trust}
-            </p>
-          </article>
-        ))}
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {entry.missingSignals.length > 0 ? (
+                  entry.missingSignals.slice(0, 3).map((signal) => (
+                    <span
+                      key={`${entry.entryRef}-${signal}`}
+                      className="rounded border border-border bg-surface px-2 py-0.5 text-[10px] text-ink-muted"
+                    >
+                      Missing: {signal}
+                    </span>
+                  ))
+                ) : (
+                  <span className="rounded border border-border bg-surface px-2 py-0.5 text-[10px] text-ink-muted">
+                    All key signals present
+                  </span>
+                )}
+              </div>
+
+              <p className="mt-2 text-[11px] text-ink-subtle">
+                {entry.entryRef} · trust {entry.trust}
+              </p>
+            </article>
+          );
+        })}
       </div>
     </section>
   );

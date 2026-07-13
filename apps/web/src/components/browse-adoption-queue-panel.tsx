@@ -1,5 +1,12 @@
+import { Link } from "@tanstack/react-router";
 import type { BrowseAdoptionPresetId, BrowseAdoptionQueueState } from "@/lib/browse-adoption-queue";
 import { browseAdoptionTierClass } from "@/lib/browse-adoption-queue";
+import {
+  browseAdoptionQueueEntryAnalyticsData,
+  browseAdoptionQueueEntryAnalyticsEvent,
+  parseBrowseDecisionPanelEntryRef,
+} from "@/lib/browse-decision-panel-cta-events";
+import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 const PRESETS: { id: BrowseAdoptionPresetId; label: string }[] = [
@@ -64,46 +71,75 @@ export function BrowseAdoptionQueuePanel({
       </div>
 
       <div className="mt-3 grid gap-2">
-        {state.rows.map((row) => (
-          <article key={row.entryRef} className="rounded-lg border border-border bg-background p-3">
-            <div className="flex flex-wrap items-start justify-between gap-2">
-              <div className="min-w-0">
-                <h4 className="text-sm font-semibold text-ink">{row.title}</h4>
-                <p className="mt-0.5 text-[11px] text-ink-muted">
-                  {row.blockers.length > 0
-                    ? `${row.blockers.length} blockers: ${row.blockers.slice(0, 2).join(", ")}`
-                    : "No required blockers for this preset."}
-                </p>
-              </div>
-              <div className="text-right">
-                <span
-                  className={cn(
-                    "inline-flex rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-wide",
-                    browseAdoptionTierClass(row.tier),
+        {state.rows.map((row) => {
+          const parsed = parseBrowseDecisionPanelEntryRef(row.entryRef);
+          const title = <h4 className="text-sm font-semibold text-ink">{row.title}</h4>;
+          return (
+            <article
+              key={row.entryRef}
+              className="rounded-lg border border-border bg-background p-3"
+            >
+              <div className="flex flex-wrap items-start justify-between gap-2">
+                <div className="min-w-0">
+                  {parsed ? (
+                    <Link
+                      to="/entry/$category/$slug"
+                      params={{ category: parsed.category, slug: parsed.slug }}
+                      onClick={() =>
+                        trackEvent(
+                          browseAdoptionQueueEntryAnalyticsEvent(),
+                          browseAdoptionQueueEntryAnalyticsData(
+                            row.entryRef,
+                            selectedPreset,
+                            row.tier,
+                            row.readinessScore,
+                            row.blockers.length,
+                          ),
+                        )
+                      }
+                      className="underline-offset-2 hover:text-accent hover:underline"
+                    >
+                      {title}
+                    </Link>
+                  ) : (
+                    title
                   )}
-                >
-                  {row.tier}
-                </span>
-                <p className="mt-1 font-mono text-xs text-ink">{row.readinessScore}/100</p>
+                  <p className="mt-0.5 text-[11px] text-ink-muted">
+                    {row.blockers.length > 0
+                      ? `${row.blockers.length} blockers: ${row.blockers.slice(0, 2).join(", ")}`
+                      : "No required blockers for this preset."}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <span
+                    className={cn(
+                      "inline-flex rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-wide",
+                      browseAdoptionTierClass(row.tier),
+                    )}
+                  >
+                    {row.tier}
+                  </span>
+                  <p className="mt-1 font-mono text-xs text-ink">{row.readinessScore}/100</p>
+                </div>
               </div>
-            </div>
 
-            <div className="mt-2 grid gap-1.5 sm:grid-cols-2">
-              {row.nextSteps.map((step) => (
-                <p
-                  key={`${row.entryRef}-${step}`}
-                  className="rounded border border-border px-2 py-1 text-[11px] text-ink-muted"
-                >
-                  {step}
-                </p>
-              ))}
-            </div>
+              <div className="mt-2 grid gap-1.5 sm:grid-cols-2">
+                {row.nextSteps.map((step) => (
+                  <p
+                    key={`${row.entryRef}-${step}`}
+                    className="rounded border border-border px-2 py-1 text-[11px] text-ink-muted"
+                  >
+                    {step}
+                  </p>
+                ))}
+              </div>
 
-            <p className="mt-2 text-[11px] text-ink-subtle">
-              {row.entryRef} · trust {row.trust} · confidence {row.confidence}%
-            </p>
-          </article>
-        ))}
+              <p className="mt-2 text-[11px] text-ink-subtle">
+                {row.entryRef} · trust {row.trust} · confidence {row.confidence}%
+              </p>
+            </article>
+          );
+        })}
       </div>
     </section>
   );
