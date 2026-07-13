@@ -49,7 +49,10 @@ import {
   compareDrawerScenarioAnalyticsEvent,
   compareDrawerScenarioSurface,
 } from "@/lib/compare-drawer-scenario-cta-events";
-import { compareDrawerDecisionBriefSurface } from "@/lib/compare-panel-entry-cta-events";
+import {
+  compareDrawerDecisionBriefSurface,
+  compareDrawerEvidenceGapsSurface,
+} from "@/lib/compare-panel-entry-cta-events";
 import {
   compareDrawerSnippetCopyAnalyticsData,
   compareDrawerSnippetCopyAnalyticsEvent,
@@ -648,7 +651,12 @@ export function CompareDrawer() {
               compact
               className="mx-3"
             />
-            <CompareEvidenceGapsPanel state={evidenceGaps} compact className="m-3 mt-0" />
+            <CompareEvidenceGapsPanel
+              state={evidenceGaps}
+              surface={compareDrawerEvidenceGapsSurface()}
+              compact
+              className="m-3 mt-0"
+            />
             <CompareRolloutReadinessPanel
               state={rolloutReadiness}
               surface={compareDrawerDecisionPresetSurface("rollout-readiness")}

@@ -1,17 +1,30 @@
+import { Link } from "@tanstack/react-router";
 import { severityClass } from "@/lib/compare-evidence-severity-lib";
 import type { CompareEvidenceGapsState } from "@/lib/compare-evidence-gaps";
+import {
+  compareEvidenceGapsEntryAnalyticsData,
+  compareEvidenceGapsEntryAnalyticsEvent,
+  parseComparePanelEntryRef,
+} from "@/lib/compare-panel-entry-cta-events";
+import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 export function CompareEvidenceGapsPanel({
   state,
+  surface,
   compact = false,
   className,
 }: {
   state: CompareEvidenceGapsState;
+  surface: string;
   compact?: boolean;
   className?: string;
 }) {
   if (state.comparedCount === 0) return null;
+
+  const entriesWithGaps = state.entries
+    .filter((entry) => entry.missingLabels.length > 0)
+    .sort((a, b) => b.missingLabels.length - a.missingLabels.length);
 
   return (
     <section
@@ -67,6 +80,58 @@ export function CompareEvidenceGapsPanel({
           </article>
         ))}
       </div>
+
+      {entriesWithGaps.length > 0 ? (
+        <div className="mt-3 rounded-md border border-border bg-background p-2.5">
+          <p className="text-[11px] font-medium text-ink">Entries with evidence gaps</p>
+          <ul className="mt-1.5 space-y-1.5">
+            {entriesWithGaps.map((entry) => {
+              const parsed = parseComparePanelEntryRef(entry.entryRef);
+              const title = (
+                <div className="min-w-0">
+                  <p className="truncate text-ink">{entry.title}</p>
+                  <p className="truncate text-ink-subtle">
+                    {entry.missingLabels.length} missing signal
+                    {entry.missingLabels.length === 1 ? "" : "s"}
+                  </p>
+                </div>
+              );
+              return (
+                <li
+                  key={entry.entryRef}
+                  className="flex items-start justify-between gap-2 text-[11px]"
+                >
+                  {parsed ? (
+                    <Link
+                      to="/entry/$category/$slug"
+                      params={{ category: parsed.category, slug: parsed.slug }}
+                      onClick={() =>
+                        trackEvent(
+                          compareEvidenceGapsEntryAnalyticsEvent(),
+                          compareEvidenceGapsEntryAnalyticsData(
+                            surface,
+                            entry.entryRef,
+                            entry.missingLabels.length,
+                            state.comparedCount,
+                          ),
+                        )
+                      }
+                      className="min-w-0 flex-1 underline-offset-2 hover:text-accent hover:underline"
+                    >
+                      {title}
+                    </Link>
+                  ) : (
+                    title
+                  )}
+                  <span className="shrink-0 font-mono text-ink-muted">
+                    {entry.missingLabels.length}/{state.rows.length}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ) : null}
     </section>
   );
 }

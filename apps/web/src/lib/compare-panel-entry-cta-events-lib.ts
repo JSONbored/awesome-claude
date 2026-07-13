@@ -163,6 +163,32 @@ export function compareMitigationPriorityEntryAnalyticsData(
   };
 }
 
+export function comparePageEvidenceGapsSurface(): string {
+  return "compare-page-evidence-gaps";
+}
+
+export function compareDrawerEvidenceGapsSurface(): string {
+  return "compare-drawer-evidence-gaps";
+}
+
+export function compareEvidenceGapsEntryAnalyticsEvent(): string {
+  return "compare_evidence_gaps_entry_click";
+}
+
+export function compareEvidenceGapsEntryAnalyticsData(
+  surface: string,
+  entryRef: string,
+  missingSignalCount: number,
+  comparedCount: number,
+) {
+  return {
+    surface,
+    entry: entryRef,
+    missingSignalCount,
+    comparedCount,
+  };
+}
+
 export function parseComparePanelEntryRef(
   entryRef: string,
 ): { category: string; slug: string } | null {

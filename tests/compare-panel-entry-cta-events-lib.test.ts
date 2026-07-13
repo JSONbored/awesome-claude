@@ -5,11 +5,15 @@ import {
   compareDeploymentRiskEntryAnalyticsData,
   compareDeploymentRiskEntryAnalyticsEvent,
   compareDrawerDecisionBriefSurface,
+  compareDrawerEvidenceGapsSurface,
+  compareEvidenceGapsEntryAnalyticsData,
+  compareEvidenceGapsEntryAnalyticsEvent,
   compareMitigationPriorityEntryAnalyticsData,
   compareMitigationPriorityEntryAnalyticsEvent,
   compareOperationalFitEntryAnalyticsData,
   compareOperationalFitEntryAnalyticsEvent,
   comparePageDecisionBriefSurface,
+  comparePageEvidenceGapsSurface,
   compareRolloutReadinessEntryAnalyticsData,
   compareRolloutReadinessEntryAnalyticsEvent,
   compareScenarioRankingEntryAnalyticsData,
@@ -158,5 +162,25 @@ describe("compare panel entry cta events lib", () => {
       slug: "browser",
     });
     expect(parseComparePanelEntryRef("invalid")).toBeNull();
+    expect(comparePageEvidenceGapsSurface()).toBe("compare-page-evidence-gaps");
+    expect(compareDrawerEvidenceGapsSurface()).toBe(
+      "compare-drawer-evidence-gaps",
+    );
+    expect(compareEvidenceGapsEntryAnalyticsEvent()).toBe(
+      "compare_evidence_gaps_entry_click",
+    );
+    expect(
+      compareEvidenceGapsEntryAnalyticsData(
+        comparePageEvidenceGapsSurface(),
+        "mcp/browser",
+        3,
+        4,
+      ),
+    ).toEqual({
+      surface: "compare-page-evidence-gaps",
+      entry: "mcp/browser",
+      missingSignalCount: 3,
+      comparedCount: 4,
+    });
   });
 });

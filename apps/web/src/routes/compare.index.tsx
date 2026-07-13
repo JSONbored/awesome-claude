@@ -48,7 +48,10 @@ import {
   comparePageScenarioAnalyticsEvent,
   comparePageScenarioSurface,
 } from "@/lib/compare-page-scenario-cta-events";
-import { comparePageDecisionBriefSurface } from "@/lib/compare-panel-entry-cta-events";
+import {
+  comparePageDecisionBriefSurface,
+  comparePageEvidenceGapsSurface,
+} from "@/lib/compare-panel-entry-cta-events";
 import {
   comparePageShareLinkCopyAnalyticsData,
   comparePageShareLinkCopyAnalyticsEvent,
@@ -400,7 +403,11 @@ function ComparePage() {
           onSelectScenario={onScenarioSelect}
           className="m-3"
         />
-        <CompareEvidenceGapsPanel state={evidenceGaps} className="m-3 mt-0" />
+        <CompareEvidenceGapsPanel
+          state={evidenceGaps}
+          surface={comparePageEvidenceGapsSurface()}
+          className="m-3 mt-0"
+        />
         <CompareRolloutReadinessPanel
           state={rolloutReadiness}
           surface={comparePageDecisionPresetSurface("rollout-readiness")}
