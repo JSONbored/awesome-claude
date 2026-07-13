@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>1369+ file-backed entries</strong> stay useful as both an
+        <strong>1370+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>1369</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>1370</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>AI-reviewed</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -79,7 +79,7 @@ Refreshed weekly by [`.github/workflows/gittensor-impact.yml`](.github/workflows
         </td>
 <td align="center" width="20%">
           <a href="#mcp-servers"><strong>🔌 MCP Servers</strong></a><br>
-          <code>479</code><br>
+          <code>480</code><br>
           <sub>Model Context Protocol servers and integrations.</sub>
         </td>
 <td align="center" width="20%">
@@ -307,7 +307,7 @@ packages use checksums and package trust metadata after review.
 - **[Web Async Agent Coordinator - Agents](https://heyclau.de/entry/agents/web-async-agent-coordinator)** - System-prompt agent that helps you drive Claude Code on the web: submitting long-running coding tasks to Anthropic's cloud, running independent sessions in parallel, linking GitHub repositories, tracking progress, and turning finished work into pull requests from the browser.
 - **[Zero Data Retention Compliance Agent](https://heyclau.de/entry/agents/zero-data-retention-compliance-agent)** - Community reusable agent prompt for mapping Claude Code deployments to zero data retention requirements using official ZDR docs: logging boundaries, MCP data flows, session storage, and compliance evidence checklists for security review.
 
-## 🔌 MCP Servers (479)
+## 🔌 MCP Servers (480)
 
 - **[Ableton MCP Extended](https://heyclau.de/entry/mcp/ableton-mcp-extended)** - Source-install MCP server for controlling Ableton Live from Claude, including session inspection, track and clip creation, MIDI note editing, tempo and transport control, browser item loading, arrangement workflows, device parameters, automation, external plugins, audio imports, and optional ElevenLabs.
 - **[ABMeter MCP Server](https://heyclau.de/entry/mcp/abmeter-mcp-server)** - ABMeter MCP exposes experimentation and analytics tooling over streamable HTTP for MCP clients.
@@ -522,6 +522,7 @@ packages use checksums and package trust metadata after review.
 - **[Gittensory MCP Server for Claude](https://heyclau.de/entry/mcp/gittensory-mcp)** - Gittensory MCP connects Claude and other MCP clients to private, metadata-only Gittensor contribution mining workflows for branch preflight, scoreability estimates, maintainer-fit checks, and public-safe PR packets.
 - **[Glean MCP Server for Claude](https://heyclau.de/entry/mcp/glean-mcp-server)** - Connect Claude to Glean — run company-wide enterprise search and chat with the Glean AI Assistant across your connected workplace apps — with the official MCP server for the Glean platform.
 - **[Godot MCP Server](https://heyclau.de/entry/mcp/godot-mcp-server)** - MCP server for controlling the Godot game engine, launching the editor, running projects, capturing debug output, and editing scenes and resources.
+- **[GoodMemory MCP Server](https://heyclau.de/entry/mcp/goodmemory-mcp-server)** - Local-first GoodMemory MCP server for giving Claude durable, scoped memory with SQLite storage, auditable recall, explicit deletion, and opt-in governed writes.
 - **[Google Analytics MCP Server](https://heyclau.de/entry/mcp/google-analytics-mcp-server)** - Experimental Google Analytics MCP server that lets Claude retrieve GA4 account and property details, Google Ads links, custom dimensions and metrics, core reports, funnel reports, and realtime reports.
 - **[Google Search Console MCP Server](https://heyclau.de/entry/mcp/google-search-console-mcp-server)** - MCP server for Google Search Console that lets Claude list properties, inspect indexing status, query search analytics, compare performance periods, audit sitemaps, and manage Search Console resources with guarded destructive tools.
 - **[Google Workspace MCP Server](https://heyclau.de/entry/mcp/google-workspace-mcp-server)** - Comprehensive Google Workspace MCP server and CLI for Gmail, Drive, Calendar, Docs, Sheets, Slides, Forms, Chat, Apps Script, Tasks, Contacts, and Custom Search workflows.
