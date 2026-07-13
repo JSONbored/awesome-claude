@@ -4,7 +4,6 @@ import process from "node:process";
 import { fileURLToPath } from "node:url";
 
 import {
-  DEFAULT_INDEXNOW_BASE_URL,
   DEFAULT_INDEXNOW_KEY,
   INDEXNOW_ENDPOINT,
   buildIndexNowPayload,
@@ -16,42 +15,12 @@ import {
   normalizeSiteUrl,
   normalizeSubmittedUrls,
 } from "./lib/indexnow.mjs";
+import { parseIndexNowArgs } from "./lib/indexnow-submit-args.mjs";
 
 const repoRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   "..",
 );
-
-function parseArgs(argv) {
-  const args = {
-    baseUrl: process.env.INDEXNOW_BASE_URL || DEFAULT_INDEXNOW_BASE_URL,
-    dryRun: false,
-    urls: [],
-    urlsFile: "",
-  };
-
-  for (let index = 0; index < argv.length; index += 1) {
-    const arg = argv[index];
-    if (arg === "--dry-run") {
-      args.dryRun = true;
-      continue;
-    }
-    if (arg === "--base-url") {
-      args.baseUrl = argv[++index] || args.baseUrl;
-      continue;
-    }
-    if (arg === "--url") {
-      args.urls.push(argv[++index] || "");
-      continue;
-    }
-    if (arg === "--urls-file") {
-      args.urlsFile = argv[++index] || "";
-      continue;
-    }
-  }
-
-  return args;
-}
 
 async function fetchText(url) {
   const response = await fetch(url, { signal: AbortSignal.timeout(10_000) });
@@ -103,7 +72,7 @@ async function submitBatch(payload, dryRun) {
 }
 
 async function main() {
-  const args = parseArgs(process.argv.slice(2));
+  const args = parseIndexNowArgs(process.argv.slice(2));
   const siteUrl = normalizeSiteUrl(args.baseUrl);
   const host = hostFromSiteUrl(siteUrl);
   const key = process.env.INDEXNOW_KEY || DEFAULT_INDEXNOW_KEY;
