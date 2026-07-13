@@ -3,13 +3,11 @@ import fs from "node:fs";
 import path from "node:path";
 
 import matter from "gray-matter";
-import {
-  domainFromUrl,
-  isHostingOrRegistryDomain,
-  normalizeBrandDomain,
-} from "@heyclaude/registry/brand-assets";
+import { normalizeBrandDomain } from "@heyclaude/registry/brand-assets";
 import { orderFrontmatter } from "@heyclaude/registry/content-schema";
 import { parseSafeFrontmatter } from "@heyclaude/registry/frontmatter";
+
+import { candidateDomain } from "./lib/brand-domain-candidate.mjs";
 
 const repoRoot = process.cwd();
 const contentRoot = path.join(repoRoot, "content");
@@ -26,23 +24,6 @@ function walkMdx(directory) {
 
 function clean(value) {
   return String(value || "").trim();
-}
-
-function candidateDomain(data) {
-  const explicit = normalizeBrandDomain(data.brandDomain);
-  if (explicit) return { domain: explicit, source: "explicit" };
-
-  const websiteDomain = domainFromUrl(data.websiteUrl);
-  if (websiteDomain && !isHostingOrRegistryDomain(websiteDomain)) {
-    return { domain: websiteDomain, source: "websiteUrl" };
-  }
-
-  const docsDomain = domainFromUrl(data.documentationUrl);
-  if (docsDomain && !isHostingOrRegistryDomain(docsDomain)) {
-    return { domain: docsDomain, source: "documentationUrl-review-only" };
-  }
-
-  return { domain: "", source: "missing" };
 }
 
 const rows = [];
