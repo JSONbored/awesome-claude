@@ -60,6 +60,23 @@ function tally(entries, exclude) {
 }
 
 /**
+ * Parse the audit-coverage-gaps CLI flags (--json, --min-demand <n>,
+ * --per-category <n>) into an options object. Non-numeric or zero numeric
+ * values fall back to the default of 12.
+ */
+export function parseCoverageGapsArgs(argv) {
+  const args = { json: false, minDemand: 12, perCategory: 12 };
+  for (let i = 0; i < argv.length; i += 1) {
+    if (argv[i] === "--json") args.json = true;
+    else if (argv[i] === "--min-demand")
+      args.minDemand = Number(argv[++i]) || 12;
+    else if (argv[i] === "--per-category")
+      args.perCategory = Number(argv[++i]) || 12;
+  }
+  return args;
+}
+
+/**
  * Priority groups of under-covered intents.
  * @param opts.minDemand global tag count to be considered a real intent (default 8)
  * @param opts.maxInCategory at-or-below this count in a category = under-covered (default 1)

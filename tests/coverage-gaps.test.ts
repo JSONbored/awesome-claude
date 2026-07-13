@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   findCoverageGaps,
   NON_INTENT_TAGS,
+  parseCoverageGapsArgs,
 } from "../scripts/lib/coverage-gaps.mjs";
 
 function e(category: string, tags: string[]) {
@@ -60,5 +61,40 @@ describe("findCoverageGaps", () => {
     expect(a.map((g) => g.category)).toEqual(
       [...a.map((g) => g.category)].sort(),
     );
+  });
+});
+
+describe("parseCoverageGapsArgs", () => {
+  it("defaults to json off and demand/per-category of 12", () => {
+    expect(parseCoverageGapsArgs([])).toEqual({
+      json: false,
+      minDemand: 12,
+      perCategory: 12,
+    });
+  });
+
+  it("sets --json and reads the numeric flags", () => {
+    expect(
+      parseCoverageGapsArgs([
+        "--json",
+        "--min-demand",
+        "16",
+        "--per-category",
+        "5",
+      ]),
+    ).toEqual({ json: true, minDemand: 16, perCategory: 5 });
+  });
+
+  it("falls back to 12 for non-numeric or zero numeric values", () => {
+    expect(parseCoverageGapsArgs(["--min-demand", "abc"]).minDemand).toBe(12);
+    expect(parseCoverageGapsArgs(["--per-category", "0"]).perCategory).toBe(12);
+  });
+
+  it("ignores unrecognized tokens", () => {
+    expect(parseCoverageGapsArgs(["--nope", "stray"])).toEqual({
+      json: false,
+      minDemand: 12,
+      perCategory: 12,
+    });
   });
 });
