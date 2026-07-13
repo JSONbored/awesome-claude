@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>1370+ file-backed entries</strong> stay useful as both an
+        <strong>1371+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>1370</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>1371</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>AI-reviewed</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -79,7 +79,7 @@ Refreshed weekly by [`.github/workflows/gittensor-impact.yml`](.github/workflows
         </td>
 <td align="center" width="20%">
           <a href="#mcp-servers"><strong>🔌 MCP Servers</strong></a><br>
-          <code>480</code><br>
+          <code>481</code><br>
           <sub>Model Context Protocol servers and integrations.</sub>
         </td>
 <td align="center" width="20%">
@@ -307,7 +307,7 @@ packages use checksums and package trust metadata after review.
 - **[Web Async Agent Coordinator - Agents](https://heyclau.de/entry/agents/web-async-agent-coordinator)** - System-prompt agent that helps you drive Claude Code on the web: submitting long-running coding tasks to Anthropic's cloud, running independent sessions in parallel, linking GitHub repositories, tracking progress, and turning finished work into pull requests from the browser.
 - **[Zero Data Retention Compliance Agent](https://heyclau.de/entry/agents/zero-data-retention-compliance-agent)** - Community reusable agent prompt for mapping Claude Code deployments to zero data retention requirements using official ZDR docs: logging boundaries, MCP data flows, session storage, and compliance evidence checklists for security review.
 
-## 🔌 MCP Servers (480)
+## 🔌 MCP Servers (481)
 
 - **[Ableton MCP Extended](https://heyclau.de/entry/mcp/ableton-mcp-extended)** - Source-install MCP server for controlling Ableton Live from Claude, including session inspection, track and clip creation, MIDI note editing, tempo and transport control, browser item loading, arrangement workflows, device parameters, automation, external plugins, audio imports, and optional ElevenLabs.
 - **[ABMeter MCP Server](https://heyclau.de/entry/mcp/abmeter-mcp-server)** - ABMeter MCP exposes experimentation and analytics tooling over streamable HTTP for MCP clients.
@@ -569,6 +569,7 @@ packages use checksums and package trust metadata after review.
 - **[Keeper.sh MCP Server](https://heyclau.de/entry/mcp/keeper-sh-mcp-server)** - Self-hostable calendar MCP service for Keeper.sh that lets Claude list calendars and accounts, read events, create or update events, delete events, respond to invites, and retrieve iCal feed URLs through Keeper's API.
 - **[KiCad MCP Server](https://heyclau.de/entry/mcp/kicad-mcp)** - MCP server for KiCad projects that lets Claude discover boards, inspect project structure, analyze PCB and schematic files, extract netlists, review BOMs, run design-rule workflows, and generate board thumbnails.
 - **[Klavis Strata MCP Router](https://heyclau.de/entry/mcp/klavis-strata-mcp-router)** - Open-source MCP router from Klavis AI that progressively exposes actions from multiple configured MCP servers instead of flooding Claude with every tool.
+- **[KLinePic MCP Server](https://heyclau.de/entry/mcp/klinepic-mcp-server)** - Source-backed KLinePic stdio MCP server for turning broker and exchange fills into annotated post-trade candlestick review charts, with capability discovery and no-charge request preflight before quota-consuming rendering.
 - **[Knock MCP Server for Claude](https://heyclau.de/entry/mcp/knock-mcp-server)** - Manage your Knock notification infrastructure from Claude — create and edit workflows, channels, templates, and email layouts, manage users and tenants, commit changes across environments, and debug message logs — with the official Knock remote MCP server.
 - **[Kordoc MCP Server](https://heyclau.de/entry/mcp/kordoc-mcp-server)** - MCP server for parsing Korean HWP, HWPX, HWPML, PDF, XLSX, and DOCX files into Markdown, with tools for metadata extraction, page ranges, tables, document diffs, form extraction, and HWPX form filling.
 - **[Korean Law MCP Server](https://heyclau.de/entry/mcp/korean-law-mcp-server)** - MCP server and CLI for searching Korean statutes, precedents, ordinances, treaties, interpretations, citation checks, amendment timelines, and legal scenario workflows through Korea's official law APIs.
