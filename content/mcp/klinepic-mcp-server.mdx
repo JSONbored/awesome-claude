@@ -1,0 +1,221 @@
+---
+title: KLinePic MCP Server
+slug: klinepic-mcp-server
+category: mcp
+description: >-
+  Source-backed KLinePic stdio MCP server for turning broker and exchange fills
+  into annotated post-trade candlestick review charts, with capability discovery
+  and no-charge request preflight before quota-consuming rendering.
+cardDescription: Turn broker and exchange fills into annotated post-trade candlestick review charts from Claude.
+seoTitle: KLinePic MCP Server for Claude Trade Review Charts
+seoDescription: >-
+  Connect Claude to KLinePic to validate broker or exchange fills and render
+  annotated post-trade candlestick review-chart PNGs through three MCP tools.
+author: KLinePic
+authorProfileUrl: 'https://github.com/sher1096'
+submittedBy: sher1096
+submittedByUrl: 'https://github.com/sher1096'
+dateAdded: '2026-07-14'
+brandName: KLinePic
+brandDomain: klinepic.com
+websiteUrl: 'https://klinepic.com/guides/trade-review-chart-api/'
+repoUrl: 'https://github.com/sher1096/klinepic-agent-api-examples'
+documentationUrl: 'https://github.com/sher1096/klinepic-agent-api-examples/blob/master/README.md'
+installable: true
+installCommand: 'npx -y github:sher1096/klinepic-agent-api-examples'
+usageSnippet: >-
+  Call klinepic_get_capabilities, validate the request with
+  klinepic_preflight_review_chart, then ask for confirmation before calling the
+  quota-consuming klinepic_create_review_chart tool.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "klinepic": {
+        "command": "npx",
+        "args": ["-y", "github:sher1096/klinepic-agent-api-examples"],
+        "env": {
+          "KLINE_AGENT_API_KEY": "YOUR_KLINEPIC_AGENT_API_KEY"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "klinepic": {
+        "command": "npx",
+        "args": ["-y", "github:sher1096/klinepic-agent-api-examples"],
+        "env": {
+          "KLINE_AGENT_API_KEY": "YOUR_KLINEPIC_AGENT_API_KEY"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: intermediate
+retrievalSources:
+  - 'https://github.com/sher1096/klinepic-agent-api-examples/blob/master/README.md'
+  - 'https://github.com/sher1096/klinepic-agent-api-examples/blob/master/llms-install.md'
+  - 'https://github.com/sher1096/klinepic-agent-api-examples/blob/master/package.json'
+  - 'https://github.com/sher1096/klinepic-agent-api-examples/blob/master/SECURITY.md'
+  - 'https://registry.modelcontextprotocol.io/v0.1/servers/io.github.sher1096%2Fklinepic/versions/latest'
+prerequisites:
+  - Node.js 20 or newer with npx available.
+  - A KLinePic Agent API key stored in the KLINE_AGENT_API_KEY environment variable.
+  - Claude Code, Claude Desktop, Cline, Cursor, or another MCP host with stdio support.
+  - Broker or exchange fills and matching K-line data that you are permitted to process.
+safetyNotes:
+  - The GitHub npx command downloads and executes repository code; review the source and pin a trusted commit for controlled production environments.
+  - klinepic_create_review_chart consumes chart-render quota; call capabilities and the no-charge preflight tool first, then require human confirmation before rendering.
+  - KLinePic creates post-trade review charts only and does not provide trading signals, price forecasts, investment advice, or order execution.
+privacyNotes:
+  - Symbols, timestamps, prices, quantities, trade directions, fees, notes, and K-line data in tool requests are transmitted over HTTPS to the hosted KLinePic Agent API.
+  - Store KLINE_AGENT_API_KEY in MCP environment configuration or a secret manager, never in source control, chat transcripts, screenshots, issues, or shared logs.
+  - Tool inputs, validation results, and returned chart images can enter the MCP host and model context; review client logging and retention before processing confidential trading records.
+tags:
+  - trade-review
+  - candlestick-charts
+  - finance
+  - visualization
+  - stdio
+keywords:
+  - KLinePic MCP Server
+  - Claude candlestick chart MCP
+  - broker fills trade review
+  - annotated K-line chart
+  - post-trade analysis MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+KLinePic is an MIT-licensed stdio MCP adapter for creating annotated
+post-trade candlestick review-chart PNGs from broker or exchange fills. It
+connects Claude and other MCP clients to the hosted KLinePic Agent API while
+keeping capability discovery and request validation separate from the
+quota-consuming render operation.
+
+The server exposes exactly three tools:
+
+- `klinepic_get_capabilities` checks key permissions, supported endpoints, plan
+  limits, and remaining quota.
+- `klinepic_preflight_review_chart` validates fills, K-line data, scopes, and
+  estimated cost without consuming chart-render quota.
+- `klinepic_create_review_chart` returns an annotated candlestick PNG as native
+  MCP image content and consumes one chart render.
+
+## Verified Behavior
+
+The public adapter repository documents and exercises the following checks:
+
+- Four API adapter tests pass.
+- A real MCP stdio initialization and `tools/list` handshake discovers all
+  three tool schemas.
+- A fresh Windows Cline-compatible `cmd /c npx` installation from an empty
+  directory completes MCP initialization and tool discovery.
+- Live production capability discovery and no-charge preflight pass with a
+  scoped Agent API key.
+- GitHub Actions builds the Docker image from a clean Linux checkout.
+- The official MCP Registry lists `io.github.sher1096/klinepic` as an active
+  server package.
+
+These checks establish installation, schema discovery, and preflight behavior.
+They do not turn KLinePic into a trading signal or order-execution system.
+
+## Installation
+
+Run the server directly from its public GitHub repository:
+
+```sh
+npx -y github:sher1096/klinepic-agent-api-examples
+```
+
+For Claude Code on macOS or Linux:
+
+```sh
+claude mcp add klinepic \
+  --env KLINE_AGENT_API_KEY=YOUR_KLINEPIC_AGENT_API_KEY \
+  -- npx -y github:sher1096/klinepic-agent-api-examples
+```
+
+For JSON-based MCP clients:
+
+```json
+{
+  "mcpServers": {
+    "klinepic": {
+      "command": "npx",
+      "args": ["-y", "github:sher1096/klinepic-agent-api-examples"],
+      "env": {
+        "KLINE_AGENT_API_KEY": "YOUR_KLINEPIC_AGENT_API_KEY"
+      }
+    }
+  }
+}
+```
+
+On Windows clients that do not resolve `npx` directly, use `cmd` as the command
+and `["/c", "npx", "-y", "github:sher1096/klinepic-agent-api-examples"]` as
+the argument list. Keep the API key in the same environment block.
+
+## Recommended Workflow
+
+1. Call `klinepic_get_capabilities` and inspect scopes, limits, and quota.
+2. Prepare broker or exchange fills plus matching K-line data.
+3. Call `klinepic_preflight_review_chart` to catch malformed data, unsupported
+   sources, missing scopes, IP restrictions, plan state, and quota issues.
+4. Review the validation result and estimated chart cost.
+5. Ask the user to confirm the render.
+6. Call `klinepic_create_review_chart` and inspect the returned PNG.
+
+## Use Cases
+
+- Convert an A-share broker export into a candlestick review chart with real
+  buy and sell markers.
+- Visualize US stock, cryptocurrency, or futures fills against matching K-line
+  data after a completed trade.
+- Let Claude validate trade-review input before spending chart quota.
+- Produce a consistent PNG artifact for a trading journal or post-trade review.
+- Inspect API-key capabilities and remaining limits before starting a batch of
+  review work.
+
+## Safety and Privacy
+
+KLinePic is for post-trade visualization. It does not generate entry or exit
+signals, predict prices, provide investment advice, or place orders. Keep a
+human in the loop before any quota-consuming render and do not treat chart
+annotations as recommendations.
+
+Tool requests can contain sensitive trading records, including instruments,
+timestamps, prices, quantities, directions, fees, and notes. Send only data you
+are permitted to process, keep the Agent API key outside source control, and
+review the MCP client's transcript, image, and log retention before using real
+broker or customer records.
+
+## Source Review
+
+- https://github.com/sher1096/klinepic-agent-api-examples
+- https://github.com/sher1096/klinepic-agent-api-examples/blob/master/README.md
+- https://github.com/sher1096/klinepic-agent-api-examples/blob/master/llms-install.md
+- https://github.com/sher1096/klinepic-agent-api-examples/blob/master/package.json
+- https://github.com/sher1096/klinepic-agent-api-examples/blob/master/SECURITY.md
+- https://registry.modelcontextprotocol.io/v0.1/servers/io.github.sher1096%2Fklinepic/versions/latest
+
+These sources were reviewed on **2026-07-14**. Prefer the live repository,
+installation guide, package metadata, security policy, and official MCP
+Registry entry for current commands, versions, credentials, and tool behavior.
+
+## Duplicate Check
+
+No KLinePic name, repository URL, `io.github.sher1096/klinepic` registry name,
+or dedicated post-trade candlestick review-chart MCP entry was found in
+HeyClaude content, open pull requests, or open issues before this submission.
+
+## Editorial Disclosure
+
+This source-backed entry was submitted by the KLinePic repository owner. The
+adapter is public and MIT-licensed; API calls require a KLinePic Agent API key,
+preflight does not consume chart-render quota, and finished renders are subject
+to the account's plan and quota. There is no sponsorship or affiliate link in
+this entry.
