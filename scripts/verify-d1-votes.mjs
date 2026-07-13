@@ -4,6 +4,7 @@ import {
   enumerateContentVoteKeys,
   findOrphanVoteKeys,
 } from "./lib/enumerate-content-vote-keys.mjs";
+import { parseWranglerRows } from "./lib/wrangler-rows.mjs";
 
 const repoRoot = process.cwd();
 const d1Binding = process.env.SITE_D1_BINDING || "SITE_DB";
@@ -35,12 +36,7 @@ function getRows(runMode, query) {
     cwd: repoRoot,
     encoding: "utf8",
   });
-  const jsonMatch = output.match(/(\[\s*\{[\s\S]*\])\s*$/);
-  if (!jsonMatch) {
-    throw new Error(`Could not parse wrangler output for ${runMode}`);
-  }
-  const payload = JSON.parse(jsonMatch[1]);
-  return payload?.[0]?.results ?? [];
+  return parseWranglerRows(output, runMode);
 }
 
 function verifyRunMode(runMode) {
