@@ -15,7 +15,7 @@ author: KLinePic
 authorProfileUrl: 'https://github.com/sher1096'
 submittedBy: sher1096
 submittedByUrl: 'https://github.com/sher1096'
-dateAdded: '2026-07-14'
+dateAdded: '2026-07-13'
 brandName: KLinePic
 brandDomain: klinepic.com
 websiteUrl: 'https://klinepic.com/guides/trade-review-chart-api/'
@@ -70,6 +70,7 @@ safetyNotes:
   - KLinePic creates post-trade review charts only and does not provide trading signals, price forecasts, investment advice, or order execution.
 privacyNotes:
   - Symbols, timestamps, prices, quantities, trade directions, fees, notes, and K-line data in tool requests are transmitted over HTTPS to the hosted KLinePic Agent API.
+  - Leave KLINEPIC_BASE_URL unset to use the hosted API, or set it only to a trusted HTTPS endpoint; the adapter sends the API key and full trade payload to this override.
   - Store KLINE_AGENT_API_KEY in MCP environment configuration or a secret manager, never in source control, chat transcripts, screenshots, issues, or shared logs.
   - Tool inputs, validation results, and returned chart images can enter the MCP host and model context; review client logging and retention before processing confidential trading records.
 tags:
@@ -195,7 +196,10 @@ Tool requests can contain sensitive trading records, including instruments,
 timestamps, prices, quantities, directions, fees, and notes. Send only data you
 are permitted to process, keep the Agent API key outside source control, and
 review the MCP client's transcript, image, and log retention before using real
-broker or customer records.
+broker or customer records. Leave `KLINEPIC_BASE_URL` unset to use the hosted
+KLinePic API. If you intentionally override it, use only a trusted HTTPS
+endpoint because the adapter sends both `KLINE_AGENT_API_KEY` and the full
+trade payload to that address.
 
 ## Source Review
 
@@ -206,7 +210,7 @@ broker or customer records.
 - https://github.com/sher1096/klinepic-agent-api-examples/blob/master/SECURITY.md
 - https://registry.modelcontextprotocol.io/v0.1/servers/io.github.sher1096%2Fklinepic/versions/latest
 
-These sources were reviewed on **2026-07-14**. Prefer the live repository,
+These sources were reviewed on **2026-07-13**. Prefer the live repository,
 installation guide, package metadata, security policy, and official MCP
 Registry entry for current commands, versions, credentials, and tool behavior.
 
