@@ -767,6 +767,8 @@ function Dossier() {
           />
           <EntryCompareBenchmarkPanel
             state={compareBenchmark}
+            category={entry.category}
+            slug={entry.slug}
             selectedPreset={benchmarkPreset}
             onSelectPreset={onBenchmarkPresetSelect}
           />

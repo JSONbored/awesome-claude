@@ -1,8 +1,15 @@
+import { Link } from "@tanstack/react-router";
 import type {
   CompareBenchmarkPresetId,
   EntryCompareBenchmarkState,
 } from "@/lib/entry-compare-benchmark";
 import { compareBenchmarkVerdictClass } from "@/lib/entry-compare-benchmark";
+import {
+  detailCompareBenchmarkEntryAnalyticsData,
+  detailCompareBenchmarkEntryAnalyticsEvent,
+  parseDetailEntryRef,
+} from "@/lib/entry-detail-decision-preset-cta-events";
+import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 const PRESETS: { id: CompareBenchmarkPresetId; label: string }[] = [
@@ -13,11 +20,15 @@ const PRESETS: { id: CompareBenchmarkPresetId; label: string }[] = [
 
 export function EntryCompareBenchmarkPanel({
   state,
+  category,
+  slug,
   selectedPreset,
   onSelectPreset,
   className,
 }: {
   state: EntryCompareBenchmarkState;
+  category: string;
+  slug: string;
   selectedPreset: CompareBenchmarkPresetId;
   onSelectPreset: (preset: CompareBenchmarkPresetId) => void;
   className?: string;
@@ -65,46 +76,78 @@ export function EntryCompareBenchmarkPanel({
       ) : null}
 
       <div className="mt-3 grid gap-2">
-        {state.rows.map((row) => (
-          <article key={row.entryRef} className="rounded-lg border border-border bg-background p-3">
-            <div className="flex flex-wrap items-start justify-between gap-2">
-              <div className="min-w-0">
-                <h4 className="text-sm font-semibold text-ink">{row.title}</h4>
-                <p className="mt-0.5 text-[11px] text-ink-muted">{row.summary}</p>
-              </div>
-              <div className="text-right">
-                <span
-                  className={cn(
-                    "inline-flex rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-wide",
-                    compareBenchmarkVerdictClass(row.verdict),
+        {state.rows.map((row) => {
+          const parsed = parseDetailEntryRef(row.entryRef);
+          const title = <h4 className="text-sm font-semibold text-ink">{row.title}</h4>;
+          return (
+            <article
+              key={row.entryRef}
+              className="rounded-lg border border-border bg-background p-3"
+            >
+              <div className="flex flex-wrap items-start justify-between gap-2">
+                <div className="min-w-0">
+                  {parsed ? (
+                    <Link
+                      to="/entry/$category/$slug"
+                      params={{ category: parsed.category, slug: parsed.slug }}
+                      onClick={() =>
+                        trackEvent(
+                          detailCompareBenchmarkEntryAnalyticsEvent(),
+                          detailCompareBenchmarkEntryAnalyticsData(
+                            category,
+                            slug,
+                            row.entryRef,
+                            selectedPreset,
+                            row.verdict,
+                            row.totalScore,
+                            row.delta,
+                            state.rows.length,
+                          ),
+                        )
+                      }
+                      className="underline-offset-2 hover:text-accent hover:underline"
+                    >
+                      {title}
+                    </Link>
+                  ) : (
+                    title
                   )}
-                >
-                  {row.verdict}
-                </span>
-                <p className="mt-1 font-mono text-xs text-ink">
-                  {row.totalScore}/100 ({row.delta >= 0 ? "+" : ""}
-                  {row.delta})
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-2 grid gap-1.5 sm:grid-cols-2">
-              {row.dimensions.map((dimension) => (
-                <div
-                  key={`${row.entryRef}-${dimension.id}`}
-                  className="rounded border border-border px-2 py-1"
-                >
-                  <p className="text-[10px] uppercase tracking-wide text-ink-subtle">
-                    {dimension.label}
-                  </p>
-                  <p className="text-[11px] text-ink-muted">
-                    {dimension.score}/100 · {dimension.detail}
+                  <p className="mt-0.5 text-[11px] text-ink-muted">{row.summary}</p>
+                </div>
+                <div className="text-right">
+                  <span
+                    className={cn(
+                      "inline-flex rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-wide",
+                      compareBenchmarkVerdictClass(row.verdict),
+                    )}
+                  >
+                    {row.verdict}
+                  </span>
+                  <p className="mt-1 font-mono text-xs text-ink">
+                    {row.totalScore}/100 ({row.delta >= 0 ? "+" : ""}
+                    {row.delta})
                   </p>
                 </div>
-              ))}
-            </div>
-          </article>
-        ))}
+              </div>
+
+              <div className="mt-2 grid gap-1.5 sm:grid-cols-2">
+                {row.dimensions.map((dimension) => (
+                  <div
+                    key={`${row.entryRef}-${dimension.id}`}
+                    className="rounded border border-border px-2 py-1"
+                  >
+                    <p className="text-[10px] uppercase tracking-wide text-ink-subtle">
+                      {dimension.label}
+                    </p>
+                    <p className="text-[11px] text-ink-muted">
+                      {dimension.score}/100 · {dimension.detail}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </article>
+          );
+        })}
       </div>
     </section>
   );
