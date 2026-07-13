@@ -22,7 +22,7 @@ websiteUrl: 'https://klinepic.com/guides/trade-review-chart-api/'
 repoUrl: 'https://github.com/sher1096/klinepic-agent-api-examples'
 documentationUrl: 'https://github.com/sher1096/klinepic-agent-api-examples/blob/master/README.md'
 installable: true
-installCommand: 'npx -y github:sher1096/klinepic-agent-api-examples'
+installCommand: 'npx -y github:sher1096/klinepic-agent-api-examples#c48f3dc12a21834a2af165c223230f0cf9500fef'
 usageSnippet: >-
   Call klinepic_get_capabilities, validate the request with
   klinepic_preflight_review_chart, then ask for confirmation before calling the
@@ -32,7 +32,7 @@ copySnippet: |-
     "mcpServers": {
       "klinepic": {
         "command": "npx",
-        "args": ["-y", "github:sher1096/klinepic-agent-api-examples"],
+        "args": ["-y", "github:sher1096/klinepic-agent-api-examples#c48f3dc12a21834a2af165c223230f0cf9500fef"],
         "env": {
           "KLINE_AGENT_API_KEY": "YOUR_KLINEPIC_AGENT_API_KEY"
         }
@@ -44,7 +44,7 @@ configSnippet: |-
     "mcpServers": {
       "klinepic": {
         "command": "npx",
-        "args": ["-y", "github:sher1096/klinepic-agent-api-examples"],
+        "args": ["-y", "github:sher1096/klinepic-agent-api-examples#c48f3dc12a21834a2af165c223230f0cf9500fef"],
         "env": {
           "KLINE_AGENT_API_KEY": "YOUR_KLINEPIC_AGENT_API_KEY"
         }
@@ -65,7 +65,7 @@ prerequisites:
   - Claude Code, Claude Desktop, Cline, Cursor, or another MCP host with stdio support.
   - Broker or exchange fills and matching K-line data that you are permitted to process.
 safetyNotes:
-  - The GitHub npx command downloads and executes repository code; review the source and pin a trusted commit for controlled production environments.
+  - The GitHub npx command downloads and executes the reviewed commit c48f3dc; review the source before changing this pin in controlled production environments.
   - klinepic_create_review_chart consumes chart-render quota; call capabilities and the no-charge preflight tool first, then require human confirmation before rendering.
   - KLinePic creates post-trade review charts only and does not provide trading signals, price forecasts, investment advice, or order execution.
 privacyNotes:
@@ -128,7 +128,7 @@ They do not turn KLinePic into a trading signal or order-execution system.
 Run the server directly from its public GitHub repository:
 
 ```sh
-npx -y github:sher1096/klinepic-agent-api-examples
+npx -y github:sher1096/klinepic-agent-api-examples#c48f3dc12a21834a2af165c223230f0cf9500fef
 ```
 
 For Claude Code on macOS or Linux:
@@ -136,7 +136,7 @@ For Claude Code on macOS or Linux:
 ```sh
 claude mcp add klinepic \
   --env KLINE_AGENT_API_KEY=YOUR_KLINEPIC_AGENT_API_KEY \
-  -- npx -y github:sher1096/klinepic-agent-api-examples
+  -- npx -y github:sher1096/klinepic-agent-api-examples#c48f3dc12a21834a2af165c223230f0cf9500fef
 ```
 
 For JSON-based MCP clients:
@@ -146,7 +146,10 @@ For JSON-based MCP clients:
   "mcpServers": {
     "klinepic": {
       "command": "npx",
-      "args": ["-y", "github:sher1096/klinepic-agent-api-examples"],
+      "args": [
+        "-y",
+        "github:sher1096/klinepic-agent-api-examples#c48f3dc12a21834a2af165c223230f0cf9500fef"
+      ],
       "env": {
         "KLINE_AGENT_API_KEY": "YOUR_KLINEPIC_AGENT_API_KEY"
       }
@@ -156,8 +159,9 @@ For JSON-based MCP clients:
 ```
 
 On Windows clients that do not resolve `npx` directly, use `cmd` as the command
-and `["/c", "npx", "-y", "github:sher1096/klinepic-agent-api-examples"]` as
-the argument list. Keep the API key in the same environment block.
+and
+`["/c", "npx", "-y", "github:sher1096/klinepic-agent-api-examples#c48f3dc12a21834a2af165c223230f0cf9500fef"]`
+as the argument list. Keep the API key in the same environment block.
 
 ## Recommended Workflow
 
