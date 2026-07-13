@@ -1,5 +1,12 @@
+import { Link } from "@tanstack/react-router";
 import { toneClass } from "@/lib/browse-rollout-tone-lib";
 import type { BrowseRolloutSignalsState } from "@/lib/browse-rollout-signals";
+import {
+  browseRolloutFlaggedEntryAnalyticsData,
+  browseRolloutFlaggedEntryAnalyticsEvent,
+  parseBrowseRolloutEntryRef,
+} from "@/lib/browse-rollout-cta-events";
+import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 export function BrowseRolloutSignalsPanel({
@@ -51,11 +58,9 @@ export function BrowseRolloutSignalsPanel({
         <div className="mt-3 rounded-md border border-border bg-background p-2.5">
           <p className="text-[11px] font-medium text-ink">Most at-risk entries in this view</p>
           <ul className="mt-1.5 space-y-1.5">
-            {state.flaggedEntries.map((entry) => (
-              <li
-                key={entry.entryRef}
-                className="flex items-start justify-between gap-2 text-[11px]"
-              >
+            {state.flaggedEntries.map((entry) => {
+              const parsed = parseBrowseRolloutEntryRef(entry.entryRef);
+              const title = (
                 <div className="min-w-0">
                   <p className="truncate text-ink">{entry.title}</p>
                   <p className="truncate text-ink-subtle">
@@ -64,11 +69,39 @@ export function BrowseRolloutSignalsPanel({
                       : "No required rollout gaps"}
                   </p>
                 </div>
-                <span className="shrink-0 font-mono text-ink-muted">
-                  {entry.signalCoveragePercent}%
-                </span>
-              </li>
-            ))}
+              );
+              return (
+                <li
+                  key={entry.entryRef}
+                  className="flex items-start justify-between gap-2 text-[11px]"
+                >
+                  {parsed ? (
+                    <Link
+                      to="/entry/$category/$slug"
+                      params={{ category: parsed.category, slug: parsed.slug }}
+                      onClick={() =>
+                        trackEvent(
+                          browseRolloutFlaggedEntryAnalyticsEvent(),
+                          browseRolloutFlaggedEntryAnalyticsData(
+                            entry.entryRef,
+                            entry.missingRequired.length,
+                            entry.signalCoveragePercent,
+                          ),
+                        )
+                      }
+                      className="min-w-0 flex-1 underline-offset-2 hover:text-accent hover:underline"
+                    >
+                      {title}
+                    </Link>
+                  ) : (
+                    title
+                  )}
+                  <span className="shrink-0 font-mono text-ink-muted">
+                    {entry.signalCoveragePercent}%
+                  </span>
+                </li>
+              );
+            })}
           </ul>
         </div>
       ) : null}
