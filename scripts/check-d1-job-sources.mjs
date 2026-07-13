@@ -6,6 +6,8 @@ import {
   validateJobPublicExposure,
 } from "@heyclaude/registry/commercial";
 
+import { getBaseUrl, getToken } from "./lib/job-sources-admin.mjs";
+
 function usage() {
   console.log(`Usage:
   pnpm jobs:check-sources -- --base-url https://dev.example.com [--dry-run|--apply]
@@ -37,29 +39,6 @@ function parseArgs(argv) {
     if (args[key] === next) index += 1;
   }
   return args;
-}
-
-function getToken() {
-  return String(
-    process.env.ADMIN_API_TOKEN ||
-      process.env.JOBS_ADMIN_API_TOKEN ||
-      process.env.LEADS_ADMIN_TOKEN ||
-      process.env.ADMIN_LEADS_TOKEN ||
-      "",
-  ).trim();
-}
-
-function getBaseUrl(args) {
-  const baseUrl = String(
-    args["base-url"] ||
-      process.env.HEYCLAUDE_ADMIN_BASE_URL ||
-      process.env.HEYCLAUDE_BASE_URL ||
-      "",
-  ).trim();
-  if (!baseUrl) {
-    throw new Error("Missing --base-url or HEYCLAUDE_ADMIN_BASE_URL.");
-  }
-  return baseUrl.replace(/\/$/, "");
 }
 
 async function adminFetch(url, options = {}) {
