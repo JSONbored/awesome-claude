@@ -1,19 +1,28 @@
+import { Link } from "@tanstack/react-router";
 import type {
   CompareScenarioId,
   CompareScenarioRankingState,
 } from "@/lib/compare-scenario-ranking";
 import { COMPARE_SCENARIO_PRESETS } from "@/lib/compare-scenario-ranking";
+import {
+  compareScenarioRankingEntryAnalyticsData,
+  compareScenarioRankingEntryAnalyticsEvent,
+  parseComparePanelEntryRef,
+} from "@/lib/compare-panel-entry-cta-events";
+import { trackEvent } from "@/lib/analytics";
 import { scoreDeltaText } from "@/lib/scenario-score-delta-lib";
 import { cn } from "@/lib/utils";
 
 export function CompareScenarioRankingPanel({
   state,
+  surface,
   selectedScenario,
   onSelectScenario,
   compact = false,
   className,
 }: {
   state: CompareScenarioRankingState;
+  surface: string;
   selectedScenario: CompareScenarioId;
   onSelectScenario: (scenario: CompareScenarioId) => void;
   compact?: boolean;
@@ -59,41 +68,68 @@ export function CompareScenarioRankingPanel({
       <div
         className={cn("mt-3 grid gap-2", compact ? "grid-cols-1" : "grid-cols-1 xl:grid-cols-2")}
       >
-        {state.ranked.map((item) => (
-          <article
-            key={item.entryRef}
-            className={cn(
-              "rounded-lg border border-border bg-background p-3",
-              item.rank === 1 && "ring-1 ring-accent/40",
-            )}
-          >
-            <div className="flex items-start justify-between gap-2">
-              <div className="min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className="rounded bg-surface-2 px-1.5 py-0.5 font-mono text-[10px] text-ink-subtle">
-                    #{item.rank}
-                  </span>
-                  <h4 className="truncate text-sm font-semibold text-ink">{item.title}</h4>
+        {state.ranked.map((item) => {
+          const parsed = parseComparePanelEntryRef(item.entryRef);
+          const title = <h4 className="truncate text-sm font-semibold text-ink">{item.title}</h4>;
+          return (
+            <article
+              key={item.entryRef}
+              className={cn(
+                "rounded-lg border border-border bg-background p-3",
+                item.rank === 1 && "ring-1 ring-accent/40",
+              )}
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="rounded bg-surface-2 px-1.5 py-0.5 font-mono text-[10px] text-ink-subtle">
+                      #{item.rank}
+                    </span>
+                    {parsed ? (
+                      <Link
+                        to="/entry/$category/$slug"
+                        params={{ category: parsed.category, slug: parsed.slug }}
+                        onClick={() =>
+                          trackEvent(
+                            compareScenarioRankingEntryAnalyticsEvent(),
+                            compareScenarioRankingEntryAnalyticsData(
+                              surface,
+                              item.entryRef,
+                              item.rank,
+                              item.score,
+                              selectedScenario,
+                              state.ranked.length,
+                            ),
+                          )
+                        }
+                        className="min-w-0 underline-offset-2 hover:text-accent hover:underline"
+                      >
+                        {title}
+                      </Link>
+                    ) : (
+                      title
+                    )}
+                  </div>
+                  <p className="mt-1 text-[11px] text-ink-muted">{item.rationale[0]}</p>
                 </div>
-                <p className="mt-1 text-[11px] text-ink-muted">{item.rationale[0]}</p>
+                <div className="text-right">
+                  <p className="font-mono text-xs text-ink">Score {item.score}</p>
+                  <p className="text-[10px] text-ink-subtle">{scoreDeltaText(item.deltaFromTop)}</p>
+                </div>
               </div>
-              <div className="text-right">
-                <p className="font-mono text-xs text-ink">Score {item.score}</p>
-                <p className="text-[10px] text-ink-subtle">{scoreDeltaText(item.deltaFromTop)}</p>
-              </div>
-            </div>
-            <ul className="mt-2 flex flex-wrap gap-1.5">
-              {item.rationale.slice(1).map((reason) => (
-                <li
-                  key={reason}
-                  className="rounded-full border border-border bg-surface px-2 py-0.5 text-[10px] text-ink-muted"
-                >
-                  {reason}
-                </li>
-              ))}
-            </ul>
-          </article>
-        ))}
+              <ul className="mt-2 flex flex-wrap gap-1.5">
+                {item.rationale.slice(1).map((reason) => (
+                  <li
+                    key={reason}
+                    className="rounded-full border border-border bg-surface px-2 py-0.5 text-[10px] text-ink-muted"
+                  >
+                    {reason}
+                  </li>
+                ))}
+              </ul>
+            </article>
+          );
+        })}
       </div>
     </section>
   );

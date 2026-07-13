@@ -45,7 +45,9 @@ import {
 import {
   comparePageScenarioAnalyticsData,
   comparePageScenarioAnalyticsEvent,
+  comparePageScenarioSurface,
 } from "@/lib/compare-page-scenario-cta-events";
+import { comparePageDecisionBriefSurface } from "@/lib/compare-panel-entry-cta-events";
 import {
   comparePageShareLinkCopyAnalyticsData,
   comparePageShareLinkCopyAnalyticsEvent,
@@ -385,9 +387,14 @@ function ComparePage() {
       </div>
 
       <div className="mt-4 overflow-auto rounded-xl border border-border">
-        <CompareDecisionBriefPanel state={decisionBrief} className="m-3 mb-0" />
+        <CompareDecisionBriefPanel
+          state={decisionBrief}
+          surface={comparePageDecisionBriefSurface()}
+          className="m-3 mb-0"
+        />
         <CompareScenarioRankingPanel
           state={scenarioRanking}
+          surface={comparePageScenarioSurface()}
           selectedScenario={scenario}
           onSelectScenario={onScenarioSelect}
           className="m-3"

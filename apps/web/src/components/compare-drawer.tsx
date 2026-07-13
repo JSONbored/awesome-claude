@@ -46,7 +46,9 @@ import {
 import {
   compareDrawerScenarioAnalyticsData,
   compareDrawerScenarioAnalyticsEvent,
+  compareDrawerScenarioSurface,
 } from "@/lib/compare-drawer-scenario-cta-events";
+import { compareDrawerDecisionBriefSurface } from "@/lib/compare-panel-entry-cta-events";
 import {
   compareDrawerSnippetCopyAnalyticsData,
   compareDrawerSnippetCopyAnalyticsEvent,
@@ -631,9 +633,15 @@ export function CompareDrawer() {
           </div>
         ) : (
           <div className="h-[calc(88vh-57px)] overflow-auto">
-            <CompareDecisionBriefPanel state={decisionBrief} compact className="m-3" />
+            <CompareDecisionBriefPanel
+              state={decisionBrief}
+              surface={compareDrawerDecisionBriefSurface()}
+              compact
+              className="m-3"
+            />
             <CompareScenarioRankingPanel
               state={scenarioRanking}
+              surface={compareDrawerScenarioSurface()}
               selectedScenario={scenario}
               onSelectScenario={onScenarioSelect}
               compact

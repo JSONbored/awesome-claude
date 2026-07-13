@@ -1,5 +1,12 @@
+import { Link } from "@tanstack/react-router";
 import { AlertTriangle, CheckCircle2, Circle, Scale, ShieldAlert } from "lucide-react";
 import type { CompareDecisionBriefState, CompareBriefTone } from "@/lib/compare-decision-brief";
+import {
+  compareDecisionBriefEntryAnalyticsData,
+  compareDecisionBriefEntryAnalyticsEvent,
+  parseComparePanelEntryRef,
+} from "@/lib/compare-panel-entry-cta-events";
+import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 const TONE_BADGE: Record<CompareBriefTone, string> = {
@@ -26,10 +33,12 @@ function ChecklistMark({ done }: { done: boolean }) {
 
 export function CompareDecisionBriefPanel({
   state,
+  surface,
   className,
   compact = false,
 }: {
   state: CompareDecisionBriefState;
+  surface: string;
   className?: string;
   compact?: boolean;
 }) {
@@ -79,83 +88,110 @@ export function CompareDecisionBriefPanel({
       <div
         className={cn("mt-4 grid gap-3", compact ? "grid-cols-1" : "grid-cols-1 xl:grid-cols-2")}
       >
-        {state.entryBriefs.map((brief) => (
-          <article
-            key={brief.entryRef}
-            className={cn(
-              "rounded-lg border border-border bg-background p-3",
-              brief.rank === 1 && "ring-1 ring-trust-trusted/30",
-            )}
-          >
-            <div className="flex flex-wrap items-start justify-between gap-2">
-              <div className="min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className="rounded bg-surface-2 px-1.5 py-0.5 font-mono text-[10px] text-ink-subtle">
-                    #{brief.rank}
-                  </span>
-                  <h4 className="truncate text-sm font-semibold text-ink">{brief.title}</h4>
+        {state.entryBriefs.map((brief) => {
+          const parsed = parseComparePanelEntryRef(brief.entryRef);
+          const title = <h4 className="truncate text-sm font-semibold text-ink">{brief.title}</h4>;
+          return (
+            <article
+              key={brief.entryRef}
+              className={cn(
+                "rounded-lg border border-border bg-background p-3",
+                brief.rank === 1 && "ring-1 ring-trust-trusted/30",
+              )}
+            >
+              <div className="flex flex-wrap items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="rounded bg-surface-2 px-1.5 py-0.5 font-mono text-[10px] text-ink-subtle">
+                      #{brief.rank}
+                    </span>
+                    {parsed ? (
+                      <Link
+                        to="/entry/$category/$slug"
+                        params={{ category: parsed.category, slug: parsed.slug }}
+                        onClick={() =>
+                          trackEvent(
+                            compareDecisionBriefEntryAnalyticsEvent(),
+                            compareDecisionBriefEntryAnalyticsData(
+                              surface,
+                              brief.entryRef,
+                              brief.rank,
+                              brief.tone,
+                              brief.score,
+                              state.comparedCount,
+                            ),
+                          )
+                        }
+                        className="min-w-0 underline-offset-2 hover:text-accent hover:underline"
+                      >
+                        {title}
+                      </Link>
+                    ) : (
+                      title
+                    )}
+                  </div>
+                  <p className="mt-1 text-xs text-ink-muted">{brief.headline}</p>
                 </div>
-                <p className="mt-1 text-xs text-ink-muted">{brief.headline}</p>
-              </div>
-              <div className="text-right">
-                <span
-                  className={cn(
-                    "inline-flex rounded-full border px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide",
-                    TONE_BADGE[brief.tone],
-                  )}
-                >
-                  {TONE_LABEL[brief.tone]}
-                </span>
-                <p className="mt-1 font-mono text-xs text-ink">Score {brief.score}</p>
-              </div>
-            </div>
-
-            <p className="mt-2 text-xs text-ink">{brief.recommendation}</p>
-            <p className="mt-1 text-[11px] text-ink-subtle">{brief.compareDeltaSummary}</p>
-
-            <ul className="mt-2 flex flex-wrap gap-1.5">
-              {brief.reasons.map((reason) => (
-                <li
-                  key={reason}
-                  className="rounded-full border border-border bg-surface px-2 py-0.5 text-[10px] text-ink-muted"
-                >
-                  {reason}
-                </li>
-              ))}
-            </ul>
-
-            {!compact && (
-              <ul className="mt-3 space-y-1.5">
-                {brief.checklist.map((item) => (
-                  <li
-                    key={item.id}
-                    className="flex items-start justify-between gap-2 rounded-md border border-border/70 px-2 py-1.5"
+                <div className="text-right">
+                  <span
+                    className={cn(
+                      "inline-flex rounded-full border px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide",
+                      TONE_BADGE[brief.tone],
+                    )}
                   >
-                    <div className="min-w-0">
-                      <p className="text-[11px] font-medium text-ink">
-                        {item.label}
-                        {item.required ? (
-                          <span className="ml-1 rounded bg-ink/10 px-1 py-0.5 text-[9px] uppercase tracking-wide text-ink-muted">
-                            Required
-                          </span>
-                        ) : null}
-                      </p>
-                      <p className="mt-0.5 text-[10px] text-ink-subtle">{item.detail}</p>
-                    </div>
-                    <ChecklistMark done={item.done} />
+                    {TONE_LABEL[brief.tone]}
+                  </span>
+                  <p className="mt-1 font-mono text-xs text-ink">Score {brief.score}</p>
+                </div>
+              </div>
+
+              <p className="mt-2 text-xs text-ink">{brief.recommendation}</p>
+              <p className="mt-1 text-[11px] text-ink-subtle">{brief.compareDeltaSummary}</p>
+
+              <ul className="mt-2 flex flex-wrap gap-1.5">
+                {brief.reasons.map((reason) => (
+                  <li
+                    key={reason}
+                    className="rounded-full border border-border bg-surface px-2 py-0.5 text-[10px] text-ink-muted"
+                  >
+                    {reason}
                   </li>
                 ))}
               </ul>
-            )}
 
-            {compact && brief.checklist.some((item) => item.required && !item.done) ? (
-              <div className="mt-2 inline-flex items-center gap-1.5 rounded-md border border-amber-500/30 bg-amber-500/10 px-2 py-1 text-[10px] text-amber-900">
-                <AlertTriangle className="h-3 w-3" aria-hidden />
-                Required checks still pending
-              </div>
-            ) : null}
-          </article>
-        ))}
+              {!compact && (
+                <ul className="mt-3 space-y-1.5">
+                  {brief.checklist.map((item) => (
+                    <li
+                      key={item.id}
+                      className="flex items-start justify-between gap-2 rounded-md border border-border/70 px-2 py-1.5"
+                    >
+                      <div className="min-w-0">
+                        <p className="text-[11px] font-medium text-ink">
+                          {item.label}
+                          {item.required ? (
+                            <span className="ml-1 rounded bg-ink/10 px-1 py-0.5 text-[9px] uppercase tracking-wide text-ink-muted">
+                              Required
+                            </span>
+                          ) : null}
+                        </p>
+                        <p className="mt-0.5 text-[10px] text-ink-subtle">{item.detail}</p>
+                      </div>
+                      <ChecklistMark done={item.done} />
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              {compact && brief.checklist.some((item) => item.required && !item.done) ? (
+                <div className="mt-2 inline-flex items-center gap-1.5 rounded-md border border-amber-500/30 bg-amber-500/10 px-2 py-1 text-[10px] text-amber-900">
+                  <AlertTriangle className="h-3 w-3" aria-hidden />
+                  Required checks still pending
+                </div>
+              ) : null}
+            </article>
+          );
+        })}
       </div>
     </section>
   );
