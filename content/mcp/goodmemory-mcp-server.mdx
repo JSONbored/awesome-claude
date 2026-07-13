@@ -1,0 +1,170 @@
+---
+title: GoodMemory MCP Server
+slug: goodmemory-mcp-server
+category: mcp
+description: >-
+  Local-first GoodMemory MCP server for giving Claude durable, scoped memory
+  with SQLite storage, auditable recall, explicit deletion, and opt-in governed
+  writes.
+cardDescription: Give Claude durable local memory with auditable recall and opt-in governed writes.
+seoTitle: GoodMemory MCP Server for Claude
+seoDescription: >-
+  Connect Claude to GoodMemory for durable local-first memory, SQLite storage,
+  auditable recall, explicit deletion, and opt-in governed writes through MCP.
+author: hjqcan
+authorProfileUrl: "https://github.com/hjqcan"
+submittedBy: hjqcan
+submittedByUrl: "https://github.com/hjqcan"
+dateAdded: "2026-07-13"
+repoUrl: "https://github.com/hjqcan/GoodMemory"
+documentationUrl: "https://github.com/hjqcan/GoodMemory/blob/main/docs/GoodMemory-Standalone-MCP-Setup-Guide.md"
+packageUrl: "https://www.npmjs.com/package/goodmemory"
+installable: true
+installCommand: "npm install -g goodmemory@0.5.1"
+usageSnippet: >-
+  Ask Claude to recall relevant project decisions before a task, inspect the
+  returned trace, and enable governed writes only after reviewing the memory
+  policy.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "goodmemory": {
+        "command": "goodmemory-mcp",
+        "args": ["--standalone", "--user-id", "YOUR_USER_ID"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "goodmemory": {
+        "command": "goodmemory-mcp",
+        "args": ["--standalone", "--user-id", "YOUR_USER_ID"]
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: intermediate
+retrievalSources:
+  - "https://github.com/hjqcan/GoodMemory/blob/main/README.md"
+  - "https://github.com/hjqcan/GoodMemory/blob/main/docs/GoodMemory-Standalone-MCP-Setup-Guide.md"
+  - "https://github.com/hjqcan/GoodMemory/blob/main/.well-known/goodmemory.json"
+  - "https://registry.modelcontextprotocol.io/v0.1/servers/io.github.hjqcan%2Fgoodmemory/versions/latest"
+prerequisites:
+  - Bun 1.3 or newer on PATH for the packaged MCP command.
+  - Node.js 20 or newer and npm for the global package install.
+  - A stable user id to scope recalled and stored memory.
+  - A writable local GoodMemory directory, or an explicitly configured PostgreSQL store.
+safetyNotes:
+  - Standalone MCP starts with eight read-only tools; the governed goodmemory_remember tool is registered only with --allow-write or GOODMEMORY_MCP_ALLOW_WRITE=1.
+  - Enabling writes persists selected memory; separate GoodMemory lifecycle APIs can remove stored records, so review write and deletion operations and keep backups of important data.
+  - Optional installed-host setup can modify Codex or Claude Code hook and MCP configuration; this is separate from standalone MCP mode.
+privacyNotes:
+  - Standalone mode stores durable memory in local SQLite by default, under the GoodMemory home directory, until the user exports or deletes it.
+  - Recalled memory is inserted into Claude's model context and can therefore be sent to the configured model provider.
+  - Optional PostgreSQL, embedding, or assisted-extraction providers change the data boundary and may send memory content to configured external services.
+tags:
+  - memory
+  - local-first
+  - sqlite
+  - codex
+  - claude-code
+keywords:
+  - GoodMemory MCP Server
+  - Claude persistent memory MCP
+  - local-first agent memory
+  - auditable memory for Claude
+  - Codex Claude Code memory
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+GoodMemory is an MIT-licensed memory layer for coding agents and AI
+applications. Its standalone MCP server gives Claude and other MCP clients a
+scoped, durable store without requiring GoodMemory's managed Codex or Claude
+Code installation path.
+
+The default MCP surface is read-only: context, trace, statistics, and artifact
+inspection. Users can explicitly add `--allow-write` to register
+`goodmemory_remember`, which sends proposed memories through the same governed
+remember pipeline used by the library API.
+
+## Features
+
+- Local SQLite persistence by default, with optional PostgreSQL storage.
+- Eight read-only MCP tools for recall, context, traces, statistics, and
+  artifact inspection.
+- Opt-in governed writes through `goodmemory_remember`.
+- User, workspace, and optional agent scope controls.
+- Companion CLI and library surfaces for audit, export, correction, forget, and
+  deletion workflows.
+- Embedding-free lexical retrieval by default, with optional embedding
+  providers.
+- Standalone recipes for Claude Desktop, Cursor, Gemini CLI, OpenCode, and
+  other MCP-compatible clients.
+
+## Installation
+
+Install the published package globally:
+
+```sh
+npm install -g goodmemory@0.5.1
+```
+
+Add the standalone server to an MCP client:
+
+```json
+{
+  "mcpServers": {
+    "goodmemory": {
+      "command": "goodmemory-mcp",
+      "args": ["--standalone", "--user-id", "YOUR_USER_ID"]
+    }
+  }
+}
+```
+
+The equivalent command is:
+
+```sh
+goodmemory-mcp --standalone --user-id YOUR_USER_ID
+```
+
+Keep the default read-only surface while validating recall. Add
+`--allow-write` only after reviewing the storage scope and write policy.
+
+## Use Cases
+
+- Recall architecture decisions before continuing a coding task.
+- Carry stable project context between Claude sessions.
+- Inspect why a memory was selected before using it.
+- Keep local memory separated by user, workspace, and agent scope.
+- Export or remove incorrect memories through explicit lifecycle operations.
+- Share one configured store across multiple MCP-compatible coding hosts.
+
+## Safety and Privacy
+
+GoodMemory creates durable state, so stored content can outlive the conversation
+that produced it. Start with the read-only MCP surface, inspect the resolved
+storage location, and keep a stable scope. Before enabling
+`goodmemory_remember`, decide which information may be retained and how it will
+be reviewed, corrected, exported, or deleted.
+
+The default standalone path is local SQLite and does not require an embedding
+or extraction provider. Configuring PostgreSQL, embeddings, assisted extraction,
+or a hosted model changes the data boundary. Treat recalled memory as prompt
+context: it will be visible to the model provider used by the host.
+
+## Source Review
+
+- https://github.com/hjqcan/GoodMemory
+- https://github.com/hjqcan/GoodMemory/blob/main/docs/GoodMemory-Standalone-MCP-Setup-Guide.md
+- https://github.com/hjqcan/GoodMemory/blob/main/.well-known/goodmemory.json
+- https://www.npmjs.com/package/goodmemory
+- https://registry.modelcontextprotocol.io/v0.1/servers/io.github.hjqcan%2Fgoodmemory/versions/latest
+
+These sources were reviewed on **2026-07-13**. Prefer the live repository,
+published package metadata, capability descriptor, and official MCP registry
+entry for current versions, commands, storage behavior, and tool exposure.
