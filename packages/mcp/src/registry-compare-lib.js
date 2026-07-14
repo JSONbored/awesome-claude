@@ -67,12 +67,25 @@ export function buildCompareEntryRow(entry, platform, deps) {
  */
 export function sharedCompareTags(comparedEntries) {
   if (!comparedEntries.length) return [];
-  return comparedEntries
-    .slice(1)
-    .reduce(
-      (tags, entry) => intersection(tags, entry.tags || []),
-      comparedEntries[0].tags || [],
-    );
+  const [first, ...rest] = comparedEntries;
+  const firstTags = first.tags || [];
+  // Intersect case-insensitively across every entry to find the shared keys...
+  const sharedKeys = new Set(
+    rest.reduce(
+      (keys, entry) => intersection(keys, entry.tags || []),
+      firstTags.map((tag) => String(tag).trim().toLowerCase()),
+    ),
+  );
+  // ...but emit the first entry's original-cased tags (matching each row's
+  // `tags`), deduped. This keeps sharedTags consistent with the displayed tags
+  // and identical in shape for one vs. many entries.
+  const seen = new Set();
+  return firstTags.filter((tag) => {
+    const key = String(tag).trim().toLowerCase();
+    if (!key || !sharedKeys.has(key) || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 /**

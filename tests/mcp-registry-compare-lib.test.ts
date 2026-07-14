@@ -6588,6 +6588,19 @@ describe("registry-compare-lib sharedCompareTags", () => {
     ];
     expect(sharedCompareTags(compared)).toEqual(["b", "c"]);
   });
+  it("intersects case-insensitively but keeps the first entry's casing", () => {
+    const compared = [
+      { tags: ["Code-Review", "Testing"] },
+      { tags: ["code-review", "  Testing  "] },
+    ];
+    expect(sharedCompareTags(compared)).toEqual(["Code-Review", "Testing"]);
+  });
+  it("dedupes a single entry's tags without lowercasing", () => {
+    expect(sharedCompareTags([{ tags: ["Alpha", "Beta", "Alpha"] }])).toEqual([
+      "Alpha",
+      "Beta",
+    ]);
+  });
   it("sharedCompareTags matrix 0", () => {
     const shared = ["shared-0", "common"];
     const compared = [
