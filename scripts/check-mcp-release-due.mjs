@@ -14,6 +14,7 @@ import {
   parseCommitLog,
   parseReleaseWatchArgs,
 } from "./lib/release-watch-core.mjs";
+import { parseNpmVersionOutput } from "./lib/npm-version.mjs";
 
 const PACKAGE_JSON_PATH = "packages/mcp/package.json";
 const PACKAGE_NAME = "@heyclaude/mcp";
@@ -61,12 +62,7 @@ function readPublishedPackageVersion(packageName) {
     stdio: ["ignore", "pipe", "pipe"],
   });
   if (result.status !== 0) return null;
-  try {
-    const parsed = JSON.parse(result.stdout);
-    return typeof parsed === "string" ? parsed : null;
-  } catch {
-    return result.stdout.trim() || null;
-  }
+  return parseNpmVersionOutput(result.stdout);
 }
 
 function readCommits(revisionRange) {
