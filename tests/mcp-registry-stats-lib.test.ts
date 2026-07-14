@@ -3020,3 +3020,25 @@ describe("registry-stats-lib buildRegistryStatsResponse", () => {
     expect(response.package.version).toBe("0.59.0");
   });
 });
+
+describe("registry-stats-lib missing-field fallbacks", () => {
+  it("skips entries that omit platforms and tags", () => {
+    const { platformCounts, tagCounts } = countPlatformsAndTags([{}]);
+    expect(platformCounts.size).toBe(0);
+    expect(tagCounts.size).toBe(0);
+  });
+
+  it("defaults registry categories to an empty object", () => {
+    const response = buildRegistryStatsResponse({
+      manifest: {
+        schemaVersion: 1,
+        generatedAt: "2026-01-01",
+        totalEntries: 0,
+      },
+      entries: [],
+      packageName: "pkg",
+      packageVersion: "1.0.0",
+    });
+    expect(response.registry.categories).toEqual({});
+  });
+});
