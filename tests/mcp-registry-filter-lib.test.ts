@@ -63,3 +63,40 @@ describe("registry-filter-lib trust filters", () => {
     );
   });
 });
+
+describe("registry-filter edge cases", () => {
+  it("does not match a tag for an entry with no tags", () => {
+    expect(entryMatchesTag({}, "foo")).toBe(false);
+  });
+
+  it("rejects entries that fail an individual trust filter", () => {
+    // hasPrivacyNotes: require present, entry has none
+    expect(
+      entryMatchesTrustFilters(
+        { privacyNotes: [] },
+        { hasPrivacyNotes: "true" },
+      ),
+    ).toBe(false);
+    // downloadTrust mismatch
+    expect(
+      entryMatchesTrustFilters(
+        { downloadTrust: "community" },
+        { downloadTrust: "verified" },
+      ),
+    ).toBe(false);
+    // claimStatus mismatch
+    expect(
+      entryMatchesTrustFilters(
+        { claimStatus: "unclaimed" },
+        { claimStatus: "verified" },
+      ),
+    ).toBe(false);
+    // sourceStatus mismatch
+    expect(
+      entryMatchesTrustFilters(
+        { trustSignals: { sourceStatus: "verified" } },
+        { sourceStatus: "unverified" },
+      ),
+    ).toBe(false);
+  });
+});
