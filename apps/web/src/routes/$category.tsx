@@ -17,6 +17,13 @@ import { NewsletterInline } from "@/components/newsletter-inline";
 import { HubHighlights, HubSignalStats } from "@/components/hub-highlights";
 import { CategoryRankingTable } from "@/components/category-ranking-table";
 import { hubHighlights, hubStats } from "@/lib/hub-highlights";
+import { trackEvent } from "@/lib/analytics";
+import {
+  categoryHubBrowseAnalyticsData,
+  categoryHubBrowseAnalyticsEvent,
+  categoryHubSeeAllAnalyticsData,
+  categoryHubSeeAllAnalyticsEvent,
+} from "@/lib/directory-hub-cta-events";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { breadcrumbListJsonLd } from "@/lib/breadcrumb-jsonld-lib";
 import { categoryItemListJsonLd } from "@/lib/category-itemlist-jsonld-lib";
@@ -131,6 +138,12 @@ function CategoryHub() {
           <Link
             to="/browse"
             search={{ category: id }}
+            onClick={() =>
+              trackEvent(
+                categoryHubBrowseAnalyticsEvent(),
+                categoryHubBrowseAnalyticsData(id, entries.length),
+              )
+            }
             className="inline-flex h-9 items-center gap-1.5 rounded-md bg-ink px-4 font-medium text-background hover:opacity-90"
           >
             Browse &amp; filter all {label} <ArrowRight className="h-4 w-4" />
@@ -183,6 +196,12 @@ function CategoryHub() {
             <Link
               to="/browse"
               search={{ category: id }}
+              onClick={() =>
+                trackEvent(
+                  categoryHubSeeAllAnalyticsEvent(),
+                  categoryHubSeeAllAnalyticsData(id, entries.length),
+                )
+              }
               className="story-link text-sm font-medium text-ink"
             >
               See all {entries.length} {label} →

@@ -4,6 +4,11 @@ import { absoluteUrl } from "@/lib/seo";
 import { breadcrumbScript, itemListScript } from "@/lib/seo-jsonld";
 import { BEST_LISTS, ENTRIES } from "@/data/entries";
 import { ResourceCard } from "@/components/resource-card";
+import { trackEvent } from "@/lib/analytics";
+import {
+  bestIndexListAnalyticsData,
+  bestIndexListAnalyticsEvent,
+} from "@/lib/directory-hub-cta-events";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 
@@ -56,7 +61,7 @@ function BestPage() {
       />
 
       <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {BEST_LISTS.map((b) => {
+        {BEST_LISTS.map((b, rowIndex) => {
           const previewTitles = b.picks
             .slice(0, 3)
             .map((p) => {
@@ -69,6 +74,12 @@ function BestPage() {
               key={b.slug}
               to="/best/$slug"
               params={{ slug: b.slug }}
+              onClick={() =>
+                trackEvent(
+                  bestIndexListAnalyticsEvent(),
+                  bestIndexListAnalyticsData(b.slug, b.picks.length, rowIndex, BEST_LISTS.length),
+                )
+              }
               className="group flex min-w-0 flex-col gap-3 rounded-xl border border-border bg-surface p-6 transition-colors duration-200 ease-out hover:bg-surface-2"
             >
               <div className="eyebrow">

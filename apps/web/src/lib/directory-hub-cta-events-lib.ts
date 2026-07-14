@@ -1,0 +1,72 @@
+/**
+ * Pure directory hub navigation analytics helpers.
+ *
+ * Maps category, best index, and platform index hub navigation to privacy-light
+ * event names without embedding list titles or entry names.
+ */
+
+export const CATEGORY_HUB_SURFACE = "category-hub";
+export const BEST_INDEX_SURFACE = "best-index";
+export const PLATFORM_INDEX_SURFACE = "platform-index";
+
+export function categoryHubBrowseAnalyticsEvent(): string {
+  return "category_hub_browse_click";
+}
+
+export function categoryHubBrowseAnalyticsData(category: string, entryCount: number) {
+  return {
+    surface: CATEGORY_HUB_SURFACE,
+    category,
+    entryCount,
+  };
+}
+
+export function categoryHubSeeAllAnalyticsEvent(): string {
+  return "category_hub_see_all_click";
+}
+
+export function categoryHubSeeAllAnalyticsData(category: string, entryCount: number) {
+  return {
+    surface: CATEGORY_HUB_SURFACE,
+    category,
+    entryCount,
+  };
+}
+
+export function bestIndexListAnalyticsEvent(): string {
+  return "best_index_list_click";
+}
+
+export function bestIndexListAnalyticsData(
+  listSlug: string,
+  pickCount: number,
+  rowIndex: number,
+  listCount: number,
+) {
+  return {
+    surface: BEST_INDEX_SURFACE,
+    listSlug,
+    pickCount,
+    rowIndex,
+    listCount,
+  };
+}
+
+export function platformIndexSelectAnalyticsEvent(): string {
+  return "platform_index_select";
+}
+
+export function platformIndexSelectAnalyticsData(
+  platformId: string,
+  entryCount: number,
+  rowIndex: number,
+  platformCount: number,
+) {
+  return {
+    surface: PLATFORM_INDEX_SURFACE,
+    platformId,
+    entryCount,
+    rowIndex,
+    platformCount,
+  };
+}
