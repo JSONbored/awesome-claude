@@ -32,6 +32,12 @@ describe("compact", () => {
     expect(compact(999)).toBe("999");
     expect(compact(0)).toBe("0");
   });
+
+  it("rolls the just-under-a-million boundary up to millions, not 1000k", () => {
+    expect(compact(999_499)).toBe("999k");
+    expect(compact(999_500)).toBe("1.0M");
+    expect(compact(999_999)).toBe("1.0M");
+  });
 });
 
 describe("escapeXml", () => {

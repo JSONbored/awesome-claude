@@ -8,7 +8,10 @@ export const WEEKS = 12;
 
 /** Compact number formatting for the card's stat values (1.2M / 34k / 900). */
 export function compact(n) {
-  if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + "M";
+  // Use the millions branch once the value would round to 1000k: n >= 999_500
+  // rounds to "1.0M". Without this, 999_500..999_999 rendered "1000k" because
+  // (n / 1000).toFixed(0) carried past the thousands magnitude.
+  if (n >= 999_500) return (n / 1_000_000).toFixed(1) + "M";
   if (n >= 1000) return (n / 1000).toFixed(0) + "k";
   return String(n);
 }
