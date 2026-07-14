@@ -455,8 +455,21 @@ export function parseJobCompensation(value) {
   const maxHasK = amounts[1].toLowerCase().endsWith("k");
   // A "k" suffix on either endpoint sets the magnitude for the whole range.
   const sharedSuffix = minHasK || maxHasK ? "k" : "";
-  const minValue = parseAmount(amounts[0], sharedSuffix);
-  const maxValue = parseAmount(amounts[1], sharedSuffix);
+  let minValue = parseAmount(amounts[0], sharedSuffix);
+  let maxValue = parseAmount(amounts[1], sharedSuffix);
+  // If the shared-k magnitude inverts the range — e.g. "$500-$2k" promotes 500
+  // to 500000 while the max is 2000 — fall back to the endpoints' literal values
+  // so a valid range still resolves instead of being dropped. This only rescues
+  // ranges that would otherwise return undefined; it never rewrites a range that
+  // is already valid under the shared magnitude (e.g. "$80-$100k").
+  if (minValue && maxValue && minValue > maxValue) {
+    const literalMin = parseAmount(amounts[0], "");
+    const literalMax = parseAmount(amounts[1], "");
+    if (literalMin && literalMax && literalMin <= literalMax) {
+      minValue = literalMin;
+      maxValue = literalMax;
+    }
+  }
   // Reject inverted ranges so JSON-LD never advertises minValue > maxValue.
   if (!minValue || !maxValue || minValue > maxValue) return undefined;
 

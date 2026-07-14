@@ -407,6 +407,17 @@ describe("parseJobCompensation", () => {
     expect(parseJobCompensation("£50k-£60k").currency).toBe("GBP");
   });
 
+  it("keeps a valid range when the shared k magnitude would invert it", () => {
+    // "$500-$2k": promoting 500 to 500000 would exceed the 2000 max, so fall
+    // back to the literal endpoints instead of dropping the range entirely.
+    expect(parseJobCompensation("$500-$2k").value).toMatchObject({
+      minValue: 500,
+      maxValue: 2000,
+    });
+    // A genuinely inverted range is still rejected.
+    expect(parseJobCompensation("$5k-$2")).toBeUndefined();
+  });
+
   it("infers pay periods from the compensation text", () => {
     expect(parseJobCompensation("$50-$60 per hour").value.unitText).toBe(
       "HOUR",
