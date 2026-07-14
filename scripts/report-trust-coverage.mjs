@@ -6,6 +6,8 @@ import prettier from "prettier";
 import { CATEGORY_SCHEMAS } from "@heyclaude/registry/content-schema";
 import { parseSafeFrontmatter } from "@heyclaude/registry/frontmatter";
 
+import { countWhere, exactPct, has, pct } from "./lib/trust-coverage-math.mjs";
+
 /*
  * Trust-coverage report.
  *
@@ -126,11 +128,6 @@ const explicitReportPath = outputPath
   : "";
 const reportPath = explicitReportPath || (check ? "" : defaultReportPath);
 
-const has = (value) =>
-  Array.isArray(value)
-    ? value.length > 0
-    : value !== undefined && value !== null && String(value).trim() !== "";
-
 const entries = [];
 
 for (const category of Object.keys(CATEGORY_SCHEMAS)) {
@@ -178,10 +175,6 @@ for (const category of Object.keys(CATEGORY_SCHEMAS)) {
 }
 
 // --- aggregate ---
-const pct = (count, total) =>
-  total === 0 ? 0 : Math.round((count / total) * 100);
-const exactPct = (count, total) => (total === 0 ? 0 : (count / total) * 100);
-const countWhere = (list, fn) => list.filter(fn).length;
 
 const presentCategories = [...new Set(entries.map((e) => e.category))].sort();
 
