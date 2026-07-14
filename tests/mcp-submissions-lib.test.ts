@@ -222,6 +222,42 @@ describe("submissions-lib spec validation", () => {
       "capability-pack skills must use skill_level=expert.",
     );
   });
+
+  it("accepts retrieval_sources pasted as a markdown bullet list", () => {
+    const baseSkill = {
+      category: "skills",
+      name: "Capability Pack",
+      description:
+        "Capability pack skill used to validate retrieval source formatting during review.",
+      github_url: "https://github.com/example/repo/tree/main/skills/demo",
+      usage_snippet: "Use this capability pack during code review workflows.",
+      skill_type: "capability-pack",
+      skill_level: "expert",
+      verified_at: "2026-01-01",
+      safety_notes: "Runs user-configured scripts in the local workspace.",
+      privacy_notes:
+        "Does not persist user data outside the configured workspace.",
+    };
+
+    const bulletResult = validateSubmissionDraftFromSpec(submissionSpec, {
+      fields: {
+        ...baseSkill,
+        retrieval_sources:
+          "- https://example.com/docs\n- https://docs.foo.com/guide",
+      },
+    });
+    expect(bulletResult.errors.join("\n")).not.toContain(
+      "retrieval_sources must use https URLs",
+    );
+
+    // A genuinely non-https source is still rejected, marker or not.
+    const insecureResult = validateSubmissionDraftFromSpec(submissionSpec, {
+      fields: { ...baseSkill, retrieval_sources: "- http://insecure.example" },
+    });
+    expect(insecureResult.errors.join("\n")).toContain(
+      "retrieval_sources must use https URLs: http://insecure.example",
+    );
+  });
 });
 
 describe("submissions-lib draft builders", () => {

@@ -378,7 +378,11 @@ function validateAgainstSpec(spec, fields = {}) {
       }
     }
     if (retrievalSources) {
-      for (const url of splitList(retrievalSources)) {
+      for (const item of splitList(retrievalSources)) {
+        // Contributors often paste retrieval_sources as a markdown list — which
+        // is exactly what this field's own example teaches ("- https://…") — so
+        // strip a leading list marker before validating the URL.
+        const url = item.replace(/^\s*(?:[-*+]|\d+[.)])\s+/, "");
         if (!isHttpsUrl(url)) {
           errors.push(`retrieval_sources must use https URLs: ${url}`);
         }
