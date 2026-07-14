@@ -10,6 +10,11 @@ import {
 } from "lucide-react";
 import { TrustBadge, SourceBadge } from "@/components/badges";
 import type { Highlight, HighlightKind, HubStat } from "@/lib/hub-highlights";
+import { trackEvent } from "@/lib/analytics";
+import {
+  hubHighlightEntryAnalyticsData,
+  hubHighlightEntryAnalyticsEvent,
+} from "@/lib/hub-entry-cta-events";
 
 const HIGHLIGHT_ICON: Record<HighlightKind, LucideIcon> = {
   trusted: ShieldCheck,
@@ -47,6 +52,17 @@ export function HubHighlights({
               <Link
                 to="/entry/$category/$slug"
                 params={{ category: h.entry.category, slug: h.entry.slug }}
+                onClick={() =>
+                  trackEvent(
+                    hubHighlightEntryAnalyticsEvent(),
+                    hubHighlightEntryAnalyticsData(
+                      h.entry.category,
+                      h.entry.slug,
+                      h.kind,
+                      highlights.length,
+                    ),
+                  )
+                }
                 className="group flex h-full flex-col rounded-xl border border-border bg-surface p-4 transition-colors hover:border-ink/20 hover:bg-surface-2"
               >
                 <div className="flex items-center gap-1.5 eyebrow">

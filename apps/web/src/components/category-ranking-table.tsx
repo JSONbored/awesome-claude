@@ -1,5 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import { PlatformChip, InstallRiskBadge, NotesPresenceChips } from "@/components/badges";
+import { trackEvent } from "@/lib/analytics";
+import {
+  hubCategoryRankingEntryAnalyticsData,
+  hubCategoryRankingEntryAnalyticsEvent,
+} from "@/lib/hub-entry-cta-events";
 import type { Entry } from "@/types/registry";
 
 /**
@@ -46,6 +51,12 @@ export function CategoryRankingTable({ entries, label }: { entries: Entry[]; lab
                   <Link
                     to="/entry/$category/$slug"
                     params={{ category: e.category, slug: e.slug }}
+                    onClick={() =>
+                      trackEvent(
+                        hubCategoryRankingEntryAnalyticsEvent(),
+                        hubCategoryRankingEntryAnalyticsData(e.category, e.slug, i, entries.length),
+                      )
+                    }
                     className="story-link text-sm font-medium text-ink"
                   >
                     {e.title}

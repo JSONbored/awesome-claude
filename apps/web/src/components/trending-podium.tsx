@@ -3,6 +3,11 @@ import { Link } from "@tanstack/react-router";
 import { Star, ArrowUpRight, TrendingUp } from "lucide-react";
 import { CategoryPill, TrustBadge, SourceBadge } from "@/components/badges";
 import { formatCompact } from "@/lib/format";
+import { trackEvent } from "@/lib/analytics";
+import {
+  hubTrendingPodiumEntryAnalyticsData,
+  hubTrendingPodiumEntryAnalyticsEvent,
+} from "@/lib/hub-entry-cta-events";
 import { cn } from "@/lib/utils";
 import type { Entry } from "@/types/registry";
 
@@ -20,6 +25,16 @@ const RANK_STYLES = [
 export function TrendingPodium({ entries }: { entries: TrendingEntry[] }) {
   const top = entries.slice(0, 3);
   if (top.length === 0) return null;
+
+  const trackPodiumClick = React.useCallback(
+    (entry: TrendingEntry, rank: number) => {
+      trackEvent(
+        hubTrendingPodiumEntryAnalyticsEvent(),
+        hubTrendingPodiumEntryAnalyticsData(entry.category, entry.slug, rank, top.length),
+      );
+    },
+    [top.length],
+  );
 
   return (
     <div className="mt-8 grid gap-3 stagger-children sm:grid-cols-3">
@@ -58,6 +73,7 @@ export function TrendingPodium({ entries }: { entries: TrendingEntry[] }) {
             <Link
               to="/entry/$category/$slug"
               params={{ category: e.category, slug: e.slug }}
+              onClick={() => trackPodiumClick(e, i + 1)}
               className="mt-3 min-w-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 rounded-sm"
             >
               <div className="flex flex-wrap items-center gap-1.5">
@@ -90,6 +106,7 @@ export function TrendingPodium({ entries }: { entries: TrendingEntry[] }) {
             <Link
               to="/entry/$category/$slug"
               params={{ category: e.category, slug: e.slug }}
+              onClick={() => trackPodiumClick(e, i + 1)}
               className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-ink-muted hover:text-ink"
             >
               Inspect <ArrowUpRight className="h-3 w-3" />
