@@ -1133,3 +1133,26 @@ describe("validateEntry brand color and source URL checks", () => {
     ).toContain("sourceUrls must use http or https");
   });
 });
+
+describe("content-schema text-utility fallbacks", () => {
+  it("falls back to 'section' ids for headings that have no slug", () => {
+    const headings = extractHeadings("## !!!\n\ntext\n\n## !!!\n");
+    expect(headings.map((h) => h.id)).toEqual(["section", "section-2"]);
+  });
+
+  it("ends the usage section at the next ## heading", () => {
+    const sections = extractSections("## Usage\n\nintro\n\n## Other\n\nx");
+    expect(sections.map((s) => s.title)).toEqual(["Usage", "Other"]);
+    expect(sections[0].markdown).toBe("intro");
+  });
+
+  it("truncates a long seoDescription at a sentence boundary", () => {
+    const longDesc =
+      "This is a reasonably long first sentence that should be picked. " +
+      "x".repeat(200);
+    expect(
+      deriveSeoFields({ title: "T", description: longDesc }, "mcp")
+        .seoDescription,
+    ).toBe("This is a reasonably long first sentence that should be picked.");
+  });
+});
