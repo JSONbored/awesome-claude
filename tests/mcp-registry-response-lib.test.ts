@@ -73,4 +73,10 @@ describe("registry-response-lib policy attachment", () => {
       policy: { readOnly: true },
     });
   });
+
+  it("returns non-object payloads unchanged", () => {
+    expect(withPublicPolicy(null)).toBeNull();
+    expect(withPublicPolicy("plain")).toBe("plain");
+    expect(withPublicPolicy([1, 2])).toEqual([1, 2]);
+  });
 });

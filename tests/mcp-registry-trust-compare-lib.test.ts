@@ -4969,3 +4969,45 @@ describe("registry-trust-compare-lib buildTrustCompareResponse", () => {
     expect(response.count).toBe(1);
   });
 });
+
+describe("registry-trust-compare-lib selected compatibility and empty ranking", () => {
+  const deps = {
+    normalizePlatform,
+    buildSkillPlatformCompatibility,
+    entryCanonicalUrl,
+    entryTrustSignalCoverage,
+    entryTrustSummary,
+  };
+
+  it("selects the matching platform compatibility when a platform is given", () => {
+    const row = buildTrustCompareRow(
+      makeEntry({ category: "skills", slug: "s" }),
+      normalizePlatform("claude-code"),
+      deps,
+    );
+    expect(row.selectedCompatibility).not.toBeNull();
+    expect(normalizePlatform(row.selectedCompatibility.platform)).toBe(
+      "claude-code",
+    );
+  });
+
+  it("returns null selected compatibility when no platform row matches", () => {
+    const row = buildTrustCompareRow(
+      makeEntry({ category: "skills", slug: "s" }),
+      "no-such-platform",
+      deps,
+    );
+    expect(row.selectedCompatibility).toBeNull();
+  });
+
+  it("defaults bestDocumented to an empty string for empty ranking", () => {
+    const response = buildTrustCompareResponse({
+      platform: "",
+      entries: [],
+      ranking: [],
+      sharedGaps: [],
+      signalKeys: [],
+    });
+    expect(response.bestDocumented).toBe("");
+  });
+});

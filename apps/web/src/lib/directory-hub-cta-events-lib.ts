@@ -8,6 +8,8 @@
 export const CATEGORY_HUB_SURFACE = "category-hub";
 export const BEST_INDEX_SURFACE = "best-index";
 export const PLATFORM_INDEX_SURFACE = "platform-index";
+export const PLATFORM_HUB_SURFACE = "platform-hub";
+export const PLATFORM_CATEGORY_SURFACE = "platform-category";
 
 export function categoryHubBrowseAnalyticsEvent(): string {
   return "category_hub_browse_click";
@@ -68,5 +70,72 @@ export function platformIndexSelectAnalyticsData(
     entryCount,
     rowIndex,
     platformCount,
+  };
+}
+
+export function platformHubBrowseAnalyticsEvent(): string {
+  return "platform_hub_browse_click";
+}
+
+export function platformHubBrowseAnalyticsData(platformId: string, entryCount: number) {
+  return {
+    surface: PLATFORM_HUB_SURFACE,
+    platformId,
+    entryCount,
+  };
+}
+
+export function platformHubSectionAnalyticsEvent(): string {
+  return "platform_hub_section_click";
+}
+
+export function platformHubSectionAnalyticsData(
+  platformId: string,
+  category: string,
+  sectionEntryCount: number,
+  rowIndex: number,
+  sectionCount: number,
+) {
+  return {
+    surface: PLATFORM_HUB_SURFACE,
+    platformId,
+    category,
+    sectionEntryCount,
+    rowIndex,
+    sectionCount,
+  };
+}
+
+export function platformCategoryPlatformAnalyticsEvent(): string {
+  return "platform_category_platform_click";
+}
+
+export function platformCategoryPlatformAnalyticsData(
+  platformId: string,
+  category: string,
+  entryCount: number,
+) {
+  return {
+    surface: PLATFORM_CATEGORY_SURFACE,
+    platformId,
+    category,
+    entryCount,
+  };
+}
+
+export function platformCategoryCategoryAnalyticsEvent(): string {
+  return "platform_category_category_click";
+}
+
+export function platformCategoryCategoryAnalyticsData(
+  platformId: string,
+  category: string,
+  entryCount: number,
+) {
+  return {
+    surface: PLATFORM_CATEGORY_SURFACE,
+    platformId,
+    category,
+    entryCount,
   };
 }

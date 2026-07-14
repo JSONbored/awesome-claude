@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import {
   BEST_INDEX_SURFACE,
   CATEGORY_HUB_SURFACE,
+  PLATFORM_CATEGORY_SURFACE,
+  PLATFORM_HUB_SURFACE,
   PLATFORM_INDEX_SURFACE,
   bestIndexListAnalyticsData,
   bestIndexListAnalyticsEvent,
@@ -9,6 +11,14 @@ import {
   categoryHubBrowseAnalyticsEvent,
   categoryHubSeeAllAnalyticsData,
   categoryHubSeeAllAnalyticsEvent,
+  platformCategoryCategoryAnalyticsData,
+  platformCategoryCategoryAnalyticsEvent,
+  platformCategoryPlatformAnalyticsData,
+  platformCategoryPlatformAnalyticsEvent,
+  platformHubBrowseAnalyticsData,
+  platformHubBrowseAnalyticsEvent,
+  platformHubSectionAnalyticsData,
+  platformHubSectionAnalyticsEvent,
   platformIndexSelectAnalyticsData,
   platformIndexSelectAnalyticsEvent,
 } from "@/lib/directory-hub-cta-events-lib";
@@ -50,6 +60,44 @@ describe("directory hub cta events lib", () => {
       entryCount: 120,
       rowIndex: 0,
       platformCount: 7,
+    });
+  });
+
+  it("builds platform hub page navigation analytics", () => {
+    expect(platformHubBrowseAnalyticsEvent()).toBe("platform_hub_browse_click");
+    expect(platformHubBrowseAnalyticsData("cursor", 88)).toEqual({
+      surface: PLATFORM_HUB_SURFACE,
+      platformId: "cursor",
+      entryCount: 88,
+    });
+    expect(platformHubSectionAnalyticsEvent()).toBe(
+      "platform_hub_section_click",
+    );
+    expect(platformHubSectionAnalyticsData("cursor", "mcp", 6, 1, 4)).toEqual({
+      surface: PLATFORM_HUB_SURFACE,
+      platformId: "cursor",
+      category: "mcp",
+      sectionEntryCount: 6,
+      rowIndex: 1,
+      sectionCount: 4,
+    });
+    expect(platformCategoryPlatformAnalyticsEvent()).toBe(
+      "platform_category_platform_click",
+    );
+    expect(platformCategoryPlatformAnalyticsData("cursor", "mcp", 12)).toEqual({
+      surface: PLATFORM_CATEGORY_SURFACE,
+      platformId: "cursor",
+      category: "mcp",
+      entryCount: 12,
+    });
+    expect(platformCategoryCategoryAnalyticsEvent()).toBe(
+      "platform_category_category_click",
+    );
+    expect(platformCategoryCategoryAnalyticsData("cursor", "mcp", 12)).toEqual({
+      surface: PLATFORM_CATEGORY_SURFACE,
+      platformId: "cursor",
+      category: "mcp",
+      entryCount: 12,
     });
   });
 });

@@ -10,6 +10,13 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { HubHighlights, HubSignalStats } from "@/components/hub-highlights";
 import { hubHighlights, hubStats, trustPosture } from "@/lib/hub-highlights";
+import { trackEvent } from "@/lib/analytics";
+import {
+  platformCategoryCategoryAnalyticsData,
+  platformCategoryCategoryAnalyticsEvent,
+  platformCategoryPlatformAnalyticsData,
+  platformCategoryPlatformAnalyticsEvent,
+} from "@/lib/directory-hub-cta-events";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { breadcrumbListJsonLd } from "@/lib/breadcrumb-jsonld-lib";
 import { platformCategoryItemListJsonLd } from "@/lib/platform-category-itemlist-jsonld-lib";
@@ -139,6 +146,12 @@ function IntersectionPage() {
           <Link
             to="/for/$platform"
             params={{ platform }}
+            onClick={() =>
+              trackEvent(
+                platformCategoryPlatformAnalyticsEvent(),
+                platformCategoryPlatformAnalyticsData(platform, category, entries.length),
+              )
+            }
             className="story-link font-medium text-ink"
           >
             All {pLabel} resources →
@@ -146,7 +159,17 @@ function IntersectionPage() {
           <span aria-hidden className="text-ink-subtle">
             ·
           </span>
-          <Link to="/$category" params={{ category }} className="story-link font-medium text-ink">
+          <Link
+            to="/$category"
+            params={{ category }}
+            onClick={() =>
+              trackEvent(
+                platformCategoryCategoryAnalyticsEvent(),
+                platformCategoryCategoryAnalyticsData(platform, category, entries.length),
+              )
+            }
+            className="story-link font-medium text-ink"
+          >
             All Claude {cLabel} →
           </Link>
         </div>
