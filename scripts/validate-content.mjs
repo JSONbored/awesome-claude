@@ -13,6 +13,7 @@ import {
 import { parseSafeFrontmatter } from "@heyclaude/registry/frontmatter";
 
 import { duplicateTopLevelFrontmatterKeys } from "./lib/frontmatter-dupe-keys.mjs";
+import { findPredictableSharedTmpDebugPaths } from "./lib/shared-tmp-debug-paths.mjs";
 
 const repoRoot = process.cwd();
 const contentRoot = path.join(repoRoot, "content");
@@ -55,9 +56,6 @@ const oldBrandOrDomainPattern = new RegExp(
   ].join("")}`,
   "i",
 );
-const sharedTmpDebugPathPattern =
-  /(^|[^A-Za-z0-9_$\/{.-])(\/tmp\/[A-Za-z0-9_.$\/{}-]*(?:debug|startup)[A-Za-z0-9_.$\/{}-]*)/gi;
-const nonPredictableTmpPathPattern = /\$\$|\$RANDOM|\$\{RANDOM\}|X{3,}/i;
 
 function checkBashSyntax(scriptBody) {
   const result = spawnSync("bash", ["--noprofile", "--norc", "-n", "-s"], {
@@ -87,18 +85,6 @@ function checkBashSyntax(scriptBody) {
   }
 
   return { ok: true };
-}
-
-function findPredictableSharedTmpDebugPaths(scriptBody) {
-  const paths = new Set();
-  for (const match of String(scriptBody || "").matchAll(
-    sharedTmpDebugPathPattern,
-  )) {
-    const tmpPath = match[2];
-    if (!tmpPath || nonPredictableTmpPathPattern.test(tmpPath)) continue;
-    paths.add(tmpPath);
-  }
-  return [...paths];
 }
 
 for (const category of Object.keys(CATEGORY_SCHEMAS)) {
