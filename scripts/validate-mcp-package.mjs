@@ -8,7 +8,11 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 
-import { parseJsonOutput, parseToolPayload } from "./lib/mcp-tool-payload.mjs";
+import {
+  assertSafetyMetadataShape,
+  parseJsonOutput,
+  parseToolPayload,
+} from "./lib/mcp-tool-payload.mjs";
 
 const execFile = promisify(execFileCallback);
 const repoRoot = path.resolve(
@@ -30,17 +34,6 @@ const { StdioClientTransport } = await import(
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
-}
-
-function assertSafetyMetadataShape(payload, label) {
-  assert(
-    Array.isArray(payload?.safetyNotes),
-    `${label} did not expose safetyNotes as an array.`,
-  );
-  assert(
-    Array.isArray(payload?.privacyNotes),
-    `${label} did not expose privacyNotes as an array.`,
-  );
 }
 
 async function run(command, args, options = {}) {
