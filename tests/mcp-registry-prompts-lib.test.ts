@@ -47,6 +47,63 @@ describe("registry-prompts-lib definitions", () => {
       "Unknown HeyClaude MCP prompt: missing.prompt",
     );
   });
+
+  it("defaults a blank name to the unknown-prompt fallback", () => {
+    const prompt = getRegistryPrompt();
+    expect(String(prompt.messages[0]?.content?.text)).toContain(
+      "Unknown HeyClaude MCP prompt:",
+    );
+  });
+
+  it("renders placeholder text for every prompt when arguments are omitted", () => {
+    const assetFind = getRegistryPrompt({ name: "asset.find" });
+    const assetText = String(assetFind.messages[0]?.content?.text);
+    expect(assetText).toContain("(not provided)");
+    expect(assetText).not.toContain("in category");
+    expect(assetText).not.toContain("for platform");
+
+    const review = getRegistryPrompt({ name: "submission.review" });
+    expect(String(review.messages[0]?.content?.text)).toContain(
+      "(draft not provided)",
+    );
+
+    const install = getRegistryPrompt({ name: "install.asset" });
+    expect(String(install.messages[0]?.content?.text)).toContain(
+      "(category)/(slug)",
+    );
+
+    const prepare = getRegistryPrompt({ name: "submission.prepare" });
+    expect(String(prepare.messages[0]?.content?.text)).toContain(
+      "Prepare a HeyClaude submission draft.",
+    );
+  });
+
+  it("fills submission.prepare and install.asset detail clauses when provided", () => {
+    const prepare = getRegistryPrompt({
+      name: "submission.prepare",
+      arguments: {
+        category: "hooks",
+        name: "pre-commit-guard",
+        source_url: "https://example.com/guard",
+      },
+    });
+    const prepareText = String(prepare.messages[0]?.content?.text);
+    expect(prepareText).toContain("for category hooks");
+    expect(prepareText).toContain("named pre-commit-guard");
+    expect(prepareText).toContain("from https://example.com/guard");
+
+    const install = getRegistryPrompt({
+      name: "install.asset",
+      arguments: {
+        category: "mcp",
+        slug: "browser-bridge",
+        platform: "Cursor",
+      },
+    });
+    expect(String(install.messages[0]?.content?.text)).toContain(
+      "mcp/browser-bridge for Cursor",
+    );
+  });
 });
 
 describe("registry re-export compatibility", () => {

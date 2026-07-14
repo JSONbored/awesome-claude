@@ -3,6 +3,11 @@ import { PLATFORM_LABEL, type Platform } from "@/types/registry";
 import { ENTRIES } from "@/data/entries";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
+import { trackEvent } from "@/lib/analytics";
+import {
+  platformIndexSelectAnalyticsData,
+  platformIndexSelectAnalyticsEvent,
+} from "@/lib/directory-hub-cta-events";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl } from "@/lib/seo";
 
@@ -65,11 +70,17 @@ function PlatformsIndex() {
         description="Pick your editor or runtime to see every compatible Claude resource in the directory."
       />
       <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {PLATFORMS.map((p) => (
+        {PLATFORMS.map((p, rowIndex) => (
           <Link
             key={p}
             to="/for/$platform"
             params={{ platform: p }}
+            onClick={() =>
+              trackEvent(
+                platformIndexSelectAnalyticsEvent(),
+                platformIndexSelectAnalyticsData(p, counts.get(p) ?? 0, rowIndex, PLATFORMS.length),
+              )
+            }
             className="group flex items-center justify-between rounded-xl border border-border bg-surface p-4 hover:bg-surface-2"
           >
             <span className="font-display text-base font-semibold text-ink">
