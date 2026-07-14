@@ -63,4 +63,20 @@ describe("registry-excerpt-lib body projection", () => {
     expect(bodyMeta.bodyMode).toBe("excerpt");
     expect(bodyMeta.bodyTruncated).toBe(true);
   });
+
+  it("treats a non-string body as empty", () => {
+    const { bodyMeta } = projectEntryBody(
+      { slug: "s", body: 123 as unknown as string },
+      "excerpt",
+    );
+    expect(bodyMeta.bodyChars).toBe(0);
+  });
+
+  it("falls back to excerpt mode for an unrecognized requested mode", () => {
+    const { bodyMeta } = projectEntryBody(
+      { slug: "s", body: "hello" },
+      "bogus-mode" as unknown as "excerpt",
+    );
+    expect(bodyMeta.bodyMode).toBe("excerpt");
+  });
 });
