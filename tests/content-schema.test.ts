@@ -279,6 +279,50 @@ describe("inferStructuredFields", () => {
     );
   });
 
+  it("accepts valid brandColors that repeat or exceed six entries", () => {
+    const base = {
+      title: "T",
+      slug: "t",
+      description: "d",
+      cardDescription: "c",
+    };
+    const brandColorError = "brandColors must be hex colors such as #796eff";
+
+    // Duplicates and >6 valid colors are normalized downstream, not invalid.
+    const duplicate = validateEntry("agents", {
+      ...base,
+      brandColors: ["#796eff", "#796eff"],
+    });
+    expect(duplicate.semanticErrors).not.toContain(brandColorError);
+
+    const overSix = validateEntry("agents", {
+      ...base,
+      brandColors: [
+        "#111111",
+        "#222222",
+        "#333333",
+        "#444444",
+        "#555555",
+        "#666666",
+        "#777777",
+      ],
+    });
+    expect(overSix.semanticErrors).not.toContain(brandColorError);
+
+    const commaString = validateEntry("agents", {
+      ...base,
+      brandColors: "#796eff,#123456",
+    });
+    expect(commaString.semanticErrors).not.toContain(brandColorError);
+
+    // A genuinely invalid color is still rejected.
+    const invalid = validateEntry("agents", {
+      ...base,
+      brandColors: ["#796eff", "not-a-color"],
+    });
+    expect(invalid.semanticErrors).toContain(brandColorError);
+  });
+
   it("does not recommend package fields for non-installable skills", () => {
     const result = validateEntry("skills", {
       slug: "copy-only-capability-pack",

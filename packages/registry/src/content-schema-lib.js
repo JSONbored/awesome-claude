@@ -13,7 +13,6 @@ import { isPublicHttpUrl, isPublicHttpsUrl } from "./source-url-lib.js";
 import {
   BRAND_ASSET_SOURCES,
   isAllowedBrandAssetUrl,
-  normalizeBrandColors,
   normalizeBrandDomain,
 } from "./brand-assets.js";
 
@@ -784,16 +783,19 @@ export function validateEntry(category, data, inferred = {}) {
   if (brandVerifiedAt && !/^\d{4}-\d{2}-\d{2}$/.test(brandVerifiedAt)) {
     semanticErrors.push("brandVerifiedAt must be ISO date format YYYY-MM-DD");
   }
-  if (
-    merged.brandColors !== undefined &&
-    normalizeBrandColors(merged.brandColors).length !==
-      (Array.isArray(merged.brandColors)
-        ? merged.brandColors.length
-        : String(merged.brandColors || "")
-            .split(",")
-            .filter((value) => value.trim()).length)
-  ) {
-    semanticErrors.push("brandColors must be hex colors such as #796eff");
+  if (merged.brandColors !== undefined) {
+    // Validate each supplied color independently. normalizeBrandColors dedups
+    // and caps at 6, so comparing its length to the raw count wrongly rejected
+    // valid input that merely repeated a color or listed more than six.
+    const rawBrandColors = Array.isArray(merged.brandColors)
+      ? merged.brandColors
+      : String(merged.brandColors ?? "").split(",");
+    const providedBrandColors = rawBrandColors
+      .map((value) => String(value ?? "").trim())
+      .filter(Boolean);
+    if (providedBrandColors.some((value) => !/^#[0-9a-f]{6}$/i.test(value))) {
+      semanticErrors.push("brandColors must be hex colors such as #796eff");
+    }
   }
 
   for (const field of [
