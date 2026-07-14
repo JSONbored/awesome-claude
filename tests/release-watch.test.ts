@@ -265,4 +265,25 @@ describe("release watch", () => {
       ).body,
     ).toContain("older relevant commits omitted");
   });
+
+  it("breaks ties between equal-version tags deterministically", () => {
+    // duplicate tags have identical parts, exercising the localeCompare tiebreak
+    expect(latestSemverTag(["mcp-v2.0.0", "mcp-v2.0.0"], "mcp-v")).toEqual({
+      tag: "mcp-v2.0.0",
+      version: "2.0.0",
+      parts: [2, 0, 0],
+    });
+  });
+
+  it("reads issue labels given as strings or { name } objects and ignores other shapes", () => {
+    expect(
+      isTrustedReleaseWatchIssue(
+        {
+          user: { login: "someone" },
+          labels: ["release", { name: "mcp" }, 123, {}, { name: 7 }],
+        },
+        ["release", "mcp"],
+      ),
+    ).toBe(true);
+  });
 });
