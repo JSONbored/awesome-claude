@@ -5,12 +5,14 @@ import { fileURLToPath } from "node:url";
 import {
   collapseWhitespace,
   combinedTextOf,
+  escapePipes,
   introOf,
   jaccard,
   normalizeForCompare,
   round,
   shinglesOf,
   tokenize,
+  truncate,
 } from "./lib/thin-content-text.mjs";
 
 /*
@@ -333,14 +335,6 @@ const summary = {
 // --- output ---
 
 const limit = (list) => (top > 0 ? list.slice(0, top) : list);
-// Escape backslashes first, then pipes, so a literal "\" in the text can't
-// combine with the inserted escape (CodeQL js/incomplete-sanitization).
-const escapePipes = (text) =>
-  String(text).replace(/\\/g, "\\\\").replace(/\|/g, "\\|");
-const truncate = (text, max = 140) => {
-  const value = collapseWhitespace(text);
-  return value.length > max ? `${value.slice(0, max - 1)}…` : value;
-};
 
 function renderMarkdown() {
   const lines = [];

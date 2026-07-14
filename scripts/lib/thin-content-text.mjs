@@ -16,6 +16,18 @@ export const TEXT_FIELDS = [
 /** Coerce to a string and trim; null/undefined become "". */
 export const collapseWhitespace = (value) => String(value ?? "").trim();
 
+// Escape backslashes first, then pipes, so a literal "\" in the text can't
+// combine with the inserted escape (CodeQL js/incomplete-sanitization).
+/** Escape a value for use inside a markdown table cell. */
+export const escapePipes = (text) =>
+  String(text).replace(/\\/g, "\\\\").replace(/\|/g, "\\|");
+
+/** Trim and clamp text to `max` chars, appending an ellipsis when truncated. */
+export const truncate = (text, max = 140) => {
+  const value = collapseWhitespace(text);
+  return value.length > max ? `${value.slice(0, max - 1)}…` : value;
+};
+
 /**
  * The primary "intro" we de-duplicate on: the description is what shows up in
  * listings and meta tags, so duplicate descriptions are the real SEO risk.
