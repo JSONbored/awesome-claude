@@ -116,6 +116,10 @@ import {
   type EntryDetailCompareEgressLinkKind,
   type EntryDetailCompareEgressSurface,
 } from "@/lib/entry-detail-compare-egress-cta-events";
+import {
+  entryDetailCollectionEntryAnalyticsData,
+  entryDetailCollectionEntryAnalyticsEvent,
+} from "@/lib/entry-detail-collection-cta-events";
 import { resourceCardCompareFullMessage } from "@/lib/resource-card-compare-ui";
 import { useCopyPref, useHarnessPref, type CopyVariant } from "@/lib/dossier-prefs";
 import { variantsForEntry } from "@/components/copy-segmented";
@@ -1277,7 +1281,11 @@ function SchemaDetails({ entry }: { entry: Entry }) {
               <FieldRow label="Estimated setup" value={entry.estimatedSetupTime} />
               <FieldRow label="Difficulty" value={entry.difficulty} />
             </FieldGrid>
-            <CollectionItemList values={entry.items} />
+            <CollectionItemList
+              values={entry.items}
+              fromCategory={entry.category}
+              fromSlug={entry.slug}
+            />
             <PillList label="Installation order" values={entry.installationOrder} />
           </MetadataGroup>
         )}
@@ -1375,7 +1383,15 @@ function PillList({ label, values }: { label: string; values?: string[] }) {
   );
 }
 
-function CollectionItemList({ values }: { values?: string[] }) {
+function CollectionItemList({
+  values,
+  fromCategory,
+  fromSlug,
+}: {
+  values?: string[];
+  fromCategory: string;
+  fromSlug: string;
+}) {
   if (!values?.length) return null;
   return (
     <div className="mt-3">
@@ -1383,7 +1399,7 @@ function CollectionItemList({ values }: { values?: string[] }) {
         Included entries
       </div>
       <div className="flex flex-wrap gap-1.5">
-        {values.map((value) => {
+        {values.map((value, itemIndex) => {
           const [category, slug] = value.split("/");
           if (category && slug) {
             return (
@@ -1391,6 +1407,18 @@ function CollectionItemList({ values }: { values?: string[] }) {
                 key={value}
                 to="/entry/$category/$slug"
                 params={{ category, slug }}
+                onClick={() =>
+                  trackEvent(
+                    entryDetailCollectionEntryAnalyticsEvent(),
+                    entryDetailCollectionEntryAnalyticsData(
+                      fromCategory,
+                      fromSlug,
+                      value,
+                      itemIndex,
+                      values.length,
+                    ),
+                  )
+                }
                 className="inline-flex rounded-md border border-border bg-surface px-2 py-0.5 font-mono text-xs text-ink-muted hover:text-ink"
               >
                 {value}
