@@ -10,6 +10,13 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { HubHighlights, HubSignalStats } from "@/components/hub-highlights";
 import { hubHighlights, hubStats, trustPosture } from "@/lib/hub-highlights";
+import { trackEvent } from "@/lib/analytics";
+import {
+  platformHubBrowseAnalyticsData,
+  platformHubBrowseAnalyticsEvent,
+  platformHubSectionAnalyticsData,
+  platformHubSectionAnalyticsEvent,
+} from "@/lib/directory-hub-cta-events";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { breadcrumbListJsonLd } from "@/lib/breadcrumb-jsonld-lib";
 import { platformItemListJsonLd } from "@/lib/platform-itemlist-jsonld-lib";
@@ -111,6 +118,12 @@ function PlatformPage() {
           <Link
             to="/browse"
             search={{ platform }}
+            onClick={() =>
+              trackEvent(
+                platformHubBrowseAnalyticsEvent(),
+                platformHubBrowseAnalyticsData(platform, all.length),
+              )
+            }
             className="inline-flex h-9 items-center gap-1.5 rounded-md bg-ink px-4 font-medium text-background hover:opacity-90"
           >
             Browse &amp; filter all {label} resources <ArrowRight className="h-4 w-4" />
@@ -125,7 +138,7 @@ function PlatformPage() {
 
       <HubSignalStats stats={stats} total={all.length} />
 
-      {sections.map((section) => (
+      {sections.map((section, rowIndex) => (
         <section key={section.category.id} className="mt-12">
           <div className="flex items-baseline justify-between gap-3">
             <h2 className="h-display-2 text-ink">
@@ -134,6 +147,18 @@ function PlatformPage() {
             <Link
               to="/for/$platform/$category"
               params={{ platform, category: section.category.id }}
+              onClick={() =>
+                trackEvent(
+                  platformHubSectionAnalyticsEvent(),
+                  platformHubSectionAnalyticsData(
+                    platform,
+                    section.category.id,
+                    section.entries.length,
+                    rowIndex,
+                    sections.length,
+                  ),
+                )
+              }
               className="story-link text-sm font-medium text-ink"
             >
               All {categoryLabels[section.category.id] ?? section.category.label} for {label} →
