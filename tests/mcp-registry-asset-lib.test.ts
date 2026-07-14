@@ -18,6 +18,21 @@ describe("registry-asset-lib content assets", () => {
     expect(contentAsset("items", "Collection items", null)).toBeNull();
     expect(contentAsset("usage", "Usage snippet", "   ")).toBeNull();
   });
+
+  it("treats empty arrays and objects as absent content", () => {
+    expect(contentAsset("items", "Collection items", [], "json")).toBeNull();
+    expect(contentAsset("items", "Collection items", {}, "json")).toBeNull();
+  });
+
+  it("still serializes non-empty array and object content", () => {
+    expect(
+      contentAsset("items", "Collection items", ["a", "b"], "json"),
+    ).toMatchObject({
+      type: "items",
+      format: "json",
+      content: '[\n  "a",\n  "b"\n]',
+    });
+  });
 });
 
 describe("registry-asset-lib category primary asset", () => {

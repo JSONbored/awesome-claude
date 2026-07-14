@@ -5,10 +5,21 @@
  * complexity scoring live here. Runtime registry handlers stay in `registry.js`.
  */
 export function contentAsset(type, label, content, format = "markdown") {
-  const text =
-    content && typeof content === "object"
-      ? JSON.stringify(content, null, 2)
-      : String(content || "").trim();
+  const isObject = content && typeof content === "object";
+  // An empty array/object serializes to "[]"/"{}" (truthy), which would slip
+  // past the emptiness guard below and surface a bogus copyable asset (e.g. a
+  // collection with items: [] producing a "Collection items" asset of "[]").
+  if (
+    isObject &&
+    (Array.isArray(content)
+      ? content.length === 0
+      : Object.keys(content).length === 0)
+  ) {
+    return null;
+  }
+  const text = isObject
+    ? JSON.stringify(content, null, 2)
+    : String(content || "").trim();
   if (!text) return null;
   return {
     type,
