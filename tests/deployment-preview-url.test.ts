@@ -46,6 +46,11 @@ describe("PR preview artifact validation flow", () => {
       "https://gittensory.aethereal.dev",
       "https://heyclaude-dev.zeronode.workers.dev",
       "https://dev.heyclau.de",
+      // Sibling workers whose name/subdomain merely contains the substring
+      // "heyclaude-prod" must not be mistaken for the prod worker.
+      "https://heyclaude-prod-next.zeronode.workers.dev",
+      "https://v1-heyclaude-prod-staging.zeronode.workers.dev",
+      "https://preview.heyclaude-prod.otheracct.workers.dev",
     ]) {
       expect(
         selectPreviewUrl([{ url, source: "github-deployment:x" }]),

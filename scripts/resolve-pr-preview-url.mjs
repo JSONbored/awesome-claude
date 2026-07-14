@@ -33,10 +33,15 @@ const nonDeploymentSourcePattern =
 // dev.heyclau.de).
 function isHeyClaudePreviewHost(hostname) {
   const host = String(hostname || "").toLowerCase();
+  if (host === "heyclau.de" || host === "www.heyclau.de") return true;
+  if (!host.endsWith(".workers.dev")) return false;
+  // The worker name is the first dot-label of the host: "heyclaude-prod" or a
+  // Workers Builds preview alias "<version>-heyclaude-prod". Match the label
+  // exactly so a sibling worker whose name merely CONTAINS the substring (e.g.
+  // "heyclaude-prod-next") or a "…heyclaude-prod…" subdomain is not selected.
+  const workerLabel = host.split(".")[0];
   return (
-    host === "heyclau.de" ||
-    host === "www.heyclau.de" ||
-    (host.endsWith(".workers.dev") && host.includes("heyclaude-prod"))
+    workerLabel === "heyclaude-prod" || workerLabel.endsWith("-heyclaude-prod")
   );
 }
 
