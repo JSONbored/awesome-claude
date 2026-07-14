@@ -5,24 +5,27 @@
 // shaping can be unit-tested.
 
 /**
+ * Project GitHub repo stats off any source object (an entry or the site-stats
+ * payload) into `{ stars, forks, updatedAt }`, carrying each value only when it
+ * has the expected type.
+ */
+export function pickRepoStats(source) {
+  const s = source ?? {};
+  return {
+    stars: typeof s.githubStars === "number" ? s.githubStars : undefined,
+    forks: typeof s.githubForks === "number" ? s.githubForks : undefined,
+    updatedAt:
+      typeof s.repoUpdatedAt === "string" ? s.repoUpdatedAt : undefined,
+  };
+}
+
+/**
  * Map an entry-detail payload to `["<category>:<slug>", { stars, forks,
  * updatedAt }]`, or null when the payload has no usable entry (missing
- * category/slug). Each stat is carried only when it has the expected type.
+ * category/slug).
  */
 export function entryRepoStatsEntry(payload) {
   const entry = payload?.entry;
   if (!entry?.category || !entry?.slug) return null;
-  return [
-    `${entry.category}:${entry.slug}`,
-    {
-      stars:
-        typeof entry.githubStars === "number" ? entry.githubStars : undefined,
-      forks:
-        typeof entry.githubForks === "number" ? entry.githubForks : undefined,
-      updatedAt:
-        typeof entry.repoUpdatedAt === "string"
-          ? entry.repoUpdatedAt
-          : undefined,
-    },
-  ];
+  return [`${entry.category}:${entry.slug}`, pickRepoStats(entry)];
 }

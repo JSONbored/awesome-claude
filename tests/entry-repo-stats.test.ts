@@ -1,6 +1,36 @@
 import { describe, expect, it } from "vitest";
 
-import { entryRepoStatsEntry } from "../scripts/lib/entry-repo-stats.mjs";
+import {
+  entryRepoStatsEntry,
+  pickRepoStats,
+} from "../scripts/lib/entry-repo-stats.mjs";
+
+describe("pickRepoStats", () => {
+  it("carries correctly-typed stats and drops the rest", () => {
+    expect(
+      pickRepoStats({
+        githubStars: 5,
+        githubForks: 0,
+        repoUpdatedAt: "2026-02-02",
+      }),
+    ).toEqual({ stars: 5, forks: 0, updatedAt: "2026-02-02" });
+    expect(
+      pickRepoStats({
+        githubStars: "5",
+        githubForks: null,
+        repoUpdatedAt: 20260202,
+      }),
+    ).toEqual({ stars: undefined, forks: undefined, updatedAt: undefined });
+  });
+
+  it("treats a nullish source as empty stats", () => {
+    expect(pickRepoStats(null)).toEqual({
+      stars: undefined,
+      forks: undefined,
+      updatedAt: undefined,
+    });
+  });
+});
 
 describe("entryRepoStatsEntry", () => {
   it("maps a payload to a keyed repo-stats pair", () => {

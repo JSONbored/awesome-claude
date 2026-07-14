@@ -19,7 +19,7 @@ import {
 import { pickAtlasEntry } from "./lib/atlas-entry.mjs";
 import { artifactOutputPath } from "./lib/artifact-output-path.mjs";
 import { parseGitContentUpdatedAt } from "./lib/git-content-updated-at.mjs";
-import { entryRepoStatsEntry } from "./lib/entry-repo-stats.mjs";
+import { entryRepoStatsEntry, pickRepoStats } from "./lib/entry-repo-stats.mjs";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "..");
@@ -244,21 +244,7 @@ function loadExistingSiteStats() {
   if (!fs.existsSync(siteStatsFile)) return null;
 
   try {
-    const payload = JSON.parse(fs.readFileSync(siteStatsFile, "utf8"));
-    return {
-      stars:
-        typeof payload.githubStars === "number"
-          ? payload.githubStars
-          : undefined,
-      forks:
-        typeof payload.githubForks === "number"
-          ? payload.githubForks
-          : undefined,
-      updatedAt:
-        typeof payload.repoUpdatedAt === "string"
-          ? payload.repoUpdatedAt
-          : undefined,
-    };
+    return pickRepoStats(JSON.parse(fs.readFileSync(siteStatsFile, "utf8")));
   } catch {
     return null;
   }
