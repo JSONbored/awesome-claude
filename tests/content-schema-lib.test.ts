@@ -1110,3 +1110,26 @@ describe("deriveSeoFields title fallbacks", () => {
     ).toEqual(expect.arrayContaining(["a", "b"]));
   });
 });
+
+describe("validateEntry brand color and source URL checks", () => {
+  const base = { slug: "a", title: "A", description: "D" };
+
+  it("validates comma-separated brandColors and flags a non-hex value", () => {
+    expect(
+      validateEntry("mcp", { ...base, brandColors: "#796eff, notahex" })
+        .semanticErrors,
+    ).toContain("brandColors must be hex colors such as #796eff");
+    expect(
+      validateEntry("mcp", { ...base, brandColors: "#796eff" }).semanticErrors,
+    ).not.toContain("brandColors must be hex colors such as #796eff");
+  });
+
+  it("flags a sourceUrls entry that is not an http(s) URL", () => {
+    expect(
+      validateEntry("mcp", {
+        ...base,
+        sourceUrls: ["https://ok.dev", "not-a-url"],
+      }).semanticErrors,
+    ).toContain("sourceUrls must use http or https");
+  });
+});
