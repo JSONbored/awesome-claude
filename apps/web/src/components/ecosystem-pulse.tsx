@@ -1,6 +1,15 @@
 import { Link } from "@tanstack/react-router";
 import { GitCommit, Users } from "lucide-react";
 import { CategoryPill } from "./badges";
+import { trackEvent } from "@/lib/analytics";
+import {
+  homePulseChangelogEgressAnalyticsData,
+  homePulseChangelogEgressAnalyticsEvent,
+  homePulseContributorClickAnalyticsData,
+  homePulseContributorClickAnalyticsEvent,
+  homePulseContributorsIndexAnalyticsData,
+  homePulseContributorsIndexAnalyticsEvent,
+} from "@/lib/home-page-cta-events";
 
 export type EcosystemPulseData = {
   recent: Array<{
@@ -34,7 +43,16 @@ export function EcosystemPulse({ data }: { data: EcosystemPulseData }) {
             <GitCommit className="h-3.5 w-3.5 text-ink-muted" />
             <div className="eyebrow">Registry pulse</div>
           </div>
-          <Link to="/changelog" className="text-xs text-ink-muted hover:text-ink">
+          <Link
+            to="/changelog"
+            onClick={() =>
+              trackEvent(
+                homePulseChangelogEgressAnalyticsEvent(),
+                homePulseChangelogEgressAnalyticsData(),
+              )
+            }
+            className="text-xs text-ink-muted hover:text-ink"
+          >
             Changelog →
           </Link>
         </div>
@@ -71,16 +89,35 @@ export function EcosystemPulse({ data }: { data: EcosystemPulseData }) {
             <Users className="h-3.5 w-3.5 text-ink-muted" />
             <div className="eyebrow">Top contributors</div>
           </div>
-          <Link to="/contributors" className="text-xs text-ink-muted hover:text-ink">
+          <Link
+            to="/contributors"
+            onClick={() =>
+              trackEvent(
+                homePulseContributorsIndexAnalyticsEvent(),
+                homePulseContributorsIndexAnalyticsData(),
+              )
+            }
+            className="text-xs text-ink-muted hover:text-ink"
+          >
             All →
           </Link>
         </div>
         <ul className="divide-y divide-border">
-          {topContributors.map((c) => (
+          {topContributors.map((c, rowIndex) => (
             <li key={c.slug}>
               <Link
                 to="/contributors/$slug"
                 params={{ slug: c.slug }}
+                onClick={() =>
+                  trackEvent(
+                    homePulseContributorClickAnalyticsEvent(),
+                    homePulseContributorClickAnalyticsData(
+                      c.slug,
+                      rowIndex,
+                      topContributors.length,
+                    ),
+                  )
+                }
                 className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-surface-2"
               >
                 <span className="flex h-7 w-7 items-center justify-center rounded-full bg-surface-2 font-mono text-[10px] font-semibold uppercase text-ink-muted">

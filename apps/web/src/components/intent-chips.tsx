@@ -1,6 +1,11 @@
 import * as React from "react";
 import { Link } from "@tanstack/react-router";
 import { Rocket, ShieldCheck, Database, Zap, Wrench } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
+import {
+  homeIntentSelectAnalyticsData,
+  homeIntentSelectAnalyticsEvent,
+} from "@/lib/home-page-cta-events";
 import { cn } from "@/lib/utils";
 
 export type Intent = {
@@ -68,6 +73,17 @@ export function IntentChips({
             key={i.id}
             to="/browse"
             search={i.search}
+            onClick={() =>
+              trackEvent(
+                homeIntentSelectAnalyticsEvent(),
+                homeIntentSelectAnalyticsData(
+                  i.id,
+                  Boolean(i.search.q),
+                  Boolean(i.search.category),
+                  Boolean(i.search.trust),
+                ),
+              )
+            }
             className={cn(
               "group inline-flex items-center gap-1.5 rounded-full border border-border bg-surface text-ink-muted transition-colors duration-200 ease-out hover:border-accent/40 hover:bg-accent/5 hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60",
               size === "sm" ? "h-6 px-2 text-[11px]" : "h-7 px-2.5 text-xs",

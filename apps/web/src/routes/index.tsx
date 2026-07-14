@@ -26,6 +26,28 @@ import { HeroStatusRow } from "@/components/hero-status-row";
 import { HowItWorks } from "@/components/how-it-works";
 import { AgentNativeStrip } from "@/components/agent-native-strip";
 import { EcosystemPulse, type EcosystemPulseData } from "@/components/ecosystem-pulse";
+import { trackEvent } from "@/lib/analytics";
+import {
+  homeBriefAnalyticsData,
+  homeBriefAnalyticsEvent,
+  homeCategorySelectAnalyticsData,
+  homeCategorySelectAnalyticsEvent,
+  homeCompareRailCtaAnalyticsData,
+  homeCompareRailCtaAnalyticsEvent,
+  homeContributeCtaAnalyticsData,
+  homeContributeCtaAnalyticsEvent,
+  homeHeroCtaAnalyticsData,
+  homeHeroCtaAnalyticsEvent,
+  homeHeroExampleSearchAnalyticsData,
+  homeHeroExampleSearchAnalyticsEvent,
+  homePopularSearchAnalyticsData,
+  homePopularSearchAnalyticsEvent,
+  homeRailCtaAnalyticsData,
+  homeRailCtaAnalyticsEvent,
+  homeTrustStatAnalyticsData,
+  homeTrustStatAnalyticsEvent,
+  type HomeTrustStatId,
+} from "@/lib/home-page-cta-events";
 import { useRecents } from "@/lib/recents";
 import { useEffect, useState } from "react";
 import { createServerFn } from "@tanstack/react-start";
@@ -241,11 +263,17 @@ function Home() {
               <span className="hidden sm:inline">
                 Press <Kbd>⌘</Kbd> <Kbd>K</Kbd> · try
               </span>
-              {EXAMPLE_QUERIES.slice(0, 4).map((q) => (
+              {EXAMPLE_QUERIES.slice(0, 4).map((q, queryIndex) => (
                 <Link
                   key={q}
                   to="/browse"
                   search={{ q }}
+                  onClick={() =>
+                    trackEvent(
+                      homeHeroExampleSearchAnalyticsEvent(),
+                      homeHeroExampleSearchAnalyticsData(q.length, queryIndex),
+                    )
+                  }
                   className="rounded-full border border-border bg-surface px-2.5 py-1 font-mono text-ink-muted transition-colors duration-200 ease-out hover:border-border-strong hover:text-ink"
                 >
                   {q}
@@ -255,6 +283,9 @@ function Home() {
             <div className="mt-5 flex flex-wrap items-center gap-2 text-sm">
               <Link
                 to="/browse"
+                onClick={() =>
+                  trackEvent(homeHeroCtaAnalyticsEvent(), homeHeroCtaAnalyticsData("browse-all"))
+                }
                 className="inline-flex h-9 items-center gap-1.5 rounded-md bg-ink px-4 font-medium text-background hover:opacity-90"
               >
                 Browse all <ArrowRight className="h-4 w-4" />
@@ -264,12 +295,18 @@ function Home() {
                 params={{ slug: "mcp-server" }}
                 title="View the MCP setup snippet and config"
                 aria-label="Set up the HeyClaude MCP server inside Claude Code"
+                onClick={() =>
+                  trackEvent(homeHeroCtaAnalyticsEvent(), homeHeroCtaAnalyticsData("setup-mcp"))
+                }
                 className="inline-flex h-9 items-center gap-1.5 rounded-md border border-border bg-surface px-4 font-medium text-ink hover:bg-surface-2"
               >
                 <Server className="h-4 w-4" /> Set up MCP
               </Link>
               <Link
                 to="/best"
+                onClick={() =>
+                  trackEvent(homeHeroCtaAnalyticsEvent(), homeHeroCtaAnalyticsData("best"))
+                }
                 className="inline-flex h-9 items-center gap-1.5 rounded-md border border-transparent px-2 font-medium text-ink-muted hover:text-ink"
               >
                 Best of HeyClaude →
@@ -289,6 +326,7 @@ function Home() {
             hint="metadata reviewed"
             to="/browse"
             search={{ trust: "trusted" }}
+            statId="trusted"
           />
           <TrustStat
             icon={GitBranch}
@@ -297,6 +335,7 @@ function Home() {
             hint="repo verified"
             to="/browse"
             search={{ source: "source-backed" }}
+            statId="source-backed"
           />
           <TrustStat
             icon={Sparkles}
@@ -305,6 +344,7 @@ function Home() {
             hint="maintainer-checked"
             to="/browse"
             search={{ sort: "newest" }}
+            statId="reviewed"
           />
           <TrustStat
             icon={Flame}
@@ -312,6 +352,7 @@ function Home() {
             value={TOTAL}
             hint="tracked entries"
             to="/trending"
+            statId="live-signals"
           />
           <TrustStat
             icon={Package}
@@ -319,6 +360,7 @@ function Home() {
             value={CATEGORIES.length}
             hint="surfaces indexed"
             to="/browse"
+            statId="categories"
           />
         </div>
       </section>
@@ -333,6 +375,7 @@ function Home() {
           title="Browse by surface"
           to="/browse"
           ctaLabel="All categories"
+          railId="categories"
         />
         <div className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-border bg-border stagger-children sm:grid-cols-3 lg:grid-cols-5">
           {CATEGORIES.map((c) => {
@@ -343,6 +386,12 @@ function Home() {
                 key={c.id}
                 to="/$category"
                 params={{ category: c.id }}
+                onClick={() =>
+                  trackEvent(
+                    homeCategorySelectAnalyticsEvent(),
+                    homeCategorySelectAnalyticsData(c.id, count),
+                  )
+                }
                 className="group hover-lift relative flex flex-col gap-1 bg-surface p-4 hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent/60"
               >
                 <div className="flex items-center justify-between">
@@ -365,7 +414,16 @@ function Home() {
         <section className="mx-auto max-w-page px-4 py-6 sm:px-6">
           <div className="mb-3 flex items-baseline justify-between gap-3">
             <div className="eyebrow">Recently viewed</div>
-            <Link to="/browse" className="text-xs text-ink-muted hover:text-ink">
+            <Link
+              to="/browse"
+              onClick={() =>
+                trackEvent(
+                  homeRailCtaAnalyticsEvent(),
+                  homeRailCtaAnalyticsData("recent", "/browse"),
+                )
+              }
+              className="text-xs text-ink-muted hover:text-ink"
+            >
               Browse all →
             </Link>
           </div>
@@ -384,14 +442,21 @@ function Home() {
           title="What developers inspect first"
           icon={Flame}
           to="/trending"
+          railId="popular"
         />
         <div className="mt-3 flex flex-wrap items-center gap-1.5 text-xs">
           <span className="eyebrow mr-1">Popular searches</span>
-          {POPULAR_SEARCHES.map((q) => (
+          {POPULAR_SEARCHES.map((q, queryIndex) => (
             <Link
               key={q}
               to="/browse"
               search={{ q }}
+              onClick={() =>
+                trackEvent(
+                  homePopularSearchAnalyticsEvent(),
+                  homePopularSearchAnalyticsData(q.length, queryIndex),
+                )
+              }
               className="inline-flex items-center rounded-full border border-border bg-surface px-2.5 py-1 font-mono text-ink-muted hover:border-border-strong hover:text-ink"
             >
               {q}
@@ -421,6 +486,12 @@ function Home() {
             <Link
               to="/compare"
               search={{ ids: sourceBacked.map((e) => `${e.category}/${e.slug}`).join(",") }}
+              onClick={() =>
+                trackEvent(
+                  homeCompareRailCtaAnalyticsEvent(),
+                  homeCompareRailCtaAnalyticsData("open-compare", sourceBacked.length),
+                )
+              }
               className="text-xs text-ink-muted hover:text-ink"
             >
               Open in compare →
@@ -433,7 +504,16 @@ function Home() {
           </div>
           <div className="flex items-center justify-between border-t border-border bg-surface-2 px-5 py-3 text-xs text-ink-muted">
             <span>Pick any 4 to see install, trust, source, and platforms in one table.</span>
-            <Link to="/compare" className="story-link font-medium text-ink">
+            <Link
+              to="/compare"
+              onClick={() =>
+                trackEvent(
+                  homeCompareRailCtaAnalyticsEvent(),
+                  homeCompareRailCtaAnalyticsData("build-comparison", sourceBacked.length),
+                )
+              }
+              className="story-link font-medium text-ink"
+            >
               Build a comparison →
             </Link>
           </div>
@@ -452,6 +532,7 @@ function Home() {
             icon={Sparkles}
             to="/browse"
             ctaLabel="Browse all"
+            railId="newest"
           />
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             {newest.map((e) => (
@@ -461,6 +542,9 @@ function Home() {
           {latestBrief && (
             <Link
               to="/brief"
+              onClick={() =>
+                trackEvent(homeBriefAnalyticsEvent(), homeBriefAnalyticsData(latestBrief.number))
+              }
               className="mt-4 flex items-center justify-between gap-4 rounded-lg border border-border bg-surface p-4 hover:bg-surface-2"
             >
               <div className="flex items-center gap-3">
@@ -504,18 +588,36 @@ function Home() {
             <div className="flex flex-wrap gap-2">
               <Link
                 to="/submit"
+                onClick={() =>
+                  trackEvent(
+                    homeContributeCtaAnalyticsEvent(),
+                    homeContributeCtaAnalyticsData("submit"),
+                  )
+                }
                 className="inline-flex h-10 items-center gap-1.5 rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink hover:opacity-90"
               >
                 Submit a resource <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
                 to="/claim"
+                onClick={() =>
+                  trackEvent(
+                    homeContributeCtaAnalyticsEvent(),
+                    homeContributeCtaAnalyticsData("claim"),
+                  )
+                }
                 className="inline-flex h-10 items-center rounded-md border border-background/20 px-4 text-sm font-medium hover:bg-background/10"
               >
                 Claim listing
               </Link>
               <Link
                 to="/api-docs"
+                onClick={() =>
+                  trackEvent(
+                    homeContributeCtaAnalyticsEvent(),
+                    homeContributeCtaAnalyticsData("api-docs"),
+                  )
+                }
                 className="inline-flex h-10 items-center rounded-md border border-transparent px-2 text-sm font-medium text-background/70 hover:text-background"
               >
                 Submission spec →
@@ -534,12 +636,14 @@ function RailHeader({
   to,
   ctaLabel = "See all",
   icon: Icon,
+  railId,
 }: {
   eyebrow: string;
   title: string;
   to?: string;
   ctaLabel?: string;
   icon?: React.ElementType;
+  railId?: string;
 }) {
   return (
     <div className="flex items-end justify-between gap-4">
@@ -551,7 +655,14 @@ function RailHeader({
         <h2 className="mt-1 h-display-2 text-ink text-balance">{title}</h2>
       </div>
       {to && (
-        <Link to={to} className="text-sm text-ink-muted hover:text-ink">
+        <Link
+          to={to}
+          onClick={() => {
+            if (!railId) return;
+            trackEvent(homeRailCtaAnalyticsEvent(), homeRailCtaAnalyticsData(railId, to));
+          }}
+          className="text-sm text-ink-muted hover:text-ink"
+        >
           {ctaLabel} →
         </Link>
       )}
@@ -566,6 +677,7 @@ function TrustStat({
   hint,
   to,
   search,
+  statId,
 }: {
   icon: React.ElementType;
   label: string;
@@ -573,6 +685,7 @@ function TrustStat({
   hint?: string;
   to?: string;
   search?: Record<string, string>;
+  statId?: HomeTrustStatId;
 }) {
   const inner = (
     <>
@@ -596,7 +709,15 @@ function TrustStat({
     "flex items-center gap-3 bg-surface p-5 transition-colors duration-200 ease-out hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent/60";
   if (to) {
     return (
-      <Link to={to} search={search as never} className={cls}>
+      <Link
+        to={to}
+        search={search as never}
+        onClick={() => {
+          if (!statId) return;
+          trackEvent(homeTrustStatAnalyticsEvent(), homeTrustStatAnalyticsData(statId));
+        }}
+        className={cls}
+      >
         {inner}
       </Link>
     );
