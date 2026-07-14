@@ -839,7 +839,11 @@ export function buildRegistryTrustReport(entries) {
         .slice(0, 50),
       missingSource: needsAttention
         .filter((entry) =>
-          entry.recommendations.some((item) => item.includes("source")),
+          // Match the "Add source, …" recommendation specifically. A plain
+          // "source" substring also matches the stale-verification text
+          // ("…from current source facts."), which pulled entries that already
+          // have a source into this queue, contradicting missingSourceCount.
+          entry.recommendations.some((item) => item.includes("Add source")),
         )
         .slice(0, 50),
       missingChecksum: needsAttention

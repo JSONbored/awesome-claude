@@ -1149,6 +1149,24 @@ describe("buildRegistryTrustReport", () => {
     expect(report.queues.missingSource.length).toBeGreaterThan(0);
   });
 
+  it("keeps stale-but-sourced entries out of the missingSource queue", () => {
+    const report = buildRegistryTrustReport([
+      {
+        category: "agents",
+        slug: "stale-one",
+        title: "Stale One",
+        repoUrl: "https://github.com/example/repo",
+        verifiedAt: "2020-01-01",
+        dateAdded: "2026-07-01",
+      },
+    ]);
+    expect(report.summary.missingSourceCount).toBe(0);
+    expect(report.queues.missingSource).toHaveLength(0);
+    expect(report.queues.staleVerification.map((entry) => entry.key)).toContain(
+      "agents:stale-one",
+    );
+  });
+
   it.each([
     ["branded", BRANDED_ENTRY, true],
     ["sparse mcp", SPARSE_ENTRY, false],
