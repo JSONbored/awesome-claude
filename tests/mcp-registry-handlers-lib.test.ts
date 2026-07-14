@@ -531,6 +531,15 @@ describe("registry-handlers-lib response builders", () => {
     });
     expect(response.relationGraph).toBe(true);
   });
+  it("buildRelatedEntriesGraphResponse count matches the returned page", () => {
+    const response = buildRelatedEntriesGraphResponse({
+      target: { category: "mcp", slug: "demo" },
+      entries: Array.from({ length: 8 }, (_, index) => ({ id: index })),
+      limit: 5,
+    });
+    expect(response.entries).toHaveLength(5);
+    expect(response.count).toBe(response.entries.length);
+  });
   it("buildTrendingResourceResponse matrix 0", () => {
     const response = buildTrendingResourceResponse({
       payload: { schemaVersion: 1 },

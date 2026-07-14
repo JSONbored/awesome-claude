@@ -154,12 +154,15 @@ export function mapRecentUpdateEntries(
 }
 
 export function buildRelatedEntriesGraphResponse({ target, entries, limit }) {
+  // The graph path receives the full related list (its caller does not
+  // pre-slice), so count must reflect the returned page, not the input length.
+  const page = entries.slice(0, limit);
   return {
     ok: true,
     key: `${target.category}:${target.slug}`,
     relationGraph: true,
-    count: entries.length,
-    entries: entries.slice(0, limit),
+    count: page.length,
+    entries: page,
   };
 }
 
