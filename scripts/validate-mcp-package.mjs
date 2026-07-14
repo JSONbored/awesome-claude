@@ -8,6 +8,12 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 
+import {
+  assertSafetyMetadataShape,
+  parseJsonOutput,
+  parseToolPayload,
+} from "./lib/mcp-tool-payload.mjs";
+
 const execFile = promisify(execFileCallback);
 const repoRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -30,35 +36,12 @@ function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
-function assertSafetyMetadataShape(payload, label) {
-  assert(
-    Array.isArray(payload?.safetyNotes),
-    `${label} did not expose safetyNotes as an array.`,
-  );
-  assert(
-    Array.isArray(payload?.privacyNotes),
-    `${label} did not expose privacyNotes as an array.`,
-  );
-}
-
 async function run(command, args, options = {}) {
   return execFile(command, args, {
     timeout: 120000,
     maxBuffer: 10 * 1024 * 1024,
     ...options,
   });
-}
-
-function parseJsonOutput(output) {
-  const parsed = JSON.parse(output);
-  return Array.isArray(parsed) ? parsed[0] : parsed;
-}
-
-function parseToolPayload(result) {
-  if (result?.structuredContent) return result.structuredContent;
-  const text = result?.content?.find((item) => item.type === "text")?.text;
-  if (!text) throw new Error("MCP tool response did not include JSON text.");
-  return JSON.parse(text);
 }
 
 async function readJson(filePath) {

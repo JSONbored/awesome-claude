@@ -15,6 +15,13 @@ import { FilterChip, FilterChipGroup } from "@/components/filter-chip";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
+import { trackEvent } from "@/lib/analytics";
+import {
+  validatorsAttentionEntryAnalyticsData,
+  validatorsAttentionEntryAnalyticsEvent,
+  validatorsRecentReviewedEntryAnalyticsData,
+  validatorsRecentReviewedEntryAnalyticsEvent,
+} from "@/lib/insights-page-entry-cta-events";
 import atlasRegistry from "@/generated/atlas-registry.json";
 
 export const Route = createFileRoute("/validators")({
@@ -169,11 +176,23 @@ function ValidatorsPage() {
                 <p className="text-xs text-ink-muted">No obvious metadata gaps in this area.</p>
               ) : (
                 <ul className="space-y-2">
-                  {coverage.needsAttention.map((entry) => (
+                  {coverage.needsAttention.map((entry, rowIndex) => (
                     <li key={`${entry.category}/${entry.slug}`}>
                       <Link
                         to="/entry/$category/$slug"
                         params={{ category: entry.category, slug: entry.slug }}
+                        onClick={() =>
+                          trackEvent(
+                            validatorsAttentionEntryAnalyticsEvent(),
+                            validatorsAttentionEntryAnalyticsData(
+                              entry.category,
+                              entry.slug,
+                              coverage.id,
+                              rowIndex,
+                              coverage.needsAttention.length,
+                            ),
+                          )
+                        }
                         className="block rounded-lg border border-border bg-background p-3 transition-colors hover:bg-surface-2"
                       >
                         <div className="flex flex-wrap items-center gap-1.5">
@@ -204,11 +223,22 @@ function ValidatorsPage() {
               snapshot.
             </p>
           ) : (
-            RECENT_REVIEWED.map((entry) => (
+            RECENT_REVIEWED.map((entry, rowIndex) => (
               <Link
                 key={`${entry.category}/${entry.slug}`}
                 to="/entry/$category/$slug"
                 params={{ category: entry.category, slug: entry.slug }}
+                onClick={() =>
+                  trackEvent(
+                    validatorsRecentReviewedEntryAnalyticsEvent(),
+                    validatorsRecentReviewedEntryAnalyticsData(
+                      entry.category,
+                      entry.slug,
+                      rowIndex,
+                      RECENT_REVIEWED.length,
+                    ),
+                  )
+                }
                 className="grid gap-3 border-b border-border px-5 py-3 text-sm last:border-0 hover:bg-surface-2 sm:grid-cols-[1fr_120px]"
               >
                 <div className="min-w-0">

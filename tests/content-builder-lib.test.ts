@@ -610,3 +610,44 @@ describe("public wrapper re-exports", () => {
     expect(wrapper.DEFAULT_DIRECTORY_REPO_URL).toBe(DEFAULT_DIRECTORY_REPO_URL);
   });
 });
+
+describe("buildContentEntryFromMdx optional-field defaults", () => {
+  it("falls back to 'skill' when the slug is only whitespace", () => {
+    const platforms = buildDefaultSkillPlatformCompatibility(
+      { slug: "   " },
+      {},
+    );
+    expect(platforms[4].adapterPath).toBe(
+      "/data/skill-adapters/cursor/skill.mdc",
+    );
+  });
+
+  it("defaults the optional fields when the frontmatter omits them", () => {
+    const entry = buildEntry({
+      fileName: "min.mdx",
+      source: mdx(["title: Minimal", "dateAdded: 2026-01-03"].join("\n")),
+    });
+    // slug derived from the file name; description defaults to ""
+    expect(entry.slug).toBe("min");
+    expect(entry.description).toBe("");
+    // optional snippets/metadata are dropped (undefined) rather than emitted
+    expect(entry.cardDescription).toBeUndefined();
+    expect(entry.commandSyntax).toBeUndefined();
+    expect(entry.retrievalSources).toBeUndefined();
+  });
+
+  it("uses a frontmatter commandSyntax when none is inferred", () => {
+    const entry = buildEntry({
+      fileName: "cmd.mdx",
+      source: mdx(
+        [
+          "title: Cmd",
+          "slug: cmd",
+          "commandSyntax: /deploy [env]",
+          "dateAdded: 2026-01-03",
+        ].join("\n"),
+      ),
+    });
+    expect(entry.commandSyntax).toBe("/deploy [env]");
+  });
+});

@@ -27,6 +27,26 @@ export function parseReleaseWatchArgs(argv) {
   return args;
 }
 
+// git log --format for readCommits: record-separated (\x1e) commits, each with
+// its hash and subject field-separated (\x1f).
+export const COMMIT_LOG_FORMAT = "%x1e%H%x1f%s";
+
+/**
+ * Parse `git log --format=COMMIT_LOG_FORMAT` output into { sha, subject } records
+ * (subject is the first line only). Blank records are dropped; a record with no
+ * subject field yields an empty subject.
+ */
+export function parseCommitLog(output) {
+  return String(output ?? "")
+    .split("\x1e")
+    .map((entry) => entry.trim())
+    .filter(Boolean)
+    .map((entry) => {
+      const [sha, subject] = entry.split("\x1f");
+      return { sha, subject: subject?.split("\n")[0] ?? "" };
+    });
+}
+
 export function readReleaseWatchConfig({ repoRoot = process.cwd() } = {}) {
   const configPath = resolve(repoRoot, RELEASE_WATCH_CONFIG_PATH);
   let parsed;

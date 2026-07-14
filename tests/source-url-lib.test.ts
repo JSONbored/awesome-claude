@@ -116,6 +116,24 @@ describe("public URL userinfo helpers", () => {
     expect(isPublicGitHubHostUrl("https://gist.github.com/octocat")).toBe(true);
   });
 
+  it("treats http and www GitHub hosts as public", () => {
+    expect(isPublicGitHubHostUrl("http://github.com/octocat")).toBe(true);
+    expect(isPublicGitHubHostUrl("https://www.github.com/octocat")).toBe(true);
+    expect(isPublicGitHubHostUrl("https://raw.githubusercontent.com/x")).toBe(
+      false,
+    );
+  });
+
+  it("rejects non-http(s) URLs even on a GitHub host", () => {
+    // A GitHub hostname over ftp/ws is not a public GitHub web URL; the protocol
+    // guard matches the sibling public-URL validators.
+    expect(isPublicGitHubHostUrl("ftp://github.com/octocat")).toBe(false);
+    expect(isPublicGitHubHostUrl("ws://raw.github.com/socket")).toBe(false);
+    expect(isPublicGitHubHostUrl("ssh://git@github.com/owner/repo")).toBe(
+      false,
+    );
+  });
+
   it("rejects reserved GitHub product surfaces as profiles", () => {
     // A single path segment that is a reserved GitHub page is not a user
     // profile, mirroring how the repo-URL parser rejects reserved owners.

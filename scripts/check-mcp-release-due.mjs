@@ -7,11 +7,14 @@ import { pathToFileURL } from "node:url";
 import {
   buildMcpReleaseIssue,
   buildMcpReleaseReport,
+  COMMIT_LOG_FORMAT,
   isTrustedReleaseWatchIssue,
   latestSemverTag,
   MCP_RELEASE_DUE_MARKER,
+  parseCommitLog,
   parseReleaseWatchArgs,
 } from "./lib/release-watch-core.mjs";
+import { parseNpmVersionOutput } from "./lib/npm-version.mjs";
 
 const PACKAGE_JSON_PATH = "packages/mcp/package.json";
 const PACKAGE_NAME = "@heyclaude/mcp";
@@ -59,34 +62,19 @@ function readPublishedPackageVersion(packageName) {
     stdio: ["ignore", "pipe", "pipe"],
   });
   if (result.status !== 0) return null;
-  try {
-    const parsed = JSON.parse(result.stdout);
-    return typeof parsed === "string" ? parsed : null;
-  } catch {
-    return result.stdout.trim() || null;
-  }
+  return parseNpmVersionOutput(result.stdout);
 }
 
 function readCommits(revisionRange) {
-  const format = "%x1e%H%x1f%s";
-  return git([
-    "log",
-    "--reverse",
-    "--no-merges",
-    `--format=${format}`,
-    revisionRange,
-  ])
-    .split("\x1e")
-    .map((entry) => entry.trim())
-    .filter(Boolean)
-    .map((entry) => {
-      const [sha, subject] = entry.split("\x1f");
-      return {
-        sha,
-        subject: subject?.split("\n")[0] ?? "",
-        files: readCommitFiles(sha),
-      };
-    });
+  return parseCommitLog(
+    git([
+      "log",
+      "--reverse",
+      "--no-merges",
+      `--format=${COMMIT_LOG_FORMAT}`,
+      revisionRange,
+    ]),
+  ).map((commit) => ({ ...commit, files: readCommitFiles(commit.sha) }));
 }
 
 function readCommitFiles(sha) {

@@ -2,6 +2,8 @@
 import fs from "node:fs";
 import { pathToFileURL } from "node:url";
 
+import { escapeTableCell } from "./lib/table-cell.mjs";
+
 export function formatJobSourceCheckSummary(report) {
   const results = Array.isArray(report?.results) ? report.results : [];
   const summary = report?.summary || {};
@@ -35,26 +37,6 @@ export function formatJobSourceCheckSummary(report) {
     );
   }
   return `${lines.join("\n")}\n`;
-}
-
-function escapeTableCell(value) {
-  const escaped = String(value ?? "")
-    .replaceAll("\\", "\\\\")
-    .replaceAll("|", "\\|");
-
-  let output = "";
-  let lastWasWhitespace = false;
-  for (const char of escaped.trim()) {
-    if (char === " " || char === "\n" || char === "\t" || char === "\r") {
-      if (!lastWasWhitespace) output += " ";
-      lastWasWhitespace = true;
-      continue;
-    }
-    output += char;
-    lastWasWhitespace = false;
-  }
-
-  return output.trim();
 }
 
 export function main(argv = process.argv.slice(2)) {

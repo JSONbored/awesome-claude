@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   collapseWhitespace,
   combinedTextOf,
+  escapePipes,
   introOf,
   jaccard,
   normalizeForCompare,
@@ -10,6 +11,7 @@ import {
   shinglesOf,
   TEXT_FIELDS,
   tokenize,
+  truncate,
 } from "../scripts/lib/thin-content-text.mjs";
 
 describe("collapseWhitespace", () => {
@@ -97,5 +99,34 @@ describe("round", () => {
     expect(round(1 / 3)).toBe(0.333);
     expect(round(0.12345, 2)).toBe(0.12);
     expect(round(2)).toBe(2);
+  });
+});
+
+describe("escapePipes", () => {
+  it("escapes backslashes before pipes so the escape can't be neutralized", () => {
+    expect(escapePipes("a|b")).toBe("a\\|b");
+    expect(escapePipes("a\\b")).toBe("a\\\\b");
+    // a literal backslash before a pipe must not swallow the pipe escape
+    expect(escapePipes("a\\|b")).toBe("a\\\\\\|b");
+  });
+
+  it("coerces non-strings", () => {
+    expect(escapePipes(42)).toBe("42");
+  });
+});
+
+describe("truncate", () => {
+  it("returns the trimmed value when within the limit", () => {
+    expect(truncate("  hello  ")).toBe("hello");
+  });
+
+  it("clamps to max chars with a trailing ellipsis when longer", () => {
+    const out = truncate("abcdef", 4);
+    expect(out).toBe("abc…");
+    expect(out.length).toBe(4);
+  });
+
+  it("does not truncate a value exactly at the limit", () => {
+    expect(truncate("abcd", 4)).toBe("abcd");
   });
 });

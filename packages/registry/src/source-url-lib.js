@@ -154,14 +154,26 @@ export function isPublicGitHubProfileUrl(value) {
 }
 
 /**
- * Return true when a URL resolves to github.com or a *.github.com host.
+ * Return true when a URL resolves to github.com or a *.github.com host over
+ * HTTP(S) and without embedded userinfo. The protocol guard matches the other
+ * public-URL validators here (`isPublicHttpUrl`, `publicHttpUrlHref`): a
+ * non-http(s) URL such as `ftp://github.com/x` or `ws://raw.github.com/x` is
+ * not a public GitHub web URL even though its hostname is a GitHub host.
  *
  * @param {unknown} value
  * @returns {boolean}
  */
 export function isPublicGitHubHostUrl(value) {
-  const hostname = publicUrlHostname(value);
-  if (!hostname) return false;
+  const url = parseUrl(value);
+  if (
+    !url ||
+    url.username ||
+    url.password ||
+    (url.protocol !== "https:" && url.protocol !== "http:")
+  ) {
+    return false;
+  }
+  const hostname = url.hostname.replace(/^www\./i, "").toLowerCase();
   return hostname === "github.com" || hostname.endsWith(".github.com");
 }
 

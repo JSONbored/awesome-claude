@@ -21,6 +21,12 @@ import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { entryRef } from "@/lib/entry-identity";
+import { trackEvent } from "@/lib/analytics";
+import {
+  qualityQueueEntryAnalyticsData,
+  qualityQueueEntryAnalyticsEvent,
+  type QualityQueueId,
+} from "@/lib/insights-page-entry-cta-events";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/quality")({
@@ -188,11 +194,13 @@ function QualityPage() {
         <Queue
           title="Improvement queue"
           help="Lowest-scoring entries by completeness and trust signals."
+          queueId="improvement"
           rows={improvementQueue}
         />
         <Queue
           title="Trust queue"
           help="Solid entries with one or two recommendations."
+          queueId="trust"
           rows={trustQueue}
         />
       </div>
@@ -424,7 +432,17 @@ function Bar({ label, pct }: { label: string; pct: number }) {
   );
 }
 
-function Queue({ title, help, rows }: { title: string; help: string; rows: QualityRow[] }) {
+function Queue({
+  title,
+  help,
+  queueId,
+  rows,
+}: {
+  title: string;
+  help: string;
+  queueId: QualityQueueId;
+  rows: QualityRow[];
+}) {
   return (
     <div className="overflow-hidden rounded-xl border border-border bg-surface">
       <div className="border-b border-border px-5 py-3">
@@ -432,12 +450,25 @@ function Queue({ title, help, rows }: { title: string; help: string; rows: Quali
         <p className="text-xs text-ink-muted">{help}</p>
       </div>
       <ul>
-        {rows.map((r) => (
+        {rows.map((r, rowIndex) => (
           <li key={entryRef(r.entry)} className="border-b border-border px-5 py-3 last:border-0">
             <div className="flex items-center justify-between gap-3">
               <Link
                 to="/entry/$category/$slug"
                 params={{ category: r.entry.category, slug: r.entry.slug }}
+                onClick={() =>
+                  trackEvent(
+                    qualityQueueEntryAnalyticsEvent(),
+                    qualityQueueEntryAnalyticsData(
+                      r.entry.category,
+                      r.entry.slug,
+                      queueId,
+                      r.score,
+                      rowIndex,
+                      rows.length,
+                    ),
+                  )
+                }
                 className="truncate text-sm font-medium text-ink hover:underline"
               >
                 {r.entry.title}

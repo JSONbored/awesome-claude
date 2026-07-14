@@ -17,6 +17,11 @@ import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { DataSection, DataStat, DistTable, pctOf, type DistRow } from "@/components/data-report";
+import { trackEvent } from "@/lib/analytics";
+import {
+  stateReportEntryAnalyticsData,
+  stateReportEntryAnalyticsEvent,
+} from "@/lib/insights-page-entry-cta-events";
 
 const PATH = "/state-of-mcp-servers";
 const TITLE = "State of MCP Servers 2026";
@@ -260,7 +265,7 @@ function StateOfMcpServersPage() {
           The ten most recently dated MCP servers in the registry snapshot.
         </p>
         <ol className="mt-4 overflow-hidden rounded-xl border border-border bg-surface">
-          {RECENT.map((e) => (
+          {RECENT.map((e, rowIndex) => (
             <li
               key={`${e.category}/${e.slug}`}
               className="flex items-center justify-between gap-3 border-b border-border px-5 py-3 last:border-0"
@@ -268,6 +273,18 @@ function StateOfMcpServersPage() {
               <Link
                 to="/entry/$category/$slug"
                 params={{ category: e.category, slug: e.slug }}
+                onClick={() =>
+                  trackEvent(
+                    stateReportEntryAnalyticsEvent(),
+                    stateReportEntryAnalyticsData(
+                      e.category,
+                      e.slug,
+                      "mcp-servers",
+                      rowIndex,
+                      RECENT.length,
+                    ),
+                  )
+                }
                 className="min-w-0 truncate text-sm font-medium text-ink hover:underline"
               >
                 {e.title}

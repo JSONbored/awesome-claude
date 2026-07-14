@@ -23,6 +23,11 @@ import { Monogram } from "@/components/monogram";
 import { absoluteUrl } from "@/lib/seo";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { breadcrumbListJsonLd } from "@/lib/breadcrumb-jsonld-lib";
+import { trackEvent } from "@/lib/analytics";
+import {
+  contributorProfileEntryAnalyticsData,
+  contributorProfileEntryAnalyticsEvent,
+} from "@/lib/insights-page-entry-cta-events";
 import { contributorPersonJsonLd } from "@/lib/contributor-person-jsonld-lib";
 import { ogImageUrl } from "@/lib/og-image";
 import { ogImageMetaTags } from "@/lib/og-meta-lib";
@@ -233,12 +238,14 @@ function ContributionSection({
         <p className="mt-3 text-sm text-ink-muted">{empty ?? "No entries yet."}</p>
       ) : (
         <div className="mt-4 divide-y divide-border overflow-hidden rounded-xl border border-border bg-surface">
-          {entries.map((entry) => (
+          {entries.map((entry, rowIndex) => (
             <ContributionRow
               key={`${role ?? "accepted"}-${entry.category}-${entry.slug}`}
               entry={entry}
               contributor={contributor}
               role={role ?? contributorAcceptedEntryRole(contributor, entry) ?? "authored"}
+              rowIndex={rowIndex}
+              rowCount={entries.length}
             />
           ))}
         </div>
@@ -267,10 +274,14 @@ function ContributionRow({
   entry,
   contributor,
   role,
+  rowIndex,
+  rowCount,
 }: {
   entry: Entry;
   contributor: Contributor;
   role: ContributionRole;
+  rowIndex: number;
+  rowCount: number;
 }) {
   const RoleIcon = roleIcon[role];
   const submitter = submitterAttribution(entry);
@@ -291,6 +302,19 @@ function ContributionRow({
         <Link
           to="/entry/$category/$slug"
           params={{ category: entry.category, slug: entry.slug }}
+          onClick={() =>
+            trackEvent(
+              contributorProfileEntryAnalyticsEvent(),
+              contributorProfileEntryAnalyticsData(
+                entry.category,
+                entry.slug,
+                contributor.slug,
+                role,
+                rowIndex,
+                rowCount,
+              ),
+            )
+          }
           className="inline-flex max-w-full flex-wrap items-baseline gap-x-2"
         >
           <h3 className="font-display text-[15px] font-semibold tracking-tight text-ink group-hover:underline">

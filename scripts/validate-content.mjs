@@ -12,6 +12,9 @@ import {
 } from "@heyclaude/registry/content-schema";
 import { parseSafeFrontmatter } from "@heyclaude/registry/frontmatter";
 
+import { duplicateTopLevelFrontmatterKeys } from "./lib/frontmatter-dupe-keys.mjs";
+import { findPredictableSharedTmpDebugPaths } from "./lib/shared-tmp-debug-paths.mjs";
+
 const repoRoot = process.cwd();
 const contentRoot = path.join(repoRoot, "content");
 const strictRecommended = process.argv.includes("--strict-recommended");
@@ -53,9 +56,6 @@ const oldBrandOrDomainPattern = new RegExp(
   ].join("")}`,
   "i",
 );
-const sharedTmpDebugPathPattern =
-  /(^|[^A-Za-z0-9_$\/{.-])(\/tmp\/[A-Za-z0-9_.$\/{}-]*(?:debug|startup)[A-Za-z0-9_.$\/{}-]*)/gi;
-const nonPredictableTmpPathPattern = /\$\$|\$RANDOM|\$\{RANDOM\}|X{3,}/i;
 
 function checkBashSyntax(scriptBody) {
   const result = spawnSync("bash", ["--noprofile", "--norc", "-n", "-s"], {
@@ -85,59 +85,6 @@ function checkBashSyntax(scriptBody) {
   }
 
   return { ok: true };
-}
-
-function findPredictableSharedTmpDebugPaths(scriptBody) {
-  const paths = new Set();
-  for (const match of String(scriptBody || "").matchAll(
-    sharedTmpDebugPathPattern,
-  )) {
-    const tmpPath = match[2];
-    if (!tmpPath || nonPredictableTmpPathPattern.test(tmpPath)) continue;
-    paths.add(tmpPath);
-  }
-  return [...paths];
-}
-
-// Duplicate top-level frontmatter keys crash the site build: gray-matter / js-yaml (build-content-index.mjs)
-// throws "duplicated mapping key" and the whole content-index build — and every deploy — fails. The lenient
-// parseSafeFrontmatter keeps the last value, so a duplicate-key file otherwise passes review AND this
-// validator, then breaks production (the backend-development-suite incident, via a templated enrichment edit).
-// Catch it here so the PR fails before merge. Scoped to top-level keys (indent 0) — the build-breaking case;
-// a repeated indent-0 key is unambiguously a dupe (no false positives). The block-scalar / sequence skipping
-// keeps indented nested/list lines from being mistaken for a top-level key. (#frontmatter-dupe-key)
-function duplicateTopLevelFrontmatterKeys(source) {
-  const match = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/.exec(
-    String(source || ""),
-  );
-  if (!match) return [];
-  const lines = match[1].split(/\r?\n/);
-  const seen = new Set();
-  const dupes = new Set();
-  let i = 0;
-  while (i < lines.length) {
-    const head = /^(?!-\s)([^#\s][^:]*?)\s*:(.*)$/.exec(lines[i]);
-    if (!head) {
-      i += 1;
-      continue;
-    }
-    const key = head[1].trim().replace(/^['"]|['"]$/g, "");
-    if (seen.has(key)) dupes.add(key);
-    else seen.add(key);
-    const inline = head[2].trim();
-    i += 1;
-    if (/^[|>][+-]?\d*$/.test(inline)) {
-      while (
-        i < lines.length &&
-        (lines[i].trim() === "" || /^\s/.test(lines[i]))
-      )
-        i += 1;
-    } else if (inline === "") {
-      while (i < lines.length && /^\s/.test(lines[i]) && lines[i].trim() !== "")
-        i += 1;
-    }
-  }
-  return [...dupes];
 }
 
 for (const category of Object.keys(CATEGORY_SCHEMAS)) {

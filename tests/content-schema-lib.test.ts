@@ -1024,3 +1024,135 @@ describe("orderFrontmatter", () => {
     ]);
   });
 });
+
+describe("inferStructuredFields carries explicit optional fields", () => {
+  it("keeps command/script/config fields provided in the frontmatter", () => {
+    const inferred = inferStructuredFields(
+      {
+        title: "T",
+        slug: "demo",
+        installCommand: "npm i x",
+        commandSyntax: "/demo",
+        scriptLanguage: "bash",
+        scriptBody: "echo hi",
+        cardDescription: "Card",
+        trigger: "PreToolUse",
+        configSnippet: "{}",
+        installable: false,
+      },
+      "Body text.",
+      "commands",
+    );
+    expect(inferred.installCommand).toBe("npm i x");
+    expect(inferred.commandSyntax).toBe("/demo");
+    expect(inferred.scriptLanguage).toBe("bash");
+    expect(inferred.scriptBody).toBe("echo hi");
+    expect(inferred.cardDescription).toBe("Card");
+    expect(inferred.trigger).toBe("PreToolUse");
+    expect(inferred.configSnippet).toBe("{}");
+    expect(inferred.installable).toBe(false);
+  });
+
+  it("keeps skills verification and tested-platform fields", () => {
+    const inferred = inferStructuredFields(
+      {
+        title: "T",
+        slug: "demo",
+        verifiedAt: "2026-01-02",
+        testedPlatforms: ["Claude", "Codex"],
+      },
+      "Body.",
+      "skills",
+    );
+    expect(inferred.verifiedAt).toBe("2026-01-02");
+    expect(inferred.testedPlatforms).toEqual(["Claude", "Codex"]);
+  });
+
+  it("drops copySnippet/usageSnippet from an agents entry's recommended gaps", () => {
+    const result = validateEntry("agents", {
+      slug: "a",
+      title: "A",
+      description: "D",
+      copySnippet: "CS",
+      usageSnippet: "US",
+    });
+    expect(result.missingRecommended).not.toContain("copySnippet");
+    expect(result.missingRecommended).not.toContain("usageSnippet");
+  });
+});
+
+describe("deriveSeoFields title fallbacks", () => {
+  it("uses the raw category as the label when it is unknown", () => {
+    expect(deriveSeoFields({ title: "T" }, "zzz-unknown").seoTitle).toBe(
+      "T - zzz-unknown for Claude",
+    );
+  });
+
+  it("falls back from title to name, then slug, then 'Entry'", () => {
+    expect(deriveSeoFields({ name: "ByName" }, "mcp").seoTitle).toBe(
+      "ByName - MCP Servers for Claude",
+    );
+    expect(deriveSeoFields({ slug: "by-slug" }, "mcp").seoTitle).toBe(
+      "by-slug - MCP Servers for Claude",
+    );
+    expect(deriveSeoFields({}, "mcp").seoTitle).toBe(
+      "Entry - MCP Servers for Claude",
+    );
+  });
+
+  it("omits the label suffix when no category is given", () => {
+    expect(deriveSeoFields({ title: "NoCat" }).seoTitle).toBe("NoCat");
+  });
+
+  it("includes explicit keywords in the derived keyword set", () => {
+    expect(
+      deriveSeoFields({ title: "K", keywords: ["a", "b"] }, "mcp").keywords,
+    ).toEqual(expect.arrayContaining(["a", "b"]));
+  });
+});
+
+describe("validateEntry brand color and source URL checks", () => {
+  const base = { slug: "a", title: "A", description: "D" };
+
+  it("validates comma-separated brandColors and flags a non-hex value", () => {
+    expect(
+      validateEntry("mcp", { ...base, brandColors: "#796eff, notahex" })
+        .semanticErrors,
+    ).toContain("brandColors must be hex colors such as #796eff");
+    expect(
+      validateEntry("mcp", { ...base, brandColors: "#796eff" }).semanticErrors,
+    ).not.toContain("brandColors must be hex colors such as #796eff");
+  });
+
+  it("flags a sourceUrls entry that is not an http(s) URL", () => {
+    expect(
+      validateEntry("mcp", {
+        ...base,
+        sourceUrls: ["https://ok.dev", "not-a-url"],
+      }).semanticErrors,
+    ).toContain("sourceUrls must use http or https");
+  });
+});
+
+describe("content-schema text-utility fallbacks", () => {
+  it("falls back to 'section' ids for headings that have no slug", () => {
+    const headings = extractHeadings("## !!!\n\ntext\n\n## !!!\n");
+    expect(headings.map((h) => h.id)).toEqual(["section", "section-2"]);
+  });
+
+  it("ends the usage section at the next ## heading", () => {
+    const sections = extractSections("## Usage\n\nintro\n\n## Other\n\nx");
+    expect(sections.map((s) => s.title)).toEqual(["Usage", "Other"]);
+    expect(sections[0].markdown).toBe("intro");
+  });
+
+  it("truncates a long seoDescription at a sentence boundary", () => {
+    const longDesc =
+      "This is a reasonably long first sentence that should be picked. " +
+      "x".repeat(200);
+    expect(
+      deriveSeoFields({ title: "T", description: longDesc }, "mcp")
+        .seoDescription,
+    ).toBe("This is a reasonably long first sentence that should be picked.");
+  });
+});
