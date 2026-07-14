@@ -9,6 +9,8 @@ import {
   mcpConfigSupportsTarget,
 } from "@heyclaude/registry/mcp-install-config";
 
+import { stringHasLoneSurrogate } from "./lib/lone-surrogate.mjs";
+
 const repoRoot = process.cwd();
 const feedPath = path.join(repoRoot, "apps/web/public/data/raycast-index.json");
 const directoryPath = path.join(
@@ -60,22 +62,6 @@ function readSource(filePath) {
     return "";
   }
   return fs.readFileSync(filePath, "utf8");
-}
-
-function stringHasLoneSurrogate(value) {
-  for (let index = 0; index < value.length; index += 1) {
-    const code = value.charCodeAt(index);
-    if (code >= 0xd800 && code <= 0xdbff) {
-      const nextCode = value.charCodeAt(index + 1);
-      if (nextCode >= 0xdc00 && nextCode <= 0xdfff) {
-        index += 1;
-        continue;
-      }
-      return true;
-    }
-    if (code >= 0xdc00 && code <= 0xdfff) return true;
-  }
-  return false;
 }
 
 function assertNoLoneSurrogates(value, label) {
@@ -281,7 +267,8 @@ for (const entry of payload.entries) {
   }
   if (detail.copyText === undefined) {
     const llmsUrl = String(detail.llmsUrl || "");
-    const validLlmsUrl = /^\/api\/registry\/entries\/[^/]+\/[^/]+\/llms\/?$/.test(llmsUrl);
+    const validLlmsUrl =
+      /^\/api\/registry\/entries\/[^/]+\/[^/]+\/llms\/?$/.test(llmsUrl);
     if (!validLlmsUrl) {
       fail(`${key}: detail without copyText must expose llmsUrl`);
     }
