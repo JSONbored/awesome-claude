@@ -4,6 +4,12 @@ import { Calendar } from "lucide-react";
 import { BRIEF_ISSUES, WEEKLY_BRIEF } from "@/data/entries";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
+import { trackEvent } from "@/lib/analytics";
+import {
+  briefEntryAnalyticsEvent,
+  briefHubEntryAnalyticsData,
+  type BriefHubSectionId,
+} from "@/lib/brief-entry-cta-events";
 import { absoluteUrl } from "@/lib/seo";
 
 type PublishedBriefSummary = { number: number; periodThrough: string; title: string };
@@ -106,9 +112,21 @@ function BriefPage() {
           )}
 
           <div className="mt-8 grid gap-5 md:grid-cols-3">
-            <BriefList title="New in the registry" items={WEEKLY_BRIEF.newEntries} />
-            <BriefList title="Trusted installs" items={WEEKLY_BRIEF.trustedInstalls} />
-            <BriefList title="Source-backed picks" items={WEEKLY_BRIEF.sourceBackedPicks} />
+            <BriefList
+              title="New in the registry"
+              sectionId="new-entries"
+              items={WEEKLY_BRIEF.newEntries}
+            />
+            <BriefList
+              title="Trusted installs"
+              sectionId="trusted-installs"
+              items={WEEKLY_BRIEF.trustedInstalls}
+            />
+            <BriefList
+              title="Source-backed picks"
+              sectionId="source-backed-picks"
+              items={WEEKLY_BRIEF.sourceBackedPicks}
+            />
           </div>
 
           <div className="mt-12 flex items-end justify-between border-b border-border pb-3">
@@ -207,18 +225,29 @@ function BriefMetric({ label, value }: { label: string; value: number }) {
 
 function BriefList({
   title,
+  sectionId,
   items,
 }: {
   title: string;
+  sectionId: BriefHubSectionId;
   items: Array<{ ref: string; title: string; reason?: string; date?: string }>;
 }) {
   return (
     <section className="rounded-xl border border-border bg-surface p-5">
       <h2 className="font-display text-base font-semibold text-ink">{title}</h2>
       <ul className="mt-4 divide-y divide-border/60 text-sm">
-        {items.map((item) => (
+        {items.map((item, rowIndex) => (
           <li key={item.ref} className="py-3 first:pt-0 last:pb-0">
-            <a href={`/entry/${item.ref}`} className="font-medium text-ink hover:underline">
+            <a
+              href={`/entry/${item.ref}`}
+              onClick={() =>
+                trackEvent(
+                  briefEntryAnalyticsEvent(),
+                  briefHubEntryAnalyticsData(item.ref, sectionId, rowIndex, items.length),
+                )
+              }
+              className="font-medium text-ink hover:underline"
+            >
               {item.title}
             </a>
             <div className="mt-1 font-mono text-[11px] text-ink-subtle">{item.ref}</div>

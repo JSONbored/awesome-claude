@@ -88,7 +88,7 @@ function BriefIssuePage() {
         </div>
       ) : null}
       <div className="mt-8">
-        <BriefSections sections={issue.found ? issue.sections : {}} />
+        <BriefSections sections={issue.found ? issue.sections : {}} issueNumber={issue.number} />
       </div>
     </div>
   );

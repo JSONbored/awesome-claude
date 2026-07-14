@@ -731,3 +731,22 @@ describe("canonicalizeSourceUrl path normalization table", () => {
     expect(canonicalizeSourceUrl(input)).toBe(expected);
   });
 });
+
+describe("URL helpers handle nullish, empty, and unparseable input", () => {
+  it("treats nullish/empty values as valid optional URLs", () => {
+    expect(isPublicHttpsUrl(null)).toBe(true);
+    expect(isPublicHttpsUrl(undefined)).toBe(true);
+    expect(isPublicHttpUrl(null)).toBe(true);
+  });
+
+  it("rejects a non-empty value that cannot be parsed as a URL", () => {
+    expect(isPublicHttpsUrl("not a url")).toBe(false);
+    expect(isPublicHttpUrl("http://")).toBe(false);
+  });
+
+  it("returns '' from publicHttpUrlHref for nullish or empty input", () => {
+    expect(publicHttpUrlHref(null)).toBe("");
+    expect(publicHttpUrlHref("")).toBe("");
+    expect(publicHttpUrlHref("   ")).toBe("");
+  });
+});
