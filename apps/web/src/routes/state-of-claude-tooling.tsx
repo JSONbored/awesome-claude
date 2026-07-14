@@ -21,6 +21,11 @@ import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import { CountUp } from "@/components/count-up";
 import { NewsletterInline } from "@/components/newsletter-inline";
+import { trackEvent } from "@/lib/analytics";
+import {
+  stateReportEntryAnalyticsData,
+  stateReportEntryAnalyticsEvent,
+} from "@/lib/insights-page-entry-cta-events";
 
 const PATH = "/state-of-claude-tooling";
 const TITLE = "State of Claude Tooling";
@@ -259,7 +264,7 @@ function StateOfClaudeToolingPage() {
           The ten most recently dated entries in the registry snapshot.
         </p>
         <ol className="mt-4 overflow-hidden rounded-xl border border-border bg-surface">
-          {RECENT_ADDITIONS.map((e) => (
+          {RECENT_ADDITIONS.map((e, rowIndex) => (
             <li
               key={`${e.category}/${e.slug}`}
               className="flex items-center justify-between gap-3 border-b border-border px-5 py-3 last:border-0"
@@ -267,6 +272,18 @@ function StateOfClaudeToolingPage() {
               <Link
                 to="/entry/$category/$slug"
                 params={{ category: e.category, slug: e.slug }}
+                onClick={() =>
+                  trackEvent(
+                    stateReportEntryAnalyticsEvent(),
+                    stateReportEntryAnalyticsData(
+                      e.category,
+                      e.slug,
+                      "claude-tooling",
+                      rowIndex,
+                      RECENT_ADDITIONS.length,
+                    ),
+                  )
+                }
                 className="min-w-0 truncate text-sm font-medium text-ink hover:underline"
               >
                 {e.title}
