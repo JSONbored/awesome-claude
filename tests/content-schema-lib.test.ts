@@ -1189,3 +1189,34 @@ describe("validateEntry category-specific recommended/semantic rules", () => {
     expect(result.missingRequired).toEqual([]);
   });
 });
+
+describe("content-schema text-utility edge cases", () => {
+  it("hard-truncates a seoDescription with no late word boundary", () => {
+    // a long unbroken tail means the last space in the 157-char slice is early,
+    // so the description is sliced at the char limit rather than a word boundary
+    const description = `short intro then ${"a".repeat(160)}`;
+    const seoDescription = deriveSeoFields(
+      { title: "T", description },
+      "mcp",
+    ).seoDescription;
+    expect(seoDescription.endsWith("...")).toBe(true);
+    expect(seoDescription.length).toBe(160);
+  });
+
+  it("does not treat a '## ' line inside a usage code block as a heading", () => {
+    const body = [
+      "## Usage",
+      "",
+      "```",
+      "## not a heading",
+      "run x",
+      "```",
+    ].join("\n");
+    const usageSnippet = inferStructuredFields(
+      { title: "T", slug: "s" },
+      body,
+      "commands",
+    ).usageSnippet;
+    expect(usageSnippet).toContain("## not a heading");
+  });
+});
