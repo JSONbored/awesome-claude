@@ -11,16 +11,42 @@ const whisper = {
 
 const RESERVED_OWNERS = [
   "about",
+  "account",
   "apps",
+  "business",
+  "codespaces",
   "collections",
+  "contact",
+  "customer-stories",
+  "dashboard",
+  "education",
+  "enterprise",
   "explore",
+  "features",
+  "issues",
+  "join",
+  "login",
+  "logout",
   "marketplace",
+  "new",
+  "nonprofits",
   "notifications",
+  "organizations",
   "orgs",
+  "pricing",
   "pulls",
+  "readme",
+  "search",
+  "security",
+  "sessions",
   "settings",
+  "signup",
   "sponsors",
+  "stars",
+  "team",
   "topics",
+  "trending",
+  "watching",
 ];
 
 describe("parseGitHubRepoUrl https forms", () => {
@@ -101,6 +127,25 @@ describe("parseGitHubRepoUrl reserved GitHub product roots", () => {
         `https://github.com/${owner.toUpperCase()}/SomeProject`,
       ),
     ).toBeNull();
+  });
+});
+
+describe("parseGitHubRepoUrl reserved two-segment product surfaces", () => {
+  // Regression: these GitHub marketing/product/auth pages used to parse as
+  // bogus owner/repo pairs because the second path segment made them look like
+  // real repositories.
+  it.each([
+    "https://github.com/features/copilot",
+    "https://github.com/enterprise/contact",
+    "https://github.com/security/advisories",
+    "https://github.com/customer-stories/duolingo",
+    "https://github.com/login/oauth",
+    "https://github.com/pricing/team",
+    "https://github.com/readme/guides",
+    "https://github.com/stars/anthropics",
+    "git@github.com:features/copilot.git",
+  ])("rejects reserved product surface %s", (input) => {
+    expect(parseGitHubRepoUrl(input)).toBeNull();
   });
 });
 

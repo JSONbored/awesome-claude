@@ -19,19 +19,50 @@ const OWNER_PATTERN = /^[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?$/;
 const REPO_PATTERN = /^[A-Za-z0-9._-]+$/;
 
 // First path segments that are GitHub product surfaces, never repo owners.
-// GitHub reserves these, so "github.com/sponsors/x" is never a repository.
+// GitHub reserves these names, so "github.com/sponsors/x" or
+// "github.com/features/copilot" is a product/marketing/auth page, not a
+// repository. Two-segment marketing URLs (features/*, enterprise/*,
+// customer-stories/*) otherwise slip through as bogus owner/repo pairs, which
+// inflates source-provenance scoring and makes the source-repo signal refresher
+// query repos that cannot exist. Keep lowercase; membership is case-folded.
 const RESERVED_OWNERS = new Set([
   "about",
+  "account",
   "apps",
+  "business",
+  "codespaces",
   "collections",
+  "contact",
+  "customer-stories",
+  "dashboard",
+  "education",
+  "enterprise",
   "explore",
+  "features",
+  "issues",
+  "join",
+  "login",
+  "logout",
   "marketplace",
+  "new",
+  "nonprofits",
   "notifications",
+  "organizations",
   "orgs",
+  "pricing",
   "pulls",
+  "readme",
+  "search",
+  "security",
+  "sessions",
   "settings",
+  "signup",
   "sponsors",
+  "stars",
+  "team",
   "topics",
+  "trending",
+  "watching",
 ]);
 
 // Strip a single leading "www." so the www alias resolves to the bare host,
