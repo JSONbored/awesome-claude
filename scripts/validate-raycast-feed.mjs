@@ -10,6 +10,7 @@ import {
 } from "@heyclaude/registry/mcp-install-config";
 
 import { stringHasLoneSurrogate } from "./lib/lone-surrogate.mjs";
+import { objectBlock, objectDefinesKey } from "./lib/raycast-source-block.mjs";
 
 const repoRoot = process.cwd();
 const feedPath = path.join(repoRoot, "apps/web/public/data/raycast-index.json");
@@ -81,24 +82,6 @@ function assertNoLoneSurrogates(value, label) {
       assertNoLoneSurrogates(item, `${label}.${key}`);
     }
   }
-}
-
-function objectBlock(source, name) {
-  const match = source.match(
-    new RegExp(`(?:const|export const)\\s+${name}[^=]*=\\s*{([\\s\\S]*?)\\n};`),
-  );
-  return match?.[1] ?? "";
-}
-
-function escapeRegExp(value) {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
-function objectDefinesKey(block, key) {
-  const escapedKey = escapeRegExp(key);
-  return new RegExp(
-    `(^|\\n)\\s*(?:${escapedKey}|["']${escapedKey}["'])\\s*:`,
-  ).test(block);
 }
 
 function normalizeMcpInstallTargets(value, label) {
