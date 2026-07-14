@@ -18,6 +18,7 @@ import {
 
 import { pickAtlasEntry } from "./lib/atlas-entry.mjs";
 import { artifactOutputPath } from "./lib/artifact-output-path.mjs";
+import { parseGitContentUpdatedAt } from "./lib/git-content-updated-at.mjs";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "..");
@@ -199,39 +200,17 @@ function writeTextFile(filePath, value) {
 }
 
 function loadGitContentUpdatedAt() {
-  const values = new Map();
-
   try {
     const output = execFileSync(
       "git",
       ["log", "--format=@@heyclaude:%cI", "--name-only", "--", "content"],
       { cwd: repoRoot, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] },
     );
-    let commitUpdatedAt = null;
-
-    for (const line of output.split("\n")) {
-      if (line.startsWith("@@heyclaude:")) {
-        commitUpdatedAt = line.slice("@@heyclaude:".length).trim() || null;
-        continue;
-      }
-
-      const relativePath = line.trim();
-      if (
-        !commitUpdatedAt ||
-        !relativePath.startsWith("content/") ||
-        !relativePath.endsWith(".mdx") ||
-        values.has(relativePath)
-      ) {
-        continue;
-      }
-
-      values.set(relativePath, commitUpdatedAt);
-    }
+    return parseGitContentUpdatedAt(output);
   } catch {
     // Keep registry generation usable outside a Git checkout.
+    return new Map();
   }
-
-  return values;
 }
 
 function loadExistingEntryRepoStats() {
