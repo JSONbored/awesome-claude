@@ -383,6 +383,12 @@ describe("reason builders and selection", () => {
     ]);
   });
 
+  it("reads packageVerified from trustSignals as well as the top level", () => {
+    expect(
+      saferInstallReasons(entry({ trustSignals: { packageVerified: true } })),
+    ).toContain("package verified");
+  });
+
   it("materializes items and selects unique entries up to a limit", () => {
     const item = itemFromEntry(
       entry({

@@ -243,7 +243,12 @@ export function saferInstallReasons(entry) {
   const reasons = [];
   if (entry.downloadTrust === "first-party")
     reasons.push("first-party package");
-  if (entry.packageVerified === true) reasons.push("package verified");
+  if (
+    entry.packageVerified === true ||
+    entry.trustSignals?.packageVerified === true
+  ) {
+    reasons.push("package verified");
+  }
   if (entry.downloadSha256 || entry.trustSignals?.checksumPresent) {
     reasons.push("checksum present");
   }
