@@ -19,6 +19,7 @@ import {
 import { pickAtlasEntry } from "./lib/atlas-entry.mjs";
 import { artifactOutputPath } from "./lib/artifact-output-path.mjs";
 import { parseGitContentUpdatedAt } from "./lib/git-content-updated-at.mjs";
+import { entryRepoStatsEntry } from "./lib/entry-repo-stats.mjs";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "..");
@@ -228,22 +229,8 @@ function loadExistingEntryRepoStats() {
         const payload = JSON.parse(
           fs.readFileSync(path.join(categoryDir, fileName), "utf8"),
         );
-        const entry = payload?.entry;
-        if (!entry?.category || !entry?.slug) continue;
-        values.set(`${entry.category}:${entry.slug}`, {
-          stars:
-            typeof entry.githubStars === "number"
-              ? entry.githubStars
-              : undefined,
-          forks:
-            typeof entry.githubForks === "number"
-              ? entry.githubForks
-              : undefined,
-          updatedAt:
-            typeof entry.repoUpdatedAt === "string"
-              ? entry.repoUpdatedAt
-              : undefined,
-        });
+        const statsEntry = entryRepoStatsEntry(payload);
+        if (statsEntry) values.set(statsEntry[0], statsEntry[1]);
       } catch {
         // Regeneration should not fail just because a stale artifact is invalid.
       }
