@@ -11,6 +11,7 @@ import {
 
 import { stringHasLoneSurrogate } from "./lib/lone-surrogate.mjs";
 import { objectBlock, objectDefinesKey } from "./lib/raycast-source-block.mjs";
+import { equalStringArrays } from "./lib/equal-string-arrays.mjs";
 
 const repoRoot = process.cwd();
 const feedPath = path.join(repoRoot, "apps/web/public/data/raycast-index.json");
@@ -105,13 +106,6 @@ function normalizeMcpInstallTargets(value, label) {
     targets.push(item);
   }
   return targets;
-}
-
-function equalStringArrays(left, right) {
-  return (
-    left.length === right.length &&
-    left.every((item, index) => item === right[index])
-  );
 }
 
 if (!fs.existsSync(feedPath)) {
