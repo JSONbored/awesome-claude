@@ -23,6 +23,17 @@ describe("sparkline", () => {
     // p0: y = 10 - ((-3 - -3)/4)*10 = 10 ; p1: y = 10 - ((0.5 - -3)/4)*10 = 1.25 -> "1.3"
     expect(svg).toContain('d="M0.0,10.0 L4.0,1.3"');
   });
+
+  it("places a single-value series at x without NaN coordinates", () => {
+    const svg = sparkline(0, 0, 100, 20, [5], "#mut", "#acc", "#bg");
+    expect(svg).not.toContain("NaN");
+    expect(svg).toContain('d="M0.0,0.0"');
+    expect(svg).toContain('<circle cx="0.0" cy="0.0" r="4" fill="#acc"/>');
+  });
+
+  it("returns empty markup for an empty series instead of throwing", () => {
+    expect(sparkline(0, 0, 100, 20, [], "#mut", "#acc", "#bg")).toBe("");
+  });
 });
 
 describe("meter", () => {

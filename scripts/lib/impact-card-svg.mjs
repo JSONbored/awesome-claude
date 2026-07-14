@@ -13,7 +13,10 @@ export function sparkline(x, y, w, h, values, mutedColor, accentColor, cardBg) {
   const min = Math.min(...values, 0);
   const range = max - min || 1;
   const n = values.length;
-  const stepX = w / (n - 1);
+  if (n === 0) return "";
+  // With a single point there is no horizontal step; keep stepX at 0 so the
+  // point lands at x instead of x + 0 * (w / 0) === NaN.
+  const stepX = n > 1 ? w / (n - 1) : 0;
   const pts = values.map((v, i) => [
     x + i * stepX,
     y + h - ((v - min) / range) * h,
