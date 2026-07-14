@@ -35,9 +35,11 @@ describe("resource card cta events lib", () => {
     expect(resourceCardCompareAnalyticsEvent(false)).toBe(
       "browse_card_compare_remove",
     );
-    expect(resourceCardCompareAnalyticsData("skills", "demo")).toEqual({
+    expect(
+      resourceCardCompareAnalyticsData("skills", "demo", "browse-grid"),
+    ).toEqual({
       entry: "skills/demo",
-      surface: "browse-card",
+      surface: "browse-grid",
     });
     expect(resourceCardCompareToastOpenAnalyticsEvent()).toBe(
       "browse_card_compare_toast_open",

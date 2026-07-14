@@ -105,7 +105,12 @@ function BestPage() {
       <h2 className="mt-16 h-display-2 text-ink text-balance">Editor's pick · {featured.title}</h2>
       <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {featuredPicks.map((e) => (
-          <ResourceCard key={`${e.category}/${e.slug}`} entry={e} variant="grid" />
+          <ResourceCard
+            key={`${e.category}/${e.slug}`}
+            entry={e}
+            variant="grid"
+            analyticsSurface="best-index"
+          />
         ))}
       </div>
     </PageContainer>

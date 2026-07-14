@@ -168,7 +168,7 @@ function BestDetail() {
               {String(i + 1).padStart(2, "0")}
             </div>
             <div className="flex flex-col gap-3">
-              <ResourceCard entry={p.entry} variant="grid" />
+              <ResourceCard entry={p.entry} variant="grid" analyticsSurface="best-collection" />
               <div className="rounded-lg border border-border bg-surface-2 p-4 text-sm">
                 <div className="eyebrow mb-1 text-accent-ink dark:text-accent">
                   Why it made the cut
