@@ -354,6 +354,15 @@ describe("submissions-lib duplicate review", () => {
     ).toBe(1);
   });
 
+  it("matches duplicates when the indexed category casing differs", () => {
+    expect(
+      searchDuplicateEntries([indexedEntry({ category: "MCP" })], {
+        category: "mcp",
+        slug: "airtable-mcp-server",
+      }).count,
+    ).toBe(1);
+  });
+
   it("reviews drafts and recommends duplicate review when matches exist", () => {
     expect(
       reviewSubmissionDraftFromSpec(

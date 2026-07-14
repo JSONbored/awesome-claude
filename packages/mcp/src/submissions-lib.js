@@ -899,7 +899,7 @@ export function searchDuplicateEntries(entries = [], args = {}) {
   const matches = [];
   for (const entry of entries) {
     const reasons = [];
-    if (category && entry.category !== category) continue;
+    if (category && normalizeLower(entry.category) !== category) continue;
     if (slug && normalizeLower(entry.slug) === slug) reasons.push("slug");
     if (title && normalizeLower(entry.title) === title) reasons.push("title");
     if (brandDomain && normalizeDomain(entry.brandDomain) === brandDomain) {
