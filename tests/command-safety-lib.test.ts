@@ -295,6 +295,19 @@ describe("segmentHasDecodeFlag", () => {
     ).toBe(true);
   });
 
+  it("detects bundled short flags that include decode", () => {
+    for (const line of [
+      "base64 -di payload",
+      "base64 -id payload",
+      "base64 -wd payload",
+      "base64 -diw payload",
+    ]) {
+      expect(segmentHasDecodeFlag(line, lower(line), 0, line.length)).toBe(
+        true,
+      );
+    }
+  });
+
   it("returns false when decode flags are absent", () => {
     const line = "base64 payload";
     expect(segmentHasDecodeFlag(line, lower(line), 0, line.length)).toBe(false);
@@ -304,6 +317,23 @@ describe("segmentHasDecodeFlag", () => {
     expect(
       segmentHasDecodeFlag(otherFlags, lower(otherFlags), 0, otherFlags.length),
     ).toBe(false);
+    const wrapOnly = "base64 -i payload";
+    expect(
+      segmentHasDecodeFlag(wrapOnly, lower(wrapOnly), 0, wrapOnly.length),
+    ).toBe(false);
+  });
+});
+
+describe("hasBase64DecodedShell bundled flags", () => {
+  it("flags a bundled base64 decode piped to a shell", () => {
+    for (const line of [
+      "echo cGF5 | base64 -di | bash",
+      "echo cGF5 | base64 -id | sh",
+    ]) {
+      expect(scanDangerousShellPatterns(line)).toContain(
+        "base64-decoded shell",
+      );
+    }
   });
 });
 
