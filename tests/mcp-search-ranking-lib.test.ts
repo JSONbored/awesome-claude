@@ -200,3 +200,174 @@ describe("search-ranking re-export compatibility", () => {
     ).toBe(scoreRegistrySearchEntry(entry, "browser playwright").score);
   });
 });
+
+describe("search-ranking-lib scoring branch coverage", () => {
+  it("rewards slug/category/tag/keyword/platform token matches", () => {
+    const { reasons } = scoreRegistrySearchEntry(
+      {
+        title: "Alpha",
+        slug: "mcp-x",
+        category: "mcp",
+        tags: ["mcp"],
+        keywords: ["mcp"],
+        platforms: ["mcp"],
+      },
+      "mcp",
+    );
+    expect(reasons).toEqual(
+      expect.arrayContaining([
+        "slug phrase",
+        "category match",
+        "tag match",
+        "keyword match",
+        "category term",
+        "platform match",
+      ]),
+    );
+  });
+
+  it("adds trust reasons from source, package, notes, and claim signals", () => {
+    const { reasons } = scoreRegistrySearchEntry(
+      {
+        title: "alpha",
+        slug: "s",
+        category: "c",
+        installCommand: "x",
+        sourceUrl: "https://example.com/repo",
+        downloadTrust: "first-party",
+        safetyNotes: [{ text: "runs shell" }],
+        privacyNotes: [{ text: "reads files" }],
+        claimStatus: "verified",
+      },
+      "alpha",
+    );
+    expect(reasons).toEqual(
+      expect.arrayContaining([
+        "installable",
+        "source-backed",
+        "trusted package",
+        "safety notes",
+        "privacy notes",
+        "reviewed",
+      ]),
+    );
+  });
+
+  it("honors trustSignals.packageVerified and reviewedBy as alternates", () => {
+    const { reasons } = scoreRegistrySearchEntry(
+      {
+        title: "gamma",
+        trustSignals: { packageVerified: true },
+        reviewedBy: "maint",
+      },
+      "gamma",
+    );
+    expect(reasons).toEqual(
+      expect.arrayContaining(["trusted package", "reviewed"]),
+    );
+  });
+
+  it("returns an empty result when the query has no usable tokens", () => {
+    expect(scoreRegistrySearchEntry({ title: "anything" }, ".")).toEqual({
+      score: 0,
+      reasons: [],
+    });
+  });
+});
+
+describe("search-ranking-lib intent profiles", () => {
+  it("scores category/tag/keyword/title and trust intent for a matched profile", () => {
+    const { reasons } = scoreRegistrySearchEntry(
+      {
+        title: "Code Review Helper",
+        category: "agents",
+        tags: ["code-review"],
+        keywords: ["code review"],
+        sourceUrl: "https://example.com/repo",
+        safetyNotes: [{ text: "n" }],
+        privacyNotes: [{ text: "n" }],
+        downloadTrust: "first-party",
+      },
+      "code review",
+    );
+    expect(reasons).toEqual(
+      expect.arrayContaining([
+        "query intent",
+        "intent title",
+        "intent tag",
+        "intent keyword",
+        "intent category",
+        "trust intent",
+      ]),
+    );
+  });
+
+  it("matches intent platforms for a platform-scoped profile", () => {
+    const { reasons } = scoreRegistrySearchEntry(
+      {
+        title: "Browser Automation Tool",
+        category: "mcp",
+        platforms: ["claude-code"],
+        trustSignals: { packageVerified: true },
+      },
+      "browser automation",
+    );
+    expect(reasons).toEqual(
+      expect.arrayContaining(["platform match", "trust intent"]),
+    );
+  });
+
+  it("skips trust weighting for a non-trust-weighted profile", () => {
+    const { reasons } = scoreRegistrySearchEntry(
+      { title: "plain", category: "skills" },
+      "design skill",
+    );
+    expect(reasons).toContain("intent category");
+    expect(reasons).not.toContain("trust intent");
+  });
+
+  it("omits query intent when a matched profile scores nothing", () => {
+    expect(
+      scoreRegistrySearchEntry({ title: "nope", category: "other" }, "safe mcp")
+        .reasons,
+    ).not.toContain("query intent");
+  });
+});
+
+describe("search-ranking-lib ranking and helper fallbacks", () => {
+  it("breaks score ties by newest date then original index", () => {
+    const byDate = rankRegistrySearchEntries(
+      [
+        { title: "a", dateAdded: "2026-01-01" },
+        { title: "a", dateAdded: "2026-05-01" },
+      ],
+      "zzz",
+    );
+    expect(byDate.map((row) => row.entry.dateAdded)).toEqual([
+      "2026-05-01",
+      "2026-01-01",
+    ]);
+    const byIndex = rankRegistrySearchEntries(
+      [{ title: "a" }, { title: "a" }],
+      "zzz",
+    );
+    expect(byIndex.map((row) => row.index)).toEqual([0, 1]);
+  });
+
+  it("defaults missing array fields when building search text", () => {
+    expect(normalizedRegistrySearchText({})).toBe("");
+  });
+
+  it("treats blank queries as matches and unusable tokens as misses", () => {
+    expect(matchesRegistryQuery({}, "")).toBe(true);
+    expect(matchesRegistryQuery({}, ".")).toBe(false);
+  });
+
+  it("passes platform filters through when no platform is requested", () => {
+    expect(matchesRegistryPlatform({}, "")).toBe(true);
+  });
+
+  it("keeps a trimmed original value for an unknown platform alias", () => {
+    expect(normalizeRegistryPlatform("MyTool")).toBe("MyTool");
+  });
+});
