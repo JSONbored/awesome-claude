@@ -84,6 +84,20 @@ describe("entrySourceUrls", () => {
       "https://github.com/example/source",
     ]);
   });
+
+  it("uses aliases when the primary url fields are empty strings", () => {
+    expect(
+      entrySourceUrls({
+        documentationUrl: "",
+        docsUrl: "https://docs.example.com/guide",
+        githubUrl: "",
+        sourceUrl: "https://github.com/example/source",
+      }),
+    ).toEqual([
+      "https://docs.example.com/guide",
+      "https://github.com/example/source",
+    ]);
+  });
 });
 
 describe("entryLastVerified", () => {

@@ -72,9 +72,12 @@ export function bulletList(values) {
 
 export function entrySourceUrls(entry) {
   return [
-    entry.documentationUrl ?? entry.docsUrl,
+    // Use `||`, not `??`: normalized entries default missing URLs to "" rather
+    // than undefined, and `??` would let an empty-string primary swallow a real
+    // docsUrl/sourceUrl alias. The array is clean()+filter(Boolean) guarded.
+    entry.documentationUrl || entry.docsUrl,
     entry.repoUrl,
-    entry.githubUrl ?? entry.sourceUrl,
+    entry.githubUrl || entry.sourceUrl,
     entry.websiteUrl,
   ]
     .map(clean)
