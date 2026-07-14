@@ -244,7 +244,10 @@ export function segmentHasDecodeFlag(line, lowerLine, start, end) {
       let flagEnd = index;
       while (flagEnd < end && !/\s/.test(line[flagEnd] || "")) flagEnd += 1;
       const flag = lowerLine.slice(index, flagEnd);
-      if (flag === "-d" || flag === "--decode") return true;
+      // GNU base64 lets short flags bundle, so `-di` (decode + ignore-garbage)
+      // still means `--decode`. Treat any single-dash short-flag group that
+      // contains `d` as a decode flag; keep the explicit long `--decode` form.
+      if (flag === "--decode" || /^-[a-z]*d[a-z]*$/.test(flag)) return true;
       index = flagEnd;
     } else {
       while (index < end && !/\s/.test(line[index] || "")) index += 1;
