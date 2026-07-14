@@ -213,6 +213,14 @@ describe("extractMcpServerConfig", () => {
     ).toBeNull();
     expect(() => extractMcpServerConfig("not json")).toThrow(SyntaxError);
   });
+
+  it("returns null when the payload or its mcpServers is not a record", () => {
+    // parsed value is not a record (number, or a JSON scalar string)
+    expect(extractMcpServerConfig(42)).toBeNull();
+    expect(extractMcpServerConfig('"just-a-string"')).toBeNull();
+    // mcpServers is present but not a record
+    expect(extractMcpServerConfig({ mcpServers: "nope" })).toBeNull();
+  });
 });
 
 describe("mcpConfigSupportsTarget", () => {
