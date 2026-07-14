@@ -1,5 +1,17 @@
 # @heyclaude/mcp Changelog
 
+## [0.11.1](https://github.com/JSONbored/awesome-claude/compare/mcp-v0.11.0...mcp-v0.11.1) (2026-07-14)
+
+
+### Bug Fixes
+
+* **mcp:** accept markdown-bullet retrieval_sources in submission validation ([#4930](https://github.com/JSONbored/awesome-claude/issues/4930)) ([4bd54bd](https://github.com/JSONbored/awesome-claude/commit/4bd54bd0806173dcb7f7749c49979aca5c31dc3c))
+* **mcp:** compare duplicate-search category case-insensitively ([#4931](https://github.com/JSONbored/awesome-claude/issues/4931)) ([bbbc94b](https://github.com/JSONbored/awesome-claude/commit/bbbc94b6ca96d375c946fbb9618223b0272b5536))
+* **mcp:** include shared keywords in related-entry reasons ([#4929](https://github.com/JSONbored/awesome-claude/issues/4929)) ([9442b76](https://github.com/JSONbored/awesome-claude/commit/9442b762ec227aef85134d3848fafe5ba974145a))
+* **mcp:** keep entry.compare sharedTags cased and deduped like the row tags ([#4928](https://github.com/JSONbored/awesome-claude/issues/4928)) ([17a9a9e](https://github.com/JSONbored/awesome-claude/commit/17a9a9ee24c94459ed800424995156cc24b0f953))
+* **mcp:** report related-graph count from the returned page ([#4936](https://github.com/JSONbored/awesome-claude/issues/4936)) ([c50b542](https://github.com/JSONbored/awesome-claude/commit/c50b542cf6b7e541176d2120e1e749944719f0a2))
+* **mcp:** treat empty array/object content as an absent copyable asset ([#4926](https://github.com/JSONbored/awesome-claude/issues/4926)) ([cd89f0f](https://github.com/JSONbored/awesome-claude/commit/cd89f0fa77329ce2c438b1cb0f16277862256599))
+
 ## [0.11.0](https://github.com/JSONbored/awesome-claude/compare/mcp-v0.10.0...mcp-v0.11.0) (2026-07-07)
 
 
