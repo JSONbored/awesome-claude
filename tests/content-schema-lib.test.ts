@@ -1080,3 +1080,33 @@ describe("inferStructuredFields carries explicit optional fields", () => {
     expect(result.missingRecommended).not.toContain("usageSnippet");
   });
 });
+
+describe("deriveSeoFields title fallbacks", () => {
+  it("uses the raw category as the label when it is unknown", () => {
+    expect(deriveSeoFields({ title: "T" }, "zzz-unknown").seoTitle).toBe(
+      "T - zzz-unknown for Claude",
+    );
+  });
+
+  it("falls back from title to name, then slug, then 'Entry'", () => {
+    expect(deriveSeoFields({ name: "ByName" }, "mcp").seoTitle).toBe(
+      "ByName - MCP Servers for Claude",
+    );
+    expect(deriveSeoFields({ slug: "by-slug" }, "mcp").seoTitle).toBe(
+      "by-slug - MCP Servers for Claude",
+    );
+    expect(deriveSeoFields({}, "mcp").seoTitle).toBe(
+      "Entry - MCP Servers for Claude",
+    );
+  });
+
+  it("omits the label suffix when no category is given", () => {
+    expect(deriveSeoFields({ title: "NoCat" }).seoTitle).toBe("NoCat");
+  });
+
+  it("includes explicit keywords in the derived keyword set", () => {
+    expect(
+      deriveSeoFields({ title: "K", keywords: ["a", "b"] }, "mcp").keywords,
+    ).toEqual(expect.arrayContaining(["a", "b"]));
+  });
+});
