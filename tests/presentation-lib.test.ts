@@ -352,6 +352,57 @@ describe("getCopyText", () => {
     ).toBe("Guide desc");
   });
 
+  it("falls through the agents/rules snippet chain to usage then description", () => {
+    expect(
+      getCopyText(
+        entry({
+          category: "agents",
+          body: "",
+          copySnippet: "",
+          usageSnippet: "Agent usage",
+        }),
+      ),
+    ).toBe("Agent usage");
+    expect(
+      getCopyText(
+        entry({
+          category: "rules",
+          body: "",
+          copySnippet: "",
+          usageSnippet: "",
+          description: "Rule desc",
+        }),
+      ),
+    ).toBe("Rule desc");
+  });
+
+  it("falls back to copySnippet / body for the hooks and skills asset blocks", () => {
+    expect(
+      getCopyText(
+        entry({ category: "hooks", scriptBody: "", copySnippet: "Hook copy" }),
+      ),
+    ).toContain("Hook script:\nHook copy");
+    expect(
+      getCopyText(
+        entry({
+          category: "skills",
+          scriptBody: "",
+          copySnippet: "Skill copy",
+        }),
+      ),
+    ).toContain("Asset:\nSkill copy");
+    expect(
+      getCopyText(
+        entry({
+          category: "statuslines",
+          scriptBody: "",
+          copySnippet: "",
+          body: "Statusline body",
+        }),
+      ),
+    ).toContain("Asset:\nStatusline body");
+  });
+
   it("copies hooks as labeled blocks", () => {
     const text = getCopyText(
       entry({
