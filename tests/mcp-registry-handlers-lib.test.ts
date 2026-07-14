@@ -20,7 +20,9 @@ import {
   buildSearchRegistryResponse,
   buildTrendingResourceResponse,
   computeNextOffset,
+  mapRecentUpdateEntries,
   paginateEntries,
+  resolveGraphRelatedEntries,
   sortEntriesByUpdatedAt,
 } from "../packages/mcp/src/registry-handlers-lib.js";
 
@@ -9305,5 +9307,82 @@ describe("registry-handlers-lib response builders", () => {
       entryUpdatedAt,
     });
     expect(response.kind).toBe("registry-recent");
+  });
+});
+
+describe("list/graph builders default missing fields", () => {
+  it("blanks search facets when args and facets are absent", () => {
+    const response = buildSearchRegistryResponse({
+      args: {},
+      entries: [],
+      trustFilters: {},
+    });
+    expect(response.query).toBe("");
+    expect(response.category).toBe("");
+    expect(response.platform).toBe("");
+    expect(response.tag).toBe("");
+  });
+
+  it("computes category-page nextOffset for last and non-last pages", () => {
+    expect(
+      buildCategoryEntriesPageResponse({
+        entries: [{}, {}],
+        offset: 0,
+        limit: 5,
+        page: [{}, {}],
+      }).nextOffset,
+    ).toBeNull();
+    expect(
+      buildCategoryEntriesPageResponse({
+        entries: [{}, {}, {}],
+        offset: 0,
+        limit: 2,
+        page: [{}, {}],
+      }).nextOffset,
+    ).toBe(2);
+  });
+
+  it("breaks equal-date sort ties by title with a blank fallback", () => {
+    const sorted = sortEntriesByUpdatedAt(
+      [{ title: undefined }, { title: "B" }],
+      () => "2026-01-01",
+    );
+    expect(sorted.map((entry) => entry.title)).toEqual([undefined, "B"]);
+  });
+
+  it("blanks the recent-updates category when omitted", () => {
+    expect(
+      buildRecentUpdatesResponse({ since: "2026-01-01", entries: [] }).category,
+    ).toBe("");
+  });
+
+  it("labels update kind from the presence of an upstream timestamp", () => {
+    const kinds = mapRecentUpdateEntries(
+      [{ repoUpdatedAt: "2026-01-01" }, {}],
+      () => ({}),
+      () => "2026-01-01",
+    ).map((entry) => entry.updateKind);
+    expect(kinds).toEqual(["upstream_update", "added"]);
+  });
+
+  it("returns null related entries when the graph row has none", () => {
+    expect(
+      resolveGraphRelatedEntries({
+        graphRow: null,
+        searchIndex: [],
+        toEntrySummary: (entry) => entry,
+        limit: 5,
+      }),
+    ).toBeNull();
+  });
+
+  it("drops unresolved keys and defaults missing related reasons", () => {
+    const related = resolveGraphRelatedEntries({
+      graphRow: { related: [{ key: "a:b" }, { key: "x:y" }] },
+      searchIndex: [{ category: "a", slug: "b" }],
+      toEntrySummary: (entry) => ({ id: entry.slug }),
+      limit: 5,
+    });
+    expect(related).toEqual([{ id: "b", relatedReasons: [] }]);
   });
 });
