@@ -9,6 +9,15 @@ import { compareBestInteractiveUiState } from "@/lib/compare-best-interactive-ui
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { getBestListEditorial } from "@/data/best-list-editorial";
+import { trackEvent } from "@/lib/analytics";
+import {
+  bestDetailCompareAnalyticsData,
+  bestDetailCompareAnalyticsEvent,
+  bestDetailIndexAnalyticsData,
+  bestDetailIndexAnalyticsEvent,
+  bestDetailSubmitAnalyticsData,
+  bestDetailSubmitAnalyticsEvent,
+} from "@/lib/best-detail-cta-events";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { bestListItemListJsonLd } from "@/lib/best-list-jsonld-lib";
 import { absoluteUrl } from "@/lib/seo";
@@ -53,16 +62,29 @@ export const Route = createFileRoute("/best/$slug")({
       ],
     };
   },
-  notFoundComponent: () => (
+  notFoundComponent: BestNotFound,
+  component: BestDetail,
+});
+
+function BestNotFound() {
+  return (
     <div className="mx-auto max-w-2xl px-6 py-24 text-center">
       <h1 className="font-display text-3xl text-ink">List not found</h1>
-      <Link to="/best" className="mt-4 inline-block text-ink-muted hover:text-ink">
+      <Link
+        to="/best"
+        onClick={() =>
+          trackEvent(
+            bestDetailIndexAnalyticsEvent(),
+            bestDetailIndexAnalyticsData(null, null, "not-found"),
+          )
+        }
+        className="mt-4 inline-block text-ink-muted hover:text-ink"
+      >
         ← Back to all lists
       </Link>
     </div>
-  ),
-  component: BestDetail,
-});
+  );
+}
 
 function BestDetail() {
   const { list } = Route.useLoaderData() as { list: BestList };
@@ -82,7 +104,21 @@ function BestDetail() {
 
   return (
     <PageContainer className="py-12">
-      <Breadcrumbs home items={[{ label: "Best lists", to: "/best" }, { label: list.title }]} />
+      <Breadcrumbs
+        home
+        items={[
+          {
+            label: "Best lists",
+            to: "/best",
+            onClick: () =>
+              trackEvent(
+                bestDetailIndexAnalyticsEvent(),
+                bestDetailIndexAnalyticsData(list.slug, resolved.length, "breadcrumb"),
+              ),
+          },
+          { label: list.title },
+        ]}
+      />
 
       <div className="mt-6 eyebrow">
         {list.eyebrow} · {list.category} · {resolved.length} picks
@@ -149,6 +185,17 @@ function BestDetail() {
             <Link
               to="/compare"
               search={compareUi.interactiveSearch}
+              onClick={() =>
+                trackEvent(
+                  bestDetailCompareAnalyticsEvent(),
+                  bestDetailCompareAnalyticsData(
+                    list.slug,
+                    resolved.length,
+                    compareEntries.length,
+                    true,
+                  ),
+                )
+              }
               className="mt-4 inline-flex items-center gap-1.5 text-sm text-ink-muted hover:text-ink"
             >
               <ArrowLeft className="h-4 w-4" />
@@ -193,6 +240,12 @@ function BestDetail() {
         </p>
         <Link
           to="/submit"
+          onClick={() =>
+            trackEvent(
+              bestDetailSubmitAnalyticsEvent(),
+              bestDetailSubmitAnalyticsData(list.slug, resolved.length, list.category),
+            )
+          }
           className="inline-flex h-9 items-center rounded-md bg-ink px-3 text-sm font-medium text-background hover:bg-ink/90"
         >
           Suggest a pick
