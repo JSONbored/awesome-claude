@@ -3,6 +3,7 @@ import path from "node:path";
 
 import { enumerateContentVoteKeys } from "./lib/enumerate-content-vote-keys.mjs";
 import { expectedKeyExclusionPredicate } from "./lib/d1-prune-predicate.mjs";
+import { wranglerArgs } from "./lib/wrangler-args.mjs";
 
 const repoRoot = process.cwd();
 const d1Binding = process.env.SITE_D1_BINDING || "SITE_DB";
@@ -38,18 +39,6 @@ if (process.env.DEBUG_SYNC === "1") {
 }
 
 const voteTables = new Set(["votes_by_client", "votes_entries"]);
-
-function wranglerArgs(runMode, command, { json = false } = {}) {
-  return [
-    "d1",
-    "execute",
-    d1Binding,
-    runMode === "remote" ? "--remote" : "--local",
-    "--command",
-    command,
-    ...(json ? ["--json"] : []),
-  ];
-}
 
 function runWrangler(args) {
   execFileSync("pnpm", ["--filter", "web", "exec", "wrangler", ...args], {
@@ -87,6 +76,7 @@ function pruneTableOrphans(runMode, tableName, whereClause) {
     wranglerArgs(
       runMode,
       `SELECT COUNT(*) AS pruned FROM ${tableName} WHERE ${whereClause};`,
+      d1Binding,
       { json: true },
     ),
   );
@@ -96,7 +86,11 @@ function pruneTableOrphans(runMode, tableName, whereClause) {
   }
 
   runWrangler(
-    wranglerArgs(runMode, `DELETE FROM ${tableName} WHERE ${whereClause};`),
+    wranglerArgs(
+      runMode,
+      `DELETE FROM ${tableName} WHERE ${whereClause};`,
+      d1Binding,
+    ),
   );
   return pruned;
 }
@@ -143,6 +137,7 @@ function applyMode(runMode) {
     wranglerArgs(
       runMode,
       "DELETE FROM votes_by_client WHERE entry_key NOT IN (SELECT entry_key FROM votes_entries);",
+      d1Binding,
     ),
   );
 
