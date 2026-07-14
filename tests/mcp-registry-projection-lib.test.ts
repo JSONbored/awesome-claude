@@ -1035,8 +1035,32 @@ describe("registry-projection-lib scoreRelatedEntry", () => {
     expect(related!.score).toBeGreaterThan(4);
     expect(related!.reasons).toContain("same_category");
     expect(related!.reasons.some((r) => r.startsWith("tag:"))).toBe(true);
+    expect(related!.reasons.some((r) => r.startsWith("keyword:"))).toBe(true);
     expect(related!.reasons.some((r) => r.startsWith("platform:"))).toBe(true);
     expect(related!.reasons.some((r) => r.startsWith("source:"))).toBe(true);
+  });
+
+  it("explains a keyword-only match with keyword reasons", () => {
+    const target = makeEntry({
+      category: "mcp",
+      slug: "kw-target",
+      tags: [],
+      keywords: ["playwright", "browser"],
+      platforms: [],
+      repoUrl: "",
+    });
+    const candidate = makeEntry({
+      category: "guides",
+      slug: "kw-candidate",
+      tags: [],
+      keywords: ["playwright", "browser"],
+      platforms: [],
+      repoUrl: "",
+    });
+    const related = scoreRelatedEntry(target, candidate);
+    expect(related).not.toBeNull();
+    expect(related!.score).toBeGreaterThan(0);
+    expect(related!.reasons).toEqual(["keyword:playwright", "keyword:browser"]);
   });
 
   it("caps keyword contribution at six points", () => {

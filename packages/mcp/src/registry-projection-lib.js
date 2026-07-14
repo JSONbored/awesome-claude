@@ -89,6 +89,7 @@ export function scoreRelatedEntry(target, candidate) {
     reasons: [
       ...(target.category === candidate.category ? ["same_category"] : []),
       ...sharedTags.map((tag) => `tag:${tag}`),
+      ...sharedKeywords.map((keyword) => `keyword:${keyword}`),
       ...sharedPlatforms.map((platform) => `platform:${platform}`),
       ...sharedHosts.map((host) => `source:${host}`),
     ],
