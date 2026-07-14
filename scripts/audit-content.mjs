@@ -13,34 +13,11 @@ import {
 import { parseSafeFrontmatter } from "@heyclaude/registry/frontmatter";
 
 import { collectContentIssues } from "./lib/content-audit-issues.mjs";
+import { parseSelectedCategories } from "./lib/selected-categories.mjs";
 
 const repoRoot = process.cwd();
 const contentRoot = path.join(repoRoot, "content");
-const selectedCategories = new Set();
-
-for (let index = 2; index < process.argv.length; index += 1) {
-  const arg = process.argv[index];
-  if (arg === "--category" || arg === "--categories") {
-    const value = process.argv[index + 1] || "";
-    for (const category of value.split(",")) {
-      const normalized = category.trim();
-      if (normalized) selectedCategories.add(normalized);
-    }
-    index += 1;
-  } else if (arg.startsWith("--category=")) {
-    const value = arg.slice("--category=".length);
-    for (const category of value.split(",")) {
-      const normalized = category.trim();
-      if (normalized) selectedCategories.add(normalized);
-    }
-  } else if (arg.startsWith("--categories=")) {
-    const value = arg.slice("--categories=".length);
-    for (const category of value.split(",")) {
-      const normalized = category.trim();
-      if (normalized) selectedCategories.add(normalized);
-    }
-  }
-}
+const selectedCategories = parseSelectedCategories(process.argv.slice(2));
 
 const reportPath =
   selectedCategories.size > 0
