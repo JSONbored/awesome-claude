@@ -1,0 +1,65 @@
+/**
+ * Pure weekly brief entry egress analytics helpers.
+ *
+ * Maps brief hub and issue archive entry navigation to privacy-light event
+ * names without embedding entry titles or brief copy.
+ */
+
+export const BRIEF_HUB_SURFACE = "brief-hub";
+export const BRIEF_ISSUE_SURFACE = "brief-issue";
+
+export type BriefHubSectionId = "new-entries" | "trusted-installs" | "source-backed-picks";
+export type BriefIssueSectionId =
+  | "newEntries"
+  | "sourceBacked"
+  | "saferInstalls"
+  | "notableChanges";
+
+export function briefEntryAnalyticsEvent(): string {
+  return "brief_entry_click";
+}
+
+export function parseBriefEntryRef(urlOrRef: string): string | null {
+  if (!urlOrRef || urlOrRef === "#") return null;
+  if (!urlOrRef.startsWith("http") && !urlOrRef.startsWith("/")) {
+    const slash = urlOrRef.indexOf("/");
+    if (slash > 0 && slash < urlOrRef.length - 1) {
+      return urlOrRef;
+    }
+  }
+  const match = urlOrRef.match(/\/entry\/([^/]+)\/([^/?#]+)/);
+  if (!match) return null;
+  return `${match[1]}/${match[2]}`;
+}
+
+export function briefHubEntryAnalyticsData(
+  entryRef: string,
+  sectionId: BriefHubSectionId,
+  rowIndex: number,
+  rowCount: number,
+) {
+  return {
+    entry: entryRef,
+    surface: BRIEF_HUB_SURFACE,
+    sectionId,
+    rowIndex,
+    rowCount,
+  };
+}
+
+export function briefIssueEntryAnalyticsData(
+  entryRef: string,
+  sectionId: BriefIssueSectionId,
+  rowIndex: number,
+  rowCount: number,
+  issueNumber: number,
+) {
+  return {
+    entry: entryRef,
+    surface: BRIEF_ISSUE_SURFACE,
+    sectionId,
+    rowIndex,
+    rowCount,
+    issueNumber,
+  };
+}
