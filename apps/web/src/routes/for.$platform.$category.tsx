@@ -162,7 +162,12 @@ function IntersectionPage() {
       </h2>
       <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {entries.map((e) => (
-          <ResourceCard key={`${e.category}/${e.slug}`} entry={e} variant="grid" />
+          <ResourceCard
+            key={`${e.category}/${e.slug}`}
+            entry={e}
+            variant="grid"
+            analyticsSurface="platform-category"
+          />
         ))}
       </div>
 

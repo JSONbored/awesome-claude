@@ -15,7 +15,18 @@ export type ResourceCardSurface =
   | "home-recent"
   | "home-popular"
   | "home-newest"
-  | "home-compare-rail";
+  | "home-compare-rail"
+  | "category-hub"
+  | "tag-hub"
+  | "best-index"
+  | "best-collection"
+  | "platform-hub"
+  | "platform-category"
+  | "detail-related"
+  | "detail-guides"
+  | "browse-grid"
+  | "browse-compact"
+  | "browse-row";
 
 export type ResourceCardVariant = "row" | "grid" | "compact";
 

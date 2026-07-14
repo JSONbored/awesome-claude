@@ -948,7 +948,12 @@ function Dossier() {
                       <div className="eyebrow mb-2">{RELATION_LABELS[g.relation] ?? "Related"}</div>
                       <div className="grid gap-3 sm:grid-cols-2">
                         {g.entries.map((e) => (
-                          <ResourceCard key={`${e.category}/${e.slug}`} entry={e} variant="grid" />
+                          <ResourceCard
+                            key={`${e.category}/${e.slug}`}
+                            entry={e}
+                            variant="grid"
+                            analyticsSurface="detail-related"
+                          />
                         ))}
                       </div>
                     </div>
@@ -957,7 +962,12 @@ function Dossier() {
               ) : (
                 <div className="grid gap-3 sm:grid-cols-2">
                   {rel.slice(0, 4).map((e) => (
-                    <ResourceCard key={`${e.category}/${e.slug}`} entry={e} variant="grid" />
+                    <ResourceCard
+                      key={`${e.category}/${e.slug}`}
+                      entry={e}
+                      variant="grid"
+                      analyticsSurface="detail-related"
+                    />
                   ))}
                 </div>
               )}
@@ -980,7 +990,12 @@ function Dossier() {
               </p>
               <div className="grid gap-3 sm:grid-cols-2">
                 {guides.map((g) => (
-                  <ResourceCard key={`${g.category}/${g.slug}`} entry={g} variant="grid" />
+                  <ResourceCard
+                    key={`${g.category}/${g.slug}`}
+                    entry={g}
+                    variant="grid"
+                    analyticsSurface="detail-guides"
+                  />
                 ))}
               </div>
             </DossierSection>

@@ -1330,6 +1330,7 @@ function Browse() {
                       entry={e}
                       variant="grid"
                       compareItems={compare.items}
+                      analyticsSurface="browse-grid"
                     />
                   ))}
                 </div>
@@ -1342,6 +1343,7 @@ function Browse() {
                       variant="compact"
                       rank={i + 1}
                       compareItems={compare.items}
+                      analyticsSurface="browse-compact"
                     />
                   ))}
                 </div>
@@ -1352,6 +1354,7 @@ function Browse() {
                       key={`${e.category}/${e.slug}`}
                       entry={e}
                       compareItems={compare.items}
+                      analyticsSurface="browse-row"
                     />
                   ))}
                 </div>
