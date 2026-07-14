@@ -16,6 +16,11 @@ import { formatCompact } from "@/lib/format";
 import { breadcrumbScript } from "@/lib/seo-jsonld";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
+import { trackEvent } from "@/lib/analytics";
+import {
+  trendingListEntryAnalyticsData,
+  trendingListEntryAnalyticsEvent,
+} from "@/lib/trending-entry-cta-events";
 import { cn } from "@/lib/utils";
 
 const defaultSearch = {
@@ -207,6 +212,24 @@ function TrendingPage() {
   const set = (patch: Partial<typeof sp>) =>
     navigate({ search: (prev: typeof sp) => ({ ...prev, ...patch }) });
 
+  const onTrendingListEntryClick = React.useCallback(
+    (entry: TrendingEntry, rank: number) => {
+      trackEvent(
+        trendingListEntryAnalyticsEvent(),
+        trendingListEntryAnalyticsData(
+          entry.category,
+          entry.slug,
+          rank,
+          list.length,
+          sp.window,
+          sp.category,
+          mode,
+        ),
+      );
+    },
+    [list.length, mode, sp.category, sp.window],
+  );
+
   const shareUrl = `/trending${sp.category ? `?category=${sp.category}` : ""}`;
 
   return (
@@ -342,6 +365,7 @@ function TrendingPage() {
               <Link
                 to="/entry/$category/$slug"
                 params={{ category: entry.category, slug: entry.slug }}
+                onClick={() => onTrendingListEntryClick(entry, index + 4)}
                 className="min-w-0 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60"
               >
                 <div className="flex flex-wrap items-center gap-2">
