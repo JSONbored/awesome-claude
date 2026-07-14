@@ -1024,3 +1024,59 @@ describe("orderFrontmatter", () => {
     ]);
   });
 });
+
+describe("inferStructuredFields carries explicit optional fields", () => {
+  it("keeps command/script/config fields provided in the frontmatter", () => {
+    const inferred = inferStructuredFields(
+      {
+        title: "T",
+        slug: "demo",
+        installCommand: "npm i x",
+        commandSyntax: "/demo",
+        scriptLanguage: "bash",
+        scriptBody: "echo hi",
+        cardDescription: "Card",
+        trigger: "PreToolUse",
+        configSnippet: "{}",
+        installable: false,
+      },
+      "Body text.",
+      "commands",
+    );
+    expect(inferred.installCommand).toBe("npm i x");
+    expect(inferred.commandSyntax).toBe("/demo");
+    expect(inferred.scriptLanguage).toBe("bash");
+    expect(inferred.scriptBody).toBe("echo hi");
+    expect(inferred.cardDescription).toBe("Card");
+    expect(inferred.trigger).toBe("PreToolUse");
+    expect(inferred.configSnippet).toBe("{}");
+    expect(inferred.installable).toBe(false);
+  });
+
+  it("keeps skills verification and tested-platform fields", () => {
+    const inferred = inferStructuredFields(
+      {
+        title: "T",
+        slug: "demo",
+        verifiedAt: "2026-01-02",
+        testedPlatforms: ["Claude", "Codex"],
+      },
+      "Body.",
+      "skills",
+    );
+    expect(inferred.verifiedAt).toBe("2026-01-02");
+    expect(inferred.testedPlatforms).toEqual(["Claude", "Codex"]);
+  });
+
+  it("drops copySnippet/usageSnippet from an agents entry's recommended gaps", () => {
+    const result = validateEntry("agents", {
+      slug: "a",
+      title: "A",
+      description: "D",
+      copySnippet: "CS",
+      usageSnippet: "US",
+    });
+    expect(result.missingRecommended).not.toContain("copySnippet");
+    expect(result.missingRecommended).not.toContain("usageSnippet");
+  });
+});
