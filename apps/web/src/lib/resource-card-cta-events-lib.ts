@@ -10,6 +10,13 @@ import type { IntentEventClientType } from "@/lib/intent-event-client-lib";
 
 export const RESOURCE_CARD_SURFACE = "browse-card";
 
+export type ResourceCardSurface =
+  | typeof RESOURCE_CARD_SURFACE
+  | "home-recent"
+  | "home-popular"
+  | "home-newest"
+  | "home-compare-rail";
+
 export type ResourceCardVariant = "row" | "grid" | "compact";
 
 export function resourceCardEntryKey(category: string, slug: string): string {
@@ -26,10 +33,14 @@ export function resourceCardInstallAnalyticsEvent(): string {
   return "browse_card_copy_install";
 }
 
-export function resourceCardInstallAnalyticsData(category: string, slug: string) {
+export function resourceCardInstallAnalyticsData(
+  category: string,
+  slug: string,
+  surface: ResourceCardSurface = RESOURCE_CARD_SURFACE,
+) {
   return {
     entry: resourceCardEntryKey(category, slug),
-    surface: RESOURCE_CARD_SURFACE,
+    surface,
   };
 }
 
@@ -37,10 +48,14 @@ export function resourceCardCompareAnalyticsEvent(adding: boolean): string {
   return adding ? "browse_card_compare_add" : "browse_card_compare_remove";
 }
 
-export function resourceCardCompareAnalyticsData(category: string, slug: string) {
+export function resourceCardCompareAnalyticsData(
+  category: string,
+  slug: string,
+  surface: ResourceCardSurface = RESOURCE_CARD_SURFACE,
+) {
   return {
     entry: resourceCardEntryKey(category, slug),
-    surface: RESOURCE_CARD_SURFACE,
+    surface,
   };
 }
 
@@ -52,10 +67,11 @@ export function resourceCardCompareToastOpenAnalyticsData(
   category: string,
   slug: string,
   compareCount: number,
+  surface: ResourceCardSurface = RESOURCE_CARD_SURFACE,
 ) {
   return {
     entry: resourceCardEntryKey(category, slug),
-    surface: RESOURCE_CARD_SURFACE,
+    surface,
     compareCount,
   };
 }
@@ -64,10 +80,15 @@ export function resourceCardSourceAnalyticsEvent(): string {
   return "browse_card_source_open";
 }
 
-export function resourceCardSourceAnalyticsData(category: string, slug: string, host: string) {
+export function resourceCardSourceAnalyticsData(
+  category: string,
+  slug: string,
+  host: string,
+  surface: ResourceCardSurface = RESOURCE_CARD_SURFACE,
+) {
   return {
     entry: resourceCardEntryKey(category, slug),
-    surface: RESOURCE_CARD_SURFACE,
+    surface,
     host,
   };
 }
@@ -82,10 +103,11 @@ export function resourceCardEntryAnalyticsData(
   variant: ResourceCardVariant,
   rank: number | null,
   compareCount: number,
+  surface: ResourceCardSurface = RESOURCE_CARD_SURFACE,
 ) {
   return {
     entry: resourceCardEntryKey(category, slug),
-    surface: RESOURCE_CARD_SURFACE,
+    surface,
     variant,
     rank,
     compareCount,

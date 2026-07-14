@@ -429,7 +429,12 @@ function Home() {
           </div>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {recentEntries.map((e) => (
-              <ResourceCard key={`${e.category}/${e.slug}`} entry={e} variant="grid" />
+              <ResourceCard
+                key={`${e.category}/${e.slug}`}
+                entry={e}
+                variant="grid"
+                analyticsSurface="home-recent"
+              />
             ))}
           </div>
         </section>
@@ -465,7 +470,12 @@ function Home() {
         </div>
         <div className="mt-4 grid gap-4 stagger-children sm:grid-cols-2 lg:grid-cols-3">
           {popular.map((e) => (
-            <ResourceCard key={`${e.category}/${e.slug}`} entry={e} variant="grid" />
+            <ResourceCard
+              key={`${e.category}/${e.slug}`}
+              entry={e}
+              variant="grid"
+              analyticsSurface="home-popular"
+            />
           ))}
         </div>
       </section>
@@ -499,7 +509,11 @@ function Home() {
           </div>
           <div className="divide-y divide-border">
             {sourceBacked.map((e) => (
-              <ResourceCard key={`${e.category}/${e.slug}`} entry={e} />
+              <ResourceCard
+                key={`${e.category}/${e.slug}`}
+                entry={e}
+                analyticsSurface="home-compare-rail"
+              />
             ))}
           </div>
           <div className="flex items-center justify-between border-t border-border bg-surface-2 px-5 py-3 text-xs text-ink-muted">
@@ -536,7 +550,12 @@ function Home() {
           />
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             {newest.map((e) => (
-              <ResourceCard key={`${e.category}/${e.slug}`} entry={e} variant="grid" />
+              <ResourceCard
+                key={`${e.category}/${e.slug}`}
+                entry={e}
+                variant="grid"
+                analyticsSurface="home-newest"
+              />
             ))}
           </div>
           {latestBrief && (

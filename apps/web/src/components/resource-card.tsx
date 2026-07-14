@@ -31,6 +31,8 @@ import {
   resourceCardInstallAnalyticsData,
   resourceCardInstallAnalyticsEvent,
   resourceCardInstallIntentType,
+  RESOURCE_CARD_SURFACE,
+  type ResourceCardSurface,
 } from "@/lib/resource-card-cta-events";
 import { resourceCardCompareFullMessage } from "@/lib/resource-card-compare-ui";
 import { resourceCardTrustDecisionState } from "@/lib/resource-card-trust-decision";
@@ -59,11 +61,13 @@ function ResourceCardInner({
   variant = "row",
   rank,
   compareItems = [],
+  analyticsSurface = RESOURCE_CARD_SURFACE,
 }: {
   entry: Entry;
   variant?: "row" | "grid" | "compact";
   rank?: number;
   compareItems?: Entry[];
+  analyticsSurface?: ResourceCardSurface;
 }) {
   const { toggle, setOpen } = useCompareActions();
   const inCompare = useIsCompared(entry);
@@ -104,6 +108,7 @@ function ResourceCardInner({
         variant,
         typeof rank === "number" ? rank : null,
         compareItems.length,
+        analyticsSurface,
       ),
     );
   };
@@ -116,7 +121,7 @@ function ResourceCardInner({
       return;
     }
     trackEvent(resourceCardCompareAnalyticsEvent(!wasIn), {
-      ...resourceCardCompareAnalyticsData(entry.category, entry.slug),
+      ...resourceCardCompareAnalyticsData(entry.category, entry.slug, analyticsSurface),
     });
     if (wasIn) {
       toast(`Removed “${entry.title}” from compare`);
@@ -130,7 +135,12 @@ function ResourceCardInner({
             setOpen(true);
             trackEvent(
               resourceCardCompareToastOpenAnalyticsEvent(),
-              resourceCardCompareToastOpenAnalyticsData(entry.category, entry.slug, compareCount),
+              resourceCardCompareToastOpenAnalyticsData(
+                entry.category,
+                entry.slug,
+                compareCount,
+                analyticsSurface,
+              ),
             );
           },
         },
@@ -142,7 +152,11 @@ function ResourceCardInner({
     void recordIntentEvent(resourceCardInstallIntentType(entry), entry);
   };
 
-  const installAnalyticsData = resourceCardInstallAnalyticsData(entry.category, entry.slug);
+  const installAnalyticsData = resourceCardInstallAnalyticsData(
+    entry.category,
+    entry.slug,
+    analyticsSurface,
+  );
 
   if (variant === "compact") {
     return (
@@ -378,6 +392,7 @@ function ResourceCardInner({
                       entry.category,
                       entry.slug,
                       outboundHost(entry.sourceUrl!),
+                      analyticsSurface,
                     ),
                   )
                 }
