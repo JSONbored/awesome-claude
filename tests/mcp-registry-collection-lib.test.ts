@@ -38,6 +38,12 @@ describe("registry-collection-lib array helpers", () => {
       intersection(["Codex", "codex", "Cursor"], ["cursor", "vscode"]),
     ).toEqual(["cursor"]);
   });
+
+  it("treats null array arguments as empty", () => {
+    expect(intersection(null, null)).toEqual([]);
+    expect(intersection(["a"], null)).toEqual([]);
+    expect(intersection(null, ["a"])).toEqual([]);
+  });
 });
 
 describe("registry-collection-lib date floors", () => {
