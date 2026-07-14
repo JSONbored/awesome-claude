@@ -5,6 +5,11 @@ import { CHANGELOG, RELEASE_NOTES, type ReleaseStream } from "@/data/changelog";
 import { FilterChip, FilterChipGroup } from "@/components/filter-chip";
 import { PageContainer } from "@/components/page-container";
 import { cn } from "@/lib/utils";
+import { trackEvent } from "@/lib/analytics";
+import {
+  changelogDiffEntryAnalyticsData,
+  changelogDiffEntryAnalyticsEvent,
+} from "@/lib/directory-page-entry-cta-events";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { changelogItemListJsonLd } from "@/lib/changelog-jsonld-lib";
 import { absoluteUrl } from "@/lib/seo";
@@ -212,11 +217,24 @@ function ChangelogPage() {
                                 <Icon className="h-3 w-3" /> {k} · {items.length}
                               </div>
                               <ul className="space-y-1 text-xs">
-                                {items.map((d) => (
+                                {items.map((d, rowIndex) => (
                                   <li key={`${d.category}/${d.slug}`} className="truncate">
                                     <Link
                                       to="/entry/$category/$slug"
                                       params={{ category: d.category, slug: d.slug }}
+                                      onClick={() =>
+                                        trackEvent(
+                                          changelogDiffEntryAnalyticsEvent(),
+                                          changelogDiffEntryAnalyticsData(
+                                            d.category,
+                                            d.slug,
+                                            k,
+                                            rowIndex,
+                                            items.length,
+                                            note.stream,
+                                          ),
+                                        )
+                                      }
                                       className="text-ink hover:underline"
                                     >
                                       {d.title}

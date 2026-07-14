@@ -6,6 +6,11 @@ import { EntryBrandMark } from "@/components/entry-brand-mark";
 import { breadcrumbScript, itemListScript } from "@/lib/seo-jsonld";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
+import { trackEvent } from "@/lib/analytics";
+import {
+  toolsDirectoryEntryAnalyticsData,
+  toolsDirectoryEntryAnalyticsEvent,
+} from "@/lib/directory-page-entry-cta-events";
 
 // Same card for og:image and twitter:image; the inputs are static.
 const OG_IMAGE = ogImageUrl({ title: "Tools that pair well with Claude", eyebrow: "Tools" });
@@ -81,11 +86,17 @@ function ToolsPage() {
       </div>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {COMMERCIAL_TOOLS.map((t) => (
+        {COMMERCIAL_TOOLS.map((t, cardIndex) => (
           <Link
             key={t.slug}
             to="/entry/$category/$slug"
             params={{ category: "tools", slug: t.slug }}
+            onClick={() =>
+              trackEvent(
+                toolsDirectoryEntryAnalyticsEvent(),
+                toolsDirectoryEntryAnalyticsData(t.slug, cardIndex, COMMERCIAL_TOOLS.length),
+              )
+            }
             className="group flex flex-col gap-3 rounded-xl border border-border bg-surface p-5 transition-colors duration-200 ease-out hover:bg-surface-2"
           >
             <div className="flex items-start justify-between gap-2">

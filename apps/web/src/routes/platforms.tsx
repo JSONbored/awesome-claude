@@ -6,6 +6,11 @@ import { PageHeader } from "@/components/page-header";
 import { breadcrumbScript, itemListScript } from "@/lib/seo-jsonld";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
+import { trackEvent } from "@/lib/analytics";
+import {
+  platformsMatrixEntryAnalyticsData,
+  platformsMatrixEntryAnalyticsEvent,
+} from "@/lib/directory-page-entry-cta-events";
 
 // Same card for og:image and twitter:image; the inputs are static.
 const OG_IMAGE = ogImageUrl({ title: "Platform compatibility", eyebrow: "Platforms" });
@@ -72,7 +77,7 @@ function PlatformsPage() {
               <div className="font-display text-base font-semibold text-ink">{p.label}</div>
               <p className="mt-1 text-xs text-ink-muted">{p.tagline}</p>
               <ul className="mt-4 space-y-2 text-xs">
-                {rows.map((r) => (
+                {rows.map((r, rowIndex) => (
                   <li
                     key={`${r.category}/${r.slug}`}
                     className="flex items-center justify-between gap-2 border-t border-border pt-2 first:border-0 first:pt-0"
@@ -80,6 +85,19 @@ function PlatformsPage() {
                     <Link
                       to="/entry/$category/$slug"
                       params={{ category: r.category, slug: r.slug }}
+                      onClick={() =>
+                        trackEvent(
+                          platformsMatrixEntryAnalyticsEvent(),
+                          platformsMatrixEntryAnalyticsData(
+                            r.category,
+                            r.slug,
+                            p.id,
+                            r.support,
+                            rowIndex,
+                            rows.length,
+                          ),
+                        )
+                      }
                       className="truncate text-ink hover:underline"
                     >
                       {r.title}
