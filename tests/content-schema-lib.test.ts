@@ -1156,3 +1156,36 @@ describe("content-schema text-utility fallbacks", () => {
     ).toBe("This is a reasonably long first sentence that should be picked.");
   });
 });
+
+describe("validateEntry category-specific recommended/semantic rules", () => {
+  it("drops installCommand from a skills entry that ships a downloadUrl", () => {
+    const result = validateEntry("skills", {
+      slug: "s",
+      title: "S",
+      description: "D",
+      downloadUrl: "/downloads/skills/s.zip",
+    });
+    expect(result.missingRecommended).not.toContain("installCommand");
+  });
+
+  it("requires verifiedAt on a capability-pack skill", () => {
+    const result = validateEntry("skills", {
+      slug: "s",
+      title: "S",
+      description: "D",
+      skillType: "capability-pack",
+      retrievalSources: ["https://source.dev"],
+    });
+    expect(result.semanticErrors).toContain(
+      "capability-pack skills must include verifiedAt",
+    );
+  });
+
+  it("has no required fields for an unknown category", () => {
+    const result = validateEntry("totally-unknown-cat", {
+      slug: "s",
+      title: "S",
+    });
+    expect(result.missingRequired).toEqual([]);
+  });
+});
