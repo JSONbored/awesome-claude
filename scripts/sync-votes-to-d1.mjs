@@ -4,6 +4,7 @@ import path from "node:path";
 import { enumerateContentVoteKeys } from "./lib/enumerate-content-vote-keys.mjs";
 import { expectedKeyExclusionPredicate } from "./lib/d1-prune-predicate.mjs";
 import { wranglerArgs } from "./lib/wrangler-args.mjs";
+import { parseWranglerQueryResults } from "./lib/wrangler-query-results.mjs";
 
 const repoRoot = process.cwd();
 const d1Binding = process.env.SITE_D1_BINDING || "SITE_DB";
@@ -53,18 +54,7 @@ function runWranglerQuery(args) {
     ["--filter", "web", "exec", "wrangler", ...args],
     { cwd: repoRoot, encoding: "utf8" },
   );
-  const jsonText = output.trim();
-  if (!jsonText) {
-    throw new Error("Could not parse wrangler prune output");
-  }
-  const payload = JSON.parse(jsonText);
-  if (Array.isArray(payload)) {
-    const statement = [...payload]
-      .reverse()
-      .find((result) => Array.isArray(result?.results));
-    return statement?.results ?? [];
-  }
-  return Array.isArray(payload?.results) ? payload.results : [];
+  return parseWranglerQueryResults(output);
 }
 
 function pruneTableOrphans(runMode, tableName, whereClause) {
