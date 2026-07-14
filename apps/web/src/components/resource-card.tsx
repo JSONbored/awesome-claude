@@ -24,6 +24,8 @@ import {
   resourceCardCompareAnalyticsEvent,
   resourceCardCompareToastOpenAnalyticsData,
   resourceCardCompareToastOpenAnalyticsEvent,
+  resourceCardEntryAnalyticsData,
+  resourceCardEntryAnalyticsEvent,
   resourceCardSourceAnalyticsData,
   resourceCardSourceAnalyticsEvent,
   resourceCardInstallAnalyticsData,
@@ -93,6 +95,19 @@ function ResourceCardInner({
 
   const installPayload = entry.installCommand ?? entry.configSnippet ?? entry.fullCopy ?? "";
 
+  const onEntryClick = () => {
+    trackEvent(
+      resourceCardEntryAnalyticsEvent(),
+      resourceCardEntryAnalyticsData(
+        entry.category,
+        entry.slug,
+        variant,
+        typeof rank === "number" ? rank : null,
+        compareItems.length,
+      ),
+    );
+  };
+
   const onCompareToggle = () => {
     const wasIn = inCompare;
     const changed = toggle(entry);
@@ -138,6 +153,7 @@ function ResourceCardInner({
         <Link
           to="/entry/$category/$slug"
           params={{ category: entry.category, slug: entry.slug }}
+          onClick={onEntryClick}
           className="flex min-w-0 flex-1 items-center gap-3 focus-visible:outline-none"
         >
           {typeof rank === "number" && (
@@ -183,6 +199,7 @@ function ResourceCardInner({
           <Link
             to="/entry/$category/$slug"
             params={{ category: entry.category, slug: entry.slug }}
+            onClick={onEntryClick}
             className="flex flex-1 flex-col gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent/60 rounded-lg"
           >
             <div className="flex items-start justify-between gap-2">
@@ -288,6 +305,7 @@ function ResourceCardInner({
             <Link
               to="/entry/$category/$slug"
               params={{ category: entry.category, slug: entry.slug }}
+              onClick={onEntryClick}
               className="font-display text-[15px] font-semibold tracking-tight text-ink group-hover:underline"
             >
               {entry.title}

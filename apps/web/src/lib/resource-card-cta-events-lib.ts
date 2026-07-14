@@ -10,6 +10,8 @@ import type { IntentEventClientType } from "@/lib/intent-event-client-lib";
 
 export const RESOURCE_CARD_SURFACE = "browse-card";
 
+export type ResourceCardVariant = "row" | "grid" | "compact";
+
 export function resourceCardEntryKey(category: string, slug: string): string {
   return `${category}/${slug}`;
 }
@@ -67,5 +69,25 @@ export function resourceCardSourceAnalyticsData(category: string, slug: string, 
     entry: resourceCardEntryKey(category, slug),
     surface: RESOURCE_CARD_SURFACE,
     host,
+  };
+}
+
+export function resourceCardEntryAnalyticsEvent(): string {
+  return "browse_card_entry_click";
+}
+
+export function resourceCardEntryAnalyticsData(
+  category: string,
+  slug: string,
+  variant: ResourceCardVariant,
+  rank: number | null,
+  compareCount: number,
+) {
+  return {
+    entry: resourceCardEntryKey(category, slug),
+    surface: RESOURCE_CARD_SURFACE,
+    variant,
+    rank,
+    compareCount,
   };
 }

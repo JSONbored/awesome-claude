@@ -22,6 +22,10 @@ import { compareTableActionsForEntry } from "@/lib/compare-table-actions-interac
 import { compareTableInteractiveUiState } from "@/lib/compare-table-interactive-ui-lib";
 import { recordCompareIntentEvent } from "@/lib/compare-entry-actions";
 import { trackEvent, entryEventKey } from "@/lib/analytics";
+import {
+  compareTableEntryAnalyticsData,
+  compareTableEntryAnalyticsEvent,
+} from "@/lib/compare-table-entry-cta-events";
 import { claimCtaAnalyticsData, claimCtaAnalyticsEvent } from "@/lib/conversion-cta-events";
 import { cn } from "@/lib/utils";
 import type { Entry } from "@/types/registry";
@@ -313,6 +317,22 @@ export function ComparisonTable({
   const { divergingDecisionLabels, renderNextActions, actionRowDiverges, actionCells } =
     compareTableInteractiveUiState(entries, showNextActions);
 
+  const trackTableEntryClick = React.useCallback(
+    (entry: Entry, linkKind: "title" | "dossier", columnIndex: number) => {
+      trackEvent(
+        compareTableEntryAnalyticsEvent(),
+        compareTableEntryAnalyticsData(
+          entry.category,
+          entry.slug,
+          linkKind,
+          columnIndex,
+          entries.length,
+        ),
+      );
+    },
+    [entries.length],
+  );
+
   return (
     <div className="overflow-auto rounded-xl border border-border">
       <table className="w-full border-collapse text-sm">
@@ -324,7 +344,7 @@ export function ComparisonTable({
             >
               Field
             </th>
-            {entries.map((e) => (
+            {entries.map((e, columnIndex) => (
               <th
                 scope="col"
                 key={`${e.category}/${e.slug}`}
@@ -335,6 +355,7 @@ export function ComparisonTable({
                   <Link
                     to="/entry/$category/$slug"
                     params={{ category: e.category, slug: e.slug }}
+                    onClick={() => trackTableEntryClick(e, "title", columnIndex)}
                     className="min-w-0 font-display text-sm font-semibold text-ink hover:underline"
                   >
                     {e.title}
@@ -344,6 +365,7 @@ export function ComparisonTable({
                 <Link
                   to="/entry/$category/$slug"
                   params={{ category: e.category, slug: e.slug }}
+                  onClick={() => trackTableEntryClick(e, "dossier", columnIndex)}
                   className="mt-2 inline-flex items-center gap-1 text-[11px] text-ink-muted hover:text-ink"
                 >
                   Open dossier <ArrowRight className="h-3 w-3" />

@@ -4,6 +4,8 @@ import {
   resourceCardCompareAnalyticsEvent,
   resourceCardCompareToastOpenAnalyticsData,
   resourceCardCompareToastOpenAnalyticsEvent,
+  resourceCardEntryAnalyticsData,
+  resourceCardEntryAnalyticsEvent,
   resourceCardSourceAnalyticsData,
   resourceCardSourceAnalyticsEvent,
   resourceCardInstallAnalyticsData,
@@ -54,6 +56,25 @@ describe("resource card cta events lib", () => {
       entry: "skills/demo",
       surface: "browse-card",
       host: "github.com",
+    });
+    expect(resourceCardEntryAnalyticsEvent()).toBe("browse_card_entry_click");
+    expect(
+      resourceCardEntryAnalyticsData("mcp", "browser", "compact", 3, 2),
+    ).toEqual({
+      entry: "mcp/browser",
+      surface: "browse-card",
+      variant: "compact",
+      rank: 3,
+      compareCount: 2,
+    });
+    expect(
+      resourceCardEntryAnalyticsData("skills", "demo", "grid", null, 0),
+    ).toEqual({
+      entry: "skills/demo",
+      surface: "browse-card",
+      variant: "grid",
+      rank: null,
+      compareCount: 0,
     });
   });
 });

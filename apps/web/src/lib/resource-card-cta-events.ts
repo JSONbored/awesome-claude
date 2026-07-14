@@ -7,10 +7,13 @@ export {
   resourceCardCompareAnalyticsEvent,
   resourceCardCompareToastOpenAnalyticsData,
   resourceCardCompareToastOpenAnalyticsEvent,
+  resourceCardEntryAnalyticsData,
+  resourceCardEntryAnalyticsEvent,
   resourceCardSourceAnalyticsData,
   resourceCardSourceAnalyticsEvent,
   resourceCardEntryKey,
   resourceCardInstallAnalyticsData,
   resourceCardInstallAnalyticsEvent,
   resourceCardInstallIntentType,
+  type ResourceCardVariant,
 } from "@/lib/resource-card-cta-events-lib";
