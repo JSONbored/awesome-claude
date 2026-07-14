@@ -7,9 +7,11 @@ import { pathToFileURL } from "node:url";
 import {
   buildMcpReleaseIssue,
   buildMcpReleaseReport,
+  COMMIT_LOG_FORMAT,
   isTrustedReleaseWatchIssue,
   latestSemverTag,
   MCP_RELEASE_DUE_MARKER,
+  parseCommitLog,
   parseReleaseWatchArgs,
 } from "./lib/release-watch-core.mjs";
 
@@ -68,25 +70,15 @@ function readPublishedPackageVersion(packageName) {
 }
 
 function readCommits(revisionRange) {
-  const format = "%x1e%H%x1f%s";
-  return git([
-    "log",
-    "--reverse",
-    "--no-merges",
-    `--format=${format}`,
-    revisionRange,
-  ])
-    .split("\x1e")
-    .map((entry) => entry.trim())
-    .filter(Boolean)
-    .map((entry) => {
-      const [sha, subject] = entry.split("\x1f");
-      return {
-        sha,
-        subject: subject?.split("\n")[0] ?? "",
-        files: readCommitFiles(sha),
-      };
-    });
+  return parseCommitLog(
+    git([
+      "log",
+      "--reverse",
+      "--no-merges",
+      `--format=${COMMIT_LOG_FORMAT}`,
+      revisionRange,
+    ]),
+  ).map((commit) => ({ ...commit, files: readCommitFiles(commit.sha) }));
 }
 
 function readCommitFiles(sha) {
