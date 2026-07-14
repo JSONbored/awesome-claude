@@ -9316,3 +9316,43 @@ describe("registry-handlers-lib response builders", () => {
     expect(response.kind).toBe("registry-recent");
   });
 });
+
+describe("resource/feed builders default missing payload fields", () => {
+  it("defaults trending resource fields for an empty payload", () => {
+    const response = buildTrendingResourceResponse({
+      payload: {},
+      entries: [],
+    });
+    expect(response.schemaVersion).toBe(1);
+    expect(response.category).toBe("all");
+    expect(response.platform).toBe("all");
+    expect(response.signalsAvailable).toBeNull();
+  });
+
+  it("nulls jobs totalAvailable when the payload omits a numeric count", () => {
+    expect(
+      buildJobsActiveResourceResponse({ payload: {}, entries: [] })
+        .totalAvailable,
+    ).toBeNull();
+  });
+
+  it("falls back to an error uri for an empty resource uri", () => {
+    const payload = buildRegistryResourcePayload(
+      "",
+      { a: 1 },
+      "application/json",
+      (value) => value,
+    );
+    expect(payload.contents[0].uri).toBe("heyclaude://error");
+  });
+
+  it("defaults empty categories/platforms for a bare feed index", () => {
+    const response = buildDistributionFeedsResponse({
+      manifest: { schemaVersion: 1, generatedAt: "2026-01-01", artifacts: [] },
+      feedIndex: {},
+      platformFeedSlug: (platform) => platform,
+    });
+    expect(response.categories).toEqual([]);
+    expect(response.platforms).toEqual([]);
+  });
+});

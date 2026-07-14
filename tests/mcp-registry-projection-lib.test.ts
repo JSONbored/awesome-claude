@@ -5572,3 +5572,41 @@ describe("registry-projection-lib scoreRelatedEntry", () => {
     });
   });
 });
+
+describe("registry-projection missing-field defaults", () => {
+  const minimal = {
+    category: "mcp",
+    slug: "s",
+    title: "T",
+    description: "D",
+  };
+
+  it("defaults array/string fields when the entry omits them", () => {
+    const result = toSearchResult(minimal);
+    expect(result.tags).toEqual([]);
+    expect(result.platforms).toEqual([]);
+    expect(result.brandName).toBe("");
+
+    const summary = toEntrySummary(minimal);
+    expect(summary.dateAdded).toBe("");
+    expect(summary.supportLevels).toEqual([]);
+  });
+
+  it("coerces falsy platform values through the intersection mapper", () => {
+    const target = {
+      category: "mcp",
+      slug: "a",
+      tags: ["x"],
+      keywords: [],
+      platforms: [null],
+    };
+    const candidate = {
+      category: "mcp",
+      slug: "b",
+      tags: ["x"],
+      keywords: [],
+      platforms: [null],
+    };
+    expect(scoreRelatedEntry(target, candidate)).not.toBeNull();
+  });
+});

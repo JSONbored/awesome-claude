@@ -68,10 +68,17 @@ describe("resource card cta events lib", () => {
       compareCount: 2,
     });
     expect(
-      resourceCardEntryAnalyticsData("skills", "demo", "grid", null, 0),
+      resourceCardEntryAnalyticsData(
+        "skills",
+        "demo",
+        "grid",
+        null,
+        0,
+        "home-popular",
+      ),
     ).toEqual({
       entry: "skills/demo",
-      surface: "browse-card",
+      surface: "home-popular",
       variant: "grid",
       rank: null,
       compareCount: 0,

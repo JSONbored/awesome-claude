@@ -14,35 +14,12 @@ import { parseSafeFrontmatter } from "@heyclaude/registry/frontmatter";
 
 import { duplicateTopLevelFrontmatterKeys } from "./lib/frontmatter-dupe-keys.mjs";
 import { findPredictableSharedTmpDebugPaths } from "./lib/shared-tmp-debug-paths.mjs";
+import { parseSelectedCategories } from "./lib/selected-categories.mjs";
 
 const repoRoot = process.cwd();
 const contentRoot = path.join(repoRoot, "content");
 const strictRecommended = process.argv.includes("--strict-recommended");
-const selectedCategories = new Set();
-
-for (let index = 2; index < process.argv.length; index += 1) {
-  const arg = process.argv[index];
-  if (arg === "--category" || arg === "--categories") {
-    const value = process.argv[index + 1] || "";
-    for (const category of value.split(",")) {
-      const normalized = category.trim();
-      if (normalized) selectedCategories.add(normalized);
-    }
-    index += 1;
-  } else if (arg.startsWith("--category=")) {
-    const value = arg.slice("--category=".length);
-    for (const category of value.split(",")) {
-      const normalized = category.trim();
-      if (normalized) selectedCategories.add(normalized);
-    }
-  } else if (arg.startsWith("--categories=")) {
-    const value = arg.slice("--categories=".length);
-    for (const category of value.split(",")) {
-      const normalized = category.trim();
-      if (normalized) selectedCategories.add(normalized);
-    }
-  }
-}
+const selectedCategories = parseSelectedCategories(process.argv.slice(2));
 
 const failures = [];
 const warnings = [];
