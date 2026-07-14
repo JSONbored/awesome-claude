@@ -102,9 +102,12 @@ export function normalizeUrl(value) {
       }
     }
     url.hostname = url.hostname.toLowerCase().replace(/^www\./, "");
+    // Strip trailing slashes before the terminal ".git" so a URL like
+    // ".../repo.git/" collapses to the same value as ".../repo.git"; otherwise
+    // the ".git$" anchor misses and the two forms produce different repo keys.
     url.pathname = url.pathname
-      .replace(/\.git$/, "")
       .replace(/\/+$/, "")
+      .replace(/\.git$/, "")
       .toLowerCase();
     url.searchParams.sort();
     return url.toString().replace(/\/$/, "");

@@ -106,6 +106,15 @@ describe("normalizeUrl", () => {
     );
   });
 
+  it("strips a terminal .git suffix even when a trailing slash follows it", () => {
+    expect(normalizeUrl("https://github.com/Acme/Widget.git/")).toBe(
+      "https://github.com/acme/widget",
+    );
+    expect(normalizeUrl("https://github.com/Acme/Widget.git//")).toBe(
+      "https://github.com/acme/widget",
+    );
+  });
+
   it("sorts remaining query params for stability", () => {
     expect(normalizeUrl("https://example.com/path?b=2&a=1")).toBe(
       "https://example.com/path?a=1&b=2",
@@ -210,6 +219,12 @@ describe("githubRepoKey", () => {
   it("returns owner/repo for a github repository", () => {
     expect(
       githubRepoKey(entry({ repoUrl: "https://github.com/Acme/Widget.git" })),
+    ).toBe("acme/widget");
+  });
+
+  it("keys a .git url with a trailing slash the same as without", () => {
+    expect(
+      githubRepoKey(entry({ repoUrl: "https://github.com/Acme/Widget.git/" })),
     ).toBe("acme/widget");
   });
 });
