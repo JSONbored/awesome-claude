@@ -262,3 +262,22 @@ export function ecosystemFeedPathAnalyticsData(
     feedCount,
   };
 }
+
+export type EcosystemQuickStartAction = "manifest-pin" | "mcp-run" | "raycast-install";
+
+export function ecosystemQuickStartCopyAnalyticsEvent(): string {
+  return "ecosystem_quick_start_copy_click";
+}
+
+export function ecosystemQuickStartCopyAnalyticsData(
+  action: EcosystemQuickStartAction,
+  rowIndex: number,
+  quickStartCount: number,
+) {
+  return {
+    surface: ECOSYSTEM_PAGE_SURFACE,
+    action,
+    rowIndex,
+    quickStartCount,
+  };
+}

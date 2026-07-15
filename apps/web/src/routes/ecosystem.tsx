@@ -31,10 +31,13 @@ import {
   ecosystemSetupClientAnalyticsEvent,
   ecosystemSetupDocAnalyticsData,
   ecosystemSetupDocAnalyticsEvent,
+  ecosystemQuickStartCopyAnalyticsData,
+  ecosystemQuickStartCopyAnalyticsEvent,
   ecosystemSectionAnalyticsData,
   ecosystemSectionAnalyticsEvent,
   ecosystemHarnessBrowseAnalyticsData,
   ecosystemHarnessBrowseAnalyticsEvent,
+  type EcosystemQuickStartAction,
 } from "@/lib/ecosystem-page-cta-events";
 import {
   CompatibilityMatrix,
@@ -218,6 +221,24 @@ const SUB_NAV = [
   { id: "setup", label: "Drop-in setup" },
   { id: "feeds", label: "Adapter feeds" },
   { id: "sponsors", label: "Sponsors" },
+];
+
+const QUICK_STARTS: {
+  label: string;
+  value: string;
+  action: EcosystemQuickStartAction;
+}[] = [
+  {
+    label: "Pin manifest",
+    value: "curl https://heyclau.de/api/registry/manifest",
+    action: "manifest-pin",
+  },
+  { label: "Run MCP", value: "npx -y @heyclaude/mcp", action: "mcp-run" },
+  {
+    label: "Install Raycast",
+    value: "raycast://extensions/jsonbored/heyclaude",
+    action: "raycast-install",
+  },
 ];
 
 export const Route = createFileRoute("/ecosystem")({
@@ -432,12 +453,16 @@ function EcosystemPage() {
             </p>
           </div>
           <div className="grid w-full max-w-md gap-2">
-            <QuickStart
-              label="Pin manifest"
-              value="curl https://heyclau.de/api/registry/manifest"
-            />
-            <QuickStart label="Run MCP" value="npx -y @heyclaude/mcp" />
-            <QuickStart label="Install Raycast" value="raycast://extensions/jsonbored/heyclaude" />
+            {QUICK_STARTS.map((item, rowIndex) => (
+              <QuickStart
+                key={item.action}
+                label={item.label}
+                value={item.value}
+                action={item.action}
+                rowIndex={rowIndex}
+                quickStartCount={QUICK_STARTS.length}
+              />
+            ))}
           </div>
         </div>
       </section>
@@ -699,14 +724,32 @@ function AdapterFeeds() {
   );
 }
 
-function QuickStart({ label, value }: { label: string; value: string }) {
+function QuickStart({
+  label,
+  value,
+  action,
+  rowIndex,
+  quickStartCount,
+}: {
+  label: string;
+  value: string;
+  action: EcosystemQuickStartAction;
+  rowIndex: number;
+  quickStartCount: number;
+}) {
   return (
     <div className="flex items-center gap-2 rounded-md border border-border bg-background px-2 py-1.5">
       <span className="w-[88px] shrink-0 font-mono text-[10px] uppercase tracking-wider text-ink-subtle">
         {label}
       </span>
       <code className="flex-1 truncate font-mono text-[11px] text-ink">{value}</code>
-      <CopyButton value={value} label="Copy" size="sm" />
+      <CopyButton
+        value={value}
+        label="Copy"
+        size="sm"
+        event={ecosystemQuickStartCopyAnalyticsEvent()}
+        eventData={ecosystemQuickStartCopyAnalyticsData(action, rowIndex, quickStartCount)}
+      />
     </div>
   );
 }

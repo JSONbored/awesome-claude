@@ -32,7 +32,10 @@ export {
   ecosystemFeedPathAnalyticsData,
   ecosystemFeedPathAnalyticsEvent,
   ecosystemFeedKey,
+  ecosystemQuickStartCopyAnalyticsData,
+  ecosystemQuickStartCopyAnalyticsEvent,
   type EcosystemMatrixSupport,
+  type EcosystemQuickStartAction,
   type EcosystemSetupDocDestination,
   type EcosystemSetupSurface,
 } from "@/lib/ecosystem-page-cta-events-lib";
