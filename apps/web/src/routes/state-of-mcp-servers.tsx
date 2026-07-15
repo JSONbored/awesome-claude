@@ -22,6 +22,22 @@ import {
   stateReportEntryAnalyticsData,
   stateReportEntryAnalyticsEvent,
 } from "@/lib/insights-page-entry-cta-events";
+import {
+  stateReportCategoryBrowseAnalyticsData,
+  stateReportCategoryBrowseAnalyticsEvent,
+  stateReportEgressAnalyticsData,
+  stateReportEgressAnalyticsEvent,
+  type StateReportEgressDestination,
+} from "@/lib/state-report-page-cta-events";
+
+const REPORT_ID = "mcp-servers" as const;
+
+function trackStateReportEgress(destination: StateReportEgressDestination) {
+  trackEvent(
+    stateReportEgressAnalyticsEvent(),
+    stateReportEgressAnalyticsData(REPORT_ID, destination),
+  );
+}
 
 const PATH = "/state-of-mcp-servers";
 const TITLE = "State of MCP Servers 2026";
@@ -312,12 +328,17 @@ function StateOfMcpServersPage() {
             heyclau.de/state-of-mcp-servers
           </a>{" "}
           with the data-as-of date. See also the{" "}
-          <Link to="/mcp-security-report" className="text-ink underline-offset-2 hover:underline">
+          <Link
+            to="/mcp-security-report"
+            onClick={() => trackStateReportEgress("mcp-security-report")}
+            className="text-ink underline-offset-2 hover:underline"
+          >
             MCP Security &amp; Privacy Report
           </Link>{" "}
           and the broader{" "}
           <Link
             to="/state-of-claude-tooling"
+            onClick={() => trackStateReportEgress("claude-tooling")}
             className="text-ink underline-offset-2 hover:underline"
           >
             State of Claude Tooling
@@ -326,6 +347,12 @@ function StateOfMcpServersPage() {
           <Link
             to="/$category"
             params={{ category: "mcp" }}
+            onClick={() =>
+              trackEvent(
+                stateReportCategoryBrowseAnalyticsEvent(),
+                stateReportCategoryBrowseAnalyticsData(REPORT_ID, "mcp", TOTAL, 0, 1),
+              )
+            }
             className="text-ink underline-offset-2 hover:underline"
           >
             MCP servers

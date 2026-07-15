@@ -26,6 +26,22 @@ import {
   stateReportEntryAnalyticsData,
   stateReportEntryAnalyticsEvent,
 } from "@/lib/insights-page-entry-cta-events";
+import {
+  stateReportCategoryBrowseAnalyticsData,
+  stateReportCategoryBrowseAnalyticsEvent,
+  stateReportEgressAnalyticsData,
+  stateReportEgressAnalyticsEvent,
+  type StateReportEgressDestination,
+} from "@/lib/state-report-page-cta-events";
+
+const REPORT_ID = "claude-tooling" as const;
+
+function trackStateReportEgress(destination: StateReportEgressDestination) {
+  trackEvent(
+    stateReportEgressAnalyticsEvent(),
+    stateReportEgressAnalyticsData(REPORT_ID, destination),
+  );
+}
 
 const PATH = "/state-of-claude-tooling";
 const TITLE = "State of Claude Tooling";
@@ -215,7 +231,11 @@ function StateOfClaudeToolingPage() {
           <h2 className="h-display-2 text-ink text-balance">Trust-level distribution</h2>
           <p className="mt-2 text-sm text-ink-muted">
             Every entry carries a trust signal you can verify yourself.{" "}
-            <Link to="/quality" className="text-ink underline-offset-2 hover:underline">
+            <Link
+              to="/quality"
+              onClick={() => trackStateReportEgress("quality")}
+              className="text-ink underline-offset-2 hover:underline"
+            >
               See how we score.
             </Link>
           </p>
@@ -315,11 +335,19 @@ function StateOfClaudeToolingPage() {
             heyclau.de/state-of-claude-tooling
           </a>{" "}
           and reference the data-as-of date. Browse the underlying catalog on the{" "}
-          <Link to="/browse" className="text-ink underline-offset-2 hover:underline">
+          <Link
+            to="/browse"
+            onClick={() => trackStateReportEgress("browse")}
+            className="text-ink underline-offset-2 hover:underline"
+          >
             directory
           </Link>{" "}
           or review the{" "}
-          <Link to="/quality" className="text-ink underline-offset-2 hover:underline">
+          <Link
+            to="/quality"
+            onClick={() => trackStateReportEgress("quality")}
+            className="text-ink underline-offset-2 hover:underline"
+          >
             quality methodology
           </Link>
           .
@@ -341,7 +369,7 @@ function StateOfClaudeToolingPage() {
     const max = rows.reduce((m, r) => Math.max(m, r.count), 0);
     return (
       <div className="overflow-hidden rounded-xl border border-border bg-surface">
-        {rows.map((row) => {
+        {rows.map((row, rowIndex) => {
           const categoryId = linkCategory ? CATEGORY_ID_BY_LABEL.get(row.label) : undefined;
           const inner = (
             <>
@@ -365,6 +393,18 @@ function StateOfClaudeToolingPage() {
               key={row.label}
               to="/$category"
               params={{ category: categoryId }}
+              onClick={() =>
+                trackEvent(
+                  stateReportCategoryBrowseAnalyticsEvent(),
+                  stateReportCategoryBrowseAnalyticsData(
+                    REPORT_ID,
+                    categoryId,
+                    row.count,
+                    rowIndex,
+                    rows.length,
+                  ),
+                )
+              }
               className={`${className} hover:bg-surface-2`}
             >
               {inner}
