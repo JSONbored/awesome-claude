@@ -10,6 +10,7 @@ export interface Crumb {
   params?: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   search?: any;
+  onClick?: () => void;
 }
 
 export function Breadcrumbs({
@@ -50,6 +51,7 @@ export function Breadcrumbs({
                     to={c.to}
                     params={c.params}
                     search={c.search}
+                    onClick={c.onClick}
                     className="rounded-md px-1.5 py-0.5 text-ink-muted transition-colors duration-200 ease-out hover:bg-surface-2 hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   >
                     {c.label}

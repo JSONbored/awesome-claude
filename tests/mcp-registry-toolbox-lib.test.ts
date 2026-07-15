@@ -3619,3 +3619,54 @@ describe("registry-toolbox-lib toolboxTrustSummary", () => {
     });
   });
 });
+
+describe("registry-toolbox-lib fit reasons and diverse selection branches", () => {
+  it("defaults missing ranking reasons and category to empty", () => {
+    const reasons = toolboxFitReasons({ category: "mcp" }, {});
+    expect(reasons).toContain("mcp workflow surface");
+  });
+
+  it("adds safety-only and privacy-only note reasons separately", () => {
+    expect(
+      toolboxFitReasons({ safetyNotes: [{ text: "a" }] }, { reasons: [] }),
+    ).toContain("safety notes present");
+    expect(
+      toolboxFitReasons({ privacyNotes: [{ text: "a" }] }, { reasons: [] }),
+    ).toContain("privacy notes present");
+  });
+
+  it("credits verified package signals from either flag", () => {
+    const signal = "first-party or verified package signal";
+    expect(
+      toolboxFitReasons({ packageVerified: true }, { reasons: [] }),
+    ).toContain(signal);
+    expect(
+      toolboxFitReasons(
+        { trustSignals: { packageVerified: true } },
+        { reasons: [] },
+      ),
+    ).toContain(signal);
+  });
+
+  it("lists platform compatibility when platforms are present", () => {
+    const reasons = toolboxFitReasons(
+      { platforms: ["claude-code", "cursor"] },
+      { reasons: [] },
+    );
+    expect(
+      reasons.some((reason) => reason.startsWith("platform compatibility")),
+    ).toBe(true);
+  });
+
+  it("falls back to fill entries after the per-category diversity cap", () => {
+    const ranked = [
+      { entry: { category: "mcp", slug: "a" } },
+      { entry: { category: "mcp", slug: "b" } },
+      { entry: { slug: "c" } },
+      { entry: { category: "mcp", slug: "d" } },
+    ];
+    expect(
+      selectDiverseRankedEntries(ranked, 4).map((item) => item.entry.slug),
+    ).toEqual(["a", "b", "c", "d"]);
+  });
+});

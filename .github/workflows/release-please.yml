@@ -13,9 +13,8 @@ name: release-please
 # the override path (it self-tags). Commits are already Conventional Commits, so the
 # changelog is generated, not hand-maintained.
 #
-# Requires the repo setting "Allow GitHub Actions to create and approve pull
-# requests" (Settings -> Actions -> General) so release-please can open the
-# Release PR with the default GITHUB_TOKEN.
+# Authenticates via RELEASE_PLEASE_TOKEN (a fine-grained PAT), not the default
+# GITHUB_TOKEN -- see the "Run release-please" step below for why.
 on:
   push:
     branches:
@@ -40,20 +39,24 @@ jobs:
         with:
           persist-credentials: false
 
+      # Authenticates as a real account (via RELEASE_PLEASE_TOKEN, a fine-grained PAT) rather than the
+      # default GITHUB_TOKEN. GitHub Apps like github-actions[bot] aren't tracked as repo collaborators,
+      # so PRs/commits it authors were repeatedly re-flagged as needing manual workflow-run approval on
+      # every push, even with the least-restrictive fork-PR-approval setting -- a real collaborator
+      # identity doesn't hit that gate.
       - name: Run release-please
         id: release
         uses: googleapis/release-please-action@5c625bfb5d1ff62eadeeb3772007f7f66fdcf071 # v4.4.1
         with:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
 
-      # release-please creates the component tag (mcp-v<semver>) + GitHub Release
-      # with GITHUB_TOKEN, which (by GitHub's recursion-prevention rule) does NOT
-      # fire push/tag-based workflows. workflow_dispatch IS exempt, so we explicitly
-      # dispatch the OIDC publish workflow here, telling it release-please already
-      # created the tag/release. Without this, merging a Release PR would never
-      # publish to npm.
+      # release-please creates the component tag (mcp-v<semver>) + GitHub Release.
+      # Even with a real-account PAT, tag/release creation doesn't fire push/tag-based
+      # workflows here, so workflow_dispatch is used explicitly to dispatch the OIDC
+      # publish workflow, telling it release-please already created the tag/release.
+      # Without this, merging a Release PR would never publish to npm.
       - name: Dispatch npm publish
         if: ${{ steps.release.outputs['packages/mcp--release_created'] == 'true' }}
         env:
