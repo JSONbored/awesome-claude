@@ -1,0 +1,122 @@
+---
+title: Agent Island
+slug: agent-island
+category: tools
+description: >-
+  Open-source status companion for Claude Code and Codex with live local
+  session state, your-turn alerts, usage views, and native macOS and Windows
+  applications.
+cardDescription: >-
+  Monitor local Claude Code and Codex sessions from a native desktop companion
+  and get notified when an agent needs your attention.
+seoTitle: Agent Island - Claude Code and Codex Status Companion
+seoDescription: >-
+  Agent Island is a free, MIT-licensed status companion for Claude Code and
+  Codex on macOS and Windows with live session state and your-turn alerts.
+author: Tristan Tang
+dateAdded: "2026-07-15"
+submittedBy: tristan666666
+submittedByUrl: "https://github.com/tristan666666"
+submittedAt: "2026-07-15"
+websiteUrl: "https://agent-island.dev"
+documentationUrl: "https://github.com/tristan666666/agent-island#readme"
+repoUrl: "https://github.com/tristan666666/agent-island"
+pricingModel: open-source
+disclosure: claimed
+applicationCategory: DeveloperApplication
+operatingSystem: macOS 13+, Windows 10+
+sourceUrls:
+  - "https://github.com/tristan666666/agent-island"
+  - "https://raw.githubusercontent.com/tristan666666/agent-island/main/README.md"
+  - "https://github.com/tristan666666/agent-island/releases/tag/v1.6.1"
+installable: true
+installCommand: "brew install tristan666666/tap/agentisland"
+usageSnippet: >-
+  Install Agent Island, launch the native app, and let it read supported local
+  Claude Code and Codex session files to show status and attention alerts.
+copySnippet: |-
+  brew install tristan666666/tap/agentisland
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "macOS 13 or later, or Windows 10 or later."
+  - "A local Claude Code or Codex installation with session data available to the current user."
+safetyNotes:
+  - "Agent Island reads local Claude Code and Codex session files to determine session state; review the requested filesystem access before use."
+  - "The macOS release is ad-hoc signed rather than Apple-notarized, so first launch requires right-clicking the app and choosing Open."
+  - "Windows packages are distributed through GitHub Releases, Scoop, and winget; verify the release source before installation."
+privacyNotes:
+  - "Session monitoring is local and the project states that the app has no Agent Island account and no product telemetry."
+  - "Usage views may call provider usage APIs with existing local credentials; those requests remain subject to the provider's privacy terms."
+  - "Local transcript files and provider credentials can contain sensitive data and should not be included in public screenshots, issues, or logs."
+tags:
+  - claude-code
+  - codex
+  - session-monitoring
+  - developer-tools
+  - desktop-app
+  - open-source
+  - macos
+  - windows
+keywords:
+  - Agent Island
+  - Claude Code status monitor
+  - Codex status monitor
+  - Claude Code notifications
+  - Codex your turn alerts
+  - AI coding agent desktop companion
+---
+
+## Overview
+
+Agent Island is a native desktop companion for developers who run Claude Code
+or Codex in background terminals and need a quick signal when a session is
+working, waiting, or needs attention. It presents current session state in a
+macOS top bar or Windows top bar and floating widget, then surfaces a system
+notification, sound, and alarm window when it is the user's turn.
+
+The project is MIT licensed and ships separate native implementations for
+macOS and Windows. It is a monitoring companion rather than a coding agent: it
+does not replace Claude Code or Codex and does not submit prompts on the user's
+behalf.
+
+## Install
+
+On macOS, install through the project's Homebrew tap:
+
+```bash
+brew install tristan666666/tap/agentisland
+```
+
+On Windows, install through winget:
+
+```powershell
+winget install TristanTang.AgentIsland
+```
+
+The latest GitHub release also provides a macOS DMG and a Windows x64 ZIP.
+
+## Core Capabilities
+
+- Live local session state for Claude Code and Codex.
+- Your-turn notifications when a background session needs attention.
+- Native macOS and Windows interfaces without an Electron runtime.
+- Usage, cost, reset, and weekly report views where provider data is available.
+- English and Simplified Chinese interfaces.
+- Local-first monitoring with no Agent Island account or product telemetry.
+
+## Safety and Privacy
+
+Agent Island determines status by reading supported local session files, so its
+filesystem access should be treated like access granted to any developer tool
+that reads terminal or agent history. Keep private transcripts, screenshots,
+and local credentials out of public bug reports.
+
+The project states that monitoring remains local and that the app has no
+product telemetry. Usage views can make requests to Claude or Codex provider
+APIs with credentials already stored on the machine, so provider-side handling
+still follows those services' terms.
+
+## Disclosure
+
+Submitted by the Agent Island maintainer. No paid placement or affiliate link.
