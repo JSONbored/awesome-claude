@@ -10,6 +10,15 @@ import {
   changelogDiffEntryAnalyticsData,
   changelogDiffEntryAnalyticsEvent,
 } from "@/lib/directory-page-entry-cta-events";
+import {
+  changelogQualityEgressAnalyticsData,
+  changelogQualityEgressAnalyticsEvent,
+  changelogReadMoreAnalyticsData,
+  changelogReadMoreAnalyticsEvent,
+  changelogStreamFilterAnalyticsData,
+  changelogStreamFilterAnalyticsEvent,
+  type ChangelogStreamFilter,
+} from "@/lib/changelog-page-cta-events";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { changelogItemListJsonLd } from "@/lib/changelog-jsonld-lib";
 import { absoluteUrl } from "@/lib/seo";
@@ -90,8 +99,17 @@ const FILTERS: { id: "all" | ReleaseStream; label: string }[] = [
 const KIND_ICON = { added: Plus, updated: RefreshCw, removed: Minus } as const;
 
 function ChangelogPage() {
-  const [filter, setFilter] = React.useState<"all" | ReleaseStream>("all");
+  const [filter, setFilter] = React.useState<ChangelogStreamFilter>("all");
   const items = RELEASE_NOTES.filter((n) => filter === "all" || n.stream === filter);
+
+  const onStreamFilter = React.useCallback((next: ChangelogStreamFilter) => {
+    setFilter(next);
+    const matchCount = RELEASE_NOTES.filter((n) => next === "all" || n.stream === next).length;
+    trackEvent(
+      changelogStreamFilterAnalyticsEvent(),
+      changelogStreamFilterAnalyticsData(next, matchCount),
+    );
+  }, []);
 
   return (
     <PageContainer className="py-12">
@@ -128,7 +146,7 @@ function ChangelogPage() {
               role="radio"
               size="md"
               active={filter === f.id}
-              onClick={() => setFilter(f.id)}
+              onClick={() => onStreamFilter(f.id)}
             >
               {f.label}
             </FilterChip>
@@ -259,6 +277,12 @@ function ChangelogPage() {
                   {note.href && (
                     <Link
                       to={note.href}
+                      onClick={() =>
+                        trackEvent(
+                          changelogReadMoreAnalyticsEvent(),
+                          changelogReadMoreAnalyticsData(note.stream, i, items.length),
+                        )
+                      }
                       className="mt-3 inline-block text-xs font-medium text-ink hover:underline"
                     >
                       Read more →
@@ -309,6 +333,12 @@ function ChangelogPage() {
             </ul>
             <Link
               to="/quality"
+              onClick={() =>
+                trackEvent(
+                  changelogQualityEgressAnalyticsEvent(),
+                  changelogQualityEgressAnalyticsData(items.length),
+                )
+              }
               className="mt-3 inline-block text-xs font-medium text-ink hover:underline"
             >
               See registry quality →
