@@ -21,6 +21,12 @@ import {
   ecosystemMatrixFocusClearAnalyticsEvent,
   ecosystemMatrixSupportFocusAnalyticsData,
   ecosystemMatrixSupportFocusAnalyticsEvent,
+  ecosystemFeedPathAnalyticsData,
+  ecosystemFeedPathAnalyticsEvent,
+  ecosystemSetupClientAnalyticsData,
+  ecosystemSetupClientAnalyticsEvent,
+  ecosystemSetupDocAnalyticsData,
+  ecosystemSetupDocAnalyticsEvent,
   ecosystemSectionAnalyticsData,
   ecosystemSectionAnalyticsEvent,
 } from "@/lib/ecosystem-page-cta-events-lib";
@@ -150,6 +156,38 @@ describe("ecosystem page cta events lib", () => {
       support: "native",
       rowIndex: 2,
       columnIndex: 4,
+    });
+  });
+
+  it("builds ecosystem setup and feed navigation analytics", () => {
+    expect(ecosystemSetupClientAnalyticsEvent()).toBe(
+      "ecosystem_setup_client_click",
+    );
+    expect(
+      ecosystemSetupClientAnalyticsData("cursor", "mcp-host", 2, 9),
+    ).toEqual({
+      surface: ECOSYSTEM_PAGE_SURFACE,
+      clientId: "cursor",
+      surfaceType: "mcp-host",
+      rowIndex: 2,
+      clientCount: 9,
+    });
+    expect(ecosystemSetupDocAnalyticsEvent()).toBe("ecosystem_setup_doc_click");
+    expect(ecosystemSetupDocAnalyticsData("web", "web", "internal")).toEqual({
+      surface: ECOSYSTEM_PAGE_SURFACE,
+      clientId: "web",
+      surfaceType: "web",
+      destination: "internal",
+    });
+    expect(ecosystemFeedPathAnalyticsEvent()).toBe("ecosystem_feed_path_click");
+    expect(
+      ecosystemFeedPathAnalyticsData("ecosystem-feed.json", "json", 0, 6),
+    ).toEqual({
+      surface: ECOSYSTEM_PAGE_SURFACE,
+      feedKey: "ecosystem-feed.json",
+      contentType: "json",
+      rowIndex: 0,
+      feedCount: 6,
     });
   });
 });
