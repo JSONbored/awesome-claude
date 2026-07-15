@@ -3322,3 +3322,36 @@ describe("registry-fetch-lib fetchPublicApiJson", () => {
     );
   });
 });
+
+describe("registry-fetch-lib fetchPublicApiJson network path", () => {
+  const originalFetch = globalThis.fetch;
+  afterEach(() => {
+    globalThis.fetch = originalFetch;
+  });
+
+  it("returns parsed JSON for a successful response", async () => {
+    globalThis.fetch = (async () => ({
+      ok: true,
+      status: 200,
+      json: async () => ({ data: 1 }),
+    })) as unknown as typeof fetch;
+    await expect(
+      fetchPublicApiJson("/api/registry/trending", {
+        publicApiBaseUrl: "https://heyclau.de",
+      }),
+    ).resolves.toEqual({ data: 1 });
+  });
+
+  it("throws when the upstream response is not ok", async () => {
+    globalThis.fetch = (async () => ({
+      ok: false,
+      status: 503,
+      json: async () => ({}),
+    })) as unknown as typeof fetch;
+    await expect(
+      fetchPublicApiJson("/api/registry/trending", {
+        publicApiBaseUrl: "https://heyclau.de",
+      }),
+    ).rejects.toThrow("returned 503");
+  });
+});
