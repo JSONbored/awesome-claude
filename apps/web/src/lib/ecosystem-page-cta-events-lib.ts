@@ -94,3 +94,108 @@ export function ecosystemHarnessBrowseAnalyticsData(
     harnessCount,
   };
 }
+
+export type EcosystemMatrixSupport = "native" | "adapter" | "manual" | "none";
+
+export function ecosystemMatrixCellAnalyticsEvent(): string {
+  return "ecosystem_matrix_cell_click";
+}
+
+export function ecosystemMatrixCellAnalyticsData(
+  clientId: string,
+  support: EcosystemMatrixSupport,
+  rowIndex: number,
+  columnIndex: number,
+  capabilityCount: number,
+  clientCount: number,
+) {
+  return {
+    surface: ECOSYSTEM_PAGE_SURFACE,
+    clientId,
+    support,
+    rowIndex,
+    columnIndex,
+    capabilityCount,
+    clientCount,
+  };
+}
+
+export function ecosystemMatrixClientFocusAnalyticsEvent(): string {
+  return "ecosystem_matrix_client_focus_click";
+}
+
+export function ecosystemMatrixClientFocusAnalyticsData(
+  clientId: string,
+  active: boolean,
+  clientCount: number,
+) {
+  return {
+    surface: ECOSYSTEM_PAGE_SURFACE,
+    clientId,
+    active,
+    clientCount,
+  };
+}
+
+export function ecosystemMatrixSupportFocusAnalyticsEvent(): string {
+  return "ecosystem_matrix_support_focus_click";
+}
+
+export function ecosystemMatrixSupportFocusAnalyticsData(
+  support: EcosystemMatrixSupport,
+  active: boolean,
+  clientCount: number,
+) {
+  return {
+    surface: ECOSYSTEM_PAGE_SURFACE,
+    support,
+    active,
+    clientCount,
+  };
+}
+
+export function ecosystemMatrixFocusClearAnalyticsEvent(): string {
+  return "ecosystem_matrix_focus_clear_click";
+}
+
+export function ecosystemMatrixFocusClearAnalyticsData(
+  hadClientFocus: boolean,
+  hadSupportFocus: boolean,
+) {
+  return {
+    surface: ECOSYSTEM_PAGE_SURFACE,
+    hadClientFocus,
+    hadSupportFocus,
+  };
+}
+
+export function ecosystemMatrixCsvAnalyticsEvent(): string {
+  return "ecosystem_matrix_csv_click";
+}
+
+export function ecosystemMatrixCsvAnalyticsData(capabilityCount: number, clientCount: number) {
+  return {
+    surface: ECOSYSTEM_PAGE_SURFACE,
+    capabilityCount,
+    clientCount,
+  };
+}
+
+export function ecosystemMatrixDocAnalyticsEvent(): string {
+  return "ecosystem_matrix_doc_click";
+}
+
+export function ecosystemMatrixDocAnalyticsData(
+  clientId: string,
+  support: EcosystemMatrixSupport,
+  rowIndex: number,
+  columnIndex: number,
+) {
+  return {
+    surface: ECOSYSTEM_PAGE_SURFACE,
+    clientId,
+    support,
+    rowIndex,
+    columnIndex,
+  };
+}
