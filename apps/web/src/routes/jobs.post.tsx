@@ -5,7 +5,16 @@ import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CommercialDisclosure } from "@/components/commercial-disclosure";
-import type { JobTier } from "@/types/registry";
+import { trackEvent } from "@/lib/analytics";
+import {
+  jobsPostPageEgressAnalyticsData,
+  jobsPostPageEgressAnalyticsEvent,
+  jobsPostPageSubmitAnalyticsData,
+  jobsPostPageSubmitAnalyticsEvent,
+  jobsPostPageTierSelectAnalyticsData,
+  jobsPostPageTierSelectAnalyticsEvent,
+  type JobsPostPageTierId,
+} from "@/lib/jobs-post-page-cta-events";
 
 export const Route = createFileRoute("/jobs/post")({
   head: () => ({
@@ -23,7 +32,7 @@ export const Route = createFileRoute("/jobs/post")({
   component: PostJobPage,
 });
 
-const TIERS: { id: JobTier; label: string; price: string; bullets: string[] }[] = [
+const TIERS: { id: JobsPostPageTierId; label: string; price: string; bullets: string[] }[] = [
   {
     id: "free",
     label: "Community",
@@ -51,7 +60,7 @@ const TIERS: { id: JobTier; label: string; price: string; bullets: string[] }[] 
 ];
 
 function PostJobPage() {
-  const [tier, setTier] = useState<JobTier>("free");
+  const [tier, setTier] = useState<JobsPostPageTierId>("free");
   const [done, setDone] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -59,6 +68,7 @@ function PostJobPage() {
   async function submitJob(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (submitting) return;
+    trackEvent(jobsPostPageSubmitAnalyticsEvent(), jobsPostPageSubmitAnalyticsData(tier));
     setSubmitting(true);
     setError("");
     const form = new FormData(e.currentTarget);
@@ -113,6 +123,9 @@ function PostJobPage() {
         <Link
           to="/jobs"
           className="mt-6 inline-flex h-10 items-center rounded-md border border-border bg-surface px-4 text-sm text-ink hover:bg-surface-2"
+          onClick={() =>
+            trackEvent(jobsPostPageEgressAnalyticsEvent(), jobsPostPageEgressAnalyticsData("jobs"))
+          }
         >
           Back to jobs
         </Link>
@@ -134,7 +147,13 @@ function PostJobPage() {
           <button
             key={t.id}
             type="button"
-            onClick={() => setTier(t.id)}
+            onClick={() => {
+              setTier(t.id);
+              trackEvent(
+                jobsPostPageTierSelectAnalyticsEvent(),
+                jobsPostPageTierSelectAnalyticsData(t.id),
+              );
+            }}
             className={cn(
               "flex flex-col gap-2 rounded-xl border p-4 text-left transition-colors duration-200 ease-out",
               tier === t.id
