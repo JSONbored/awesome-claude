@@ -263,6 +263,25 @@ export function ecosystemFeedPathAnalyticsData(
   };
 }
 
+export function ecosystemFeedUrlCopyAnalyticsEvent(): string {
+  return "ecosystem_feed_url_copy_click";
+}
+
+export function ecosystemFeedUrlCopyAnalyticsData(
+  feedKey: string,
+  contentType: string,
+  rowIndex: number,
+  feedCount: number,
+) {
+  return {
+    surface: ECOSYSTEM_PAGE_SURFACE,
+    feedKey,
+    contentType,
+    rowIndex,
+    feedCount,
+  };
+}
+
 export type EcosystemQuickStartAction = "manifest-pin" | "mcp-run" | "raycast-install";
 
 export function ecosystemQuickStartCopyAnalyticsEvent(): string {

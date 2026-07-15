@@ -26,6 +26,8 @@ import {
   ecosystemMatrixSupportFocusAnalyticsEvent,
   ecosystemFeedPathAnalyticsData,
   ecosystemFeedPathAnalyticsEvent,
+  ecosystemFeedUrlCopyAnalyticsData,
+  ecosystemFeedUrlCopyAnalyticsEvent,
   ecosystemFeedKey,
   ecosystemSetupClientAnalyticsData,
   ecosystemSetupClientAnalyticsEvent,
@@ -716,7 +718,18 @@ function AdapterFeeds() {
           </span>
           <code className="truncate font-mono text-xs text-ink-muted">{f.sha256}</code>
           <div className="flex justify-end">
-            <CopyButton value={`https://heyclau.de${f.path}`} label="Copy URL" size="sm" />
+            <CopyButton
+              value={`https://heyclau.de${f.path}`}
+              label="Copy URL"
+              size="sm"
+              event={ecosystemFeedUrlCopyAnalyticsEvent()}
+              eventData={ecosystemFeedUrlCopyAnalyticsData(
+                ecosystemFeedKey(f.path),
+                f.contentType,
+                rowIndex,
+                ECOSYSTEM_FEEDS.length,
+              )}
+            />
           </div>
         </div>
       ))}
