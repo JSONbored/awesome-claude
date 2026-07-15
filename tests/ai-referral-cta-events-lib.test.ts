@@ -18,4 +18,10 @@ describe("ai referral cta events lib", () => {
       landingSegment: "agents",
     });
   });
+
+  it("treats blank and slash-only paths as the home landing segment", () => {
+    expect(aiReferralLandingSegment("")).toBe("home");
+    expect(aiReferralLandingSegment("   ")).toBe("home");
+    expect(aiReferralLandingSegment("///")).toBe("home");
+  });
 });

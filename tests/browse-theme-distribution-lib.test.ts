@@ -105,4 +105,19 @@ describe("browseThemeDistributionState", () => {
     expect(tags).not.toContain("");
     expect(tags).toContain("memory");
   });
+
+  it("classifies a balanced two-theme view as mixed concentration", () => {
+    // Top theme under 50% and fewer than 2x distinct tags vs entries => mixed.
+    const state = browseThemeDistributionState([
+      entry("a", ["memory", "rag"]),
+      entry("b", ["search", "graph"]),
+      entry("c", ["memory", "tools"]),
+      entry("d", ["search", "hooks"]),
+      entry("e", ["graph", "rag"]),
+    ]);
+    expect(state.focusPercent).toBeLessThan(50);
+    expect(state.concentration).toBe("mixed");
+    expect(state.heading).toContain("A few themes lead this view");
+    expect(state.summary).toContain("distinct themes");
+  });
 });

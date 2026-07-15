@@ -107,4 +107,101 @@ describe("browse filter decision hints lib", () => {
       kind: null,
     });
   });
+
+  it("builds trust-filter guidance when every result shares one trust level", () => {
+    const results = [entry(), entry({ slug: "two" })];
+    expect(
+      browseFilterDecisionUiState({ ...emptySlice, trust: "review" }, results),
+    ).toEqual({
+      hint: "All 2 results are review trust — check install risk per entry.",
+      kind: "trust-filter",
+    });
+  });
+
+  it("switches signal-filter copy when compare already has two entries", () => {
+    expect(
+      browseFilterDecisionUiState(
+        { ...emptySlice, signal: "safety-notes" },
+        [entry(), entry({ slug: "two" })],
+        2,
+      ),
+    ).toEqual({
+      hint: "Safety notes filter — open compare to see trust gaps in your selection.",
+      kind: "signal-filter",
+    });
+  });
+
+  it("nudges compare when a narrow filter set has fewer than two selections", () => {
+    expect(
+      browseFilterDecisionUiState(
+        { ...emptySlice, category: "skills", platform: "claude-code" },
+        [entry(), entry({ slug: "two" })],
+        0,
+      ),
+    ).toEqual({
+      hint: "Narrow filter set — select entries to compare trust side by side.",
+      kind: "narrow-set",
+    });
+  });
+
+  it("opens compare guidance when two entries are already selected", () => {
+    expect(
+      browseFilterDecisionUiState(
+        { ...emptySlice, q: "memory" },
+        [entry(), entry({ slug: "two" })],
+        2,
+      ),
+    ).toEqual({
+      hint: "Open compare to review trust and next steps across your selection.",
+      kind: "compare",
+    });
+  });
+
+  it("suggests compare for text/category/source/platform filters with enough results", () => {
+    const results = [entry(), entry({ slug: "two" }), entry({ slug: "three" })];
+    expect(
+      browseFilterDecisionUiState({ ...emptySlice, q: "memory" }, results, 0),
+    ).toEqual({
+      hint: "Select entries to compare install and trust signals side by side.",
+      kind: "compare",
+    });
+    expect(
+      browseFilterDecisionUiState(
+        { ...emptySlice, source: "source-backed" },
+        results,
+        0,
+      ).kind,
+    ).toBe("compare");
+    expect(
+      browseFilterDecisionUiState(
+        { ...emptySlice, platform: "claude-code" },
+        results,
+        0,
+      ).kind,
+    ).toBe("compare");
+  });
+
+  it("counts every active browse filter dimension", () => {
+    expect(
+      browseActiveFilterCount({
+        ...emptySlice,
+        q: "memory",
+        category: "skills",
+        trust: "trusted",
+        source: "source-backed",
+        signal: "reviewed",
+        platform: "claude-code",
+      }),
+    ).toBe(6);
+  });
+
+  it("returns null trust-mix hint for fewer than two entries or a single trust level", () => {
+    expect(browseFilteredTrustMixHint([entry()])).toBeNull();
+    expect(
+      browseFilteredTrustMixHint([
+        entry({ trust: "trusted" }),
+        entry({ slug: "two", trust: "trusted" }),
+      ]),
+    ).toBeNull();
+  });
 });

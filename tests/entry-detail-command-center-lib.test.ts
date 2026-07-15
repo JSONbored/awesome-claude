@@ -157,4 +157,69 @@ describe("entry detail command center lib", () => {
       { id: "signals", label: "Community signals", targetId: "signals" },
     ]);
   });
+
+  it("keeps browse as the only quick link when docs and source are absent", () => {
+    expect(resolveDetailQuickLinks(entry()).map((link) => link.id)).toEqual([
+      "browse",
+    ]);
+  });
+
+  it("treats list-only safety and privacy notes as present for the safety gate", () => {
+    const installable = entry({ installCommand: "npm i fixture" });
+    expect(
+      shouldElevateDetailSafetyGate(
+        "low",
+        entry({
+          ...installable,
+          safetyNotesList: ["Runs locally"],
+          privacyNotesList: ["No telemetry"],
+        }),
+      ),
+    ).toBe(false);
+    expect(
+      detailSafetyGateMessage(
+        "low",
+        entry({ ...installable, safetyNotesList: ["Runs locally"] }),
+      ),
+    ).toContain("Missing privacy notes");
+    expect(
+      detailSafetyGateMessage(
+        "low",
+        entry({ ...installable, privacyNotesList: ["No telemetry"] }),
+      ),
+    ).toContain("Missing safety notes");
+  });
+
+  it("does not elevate low-risk entries without install payloads", () => {
+    expect(shouldElevateDetailSafetyGate("low", entry())).toBe(false);
+    expect(detailSafetyGateMessage("low", entry())).toBeNull();
+  });
+
+  it("falls back to generic trust review copy when notes exist but risk still elevates", () => {
+    expect(
+      detailSafetyGateMessage(
+        "review",
+        entry({
+          installCommand: "npm i fixture",
+          safetyNotes: "ok",
+          privacyNotes: "ok",
+        }),
+      ),
+    ).toContain("Review safety and privacy notes");
+  });
+
+  it("builds partial community anchors when only one section has content", () => {
+    expect(resolveDetailCommunityAnchors(2, 0, false)).toEqual([
+      {
+        id: "related",
+        label: "Related entries",
+        targetId: "related",
+        count: 2,
+      },
+    ]);
+    expect(resolveDetailCommunityAnchors(0, 1, true)).toEqual([
+      { id: "guides", label: "Related guides", targetId: "guides", count: 1 },
+      { id: "signals", label: "Community signals", targetId: "signals" },
+    ]);
+  });
 });

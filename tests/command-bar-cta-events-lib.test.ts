@@ -57,5 +57,21 @@ describe("command bar cta events lib", () => {
       resultCount: 4,
       scopeCategory: "mcp",
     });
+    expect(
+      commandBarResultSelectAnalyticsData("skills", "demo", 0, 1, "", 0),
+    ).toEqual({
+      surface: COMMAND_BAR_SURFACE,
+      entry: "skills/demo",
+      resultIndex: 0,
+      resultCount: 1,
+      scopeCategory: "all",
+      queryLength: 0,
+    });
+    expect(commandBarSearchSubmitAnalyticsData(0, 0, "")).toEqual({
+      surface: COMMAND_BAR_SURFACE,
+      queryLength: 0,
+      resultCount: 0,
+      scopeCategory: "all",
+    });
   });
 });
