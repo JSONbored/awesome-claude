@@ -12,6 +12,18 @@ import {
   ecosystemIntegrationCardAnalyticsEvent,
   ecosystemKindFilterAnalyticsData,
   ecosystemKindFilterAnalyticsEvent,
+  ecosystemMatrixCellAnalyticsData,
+  ecosystemMatrixCellAnalyticsEvent,
+  ecosystemMatrixClientFocusAnalyticsData,
+  ecosystemMatrixClientFocusAnalyticsEvent,
+  ecosystemMatrixCsvAnalyticsData,
+  ecosystemMatrixCsvAnalyticsEvent,
+  ecosystemMatrixDocAnalyticsData,
+  ecosystemMatrixDocAnalyticsEvent,
+  ecosystemMatrixFocusClearAnalyticsData,
+  ecosystemMatrixFocusClearAnalyticsEvent,
+  ecosystemMatrixSupportFocusAnalyticsData,
+  ecosystemMatrixSupportFocusAnalyticsEvent,
   ecosystemSectionAnalyticsData,
   ecosystemSectionAnalyticsEvent,
   ecosystemHarnessBrowseAnalyticsData,
@@ -287,7 +299,54 @@ function EcosystemPage() {
         title="Platform compatibility"
         subtitle="What each client supports natively, via adapter, or with a manual copy step. Click any cell with a glyph button for the exact snippet."
       >
-        <CompatibilityMatrix clients={CLIENTS} rows={MATRIX} details={CELL_DETAILS} />
+        <CompatibilityMatrix
+          clients={CLIENTS}
+          rows={MATRIX}
+          details={CELL_DETAILS}
+          onCellClick={(clientId, support, rowIndex, columnIndex, capabilityCount, clientCount) =>
+            trackEvent(
+              ecosystemMatrixCellAnalyticsEvent(),
+              ecosystemMatrixCellAnalyticsData(
+                clientId,
+                support,
+                rowIndex,
+                columnIndex,
+                capabilityCount,
+                clientCount,
+              ),
+            )
+          }
+          onClientFocusClick={(clientId, active, clientCount) =>
+            trackEvent(
+              ecosystemMatrixClientFocusAnalyticsEvent(),
+              ecosystemMatrixClientFocusAnalyticsData(clientId, active, clientCount),
+            )
+          }
+          onSupportFocusClick={(support, active, clientCount) =>
+            trackEvent(
+              ecosystemMatrixSupportFocusAnalyticsEvent(),
+              ecosystemMatrixSupportFocusAnalyticsData(support, active, clientCount),
+            )
+          }
+          onFocusClearClick={(hadClientFocus, hadSupportFocus) =>
+            trackEvent(
+              ecosystemMatrixFocusClearAnalyticsEvent(),
+              ecosystemMatrixFocusClearAnalyticsData(hadClientFocus, hadSupportFocus),
+            )
+          }
+          onCsvDownloadClick={(capabilityCount, clientCount) =>
+            trackEvent(
+              ecosystemMatrixCsvAnalyticsEvent(),
+              ecosystemMatrixCsvAnalyticsData(capabilityCount, clientCount),
+            )
+          }
+          onDocClick={(clientId, support, rowIndex, columnIndex) =>
+            trackEvent(
+              ecosystemMatrixDocAnalyticsEvent(),
+              ecosystemMatrixDocAnalyticsData(clientId, support, rowIndex, columnIndex),
+            )
+          }
+        />
       </Section>
 
       {/* Harness coverage */}

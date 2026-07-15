@@ -9,6 +9,18 @@ import {
   ecosystemIntegrationCardAnalyticsEvent,
   ecosystemKindFilterAnalyticsData,
   ecosystemKindFilterAnalyticsEvent,
+  ecosystemMatrixCellAnalyticsData,
+  ecosystemMatrixCellAnalyticsEvent,
+  ecosystemMatrixClientFocusAnalyticsData,
+  ecosystemMatrixClientFocusAnalyticsEvent,
+  ecosystemMatrixCsvAnalyticsData,
+  ecosystemMatrixCsvAnalyticsEvent,
+  ecosystemMatrixDocAnalyticsData,
+  ecosystemMatrixDocAnalyticsEvent,
+  ecosystemMatrixFocusClearAnalyticsData,
+  ecosystemMatrixFocusClearAnalyticsEvent,
+  ecosystemMatrixSupportFocusAnalyticsData,
+  ecosystemMatrixSupportFocusAnalyticsEvent,
   ecosystemSectionAnalyticsData,
   ecosystemSectionAnalyticsEvent,
 } from "@/lib/ecosystem-page-cta-events-lib";
@@ -75,6 +87,69 @@ describe("ecosystem page cta events lib", () => {
       coveragePct: 31,
       rowIndex: 3,
       harnessCount: 7,
+    });
+  });
+
+  it("builds ecosystem compatibility matrix analytics", () => {
+    expect(ecosystemMatrixCellAnalyticsEvent()).toBe(
+      "ecosystem_matrix_cell_click",
+    );
+    expect(
+      ecosystemMatrixCellAnalyticsData("cursor", "native", 1, 3, 7, 7),
+    ).toEqual({
+      surface: ECOSYSTEM_PAGE_SURFACE,
+      clientId: "cursor",
+      support: "native",
+      rowIndex: 1,
+      columnIndex: 3,
+      capabilityCount: 7,
+      clientCount: 7,
+    });
+    expect(ecosystemMatrixClientFocusAnalyticsEvent()).toBe(
+      "ecosystem_matrix_client_focus_click",
+    );
+    expect(ecosystemMatrixClientFocusAnalyticsData("web", true, 7)).toEqual({
+      surface: ECOSYSTEM_PAGE_SURFACE,
+      clientId: "web",
+      active: true,
+      clientCount: 7,
+    });
+    expect(ecosystemMatrixSupportFocusAnalyticsEvent()).toBe(
+      "ecosystem_matrix_support_focus_click",
+    );
+    expect(
+      ecosystemMatrixSupportFocusAnalyticsData("adapter", true, 7),
+    ).toEqual({
+      surface: ECOSYSTEM_PAGE_SURFACE,
+      support: "adapter",
+      active: true,
+      clientCount: 7,
+    });
+    expect(ecosystemMatrixFocusClearAnalyticsEvent()).toBe(
+      "ecosystem_matrix_focus_clear_click",
+    );
+    expect(ecosystemMatrixFocusClearAnalyticsData(true, false)).toEqual({
+      surface: ECOSYSTEM_PAGE_SURFACE,
+      hadClientFocus: true,
+      hadSupportFocus: false,
+    });
+    expect(ecosystemMatrixCsvAnalyticsEvent()).toBe(
+      "ecosystem_matrix_csv_click",
+    );
+    expect(ecosystemMatrixCsvAnalyticsData(7, 7)).toEqual({
+      surface: ECOSYSTEM_PAGE_SURFACE,
+      capabilityCount: 7,
+      clientCount: 7,
+    });
+    expect(ecosystemMatrixDocAnalyticsEvent()).toBe(
+      "ecosystem_matrix_doc_click",
+    );
+    expect(ecosystemMatrixDocAnalyticsData("cursor", "native", 2, 4)).toEqual({
+      surface: ECOSYSTEM_PAGE_SURFACE,
+      clientId: "cursor",
+      support: "native",
+      rowIndex: 2,
+      columnIndex: 4,
     });
   });
 });

@@ -6,10 +6,16 @@ import {
   jobsDetailIndexAnalyticsEvent,
   jobsDetailRelatedAnalyticsData,
   jobsDetailRelatedAnalyticsEvent,
+  jobsIndexFilterClearAnalyticsData,
+  jobsIndexFilterClearAnalyticsEvent,
+  jobsIndexFilterSelectAnalyticsData,
+  jobsIndexFilterSelectAnalyticsEvent,
   jobsIndexJobAnalyticsData,
   jobsIndexJobAnalyticsEvent,
   jobsIndexPostAnalyticsData,
   jobsIndexPostAnalyticsEvent,
+  jobsIndexSortSelectAnalyticsData,
+  jobsIndexSortSelectAnalyticsEvent,
 } from "@/lib/jobs-hub-cta-events-lib";
 
 describe("jobs hub cta events lib", () => {
@@ -30,6 +36,38 @@ describe("jobs hub cta events lib", () => {
       rowIndex: 0,
       jobCount: 24,
       variant: "row",
+    });
+  });
+
+  it("builds jobs index filter and sort analytics", () => {
+    expect(jobsIndexFilterSelectAnalyticsEvent()).toBe(
+      "jobs_index_filter_select",
+    );
+    expect(
+      jobsIndexFilterSelectAnalyticsData("tier", "featured", true, 6, 24),
+    ).toEqual({
+      surface: JOBS_INDEX_SURFACE,
+      axis: "tier",
+      value: "featured",
+      active: true,
+      matchCount: 6,
+      jobCount: 24,
+    });
+    expect(jobsIndexSortSelectAnalyticsEvent()).toBe("jobs_index_sort_select");
+    expect(jobsIndexSortSelectAnalyticsData("newest", 12, 24)).toEqual({
+      surface: JOBS_INDEX_SURFACE,
+      sort: "newest",
+      matchCount: 12,
+      jobCount: 24,
+    });
+    expect(jobsIndexFilterClearAnalyticsEvent()).toBe(
+      "jobs_index_filter_clear",
+    );
+    expect(jobsIndexFilterClearAnalyticsData(3, 24, 24)).toEqual({
+      surface: JOBS_INDEX_SURFACE,
+      activeFilterCount: 3,
+      matchCount: 24,
+      jobCount: 24,
     });
   });
 

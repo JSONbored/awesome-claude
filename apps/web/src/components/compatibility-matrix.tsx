@@ -46,11 +46,30 @@ export function CompatibilityMatrix({
   clients,
   rows,
   details,
+  onCellClick,
+  onClientFocusClick,
+  onSupportFocusClick,
+  onFocusClearClick,
+  onCsvDownloadClick,
+  onDocClick,
 }: {
   clients: readonly MatrixClient[];
   rows: MatrixRow[];
   /** Keyed by `${capability}::${clientId}` */
   details?: Record<string, CellDetail>;
+  onCellClick?: (
+    clientId: string,
+    support: Support,
+    rowIndex: number,
+    columnIndex: number,
+    capabilityCount: number,
+    clientCount: number,
+  ) => void;
+  onClientFocusClick?: (clientId: string, active: boolean, clientCount: number) => void;
+  onSupportFocusClick?: (support: Support, active: boolean, clientCount: number) => void;
+  onFocusClearClick?: (hadClientFocus: boolean, hadSupportFocus: boolean) => void;
+  onCsvDownloadClick?: (capabilityCount: number, clientCount: number) => void;
+  onDocClick?: (clientId: string, support: Support, rowIndex: number, columnIndex: number) => void;
 }) {
   const [query, setQuery] = React.useState("");
   const [focusClient, setFocusClient] = React.useState<string | null>(null);
@@ -65,6 +84,7 @@ export function CompatibilityMatrix({
   }, [rows, query]);
 
   const downloadCsv = () => {
+    onCsvDownloadClick?.(rows.length, clients.length);
     const csv = buildCompatibilityCsv(clients, rows, (support) => SUPPORT_META[support].label);
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
@@ -93,6 +113,7 @@ export function CompatibilityMatrix({
           <button
             type="button"
             onClick={() => {
+              onFocusClearClick?.(!!focusClient, !!focusSupport);
               setFocusClient(null);
               setFocusSupport(null);
             }}
@@ -130,7 +151,11 @@ export function CompatibilityMatrix({
                   >
                     <button
                       type="button"
-                      onClick={() => setFocusClient(active ? null : c.id)}
+                      onClick={() => {
+                        const nextActive = !active;
+                        onClientFocusClick?.(c.id, nextActive, clients.length);
+                        setFocusClient(active ? null : c.id);
+                      }}
                       className="hover:text-ink"
                       title={active ? `Clear focus on ${c.label}` : `Focus ${c.label}`}
                     >
@@ -142,7 +167,7 @@ export function CompatibilityMatrix({
             </tr>
           </thead>
           <tbody>
-            {filtered.map((row) => (
+            {filtered.map((row, rowIndex) => (
               <tr
                 key={row.capability}
                 className="border-b border-border last:border-0 hover:bg-surface-2/40"
@@ -151,7 +176,7 @@ export function CompatibilityMatrix({
                   <div className="text-sm font-medium text-ink">{row.capability}</div>
                   <div className="text-xs text-ink-subtle">{row.blurb}</div>
                 </th>
-                {clients.map((c) => {
+                {clients.map((c, columnIndex) => {
                   const v = row.cells[c.id];
                   const meta = SUPPORT_META[v];
                   const dim =
@@ -173,6 +198,16 @@ export function CompatibilityMatrix({
                           <PopoverTrigger asChild>
                             <button
                               type="button"
+                              onClick={() =>
+                                onCellClick?.(
+                                  c.id,
+                                  v,
+                                  rowIndex,
+                                  columnIndex,
+                                  filtered.length,
+                                  clients.length,
+                                )
+                              }
                               className={cn(
                                 "rounded-md px-1.5 font-mono text-base leading-none transition-colors duration-200 ease-out hover:bg-background",
                                 meta.tone,
@@ -189,6 +224,11 @@ export function CompatibilityMatrix({
                               client={c.label}
                               support={v}
                               detail={detail!}
+                              onDocClick={
+                                onDocClick
+                                  ? () => onDocClick(c.id, v, rowIndex, columnIndex)
+                                  : undefined
+                              }
                             />
                           </PopoverContent>
                         </Popover>
@@ -230,7 +270,11 @@ export function CompatibilityMatrix({
             <button
               key={k}
               type="button"
-              onClick={() => setFocusSupport(active ? null : k)}
+              onClick={() => {
+                const nextActive = !active;
+                onSupportFocusClick?.(k, nextActive, clients.length);
+                setFocusSupport(active ? null : k);
+              }}
               className={cn(
                 "inline-flex items-center gap-1.5 rounded-md border px-2 py-1 transition-colors duration-200 ease-out",
                 active
@@ -253,11 +297,13 @@ function CellPopover({
   client,
   support,
   detail,
+  onDocClick,
 }: {
   capability: string;
   client: string;
   support: Support;
   detail: CellDetail;
+  onDocClick?: () => void;
 }) {
   const meta = SUPPORT_META[support];
   return (
@@ -288,6 +334,7 @@ function CellPopover({
           href={detail.docUrl}
           target="_blank"
           rel="noreferrer"
+          onClick={onDocClick}
           className="text-xs font-medium text-ink-muted hover:text-ink"
         >
           Open docs →

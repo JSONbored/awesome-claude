@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageContainer } from "@/components/page-container";
 import { absoluteUrl } from "@/lib/seo";
 import { createServerFn } from "@tanstack/react-start";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ArrowUpRight, Search, Sparkles, X } from "lucide-react";
 import type { JobListing, JobTier } from "@/types/registry";
 import { normalizeJobListing } from "@/lib/job-listing-lib";
@@ -11,10 +11,17 @@ import { JobCard } from "@/components/job-card";
 import { isFresh, pickDailySpotlight, relativePosted, sortJobs } from "@/lib/jobs-utils";
 import { trackEvent } from "@/lib/analytics";
 import {
+  jobsIndexFilterClearAnalyticsData,
+  jobsIndexFilterClearAnalyticsEvent,
+  jobsIndexFilterSelectAnalyticsData,
+  jobsIndexFilterSelectAnalyticsEvent,
   jobsIndexJobAnalyticsData,
   jobsIndexJobAnalyticsEvent,
   jobsIndexPostAnalyticsData,
   jobsIndexPostAnalyticsEvent,
+  jobsIndexSortSelectAnalyticsData,
+  jobsIndexSortSelectAnalyticsEvent,
+  type JobsIndexFilterAxis,
 } from "@/lib/jobs-hub-cta-events";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import type { ErrorComponentProps } from "@tanstack/react-router";
@@ -60,6 +67,49 @@ export const Route = createFileRoute("/jobs/")({
 
 type RemoteFilter = "all" | "remote" | "onsite";
 type SortMode = "default" | "newest" | "salary";
+
+type JobsFilterState = {
+  q: string;
+  tier: JobTier | "all";
+  remote: RemoteFilter;
+  type: string;
+  freshOnly: boolean;
+  featuredOnly: boolean;
+};
+
+function countJobsForFilters(jobs: JobListing[], slice: Partial<JobsFilterState>) {
+  const q = slice.q ?? "";
+  const tier = slice.tier ?? "all";
+  const remote = slice.remote ?? "all";
+  const type = slice.type ?? "all";
+  const freshOnly = slice.freshOnly ?? false;
+  const featuredOnly = slice.featuredOnly ?? false;
+
+  return jobs.filter((j) => {
+    if (tier !== "all" && j.tier !== tier) return false;
+    if (remote === "remote" && !j.isRemote) return false;
+    if (remote === "onsite" && j.isRemote) return false;
+    if (type !== "all" && j.type !== type) return false;
+    if (freshOnly && !isFresh(j.postedAt)) return false;
+    if (featuredOnly && j.tier !== "featured" && j.tier !== "sponsored") return false;
+    if (!q) return true;
+    const blob = [j.title, j.company, j.location, j.description, j.type, j.labels?.join(" ")]
+      .join(" ")
+      .toLowerCase();
+    return blob.includes(q.toLowerCase());
+  }).length;
+}
+
+function activeJobsFilterCount(filters: JobsFilterState): number {
+  let count = 0;
+  if (filters.q) count++;
+  if (filters.tier !== "all") count++;
+  if (filters.remote !== "all") count++;
+  if (filters.type !== "all") count++;
+  if (filters.freshOnly) count++;
+  if (filters.featuredOnly) count++;
+  return count;
+}
 
 function JobsPage() {
   const loaderData = Route.useLoaderData();
@@ -152,6 +202,107 @@ function JobsPage() {
   const hasFilters =
     q || tier !== "all" || remote !== "all" || type !== "all" || freshOnly || featuredOnly;
 
+  const filterState = useMemo(
+    () => ({ q, tier, remote, type, freshOnly, featuredOnly }),
+    [q, tier, remote, type, freshOnly, featuredOnly],
+  );
+
+  const countForFilters = useCallback(
+    (slice: Partial<JobsFilterState>) => countJobsForFilters(jobs, { ...filterState, ...slice }),
+    [filterState, jobs],
+  );
+
+  const onFilterSelect = useCallback(
+    (
+      axis: JobsIndexFilterAxis,
+      value: string,
+      active: boolean,
+      slice: Partial<JobsFilterState>,
+    ) => {
+      trackEvent(
+        jobsIndexFilterSelectAnalyticsEvent(),
+        jobsIndexFilterSelectAnalyticsData(
+          axis,
+          value,
+          active,
+          countForFilters(slice),
+          jobs.length,
+        ),
+      );
+    },
+    [countForFilters, jobs.length],
+  );
+
+  const onTierFilter = useCallback(
+    (value: string) => {
+      const next = value as JobTier | "all";
+      if (next === tier) return;
+      onFilterSelect("tier", next, next !== "all", { tier: next });
+      setTier(next);
+    },
+    [onFilterSelect, tier],
+  );
+
+  const onRemoteFilter = useCallback(
+    (value: string) => {
+      const next = value as RemoteFilter;
+      if (next === remote) return;
+      onFilterSelect("remote", next, next !== "all", { remote: next });
+      setRemote(next);
+    },
+    [onFilterSelect, remote],
+  );
+
+  const onTypeFilter = useCallback(
+    (value: string) => {
+      if (value === type) return;
+      onFilterSelect("type", value, value !== "all", { type: value });
+      setType(value);
+    },
+    [onFilterSelect, type],
+  );
+
+  const onFreshToggle = useCallback(() => {
+    const next = !freshOnly;
+    onFilterSelect("fresh", next ? "on" : "off", next, { freshOnly: next });
+    setFreshOnly(next);
+  }, [freshOnly, onFilterSelect]);
+
+  const onFeaturedToggle = useCallback(() => {
+    const next = !featuredOnly;
+    onFilterSelect("featured", next ? "on" : "off", next, { featuredOnly: next });
+    setFeaturedOnly(next);
+  }, [featuredOnly, onFilterSelect]);
+
+  const onSortSelect = useCallback(
+    (value: SortMode) => {
+      if (value === sortMode) return;
+      trackEvent(
+        jobsIndexSortSelectAnalyticsEvent(),
+        jobsIndexSortSelectAnalyticsData(value, filtered.length, jobs.length),
+      );
+      setSortMode(value);
+    },
+    [filtered.length, jobs.length, sortMode],
+  );
+
+  const onClearFilters = useCallback(() => {
+    trackEvent(
+      jobsIndexFilterClearAnalyticsEvent(),
+      jobsIndexFilterClearAnalyticsData(
+        activeJobsFilterCount(filterState),
+        jobs.length,
+        jobs.length,
+      ),
+    );
+    setQ("");
+    setTier("all");
+    setRemote("all");
+    setType("all");
+    setFreshOnly(false);
+    setFeaturedOnly(false);
+  }, [filterState, jobs.length]);
+
   return (
     <PageContainer>
       <div className="flex flex-wrap items-end justify-between gap-4">
@@ -201,7 +352,7 @@ function JobsPage() {
               { id: "free", label: `Community · ${counts.byTier.free}` },
             ]}
             value={tier}
-            onChange={(v) => setTier(v as JobTier | "all")}
+            onChange={onTierFilter}
           />
           <Segmented
             options={[
@@ -210,11 +361,11 @@ function JobsPage() {
               { id: "onsite", label: "Onsite" },
             ]}
             value={remote}
-            onChange={(v) => setRemote(v as RemoteFilter)}
+            onChange={onRemoteFilter}
           />
           <select
             value={type}
-            onChange={(e) => setType(e.target.value)}
+            onChange={(e) => onTypeFilter(e.target.value)}
             aria-label="Filter by job type"
             className="h-9 rounded-md border border-border bg-background px-2 text-xs text-ink-muted focus:outline-none focus:ring-2 focus:ring-accent/40"
           >
@@ -227,7 +378,7 @@ function JobsPage() {
           </select>
           <button
             type="button"
-            onClick={() => setFreshOnly((v) => !v)}
+            onClick={onFreshToggle}
             className={cn(
               "h-9 rounded-md border px-2.5 text-xs font-medium transition-colors duration-200 ease-out",
               freshOnly
@@ -239,7 +390,7 @@ function JobsPage() {
           </button>
           <button
             type="button"
-            onClick={() => setFeaturedOnly((v) => !v)}
+            onClick={onFeaturedToggle}
             className={cn(
               "h-9 rounded-md border px-2.5 text-xs font-medium transition-colors duration-200 ease-out",
               featuredOnly
@@ -253,7 +404,7 @@ function JobsPage() {
             <span className="text-[10px] uppercase tracking-wider text-ink-subtle">Sort</span>
             <select
               value={sortMode}
-              onChange={(e) => setSortMode(e.target.value as SortMode)}
+              onChange={(e) => onSortSelect(e.target.value as SortMode)}
               className="h-9 rounded-md border border-border bg-background px-2 text-xs text-ink-muted focus:outline-none focus:ring-2 focus:ring-accent/40"
             >
               <option value="default">Featured first</option>
@@ -264,14 +415,7 @@ function JobsPage() {
           {hasFilters && (
             <button
               type="button"
-              onClick={() => {
-                setQ("");
-                setTier("all");
-                setRemote("all");
-                setType("all");
-                setFreshOnly(false);
-                setFeaturedOnly(false);
-              }}
+              onClick={onClearFilters}
               className="inline-flex h-9 items-center gap-1 rounded-md px-2 text-xs text-ink-muted hover:text-ink"
             >
               <X className="h-3 w-3" /> Clear

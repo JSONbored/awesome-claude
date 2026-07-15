@@ -11,6 +11,8 @@ export const JOBS_DETAIL_SURFACE = "jobs-detail";
 export type JobsIndexPostSource = "header" | "sidebar";
 export type JobsIndexJobVariant = "row" | "rail";
 export type JobsDetailIndexSource = "breadcrumb" | "not-found" | "see-all";
+export type JobsIndexFilterAxis = "tier" | "remote" | "type" | "fresh" | "featured";
+export type JobsIndexSortMode = "default" | "newest" | "salary";
 
 export function jobsIndexPostAnalyticsEvent(): string {
   return "jobs_index_post_click";
@@ -78,5 +80,60 @@ export function jobsDetailRelatedAnalyticsData(
     relatedSlug,
     rowIndex,
     relatedCount,
+  };
+}
+
+export function jobsIndexFilterSelectAnalyticsEvent(): string {
+  return "jobs_index_filter_select";
+}
+
+export function jobsIndexFilterSelectAnalyticsData(
+  axis: JobsIndexFilterAxis,
+  value: string,
+  active: boolean,
+  matchCount: number,
+  jobCount: number,
+) {
+  return {
+    surface: JOBS_INDEX_SURFACE,
+    axis,
+    value,
+    active,
+    matchCount,
+    jobCount,
+  };
+}
+
+export function jobsIndexSortSelectAnalyticsEvent(): string {
+  return "jobs_index_sort_select";
+}
+
+export function jobsIndexSortSelectAnalyticsData(
+  sort: JobsIndexSortMode,
+  matchCount: number,
+  jobCount: number,
+) {
+  return {
+    surface: JOBS_INDEX_SURFACE,
+    sort,
+    matchCount,
+    jobCount,
+  };
+}
+
+export function jobsIndexFilterClearAnalyticsEvent(): string {
+  return "jobs_index_filter_clear";
+}
+
+export function jobsIndexFilterClearAnalyticsData(
+  activeFilterCount: number,
+  matchCount: number,
+  jobCount: number,
+) {
+  return {
+    surface: JOBS_INDEX_SURFACE,
+    activeFilterCount,
+    matchCount,
+    jobCount,
   };
 }
