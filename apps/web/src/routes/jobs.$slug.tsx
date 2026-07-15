@@ -8,6 +8,13 @@ import { ArrowUpRight, MapPin, BadgeCheck, ArrowLeft } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { companyTint, monogram, relativePosted, sortJobs } from "@/lib/jobs-utils";
 import { CopyButton } from "@/components/copy-button";
+import { trackEvent } from "@/lib/analytics";
+import {
+  jobsDetailIndexAnalyticsData,
+  jobsDetailIndexAnalyticsEvent,
+  jobsDetailRelatedAnalyticsData,
+  jobsDetailRelatedAnalyticsEvent,
+} from "@/lib/jobs-hub-cta-events";
 import type { ReactNode } from "react";
 import type { ErrorComponentProps } from "@tanstack/react-router";
 import type { JobListing } from "@/types/registry";
@@ -104,6 +111,12 @@ export const Route = createFileRoute("/jobs/$slug")({
         </p>
         <Link
           to="/jobs"
+          onClick={() =>
+            trackEvent(
+              jobsDetailIndexAnalyticsEvent(),
+              jobsDetailIndexAnalyticsData(null, null, "not-found"),
+            )
+          }
           className="mt-5 inline-flex items-center gap-1.5 rounded-md bg-ink px-4 py-2 text-sm font-medium text-background hover:bg-ink/90"
         >
           <ArrowLeft className="h-3.5 w-3.5" /> Browse all jobs
@@ -129,6 +142,12 @@ function JobDetail() {
         </p>
         <Link
           to="/jobs"
+          onClick={() =>
+            trackEvent(
+              jobsDetailIndexAnalyticsEvent(),
+              jobsDetailIndexAnalyticsData(null, null, "not-found"),
+            )
+          }
           className="mt-5 inline-flex items-center gap-1.5 rounded-md bg-ink px-4 py-2 text-sm font-medium text-background hover:bg-ink/90"
         >
           <ArrowLeft className="h-3.5 w-3.5" /> Browse all jobs
@@ -143,7 +162,20 @@ function JobDetail() {
 
   return (
     <div className="mx-auto max-w-[1100px] px-4 py-8 sm:px-6">
-      <Breadcrumbs items={[{ label: "Jobs", to: "/jobs" }, { label: job.title }]} />
+      <Breadcrumbs
+        items={[
+          {
+            label: "Jobs",
+            to: "/jobs",
+            onClick: () =>
+              trackEvent(
+                jobsDetailIndexAnalyticsEvent(),
+                jobsDetailIndexAnalyticsData(job.slug, job.tier, "breadcrumb"),
+              ),
+          },
+          { label: job.title },
+        ]}
+      />
 
       <header className="mt-5 overflow-hidden rounded-xl border border-border bg-gradient-to-br from-surface to-accent/[0.04] surface-raised p-6">
         <div className="flex items-start gap-4">
@@ -283,9 +315,19 @@ function JobDetail() {
             <div className="rounded-xl border border-border bg-surface p-4">
               <div className="eyebrow mb-2">More roles</div>
               <ul className="space-y-2.5">
-                {more.map((m) => (
+                {more.map((m, rowIndex) => (
                   <li key={m.slug}>
-                    <Link to="/jobs/$slug" params={{ slug: m.slug }} className="group block">
+                    <Link
+                      to="/jobs/$slug"
+                      params={{ slug: m.slug }}
+                      onClick={() =>
+                        trackEvent(
+                          jobsDetailRelatedAnalyticsEvent(),
+                          jobsDetailRelatedAnalyticsData(job.slug, m.slug, rowIndex, more.length),
+                        )
+                      }
+                      className="group block"
+                    >
                       <div className="text-sm font-medium leading-snug text-ink transition-colors duration-200 ease-out group-hover:text-ink-hover">
                         {m.title}
                       </div>
@@ -298,6 +340,12 @@ function JobDetail() {
               </ul>
               <Link
                 to="/jobs"
+                onClick={() =>
+                  trackEvent(
+                    jobsDetailIndexAnalyticsEvent(),
+                    jobsDetailIndexAnalyticsData(job.slug, job.tier, "see-all"),
+                  )
+                }
                 className="mt-3 inline-flex items-center gap-1 text-xs text-ink-muted hover:text-ink"
               >
                 See all roles <ArrowUpRight className="h-3 w-3" />

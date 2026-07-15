@@ -9,6 +9,13 @@ import { normalizeJobListing } from "@/lib/job-listing-lib";
 import { cn } from "@/lib/utils";
 import { JobCard } from "@/components/job-card";
 import { isFresh, pickDailySpotlight, relativePosted, sortJobs } from "@/lib/jobs-utils";
+import { trackEvent } from "@/lib/analytics";
+import {
+  jobsIndexJobAnalyticsData,
+  jobsIndexJobAnalyticsEvent,
+  jobsIndexPostAnalyticsData,
+  jobsIndexPostAnalyticsEvent,
+} from "@/lib/jobs-hub-cta-events";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import type { ErrorComponentProps } from "@tanstack/react-router";
 
@@ -161,6 +168,12 @@ function JobsPage() {
         </div>
         <Link
           to="/jobs/post"
+          onClick={() =>
+            trackEvent(
+              jobsIndexPostAnalyticsEvent(),
+              jobsIndexPostAnalyticsData(jobs.length, "header"),
+            )
+          }
           className="inline-flex h-10 items-center gap-1.5 rounded-md bg-ink px-4 text-sm font-medium text-background hover:bg-ink/90"
         >
           Post a role <ArrowUpRight className="h-4 w-4" />
@@ -277,8 +290,17 @@ function JobsPage() {
             </span>
           </div>
           <div className="space-y-2.5">
-            {sorted.map((j) => (
-              <JobCard key={j.slug} job={j} />
+            {sorted.map((j, rowIndex) => (
+              <JobCard
+                key={j.slug}
+                job={j}
+                onNavigate={() =>
+                  trackEvent(
+                    jobsIndexJobAnalyticsEvent(),
+                    jobsIndexJobAnalyticsData(j.slug, j.tier, rowIndex, sorted.length, "row"),
+                  )
+                }
+              />
             ))}
             {sorted.length === 0 && (
               <div className="rounded-xl border border-dashed border-border bg-surface px-5 py-12 text-center text-sm text-ink-muted">
@@ -300,31 +322,50 @@ function JobsPage() {
         {/* Spotlight rail */}
         <aside className="hidden min-w-0 lg:block">
           <div className="sticky top-24 space-y-5">
-            {spotlight.current && (
-              <div className="rounded-xl border border-accent/30 bg-gradient-to-br from-surface to-accent/[0.06] p-4">
-                <div className="flex items-center gap-1.5">
-                  <Sparkles className="h-3.5 w-3.5 text-accent-ink" />
-                  <span className="font-mono text-[10px] uppercase tracking-wider text-accent-ink">
-                    In the spotlight
-                  </span>
-                </div>
-                <p className="mt-1 text-[11px] text-ink-muted">
-                  Rotates daily from verified, salary-disclosed, remote-friendly roles.
-                </p>
-                <div className="mt-3">
-                  <JobCard job={spotlight.current} variant="rail" />
-                </div>
-                <div className="mt-2 text-[10px] text-ink-subtle">
-                  Posted {relativePosted(spotlight.current.postedAt)}
-                  {spotlight.current.lastVerifiedAt ? " · employer verified" : ""}
-                </div>
-                {spotlight.next && (
-                  <div className="mt-3 border-t border-border pt-2 text-[10px] text-ink-subtle">
-                    Up next: <span className="text-ink-muted">{spotlight.next.title}</span>
+            {(() => {
+              const current = spotlight.current;
+              if (!current) return null;
+              return (
+                <div className="rounded-xl border border-accent/30 bg-gradient-to-br from-surface to-accent/[0.06] p-4">
+                  <div className="flex items-center gap-1.5">
+                    <Sparkles className="h-3.5 w-3.5 text-accent-ink" />
+                    <span className="font-mono text-[10px] uppercase tracking-wider text-accent-ink">
+                      In the spotlight
+                    </span>
                   </div>
-                )}
-              </div>
-            )}
+                  <p className="mt-1 text-[11px] text-ink-muted">
+                    Rotates daily from verified, salary-disclosed, remote-friendly roles.
+                  </p>
+                  <div className="mt-3">
+                    <JobCard
+                      job={current}
+                      variant="rail"
+                      onNavigate={() =>
+                        trackEvent(
+                          jobsIndexJobAnalyticsEvent(),
+                          jobsIndexJobAnalyticsData(
+                            current.slug,
+                            current.tier,
+                            0,
+                            jobs.length,
+                            "rail",
+                          ),
+                        )
+                      }
+                    />
+                  </div>
+                  <div className="mt-2 text-[10px] text-ink-subtle">
+                    Posted {relativePosted(current.postedAt)}
+                    {current.lastVerifiedAt ? " · employer verified" : ""}
+                  </div>
+                  {spotlight.next && (
+                    <div className="mt-3 border-t border-border pt-2 text-[10px] text-ink-subtle">
+                      Up next: <span className="text-ink-muted">{spotlight.next.title}</span>
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
 
             <div className="rounded-xl border border-border bg-surface p-4 text-xs">
               <div className="eyebrow mb-2">Why post here</div>
@@ -335,6 +376,12 @@ function JobsPage() {
               </ul>
               <Link
                 to="/jobs/post"
+                onClick={() =>
+                  trackEvent(
+                    jobsIndexPostAnalyticsEvent(),
+                    jobsIndexPostAnalyticsData(jobs.length, "sidebar"),
+                  )
+                }
                 className="mt-3 inline-flex h-9 w-full items-center justify-center gap-1 rounded-md bg-ink text-xs font-medium text-background hover:bg-ink/90"
               >
                 Post a role <ArrowUpRight className="h-3 w-3" />
