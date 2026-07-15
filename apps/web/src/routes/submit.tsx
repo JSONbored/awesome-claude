@@ -27,6 +27,10 @@ import { cn } from "@/lib/utils";
 import { absoluteUrl } from "@/lib/seo";
 import { trackEvent } from "@/lib/analytics";
 import {
+  submitPageCategorySelectAnalyticsData,
+  submitPageCategorySelectAnalyticsEvent,
+  submitPageEgressAnalyticsData,
+  submitPageEgressAnalyticsEvent,
   submitStartAnalyticsData,
   submitStartAnalyticsEvent,
   submitSuccessAnalyticsData,
@@ -284,11 +288,29 @@ function SubmitPage() {
       <p className="mt-2 text-sm text-ink-muted">
         Free, source-backed, useful. The site opens a single-entry GitHub PR for private-gate
         review. Commercial tools go through{" "}
-        <a href="/advertise" className="text-ink underline">
+        <a
+          href="/advertise"
+          onClick={() =>
+            trackEvent(
+              submitPageEgressAnalyticsEvent(),
+              submitPageEgressAnalyticsData("advertise", "intro"),
+            )
+          }
+          className="text-ink underline"
+        >
           advertise
         </a>
         . Jobs go through{" "}
-        <a href="/jobs/post" className="text-ink underline">
+        <a
+          href="/jobs/post"
+          onClick={() =>
+            trackEvent(
+              submitPageEgressAnalyticsEvent(),
+              submitPageEgressAnalyticsData("jobs-post", "intro"),
+            )
+          }
+          className="text-ink underline"
+        >
           post a job
         </a>
         .
@@ -342,6 +364,10 @@ function SubmitPage() {
                       setPreflightResult(null);
                       setPreflightError("");
                       setSubmitError("");
+                      trackEvent(
+                        submitPageCategorySelectAnalyticsEvent(),
+                        submitPageCategorySelectAnalyticsData(c.id, disabled),
+                      );
                     }}
                     className={cn(
                       "rounded-lg border px-3 py-3 text-left text-sm transition-colors duration-200 ease-out",
@@ -368,7 +394,16 @@ function SubmitPage() {
             {unsupportedWebCategory && (
               <div className="mt-4 rounded-md border border-border bg-background p-3 text-xs text-ink-muted">
                 This category is not enabled for website-created PRs yet. Use{" "}
-                <a href="/advertise" className="text-ink underline">
+                <a
+                  href="/advertise"
+                  onClick={() =>
+                    trackEvent(
+                      submitPageEgressAnalyticsEvent(),
+                      submitPageEgressAnalyticsData("advertise", "unsupported-category"),
+                    )
+                  }
+                  className="text-ink underline"
+                >
                   commercial intake
                 </a>{" "}
                 for tools or contact a maintainer for special routing.
