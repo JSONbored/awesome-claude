@@ -6,6 +6,15 @@ import { useRecents } from "@/lib/recents";
 import { SavedSearchManager } from "@/components/saved-search-manager";
 import { EmptyState } from "@/components/empty-state";
 import { unsubscribeFromNewsletter } from "@/lib/api/newsletter";
+import { trackEvent } from "@/lib/analytics";
+import {
+  subscriptionsPageConfirmAnalyticsData,
+  subscriptionsPageConfirmAnalyticsEvent,
+  subscriptionsPageEgressAnalyticsData,
+  subscriptionsPageEgressAnalyticsEvent,
+  subscriptionsPageManageAlertsAnalyticsData,
+  subscriptionsPageManageAlertsAnalyticsEvent,
+} from "@/lib/subscriptions-page-cta-events";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -150,12 +159,24 @@ function SubscriptionsPage() {
                     <Link
                       to="/feeds"
                       className="inline-flex h-8 items-center gap-1.5 rounded-md bg-ink px-3 text-xs font-medium text-background hover:bg-ink/90"
+                      onClick={() =>
+                        trackEvent(
+                          subscriptionsPageEgressAnalyticsEvent(),
+                          subscriptionsPageEgressAnalyticsData("feeds"),
+                        )
+                      }
                     >
                       <Rss className="h-3.5 w-3.5" /> Browse feeds
                     </Link>
                     <Link
                       to="/browse"
                       className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-surface px-3 text-xs font-medium text-ink hover:bg-surface-2"
+                      onClick={() =>
+                        trackEvent(
+                          subscriptionsPageEgressAnalyticsEvent(),
+                          subscriptionsPageEgressAnalyticsData("browse"),
+                        )
+                      }
                     >
                       <Compass className="h-3.5 w-3.5" /> Browse directory
                     </Link>
@@ -277,7 +298,13 @@ function SubscriptionsPage() {
           <h2 className="font-display text-base font-semibold text-ink">Saved-search alerts</h2>
           <button
             type="button"
-            onClick={() => setManagerOpen(true)}
+            onClick={() => {
+              trackEvent(
+                subscriptionsPageManageAlertsAnalyticsEvent(),
+                subscriptionsPageManageAlertsAnalyticsData(alertCount, recents.saved.length),
+              );
+              setManagerOpen(true);
+            }}
             className="inline-flex h-8 items-center gap-1 rounded-md border border-border bg-surface px-2.5 text-xs text-ink hover:bg-surface-2"
           >
             <Pencil className="h-3.5 w-3.5" /> Manage
@@ -327,6 +354,10 @@ function SubscriptionsPage() {
             <AlertDialogAction
               onClick={() => {
                 if (!confirm) return;
+                trackEvent(
+                  subscriptionsPageConfirmAnalyticsEvent(),
+                  subscriptionsPageConfirmAnalyticsData(confirm.kind),
+                );
                 if (confirm.kind === "follow") void doRemoveFollow(confirm.id);
                 else void doRemoveSegment(confirm.id);
                 setConfirm(null);
