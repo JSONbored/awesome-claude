@@ -1,0 +1,271 @@
+---
+title: AI-Generated XSS (Cross-Site Scripting) Review Rules
+slug: ai-generated-xss-review-rules
+category: rules
+description: >-
+  Source-backed rules for reviewing AI-generated code that renders untrusted
+  data into HTML, JavaScript, URLs, or CSS before merge for cross-site
+  scripting risk, covering context-correct output encoding, dangerous DOM
+  sinks, HTML sanitization, and Content-Security-Policy as defense in depth.
+cardDescription: >-
+  Review AI-generated code for XSS: context-correct output encoding, unsafe
+  DOM sinks like innerHTML, HTML sanitization, and CSP as a secondary layer.
+seoTitle: AI-Generated XSS (Cross-Site Scripting) Review Rules
+seoDescription: >-
+  Practical review rules for AI-generated code that renders untrusted data:
+  encode by context, avoid unsafe sinks like innerHTML and
+  dangerouslySetInnerHTML, sanitize HTML with DOMPurify, and use CSP as
+  defense in depth against cross-site scripting.
+author: lourincedaging0-commits
+submittedBy: lourincedaging0-commits
+submittedByUrl: "https://github.com/lourincedaging0-commits"
+dateAdded: "2026-07-15"
+documentationUrl: "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html"
+sourceUrls:
+  - "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html"
+  - "https://cheatsheetseries.owasp.org/cheatsheets/DOM_based_XSS_Prevention_Cheat_Sheet.html"
+  - "https://owasp.org/www-community/attacks/xss/"
+  - "https://developer.mozilla.org/en-US/docs/Web/Security/Attacks/XSS"
+  - "https://cwe.mitre.org/data/definitions/79.html"
+installable: false
+usageSnippet: >-
+  Apply these rules when an AI assistant writes or edits code that renders
+  untrusted data into HTML, inline JavaScript, a URL, or CSS, or that calls a
+  DOM API capable of executing markup or script.
+copySnippet: |-
+  You are reviewing AI-generated code for cross-site scripting (XSS) risk.
+
+  Rules:
+  1. Identify every place untrusted data flows into HTML, JavaScript, a URL,
+     or CSS, and confirm each one uses the output encoding for that specific
+     context — HTML entity encoding, HTML attribute encoding, JavaScript
+     encoding, URL encoding, or CSS hex encoding are not interchangeable.
+  2. Flag any use of a dangerous sink — `innerHTML`, `outerHTML`,
+     `document.write`, `dangerouslySetInnerHTML`, Vue's `v-html`, Angular's
+     `bypassSecurityTrustAs*`, or string-built `<script>`/`eval` — and require
+     a safe sink (`textContent`, `setAttribute` on a hardcoded-safe attribute
+     name, `.value`, framework-default templating) instead, unless the value
+     first passes through an HTML sanitizer.
+  3. When a feature genuinely needs to render user-authored HTML (a WYSIWYG
+     editor, markdown preview), require sanitization with a maintained library
+     (for example DOMPurify) applied immediately before render, and confirm
+     the sanitized output is not concatenated with more untrusted data
+     afterward.
+  4. Never place untrusted data in a dangerous context that output encoding
+     cannot make safe: directly inside a `<script>` block, inside an HTML
+     comment, inside a `<style>` block, as an unquoted attribute value, or as
+     the tag/attribute name itself.
+  5. For any URL built from untrusted input, validate the scheme against an
+     allowlist (`http`/`https` only) before use in `href`, `src`, or a
+     redirect, since `javascript:` and `data:` URLs execute when navigated or
+     loaded.
+  6. Do not treat a Content-Security-Policy header, a WAF, or an input-side
+     interceptor/filter as the primary defense — require context-correct
+     output encoding or sanitization at the point of render first, and treat
+     CSP as an additional layer, not a substitute.
+
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - A pull request, diff, or snippet containing AI-generated or AI-edited code that renders variables into HTML, JavaScript, a URL, or CSS, or that calls DOM-manipulation APIs.
+  - Knowledge of which values in the change are untrusted (user input, query params, third-party API responses, database content originally sourced from users).
+  - Awareness of the framework's default auto-escaping behavior and which of its APIs bypass that escaping.
+  - Permission to block merge when untrusted data reaches a dangerous sink without context-correct encoding or sanitization.
+safetyNotes:
+  - "A successful XSS injection runs attacker JavaScript in another user's browser session, enabling session/token theft, account takeover, keylogging, or unauthorized actions performed as that user."
+  - "AI assistants frequently reach for innerHTML, dangerouslySetInnerHTML, or string-concatenated HTML because it is the shortest path to the desired rendering, without adding sanitization or switching to a safe sink."
+  - "Relying only on a Content-Security-Policy header is not sufficient: CSP support and enforcement vary by browser, misconfiguration is common, and it does not address DOM-based XSS that never touches the network."
+privacyNotes:
+  - "XSS proof-of-concept payloads and captured DOM/session state can include real session tokens, cookies, or personal data; use synthetic accounts and redact captures before pasting them into a PR or issue."
+  - "Sanitizer configuration (allowed tags/attributes) can itself leak intent about what user-generated content the product stores; avoid documenting real user content samples in public review threads."
+  - "Third-party scripts and widgets execute with the same DOM access as first-party code; disclose any new third-party script include as part of the change under review."
+tags:
+  - xss
+  - web-security
+  - output-encoding
+  - content-security-policy
+  - ai-generated-code
+  - code-review
+keywords:
+  - xss review rules
+  - cross-site scripting prevention
+  - ai-generated code security review
+  - dangerouslysetinnerhtml review
+  - content security policy checklist
+---
+
+## Purpose
+
+Use these rules when an AI coding assistant writes or edits code that renders
+data of uncertain origin into a page. The goal is to stop a generated
+component, template, or DOM update from shipping a cross-site scripting hole
+because it renders correctly for the happy-path input and looks like ordinary
+UI code.
+
+This is a review policy, not an XSS tutorial. It tells reviewers what must be
+true about a generated change's encoding, sinks, and sanitization before the
+change is safe to merge.
+
+## Review Inputs
+
+Collect enough context to know where untrusted data flows and how it is
+rendered.
+
+- Every place the change writes a variable into HTML, an HTML attribute,
+  inline JavaScript, a URL, or CSS.
+- Whether each variable originates from user input, a query parameter, a
+  third-party API response, or stored content that was ever user-controlled.
+- Which DOM APIs or template constructs the change uses to do the writing,
+  and whether any of them bypass the framework's default auto-escaping.
+- Whether the change introduces or modifies an HTML sanitizer, a
+  Content-Security-Policy header, or a third-party script include.
+
+## Context-Correct Encoding Rules
+
+- Match the encoding to the context, not the data type: HTML body, HTML
+  attribute, JavaScript, URL, and CSS each parse differently, and the wrong
+  encoding for a context can still allow execution.
+- HTML body context (`<div>UNTRUSTED</div>`): use HTML entity encoding, or a
+  safe sink such as `.textContent`.
+- HTML attribute context (`<div attr="UNTRUSTED">`): quote the attribute with
+  `"` or `'`, use HTML attribute encoding, and only place untrusted data into
+  attributes that cannot execute (never `onclick`, `onerror`, `href` with a
+  `javascript:` scheme, or similar event/URL attributes without extra
+  validation).
+- JavaScript context: the only safe placement for untrusted data is inside an
+  already-quoted string literal, and it must use JavaScript-specific encoding
+  there; never build a `<script>` block or event handler by concatenating
+  untrusted strings into unquoted code.
+- URL context: URL-encode the value first, then apply HTML attribute encoding
+  when the URL is placed in `href` or `src`; validate the scheme against an
+  allowlist before use.
+- CSS context: restrict untrusted data to a CSS property *value*, never a
+  selector or property name, and prefer `element.style.property = value`
+  (a safe sink) over building a `<style>` block from strings.
+
+## Dangerous Sinks And Framework Escape Hatches
+
+- Treat these as unsafe unless the value has first passed through a
+  maintained HTML sanitizer immediately before the call: `innerHTML`,
+  `outerHTML`, `insertAdjacentHTML`, `document.write`, `document.writeln`.
+- Treat these framework escape hatches the same way: React's
+  `dangerouslySetInnerHTML`, Vue's `v-html`, Angular's
+  `bypassSecurityTrustAs*` family, and any `unsafeHTML`/raw-HTML helper.
+- Prefer safe sinks that always treat their argument as text, never markup:
+  `.textContent`, `.setAttribute(name, value)` with a hardcoded attribute
+  name, `.value`, `.className`, `document.createTextNode`.
+- Flag `eval`, `new Function`, `setTimeout`/`setInterval` called with a
+  string argument, and any dynamic `<script src>` built from untrusted input.
+- A modern framework's default template syntax already HTML-encodes
+  interpolated values — the risk is almost always in code that deliberately
+  opts out of that default, not in ordinary template bindings.
+
+## Sanitization And CSP Rules
+
+- When a feature must render user-authored HTML (rich text, markdown
+  preview, pasted content), sanitize with a maintained library (for example
+  DOMPurify) and keep it patched, since sanitizer bypasses are discovered and
+  fixed on an ongoing basis.
+- Sanitize as the last step before rendering; if sanitized output is modified
+  or concatenated with more untrusted data afterward, the sanitization is
+  void.
+- Use Content-Security-Policy as defense in depth, tuned for the specific
+  application, not as a blanket policy assumed to cover every legacy page —
+  it does not replace context-correct encoding or sanitization.
+- Where the browser target supports it, consider Trusted Types
+  (`Content-Security-Policy: require-trusted-types-for 'script'`) to force
+  DOM XSS sinks through a vetted policy instead of accepting plain strings.
+- Do not rely on an input-side validator, HTTP interceptor, or WAF as the
+  primary XSS defense: none of them have enough context to know which output
+  context a given value will render into, and none of them stop
+  DOM-based XSS that never touches the network.
+
+## Merge Blockers
+
+Block merge when any of these is true.
+
+- Untrusted data reaches `innerHTML`, `dangerouslySetInnerHTML`, `v-html`,
+  `document.write`, or an equivalent sink without prior sanitization.
+- A variable is placed inside a `<script>` block, an HTML comment, a
+  `<style>` block, or an unquoted attribute — a dangerous context that output
+  encoding cannot fully protect.
+- A URL built from untrusted input is used in `href`, `src`, or a redirect
+  without scheme validation, allowing a `javascript:` or `data:` URL.
+- An HTML sanitizer is applied and then the result is mutated or concatenated
+  with more untrusted data before render.
+- The only stated defense is a Content-Security-Policy header, a WAF, or an
+  input-side filter, with no context-correct output encoding or sanitization
+  at the render point.
+
+## Review Checklist
+
+- [ ] {"task": "Context-correct encoding", "description": "Every untrusted value uses the encoding for its actual context (HTML body, attribute, JS, URL, CSS)"}
+- [ ] {"task": "No unsafe sinks", "description": "innerHTML/dangerouslySetInnerHTML/v-html/document.write are absent, or the value is sanitized immediately before use"}
+- [ ] {"task": "Safe sinks preferred", "description": "textContent, setAttribute with a hardcoded name, and .value are used wherever markup rendering isn't required"}
+- [ ] {"task": "URL scheme validated", "description": "URLs built from untrusted input are allowlisted to http/https before use in href/src/redirects"}
+- [ ] {"task": "Sanitizer applied last", "description": "HTML sanitization happens immediately before render and isn't followed by further concatenation or mutation"}
+- [ ] {"task": "CSP is secondary", "description": "Any CSP/WAF/interceptor is documented as defense in depth, not the sole XSS control"}
+
+## AI Review Rules
+
+AI assistants can write and review rendering code, but they should show their
+evidence.
+
+- Ask the assistant to list every place the change writes untrusted data into
+  HTML, JavaScript, a URL, or CSS before judging safety.
+- Require the assistant to name the specific sink or template construct used
+  for each write, and state whether it is a safe sink, a dangerous sink, or a
+  dangerous sink paired with sanitization.
+- Have the assistant show where sanitization happens and confirm nothing runs
+  after it that could reintroduce unsanitized data.
+- Do not let the assistant claim a Content-Security-Policy header alone makes
+  a dangerous sink safe.
+- Re-run review after any change to rendering logic, sanitizer configuration,
+  or third-party script includes.
+
+## Troubleshooting
+
+- **Encoded output shows literal `&lt;`/`&gt;` instead of rendering
+  markup:** that is expected for HTML entity encoding of plain text; if
+  markup rendering is actually required, sanitize the HTML instead of
+  switching back to an unsafe sink.
+- **A sanitizer strips content the feature needs:** adjust the sanitizer's
+  allowlist of tags/attributes rather than bypassing sanitization or
+  switching to `innerHTML` with raw input.
+- **It renders fine in the framework's template but breaks when built
+  manually:** the framework's default binding already encodes for you; a
+  manual DOM write or raw HTML string bypasses that and needs its own
+  encoding or sanitization.
+- **CSP reports block a legitimate inline script:** move the script to an
+  external file or a nonce-based include rather than relaxing CSP to
+  `unsafe-inline`, and keep pursuing output-side fixes for the underlying
+  sink.
+
+## Duplicate And History Check
+
+Before adding new HTML-rendering or sanitization logic, confirm the codebase
+does not already have a shared rendering helper, template component, or
+sanitizer wrapper that solves this. A generated change that reaches for a raw
+DOM API or hand-rolled encoding next to an existing safe helper should be
+treated as suspicious — check whether the existing helper was simply not
+reused before introducing a second, parallel mechanism.
+
+## Context Reference
+
+| Context            | Example                                  | Sample Defense                                   |
+| ------------------ | ----------------------------------------- | ------------------------------------------------- |
+| HTML body           | `<span>DATA</span>`                       | HTML entity encoding, or `.textContent`            |
+| HTML attribute      | `<input value="DATA">`                    | Quote the attribute, HTML attribute encoding       |
+| URL / GET parameter | `<a href="/search?q=DATA">`               | URL encoding, then HTML attribute encoding         |
+| JavaScript variable | `<script>var x='DATA';</script>`          | JavaScript encoding inside an already-quoted value |
+| CSS value           | `<div style="width: DATA;">`              | CSS hex encoding, or `element.style.property = x`  |
+| Untrusted HTML      | `<div>DATA (rich text)</div>`             | HTML sanitization (e.g. DOMPurify), not encoding   |
+| DOM-based           | `document.write(location.hash)`           | Avoid the sink; see the DOM-based XSS cheat sheet  |
+
+## Sources
+
+- OWASP Cross-Site Scripting Prevention Cheat Sheet
+- OWASP DOM-based XSS Prevention Cheat Sheet
+- OWASP XSS attack reference
+- MDN Web Docs: Cross-site scripting (XSS)
+- CWE-79: Improper Neutralization of Input During Web Page Generation

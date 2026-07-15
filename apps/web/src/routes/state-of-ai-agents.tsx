@@ -14,6 +14,23 @@ import { PageHeader } from "@/components/page-header";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { ReportDownloads } from "@/components/report-downloads";
 import { DataSection, DataStat, DistTable } from "@/components/data-report";
+import { trackEvent } from "@/lib/analytics";
+import {
+  stateReportCategoryBrowseAnalyticsData,
+  stateReportCategoryBrowseAnalyticsEvent,
+  stateReportEgressAnalyticsData,
+  stateReportEgressAnalyticsEvent,
+  type StateReportEgressDestination,
+} from "@/lib/state-report-page-cta-events";
+
+const REPORT_ID = "ai-agents" as const;
+
+function trackStateReportEgress(destination: StateReportEgressDestination) {
+  trackEvent(
+    stateReportEgressAnalyticsEvent(),
+    stateReportEgressAnalyticsData(REPORT_ID, destination),
+  );
+}
 
 const AS_OF = String(REGISTRY_GENERATED_AT).slice(0, 10);
 const MODEL = buildAgentsReport(ENTRIES, AS_OF);
@@ -129,12 +146,17 @@ function StateOfAiAgentsPage() {
             heyclau.de/state-of-ai-agents
           </a>{" "}
           with the data-as-of date. See also the{" "}
-          <Link to="/state-of-agent-skills" className="text-ink underline-offset-2 hover:underline">
+          <Link
+            to="/state-of-agent-skills"
+            onClick={() => trackStateReportEgress("agent-skills")}
+            className="text-ink underline-offset-2 hover:underline"
+          >
             State of Agent Skills
           </Link>{" "}
           and the broader{" "}
           <Link
             to="/state-of-claude-tooling"
+            onClick={() => trackStateReportEgress("claude-tooling")}
             className="text-ink underline-offset-2 hover:underline"
           >
             State of Claude Tooling
@@ -143,6 +165,12 @@ function StateOfAiAgentsPage() {
           <Link
             to="/$category"
             params={{ category: "agents" }}
+            onClick={() =>
+              trackEvent(
+                stateReportCategoryBrowseAnalyticsEvent(),
+                stateReportCategoryBrowseAnalyticsData(REPORT_ID, "agents", MODEL.total, 0, 1),
+              )
+            }
             className="text-ink underline-offset-2 hover:underline"
           >
             agents

@@ -3042,3 +3042,35 @@ describe("registry-stats-lib missing-field fallbacks", () => {
     expect(response.registry.categories).toEqual({});
   });
 });
+
+describe("registry-stats-lib platform sorting", () => {
+  const manifest = {
+    schemaVersion: 2,
+    generatedAt: "2026-07-14",
+    totalEntries: 2,
+    categories: { mcp: 2 },
+  };
+
+  it("returns registry platforms sorted alphabetically by name", () => {
+    // Two entries spanning several platforms out of order, so the platform
+    // sort comparator runs and the response keys come back alphabetized.
+    const entries = [
+      makeEntry({ slug: "a", platforms: ["vscode", "cursor"] }),
+      makeEntry({ slug: "b", platforms: ["claude-code", "windsurf"] }),
+    ];
+    const response = buildRegistryStatsResponse({
+      manifest,
+      entries,
+      packageName: "@heyclaude/mcp",
+      packageVersion: "1.0.0",
+    });
+    expect(Object.keys(response.platforms)).toEqual([
+      "claude-code",
+      "cursor",
+      "vscode",
+      "windsurf",
+    ]);
+    expect(response.platforms["cursor"]).toBe(1);
+    expect(response.platforms["claude-code"]).toBe(1);
+  });
+});

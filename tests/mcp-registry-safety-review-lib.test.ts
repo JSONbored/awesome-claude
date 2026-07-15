@@ -5594,3 +5594,58 @@ describe("registry-safety-review-lib buildSafetyReviewResponse", () => {
     expect(response.count).toBe(1);
   });
 });
+
+describe("registry-safety-review-lib platform-selected compatibility", () => {
+  const deps = (
+    compatibility: Array<{ platform: string; support: string }>,
+  ) => ({
+    normalizePlatform: (platform: string) => platform,
+    buildSkillPlatformCompatibility: () => compatibility,
+    entryCanonicalUrl: () => "https://heyclau.de/entry/skills/designer",
+    entryTrustSummary: () => ({ level: "trusted" }),
+  });
+
+  it("selects the compatibility row whose normalized platform matches", () => {
+    const row = buildSafetyReviewRow(
+      makeEntry({ category: "skills", slug: "designer" }),
+      "cursor",
+      deps([
+        { platform: "claude-code", support: "native" },
+        { platform: "cursor", support: "adapter" },
+      ]),
+    );
+    expect(row.selectedCompatibility).toEqual({
+      platform: "cursor",
+      support: "adapter",
+    });
+  });
+
+  it("returns a null selection when no compatibility row matches the platform", () => {
+    const row = buildSafetyReviewRow(
+      makeEntry({ category: "skills", slug: "designer" }),
+      "codex",
+      deps([{ platform: "cursor", support: "adapter" }]),
+    );
+    expect(row.selectedCompatibility).toBeNull();
+  });
+
+  it("normalizes the compatibility platform before comparing", () => {
+    const row = buildSafetyReviewRow(
+      makeEntry({ category: "skills", slug: "designer" }),
+      "cursor",
+      {
+        normalizePlatform: (platform: string) =>
+          platform === "cursor-rules" ? "cursor" : platform,
+        buildSkillPlatformCompatibility: () => [
+          { platform: "cursor-rules", support: "adapter" },
+        ],
+        entryCanonicalUrl: () => "u",
+        entryTrustSummary: () => ({}),
+      },
+    );
+    expect(row.selectedCompatibility).toEqual({
+      platform: "cursor-rules",
+      support: "adapter",
+    });
+  });
+});

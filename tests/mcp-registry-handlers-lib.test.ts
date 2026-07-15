@@ -4,6 +4,7 @@ import {
   DISCOVERY_RESOURCE_LIMIT,
   buildCategoryEntriesPageResponse,
   buildCategoryResourcePayload,
+  buildCompatibilityResponse,
   buildDiscoveryRecentResponse,
   buildDistributionFeedsResponse,
   buildExplainEntryTrustResponse,
@@ -12,15 +13,18 @@ import {
   buildJobsActiveResourceResponse,
   buildListRegistryResourcesResponse,
   buildPlanWorkflowResponse,
+  buildPlatformAdapterAvailableResponse,
   buildPlatformAdapterUnavailableResponse,
   buildRecentUpdatesResponse,
   buildRecommendForTaskResponse,
   buildRegistryResourcePayload,
   buildRelatedEntriesGraphResponse,
+  buildRelatedEntriesScoredResponse,
   buildSearchRegistryResponse,
   buildTrendingResourceResponse,
   computeNextOffset,
   paginateEntries,
+  resolveGraphRelatedEntries,
   sortEntriesByUpdatedAt,
 } from "../packages/mcp/src/registry-handlers-lib.js";
 
@@ -9354,5 +9358,143 @@ describe("resource/feed builders default missing payload fields", () => {
     });
     expect(response.categories).toEqual([]);
     expect(response.platforms).toEqual([]);
+  });
+});
+
+describe("registry-handlers-lib related, adapter, and compatibility responses", () => {
+  const target = { category: "mcp", slug: "browser-bridge" };
+
+  it("buildRelatedEntriesScoredResponse keys the target and caps entries at the limit", () => {
+    const entries = [
+      { category: "mcp", slug: "a" },
+      { category: "mcp", slug: "b" },
+      { category: "mcp", slug: "c" },
+    ];
+    const response = buildRelatedEntriesScoredResponse({
+      target,
+      entries,
+      limit: 2,
+    });
+    expect(response).toEqual({
+      ok: true,
+      key: "mcp:browser-bridge",
+      count: 3,
+      entries: [
+        { category: "mcp", slug: "a" },
+        { category: "mcp", slug: "b" },
+      ],
+    });
+  });
+
+  it("resolveGraphRelatedEntries returns null when the graph row has no relations", () => {
+    expect(
+      resolveGraphRelatedEntries({
+        graphRow: null,
+        searchIndex: [],
+        toEntrySummary,
+        limit: 5,
+      }),
+    ).toBeNull();
+    expect(
+      resolveGraphRelatedEntries({
+        graphRow: { related: [] },
+        searchIndex: [],
+        toEntrySummary,
+        limit: 5,
+      }),
+    ).toBeNull();
+  });
+
+  it("resolveGraphRelatedEntries resolves related keys and drops unknown ones", () => {
+    const searchIndex = [{ category: "mcp", slug: "known", title: "Known" }];
+    const graphRow = {
+      related: [
+        {
+          key: "mcp:known",
+          relation: "similar",
+          score: 0.9,
+          reasons: ["shared tag"],
+        },
+        { key: "mcp:missing", relation: "similar", score: 0.4 },
+      ],
+    };
+    const resolved = resolveGraphRelatedEntries({
+      graphRow,
+      searchIndex,
+      toEntrySummary,
+      limit: 5,
+    });
+    expect(resolved).toEqual([
+      {
+        key: "mcp:known",
+        category: "mcp",
+        slug: "known",
+        title: "Known",
+        relation: "similar",
+        relatedScore: 0.9,
+        relatedReasons: ["shared tag"],
+      },
+    ]);
+  });
+
+  it("resolveGraphRelatedEntries defaults missing reasons to an empty array", () => {
+    const resolved = resolveGraphRelatedEntries({
+      graphRow: { related: [{ key: "mcp:x", relation: "similar", score: 1 }] },
+      searchIndex: [{ category: "mcp", slug: "x", title: "X" }],
+      toEntrySummary,
+      limit: 5,
+    });
+    expect(resolved?.[0]?.relatedReasons).toEqual([]);
+  });
+
+  it("buildPlatformAdapterAvailableResponse points at the cursor adapter path", () => {
+    expect(
+      buildPlatformAdapterAvailableResponse("my-skill", "adapter body"),
+    ).toEqual({
+      ok: true,
+      platform: "cursor",
+      slug: "my-skill",
+      adapterAvailable: true,
+      adapterPath: "/data/skill-adapters/cursor/my-skill.mdc",
+      content: "adapter body",
+    });
+  });
+
+  it("buildCompatibilityResponse surfaces the entry platform compatibility", () => {
+    const entry = {
+      category: "skills",
+      slug: "designer",
+      platformCompatibility: { "claude-code": "native", cursor: "adapter" },
+    };
+    expect(buildCompatibilityResponse(entry)).toEqual({
+      ok: true,
+      key: "skills:designer",
+      category: "skills",
+      slug: "designer",
+      platformCompatibility: {
+        "claude-code": "native",
+        cursor: "adapter",
+      },
+    });
+  });
+
+  it("buildDistributionFeedsResponse maps each platform to its feed slug", () => {
+    const response = buildDistributionFeedsResponse({
+      manifest: {
+        schemaVersion: 2,
+        generatedAt: "2026-07-14T00:00:00.000Z",
+        artifacts: ["a.json"],
+      },
+      feedIndex: {
+        categories: ["mcp", "skills"],
+        platforms: [{ platform: "claude-code" }, { platform: "cursor" }],
+      },
+      platformFeedSlug: (platform) => `feed-${platform}`,
+    });
+    expect(response.categories).toEqual(["mcp", "skills"]);
+    expect(response.platforms).toEqual([
+      { platform: "claude-code", feedSlug: "feed-claude-code" },
+      { platform: "cursor", feedSlug: "feed-cursor" },
+    ]);
   });
 });

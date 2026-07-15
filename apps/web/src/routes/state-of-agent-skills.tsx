@@ -14,6 +14,23 @@ import { PageHeader } from "@/components/page-header";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { ReportDownloads } from "@/components/report-downloads";
 import { DataSection, DataStat, DistTable } from "@/components/data-report";
+import { trackEvent } from "@/lib/analytics";
+import {
+  stateReportCategoryBrowseAnalyticsData,
+  stateReportCategoryBrowseAnalyticsEvent,
+  stateReportEgressAnalyticsData,
+  stateReportEgressAnalyticsEvent,
+  type StateReportEgressDestination,
+} from "@/lib/state-report-page-cta-events";
+
+const REPORT_ID = "agent-skills" as const;
+
+function trackStateReportEgress(destination: StateReportEgressDestination) {
+  trackEvent(
+    stateReportEgressAnalyticsEvent(),
+    stateReportEgressAnalyticsData(REPORT_ID, destination),
+  );
+}
 
 const AS_OF = String(REGISTRY_GENERATED_AT).slice(0, 10);
 const MODEL = buildSkillsReport(ENTRIES, AS_OF);
@@ -131,6 +148,7 @@ function StateOfAgentSkillsPage() {
           with the data-as-of date. See also the{" "}
           <Link
             to="/state-of-claude-code-hooks"
+            onClick={() => trackStateReportEgress("claude-code-hooks")}
             className="text-ink underline-offset-2 hover:underline"
           >
             State of Claude Code Hooks
@@ -138,6 +156,7 @@ function StateOfAgentSkillsPage() {
           and the broader{" "}
           <Link
             to="/state-of-claude-tooling"
+            onClick={() => trackStateReportEgress("claude-tooling")}
             className="text-ink underline-offset-2 hover:underline"
           >
             State of Claude Tooling
@@ -146,6 +165,12 @@ function StateOfAgentSkillsPage() {
           <Link
             to="/$category"
             params={{ category: "skills" }}
+            onClick={() =>
+              trackEvent(
+                stateReportCategoryBrowseAnalyticsEvent(),
+                stateReportCategoryBrowseAnalyticsData(REPORT_ID, "skills", MODEL.total, 0, 1),
+              )
+            }
             className="text-ink underline-offset-2 hover:underline"
           >
             skills
