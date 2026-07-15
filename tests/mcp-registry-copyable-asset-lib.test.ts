@@ -3247,3 +3247,26 @@ describe("registry-copyable-asset-lib buildCopyableAssetResponse", () => {
     expect(response.assets.length).toBeGreaterThan(0);
   });
 });
+
+describe("registry-copyable-asset-lib missing-value fallbacks", () => {
+  it("returns null when a requested type has no matching assets", () => {
+    expect(
+      selectPrimaryAsset([], { category: "mcp" }, "install_command"),
+    ).toBeNull();
+  });
+
+  it("defaults installCommand to an empty string when the entry omits it", () => {
+    const response = buildCopyableAssetResponse({
+      entry: { category: "mcp", slug: "s", title: "T" },
+      platform: "",
+      requestedType: "",
+      assets: [],
+      primary: null,
+      compatibility: null,
+      source: null,
+      trust: null,
+      canonicalUrl: "https://example.com/s",
+    });
+    expect(response.installCommand).toBe("");
+  });
+});
