@@ -84,3 +84,24 @@ export function integrationsDetailRelatedAnalyticsData(
     relatedCount,
   };
 }
+
+export type IntegrationsDetailActionRole = "primary" | "secondary";
+
+export function integrationsDetailActionAnalyticsEvent(): string {
+  return "integrations_detail_action_click";
+}
+
+export function integrationsDetailActionAnalyticsData(
+  integrationSlug: string,
+  action: IntegrationsDetailActionRole,
+  status: string,
+  kind: string,
+) {
+  return {
+    surface: INTEGRATIONS_DETAIL_SURFACE,
+    integrationSlug,
+    action,
+    status,
+    kind,
+  };
+}

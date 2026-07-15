@@ -13,6 +13,8 @@ import { ogImageUrl } from "@/lib/og-image";
 import { ogImageMetaTags } from "@/lib/og-meta-lib";
 import { trackEvent } from "@/lib/analytics";
 import {
+  integrationsDetailActionAnalyticsData,
+  integrationsDetailActionAnalyticsEvent,
   integrationsDetailIndexAnalyticsData,
   integrationsDetailIndexAnalyticsEvent,
   integrationsDetailRelatedAnalyticsData,
@@ -95,6 +97,17 @@ function IntegrationDetail() {
               href={integration.primaryAction.href}
               target="_blank"
               rel="noreferrer"
+              onClick={() =>
+                trackEvent(
+                  integrationsDetailActionAnalyticsEvent(),
+                  integrationsDetailActionAnalyticsData(
+                    integration.slug,
+                    "primary",
+                    integration.status,
+                    integration.kind,
+                  ),
+                )
+              }
               className="inline-flex h-9 items-center gap-1.5 rounded-md bg-ink px-3 text-sm font-medium text-background hover:bg-ink/90"
             >
               {integration.primaryAction.label} <ArrowUpRight className="h-3.5 w-3.5" />
@@ -104,6 +117,17 @@ function IntegrationDetail() {
                 href={integration.secondaryAction.href}
                 target="_blank"
                 rel="noreferrer"
+                onClick={() =>
+                  trackEvent(
+                    integrationsDetailActionAnalyticsEvent(),
+                    integrationsDetailActionAnalyticsData(
+                      integration.slug,
+                      "secondary",
+                      integration.status,
+                      integration.kind,
+                    ),
+                  )
+                }
                 className="inline-flex h-9 items-center gap-1.5 rounded-md border border-border bg-surface px-3 text-sm text-ink hover:bg-surface-2"
               >
                 {integration.secondaryAction.label}

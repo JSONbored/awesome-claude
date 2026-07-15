@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import {
   INTEGRATIONS_DETAIL_SURFACE,
   INTEGRATIONS_INDEX_SURFACE,
+  integrationsDetailActionAnalyticsData,
+  integrationsDetailActionAnalyticsEvent,
   integrationsDetailIndexAnalyticsData,
   integrationsDetailIndexAnalyticsEvent,
   integrationsDetailRelatedAnalyticsData,
@@ -71,6 +73,37 @@ describe("integrations hub cta events lib", () => {
       relatedSlug: "mcp-server",
       rowIndex: 0,
       relatedCount: 3,
+    });
+    expect(integrationsDetailActionAnalyticsEvent()).toBe(
+      "integrations_detail_action_click",
+    );
+    expect(
+      integrationsDetailActionAnalyticsData(
+        "raycast",
+        "primary",
+        "live",
+        "extension",
+      ),
+    ).toEqual({
+      surface: INTEGRATIONS_DETAIL_SURFACE,
+      integrationSlug: "raycast",
+      action: "primary",
+      status: "live",
+      kind: "extension",
+    });
+    expect(
+      integrationsDetailActionAnalyticsData(
+        "mcp-server",
+        "secondary",
+        "beta",
+        "mcp-server",
+      ),
+    ).toEqual({
+      surface: INTEGRATIONS_DETAIL_SURFACE,
+      integrationSlug: "mcp-server",
+      action: "secondary",
+      status: "beta",
+      kind: "mcp-server",
     });
   });
 });

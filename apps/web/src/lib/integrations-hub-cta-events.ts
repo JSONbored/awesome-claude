@@ -4,6 +4,8 @@
 export {
   INTEGRATIONS_DETAIL_SURFACE,
   INTEGRATIONS_INDEX_SURFACE,
+  integrationsDetailActionAnalyticsData,
+  integrationsDetailActionAnalyticsEvent,
   integrationsDetailIndexAnalyticsData,
   integrationsDetailIndexAnalyticsEvent,
   integrationsDetailRelatedAnalyticsData,
@@ -14,4 +16,5 @@ export {
   integrationsIndexCardAnalyticsEvent,
   integrationsIndexEcosystemAnalyticsData,
   integrationsIndexEcosystemAnalyticsEvent,
+  type IntegrationsDetailActionRole,
 } from "@/lib/integrations-hub-cta-events-lib";
