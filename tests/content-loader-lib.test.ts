@@ -2534,3 +2534,54 @@ describe("content-loader-lib edge branches", () => {
     expect(sleep).not.toHaveBeenCalled();
   });
 });
+
+describe("content-loader-lib exhausted/empty-input branches", () => {
+  it("readLocalDataFileFromPaths throws the default error when no paths are given", async () => {
+    const readFile = vi.fn();
+    await expect(readLocalDataFileFromPaths([], readFile)).rejects.toThrow(
+      "Local data artifact not found",
+    );
+    expect(readFile).not.toHaveBeenCalled();
+  });
+
+  it("readLocalJsonDataFileWithRetry rethrows the last error after exhausting every attempt", async () => {
+    const readFile = vi.fn().mockRejectedValue(new Error("persistent"));
+    const sleep = vi.fn().mockResolvedValue(undefined);
+    await expect(
+      readLocalJsonDataFileWithRetry(
+        "bad.json",
+        ["/bad.json"],
+        readFile,
+        sleep,
+      ),
+    ).rejects.toThrow("persistent");
+    // One read per attempt, sleeping only between attempts (not after the last).
+    expect(readFile).toHaveBeenCalledTimes(LOCAL_JSON_READ_ATTEMPTS);
+    expect(sleep).toHaveBeenCalledTimes(LOCAL_JSON_READ_ATTEMPTS - 1);
+  });
+
+  it("readLocalJsonDataFileWithRetry throws the default error when maxAttempts is zero", async () => {
+    const readFile = vi.fn();
+    const sleep = vi.fn().mockResolvedValue(undefined);
+    await expect(
+      readLocalJsonDataFileWithRetry(
+        "none.json",
+        ["/none.json"],
+        readFile,
+        sleep,
+        0,
+      ),
+    ).rejects.toThrow("Invalid local data artifact: none.json");
+    expect(readFile).not.toHaveBeenCalled();
+    expect(sleep).not.toHaveBeenCalled();
+  });
+
+  it("loadTextFromAssetsBinding throws when the asset response is not ok", async () => {
+    const assets = {
+      fetch: vi.fn().mockResolvedValue({ ok: false, status: 503 }),
+    };
+    await expect(
+      loadTextFromAssetsBinding(assets, "https://example/data/missing.txt"),
+    ).rejects.toThrow("Failed to load asset (503)");
+  });
+});
