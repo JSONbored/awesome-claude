@@ -3,6 +3,15 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Check, ShieldCheck, ListChecks } from "lucide-react";
 import { ENTRIES } from "@/data/entries";
 import { resolveClaimWebsiteUrl } from "@/lib/claim-website-url-lib";
+import { trackEvent } from "@/lib/analytics";
+import {
+  claimPageEntrySelectAnalyticsData,
+  claimPageEntrySelectAnalyticsEvent,
+  claimPageSubmitAnalyticsData,
+  claimPageSubmitAnalyticsEvent,
+  claimPageTypeSelectAnalyticsData,
+  claimPageTypeSelectAnalyticsEvent,
+} from "@/lib/claim-page-cta-events";
 import { cn } from "@/lib/utils";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { absoluteUrl } from "@/lib/seo";
@@ -111,7 +120,11 @@ function ClaimPage() {
 
   const optionId = (index: number) => `${listboxId}-option-${index}`;
 
-  const choose = (entry: (typeof ENTRIES)[number]) => {
+  const choose = (entry: (typeof ENTRIES)[number], rowIndex: number) => {
+    trackEvent(
+      claimPageEntrySelectAnalyticsEvent(),
+      claimPageEntrySelectAnalyticsData(entry.category, entry.slug, rowIndex, matches.length),
+    );
     setPicked(entry);
     setActiveIndex(-1);
   };
@@ -136,7 +149,7 @@ function ClaimPage() {
       case "Enter":
         if (activeIndex >= 0 && activeIndex < matches.length) {
           e.preventDefault();
-          choose(matches[activeIndex]);
+          choose(matches[activeIndex], activeIndex);
         }
         break;
       case "Escape":
@@ -289,7 +302,7 @@ function ClaimPage() {
                         >
                           <button
                             type="button"
-                            onClick={() => choose(m)}
+                            onClick={() => choose(m, i)}
                             onMouseEnter={() => setActiveIndex(i)}
                             className={cn(
                               "block w-full px-3 py-2 text-left hover:bg-surface-2",
@@ -316,7 +329,15 @@ function ClaimPage() {
                 <button
                   type="button"
                   key={t}
-                  onClick={() => setType(t)}
+                  onClick={() => {
+                    if (type !== t) {
+                      trackEvent(
+                        claimPageTypeSelectAnalyticsEvent(),
+                        claimPageTypeSelectAnalyticsData(t),
+                      );
+                    }
+                    setType(t);
+                  }}
                   className={cn(
                     "rounded-md border px-3 py-2 text-left text-sm transition-colors duration-200 ease-out",
                     type === t
@@ -447,7 +468,13 @@ function ClaimPage() {
         </div>
         <p className="mt-3 text-xs text-ink-subtle">
           Want to file a fresh submission instead?{" "}
-          <Link to="/submit" className="text-ink hover:underline">
+          <Link
+            to="/submit"
+            className="text-ink hover:underline"
+            onClick={() =>
+              trackEvent(claimPageSubmitAnalyticsEvent(), claimPageSubmitAnalyticsData())
+            }
+          >
             Submit a resource →
           </Link>
         </p>
