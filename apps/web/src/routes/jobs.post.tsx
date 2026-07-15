@@ -6,6 +6,15 @@ import { cn } from "@/lib/utils";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CommercialDisclosure } from "@/components/commercial-disclosure";
 import type { JobTier } from "@/types/registry";
+import { trackEvent } from "@/lib/analytics";
+import {
+  jobsPostPageEgressAnalyticsData,
+  jobsPostPageEgressAnalyticsEvent,
+  jobsPostPageSubmitAnalyticsData,
+  jobsPostPageSubmitAnalyticsEvent,
+  jobsPostPageTierSelectAnalyticsData,
+  jobsPostPageTierSelectAnalyticsEvent,
+} from "@/lib/jobs-post-page-cta-events";
 
 export const Route = createFileRoute("/jobs/post")({
   head: () => ({
@@ -59,6 +68,7 @@ function PostJobPage() {
   async function submitJob(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (submitting) return;
+    trackEvent(jobsPostPageSubmitAnalyticsEvent(), jobsPostPageSubmitAnalyticsData(tier));
     setSubmitting(true);
     setError("");
     const form = new FormData(e.currentTarget);
@@ -112,6 +122,12 @@ function PostJobPage() {
         </p>
         <Link
           to="/jobs"
+          onClick={() =>
+            trackEvent(
+              jobsPostPageEgressAnalyticsEvent(),
+              jobsPostPageEgressAnalyticsData("jobs-index"),
+            )
+          }
           className="mt-6 inline-flex h-10 items-center rounded-md border border-border bg-surface px-4 text-sm text-ink hover:bg-surface-2"
         >
           Back to jobs
@@ -134,7 +150,13 @@ function PostJobPage() {
           <button
             key={t.id}
             type="button"
-            onClick={() => setTier(t.id)}
+            onClick={() => {
+              setTier(t.id);
+              trackEvent(
+                jobsPostPageTierSelectAnalyticsEvent(),
+                jobsPostPageTierSelectAnalyticsData(t.id),
+              );
+            }}
             className={cn(
               "flex flex-col gap-2 rounded-xl border p-4 text-left transition-colors duration-200 ease-out",
               tier === t.id
