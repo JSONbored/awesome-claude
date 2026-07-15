@@ -6,8 +6,13 @@ export {
   BRIEF_ISSUE_SURFACE,
   briefEntryAnalyticsEvent,
   briefHubEntryAnalyticsData,
+  briefHubIssueAnalyticsData,
+  briefHubIssueAnalyticsEvent,
   briefIssueEntryAnalyticsData,
+  briefIssueHubAnalyticsData,
+  briefIssueHubAnalyticsEvent,
   parseBriefEntryRef,
   type BriefHubSectionId,
+  type BriefIssueHubSource,
   type BriefIssueSectionId,
 } from "@/lib/brief-entry-cta-events-lib";

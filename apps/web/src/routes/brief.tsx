@@ -8,6 +8,10 @@ import { trackEvent } from "@/lib/analytics";
 import {
   briefEntryAnalyticsEvent,
   briefHubEntryAnalyticsData,
+  briefHubIssueAnalyticsData,
+  briefHubIssueAnalyticsEvent,
+  briefIssueHubAnalyticsData,
+  briefIssueHubAnalyticsEvent,
   type BriefHubSectionId,
 } from "@/lib/brief-entry-cta-events";
 import { absoluteUrl } from "@/lib/seo";
@@ -137,7 +141,7 @@ function BriefPage() {
           </div>
           {published.length > 0 ? (
             <ol className="mt-4 space-y-3 stagger-children">
-              {published.map((issue: PublishedBriefSummary) => (
+              {published.map((issue: PublishedBriefSummary, rowIndex: number) => (
                 <li
                   key={issue.number}
                   className="group hover-lift rounded-xl border border-border bg-surface p-5 transition-[border-color,background-color] duration-200 ease-out hover:border-ink/20 hover:bg-surface-2"
@@ -145,6 +149,12 @@ function BriefPage() {
                   <Link
                     to="/brief/$number"
                     params={{ number: String(issue.number) }}
+                    onClick={() =>
+                      trackEvent(
+                        briefHubIssueAnalyticsEvent(),
+                        briefHubIssueAnalyticsData(issue.number, rowIndex, published.length),
+                      )
+                    }
                     className="block"
                   >
                     <div className="flex items-center justify-between text-xs text-ink-subtle">
