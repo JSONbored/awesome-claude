@@ -1,0 +1,241 @@
+---
+title: AI-Generated Prototype Pollution Review Rules
+slug: ai-generated-prototype-pollution-review-rules
+category: rules
+description: >-
+  Source-backed rules for reviewing AI-generated JavaScript/TypeScript code
+  before merge for prototype pollution risk, covering unsafe recursive
+  merge/clone/assign helpers on untrusted input, proto and
+  constructor-prototype key handling, and safer alternatives like Map, Set,
+  and Object.create(null).
+cardDescription: >-
+  Review AI-generated JS/TS merge, clone, and object-assignment code for
+  prototype pollution: block proto and constructor-prototype keys, prefer
+  Map/Set or Object.create(null) over mutable object literals.
+seoTitle: AI-Generated Prototype Pollution Review Rules
+seoDescription: >-
+  Practical review rules for AI-generated JavaScript/TypeScript code: guard
+  recursive merge/clone/assign helpers against proto and
+  constructor-prototype keys, and prefer Map/Set over plain object literals
+  for untrusted key-value data.
+author: lourincedaging0-commits
+submittedBy: lourincedaging0-commits
+submittedByUrl: "https://github.com/lourincedaging0-commits"
+dateAdded: "2026-07-15"
+documentationUrl: "https://cheatsheetseries.owasp.org/cheatsheets/Prototype_Pollution_Prevention_Cheat_Sheet.html"
+sourceUrls:
+  - "https://cheatsheetseries.owasp.org/cheatsheets/Prototype_Pollution_Prevention_Cheat_Sheet.html"
+  - "https://cwe.mitre.org/data/definitions/1321.html"
+  - "https://portswigger.net/web-security/prototype-pollution"
+  - "https://github.com/advisories/GHSA-jf85-cpcp-j695"
+installable: false
+usageSnippet: >-
+  Apply these rules when an AI assistant writes or edits JavaScript/
+  TypeScript code that recursively merges, deep-clones, or assigns
+  properties from an object whose keys can be influenced by user input,
+  request bodies, query strings, or parsed JSON/YAML from an external
+  source.
+copySnippet: |-
+  You are reviewing AI-generated JavaScript/TypeScript code for prototype
+  pollution risk.
+
+  Rules:
+  1. Identify every recursive merge, deep-clone, deep-assign, or "set a
+     nested path from a string" helper the change adds or edits, and
+     whether the source object's keys can be influenced by user input
+     (request body, query string, parsed JSON/YAML, a config file a user
+     can upload).
+  2. Flag any such helper that copies keys without excluding `__proto__`,
+     `constructor`, and `prototype` — a key named `__proto__` in the
+     source object, or a nested `constructor.prototype` path, can let an
+     attacker write properties onto `Object.prototype` itself, affecting
+     every object in the process.
+  3. Prefer `Map`/`Set` over a plain object literal for any untrusted
+     key-value data — `Map`/`Set` have no prototype chain to pollute for
+     the keys/values they store, unlike `{}`.
+  4. When a plain object is required, create it with `Object.create(null)`
+     (no inherited prototype) rather than `{}`, or use `{ __proto__: null }`
+     as a last resort when `Object.create` isn't available in context.
+  5. Do not trust a hand-rolled recursive merge/clone as automatically
+     safe just because it looks similar to a well-known library function;
+     confirm it explicitly denies `__proto__`/`constructor`/`prototype`
+     keys at every recursion level, not just the top level.
+  6. Treat any dependency that performs deep merging, cloning, or templating
+     on external input (config-merging libraries, deep-set-by-path
+     utilities) as needing a version check against known prototype
+     pollution advisories for that library, not just an assumption that
+     "it's a popular package so it's safe."
+
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - A pull request, diff, or snippet containing AI-generated or AI-edited JavaScript/TypeScript code that recursively merges, clones, or assigns object properties.
+  - Knowledge of which objects in the change are built from or merged with untrusted input (request bodies, query strings, parsed config/JSON/YAML).
+  - Awareness that this class of bug affects the entire process, not just the object being merged — Object.prototype pollution can enable denial-of-service, property injection into unrelated objects, or in some environments remote code execution.
+  - Permission to block merge when a recursive merge/clone/assign helper on untrusted input doesn't explicitly guard __proto__/constructor/prototype keys.
+safetyNotes:
+  - "Prototype pollution lets an attacker add or overwrite properties on Object.prototype (or another shared built-in prototype), which can silently change behavior across the entire application — from denial-of-service and logic bypasses to, in some frameworks/environments, remote code execution."
+  - "AI assistants often write a straightforward recursive merge/deep-clone/deep-set helper (a natural, short implementation for combining config objects or request bodies) without excluding __proto__/constructor/prototype keys, because the happy-path test data never includes those key names."
+  - "This is a real, repeatedly-exploited class in widely-used JavaScript libraries, not a theoretical concern — for example CVE-2019-10744 in lodash's defaultsDeep allowed Object.prototype pollution via a crafted {constructor: {prototype: {...}}} input."
+privacyNotes:
+  - "Prototype pollution proof-of-concept payloads can trigger unexpected application-wide behavior in a shared environment; test in an isolated sandbox, not a shared staging or production system."
+  - "Do not commit a working exploit payload targeting a specific internal endpoint into a public PR or issue; describe the vulnerable merge pattern and the class of key involved instead."
+tags:
+  - prototype-pollution
+  - javascript
+  - typescript
+  - web-security
+  - ai-generated-code
+  - code-review
+keywords:
+  - prototype pollution review rules
+  - proto constructor prototype key injection
+  - ai-generated code security review
+  - lodash defaultsdeep vulnerability
+  - object prototype pollution javascript
+---
+
+## Purpose
+
+Use these rules when an AI coding assistant writes or edits JavaScript or
+TypeScript code that recursively merges, deep-clones, or assigns properties
+from an object built from untrusted input. The goal is to stop a generated
+config-merge, deep-clone, or "set a nested path from a string" helper from
+letting an attacker pollute `Object.prototype` (or another built-in
+prototype) and silently change behavior across the whole application.
+
+This is a review policy, not a prototype-pollution tutorial. It tells
+reviewers what must be true about a generated change's object-merging code
+before the change is safe to merge.
+
+## Review Inputs
+
+Collect enough context to know which objects are merged/cloned and where
+their keys come from.
+
+- Every recursive merge, deep-clone, deep-assign, or dynamic nested-path-set
+  helper the change adds or edits.
+- Whether the source object being merged/cloned/read from can have its keys
+  influenced by user input — a request body, query string, parsed
+  JSON/YAML, an uploaded config file.
+- Whether the change adds or updates a dependency that performs deep
+  merging or cloning on external input, and what version is pinned.
+- Whether plain object literals (`{}`) or `Map`/`Set` are used to hold
+  untrusted key-value data.
+
+## Merge/Clone Guard Rules
+
+- Any recursive merge, deep-clone, or deep-assign helper that processes
+  untrusted input must explicitly reject or skip `__proto__`,
+  `constructor`, and `prototype` as keys at every recursion level, not just
+  the top level of the object.
+- Do not assume a hand-rolled merge helper is safe because it "looks like"
+  a well-known library's merge function; verify the guard is actually
+  present in the diff.
+- When adding or bumping a dependency that performs deep merging, cloning,
+  or path-based assignment on external input (a config-merge library, a
+  deep-set-by-string-path utility), check the version against known
+  prototype-pollution advisories for that specific library rather than
+  assuming popularity implies safety.
+- Prefer a well-maintained, current-version library with a documented fix
+  for this class of bug over a new hand-rolled merge implementation,
+  when one is genuinely needed.
+
+## Safer Object Construction Rules
+
+- Prefer `Map`/`Set` over a plain object literal for any collection built
+  from untrusted keys — they have no prototype chain for attacker-supplied
+  keys to pollute, unlike `{}`.
+- When a plain object is required, construct it with `Object.create(null)`
+  so it has no inherited prototype, or use `{ __proto__: null }` as a
+  fallback when `Object.create` isn't available in that context.
+- Consider `Object.freeze()`/`Object.seal()` on built-in prototypes as an
+  additional defense-in-depth layer, understanding it can break libraries
+  that legitimately extend built-ins, so apply and test it deliberately
+  rather than blanket-applying it.
+- In Node.js, the `--disable-proto=delete` flag removes the `__proto__`
+  accessor entirely as a defense-in-depth measure; note it does not stop
+  pollution via `constructor.prototype`, so it complements rather than
+  replaces the merge/clone guards above.
+
+## Merge Blockers
+
+Block merge when any of these is true.
+
+- A recursive merge/clone/deep-assign helper processes untrusted input
+  without excluding `__proto__`, `constructor`, and `prototype` keys at
+  every level.
+- A new or updated deep-merge/clone/path-assignment dependency is added
+  without checking its version against known prototype-pollution advisories.
+- Untrusted key-value data is stored in a plain object literal where a
+  `Map`/`Set` or `Object.create(null)` would avoid the prototype-chain risk
+  entirely, with no documented reason for the plain object.
+- A hand-rolled merge/clone helper duplicates functionality an existing,
+  already-guarded shared helper provides.
+
+## Review Checklist
+
+- [ ] {"task": "Merge/clone helpers identified", "description": "Every recursive merge, deep-clone, or deep-assign helper touching untrusted input is identified"}
+- [ ] {"task": "Dangerous keys excluded", "description": "__proto__, constructor, and prototype keys are explicitly rejected at every recursion level"}
+- [ ] {"task": "Safer collection type used", "description": "Untrusted key-value data uses Map/Set or Object.create(null) rather than a plain {} literal, where practical"}
+- [ ] {"task": "Dependency versions checked", "description": "Any deep-merge/clone/path-assignment dependency is checked against known prototype-pollution advisories for its version"}
+- [ ] {"task": "No parallel unguarded helper", "description": "The change doesn't add a new merge/clone helper next to an existing guarded shared one"}
+
+## AI Review Rules
+
+AI assistants can write and review object-merging code, but they should
+show their evidence.
+
+- Ask the assistant to list every recursive merge/clone/deep-assign helper
+  in the change and whether its input can be influenced by a user.
+- Require the assistant to point to the exact line(s) that guard against
+  `__proto__`/`constructor`/`prototype` keys, not just assert the helper is
+  "safe."
+- Have the assistant check the version of any deep-merge/clone dependency
+  against known CVEs/advisories for that library.
+- Do not let the assistant claim a merge helper is safe because tests only
+  used ordinary key names; require a test with a `__proto__` or
+  `constructor.prototype` payload.
+- Re-run review after any change to shared merge/clone/config-loading
+  helpers or their dependencies.
+
+## Troubleshooting
+
+- **A legitimate key named `constructor` or `prototype` needs to be
+  stored:** use a `Map` for that data instead of a plain object, so the key
+  name has no special meaning.
+- **`Object.freeze()` on a built-in prototype breaks a library:** that
+  library legitimately extends the built-in; scope the freeze more
+  narrowly or drop it, and rely on the merge/clone-level guards instead.
+- **Tests only cover normal merge behavior:** add a test that attempts to
+  merge in a `{"__proto__": {"polluted": true}}` or
+  `{"constructor": {"prototype": {"polluted": true}}}` payload and asserts
+  `({}).polluted` remains `undefined` afterward.
+- **A third-party library is flagged for a known prototype-pollution CVE:**
+  upgrade to the patched version rather than adding a local workaround, so
+  the fix isn't silently lost on the next unrelated dependency bump.
+
+## Duplicate And History Check
+
+Before adding a new merge/clone/deep-assign helper, confirm the codebase
+does not already have a shared, guarded utility for this. A generated
+change that adds a new hand-rolled merge function next to an existing
+guarded shared helper should be treated as suspicious — check whether the
+existing mechanism was simply not reused before introducing a second,
+possibly unguarded one.
+
+## Reference
+
+| Pattern                                          | Risk                                                  | Fix                                                          |
+| ---------------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------ |
+| Recursive `merge(target, source)` with no key filter | `{"__proto__": {...}}` pollutes Object.prototype           | Explicitly skip `__proto__`/`constructor`/`prototype` at every level |
+| `defaultsDeep`-style deep-defaults on user input     | `{"constructor": {"prototype": {...}}}` pollution (CVE-2019-10744 pattern) | Guarded merge helper or a patched, current library version          |
+| Untrusted data stored as `{}`                        | Inherits from `Object.prototype`                            | `Map`/`Set`, or `Object.create(null)`                                |
+| Old deep-merge dependency, never version-checked      | May carry a known, patched prototype-pollution CVE           | Pin/upgrade to a version with the fix, verify via its advisory       |
+
+## Sources
+
+- OWASP Prototype Pollution Prevention Cheat Sheet
+- CWE-1321: Improperly Controlled Modification of Object Prototype Attributes ('Prototype Pollution')
+- PortSwigger Web Security Academy: Prototype pollution
+- GitHub Security Advisory GHSA-jf85-cpcp-j695: Prototype Pollution in lodash (CVE-2019-10744)
