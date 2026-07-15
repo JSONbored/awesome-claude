@@ -24,6 +24,11 @@ import {
   EyeOff,
 } from "lucide-react";
 import { IntegrationMark, platformMark } from "./integration-marks";
+import { trackEvent } from "@/lib/analytics";
+import {
+  platformChipAnalyticsData,
+  platformChipAnalyticsEvent,
+} from "@/lib/platform-chip-cta-events";
 import {
   installRiskLevel,
   INSTALL_RISK_LABEL,
@@ -102,6 +107,7 @@ export function PlatformChip({ id, asLink = false }: { id: Platform; asLink?: bo
         to="/for/$platform"
         params={{ platform: id }}
         className={cn(base, "transition-colors hover:border-ink/20 hover:text-ink")}
+        onClick={() => trackEvent(platformChipAnalyticsEvent(), platformChipAnalyticsData(id))}
       >
         {content}
       </Link>

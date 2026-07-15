@@ -1,6 +1,13 @@
 import { Link } from "@tanstack/react-router";
 import { ChevronRight, Home } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { trackEvent } from "@/lib/analytics";
+import {
+  breadcrumbsCrumbAnalyticsData,
+  breadcrumbsCrumbAnalyticsEvent,
+  breadcrumbsHomeAnalyticsData,
+  breadcrumbsHomeAnalyticsEvent,
+} from "@/lib/breadcrumbs-cta-events";
 import { Fragment } from "react";
 
 export interface Crumb {
@@ -34,6 +41,12 @@ export function Breadcrumbs({
               to="/"
               className="inline-flex h-6 w-6 items-center justify-center rounded-md text-ink-subtle transition-colors duration-200 ease-out hover:bg-surface-2 hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               aria-label="Home"
+              onClick={() =>
+                trackEvent(
+                  breadcrumbsHomeAnalyticsEvent(),
+                  breadcrumbsHomeAnalyticsData(items.length),
+                )
+              }
             >
               <Home className="h-3 w-3" />
             </Link>
@@ -51,7 +64,13 @@ export function Breadcrumbs({
                     to={c.to}
                     params={c.params}
                     search={c.search}
-                    onClick={c.onClick}
+                    onClick={() => {
+                      trackEvent(
+                        breadcrumbsCrumbAnalyticsEvent(),
+                        breadcrumbsCrumbAnalyticsData(i, items.length),
+                      );
+                      c.onClick?.();
+                    }}
                     className="rounded-md px-1.5 py-0.5 text-ink-muted transition-colors duration-200 ease-out hover:bg-surface-2 hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   >
                     {c.label}

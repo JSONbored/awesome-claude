@@ -18,6 +18,20 @@ import { Label } from "@/components/ui/label";
 import { IntegrationMark } from "@/components/integration-marks";
 import { PARTNER_ROLE_LABEL, PARTNERS, SPONSORS, type Partner } from "@/data/sponsors";
 import { sponsorKindLabel } from "@/lib/sponsor-kind-lib";
+import { trackEvent } from "@/lib/analytics";
+import {
+  sponsorsSectionCreditAnalyticsData,
+  sponsorsSectionCreditAnalyticsEvent,
+  sponsorsSectionEgressAnalyticsData,
+  sponsorsSectionEgressAnalyticsEvent,
+  sponsorsSectionInquiryOpenAnalyticsData,
+  sponsorsSectionInquiryOpenAnalyticsEvent,
+  sponsorsSectionPartnerAnalyticsData,
+  sponsorsSectionPartnerAnalyticsEvent,
+  sponsorsSectionSubmitAnalyticsData,
+  sponsorsSectionSubmitAnalyticsEvent,
+  type SponsorsSectionInquirySource,
+} from "@/lib/sponsors-section-cta-events";
 import { cn } from "@/lib/utils";
 
 export function SponsorsSection() {
@@ -35,18 +49,33 @@ export function SponsorsSection() {
               Credits + infrastructure
             </h3>
           </div>
-          <Link to="/legal" className="text-xs font-medium text-ink-muted hover:text-ink">
+          <Link
+            to="/legal"
+            className="text-xs font-medium text-ink-muted hover:text-ink"
+            onClick={() =>
+              trackEvent(
+                sponsorsSectionEgressAnalyticsEvent(),
+                sponsorsSectionEgressAnalyticsData("legal"),
+              )
+            }
+          >
             Sponsorship policy →
           </Link>
         </div>
         <ul className="mt-4 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-3 lg:grid-cols-6">
-          {SPONSORS.map((s) => (
+          {SPONSORS.map((s, i) => (
             <li key={s.slug}>
               <a
                 href={s.url}
                 target="_blank"
                 rel="sponsored noopener noreferrer"
                 title={s.note}
+                onClick={() =>
+                  trackEvent(
+                    sponsorsSectionCreditAnalyticsEvent(),
+                    sponsorsSectionCreditAnalyticsData(s.slug, s.kind, i, SPONSORS.length),
+                  )
+                }
                 className="group flex h-full flex-col items-center justify-center gap-1.5 bg-surface px-3 py-5 text-center text-ink-muted transition-colors duration-200 ease-out hover:bg-surface-2 hover:text-ink"
               >
                 {s.mark ? (
@@ -80,6 +109,7 @@ export function SponsorsSection() {
             </h3>
           </div>
           <PartnerDrawer
+            inquirySource="header"
             trigger={
               <Button variant="outline" size="sm" className="gap-1.5">
                 <Mail className="h-3.5 w-3.5" /> Become a partner
@@ -89,8 +119,8 @@ export function SponsorsSection() {
         </div>
 
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {filled.map((p) => (
-            <PartnerCard key={p.slug} partner={p} />
+          {filled.map((p, i) => (
+            <PartnerCard key={p.slug} partner={p} rowIndex={i} partnerCount={filled.length} />
           ))}
           {open.map((p) => (
             <OpenSlotCard key={p.slug} partner={p} />
@@ -110,7 +140,16 @@ export function SponsorsSection() {
               <li>Every paid placement carries a visible "Sponsor" label.</li>
               <li>
                 Paid featured listings and Brief sponsorships are handled separately on{" "}
-                <Link to="/advertise" className="text-ink underline-offset-2 hover:underline">
+                <Link
+                  to="/advertise"
+                  className="text-ink underline-offset-2 hover:underline"
+                  onClick={() =>
+                    trackEvent(
+                      sponsorsSectionEgressAnalyticsEvent(),
+                      sponsorsSectionEgressAnalyticsData("advertise"),
+                    )
+                  }
+                >
                   /advertise
                 </Link>
                 .
@@ -123,12 +162,26 @@ export function SponsorsSection() {
   );
 }
 
-function PartnerCard({ partner }: { partner: Partner }) {
+function PartnerCard({
+  partner,
+  rowIndex,
+  partnerCount,
+}: {
+  partner: Partner;
+  rowIndex: number;
+  partnerCount: number;
+}) {
   return (
     <a
       href={partner.url}
       target="_blank"
       rel="sponsored noopener noreferrer"
+      onClick={() =>
+        trackEvent(
+          sponsorsSectionPartnerAnalyticsEvent(),
+          sponsorsSectionPartnerAnalyticsData(partner.slug, partner.role, rowIndex, partnerCount),
+        )
+      }
       className="group flex flex-col gap-3 rounded-xl border border-border bg-surface p-5 transition-colors duration-200 ease-out hover:bg-surface-2"
     >
       <div className="flex items-center justify-between gap-2">
@@ -163,7 +216,9 @@ function PartnerCard({ partner }: { partner: Partner }) {
 function OpenSlotCard({ partner }: { partner: Partner }) {
   return (
     <PartnerDrawer
+      inquirySource="open-slot"
       defaultRole={PARTNER_ROLE_LABEL[partner.role]}
+      role={partner.role}
       trigger={
         <button
           type="button"
@@ -195,12 +250,24 @@ function OpenSlotCard({ partner }: { partner: Partner }) {
 function PartnerDrawer({
   trigger,
   defaultRole,
+  inquirySource,
+  role = null,
 }: {
-  trigger: React.ReactNode;
+  trigger: React.ReactElement;
   defaultRole?: string;
+  inquirySource: SponsorsSectionInquirySource;
+  role?: string | null;
 }) {
   const [submitting, setSubmitting] = React.useState(false);
   const formRef = React.useRef<HTMLFormElement>(null);
+
+  const onOpenChange = (open: boolean) => {
+    if (!open) return;
+    trackEvent(
+      sponsorsSectionInquiryOpenAnalyticsEvent(),
+      sponsorsSectionInquiryOpenAnalyticsData(inquirySource, role),
+    );
+  };
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -209,9 +276,14 @@ function PartnerDrawer({
     const company = String(data.get("company") ?? "").trim();
     const website = String(data.get("website") ?? "").trim();
     const email = String(data.get("email") ?? "").trim();
-    const role = String(data.get("role") ?? "").trim();
+    const roleValue = String(data.get("role") ?? "").trim();
     const offer = String(data.get("offer") ?? "").trim();
     const notes = String(data.get("notes") ?? "").trim();
+
+    trackEvent(
+      sponsorsSectionSubmitAnalyticsEvent(),
+      sponsorsSectionSubmitAnalyticsData(Boolean(roleValue)),
+    );
 
     try {
       const response = await fetch("/api/listing-leads", {
@@ -223,9 +295,9 @@ function PartnerDrawer({
           contactName: company,
           contactEmail: email,
           companyName: company,
-          listingTitle: offer || role || "Ecosystem partnership",
+          listingTitle: offer || roleValue || "Ecosystem partnership",
           websiteUrl: website,
-          message: [role ? `Role: ${role}` : "", notes].filter(Boolean).join("\n\n"),
+          message: [roleValue ? `Role: ${roleValue}` : "", notes].filter(Boolean).join("\n\n"),
         }),
       });
       if (!response.ok) throw new Error(`Lead intake returned ${response.status}`);
@@ -244,7 +316,7 @@ function PartnerDrawer({
   };
 
   return (
-    <Drawer>
+    <Drawer onOpenChange={onOpenChange}>
       <DrawerTrigger asChild>{trigger}</DrawerTrigger>
       <DrawerContent>
         <div className="mx-auto w-full max-w-xl">

@@ -14,6 +14,13 @@ import {
   readActiveCommunity,
   writeActiveCommunity,
 } from "@/lib/entry-signals-storage-lib";
+import { trackEvent } from "@/lib/analytics";
+import {
+  entrySignalsCommunityAnalyticsData,
+  entrySignalsCommunityAnalyticsEvent,
+  entrySignalsVoteAnalyticsData,
+  entrySignalsVoteAnalyticsEvent,
+} from "@/lib/entry-signals-panel-cta-events";
 import { cn } from "@/lib/utils";
 
 type SignalState = {
@@ -100,6 +107,15 @@ export function EntrySignalsPanel({ category, slug }: { category: Category; slug
   const toggleVote = async () => {
     const clientId = getClientId(defaultLocalStorage());
     const nextVote = !state.voted;
+    trackEvent(
+      entrySignalsVoteAnalyticsEvent(),
+      entrySignalsVoteAnalyticsData(
+        category,
+        slug,
+        nextVote,
+        Math.max(0, state.voteCount + (nextVote ? 1 : -1)),
+      ),
+    );
     setState((current) => ({
       ...current,
       voted: nextVote,
@@ -130,6 +146,10 @@ export function EntrySignalsPanel({ category, slug }: { category: Category; slug
   const toggleCommunity = async (signalType: keyof CommunityCounts) => {
     const clientId = getClientId(defaultLocalStorage());
     const active = !state.activeCommunity[signalType];
+    trackEvent(
+      entrySignalsCommunityAnalyticsEvent(),
+      entrySignalsCommunityAnalyticsData(category, slug, signalType, active),
+    );
     const nextActive = { ...state.activeCommunity, [signalType]: active };
     writeActiveCommunity(defaultLocalStorage(), targetKey, nextActive);
     setState((current) => ({

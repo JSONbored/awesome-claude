@@ -1,6 +1,12 @@
 import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { trackEvent } from "@/lib/analytics";
+import {
+  hoverChevronsScrollAnalyticsData,
+  hoverChevronsScrollAnalyticsEvent,
+  type HoverChevronsDirection,
+} from "@/lib/hover-chevrons-cta-events";
 
 /**
  * Hover-revealed left/right scroll chevrons for a horizontal scroller.
@@ -55,6 +61,8 @@ export function HoverChevrons({
   const nudge = (dir: 1 | -1) => {
     const el = scroller();
     if (!el) return;
+    const direction: HoverChevronsDirection = dir === -1 ? "left" : "right";
+    trackEvent(hoverChevronsScrollAnalyticsEvent(), hoverChevronsScrollAnalyticsData(direction));
     el.scrollBy({ left: dir * el.clientWidth * 0.85, behavior: "smooth" });
   };
 

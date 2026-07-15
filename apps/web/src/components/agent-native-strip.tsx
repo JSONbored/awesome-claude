@@ -1,8 +1,19 @@
 import { Link } from "@tanstack/react-router";
 import { Terminal, Command, FileCode } from "lucide-react";
 import { CopyButton } from "./copy-button";
+import { trackEvent } from "@/lib/analytics";
+import {
+  agentNativeStripCopyAnalyticsData,
+  agentNativeStripCopyAnalyticsEvent,
+  agentNativeStripEgressAnalyticsData,
+  agentNativeStripEgressAnalyticsEvent,
+  type AgentNativeStripCardId,
+  type AgentNativeStripDestination,
+} from "@/lib/agent-native-strip-cta-events";
 
 type Card = {
+  id: AgentNativeStripCardId;
+  destination: AgentNativeStripDestination;
   Icon: typeof Terminal;
   eyebrow: string;
   title: string;
@@ -14,6 +25,8 @@ type Card = {
 
 const CARDS: Card[] = [
   {
+    id: "mcp",
+    destination: "integrations-mcp",
     Icon: Terminal,
     eyebrow: "MCP endpoint",
     title: "Use HeyClaude inside Claude Code",
@@ -23,6 +36,8 @@ const CARDS: Card[] = [
     ctaLabel: "MCP setup",
   },
   {
+    id: "raycast",
+    destination: "integrations-raycast",
     Icon: Command,
     eyebrow: "Raycast extension",
     title: "Search from anywhere",
@@ -32,6 +47,8 @@ const CARDS: Card[] = [
     ctaLabel: "Get the extension",
   },
   {
+    id: "llms",
+    destination: "api-docs",
     Icon: FileCode,
     eyebrow: "llms.txt & JSON feeds",
     title: "Pipe the registry into your agent",
@@ -52,14 +69,23 @@ export function AgentNativeStrip() {
             One registry, every surface
           </h2>
         </div>
-        <Link to="/ecosystem" className="text-sm text-ink-muted hover:text-ink">
+        <Link
+          to="/ecosystem"
+          className="text-sm text-ink-muted hover:text-ink"
+          onClick={() =>
+            trackEvent(
+              agentNativeStripEgressAnalyticsEvent(),
+              agentNativeStripEgressAnalyticsData("ecosystem"),
+            )
+          }
+        >
           All integrations →
         </Link>
       </div>
       <div className="mt-6 grid gap-4 lg:grid-cols-3">
         {CARDS.map((c) => (
           <div
-            key={c.eyebrow}
+            key={c.id}
             className="group flex flex-col gap-4 rounded-xl border border-border bg-surface p-5 transition-colors duration-200 ease-out hover:bg-surface-2"
           >
             <div className="flex items-center justify-between">
@@ -74,11 +100,22 @@ export function AgentNativeStrip() {
             </div>
             <div className="flex items-center gap-2 rounded-md border border-border bg-surface-2 px-3 py-2 font-mono text-xs text-ink">
               <span className="flex-1 truncate">{c.snippet}</span>
-              <CopyButton value={c.snippet} label="Copy" />
+              <CopyButton
+                value={c.snippet}
+                label="Copy"
+                event={agentNativeStripCopyAnalyticsEvent()}
+                eventData={agentNativeStripCopyAnalyticsData(c.id)}
+              />
             </div>
             <Link
               to={c.to}
               className="story-link mt-auto inline-flex items-center gap-1 text-sm font-medium text-ink hover:text-ink-hover"
+              onClick={() =>
+                trackEvent(
+                  agentNativeStripEgressAnalyticsEvent(),
+                  agentNativeStripEgressAnalyticsData(c.destination),
+                )
+              }
             >
               {c.ctaLabel} <span aria-hidden>→</span>
             </Link>
