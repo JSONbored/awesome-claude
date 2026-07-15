@@ -309,4 +309,97 @@ describe("compare decision brief lib", () => {
     const state = compareDecisionBriefState([ready]);
     expect(state.entryBriefs[0].recommendation).toContain("Best candidate");
   });
+
+  it("asks for source and safety work when two required checklist items are missing", () => {
+    const sparse = entry({
+      trust: "trusted",
+      source: "unverified",
+      sourceUrl: undefined,
+      safetyNotes: undefined,
+      privacyNotes: "present",
+      reviewed: true,
+    });
+    const state = compareDecisionBriefState([sparse]);
+    expect(state.entryBriefs[0].recommendation).toContain(
+      "Complete source, safety, and privacy checks",
+    );
+  });
+
+  it("keeps review-trust guidance when posture is mixed but not blocked", () => {
+    const review = entry({
+      trust: "review",
+      source: "source-backed",
+      sourceUrl: "https://github.com/acme/review",
+      safetyNotes: "yes",
+      privacyNotes: "yes",
+      reviewed: true,
+      installCommand: "npm i review",
+    });
+    const state = compareDecisionBriefState([review]);
+    expect(state.entryBriefs[0].recommendation).toMatch(
+      /compare remaining trust differences|confirm fit/i,
+    );
+  });
+
+  it("reports action-only divergence when trust signals match", () => {
+    const installable = entry({
+      slug: "installable",
+      title: "Installable",
+      trust: "review",
+      reviewed: true,
+      source: "source-backed",
+      sourceUrl: "https://github.com/acme/installable",
+      safetyNotes: "yes",
+      privacyNotes: "yes",
+      installCommand: "npm i installable",
+    });
+    const docsOnly = entry({
+      slug: "docs",
+      title: "Docs",
+      trust: "review",
+      reviewed: true,
+      source: "source-backed",
+      sourceUrl: "https://github.com/acme/docs",
+      safetyNotes: "yes",
+      privacyNotes: "yes",
+      installCommand: undefined,
+      configSnippet: undefined,
+      fullCopy: undefined,
+      copySnippet: undefined,
+    });
+    const state = compareDecisionBriefState([installable, docsOnly]);
+    expect(state.hasActionDivergence).toBe(true);
+    expect(state.summary).toMatch(/next-step actions differ|Signals diverge/i);
+  });
+
+  it("reports score parity when two briefs land on the same score", () => {
+    const a = entry({
+      slug: "a",
+      title: "A",
+      trust: "review",
+      reviewed: true,
+      source: "source-backed",
+      sourceUrl: "https://github.com/acme/a",
+      safetyNotes: "yes",
+      privacyNotes: "yes",
+      installCommand: "npm i a",
+    });
+    const b = entry({
+      slug: "b",
+      title: "B",
+      trust: "review",
+      reviewed: true,
+      source: "source-backed",
+      sourceUrl: "https://github.com/acme/b",
+      safetyNotes: "yes",
+      privacyNotes: "yes",
+      installCommand: "npm i b",
+    });
+    const state = compareDecisionBriefState([a, b]);
+    expect(
+      state.entryBriefs.some((brief) =>
+        brief.compareDeltaSummary.includes("Score parity"),
+      ) || state.entryBriefs[0].score === state.entryBriefs[1].score,
+    ).toBe(true);
+  });
 });

@@ -210,4 +210,72 @@ describe("entry compare benchmark lib", () => {
     const row = state.rows[0];
     expect(row.summary).toContain("points");
   });
+
+  it("treats blocked trust, list-based notes, and config payloads as score signals", () => {
+    const blocked = entry({
+      slug: "blocked",
+      title: "Blocked",
+      trust: "blocked",
+      source: "unverified",
+    });
+    const listed = entry({
+      slug: "listed",
+      title: "Listed",
+      trust: "limited",
+      source: "unverified",
+      safetyNotesList: ["Runs locally"],
+      privacyNotesList: ["No telemetry"],
+      configSnippet: '{ "enabled": true }',
+    });
+    const blockedState = entryCompareBenchmarkState(blocked, "balanced", [
+      listed,
+    ]);
+    expect(blockedState.targetScore).toBeLessThan(
+      entryCompareBenchmarkState(listed, "balanced", []).targetScore,
+    );
+    expect(
+      blockedState.rows.find((row) => row.entryRef === "tools/listed")
+        ?.dimensions.length,
+    ).toBe(4);
+  });
+
+  it("marks near-tied peers as aligned and reports mixed benchmark summaries", () => {
+    const left = entry({
+      slug: "left",
+      title: "Left",
+      trust: "review",
+      source: "source-backed",
+      sourceUrl: "https://github.com/acme/left",
+      reviewed: true,
+      safetyNotes: "present",
+      privacyNotes: "present",
+      installCommand: "npm i left",
+    });
+    const right = entry({
+      slug: "right",
+      title: "Right",
+      trust: "review",
+      source: "source-backed",
+      sourceUrl: "https://github.com/acme/right",
+      reviewed: true,
+      safetyNotes: "present",
+      privacyNotes: "present",
+      installCommand: "npm i right",
+    });
+    const aligned = entryCompareBenchmarkState(left, "balanced", [right]);
+    expect(aligned.rows[0]?.verdict).toBe("aligned");
+    expect(aligned.benchmarkSummary).toContain("aligned");
+
+    const mixed = entryCompareBenchmarkState(target, "balanced", [
+      strong,
+      weak,
+    ]);
+    expect(mixed.benchmarkSummary).toMatch(/stronger|weaker|mixed/);
+  });
+
+  it("prompts tray membership when the compare list is empty", () => {
+    const empty = entryCompareBenchmarkState(target, "balanced", []);
+    expect(empty.summary).toContain("Add other entries");
+    expect(empty.benchmarkSummary).toBeNull();
+  });
 });
