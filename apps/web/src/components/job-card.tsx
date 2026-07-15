@@ -8,9 +8,10 @@ interface Props {
   job: JobListing;
   /** "row" is the standard list card. "rail" is a compact card for the spotlight aside. */
   variant?: "row" | "rail";
+  onNavigate?: () => void;
 }
 
-export function JobCard({ job, variant = "row" }: Props) {
+export function JobCard({ job, variant = "row", onNavigate }: Props) {
   const tint = companyTint(job.company);
   const fresh = isFresh(job.postedAt);
   const featured = job.tier === "featured";
@@ -21,6 +22,7 @@ export function JobCard({ job, variant = "row" }: Props) {
       <Link
         to="/jobs/$slug"
         params={{ slug: job.slug }}
+        onClick={onNavigate}
         className="group block rounded-lg border border-border bg-background p-3 transition-[border-color,background-color,color] duration-200 ease-out hover:border-ink/20 hover:bg-surface-2"
       >
         <div className="flex items-start gap-3">
@@ -56,6 +58,7 @@ export function JobCard({ job, variant = "row" }: Props) {
     <Link
       to="/jobs/$slug"
       params={{ slug: job.slug }}
+      onClick={onNavigate}
       className={cn(
         "group hover-lift surface-raised relative block overflow-hidden rounded-xl border bg-surface p-4 sm:p-5",
         "hover:border-ink/20 hover:bg-surface-2",
