@@ -10,6 +10,8 @@ import { companyTint, monogram, relativePosted, sortJobs } from "@/lib/jobs-util
 import { CopyButton } from "@/components/copy-button";
 import { trackEvent } from "@/lib/analytics";
 import {
+  jobsDetailEgressAnalyticsData,
+  jobsDetailEgressAnalyticsEvent,
   jobsDetailIndexAnalyticsData,
   jobsDetailIndexAnalyticsEvent,
   jobsDetailRelatedAnalyticsData,
@@ -193,6 +195,12 @@ function JobDetail() {
                   href={job.companyUrl}
                   target="_blank"
                   rel="noreferrer"
+                  onClick={() =>
+                    trackEvent(
+                      jobsDetailEgressAnalyticsEvent(),
+                      jobsDetailEgressAnalyticsData(job.slug, job.tier, "company"),
+                    )
+                  }
                   className="font-medium text-ink transition-colors duration-200 ease-out hover:text-ink-hover"
                 >
                   {job.company}
@@ -259,6 +267,12 @@ function JobDetail() {
                 href={job.applyUrl}
                 target="_blank"
                 rel="noreferrer"
+                onClick={() =>
+                  trackEvent(
+                    jobsDetailEgressAnalyticsEvent(),
+                    jobsDetailEgressAnalyticsData(job.slug, job.tier, "apply"),
+                  )
+                }
                 className="inline-flex h-10 w-full items-center justify-center gap-1.5 rounded-md bg-ink px-4 text-sm font-medium text-background hover:bg-ink/90"
               >
                 Apply on {job.company} <ArrowUpRight className="h-4 w-4" />
@@ -287,6 +301,12 @@ function JobDetail() {
                 href={job.sourceUrl}
                 target="_blank"
                 rel="noreferrer"
+                onClick={() =>
+                  trackEvent(
+                    jobsDetailEgressAnalyticsEvent(),
+                    jobsDetailEgressAnalyticsData(job.slug, job.tier, "source"),
+                  )
+                }
                 className="mt-1.5 block truncate text-ink transition-colors duration-200 ease-out hover:text-ink-hover"
               >
                 {job.sourceUrl}

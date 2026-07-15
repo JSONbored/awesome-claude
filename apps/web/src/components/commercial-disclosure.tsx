@@ -1,6 +1,11 @@
 import { Link } from "@tanstack/react-router";
 import { ShieldCheck } from "lucide-react";
 import type { ReactNode } from "react";
+import { trackEvent } from "@/lib/analytics";
+import {
+  commercialDisclosureEgressAnalyticsData,
+  commercialDisclosureEgressAnalyticsEvent,
+} from "@/lib/commercial-disclosure-cta-events";
 
 export function CommercialDisclosure({ className = "" }: { className?: string }) {
   return (
@@ -26,7 +31,16 @@ export function CommercialDisclosure({ className = "" }: { className?: string })
           </ul>
           <p className="text-xs">
             Policy details live on{" "}
-            <Link to="/legal" className="text-ink underline-offset-2 hover:underline">
+            <Link
+              to="/legal"
+              className="text-ink underline-offset-2 hover:underline"
+              onClick={() =>
+                trackEvent(
+                  commercialDisclosureEgressAnalyticsEvent(),
+                  commercialDisclosureEgressAnalyticsData("legal"),
+                )
+              }
+            >
               /legal
             </Link>
             .

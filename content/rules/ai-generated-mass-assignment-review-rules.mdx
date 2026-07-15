@@ -1,0 +1,237 @@
+---
+title: AI-Generated Mass Assignment Review Rules
+slug: ai-generated-mass-assignment-review-rules
+category: rules
+description: >-
+  Source-backed rules for reviewing AI-generated code that binds request
+  parameters to model/entity objects before merge for mass assignment risk,
+  covering allowlist field binding, DTOs that exclude sensitive fields, and
+  the framework-specific autobinding features that make this easy to
+  introduce by default.
+cardDescription: >-
+  Review AI-generated request-to-model binding code for mass assignment:
+  allowlist bindable fields, use DTOs that exclude sensitive properties, and
+  don't trust a framework's default autobinding.
+seoTitle: AI-Generated Mass Assignment Review Rules
+seoDescription: >-
+  Practical review rules for AI-generated code that binds request bodies to
+  model objects: allowlist bindable fields, exclude sensitive properties like
+  admin/role flags with DTOs, and audit framework autobinding defaults.
+author: lourincedaging0-commits
+submittedBy: lourincedaging0-commits
+submittedByUrl: "https://github.com/lourincedaging0-commits"
+dateAdded: "2026-07-15"
+documentationUrl: "https://cheatsheetseries.owasp.org/cheatsheets/Mass_Assignment_Cheat_Sheet.html"
+sourceUrls:
+  - "https://cheatsheetseries.owasp.org/cheatsheets/Mass_Assignment_Cheat_Sheet.html"
+  - "https://cwe.mitre.org/data/definitions/915.html"
+  - "https://owasp.org/API-Security/editions/2023/en/0xa3-broken-object-property-level-authorization/"
+  - "https://github.blog/2012-03-04-public-key-security-vulnerability-and-mitigation/"
+installable: false
+usageSnippet: >-
+  Apply these rules when an AI assistant writes or edits code that binds an
+  HTTP request body, query string, or form submission directly to a model,
+  entity, or domain object — especially "create" and "update" endpoints
+  generated from a model/ORM definition.
+copySnippet: |-
+  You are reviewing AI-generated code for mass assignment (autobinding)
+  risk.
+
+  Rules:
+  1. Identify every place the change binds request data (JSON body, form
+     fields, query parameters) directly onto a model, entity, or ORM object
+     — whether via a framework's autobinding (Spring MVC model binding,
+     ASP.NET MVC model binding, Rails `update_attributes`/`assign_attributes`,
+     a Mongoose schema constructor, PHP object hydration) or a hand-written
+     loop that copies request keys onto an object.
+  2. Require an explicit allowlist of the fields a given endpoint may set —
+     never bind "whatever the request body contains" onto a full model
+     object by default.
+  3. Flag any model/entity with a sensitive field (an admin/role flag, an
+     ownership/user-ID reference, a price/balance, an internal status or
+     verification flag) that is reachable through a binding path without
+     an explicit allowlist or block-list excluding that field.
+  4. Prefer a dedicated Data Transfer Object (DTO) / input schema per
+     endpoint that only declares the fields a user is allowed to set, over
+     binding directly to the full persistence model — a field that doesn't
+     exist on the DTO can't be mass-assigned even if the request includes
+     it.
+  5. Do not treat a framework's default autobinding behavior as safe by
+     default; confirm the framework's allowlist/block-list mechanism
+     (`@InitBinder` allowed/disallowed fields in Spring, strong parameters
+     in Rails, a schema pick/omit list in Mongoose, a serializer/DTO in
+     other stacks) is actually configured for each bindable model.
+  6. Apply the same scrutiny to "update" endpoints as "create" endpoints —
+     an update path that re-binds the full request onto an existing loaded
+     entity can overwrite fields the create-path DTO already protected.
+
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - A pull request, diff, or snippet containing AI-generated or AI-edited code that binds request data to a model, entity, or ORM object.
+  - Knowledge of which fields on the affected model/entity are sensitive (admin/role flags, ownership references, financial fields, verification/status flags).
+  - Familiarity with the specific framework's autobinding and allowlist/block-list mechanism in use, since the safe pattern differs meaningfully between Spring MVC, Rails, Mongoose/Node, Django, and hand-rolled binding code.
+  - Permission to block merge when a request-to-model binding path can set a sensitive field with no allowlist, block-list, or DTO in place.
+safetyNotes:
+  - "Mass assignment lets an attacker set fields on a model that were never meant to be user-editable — a privilege flag, an ownership reference, a price — simply by adding an extra parameter the client controls to a request that already succeeds for legitimate fields."
+  - "AI assistants often generate the shortest working binding code (bind the whole request body onto the model, or a framework's default autobinding) because it passes the happy-path test with only the intended fields present, without adding the allowlist/DTO layer that blocks unintended ones."
+  - "This is not a theoretical risk: a mass assignment vulnerability in GitHub's own public-key update form in 2012 let an attacker add their SSH key to the rails organization and push code, entirely through an unintended request parameter."
+privacyNotes:
+  - "Mass assignment proof-of-concept testing (setting an unintended field like an admin flag) can grant real elevated access in a shared test environment; use an isolated account and environment, never a shared staging or production system."
+  - "Do not commit a working exploit request (the exact extra parameter and target field) targeting a real internal endpoint into a public PR or issue; describe the vulnerable binding pattern and the class of field involved instead."
+tags:
+  - mass-assignment
+  - autobinding
+  - broken-object-property-level-authorization
+  - api-security
+  - ai-generated-code
+  - code-review
+keywords:
+  - mass assignment review rules
+  - autobinding vulnerability
+  - ai-generated code security review
+  - broken object property level authorization
+  - allowlist model binding
+---
+
+## Purpose
+
+Use these rules when an AI coding assistant writes or edits code that binds
+request data onto a model, entity, or ORM object. The goal is to stop a
+generated create/update endpoint from letting a client set fields it was
+never meant to control — an admin flag, an ownership reference, a price —
+just by adding an extra request parameter, because the binding code accepted
+the whole request body by default.
+
+This is a review policy, not a mass-assignment tutorial. It tells reviewers
+what must be true about a generated change's request-to-model binding before
+the change is safe to merge.
+
+## Review Inputs
+
+Collect enough context to know what gets bound and what's sensitive on it.
+
+- Every place the change binds request data (JSON body, form fields, query
+  parameters) onto a model, entity, or ORM object, whether through framework
+  autobinding or hand-written field-copying code.
+- Which fields on the target model/entity are sensitive: privilege/role
+  flags, ownership or user-ID references, financial fields, verification or
+  approval status, anything that should only ever be set by trusted
+  server-side logic.
+- Whether the framework in use autobinds by default (Spring MVC, ASP.NET
+  MVC, Rails, many ORMs) and what its allowlist/block-list mechanism is.
+- Whether create and update paths for the same model use the same binding
+  code or different, independently-reviewed paths.
+
+## Binding Rules
+
+- Require an explicit allowlist of bindable fields per endpoint — never
+  accept "whatever fields the request includes" onto a full model object.
+- Flag any sensitive field (privilege/role, ownership, financial, status)
+  that's reachable through a binding path without an explicit allowlist or
+  block-list excluding it.
+- Prefer a dedicated DTO / input schema per endpoint over binding directly
+  to the persistence model: a field the DTO doesn't declare can't be
+  mass-assigned even if present in the request.
+- Do not assume a framework's default autobinding is safe; confirm its
+  specific allowlist/block-list mechanism (Spring's `@InitBinder`
+  `setAllowedFields`/`setDisallowedFields`, Rails strong parameters, a
+  Mongoose schema pick/omit list, a serializer/DTO elsewhere) is actually
+  configured for every bindable model in the diff.
+- Give update endpoints the same scrutiny as create endpoints — rebinding a
+  full request body onto an already-loaded entity on update can overwrite
+  fields the create path's DTO protected.
+
+## Exploitability Rules
+
+- Treat a sensitive field as exploitable mass-assignment risk when: an
+  attacker can guess or discover the field name (from public source, docs,
+  or a client bundle), and the binding path has no allowlist/block-list
+  excluding it — both conditions are commonly true for AI-generated code
+  that mirrors the model's real field names in API docs or client code.
+- Remember this vulnerability goes by different names per stack — mass
+  assignment (Rails, Node), autobinding (Spring MVC, ASP.NET MVC), object
+  injection (PHP) — review binding code in every language present in the
+  diff, not just the one the reviewer is most familiar with.
+- Confirm the fix uses an allowlist (only named safe fields bindable) rather
+  than a block-list alone where practical — a block-list must be kept in
+  sync with every new sensitive field added later, while an allowlist fails
+  closed by default.
+
+## Merge Blockers
+
+Block merge when any of these is true.
+
+- A create or update endpoint binds request data onto a model/entity with
+  no allowlist, block-list, or DTO restricting which fields can be set.
+- A sensitive field (privilege/role, ownership, financial, verification
+  status) is reachable through a binding path with no explicit protection.
+- An update endpoint uses different, less-restrictive binding than the
+  create endpoint for the same model.
+- A framework's autobinding is relied on with its default configuration,
+  with no allowlist/block-list mechanism actually applied.
+
+## Review Checklist
+
+- [ ] {"task": "Binding paths identified", "description": "Every request-to-model binding path in the change is identified, including framework autobinding"}
+- [ ] {"task": "Allowlist or DTO present", "description": "Each binding path restricts to an explicit allowlist of fields or uses a DTO that excludes sensitive ones"}
+- [ ] {"task": "Sensitive fields protected", "description": "Privilege/role, ownership, financial, and status fields are not reachable through any unprotected binding path"}
+- [ ] {"task": "Create and update both covered", "description": "Update endpoints get the same binding scrutiny as create endpoints for the same model"}
+- [ ] {"task": "Framework default not assumed safe", "description": "The framework's specific allowlist/block-list mechanism is confirmed configured, not just assumed"}
+
+## AI Review Rules
+
+AI assistants can write and review request-binding code, but they should
+show their evidence.
+
+- Ask the assistant to list every request-to-model binding path in the
+  change, including any framework autobinding it relies on implicitly.
+- Require the assistant to state, for each bindable model, which fields are
+  sensitive and how the binding path excludes them.
+- Have the assistant confirm update endpoints don't silently gain broader
+  binding than their corresponding create endpoint.
+- Do not let the assistant claim a binding path is safe because the happy-
+  path test only sent the intended fields.
+- Re-run review after any change to a model's fields, a binding
+  configuration, or a shared DTO/serializer.
+
+## Troubleshooting
+
+- **A legitimate admin-only field needs to be settable by some requests:**
+  give the admin-facing endpoint its own DTO/allowlist that includes it,
+  separate from the general user-facing endpoint's DTO.
+- **Switching to a DTO breaks a field the client actually needs to set:**
+  add that specific field to the DTO deliberately, rather than reverting to
+  full-model binding.
+- **Tests only cover intended fields:** add a test that includes an extra,
+  unintended field (e.g. a role/admin flag) in the request and asserts it
+  was not applied to the resulting object.
+- **An update endpoint needs different bindable fields than create:** give
+  it its own explicit allowlist/DTO rather than reusing the create path's
+  binding code unchanged.
+
+## Duplicate And History Check
+
+Before adding a new binding path, confirm the codebase does not already
+have a shared DTO, serializer, or allowlist configuration for this model. A
+generated change that binds directly to the model next to an existing
+protected DTO for the same entity should be treated as suspicious — check
+whether the existing mechanism was simply not reused before introducing a
+second, unprotected binding path.
+
+## Reference
+
+| Pattern                                        | Risk                                                | Fix                                                          |
+| ------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------ |
+| `submit(User user)` binding the full request body | Any model field, including `isAdmin`, is settable   | Bind to a DTO that omits sensitive fields                          |
+| Rails `update_attributes(params[:user])`           | All permitted-by-default attributes are settable    | Strong parameters: explicit `.permit(:userid, :email)`             |
+| Mongoose `new User(req.body)`                      | Every schema field, including `isAdmin`, is settable | `_.pick(req.body, User.userCreateSafeFields)` or a protect flag    |
+| Update endpoint reuses create's unrestricted binding | Same exposure persists after "fixing" create only  | Give update its own explicit allowlist/DTO                         |
+| Sensitive field name discoverable via public docs/client | Attacker can guess the exact unintended parameter | Allowlist (fail-closed) rather than relying on obscurity            |
+
+## Sources
+
+- OWASP Mass Assignment Cheat Sheet
+- CWE-915: Improperly Controlled Modification of Dynamically-Determined Object Attributes
+- OWASP API Security Top 10 2023 — API3: Broken Object Property Level Authorization
+- GitHub Blog: Public Key Security Vulnerability and Mitigation (2012 mass assignment incident)

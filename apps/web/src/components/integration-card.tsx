@@ -5,6 +5,10 @@ import { IntegrationMarkTile } from "./integration-marks";
 import { LiveVersionBadge } from "./live-version-badge";
 import { CopyButton } from "./copy-button";
 import { cn } from "@/lib/utils";
+import {
+  integrationCardCopyAnalyticsData,
+  integrationCardCopyAnalyticsEvent,
+} from "@/lib/integration-card-cta-events";
 
 const STATUS_STYLES: Record<Integration["status"], string> = {
   live: "text-trust-trusted",
@@ -74,7 +78,17 @@ export function IntegrationCard({
           <code className="min-w-0 flex-1 truncate font-mono text-[11px] text-ink">
             {surface.snippet}
           </code>
-          <CopyButton value={surface.snippet} label="Copy" size="sm" />
+          <CopyButton
+            value={surface.snippet}
+            label="Copy"
+            size="sm"
+            event={integrationCardCopyAnalyticsEvent()}
+            eventData={integrationCardCopyAnalyticsData(
+              integration.slug,
+              surface.kind,
+              integration.status,
+            )}
+          />
         </div>
       )}
       {!compact && (

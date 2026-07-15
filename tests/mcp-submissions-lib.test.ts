@@ -414,3 +414,112 @@ describe("submissions re-export compatibility", () => {
     );
   });
 });
+
+describe("submissions-lib normalizeSubmissionFields derivations", () => {
+  it("derives name from title and slug from name", () => {
+    const normalized = normalizeSubmissionFields({
+      title: "My Cool Tool",
+      description: "A helpful thing for testing.",
+    });
+    expect(normalized.name).toBe("My Cool Tool");
+    expect(normalized.slug).toBe("my-cool-tool");
+    expect(normalized.card_description).toBe("A helpful thing for testing.");
+  });
+
+  it("normalizes a brand domain and routes non-parseable source urls to docs", () => {
+    expect(
+      normalizeSubmissionFields({
+        name: "X",
+        slug: "x",
+        brand_domain: "https://www.Asana.com/teams",
+      }).brand_domain,
+    ).toBe("asana.com");
+    expect(
+      normalizeSubmissionFields({
+        name: "X",
+        slug: "x",
+        source_url: "not a url",
+      }).docs_url,
+    ).toBe("not a url");
+  });
+
+  it("truncates over-long card descriptions and joins tag arrays", () => {
+    const long = normalizeSubmissionFields({
+      name: "X",
+      slug: "x",
+      description: "word ".repeat(60),
+    });
+    expect(long.card_description.endsWith("...")).toBe(true);
+    expect(long.card_description.length).toBeLessThanOrEqual(140);
+    expect(
+      normalizeSubmissionFields({ name: "X", slug: "x", tags: ["a", "b"] })
+        .tags,
+    ).toBe("a, b");
+  });
+
+  it("skips null/undefined fields during normalization", () => {
+    const normalized = normalizeSubmissionFields({
+      name: null,
+      extra: undefined,
+      title: "T",
+    });
+    expect(normalized.name).toBe("T");
+    expect("extra" in normalized).toBe(false);
+  });
+});
+
+describe("submissions-lib slugify character handling", () => {
+  it("drops quotes, keeps digits, and collapses separators", () => {
+    expect(slugify("Don't Stop")).toBe("dont-stop");
+    expect(slugify('Say "Hi"')).toBe("say-hi");
+    expect(slugify("Tool 2 v3")).toBe("tool-2-v3");
+    expect(slugify("hello!!!")).toBe("hello");
+    expect(slugify("")).toBe("");
+  });
+});
+
+describe("submissions-lib example generation across categories", () => {
+  it("builds field examples for every submission category", () => {
+    for (const category of Object.keys(submissionSpec.categories)) {
+      const result = getSubmissionExamplesFromSpec(submissionSpec, {
+        category,
+      });
+      expect(result.ok).toBe(true);
+      expect(result.categories).toHaveLength(1);
+      const example = result.categories[0];
+      expect(example.category).toBe(category);
+      expect(Object.keys(example.completeFields).length).toBeGreaterThan(0);
+      expect(example.completeFields.category).toBe(category);
+    }
+  });
+
+  it("lists every category when none is requested", () => {
+    const result = getSubmissionExamplesFromSpec(submissionSpec, {});
+    expect(result.ok).toBe(true);
+    expect(result.categories.length).toBe(
+      Object.keys(submissionSpec.categories).length,
+    );
+  });
+
+  it("returns a not-found error for an unknown example category", () => {
+    expect(
+      getSubmissionExamplesFromSpec(submissionSpec, { category: "nope" }),
+    ).toMatchObject({ ok: false, error: { code: "not_found" } });
+  });
+});
+
+describe("submissions-lib validate envelope for unsupported category", () => {
+  it("nulls the pr preview and blanks required fields when no category is given", () => {
+    const result = validateSubmissionDraftFromSpec(submissionSpec, {
+      fields: { name: "No Category" },
+    });
+    expect(result.valid).toBe(false);
+    expect(result.category).toBe("");
+    expect(result.prPreview).toBeNull();
+    expect(result.slug).toBe("no-category");
+    expect(result.requiredFields).toEqual([]);
+    expect(result.nextSteps).toEqual([
+      "Fix validation errors before opening a public submission PR.",
+    ]);
+  });
+});

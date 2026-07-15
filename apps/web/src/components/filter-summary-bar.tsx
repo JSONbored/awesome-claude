@@ -1,5 +1,12 @@
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { trackEvent } from "@/lib/analytics";
+import {
+  filterSummaryClearAllAnalyticsData,
+  filterSummaryClearAllAnalyticsEvent,
+  filterSummaryClearAnalyticsData,
+  filterSummaryClearAnalyticsEvent,
+} from "@/lib/filter-summary-bar-cta-events";
 
 export interface ActiveFilter {
   key: string;
@@ -30,7 +37,13 @@ export function FilterSummaryBar({
         <button
           key={f.key}
           type="button"
-          onClick={f.onClear}
+          onClick={() => {
+            trackEvent(
+              filterSummaryClearAnalyticsEvent(),
+              filterSummaryClearAnalyticsData(f.key, filters.length),
+            );
+            f.onClear();
+          }}
           className="inline-flex h-6 items-center gap-1 rounded-full border border-border bg-background pl-2 pr-1 text-[11px] text-ink hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60"
           aria-label={`Remove filter ${f.label}: ${f.value}`}
         >
@@ -41,7 +54,13 @@ export function FilterSummaryBar({
       ))}
       <button
         type="button"
-        onClick={onClearAll}
+        onClick={() => {
+          trackEvent(
+            filterSummaryClearAllAnalyticsEvent(),
+            filterSummaryClearAllAnalyticsData(filters.length),
+          );
+          onClearAll();
+        }}
         className="ml-1 inline-flex h-6 items-center gap-1 rounded-full border border-dashed border-border px-2 text-[11px] text-ink-muted hover:bg-surface-2 hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60"
       >
         Clear all

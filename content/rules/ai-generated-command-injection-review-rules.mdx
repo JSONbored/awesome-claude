@@ -1,0 +1,265 @@
+---
+title: AI-Generated OS Command Injection Review Rules
+slug: ai-generated-command-injection-review-rules
+category: rules
+description: >-
+  Source-backed rules for reviewing AI-generated code that builds or runs
+  operating-system commands, shell invocations, or subprocesses before merge
+  for command injection and argument injection risk, covering library
+  alternatives to shelling out, array-form process APIs, allowlist input
+  validation, and least-privilege execution.
+cardDescription: >-
+  Review AI-generated shell/subprocess code for command injection: prefer
+  library calls over shelling out, array-form exec APIs, allowlist
+  validation, and least privilege.
+seoTitle: AI-Generated OS Command Injection Review Rules
+seoDescription: >-
+  Practical review rules for AI-generated code that runs OS commands or
+  subprocesses: avoid shell=True/string commands, use array-form exec APIs,
+  validate commands and arguments against an allowlist, and run with least
+  privilege.
+author: lourincedaging0-commits
+submittedBy: lourincedaging0-commits
+submittedByUrl: "https://github.com/lourincedaging0-commits"
+dateAdded: "2026-07-15"
+documentationUrl: "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html"
+sourceUrls:
+  - "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html"
+  - "https://cwe.mitre.org/data/definitions/78.html"
+  - "https://owasp.org/www-community/attacks/Command_Injection"
+  - "https://nodejs.org/api/child_process.html"
+  - "https://docs.python.org/3/library/subprocess.html#security-considerations"
+installable: false
+usageSnippet: >-
+  Apply these rules when an AI assistant writes or edits code that builds a
+  shell command, invokes a subprocess, or calls a library function whose
+  argument is eventually passed to the operating system shell.
+copySnippet: |-
+  You are reviewing AI-generated code for OS command injection and argument
+  injection risk.
+
+  Rules:
+  1. Prefer a built-in library function or API over shelling out at all —
+     for example a filesystem library's `mkdir`/`copy`/`remove` instead of
+     invoking `mkdir`/`cp`/`rm` as a subprocess. If no untrusted input ever
+     reaches a shell, injection is not possible.
+  2. When invoking an external program is unavoidable, use the array/list
+     form of the process API (`subprocess.run([...], shell=False)`,
+     Node's `execFile`/`spawn` with an argument array, Java's
+     `ProcessBuilder`) so arguments are passed directly to the program
+     without a shell parsing them — never build a single command string and
+     pass it to a shell interpreter.
+  3. Flag any use of a shell-invoking call with `shell=True` (Python),
+     `exec`/`execSync` given a string command (Node), `os.system`, backticks,
+     or an equivalent shell-parsed call, when any part of the command or its
+     arguments comes from user input, a file, or an external system.
+  4. Validate the command itself against an allowlist of permitted commands,
+     and validate each argument with positive/allowlist validation (a
+     regular expression of allowed characters and a bounded length) rather
+     than a denylist of "dangerous" characters.
+  5. Treat this as argument injection even when the command name is fixed:
+     if an attacker can control an argument's value (for example a flag like
+     `--output=...` or `--help`), they can still change the program's
+     behavior; use a `--` end-of-options delimiter or the library's
+     equivalent where supported.
+  6. Confirm the process runs with the least privilege necessary for the
+     task, not with elevated/root privileges inherited from the parent
+     process, so a successful injection has the smallest possible blast
+     radius.
+
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - A pull request, diff, or snippet containing AI-generated or AI-edited code that builds a shell command string or invokes a subprocess/child process.
+  - Knowledge of which values in the command or its arguments originate from user input, uploaded files, configuration, or other external systems.
+  - Familiarity with the target language's array-form process APIs (subprocess, child_process, ProcessBuilder, or equivalent) so a shell-string call can be reviewed against a safer alternative.
+  - Permission to block merge when untrusted input reaches a shell-parsed command without validation, or when a safer library alternative exists and was not used.
+safetyNotes:
+  - "A successful OS command injection lets an attacker run arbitrary commands with the privileges of the running process, which can mean full remote code execution, data exfiltration, or lateral movement on the host."
+  - "AI assistants often shell out with a string-interpolated command (f-string, template literal, string concatenation) because it is the shortest path to invoking an external tool, without switching to the array-form API or validating input."
+  - "Even a fixed, non-attacker-controlled command name is not safe if an attacker can control one of its arguments — argument injection can still cause information disclosure or code execution depending on the command."
+privacyNotes:
+  - "Command injection proof-of-concept payloads and captured process output can expose real filesystem contents, environment variables, or credentials; use a sandboxed environment and redact captures before pasting them into a PR or issue."
+  - "Do not commit real file paths, hostnames, or internal tool names discovered while testing a suspected injection into a public PR or issue description."
+  - "Subprocess output and error streams are a common place for secrets (API keys, tokens in env vars) to leak into logs; avoid logging raw stdout/stderr from a shelled-out command that could echo them back."
+tags:
+  - command-injection
+  - argument-injection
+  - subprocess
+  - web-security
+  - ai-generated-code
+  - code-review
+keywords:
+  - os command injection review rules
+  - argument injection prevention
+  - ai-generated code security review
+  - subprocess shell=true risk
+  - command injection checklist
+---
+
+## Purpose
+
+Use these rules when an AI coding assistant writes or edits code that builds
+a shell command or invokes an external program. The goal is to stop a
+generated integration, build script, or file-processing feature from
+shipping a command injection hole because it works for the expected input
+and looks like ordinary subprocess code.
+
+This is a review policy, not a command-injection tutorial. It tells
+reviewers what must be true about a generated change's process-invocation
+API, input validation, and privilege level before the change is safe to
+merge.
+
+## Review Inputs
+
+Collect enough context to know what the process call actually does and where
+its inputs come from.
+
+- Every place the change builds a command string or invokes a subprocess,
+  child process, or external program.
+- Which parts of the command (the program name, flags, or arguments) come
+  from user input, an uploaded file, configuration, or another external
+  system, versus values hardcoded by the developer.
+- Whether the call goes through a shell (a single string parsed by
+  `/bin/sh` or `cmd.exe`) or the array/list form that bypasses shell
+  parsing.
+- Whether a built-in library function could accomplish the same task without
+  invoking an external program at all.
+
+## Avoid-The-Shell Rules
+
+- The strongest defense is not calling an OS command at all: prefer a
+  language or framework library function (filesystem, archive, image,
+  network libraries) over shelling out to an equivalent CLI tool.
+- When an external program is genuinely required, use the array/list form of
+  the process API so the program and its arguments are passed directly to
+  the OS without a shell interpreting metacharacters:
+  `subprocess.run([...], shell=False)` in Python, `execFile`/`spawn` with an
+  argument array in Node.js, `ProcessBuilder` with separate arguments in
+  Java.
+- Flag `shell=True`, `os.system`, `exec`/`execSync` given a single string,
+  backticks, or any API that hands a whole command line to a shell, whenever
+  any part of that line is not a hardcoded literal.
+- Remember the language-specific distinction: some "exec" APIs (for example
+  Java's `Runtime.exec` given a string) split on whitespace and invoke the
+  first token directly without shell metacharacter support, while others
+  genuinely invoke a shell — verify which behavior the specific API in the
+  diff actually has before treating it as safe.
+
+## Input Validation And Argument Injection Rules
+
+- Validate the command itself against an allowlist of permitted programs;
+  never let user input choose which program to run.
+- Validate each argument with positive/allowlist validation — an allowed
+  character set and a maximum length — rather than trying to deny a list of
+  "dangerous" characters (`& | ; $ > < \` \ ! ' " ( )` and whitespace are
+  common shell metacharacters, but a denylist is easy to miss a variant of).
+- Treat argument injection as a real risk even for a fixed command name: an
+  attacker who controls an argument value can still pass an unexpected flag
+  (for example turning a data argument into `--help`, `--output=...`, or a
+  second target) and change the program's behavior.
+- Where the target program and library support it, use a `--`
+  end-of-options delimiter (or the equivalent convention) so
+  attacker-controlled values cannot be interpreted as flags.
+- Escaping functions (for example PHP's `escapeshellarg()`) reduce risk but
+  do not fully close argument injection; prefer array-form APIs and
+  allowlist validation as the primary defenses, with escaping only as an
+  additional layer when shelling out cannot be avoided at all.
+
+## Least-Privilege Rules
+
+- Run the process with the lowest privileges that accomplish the task, not
+  with the privileges of a more powerful parent process (root, an admin
+  service account, or a broad cloud IAM role).
+- Prefer a dedicated, isolated account or sandbox for a single narrow task
+  over reusing a general-purpose privileged account for subprocess work.
+- Assume any successful injection will run with whatever privilege the
+  process already has; least privilege limits the blast radius even when
+  every other defense fails.
+
+## Merge Blockers
+
+Block merge when any of these is true.
+
+- Untrusted input (user input, uploaded file content/name, external API
+  response) reaches a shell-parsed command string (`shell=True`,
+  `os.system`, string-form `exec`, backticks) without going through the
+  array-form API instead.
+- A built-in library function could replace the external-program call
+  entirely and was not used, with no documented reason for shelling out.
+- Command or argument values are validated with a denylist of "bad"
+  characters instead of positive/allowlist validation.
+- A fixed command name is invoked with attacker-controlled arguments and no
+  consideration of argument injection (unexpected flags, extra targets).
+- The subprocess runs with elevated or inherited privileges broader than the
+  task requires.
+
+## Review Checklist
+
+- [ ] {"task": "Shell avoided where possible", "description": "A library function replaces the external-program call wherever one exists"}
+- [ ] {"task": "Array-form API used", "description": "Unavoidable process calls use the array/list form, not a shell-parsed command string"}
+- [ ] {"task": "Allowlist validation", "description": "Commands and arguments are validated against an allowlist, not a denylist of dangerous characters"}
+- [ ] {"task": "Argument injection considered", "description": "Attacker-controlled argument values can't be interpreted as unexpected flags, even for a fixed command"}
+- [ ] {"task": "Least privilege", "description": "The subprocess runs with the minimum privilege needed, not an inherited elevated account"}
+- [ ] {"task": "No secret leakage", "description": "Subprocess stdout/stderr isn't logged in a way that could echo back credentials or sensitive paths"}
+
+## AI Review Rules
+
+AI assistants can write and review process-invocation code, but they should
+show their evidence.
+
+- Ask the assistant to list every place the change invokes an external
+  program or builds a command string, and what API it uses for each.
+- Require the assistant to state whether each call goes through a shell or
+  uses the array-form API, and to justify shelling out when a library
+  alternative exists.
+- Have the assistant identify which parts of each command are attacker- or
+  externally-influenced, and how those specific values are validated.
+- Do not let the assistant claim an escaping function alone makes a
+  shell-parsed call safe; require the array-form API plus validation.
+- Re-run review after any change to how a command or its arguments are
+  constructed, or to the account/privileges the process runs under.
+
+## Troubleshooting
+
+- **Switching to the array-form API breaks a command that relied on shell
+  features** (globbing, pipes, redirection): implement the specific shell
+  feature in code (expand the glob yourself, chain calls explicitly) rather
+  than reintroducing a shell-parsed string for convenience.
+- **Allowlist validation rejects a legitimate argument:** widen the
+  allowlist pattern deliberately and re-test with known-bad payloads, rather
+  than switching to a denylist or removing validation.
+- **A fixed-command call is flagged even though the command name can't
+  change:** check whether any argument is attacker-influenced; if so, this
+  is legitimate argument-injection risk even with a hardcoded command name.
+- **The subprocess needs elevated access for one specific operation:** scope
+  the elevation to that one operation (a narrowly-privileged helper, a
+  capability, or a policy) instead of running the whole process with broad
+  elevated privileges.
+
+## Duplicate And History Check
+
+Before adding a new subprocess call, confirm the codebase does not already
+have a shared wrapper or library helper for this task. A generated change
+that shells out next to an existing safe wrapper, or reintroduces a
+string-form command where a validated array-form helper already exists,
+should be treated as suspicious — check whether the existing mechanism was
+simply not reused before adding a second, parallel, and possibly unsafe one.
+
+## Reference
+
+| Pattern                                    | Risk                                             | Fix                                                     |
+| -------------------------------------------- | --------------------------------------------------- | ---------------------------------------------------------- |
+| `os.system(f"cmd {user_input}")`             | Shell parses metacharacters in `user_input`        | `subprocess.run(["cmd", user_input], shell=False)`         |
+| `exec("cmd " + userInput)` (Node)            | String handed to `/bin/sh -c`                      | `execFile("cmd", [userInput])` or `spawn` with an array     |
+| `escapeshellarg()` alone                     | Prevents command chaining, not argument injection  | Array-form API plus allowlist argument validation           |
+| Denylist of `&`, `|`, `;`, etc.              | Easy to miss a metacharacter or encoding variant   | Positive/allowlist validation of allowed characters          |
+| Fixed command, attacker-controlled argument  | Argument injection (unexpected flags)              | `--` end-of-options delimiter plus allowlist validation      |
+
+## Sources
+
+- OWASP OS Command Injection Defense Cheat Sheet
+- CWE-78: Improper Neutralization of Special Elements used in an OS Command
+- OWASP Command Injection attack reference
+- Node.js `child_process` documentation
+- Python `subprocess` documentation — Security Considerations

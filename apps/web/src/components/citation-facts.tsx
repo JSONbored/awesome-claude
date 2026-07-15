@@ -1,6 +1,11 @@
 import { entryCitationFacts } from "@heyclaude/registry";
 
 import type { Entry } from "@/types/registry";
+import { trackEvent, outboundHost } from "@/lib/analytics";
+import {
+  citationFactsEgressAnalyticsData,
+  citationFactsEgressAnalyticsEvent,
+} from "@/lib/citation-facts-cta-events";
 
 // `Robots` is a crawler directive, not a human/AI citation fact — keep it in the
 // machine LLMS endpoint but hide it from the visible block.
@@ -31,6 +36,17 @@ export function CitationFacts({ entry }: { entry: Entry }) {
                 href={value}
                 target="_blank"
                 rel="noreferrer"
+                onClick={() =>
+                  trackEvent(
+                    citationFactsEgressAnalyticsEvent(),
+                    citationFactsEgressAnalyticsData(
+                      entry.category,
+                      entry.slug,
+                      label,
+                      outboundHost(value),
+                    ),
+                  )
+                }
                 className="text-ink underline-offset-2 hover:underline"
               >
                 {value}

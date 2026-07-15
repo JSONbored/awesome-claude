@@ -1,0 +1,71 @@
+---
+title: Pipecat
+slug: pipecat
+category: tools
+description: Open-source Python framework for building real-time voice and multimodal conversational agents, orchestrating speech-to-text, LLM, text-to-speech, voice activity detection, and transports as a composable pipeline with pluggable providers.
+cardDescription: Build real-time voice and multimodal AI agents by composing STT, LLM, TTS, and transport services in a pipeline.
+seoTitle: Pipecat real-time voice AI agent framework
+seoDescription: Pipecat is an open-source Python framework for real-time voice and multimodal conversational agents, composing speech-to-text, LLM, text-to-speech, voice activity detection, and WebRTC, WebSocket, and telephony transports across many pluggable providers with low-latency interruption handling.
+author: Pipecat
+submittedBy: jaytbarimbao-collab
+submittedByUrl: "https://github.com/jaytbarimbao-collab"
+dateAdded: "2026-07-15"
+websiteUrl: "https://pipecat.ai/"
+documentationUrl: "https://docs.pipecat.ai/"
+repoUrl: "https://github.com/pipecat-ai/pipecat"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - voice-agents
+  - realtime-ai
+  - multimodal
+keywords:
+  - Pipecat
+  - voice agents
+  - real-time AI
+  - speech-to-text
+  - text-to-speech
+prerequisites:
+  - Python 3.11 or newer environment with the Pipecat package and the CLI or transport extras needed for the chosen deployment installed.
+  - Selected speech-to-text, LLM, and text-to-speech providers with API keys, model choices, licenses, latency limits, and provider data handling reviewed.
+  - Transport chosen for the session, such as WebRTC, WebSockets, or a telephony serializer, with signaling, networking, and media routing configured.
+  - Voice activity detection, audio device, sampling, and echo or noise handling set up for the target microphone, browser, or phone environment.
+  - Latency, interruption, barge-in, and turn-taking policy defined so the agent responds and yields naturally during live conversation.
+safetyNotes:
+  - Pipecat runs real-time audio and video pipelines and can capture microphone, browser, or telephony streams, so consent, recording indicators, and call-handling rules should be defined before deployment.
+  - Speech-to-text, LLM, text-to-speech, speech-to-speech, and video services can run locally or call external providers depending on configuration, which changes where audio, transcripts, and prompts travel.
+  - Voice agents can take actions, hand off between specialists, and drive downstream tools, so their outputs and tool calls need guardrails, review, and testing before affecting real workflows.
+  - WebRTC, WebSocket, and telephony transports need explicit network exposure, authentication, and resource-limit decisions for production use.
+  - Real-time interruption, turn-taking, and low-latency behavior should be tested across devices and network conditions to avoid dropped, overlapping, or misattributed audio.
+privacyNotes:
+  - Pipecat processes live voice and conversation data, including microphone or call audio, transcripts, and generated speech, which can contain sensitive personal information.
+  - Configured speech-to-text, LLM, text-to-speech, and video providers may receive and process audio, text, or media depending on the pipeline setup.
+  - Recordings, transcripts, analytics, and observability logs may retain user data beyond a single session unless retention and deletion are configured.
+  - Conversation context, caller metadata, and transcripts used for handoff or tool calls should follow the same access, retention, and consent policies as the underlying audio.
+---
+
+## Editorial notes
+
+Pipecat is useful when Claude-adjacent teams want to build real-time voice or multimodal agents rather than text-only chat. It orchestrates the full spoken-interaction loop — voice activity detection, speech-to-text, an LLM turn, text-to-speech, and transport — as a composable pipeline of frames, so each stage can use the provider a team prefers and run with low latency and natural interruption handling. It supports single agents or multi-agent systems where specialists hand off or fan out.
+
+This is distinct from existing entries. Text-first agent and LLM-app frameworks in the directory orchestrate prompts, tools, and retrieval; Pipecat's center of gravity is the real-time audio and video pipeline — streaming transports such as WebRTC, WebSockets, and telephony, plus voice activity detection, speech-to-text, text-to-speech, and speech-to-speech services — for live conversational agents. No existing entry covers a real-time voice-agent pipeline framework.
+
+## Source notes
+
+- The PyPI summary describes Pipecat as "An open source framework for voice (and multimodal) assistants."
+- The README describes Pipecat as an open-source Python framework for building real-time voice and multimodal conversational agents, from a single agent to multi-agent systems where specialists hand off or fan out in parallel.
+- The README describes a pipeline that handles speech-to-text, LLM processing, text-to-speech, and voice activity detection, with ultra-low-latency interaction across different transports.
+- The README lists pluggable service categories including speech-to-text, large language models, text-to-speech, speech-to-speech, transports, audio processing, video generation, and analytics or observability.
+- The README lists many providers across those categories, including Anthropic, OpenAI, and Gemini for language models, Deepgram and AssemblyAI for speech-to-text, and ElevenLabs for text-to-speech, among others.
+- The README lists real-time transport options including WebRTC, WebSockets, telephony serializers, and services such as Daily and LiveKit.
+- The package is published on PyPI as `pipecat-ai` at version 1.5.0, requires Python 3.11 or newer, and the repository `pipecat-ai/pipecat` is BSD-2-Clause licensed.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, open pull requests, and repository-wide content for `Pipecat`, `pipecat`, `pipecat-ai/pipecat`, `voice agent`, and `real-time voice`. No dedicated Pipecat entry, Pipecat source URL, or open duplicate PR was found; existing agent and LLM-app frameworks cover text orchestration rather than a real-time voice and multimodal pipeline.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Pipecat is a BSD-2-Clause open-source framework maintained under the `pipecat-ai` organization.

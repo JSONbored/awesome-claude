@@ -4,6 +4,8 @@
 export {
   JOBS_DETAIL_SURFACE,
   JOBS_INDEX_SURFACE,
+  jobsDetailEgressAnalyticsData,
+  jobsDetailEgressAnalyticsEvent,
   jobsDetailIndexAnalyticsData,
   jobsDetailIndexAnalyticsEvent,
   jobsDetailRelatedAnalyticsData,
@@ -18,6 +20,7 @@ export {
   jobsIndexPostAnalyticsEvent,
   jobsIndexSortSelectAnalyticsData,
   jobsIndexSortSelectAnalyticsEvent,
+  type JobsDetailEgressDestination,
   type JobsDetailIndexSource,
   type JobsIndexFilterAxis,
   type JobsIndexJobVariant,

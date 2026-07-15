@@ -83,6 +83,25 @@ export function jobsDetailRelatedAnalyticsData(
   };
 }
 
+export type JobsDetailEgressDestination = "apply" | "company" | "source";
+
+export function jobsDetailEgressAnalyticsEvent(): string {
+  return "jobs_detail_egress_click";
+}
+
+export function jobsDetailEgressAnalyticsData(
+  jobSlug: string,
+  tier: string,
+  destination: JobsDetailEgressDestination,
+) {
+  return {
+    surface: JOBS_DETAIL_SURFACE,
+    jobSlug,
+    tier,
+    destination,
+  };
+}
+
 export function jobsIndexFilterSelectAnalyticsEvent(): string {
   return "jobs_index_filter_select";
 }

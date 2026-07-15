@@ -519,3 +519,120 @@ describe("brief-token-lib sign and verify", () => {
     expect(verified?.n).toBe(50);
   });
 });
+
+describe("brief-token-lib verifyBriefApproveToken rejections", () => {
+  const FUTURE = 4102444800000; // 2100-01-01, safely unexpired
+  const NOW = 1_700_000_000_000;
+
+  // Re-implements the lib's base64url + HMAC so we can forge a token whose
+  // signature is valid but whose body does not decode to JSON.
+  function base64url(bytes: Uint8Array): string {
+    let binary = "";
+    for (const byte of bytes) binary += String.fromCharCode(byte);
+    return btoa(binary)
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+  }
+  async function hmacBase64url(
+    secret: string,
+    message: string,
+  ): Promise<string> {
+    const enc = new TextEncoder();
+    const key = await crypto.subtle.importKey(
+      "raw",
+      enc.encode(secret),
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["sign"],
+    );
+    const sig = await crypto.subtle.sign("HMAC", key, enc.encode(message));
+    return base64url(new Uint8Array(sig));
+  }
+
+  it("rejects an empty secret or a non-string token", async () => {
+    const token = await signBriefApproveToken(SIGNING_KEY, {
+      n: 1,
+      p: "p",
+      exp: FUTURE,
+    });
+    expect(await verifyBriefApproveToken("", token, NOW)).toBeNull();
+    expect(
+      await verifyBriefApproveToken(SIGNING_KEY, 123 as unknown as string, NOW),
+    ).toBeNull();
+  });
+
+  it("rejects tokens without a usable separator", async () => {
+    expect(
+      await verifyBriefApproveToken(SIGNING_KEY, "nodothere", NOW),
+    ).toBeNull();
+    expect(
+      await verifyBriefApproveToken(SIGNING_KEY, ".leading", NOW),
+    ).toBeNull();
+    expect(
+      await verifyBriefApproveToken(SIGNING_KEY, "trailing.", NOW),
+    ).toBeNull();
+  });
+
+  it("rejects a signature of the wrong length", async () => {
+    const token = await signBriefApproveToken(SIGNING_KEY, {
+      n: 1,
+      p: "p",
+      exp: FUTURE,
+    });
+    const body = token.slice(0, token.indexOf("."));
+    expect(
+      await verifyBriefApproveToken(SIGNING_KEY, `${body}.AAAA`, NOW),
+    ).toBeNull();
+  });
+
+  it("rejects a signature that is not valid base64url", async () => {
+    const token = await signBriefApproveToken(SIGNING_KEY, {
+      n: 1,
+      p: "p",
+      exp: FUTURE,
+    });
+    const body = token.slice(0, token.indexOf("."));
+    expect(
+      await verifyBriefApproveToken(SIGNING_KEY, `${body}.@@@@`, NOW),
+    ).toBeNull();
+  });
+
+  it("rejects a validly-signed token whose body is not JSON", async () => {
+    const body = base64url(new TextEncoder().encode("not-json"));
+    const sig = await hmacBase64url(SIGNING_KEY, body);
+    expect(
+      await verifyBriefApproveToken(SIGNING_KEY, `${body}.${sig}`, NOW),
+    ).toBeNull();
+  });
+
+  it("rejects an expired token", async () => {
+    const token = await signBriefApproveToken(SIGNING_KEY, {
+      n: 1,
+      p: "p",
+      exp: 1000,
+    });
+    expect(await verifyBriefApproveToken(SIGNING_KEY, token, NOW)).toBeNull();
+  });
+
+  it("rejects payloads with the wrong field types", async () => {
+    const badN = await signBriefApproveToken(SIGNING_KEY, {
+      n: "one",
+      p: "p",
+      exp: FUTURE,
+    } as unknown as { n: number; p: string; exp: number });
+    const badP = await signBriefApproveToken(SIGNING_KEY, {
+      n: 1,
+      p: 5,
+      exp: FUTURE,
+    } as unknown as { n: number; p: string; exp: number });
+    const badExp = await signBriefApproveToken(SIGNING_KEY, {
+      n: 1,
+      p: "p",
+      exp: "soon",
+    } as unknown as { n: number; p: string; exp: number });
+    expect(await verifyBriefApproveToken(SIGNING_KEY, badN, NOW)).toBeNull();
+    expect(await verifyBriefApproveToken(SIGNING_KEY, badP, NOW)).toBeNull();
+    expect(await verifyBriefApproveToken(SIGNING_KEY, badExp, NOW)).toBeNull();
+  });
+});

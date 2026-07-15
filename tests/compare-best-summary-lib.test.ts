@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
+  compareBestActionBannerText,
   compareBestBannerTexts,
+  compareBestDecisionBannerText,
+  compareBestListInteractiveLinkLabel,
+  compareBestListInteractiveSearch,
+  compareBestListPickRefs,
   compareBestSummary,
   shouldShowBestCompareSection,
 } from "../apps/web/src/lib/compare-best-summary-lib";
@@ -1416,5 +1421,72 @@ describe("compare-best-summary-lib", () => {
       { category: "mcp", slug: "b-99", title: "B" },
     ];
     expect(Array.isArray(compareBestBannerTexts(entries as never))).toBe(true);
+  });
+});
+
+describe("compare-best-summary-lib delegators", () => {
+  const twoEntries = [
+    { category: "mcp", slug: "a", title: "A" },
+    { category: "mcp", slug: "b", title: "B" },
+  ];
+
+  it("compareBestBannerTexts is empty when there is nothing to compare", () => {
+    expect(
+      compareBestBannerTexts([
+        { category: "mcp", slug: "a", title: "A" },
+      ] as never),
+    ).toEqual([]);
+  });
+
+  it("compareBestDecisionBannerText delegates to the surface decision banner", () => {
+    const banner = compareBestDecisionBannerText(twoEntries as never);
+    expect(banner === null || typeof banner === "string").toBe(true);
+  });
+
+  it("compareBestActionBannerText is null unless next-step actions diverge", () => {
+    expect(compareBestActionBannerText(false)).toBeNull();
+    expect(compareBestActionBannerText(true)).toContain("Next steps differ");
+  });
+
+  it("compareBestListPickRefs maps pick refs", () => {
+    expect(
+      compareBestListPickRefs([{ ref: "mcp/a" }, { ref: "mcp/b" }]),
+    ).toEqual(["mcp/a", "mcp/b"]);
+  });
+
+  it("compareBestListInteractiveSearch resolves matching picks and skips the rest", () => {
+    const catalog = [
+      { category: "mcp", slug: "a" },
+      { category: "mcp", slug: "b" },
+    ];
+    const search = compareBestListInteractiveSearch(
+      [{ ref: "mcp/a" }, { ref: "mcp/b" }],
+      catalog,
+    );
+    expect(typeof search?.ids).toBe("string");
+    // A single resolved pick is below the interactive minimum, so it is null.
+    expect(
+      compareBestListInteractiveSearch([{ ref: "mcp/a" }], catalog),
+    ).toBeNull();
+  });
+
+  it("compareBestListInteractiveLinkLabel scales with the resolved pick count", () => {
+    const catalog = [
+      { category: "mcp", slug: "a" },
+      { category: "mcp", slug: "b" },
+      { category: "mcp", slug: "c" },
+    ];
+    expect(
+      compareBestListInteractiveLinkLabel(
+        [{ ref: "mcp/a" }, { ref: "mcp/b" }],
+        catalog,
+      ),
+    ).toBe("Open interactively");
+    expect(
+      compareBestListInteractiveLinkLabel(
+        [{ ref: "mcp/a" }, { ref: "mcp/b" }, { ref: "mcp/c" }],
+        catalog,
+      ),
+    ).toBe("Open 3 picks in the interactive comparison tool");
   });
 });

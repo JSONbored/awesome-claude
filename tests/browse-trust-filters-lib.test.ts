@@ -131,6 +131,27 @@ describe("browse trust filters lib", () => {
     );
   });
 
+  it("forwards active trust and source filters when building facet counts", () => {
+    const entries = [
+      entry({
+        slug: "trusted-verified",
+        trust: "trusted",
+        source: "verified",
+        safetyNotes: "Sandboxed",
+      }),
+    ];
+    const counts = buildBrowseTrustSignalCounts(
+      { ...slice, trust: "trusted", source: "verified" },
+      (filters) => {
+        expect(filters.trust).toEqual(["trusted"]);
+        expect(filters.source).toEqual(["verified"]);
+        return countSearchResults(filters, entries);
+      },
+    );
+
+    expect(counts["safety-notes"]).toBe(1);
+  });
+
   it("formats utility dropdown labels with facet counts", () => {
     expect(formatBrowseTrustUtilityOptionLabel("Safety notes", 12)).toBe(
       "Safety notes (12)",
@@ -150,6 +171,19 @@ describe("browse trust filters lib", () => {
     });
     expect(options[1]?.label).toBe("Safety notes (3)");
     expect(options).toHaveLength(BROWSE_TRUST_SIGNAL_OPTIONS.length + 1);
+  });
+
+  it("defaults missing facet counts to zero when building utility options", () => {
+    const options = buildBrowseTrustUtilityOptions(
+      {} as Record<(typeof BROWSE_TRUST_SIGNAL_OPTIONS)[number]["id"], number>,
+    );
+
+    expect(options[1]).toEqual({
+      id: "safety-notes",
+      label: "Safety notes (0)",
+      count: 0,
+    });
+    expect(options.every((option) => option.count === 0)).toBe(true);
   });
 
   it("orders empty-state relaxation trials from least specific filters first", () => {

@@ -9,6 +9,7 @@ import {
   prNumber,
   previewCandidatesFromEnv,
 } from "./lib/preview-url-event.mjs";
+import { isHeyClaudePreviewHost } from "./lib/preview-url-host.mjs";
 
 const githubUrlPattern = /^https:\/\/github\.com\//i;
 const blockedPreviewHosts = new Set([
@@ -22,28 +23,6 @@ const blockedPreviewHosts = new Set([
 ]);
 const nonDeploymentSourcePattern =
   /(?:coderabbit|superagent|contributor trust|pipelock|codeql|trunk|security scan|repo scan)/i;
-
-// A preview URL for this project must be a HeyClaude PRODUCTION host. This
-// Cloudflare account hosts several unrelated projects, so GitHub
-// deployment/status lookups can surface a sibling project's URL (e.g.
-// gittensory.aethereal.dev) — running the artifact contract against that is
-// wrong. Accept only the production site and Cloudflare Workers Builds preview
-// aliases for the prod worker (<version>-heyclaude-prod.<subdomain>.workers.dev).
-// Deliberately excludes the retired dev worker (heyclaude-dev.*.workers.dev and
-// dev.heyclau.de).
-function isHeyClaudePreviewHost(hostname) {
-  const host = String(hostname || "").toLowerCase();
-  if (host === "heyclau.de" || host === "www.heyclau.de") return true;
-  if (!host.endsWith(".workers.dev")) return false;
-  // The worker name is the first dot-label of the host: "heyclaude-prod" or a
-  // Workers Builds preview alias "<version>-heyclaude-prod". Match the label
-  // exactly so a sibling worker whose name merely CONTAINS the substring (e.g.
-  // "heyclaude-prod-next") or a "…heyclaude-prod…" subdomain is not selected.
-  const workerLabel = host.split(".")[0];
-  return (
-    workerLabel === "heyclaude-prod" || workerLabel.endsWith("-heyclaude-prod")
-  );
-}
 
 export function normalizeBaseUrl(value) {
   const trimmed = String(value || "").trim();

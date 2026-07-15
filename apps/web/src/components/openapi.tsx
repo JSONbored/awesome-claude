@@ -3,6 +3,15 @@ import { Send, Loader2, ChevronDown } from "lucide-react";
 import { CopyButton } from "@/components/copy-button";
 import type { OpenApiEndpoint, OpenApiParam } from "@/data/openapi";
 import { buildRequestUrl } from "@/lib/openapi-request-lib";
+import { trackEvent } from "@/lib/analytics";
+import {
+  openApiAdvancedToggleAnalyticsData,
+  openApiAdvancedToggleAnalyticsEvent,
+  openApiCopyAnalyticsData,
+  openApiCopyAnalyticsEvent,
+  openApiSendAnalyticsData,
+  openApiSendAnalyticsEvent,
+} from "@/lib/openapi-cta-events";
 import { cn } from "@/lib/utils";
 
 const METHOD_STYLES: Record<OpenApiEndpoint["method"], string> = {
@@ -115,7 +124,12 @@ function CurlBlock({ endpoint }: { endpoint: OpenApiEndpoint }) {
     <div>
       <div className="mb-2 flex items-center justify-between">
         <div className="eyebrow">curl</div>
-        <CopyButton value={curl} label="Copy" />
+        <CopyButton
+          value={curl}
+          label="Copy"
+          event={openApiCopyAnalyticsEvent()}
+          eventData={openApiCopyAnalyticsData(endpoint.id, endpoint.method, "curl")}
+        />
       </div>
       <pre className="overflow-auto rounded-md bg-background p-3 font-mono text-[11px] text-ink">
         <code>{curl}</code>
@@ -137,6 +151,10 @@ export function OpenApiPlayground({ endpoint }: { endpoint: OpenApiEndpoint }) {
   const [showAdvanced, setShowAdvanced] = useState(false);
 
   const send = async () => {
+    trackEvent(
+      openApiSendAnalyticsEvent(),
+      openApiSendAnalyticsData(endpoint.id, endpoint.method, Boolean(endpoint.liveRequest)),
+    );
     setSending(true);
     setResponse(null);
     setError(null);
@@ -213,7 +231,12 @@ export function OpenApiPlayground({ endpoint }: { endpoint: OpenApiEndpoint }) {
         <div>
           <div className="mb-1.5 flex items-center justify-between">
             <div className="eyebrow">Response</div>
-            <CopyButton value={response} label="Copy" />
+            <CopyButton
+              value={response}
+              label="Copy"
+              event={openApiCopyAnalyticsEvent()}
+              eventData={openApiCopyAnalyticsData(endpoint.id, endpoint.method, "response")}
+            />
           </div>
           <pre className="overflow-auto rounded-md border border-border bg-background p-3 font-mono text-[11px] text-ink">
             <code>{response}</code>
@@ -224,7 +247,19 @@ export function OpenApiPlayground({ endpoint }: { endpoint: OpenApiEndpoint }) {
         <>
           <button
             type="button"
-            onClick={() => setShowAdvanced((s) => !s)}
+            onClick={() => {
+              const next = !showAdvanced;
+              trackEvent(
+                openApiAdvancedToggleAnalyticsEvent(),
+                openApiAdvancedToggleAnalyticsData(
+                  endpoint.id,
+                  endpoint.method,
+                  next,
+                  endpoint.clientExamples?.length ?? 0,
+                ),
+              );
+              setShowAdvanced(next);
+            }}
             className="inline-flex items-center gap-1 text-[11px] text-ink-muted hover:text-ink"
           >
             <ChevronDown

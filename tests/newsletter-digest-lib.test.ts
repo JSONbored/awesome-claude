@@ -1015,3 +1015,40 @@ describe("newsletter-digest-lib", () => {
     if (entries.length >= 1) expect(result?.length).toBeGreaterThan(0);
   });
 });
+
+describe("newsletter-digest-lib default minimum and undated entries", () => {
+  it("applies the default minimum of 5 and skips entries without a date", () => {
+    const now = Date.parse("2026-06-10T00:00:00.000Z");
+    const dated = "2026-06-08T00:00:00.000Z";
+    const entries = [
+      { title: "no-date", category: "agents", slug: "nd" },
+      ...Array.from({ length: 4 }, (_, idx) => ({
+        title: `t${idx}`,
+        category: "agents",
+        slug: `s${idx}`,
+        dateAdded: dated,
+      })),
+    ];
+    // Four dated recent entries fall below the default minimum of 5, and the
+    // undated entry parses to NaN and is filtered out, so no digest is sent.
+    expect(selectDigestEntries(entries, now, { windowDays: 7 })).toBeNull();
+  });
+
+  it("sends a digest once the default minimum is met, ignoring undated entries", () => {
+    const now = Date.parse("2026-06-10T00:00:00.000Z");
+    const dated = "2026-06-08T00:00:00.000Z";
+    const entries = [
+      { title: "no-date", category: "agents", slug: "nd" },
+      ...Array.from({ length: 5 }, (_, idx) => ({
+        title: `t${idx}`,
+        category: "agents",
+        slug: `s${idx}`,
+        dateAdded: dated,
+      })),
+    ];
+    const digest = selectDigestEntries(entries, now, { windowDays: 7 });
+    expect(digest).not.toBeNull();
+    expect(digest).toHaveLength(5);
+    expect(digest?.every((item) => item.slug !== "nd")).toBe(true);
+  });
+});
