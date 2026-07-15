@@ -8542,3 +8542,50 @@ describe("registry-compare-lib buildCompareEntriesResponse", () => {
     expect(response.entries).toHaveLength(1);
   });
 });
+
+describe("registry-compare-lib missing-field fallbacks", () => {
+  const deps = {
+    normalizePlatform,
+    buildSkillPlatformCompatibility,
+    entryInstallComplexity,
+    categoryPrimaryAsset,
+    sourceSummary,
+    entryTrustSummary,
+    entryCanonicalUrl,
+  };
+
+  it("defaults tags/platforms/asset types for a bare entry", () => {
+    const row = buildCompareEntryRow(
+      { category: "mcp", slug: "s", title: "T", description: "d" },
+      "",
+      deps,
+    );
+    expect(row.tags).toEqual([]);
+    expect(row.platforms).toEqual([]);
+    expect(row.copyableAssetTypes).toEqual([]);
+  });
+
+  it("treats entries without tags as empty when intersecting shared tags", () => {
+    expect(sharedCompareTags([{ slug: "a" }, { tags: ["x"] }])).toEqual([]);
+    expect(sharedCompareTags([{ tags: ["x", "y"] }, { slug: "b" }])).toEqual(
+      [],
+    );
+  });
+
+  it("lists config and script asset types when the entry provides them", () => {
+    const row = buildCompareEntryRow(
+      {
+        category: "mcp",
+        slug: "s",
+        title: "T",
+        configSnippet: "{ }",
+        scriptBody: "echo hi",
+      },
+      "",
+      deps,
+    );
+    expect(row.copyableAssetTypes).toEqual(
+      expect.arrayContaining(["config_snippet", "script"]),
+    );
+  });
+});
