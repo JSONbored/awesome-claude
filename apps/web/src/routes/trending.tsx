@@ -18,6 +18,12 @@ import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
 import { trackEvent } from "@/lib/analytics";
 import {
+  trendingCategoryFilterAnalyticsData,
+  trendingCategoryFilterAnalyticsEvent,
+  trendingChromeAnalyticsData,
+  trendingChromeAnalyticsEvent,
+  trendingFilterResetAnalyticsData,
+  trendingFilterResetAnalyticsEvent,
   trendingListEntryAnalyticsData,
   trendingListEntryAnalyticsEvent,
 } from "@/lib/trending-entry-cta-events";
@@ -232,6 +238,37 @@ function TrendingPage() {
 
   const shareUrl = `/trending${sp.category ? `?category=${sp.category}` : ""}`;
 
+  const trackCategoryFilter = (categoryFilter: string, active: boolean, matchCount: number) => {
+    trackEvent(
+      trendingCategoryFilterAnalyticsEvent(),
+      trendingCategoryFilterAnalyticsData(
+        categoryFilter,
+        active,
+        matchCount,
+        allRows.length,
+        sp.window,
+        mode,
+      ),
+    );
+  };
+
+  const trackFilterReset = () => {
+    trackEvent(
+      trendingFilterResetAnalyticsEvent(),
+      trendingFilterResetAnalyticsData(sp.category, sp.window, mode),
+    );
+  };
+
+  const trackChrome = (
+    destination: "rss" | "brief" | "browse",
+    placement: "header" | "footer" | "empty",
+  ) => {
+    trackEvent(
+      trendingChromeAnalyticsEvent(),
+      trendingChromeAnalyticsData(destination, placement, sp.window, sp.category, mode),
+    );
+  };
+
   return (
     <PageContainer className="py-12">
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -255,6 +292,7 @@ function TrendingPage() {
           {latestBrief && (
             <Link
               to="/brief"
+              onClick={() => trackChrome("brief", "header")}
               className="mt-3 inline-flex items-center gap-2 text-sm text-ink-muted hover:text-ink"
             >
               Featured in Brief #{latestBrief.number} · {latestBrief.title} →
@@ -269,6 +307,7 @@ function TrendingPage() {
           />
           <a
             href="/feeds/trending.xml"
+            onClick={() => trackChrome("rss", "header")}
             className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-surface px-3 text-xs font-medium text-ink-muted hover:bg-surface-2 hover:text-ink"
           >
             <Rss className="h-3.5 w-3.5" /> RSS
@@ -296,7 +335,10 @@ function TrendingPage() {
           <div className="flex gap-1.5 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <button
               type="button"
-              onClick={() => set({ category: "" })}
+              onClick={() => {
+                trackCategoryFilter("", true, allRows.length);
+                set({ category: "" });
+              }}
               aria-pressed={!sp.category}
               className={cn(
                 "shrink-0 rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors duration-200 ease-out motion-safe:active:scale-[0.97]",
@@ -315,7 +357,10 @@ function TrendingPage() {
                   key={category.id}
                   type="button"
                   disabled={count === 0 && !active}
-                  onClick={() => set({ category: active ? "" : category.id })}
+                  onClick={() => {
+                    trackCategoryFilter(category.id, !active, count);
+                    set({ category: active ? "" : category.id });
+                  }}
                   aria-pressed={active}
                   className={cn(
                     "shrink-0 rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors duration-200 ease-out motion-safe:active:scale-[0.97]",
@@ -346,7 +391,10 @@ function TrendingPage() {
           </p>
           <button
             type="button"
-            onClick={() => set({ window: "7d", category: "" })}
+            onClick={() => {
+              trackFilterReset();
+              set({ window: "7d", category: "" });
+            }}
             className="mt-2 inline-flex h-8 items-center gap-1.5 rounded-md bg-ink px-3 text-xs font-medium text-background transition-transform hover:bg-ink/90 active:translate-y-px"
           >
             Reset filters
@@ -401,18 +449,21 @@ function TrendingPage() {
         <div className="flex flex-wrap gap-2">
           <a
             href="/feeds/trending.xml"
+            onClick={() => trackChrome("rss", "footer")}
             className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-surface px-3 text-xs font-medium text-ink transition-transform hover:bg-surface-2 active:translate-y-px"
           >
             <Rss className="h-3.5 w-3.5" /> RSS
           </a>
           <Link
             to="/brief"
+            onClick={() => trackChrome("brief", "footer")}
             className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-surface px-3 text-xs font-medium text-ink transition-transform hover:bg-surface-2 active:translate-y-px"
           >
             Weekly Brief →
           </Link>
           <Link
             to="/browse"
+            onClick={() => trackChrome("browse", "footer")}
             className="inline-flex h-8 items-center gap-1.5 rounded-md bg-ink px-3 text-xs font-medium text-background transition-transform hover:opacity-90 active:translate-y-px"
           >
             Browse all <ArrowRight className="h-3.5 w-3.5" />

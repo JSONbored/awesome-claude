@@ -22,6 +22,10 @@ import {
   validatorsRecentReviewedEntryAnalyticsData,
   validatorsRecentReviewedEntryAnalyticsEvent,
 } from "@/lib/insights-page-entry-cta-events";
+import {
+  validatorsExpertiseFilterAnalyticsData,
+  validatorsExpertiseFilterAnalyticsEvent,
+} from "@/lib/validators-expertise-cta-events";
 import atlasRegistry from "@/generated/atlas-registry.json";
 
 export const Route = createFileRoute("/validators")({
@@ -84,6 +88,17 @@ function ValidatorsPage() {
   const [active, setActive] = React.useState<Expertise | "all">("all");
   const list = REVIEW_COVERAGE.filter((coverage) => active === "all" || coverage.id === active);
 
+  const onExpertiseFilter = React.useCallback(
+    (expertiseId: Expertise | "all", matchCount: number) => {
+      trackEvent(
+        validatorsExpertiseFilterAnalyticsEvent(),
+        validatorsExpertiseFilterAnalyticsData(expertiseId, matchCount, EXPERTISE_OPTIONS.length),
+      );
+      setActive(expertiseId);
+    },
+    [],
+  );
+
   return (
     <PageContainer className="py-12">
       <PageHeader
@@ -113,7 +128,7 @@ function ValidatorsPage() {
             role="radio"
             size="md"
             active={active === "all"}
-            onClick={() => setActive("all")}
+            onClick={() => onExpertiseFilter("all", REVIEW_COVERAGE.length)}
           >
             All
           </FilterChip>
@@ -123,7 +138,12 @@ function ValidatorsPage() {
               role="radio"
               size="md"
               active={active === option}
-              onClick={() => setActive(option)}
+              onClick={() =>
+                onExpertiseFilter(
+                  option,
+                  REVIEW_COVERAGE.filter((coverage) => coverage.id === option).length,
+                )
+              }
             >
               {option}
             </FilterChip>
