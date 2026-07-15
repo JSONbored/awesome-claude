@@ -11,6 +11,13 @@ import { breadcrumbListJsonLd } from "@/lib/breadcrumb-jsonld-lib";
 import { integrationAppJsonLd } from "@/lib/integration-app-jsonld-lib";
 import { ogImageUrl } from "@/lib/og-image";
 import { ogImageMetaTags } from "@/lib/og-meta-lib";
+import { trackEvent } from "@/lib/analytics";
+import {
+  integrationsDetailIndexAnalyticsData,
+  integrationsDetailIndexAnalyticsEvent,
+  integrationsDetailRelatedAnalyticsData,
+  integrationsDetailRelatedAnalyticsEvent,
+} from "@/lib/integrations-hub-cta-events";
 
 export const Route = createFileRoute("/integrations/$slug")({
   loader: ({ params }) => {
@@ -59,7 +66,16 @@ function IntegrationDetail() {
   return (
     <div className="mx-auto max-w-[1100px] px-4 py-10 sm:px-6">
       <nav className="text-xs text-ink-muted">
-        <Link to="/integrations" className="hover:text-ink">
+        <Link
+          to="/integrations"
+          onClick={() =>
+            trackEvent(
+              integrationsDetailIndexAnalyticsEvent(),
+              integrationsDetailIndexAnalyticsData(integration.slug, related.length),
+            )
+          }
+          className="hover:text-ink"
+        >
           Integrations
         </Link>
         <span className="mx-1.5">/</span>
@@ -159,8 +175,23 @@ function IntegrationDetail() {
           <div>
             <div className="eyebrow mb-2">Related</div>
             <div className="space-y-3">
-              {related.map((r) => (
-                <IntegrationCard key={r.slug} integration={r} compact />
+              {related.map((r, rowIndex) => (
+                <IntegrationCard
+                  key={r.slug}
+                  integration={r}
+                  compact
+                  onNavigate={() =>
+                    trackEvent(
+                      integrationsDetailRelatedAnalyticsEvent(),
+                      integrationsDetailRelatedAnalyticsData(
+                        integration.slug,
+                        r.slug,
+                        rowIndex,
+                        related.length,
+                      ),
+                    )
+                  }
+                />
               ))}
             </div>
           </div>
