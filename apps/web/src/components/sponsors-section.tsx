@@ -261,16 +261,13 @@ function PartnerDrawer({
   const [submitting, setSubmitting] = React.useState(false);
   const formRef = React.useRef<HTMLFormElement>(null);
 
-  const trackedTrigger = React.cloneElement(trigger, {
-    onClick: (e: React.MouseEvent) => {
-      trackEvent(
-        sponsorsSectionInquiryOpenAnalyticsEvent(),
-        sponsorsSectionInquiryOpenAnalyticsData(inquirySource, role),
-      );
-      const prior = (trigger.props as { onClick?: (ev: React.MouseEvent) => void }).onClick;
-      prior?.(e);
-    },
-  });
+  const onOpenChange = (open: boolean) => {
+    if (!open) return;
+    trackEvent(
+      sponsorsSectionInquiryOpenAnalyticsEvent(),
+      sponsorsSectionInquiryOpenAnalyticsData(inquirySource, role),
+    );
+  };
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -319,8 +316,8 @@ function PartnerDrawer({
   };
 
   return (
-    <Drawer>
-      <DrawerTrigger asChild>{trackedTrigger}</DrawerTrigger>
+    <Drawer onOpenChange={onOpenChange}>
+      <DrawerTrigger asChild>{trigger}</DrawerTrigger>
       <DrawerContent>
         <div className="mx-auto w-full max-w-xl">
           <DrawerHeader>
