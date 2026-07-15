@@ -22,14 +22,19 @@ describe("submission-gate drafts branch coverage", () => {
   it("derives slugs from nested draft payloads and strips unsupported bodies", () => {
     expect(draftFieldsFromBody(["not", "a", "record"])).toEqual({});
     expect(
-      draftFieldsFromBody({ fields: { category: "hooks", title: "Hook Draft" } }),
+      draftFieldsFromBody({
+        fields: { category: "hooks", title: "Hook Draft" },
+      }),
     ).toEqual({ category: "hooks", title: "Hook Draft" });
     expect(slugify('  "Branch" Draft!  ')).toBe("branch-draft");
   });
 
   it("hashes overlong branch names while preserving the full target slug", () => {
     const longSlug = "x".repeat(120);
-    const target = buildDraftTarget({ category: "skills", slug: longSlug }, "main");
+    const target = buildDraftTarget(
+      { category: "skills", slug: longSlug },
+      "main",
+    );
     expect(target.slug).toBe(longSlug);
     expect(target.branchName.length).toBeLessThanOrEqual(120);
     expect(target.branchName).toMatch(/-[a-z0-9]{8}$/);
@@ -58,7 +63,7 @@ describe("submission-gate drafts branch coverage", () => {
         download_url: "https://example.com/pkg.zip",
         install_command: "npm i fixture",
         usage_snippet: "Run locally",
-        config_snippet: "{ \"enabled\": true }",
+        config_snippet: '{ "enabled": true }',
         full_copyable_content: "Step one\nStep two",
         command_syntax: "/fixture run",
         trigger: "manual",
@@ -103,7 +108,9 @@ describe("submission-gate drafts branch coverage", () => {
     );
 
     expect(mdx).toContain('submittedBy: "@valid-contributor"');
-    expect(mdx).toContain('authorProfileUrl: "https://github.com/valid-contributor"');
+    expect(mdx).toContain(
+      'authorProfileUrl: "https://github.com/valid-contributor"',
+    );
     expect(mdx).toContain('documentationUrl: "https://example.com/docs"');
   });
 });

@@ -160,11 +160,9 @@ describe("browse results trust decision lib", () => {
 
   it("prefers side-by-side compare copy when diverging labels exist and compare is ready", () => {
     expect(
-      browseTrustPanelDecisionHint(
-        [entry(), entry({ slug: "two" })],
-        2,
-        ["Review status"],
-      ),
+      browseTrustPanelDecisionHint([entry(), entry({ slug: "two" })], 2, [
+        "Review status",
+      ]),
     ).toContain("open compare to review side by side");
   });
 

@@ -418,7 +418,11 @@ describe("site-lib publicEnv and publicCsvEnv", () => {
 
   it("splits, trims, and drops empty csv entries", () => {
     vi.stubEnv("VITE_CSV_FIXTURE", " alpha , , beta ,gamma ");
-    expect(publicCsvEnv("VITE_CSV_FIXTURE")).toEqual(["alpha", "beta", "gamma"]);
+    expect(publicCsvEnv("VITE_CSV_FIXTURE")).toEqual([
+      "alpha",
+      "beta",
+      "gamma",
+    ]);
   });
 });
 
