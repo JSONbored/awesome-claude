@@ -11,6 +11,12 @@ import {
   toolsDirectoryEntryAnalyticsData,
   toolsDirectoryEntryAnalyticsEvent,
 } from "@/lib/directory-page-entry-cta-events";
+import {
+  toolsPageBrowseAnalyticsData,
+  toolsPageBrowseAnalyticsEvent,
+  toolsPageSubmitAnalyticsData,
+  toolsPageSubmitAnalyticsEvent,
+} from "@/lib/tools-page-cta-events";
 
 // Same card for og:image and twitter:image; the inputs are static.
 const OG_IMAGE = ogImageUrl({ title: "Tools that pair well with Claude", eyebrow: "Tools" });
@@ -71,7 +77,16 @@ function ToolsPage() {
           </h1>
           <p className="mt-2 max-w-2xl text-ink-muted">
             Editorial picks and disclosed partners. Free, open-source community resources live in{" "}
-            <Link to="/browse" className="text-ink underline">
+            <Link
+              to="/browse"
+              onClick={() =>
+                trackEvent(
+                  toolsPageBrowseAnalyticsEvent(),
+                  toolsPageBrowseAnalyticsData(COMMERCIAL_TOOLS.length),
+                )
+              }
+              className="text-ink underline"
+            >
               the directory
             </Link>
             .
@@ -79,6 +94,12 @@ function ToolsPage() {
         </div>
         <Link
           to="/tools/submit"
+          onClick={() =>
+            trackEvent(
+              toolsPageSubmitAnalyticsEvent(),
+              toolsPageSubmitAnalyticsData(COMMERCIAL_TOOLS.length),
+            )
+          }
           className="inline-flex h-10 items-center rounded-md bg-ink px-4 text-sm font-medium text-background hover:bg-ink/90"
         >
           Submit a tool
