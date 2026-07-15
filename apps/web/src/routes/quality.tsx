@@ -27,7 +27,19 @@ import {
   qualityQueueEntryAnalyticsEvent,
   type QualityQueueId,
 } from "@/lib/insights-page-entry-cta-events";
+import {
+  qualityPageCategoryBrowseAnalyticsData,
+  qualityPageCategoryBrowseAnalyticsEvent,
+  qualityPageChangelogAnalyticsData,
+  qualityPageChangelogAnalyticsEvent,
+  qualityPageClaimAnalyticsData,
+  qualityPageClaimAnalyticsEvent,
+  qualityPageIssueAnalyticsData,
+  qualityPageIssueAnalyticsEvent,
+} from "@/lib/quality-page-cta-events";
 import { cn } from "@/lib/utils";
+
+const CHANGELOG_PREVIEW_COUNT = 6;
 
 export const Route = createFileRoute("/quality")({
   head: () => ({
@@ -170,13 +182,24 @@ function QualityPage() {
 
       <h2 className="mt-12 h-display-2 text-ink text-balance">Coverage by category</h2>
       <div className="mt-4 overflow-x-auto rounded-xl border border-border bg-surface">
-        {CATEGORIES.map((c) => {
+        {CATEGORIES.map((c, rowIndex) => {
           const cov = CATEGORY_COVERAGE.get(c.id)!;
           return (
             <Link
               key={c.id}
               to="/browse"
               search={{ category: c.id }}
+              onClick={() =>
+                trackEvent(
+                  qualityPageCategoryBrowseAnalyticsEvent(),
+                  qualityPageCategoryBrowseAnalyticsData(
+                    c.id,
+                    cov.count,
+                    rowIndex,
+                    CATEGORIES.length,
+                  ),
+                )
+              }
               className="grid grid-cols-[140px_1fr_110px_110px_110px_50px] items-center gap-4 border-b border-border px-5 py-3 text-sm last:border-0 hover:bg-surface-2"
             >
               <div className="font-display font-semibold text-ink">{c.label}</div>
@@ -254,7 +277,7 @@ function QualityPage() {
             Additions, updates, and removals from the public registry feed.
           </p>
           <ol className="mt-4 overflow-hidden rounded-xl border border-border bg-surface">
-            {CHANGELOG.slice(0, 6).map((c) => (
+            {CHANGELOG.slice(0, CHANGELOG_PREVIEW_COUNT).map((c) => (
               <li
                 key={`${c.date}-${c.ref}`}
                 className="flex items-start gap-3 border-b border-border px-4 py-3 last:border-0"
@@ -281,6 +304,12 @@ function QualityPage() {
           </ol>
           <Link
             to="/changelog"
+            onClick={() =>
+              trackEvent(
+                qualityPageChangelogAnalyticsEvent(),
+                qualityPageChangelogAnalyticsData(CHANGELOG_PREVIEW_COUNT),
+              )
+            }
             className="mt-3 inline-flex items-center gap-1 text-xs text-ink-muted hover:text-ink"
           >
             Full changelog →
@@ -334,6 +363,9 @@ function QualityPage() {
         <div className="flex flex-col gap-2 sm:flex-row">
           <Link
             to="/claim"
+            onClick={() =>
+              trackEvent(qualityPageClaimAnalyticsEvent(), qualityPageClaimAnalyticsData())
+            }
             className="inline-flex h-10 items-center rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink hover:opacity-90"
           >
             Claim a listing
@@ -342,6 +374,9 @@ function QualityPage() {
             href="https://github.com/jsonbored/awesome-claude/issues"
             target="_blank"
             rel="noreferrer"
+            onClick={() =>
+              trackEvent(qualityPageIssueAnalyticsEvent(), qualityPageIssueAnalyticsData())
+            }
             className="inline-flex h-10 items-center rounded-md border border-background/30 px-4 text-sm font-medium hover:bg-background/10"
           >
             Open an issue

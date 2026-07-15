@@ -5,6 +5,14 @@ import { CATEGORIES } from "@/types/registry";
 import { CopyButton } from "@/components/copy-button";
 import { SubscribeForm } from "@/components/subscribe-form";
 import { FeedHealthPanel } from "@/components/feed-health-panel";
+import { trackEvent } from "@/lib/analytics";
+import {
+  feedsPageApiDocsAnalyticsData,
+  feedsPageApiDocsAnalyticsEvent,
+  feedsPageFeedOpenAnalyticsData,
+  feedsPageFeedOpenAnalyticsEvent,
+  type FeedsPageFeedKind,
+} from "@/lib/feeds-page-cta-events";
 
 export const Route = createFileRoute("/feeds")({
   head: () => ({
@@ -42,11 +50,19 @@ function FeedRow({
   label,
   blurb,
   segment,
+  feedKey,
+  feedKind,
+  rowIndex,
+  sectionCount,
 }: {
   href: string;
   label: string;
   blurb: string;
   segment: string;
+  feedKey: string;
+  feedKind: FeedsPageFeedKind;
+  rowIndex: number;
+  sectionCount: number;
 }) {
   return (
     <div className="grid gap-3 border-b border-border py-4 last:border-b-0 sm:grid-cols-[1fr_auto] sm:items-center">
@@ -60,6 +76,12 @@ function FeedRow({
       <div className="flex flex-wrap items-center gap-2">
         <a
           href={href}
+          onClick={() =>
+            trackEvent(
+              feedsPageFeedOpenAnalyticsEvent(),
+              feedsPageFeedOpenAnalyticsData(feedKey, feedKind, rowIndex, sectionCount),
+            )
+          }
           className="inline-flex h-8 items-center rounded-md border border-border bg-surface px-2.5 text-xs text-ink hover:bg-surface-2"
         >
           Open feed
@@ -102,18 +124,30 @@ function FeedsPage() {
             label="Everything (RSS 2.0)"
             blurb="New entries, updates, removals, and changelog notes across the whole registry."
             segment="all"
+            feedKey="all"
+            feedKind="site-wide"
+            rowIndex={0}
+            sectionCount={3}
           />
           <FeedRow
             href="/atom.xml"
             label="Everything (Atom 1.0)"
             blurb="Same content as the RSS feed in Atom 1.0 format."
             segment="all"
+            feedKey="atom"
+            feedKind="site-wide"
+            rowIndex={1}
+            sectionCount={3}
           />
           <FeedRow
             href="/feeds/trending.xml"
             label="Trending"
             blurb="Entries with current public community, vote, and intent signals when live signals are available."
             segment="trending"
+            feedKey="trending"
+            feedKind="site-wide"
+            rowIndex={2}
+            sectionCount={3}
           />
         </div>
       </section>
@@ -121,13 +155,17 @@ function FeedsPage() {
       <section className="mt-8">
         <h2 className="font-display text-base font-semibold text-ink">Categories</h2>
         <div className="mt-2">
-          {CATEGORIES.map((c) => (
+          {CATEGORIES.map((c, rowIndex) => (
             <FeedRow
               key={c.id}
               href={`/feeds/${c.id}.xml`}
               label={c.label}
               blurb={c.blurb}
               segment={`category:${c.id}`}
+              feedKey={c.id}
+              feedKind="category"
+              rowIndex={rowIndex}
+              sectionCount={CATEGORIES.length}
             />
           ))}
         </div>
@@ -136,13 +174,17 @@ function FeedsPage() {
       <section className="mt-8">
         <h2 className="font-display text-base font-semibold text-ink">Changelog streams</h2>
         <div className="mt-2">
-          {STREAMS.map((s) => (
+          {STREAMS.map((s, rowIndex) => (
             <FeedRow
               key={s.slug}
               href={`/feeds/${s.slug}.xml`}
               label={s.label}
               blurb={`Just the ${s.label.toLowerCase()} stream.`}
               segment={`changelog:${s.slug.replace("changelog-", "")}`}
+              feedKey={s.slug.replace("changelog-", "")}
+              feedKind="changelog"
+              rowIndex={rowIndex}
+              sectionCount={STREAMS.length}
             />
           ))}
         </div>
@@ -156,19 +198,33 @@ function FeedsPage() {
             label="llms.txt"
             blurb="Short link manifest of the whole registry, grouped by category."
             segment="llms"
+            feedKey="llms"
+            feedKind="llms"
+            rowIndex={0}
+            sectionCount={2}
           />
           <FeedRow
             href="/llms-full.txt"
             label="llms-full.txt"
             blurb="Full text export with descriptions and install/config snippets, sized for context windows."
             segment="llms-full"
+            feedKey="llms-full"
+            feedKind="llms"
+            rowIndex={1}
+            sectionCount={2}
           />
         </div>
       </section>
 
       <p className="mt-10 text-xs text-ink-muted">
         Looking for a JSON feed?{" "}
-        <Link to="/api-docs" className="underline">
+        <Link
+          to="/api-docs"
+          className="underline"
+          onClick={() =>
+            trackEvent(feedsPageApiDocsAnalyticsEvent(), feedsPageApiDocsAnalyticsData())
+          }
+        >
           See the registry API.
         </Link>
       </p>
