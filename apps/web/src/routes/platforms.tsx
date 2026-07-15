@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowRight } from "lucide-react";
 import { SUPPORTED_PLATFORMS, PLATFORM_MATRIX } from "@/data/platforms";
 import { PLATFORM_LABEL, PLATFORM_SUPPORT_LABEL, type Platform } from "@/types/registry";
 import { PageContainer } from "@/components/page-container";
@@ -11,6 +12,10 @@ import {
   platformsMatrixEntryAnalyticsData,
   platformsMatrixEntryAnalyticsEvent,
 } from "@/lib/directory-page-entry-cta-events";
+import {
+  platformsPageHubAnalyticsData,
+  platformsPageHubAnalyticsEvent,
+} from "@/lib/platforms-page-cta-events";
 
 // Same card for og:image and twitter:image; the inputs are static.
 const OG_IMAGE = ogImageUrl({ title: "Platform compatibility", eyebrow: "Platforms" });
@@ -70,7 +75,7 @@ function PlatformsPage() {
       />
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {SUPPORTED_PLATFORMS.map((p) => {
+        {SUPPORTED_PLATFORMS.map((p, cardIndex) => {
           const rows = PLATFORM_MATRIX[p.id] ?? [];
           return (
             <div key={p.id} className="rounded-xl border border-border bg-surface p-5">
@@ -109,9 +114,24 @@ function PlatformsPage() {
                 ))}
                 {rows.length === 0 && <li className="text-ink-subtle">No entries yet.</li>}
               </ul>
-              <div className="mt-4 text-[10px] uppercase tracking-wider text-ink-subtle">
-                {PLATFORM_LABEL[p.id]}
-              </div>
+              <Link
+                to="/for/$platform"
+                params={{ platform: p.id }}
+                onClick={() =>
+                  trackEvent(
+                    platformsPageHubAnalyticsEvent(),
+                    platformsPageHubAnalyticsData(
+                      p.id,
+                      cardIndex,
+                      SUPPORTED_PLATFORMS.length,
+                      rows.length,
+                    ),
+                  )
+                }
+                className="mt-4 inline-flex items-center gap-1 text-[10px] font-medium uppercase tracking-wider text-ink-subtle transition-colors hover:text-ink"
+              >
+                {PLATFORM_LABEL[p.id]} hub <ArrowRight className="h-3 w-3" />
+              </Link>
             </div>
           );
         })}
