@@ -125,7 +125,22 @@ const SURFACE_LABEL: Record<ClientSetup["surface"], string> = {
   web: "Web / API",
 };
 
-export function DropInSetup() {
+export function DropInSetup({
+  onClientClick,
+  onDocClick,
+}: {
+  onClientClick?: (
+    clientId: string,
+    surfaceType: ClientSetup["surface"],
+    rowIndex: number,
+    clientCount: number,
+  ) => void;
+  onDocClick?: (
+    clientId: string,
+    surfaceType: ClientSetup["surface"],
+    destination: "external" | "internal",
+  ) => void;
+}) {
   const [activeId, setActiveId] = React.useState<string>(SETUPS[0].id);
   const active = SETUPS.find((s) => s.id === activeId) ?? SETUPS[0];
   const mark = platformMark(active.id);
@@ -138,14 +153,17 @@ export function DropInSetup() {
           Pick your client
         </div>
         <ul className="max-h-[420px] overflow-y-auto md:max-h-none">
-          {SETUPS.map((s) => {
+          {SETUPS.map((s, rowIndex) => {
             const isActive = s.id === active.id;
             const m = platformMark(s.id);
             return (
               <li key={s.id}>
                 <button
                   type="button"
-                  onClick={() => setActiveId(s.id)}
+                  onClick={() => {
+                    onClientClick?.(s.id, s.surface, rowIndex, SETUPS.length);
+                    setActiveId(s.id);
+                  }}
                   className={cn(
                     "flex w-full items-center gap-2 border-b border-border px-4 py-2.5 text-left text-sm transition-colors duration-200 ease-out last:border-0",
                     isActive
@@ -190,6 +208,13 @@ export function DropInSetup() {
               href={active.docUrl}
               target={active.docUrl.startsWith("http") ? "_blank" : undefined}
               rel="noreferrer"
+              onClick={() =>
+                onDocClick?.(
+                  active.id,
+                  active.surface,
+                  active.docUrl!.startsWith("http") ? "external" : "internal",
+                )
+              }
               className="shrink-0 text-xs font-medium text-ink-muted hover:text-ink"
             >
               Docs →

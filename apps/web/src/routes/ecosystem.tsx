@@ -24,6 +24,13 @@ import {
   ecosystemMatrixFocusClearAnalyticsEvent,
   ecosystemMatrixSupportFocusAnalyticsData,
   ecosystemMatrixSupportFocusAnalyticsEvent,
+  ecosystemFeedPathAnalyticsData,
+  ecosystemFeedPathAnalyticsEvent,
+  ecosystemFeedKey,
+  ecosystemSetupClientAnalyticsData,
+  ecosystemSetupClientAnalyticsEvent,
+  ecosystemSetupDocAnalyticsData,
+  ecosystemSetupDocAnalyticsEvent,
   ecosystemSectionAnalyticsData,
   ecosystemSectionAnalyticsEvent,
   ecosystemHarnessBrowseAnalyticsData,
@@ -377,7 +384,20 @@ function EcosystemPage() {
         title="Drop-in setup"
         subtitle="Pick your client. Copy the config. Verify with one command."
       >
-        <DropInSetup />
+        <DropInSetup
+          onClientClick={(clientId, surfaceType, rowIndex, clientCount) =>
+            trackEvent(
+              ecosystemSetupClientAnalyticsEvent(),
+              ecosystemSetupClientAnalyticsData(clientId, surfaceType, rowIndex, clientCount),
+            )
+          }
+          onDocClick={(clientId, surfaceType, destination) =>
+            trackEvent(
+              ecosystemSetupDocAnalyticsEvent(),
+              ecosystemSetupDocAnalyticsData(clientId, surfaceType, destination),
+            )
+          }
+        />
       </Section>
 
       {/* Adapter feeds */}
@@ -623,7 +643,7 @@ function AdapterFeeds() {
         <span>SHA-256</span>
         <span className="text-right">Copy</span>
       </div>
-      {ECOSYSTEM_FEEDS.map((f) => (
+      {ECOSYSTEM_FEEDS.map((f, rowIndex) => (
         <div
           key={f.path}
           className="grid grid-cols-1 gap-2 border-b border-border px-5 py-3 text-sm last:border-0 md:grid-cols-[1.6fr_2fr_120px_90px_140px_80px] md:items-center md:gap-4"
@@ -634,6 +654,17 @@ function AdapterFeeds() {
               href={f.path}
               target="_blank"
               rel="noreferrer"
+              onClick={() =>
+                trackEvent(
+                  ecosystemFeedPathAnalyticsEvent(),
+                  ecosystemFeedPathAnalyticsData(
+                    ecosystemFeedKey(f.path),
+                    f.contentType,
+                    rowIndex,
+                    ECOSYSTEM_FEEDS.length,
+                  ),
+                )
+              }
               className="truncate font-mono text-xs text-ink hover:underline"
             >
               {f.path}

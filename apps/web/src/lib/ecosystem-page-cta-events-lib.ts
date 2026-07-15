@@ -199,3 +199,66 @@ export function ecosystemMatrixDocAnalyticsData(
     columnIndex,
   };
 }
+
+export type EcosystemSetupSurface = "mcp-host" | "adapter" | "extension" | "web";
+export type EcosystemSetupDocDestination = "external" | "internal";
+
+export function ecosystemFeedKey(path: string): string {
+  const parts = path.split("/").filter(Boolean);
+  return parts[parts.length - 1] ?? path;
+}
+
+export function ecosystemSetupClientAnalyticsEvent(): string {
+  return "ecosystem_setup_client_click";
+}
+
+export function ecosystemSetupClientAnalyticsData(
+  clientId: string,
+  surfaceType: EcosystemSetupSurface,
+  rowIndex: number,
+  clientCount: number,
+) {
+  return {
+    surface: ECOSYSTEM_PAGE_SURFACE,
+    clientId,
+    surfaceType,
+    rowIndex,
+    clientCount,
+  };
+}
+
+export function ecosystemSetupDocAnalyticsEvent(): string {
+  return "ecosystem_setup_doc_click";
+}
+
+export function ecosystemSetupDocAnalyticsData(
+  clientId: string,
+  surfaceType: EcosystemSetupSurface,
+  destination: EcosystemSetupDocDestination,
+) {
+  return {
+    surface: ECOSYSTEM_PAGE_SURFACE,
+    clientId,
+    surfaceType,
+    destination,
+  };
+}
+
+export function ecosystemFeedPathAnalyticsEvent(): string {
+  return "ecosystem_feed_path_click";
+}
+
+export function ecosystemFeedPathAnalyticsData(
+  feedKey: string,
+  contentType: string,
+  rowIndex: number,
+  feedCount: number,
+) {
+  return {
+    surface: ECOSYSTEM_PAGE_SURFACE,
+    feedKey,
+    contentType,
+    rowIndex,
+    feedCount,
+  };
+}
