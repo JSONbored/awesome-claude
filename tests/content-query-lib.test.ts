@@ -3289,3 +3289,22 @@ describe("content-query-lib createResettablePromiseCache", () => {
     expect(calls).toBe(1);
   });
 });
+
+describe("content-query-lib pruneEntryDetailCache boundaries", () => {
+  it("does not evict anything when the map is below capacity", () => {
+    const map = new Map([
+      ["a", 1],
+      ["b", 2],
+    ]);
+    pruneEntryDetailCache(map, 5);
+    expect(map.size).toBe(2);
+    expect(map.has("a")).toBe(true);
+    expect(map.has("b")).toBe(true);
+  });
+
+  it("is a safe no-op for an empty map at zero capacity", () => {
+    const map = new Map<string, number>();
+    expect(() => pruneEntryDetailCache(map, 0)).not.toThrow();
+    expect(map.size).toBe(0);
+  });
+});

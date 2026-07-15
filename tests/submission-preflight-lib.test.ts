@@ -480,3 +480,75 @@ describe("missingNoteWarnings", () => {
     });
   });
 });
+
+describe("submission-preflight-lib coverage gaps", () => {
+  it("missingNoteWarnings defaults to no warnings when classificationWarnings is absent", () => {
+    const result = missingNoteWarnings(
+      {} as Parameters<typeof missingNoteWarnings>[0],
+    );
+    expect(result).toEqual({ safety: undefined, privacy: undefined });
+  });
+
+  it("isSimilarSubmissionTitle returns false when either title tokenizes to nothing", () => {
+    expect(isSimilarSubmissionTitle("", "Browser Bridge")).toBe(false);
+    expect(isSimilarSubmissionTitle("Browser Bridge", "")).toBe(false);
+  });
+
+  it("isSimilarSubmissionTitle returns false when a title has only short words", () => {
+    // "ai ml" is non-empty and differs from the other title, but every token is
+    // <= 2 chars, so titleWords() is empty and the size guard returns false.
+    expect(isSimilarSubmissionTitle("ai ml", "Browser Bridge Tool")).toBe(
+      false,
+    );
+  });
+
+  it("findDuplicateCandidates falls back from name to title to empty", () => {
+    const entry = directoryEntry({
+      category: "mcp",
+      slug: "x",
+      title: "Browser Bridge",
+    });
+    // No name field -> the comparable title comes from `title` and matches.
+    const byTitle = findDuplicateCandidates({
+      entries: [entry],
+      fields: { title: "Browser Bridge" },
+      category: "mcp",
+      slug: "y",
+    });
+    expect(byTitle.some((c) => c.reasons.includes("title"))).toBe(true);
+    // Neither name nor title -> empty comparable title, no title-based match.
+    const noTitle = findDuplicateCandidates({
+      entries: [entry],
+      fields: {},
+      category: "mcp",
+      slug: "y",
+    });
+    expect(noTitle.every((c) => !c.reasons.includes("title"))).toBe(true);
+  });
+
+  it("findDuplicateCandidates skips the slug reason when category or slug is blank", () => {
+    const entry = directoryEntry({ category: "mcp", slug: "x", title: "X" });
+    const result = findDuplicateCandidates({
+      entries: [entry],
+      fields: { name: "X" },
+      category: "",
+      slug: "",
+    });
+    expect(result.every((c) => !c.reasons.includes("slug"))).toBe(true);
+  });
+
+  it("buildPreflightIssues uses a default source-review message when no summary is given", () => {
+    const result = buildPreflightIssues({
+      validationSkipped: false,
+      validationErrors: [],
+      category: "mcp",
+      fields: {},
+      duplicates: [],
+      sourceGateStatus: "fail",
+    });
+    const warning = result.warnings.find(
+      (w) => w.code === "source_needs_review",
+    );
+    expect(warning?.message).toContain("Add a canonical GitHub");
+  });
+});

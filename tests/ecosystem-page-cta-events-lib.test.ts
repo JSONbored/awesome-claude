@@ -23,6 +23,8 @@ import {
   ecosystemMatrixSupportFocusAnalyticsEvent,
   ecosystemFeedPathAnalyticsData,
   ecosystemFeedPathAnalyticsEvent,
+  ecosystemFeedUrlCopyAnalyticsData,
+  ecosystemFeedUrlCopyAnalyticsEvent,
   ecosystemSetupClientAnalyticsData,
   ecosystemSetupClientAnalyticsEvent,
   ecosystemSetupDocAnalyticsData,
@@ -189,6 +191,18 @@ describe("ecosystem page cta events lib", () => {
       feedKey: "ecosystem-feed.json",
       contentType: "json",
       rowIndex: 0,
+      feedCount: 6,
+    });
+    expect(ecosystemFeedUrlCopyAnalyticsEvent()).toBe(
+      "ecosystem_feed_url_copy_click",
+    );
+    expect(
+      ecosystemFeedUrlCopyAnalyticsData("ecosystem-feed.json", "json", 2, 6),
+    ).toEqual({
+      surface: ECOSYSTEM_PAGE_SURFACE,
+      feedKey: "ecosystem-feed.json",
+      contentType: "json",
+      rowIndex: 2,
       feedCount: 6,
     });
     expect(ecosystemQuickStartCopyAnalyticsEvent()).toBe(

@@ -109,3 +109,25 @@ describe("computeRelatedTags", () => {
     expect(computeRelatedTags(groups, "ai", 1)).toHaveLength(1);
   });
 });
+
+describe("tags-lib entries without tags", () => {
+  it("buildTagGroups treats a tagless entry as contributing no groups", () => {
+    const tagless = { ...entry("b", []), tags: undefined } as Entry;
+    const groups = buildTagGroups([entry("a", ["ai"]), tagless]);
+    expect(groups.map((group) => group.slug)).toEqual(["ai"]);
+  });
+
+  it("computeRelatedTags skips a grouped entry that has no tags", () => {
+    const tagless = { ...entry("x", []), tags: undefined } as Entry;
+    const groups = [
+      { slug: "ai", name: "AI", entries: [tagless, entry("y", ["ai", "ml"])] },
+      {
+        slug: "ml",
+        name: "ML",
+        entries: [entry("y", ["ai", "ml"]), entry("z", ["ml"])],
+      },
+    ];
+    const related = computeRelatedTags(groups, "ai");
+    expect(related.map((group) => group.slug)).toEqual(["ml"]);
+  });
+});

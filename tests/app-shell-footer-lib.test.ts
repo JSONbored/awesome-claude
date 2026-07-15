@@ -36,6 +36,8 @@ describe("app-shell-footer-lib", () => {
     expect(footerColumnSpanClass(2)).toBe("md:col-span-2");
     expect(footerColumnSpanClass()).toBe("md:col-span-2");
     expect(shellFooterBrandSpanClass()).toBe("md:col-span-4");
+    expect(shellFooterBrandSpanClass(3)).toBe("md:col-span-3");
+    expect(shellFooterBrandSpanClass(2)).toBe("md:col-span-2");
   });
 
   it("fits brand and link columns into the 12-column footer grid", () => {

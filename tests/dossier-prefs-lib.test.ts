@@ -1,10 +1,12 @@
-import { describe, expect, it, beforeEach } from "vitest";
+import { afterEach, describe, expect, it, beforeEach } from "vitest";
 
 import {
   COPY_KEY,
   HARNESS_KEY_PREFIX,
   SCROLL_KEY_PREFIX,
   createDossierPrefsStorage,
+  defaultLocalStorage,
+  defaultSessionStorage,
   harnessStorageKey,
   isCopyVariant,
   parseScrollPosition,
@@ -2656,5 +2658,117 @@ describe("dossier-prefs-lib persistence", () => {
     const key = "hc:test-119";
     writePersistent(key, "value-119", storage);
     expect(readPersistent(key, storage)).toBe("value-119");
+  });
+});
+
+describe("dossier-prefs-lib readPersistent session fallback", () => {
+  it("migrates a value from session to local storage on read", () => {
+    const local = makeMemoryStorage();
+    const session = makeMemoryStorage();
+    session.setItem("k", "v");
+    expect(readPersistent("k", { local, session })).toBe("v");
+    // The value is copied into local so later reads no longer need session.
+    expect(local.getItem("k")).toBe("v");
+  });
+
+  it("reads from session without migrating when local storage is absent", () => {
+    const session = makeMemoryStorage();
+    session.setItem("k", "v");
+    expect(readPersistent("k", { local: null, session })).toBe("v");
+  });
+
+  it("returns null when neither store has the key", () => {
+    expect(
+      readPersistent("missing", {
+        local: makeMemoryStorage(),
+        session: makeMemoryStorage(),
+      }),
+    ).toBeNull();
+  });
+
+  it("returns null when local misses and there is no session store", () => {
+    expect(
+      readPersistent("missing", { local: makeMemoryStorage(), session: null }),
+    ).toBeNull();
+  });
+
+  it("writePersistent is a no-op when local storage is absent", () => {
+    expect(() =>
+      writePersistent("k", "v", { local: null, session: null }),
+    ).not.toThrow();
+  });
+});
+
+describe("dossier-prefs-lib default window storage", () => {
+  const globalWithWindow = globalThis as { window?: unknown };
+  const originalWindow = globalWithWindow.window;
+
+  afterEach(() => {
+    if (originalWindow === undefined) delete globalWithWindow.window;
+    else globalWithWindow.window = originalWindow;
+  });
+
+  it("returns the window storages when they are available", () => {
+    const local = makeMemoryStorage();
+    const session = makeMemoryStorage();
+    globalWithWindow.window = { localStorage: local, sessionStorage: session };
+    expect(defaultLocalStorage()).toBe(local);
+    expect(defaultSessionStorage()).toBe(session);
+  });
+
+  it("returns null when accessing a window storage throws", () => {
+    globalWithWindow.window = {
+      get localStorage(): Storage {
+        throw new Error("storage blocked");
+      },
+      get sessionStorage(): Storage {
+        throw new Error("storage blocked");
+      },
+    };
+    expect(defaultLocalStorage()).toBeNull();
+    expect(defaultSessionStorage()).toBeNull();
+  });
+
+  it("returns null when window is undefined", () => {
+    delete globalWithWindow.window;
+    expect(defaultLocalStorage()).toBeNull();
+    expect(defaultSessionStorage()).toBeNull();
+  });
+});
+
+describe("dossier-prefs-lib resilience and parsing edges", () => {
+  function throwingStorage(): Storage {
+    return {
+      ...makeMemoryStorage(),
+      getItem() {
+        throw new Error("storage blocked");
+      },
+    };
+  }
+
+  it("parseScrollPosition returns null for empty or nullish input", () => {
+    expect(parseScrollPosition("")).toBeNull();
+    expect(parseScrollPosition(null)).toBeNull();
+    expect(parseScrollPosition(undefined)).toBeNull();
+  });
+
+  it("parseScrollPosition rejects non-positive and non-finite values", () => {
+    expect(parseScrollPosition("0")).toBeNull();
+    expect(parseScrollPosition("-5")).toBeNull();
+    expect(parseScrollPosition("abc")).toBeNull();
+  });
+
+  it("readPersistent recovers to session when local getItem throws", () => {
+    const session = makeMemoryStorage();
+    session.setItem("k", "v");
+    expect(readPersistent("k", { local: throwingStorage(), session })).toBe(
+      "v",
+    );
+  });
+
+  it("readPersistent returns null when session getItem throws", () => {
+    expect(
+      readPersistent("k", { local: null, session: throwingStorage() }),
+    ).toBeNull();
   });
 });

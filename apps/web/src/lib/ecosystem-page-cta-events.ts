@@ -32,6 +32,8 @@ export {
   ecosystemFeedPathAnalyticsData,
   ecosystemFeedPathAnalyticsEvent,
   ecosystemFeedKey,
+  ecosystemFeedUrlCopyAnalyticsData,
+  ecosystemFeedUrlCopyAnalyticsEvent,
   ecosystemQuickStartCopyAnalyticsData,
   ecosystemQuickStartCopyAnalyticsEvent,
   type EcosystemMatrixSupport,

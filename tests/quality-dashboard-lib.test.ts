@@ -493,3 +493,83 @@ describe("quality-dashboard-lib edge cases", () => {
     });
   });
 });
+
+describe("quality-dashboard-lib coverage gaps", () => {
+  type TrustRow = Parameters<typeof rankWeakestTrustCategories>[0][number];
+  const row = (
+    category: string,
+    trustCoverageScore: number,
+    recommendedFixes: number,
+  ) =>
+    ({
+      category,
+      count: 1,
+      trustCoverageScore,
+      recommendedFixes,
+    }) as unknown as TrustRow;
+
+  it("toSafePathSegment returns an empty string for nullish input", () => {
+    expect(toSafePathSegment(null as unknown as string)).toBe("");
+    expect(toSafePathSegment(undefined as unknown as string)).toBe("");
+  });
+
+  it("findSafetyPrivacyGaps flags an entry that has safety notes but lacks privacy notes", () => {
+    const report = {
+      entries: [
+        trustEntry({
+          category: "mcp",
+          slug: "x",
+          hasSafetyNotes: true,
+          hasPrivacyNotes: false,
+        }),
+      ],
+    } as unknown as RegistryTrustReport;
+    const gaps = findSafetyPrivacyGaps(report);
+    expect(gaps.missingSafetyNotes).toEqual([]);
+    expect(gaps.missingPrivacyNotes.map((gap) => gap.slug)).toEqual(["x"]);
+  });
+
+  it("findSafetyPrivacyGaps flags an entry that lacks safety notes but has privacy notes", () => {
+    const report = {
+      entries: [
+        trustEntry({
+          category: "mcp",
+          slug: "y",
+          hasSafetyNotes: false,
+          hasPrivacyNotes: true,
+        }),
+      ],
+    } as unknown as RegistryTrustReport;
+    const gaps = findSafetyPrivacyGaps(report);
+    expect(gaps.missingSafetyNotes.map((gap) => gap.slug)).toEqual(["y"]);
+    expect(gaps.missingPrivacyNotes).toEqual([]);
+  });
+
+  it("findSafetyPrivacyGaps treats a non-array entries field as empty", () => {
+    const report = { entries: undefined } as unknown as RegistryTrustReport;
+    expect(findSafetyPrivacyGaps(report)).toEqual({
+      missingSafetyNotes: [],
+      missingPrivacyNotes: [],
+    });
+  });
+
+  it("summarizeRiskBearingTotals treats a non-array entries field as empty", () => {
+    const report = { entries: undefined } as unknown as RegistryTrustReport;
+    expect(summarizeRiskBearingTotals(report).totalEntries).toBe(0);
+  });
+
+  it("rankWeakestTrustCategories breaks ties by recommendedFixes then category", () => {
+    // Equal trustCoverageScore, differing recommendedFixes -> more fixes first.
+    expect(
+      rankWeakestTrustCategories([row("hooks", 50, 1), row("mcp", 50, 3)]).map(
+        (r) => r.category,
+      ),
+    ).toEqual(["mcp", "hooks"]);
+    // Equal trustCoverageScore and recommendedFixes -> alphabetical by category.
+    expect(
+      rankWeakestTrustCategories([row("zeta", 50, 2), row("alpha", 50, 2)]).map(
+        (r) => r.category,
+      ),
+    ).toEqual(["alpha", "zeta"]);
+  });
+});

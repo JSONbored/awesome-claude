@@ -1412,3 +1412,10 @@ describe("brief-issues-lib parseBriefIssueRow", () => {
     expect(issue.sent_at).toBe("2026-06-02T09:05:00.000Z");
   });
 });
+
+describe("brief-issues-lib isMissingBriefIssuesInfra nullish input", () => {
+  it("treats null and undefined as unrelated errors (fails closed)", () => {
+    expect(isMissingBriefIssuesInfra(null)).toBe(false);
+    expect(isMissingBriefIssuesInfra(undefined)).toBe(false);
+  });
+});

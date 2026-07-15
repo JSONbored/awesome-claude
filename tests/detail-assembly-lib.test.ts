@@ -428,3 +428,210 @@ describe("detail-assembly-lib getSourceSignals", () => {
     });
   });
 });
+
+describe("detail-assembly-lib branch edge cases", () => {
+  it("getPrimarySnippet: agents entry falls back to copy then usage snippets", () => {
+    expect(
+      getPrimarySnippet(entry({ category: "agents", copySnippet: "CS" })),
+    ).toEqual({
+      title: "Copyable asset",
+      code: "CS",
+      language: "md",
+    });
+    expect(
+      getPrimarySnippet(entry({ category: "agents", usageSnippet: "US" })),
+    ).toEqual({
+      title: "Copyable asset",
+      code: "US",
+      language: "md",
+    });
+  });
+
+  it("getPrimarySnippet: hooks without config or script fall back to usage", () => {
+    expect(
+      getPrimarySnippet(entry({ category: "hooks", copySnippet: "CS" })),
+    ).toEqual({
+      title: "Usage",
+      code: "CS",
+      language: "text",
+    });
+    expect(
+      getPrimarySnippet(entry({ category: "hooks", usageSnippet: "US" })),
+    ).toEqual({
+      title: "Usage",
+      code: "US",
+      language: "text",
+    });
+  });
+
+  it("getPrimarySnippet: statuslines without config or script fall back to usage", () => {
+    expect(
+      getPrimarySnippet(entry({ category: "statuslines", copySnippet: "CS" })),
+    ).toEqual({
+      title: "Usage",
+      code: "CS",
+      language: "text",
+    });
+    expect(
+      getPrimarySnippet(entry({ category: "statuslines", usageSnippet: "US" })),
+    ).toEqual({
+      title: "Usage",
+      code: "US",
+      language: "text",
+    });
+  });
+
+  it("getPrimarySnippet: statuslines script without language defaults to text", () => {
+    expect(
+      getPrimarySnippet(entry({ category: "statuslines", scriptBody: "fn()" })),
+    ).toEqual({
+      title: "Source asset",
+      code: "fn()",
+      language: "text",
+    });
+  });
+
+  it("getPrimarySnippet: collections and guides fall back to copy and body", () => {
+    expect(
+      getPrimarySnippet(entry({ category: "collections", copySnippet: "CS" })),
+    ).toEqual({
+      title: "Quick start",
+      code: "CS",
+      language: "text",
+    });
+    expect(
+      getPrimarySnippet(entry({ category: "collections", body: "B" })),
+    ).toEqual({
+      title: "Quick start",
+      code: "B",
+      language: "text",
+    });
+    expect(getPrimarySnippet(entry({ category: "guides", body: "B" }))).toEqual(
+      {
+        title: "Quick summary",
+        code: "B",
+        language: "text",
+      },
+    );
+  });
+
+  it("getPrimarySnippet: unknown category labels copyable and falls back to body", () => {
+    expect(
+      getPrimarySnippet(
+        entry({
+          category: "tools" as ContentEntry["category"],
+          copySnippet: "CS",
+        }),
+      ),
+    ).toEqual({ title: "Copyable asset", code: "CS", language: "text" });
+    expect(
+      getPrimarySnippet(
+        entry({ category: "tools" as ContentEntry["category"], body: "B" }),
+      ),
+    ).toEqual({ title: "Usage", code: "B", language: "text" });
+  });
+
+  it("getMetadataFallback: hooks without a trigger and with documentation", () => {
+    expect(
+      getMetadataFallback(entry({ category: "hooks" })).points[0],
+    ).toContain("hooks configuration");
+    expect(
+      getMetadataFallback(
+        entry({
+          category: "hooks",
+          trigger: "Stop",
+          documentationUrl: "https://docs",
+        }),
+      ).points[1],
+    ).toContain("documentation link");
+  });
+
+  it("getRelatedEntries: tolerates missing tags on the anchor and items", () => {
+    const anchor = entry({
+      category: "agents",
+      slug: "anchor",
+      tags: undefined,
+    });
+    const a = {
+      category: "agents",
+      slug: "a",
+      title: "a",
+      description: "d",
+    } as DirectoryEntry;
+    const b = {
+      category: "guides",
+      slug: "b",
+      title: "b",
+      description: "d",
+    } as DirectoryEntry;
+    const related = getRelatedEntries(anchor, [a, b]);
+    expect(related).toHaveLength(2);
+  });
+
+  it("getRelatedEntries: breaks fully-tied scores deterministically by hash closeness", () => {
+    const anchor = entry({ category: "agents", slug: "anchor", tags: [] });
+    const one = directory("agents", "tie-one");
+    const two = directory("agents", "tie-two");
+    const forward = getRelatedEntries(anchor, [one, two]).map(
+      (item) => item.slug,
+    );
+    const reversed = getRelatedEntries(anchor, [two, one]).map(
+      (item) => item.slug,
+    );
+    expect(forward).toHaveLength(2);
+    expect(reversed).toEqual(forward);
+  });
+
+  it("getCollectionItems: coerces missing category or slug on object refs to empty", () => {
+    const items = getCollectionItems(
+      entry({
+        category: "collections",
+        items: [
+          { slug: "only-slug" },
+          { category: "agents" },
+        ] as ContentEntry["items"],
+      }),
+      [],
+    );
+    expect(items).toEqual([]);
+  });
+
+  it("getTopFacts: includes trigger, arguments, format, and setup time", () => {
+    expect(
+      getTopFacts(
+        entry({
+          trigger: "Stop",
+          argumentHint: "<file>",
+          scriptLanguage: "sh",
+          estimatedSetupTime: "5m",
+        }),
+      ),
+    ).toEqual(
+      expect.arrayContaining([
+        { label: "Trigger", value: "Stop" },
+        { label: "Arguments", value: "<file>" },
+        { label: "Format", value: "sh" },
+        { label: "Setup time", value: "5m" },
+      ]),
+    );
+  });
+
+  it("getSourceSignals: reviewer without a date and claim without a url use bare values", () => {
+    const signals = getSourceSignals(
+      entry({ reviewedBy: "maintainer", claimedBy: "owner" }),
+    );
+    expect(signals).toContainEqual({
+      label: "Reviewed by",
+      value: "maintainer",
+    });
+    expect(signals).toContainEqual({ label: "Claimed by", value: "owner" });
+  });
+});
+
+describe("detail-assembly-lib renderMarkdown anchor without href", () => {
+  it("drops a raw anchor tag that has no href attribute", async () => {
+    const html = await renderMarkdown("<a>bare link</a>");
+    expect(html).toContain("bare link");
+    expect(html).not.toMatch(/<a[\s>]/);
+  });
+});

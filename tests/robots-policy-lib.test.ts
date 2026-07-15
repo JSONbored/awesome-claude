@@ -613,3 +613,19 @@ describe("robots-policy-lib", () => {
     expect(renderRobotsTxt()).toContain("Sitemap:");
   });
 });
+
+describe("robots-policy-lib rules without disallow paths", () => {
+  it("omits Disallow lines for a rule that has no disallow list", () => {
+    const policy = {
+      rules: [{ userAgent: "*", allow: "/" }],
+      contentSignal: "",
+      sitemap: "https://heyclau.de/sitemap.xml",
+      host: "heyclau.de",
+    } as Parameters<typeof renderRobotsTxt>[0];
+    const output = renderRobotsTxt(policy);
+    expect(output).toContain("User-agent: *");
+    expect(output).toContain("Allow: /");
+    expect(output).not.toContain("Disallow:");
+    expect(output).toContain("Sitemap: https://heyclau.de/sitemap.xml");
+  });
+});

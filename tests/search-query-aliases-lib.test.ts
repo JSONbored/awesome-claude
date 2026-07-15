@@ -814,3 +814,29 @@ describe("search-query-aliases-lib", () => {
     expect(set.has("security")).toBe(true);
   });
 });
+
+describe("search-query-aliases-lib non-alias and empty tokens", () => {
+  it("queryAliasExpansions returns [] for an empty or whitespace token", () => {
+    expect(queryAliasExpansions("")).toEqual([]);
+    expect(queryAliasExpansions("   ")).toEqual([]);
+  });
+
+  it("queryAliasExpansions returns [] for a token that is not an alias key", () => {
+    expect(queryAliasExpansions("spreadsheet")).toEqual([]);
+  });
+
+  it("queryAliasExpansions does not treat inherited prototype names as aliases", () => {
+    // Object.hasOwn guards against "constructor"/"toString" resolving to Object.prototype.
+    expect(queryAliasExpansions("constructor")).toEqual([]);
+    expect(queryAliasExpansions("toString")).toEqual([]);
+  });
+
+  it("expandedTokenCandidates returns [] for an empty or whitespace token", () => {
+    expect(expandedTokenCandidates("")).toEqual([]);
+    expect(expandedTokenCandidates("   ")).toEqual([]);
+  });
+
+  it("expandedTokenCandidates returns just the token for a non-alias word", () => {
+    expect(expandedTokenCandidates("spreadsheet")).toEqual(["spreadsheet"]);
+  });
+});

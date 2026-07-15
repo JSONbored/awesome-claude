@@ -102,4 +102,81 @@ describe("browse results trust decision lib", () => {
       ),
     ).toContain("Review status");
   });
+
+  it("returns an empty coverage chip list for zero results", () => {
+    expect(browseTrustCoverageChips([])).toEqual([]);
+  });
+
+  it("classifies high and neutral coverage chip emphasis", () => {
+    const results = [
+      entry({
+        trust: "trusted",
+        safetyNotes: "Careful",
+        privacyNotes: "Local only",
+        reviewed: true,
+        source: "source-backed",
+        claimed: true,
+      }),
+      entry({
+        slug: "two",
+        trust: "trusted",
+        safetyNotes: "Careful",
+        privacyNotes: "Local only",
+        reviewed: true,
+        source: "source-backed",
+        claimed: true,
+      }),
+      entry({
+        slug: "three",
+        trust: "trusted",
+        safetyNotes: "Careful",
+        privacyNotes: "Local only",
+        reviewed: true,
+        source: "source-backed",
+        claimed: true,
+      }),
+    ];
+    const coverage = browseTrustCoverageChips(results);
+    expect(coverage.find((chip) => chip.id === "safety")).toMatchObject({
+      emphasis: "high",
+      percent: 100,
+    });
+    expect(coverage.find((chip) => chip.id === "reviewed")?.emphasis).toBe(
+      "high",
+    );
+  });
+
+  it("warns about weak trust-signal coverage when multiple chips are low", () => {
+    const sparse = [
+      entry(),
+      entry({ slug: "two" }),
+      entry({ slug: "three" }),
+      entry({ slug: "four" }),
+    ];
+    expect(browseTrustPanelDecisionHint(sparse, 0, [])).toContain(
+      "of results have key trust signals",
+    );
+  });
+
+  it("prefers side-by-side compare copy when diverging labels exist and compare is ready", () => {
+    expect(
+      browseTrustPanelDecisionHint([entry(), entry({ slug: "two" })], 2, [
+        "Review status",
+      ]),
+    ).toContain("open compare to review side by side");
+  });
+
+  it("falls back to mixed-trust guidance when labels do not diverge", () => {
+    expect(
+      browseTrustPanelDecisionHint(
+        [
+          entry({ trust: "trusted" }),
+          entry({ slug: "two", trust: "review" }),
+          entry({ slug: "three", trust: "limited" }),
+        ],
+        0,
+        [],
+      ),
+    ).toContain("Mixed trust levels");
+  });
 });

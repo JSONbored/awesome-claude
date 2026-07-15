@@ -1,15 +1,30 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
+  buildCategoryDescriptions,
   buildCategoryLabels,
+  buildCategoryQuickstarts,
+  buildCategorySeoDescriptions,
+  buildCategoryUsageHints,
   categoryAccentClasses,
   categorySpecCategories,
+  publicCsvEnv,
+  publicEnv,
   publicHttpUrl,
 } from "../apps/web/src/lib/site-lib";
 
 describe("site-lib publicHttpUrl", () => {
   it("accepts https url", () => {
     expect(publicHttpUrl("https://example.com/")).toBe("https://example.com");
+  });
+  it("accepts http url and strips trailing slash", () => {
+    expect(publicHttpUrl("http://example.com/path/")).toBe(
+      "http://example.com/path",
+    );
+  });
+  it("rejects non-http protocols and empty input", () => {
+    expect(publicHttpUrl("javascript:alert(1)")).toBe("");
+    expect(publicHttpUrl("")).toBe("");
   });
   it("rejects invalid url", () => {
     expect(publicHttpUrl("not-a-url")).toBe("");
@@ -373,5 +388,87 @@ describe("site-lib category builders", () => {
   it("buildCategoryLabels matrix 49", () => {
     const labels = buildCategoryLabels(categorySpecCategories);
     expect(Object.keys(labels).length).toBeGreaterThan(5);
+  });
+});
+
+describe("site-lib publicEnv and publicCsvEnv", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("reads trimmed values from import.meta.env first", () => {
+    vi.stubEnv("VITE_BRANCH_FIXTURE", "  from-vite  ");
+    expect(publicEnv("VITE_BRANCH_FIXTURE")).toBe("from-vite");
+  });
+
+  it("falls back to process.env when import.meta.env is empty", () => {
+    vi.stubEnv("VITE_MISSING_FIXTURE", "");
+    process.env.VITE_MISSING_FIXTURE = "  from-process  ";
+    expect(publicEnv("VITE_MISSING_FIXTURE")).toBe("from-process");
+    delete process.env.VITE_MISSING_FIXTURE;
+  });
+
+  it("returns fallback csv values when the env var is blank", () => {
+    vi.stubEnv("VITE_CSV_FIXTURE", "");
+    expect(publicCsvEnv("VITE_CSV_FIXTURE", ["alpha", "beta"])).toEqual([
+      "alpha",
+      "beta",
+    ]);
+  });
+
+  it("splits, trims, and drops empty csv entries", () => {
+    vi.stubEnv("VITE_CSV_FIXTURE", " alpha , , beta ,gamma ");
+    expect(publicCsvEnv("VITE_CSV_FIXTURE")).toEqual([
+      "alpha",
+      "beta",
+      "gamma",
+    ]);
+  });
+});
+
+describe("site-lib category builders", () => {
+  const fixtureMap = {
+    agents: {
+      label: "Agents",
+      description: "Agent description",
+      seoDescription: "Agent SEO",
+      usageHint: "Use agents for workflows",
+      quickstart: ["Install", "Run"],
+    },
+    tools: {
+      label: "Tools",
+      description: "Tool description",
+      usageHint: "Use tools carefully",
+      quickstart: "not-an-array" as unknown as string[],
+    },
+  };
+
+  it("builds category label, description, seo, usage, and quickstart maps", () => {
+    expect(buildCategoryLabels(fixtureMap)).toEqual({
+      agents: "Agents",
+      tools: "Tools",
+    });
+    expect(buildCategoryDescriptions(fixtureMap)).toEqual({
+      agents: "Agent description",
+      tools: "Tool description",
+    });
+    expect(buildCategorySeoDescriptions(fixtureMap)).toEqual({
+      agents: "Agent SEO",
+      tools: "Tool description",
+    });
+    expect(buildCategoryUsageHints(fixtureMap)).toEqual({
+      agents: "Use agents for workflows",
+      tools: "Use tools carefully",
+    });
+    expect(buildCategoryQuickstarts(fixtureMap)).toEqual({
+      agents: ["Install", "Run"],
+      tools: [],
+    });
+  });
+
+  it("exposes accent classes for every catalog category", () => {
+    for (const category of Object.keys(categorySpecCategories)) {
+      expect(categoryAccentClasses[category]).toContain("border-border");
+    }
   });
 });

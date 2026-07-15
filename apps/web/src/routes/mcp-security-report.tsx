@@ -11,6 +11,21 @@ import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { DataSection, DataStat, DistTable, pctOf, type DistRow } from "@/components/data-report";
+import { trackEvent } from "@/lib/analytics";
+import {
+  mcpSecurityReportCategoryBrowseAnalyticsData,
+  mcpSecurityReportCategoryBrowseAnalyticsEvent,
+  mcpSecurityReportEgressAnalyticsData,
+  mcpSecurityReportEgressAnalyticsEvent,
+  type McpSecurityReportEgressDestination,
+} from "@/lib/mcp-security-report-page-cta-events";
+
+function trackMcpSecurityReportEgress(destination: McpSecurityReportEgressDestination) {
+  trackEvent(
+    mcpSecurityReportEgressAnalyticsEvent(),
+    mcpSecurityReportEgressAnalyticsData(destination),
+  );
+}
 
 const PATH = "/mcp-security-report";
 const TITLE = "MCP Server Security & Privacy Report";
@@ -237,6 +252,7 @@ function McpSecurityReportPage() {
               <Link
                 to="/guides/$slug"
                 params={{ slug: "threat-model-mcp-servers-before-installation" }}
+                onClick={() => trackMcpSecurityReportEgress("threat-model-guide")}
                 className="text-ink underline-offset-2 hover:underline"
               >
                 MCP threat-model guide
@@ -262,13 +278,23 @@ function McpSecurityReportPage() {
             heyclau.de/mcp-security-report
           </a>{" "}
           with the data-as-of date. See also the{" "}
-          <Link to="/state-of-mcp-servers" className="text-ink underline-offset-2 hover:underline">
+          <Link
+            to="/state-of-mcp-servers"
+            onClick={() => trackMcpSecurityReportEgress("state-of-mcp-servers")}
+            className="text-ink underline-offset-2 hover:underline"
+          >
             State of MCP Servers
           </Link>{" "}
           report. Browse all{" "}
           <Link
             to="/$category"
             params={{ category: "mcp" }}
+            onClick={() =>
+              trackEvent(
+                mcpSecurityReportCategoryBrowseAnalyticsEvent(),
+                mcpSecurityReportCategoryBrowseAnalyticsData(TOTAL),
+              )
+            }
             className="text-ink underline-offset-2 hover:underline"
           >
             MCP servers

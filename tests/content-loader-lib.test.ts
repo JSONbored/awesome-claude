@@ -2485,4 +2485,52 @@ describe("content-loader-lib loadTextFromAssetsBinding", () => {
     );
     expect(result).toBe("text-39");
   });
+
+  it("throws when the assets binding returns a non-ok text response", async () => {
+    const assets = {
+      fetch: vi.fn().mockResolvedValue({ ok: false, status: 503 }),
+    };
+    await expect(
+      loadTextFromAssetsBinding(assets, "https://example/data/down.txt"),
+    ).rejects.toThrow("503");
+  });
+});
+
+describe("content-loader-lib edge branches", () => {
+  it("throws a generic not-found error when every path fails without an error", async () => {
+    const readFile = vi.fn().mockRejectedValue(undefined);
+    await expect(readLocalDataFileFromPaths([], readFile)).rejects.toThrow(
+      "Local data artifact not found",
+    );
+  });
+
+  it("throws after exhausting json read retries", async () => {
+    const readFile = vi.fn().mockRejectedValue(new Error("disk busy"));
+    const sleep = vi.fn().mockResolvedValue(undefined);
+    await expect(
+      readLocalJsonDataFileWithRetry(
+        "broken.json",
+        ["/broken.json"],
+        readFile,
+        sleep,
+        2,
+      ),
+    ).rejects.toThrow("disk busy");
+    expect(sleep).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not sleep after the final failed json read attempt", async () => {
+    const readFile = vi.fn().mockResolvedValue("not-json");
+    const sleep = vi.fn().mockResolvedValue(undefined);
+    await expect(
+      readLocalJsonDataFileWithRetry(
+        "invalid.json",
+        ["/invalid.json"],
+        readFile,
+        sleep,
+        1,
+      ),
+    ).rejects.toThrow();
+    expect(sleep).not.toHaveBeenCalled();
+  });
 });
