@@ -1,0 +1,258 @@
+---
+title: AI-Generated Insecure Deserialization Review Rules
+slug: ai-generated-insecure-deserialization-review-rules
+category: rules
+description: >-
+  Source-backed rules for reviewing AI-generated code that deserializes data
+  before merge for insecure deserialization risk, covering native
+  serialization formats (pickle, PyYAML, Java Serializable) that can execute
+  arbitrary code on untrusted input, safe data-interchange alternatives, and
+  class allowlisting/integrity checks when native formats can't be avoided.
+cardDescription: >-
+  Review AI-generated deserialization code: avoid native formats like
+  pickle/yaml.load/Java Serializable on untrusted input, prefer JSON, and
+  allowlist types or verify integrity when native formats are unavoidable.
+seoTitle: AI-Generated Insecure Deserialization Review Rules
+seoDescription: >-
+  Practical review rules for AI-generated deserialization code: flag
+  pickle.loads, unsafe YAML loading, and Java ObjectInputStream on untrusted
+  data, and require safe data-interchange formats or class allowlisting.
+author: lourincedaging0-commits
+submittedBy: lourincedaging0-commits
+submittedByUrl: "https://github.com/lourincedaging0-commits"
+dateAdded: "2026-07-15"
+documentationUrl: "https://cheatsheetseries.owasp.org/cheatsheets/Deserialization_Cheat_Sheet.html"
+sourceUrls:
+  - "https://cheatsheetseries.owasp.org/cheatsheets/Deserialization_Cheat_Sheet.html"
+  - "https://cwe.mitre.org/data/definitions/502.html"
+  - "https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/"
+  - "https://docs.python.org/3/library/pickle.html#restricting-globals"
+installable: false
+usageSnippet: >-
+  Apply these rules when an AI assistant writes or edits code that
+  deserializes, unpickles, unmarshals, or otherwise reconstructs objects from
+  data that originates outside the process — a request body, a file upload,
+  a cache/queue payload, or another service's response.
+copySnippet: |-
+  You are reviewing AI-generated code for insecure deserialization risk.
+
+  Rules:
+  1. Identify every place the change deserializes data from a source that
+     isn't fully trusted: request bodies, uploaded files, cache/queue
+     messages, cookies, or responses from another service — and note which
+     deserialization API is used for each.
+  2. Flag native/language-specific deserialization APIs applied to
+     untrusted input: Python `pickle.load`/`pickle.loads` (and
+     `cPickle`/`_pickle`), non-safe YAML loading (PyYAML `yaml.load` without
+     `Loader=SafeLoader`, or any loader that can construct arbitrary
+     objects), Java `ObjectInputStream#readObject` on a `Serializable`
+     stream, and equivalent native-object deserializers in other languages
+     (PHP `unserialize()`, Ruby `Marshal.load`). These formats can be
+     crafted to execute arbitrary code or trigger denial-of-service simply
+     by being deserialized.
+  3. Prefer a safe data-interchange format (JSON, or YAML with an explicitly
+     restricted/safe loader) over a native serialization format whenever the
+     data crosses a trust boundary, even if it costs some convenience
+     (custom types, non-JSON-native values).
+  4. When a native format genuinely cannot be avoided, require an
+     allowlist of the specific classes/types that may be constructed
+     (Java: override `resolveClass()`; Python: restrict `pickle`'s globals)
+     rather than deserializing into "whatever the stream says."
+  5. Require an integrity check (a signature or MAC verified before
+     deserialization, not after) whenever a serialized blob is round-tripped
+     through a client, cookie, cache, or other location a user could tamper
+     with, so a modified payload is rejected before it reaches the
+     deserializer.
+  6. Treat sensitive object fields you don't want exposed or attacker-set
+     during (de)serialization as needing explicit exclusion (for example
+     Java's `transient` keyword) rather than assuming they're safe by
+     default.
+
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - A pull request, diff, or snippet containing AI-generated or AI-edited code that deserializes, unpickles, unmarshals, or loads structured data from an external source.
+  - Knowledge of which deserialization APIs the language/framework in use considers "safe" versus "native/unsafe" (this differs significantly between Python, Java, PHP, Ruby, and JS/Node).
+  - Awareness of which data sources in the application are genuinely untrusted (client-supplied, cross-service, or user-uploaded) versus fully internal and controlled.
+  - Permission to block merge when untrusted data reaches a native deserialization API without an allowlist or integrity check.
+safetyNotes:
+  - "Deserializing untrusted data with a native format's full-featured API (pickle, unsafe YAML, Java Serializable, PHP unserialize) can cause denial-of-service or remote code execution — the vulnerability triggers during deserializing itself, before any application logic runs on the result."
+  - "AI assistants often reach for the most convenient deserialization call (pickle for Python object graphs, yaml.load for config-like YAML, ObjectInputStream for Java) without checking whether the input is trusted, since developer-controlled test data works regardless of which API is used."
+  - "An integrity check (signature/MAC) added after deserialization already ran does not help — the attack happens during deserialization, so the check must gate the deserialization call itself, not just the object it produces."
+privacyNotes:
+  - "Deserialization proof-of-concept payloads (e.g. a crafted pickle or Java serialized stream) can trigger real code execution in a test environment; run them only in an isolated, disposable sandbox, never against a shared or production system."
+  - "Do not commit real crafted exploit payloads, credentials, or internal class/package names discovered while testing into a public PR or issue; describe the vulnerable pattern instead of attaching a working exploit."
+tags:
+  - deserialization
+  - insecure-deserialization
+  - remote-code-execution
+  - web-security
+  - ai-generated-code
+  - code-review
+keywords:
+  - insecure deserialization review rules
+  - pickle load remote code execution
+  - ai-generated code security review
+  - yaml load unsafe
+  - java objectinputstream security
+---
+
+## Purpose
+
+Use these rules when an AI coding assistant writes or edits code that
+deserializes data from outside the process. The goal is to stop a generated
+integration, cache layer, or file-import feature from shipping a native
+deserialization call against untrusted input, where simply parsing a
+crafted payload — before any application logic runs — can trigger
+denial-of-service or remote code execution.
+
+This is a review policy, not a deserialization tutorial. It tells reviewers
+what must be true about a generated change's deserialization API choice and
+trust boundary before the change is safe to merge.
+
+## Review Inputs
+
+Collect enough context to know what is being deserialized and where it came
+from.
+
+- Every deserialization call the change adds or edits, and the exact API
+  used (`pickle.loads`, `yaml.load`, `ObjectInputStream#readObject`,
+  `unserialize()`, `JSON.parse`, a framework's model-binding layer, etc.).
+- Where the serialized data originates: a request body, an uploaded file, a
+  cache/queue message, a cookie, or a response from another internal or
+  external service.
+- Whether that source is fully trusted (only ever written by this
+  application's own trusted code) or can be influenced by a user or another
+  party.
+- Whether an integrity check (signature/MAC) exists, and whether it runs
+  before or after the deserialization call.
+
+## Format And API Rules
+
+- Prefer JSON (or a YAML loader explicitly restricted to safe types) for
+  any data that crosses a trust boundary; reserve native/full-featured
+  serialization formats for data that never leaves fully trusted, internal
+  control.
+- Flag `pickle.load`/`pickle.loads` (Python), non-safe YAML loading
+  (PyYAML without an explicit safe loader), `ObjectInputStream#readObject`
+  on `Serializable` data (Java), `unserialize()` (PHP), and `Marshal.load`
+  (Ruby) whenever the input isn't fully trusted — these formats can
+  reconstruct arbitrary objects, including ones whose construction or
+  destruction has side effects, by design.
+- Confirm the deserialization target type is explicit and narrow (a known
+  DTO/schema) rather than "whatever the stream says," even when using a
+  nominally safer format like JSON, so unexpected fields or types can't
+  silently reach application logic that assumes a specific shape.
+- Do not treat a library's default constructor/loader as safe without
+  checking; defaults have changed between major versions of common
+  libraries, and the safe option is often the one that must be explicitly
+  chosen.
+
+## Trust Boundary And Defense Rules
+
+- When a native/full-featured format truly cannot be avoided, require a
+  class/type allowlist so only explicitly approved types can be constructed
+  during deserialization (Java: override `resolveClass()`; Python:
+  restrict `pickle`'s globals; equivalent mechanisms exist for other
+  languages).
+- Require an integrity check (a signature or MAC) that is verified *before*
+  the deserialization call runs, for any serialized blob a client, cookie,
+  cache, or other tamperable location could have modified — a check that
+  runs on the already-deserialized object is too late.
+- Treat any object round-tripped through the client (a serialized session,
+  a "state" blob in a hidden field or cookie) as untrusted on the way back
+  in, even if your own server produced it originally, unless it's signed or
+  encrypted with a key the client never has.
+- Mark sensitive fields that should never be (de)serialized or exposed
+  (credentials, internal tokens, computed/derived values) with the
+  language's exclusion mechanism (for example Java's `transient`) instead
+  of relying on convention.
+
+## Merge Blockers
+
+Block merge when any of these is true.
+
+- Untrusted input (request body, upload, cache/queue message, cookie,
+  cross-service response) reaches `pickle`, unsafe YAML loading, Java
+  `ObjectInputStream#readObject`, PHP `unserialize()`, or an equivalent
+  native deserializer with no allowlist or integrity check.
+- A native format is used for a trust-boundary-crossing payload when a safe
+  data-interchange format (JSON, restricted YAML) would work instead, with
+  no documented reason.
+- An integrity check exists but runs after deserialization rather than
+  gating the deserialization call itself.
+- A client-tamperable serialized blob (cookie, hidden field, cache entry a
+  user can influence) is deserialized without a signature/MAC verified
+  first.
+- Sensitive fields on a serializable object are exposed with no exclusion
+  mechanism applied.
+
+## Review Checklist
+
+- [ ] {"task": "Deserialization calls identified", "description": "Every deserialization call in the change is identified along with its exact API and data source"}
+- [ ] {"task": "Trust boundary assessed", "description": "Each data source is classified as trusted-internal or potentially attacker-influenced"}
+- [ ] {"task": "Safe format preferred", "description": "Untrusted data uses JSON or an explicitly restricted YAML loader rather than a native full-featured format"}
+- [ ] {"task": "Allowlist when native is required", "description": "Any unavoidable native-format deserialization of untrusted data is constrained by a class/type allowlist"}
+- [ ] {"task": "Integrity check gates deserialization", "description": "Signature/MAC verification happens before the deserialization call, not after"}
+- [ ] {"task": "Sensitive fields excluded", "description": "Fields that must not be exposed or attacker-set during (de)serialization use the language's exclusion mechanism"}
+
+## AI Review Rules
+
+AI assistants can write and review deserialization code, but they should
+show their evidence.
+
+- Ask the assistant to list every deserialization call in the change, the
+  exact API, and the trust level of its input source.
+- Require the assistant to justify any native/full-featured deserialization
+  API used on data that isn't fully trusted-internal.
+- Have the assistant confirm whether an integrity check exists and exactly
+  where it runs relative to the deserialization call.
+- Do not let the assistant claim a deserialization call is safe only
+  because "it's from our own database/cache" without confirming nothing
+  user-influenced ever writes to that store.
+- Re-run review after any change to serialization formats, trust
+  boundaries, or shared (de)serialization helper functions.
+
+## Troubleshooting
+
+- **Switching from pickle/native serialization to JSON breaks a custom
+  type** (datetime, a domain object with methods): implement explicit
+  encode/decode functions for that type rather than reverting to a native
+  format for convenience.
+- **A class allowlist rejects a legitimate internal type:** add that
+  specific type to the allowlist deliberately and re-test, rather than
+  disabling the allowlist.
+- **An integrity check breaks a legitimate client round-trip:** the client
+  needs to receive and echo back the actual signed/encrypted blob, not a
+  reconstructed copy — check that the signing key and the verification key
+  match and that the payload isn't being rebuilt client-side.
+- **Tests only cover well-formed payloads:** add a test asserting that a
+  malformed or unauthorized-type payload is rejected before any object
+  construction happens, not just that valid payloads succeed.
+
+## Duplicate And History Check
+
+Before adding a new deserialization call, confirm the codebase does not
+already have a shared safe-deserialization helper (a wrapper enforcing a
+safe loader, an allowlist, or signature verification) for this data type. A
+generated change that adds a new native deserialization call next to an
+existing safe helper should be treated as suspicious — check whether the
+existing mechanism was simply not reused before introducing a second,
+possibly unsafe one.
+
+## Reference
+
+| Pattern                                        | Risk                                              | Fix                                                        |
+| ------------------------------------------------- | ---------------------------------------------------- | --------------------------------------------------------------- |
+| `pickle.loads(untrusted_bytes)`                   | Arbitrary code execution during unpickling         | JSON, or `pickle` with a restricted `Unpickler.find_class`      |
+| `yaml.load(data)` without a safe loader            | Can construct arbitrary Python/Ruby/etc. objects   | `yaml.safe_load(data)` / an explicit safe loader                |
+| `ObjectInputStream#readObject()` on untrusted data | Gadget-chain remote code execution                 | Override `resolveClass()` with an allowlist, or avoid `Serializable` |
+| Signature check after deserializing               | Malicious object already constructed by the time it's checked | Verify signature/MAC before calling the deserializer            |
+| Client-editable serialized "state" blob            | Tampering reconstructs an attacker-chosen object    | Sign/encrypt the blob server-side; verify before deserializing   |
+
+## Sources
+
+- OWASP Deserialization Cheat Sheet
+- CWE-502: Deserialization of Untrusted Data
+- OWASP Top 10 2021 — A08: Software and Data Integrity Failures
+- Python `pickle` documentation — Restricting Globals
