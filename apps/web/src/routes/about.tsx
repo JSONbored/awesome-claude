@@ -95,16 +95,28 @@ function AboutPage() {
         <h2 className="h-display-2 text-ink text-balance">Three surfaces, one registry</h2>
         <p className="mt-3 text-sm text-ink-muted">
           The website, the public read-only API, and our{" "}
-          <Link to="/integrations" className="text-ink underline">
+          <Link
+            to="/integrations"
+            className="text-ink underline"
+            onClick={() => trackAboutEgress("integrations")}
+          >
             integrations
           </Link>{" "}
           (Raycast extension, MCP server, editor adapters) all read from the same content with the
           same contracts. If you build on one, you can build on all of them — see the{" "}
-          <Link to="/api-docs" className="text-ink underline">
+          <Link
+            to="/api-docs"
+            className="text-ink underline"
+            onClick={() => trackAboutEgress("api-docs")}
+          >
             API docs
           </Link>{" "}
           and{" "}
-          <Link to="/quality" className="text-ink underline">
+          <Link
+            to="/quality"
+            className="text-ink underline"
+            onClick={() => trackAboutEgress("quality")}
+          >
             quality dashboard
           </Link>
           .
