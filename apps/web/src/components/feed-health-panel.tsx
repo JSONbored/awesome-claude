@@ -3,6 +3,17 @@ import { CheckCircle2, AlertTriangle, ExternalLink, Loader2 } from "lucide-react
 import { CopyButton } from "@/components/copy-button";
 import { timeAgo } from "@/lib/format-lib";
 import { cn } from "@/lib/utils";
+import { trackEvent } from "@/lib/analytics";
+import {
+  feedHealthCopyAnalyticsData,
+  feedHealthCopyAnalyticsEvent,
+  feedHealthFeedOpenAnalyticsData,
+  feedHealthFeedOpenAnalyticsEvent,
+  feedHealthJsonAnalyticsData,
+  feedHealthJsonAnalyticsEvent,
+  feedHealthSeeAllAnalyticsData,
+  feedHealthSeeAllAnalyticsEvent,
+} from "@/lib/feed-health-panel-cta-events";
 
 interface FeedHealth {
   id: string;
@@ -73,12 +84,15 @@ export function FeedHealthPanel({ compact = false }: { compact?: boolean }) {
           target="_blank"
           rel="noreferrer"
           className="inline-flex items-center gap-1 text-xs text-ink-muted hover:text-ink"
+          onClick={() =>
+            trackEvent(feedHealthJsonAnalyticsEvent(), feedHealthJsonAnalyticsData(total, current))
+          }
         >
           JSON <ExternalLink className="h-3 w-3" />
         </a>
       </div>
       <div className="divide-y divide-border">
-        {visible.map((f) => (
+        {visible.map((f, i) => (
           <div
             key={f.id}
             className={cn(
@@ -105,7 +119,16 @@ export function FeedHealthPanel({ compact = false }: { compact?: boolean }) {
                 )}
                 {f.isCurrent ? "Current" : "Stale"}
               </span>
-              <a href={f.url} className="truncate font-medium text-ink hover:underline">
+              <a
+                href={f.url}
+                className="truncate font-medium text-ink hover:underline"
+                onClick={() =>
+                  trackEvent(
+                    feedHealthFeedOpenAnalyticsEvent(),
+                    feedHealthFeedOpenAnalyticsData(f.id, f.isCurrent, i, visible.length),
+                  )
+                }
+              >
                 {f.title}
               </a>
             </div>
@@ -115,13 +138,27 @@ export function FeedHealthPanel({ compact = false }: { compact?: boolean }) {
             <div className="truncate font-mono text-ink-subtle" title={f.etag}>
               {f.etag.replace(/"/g, "")}
             </div>
-            <CopyButton value={f.url} label="Copy" />
+            <CopyButton
+              value={f.url}
+              label="Copy"
+              event={feedHealthCopyAnalyticsEvent()}
+              eventData={feedHealthCopyAnalyticsData(f.id, f.isCurrent)}
+            />
           </div>
         ))}
       </div>
       {compact && data.feeds.length > visible.length && (
         <div className="border-t border-border px-4 py-2 text-right text-xs">
-          <a href="/feeds" className="text-ink-muted hover:text-ink">
+          <a
+            href="/feeds"
+            className="text-ink-muted hover:text-ink"
+            onClick={() =>
+              trackEvent(
+                feedHealthSeeAllAnalyticsEvent(),
+                feedHealthSeeAllAnalyticsData(data.feeds.length, visible.length),
+              )
+            }
+          >
             See all {data.feeds.length} feeds →
           </a>
         </div>

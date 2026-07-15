@@ -1,6 +1,11 @@
 import { Download } from "lucide-react";
 
 import { reportExportUrl } from "@/lib/data-reports";
+import { trackEvent } from "@/lib/analytics";
+import {
+  reportDownloadsExportAnalyticsData,
+  reportDownloadsExportAnalyticsEvent,
+} from "@/lib/report-downloads-cta-events";
 
 const LINK_CLASS =
   "inline-flex items-center gap-2 rounded-lg border border-border bg-surface-2 px-4 py-2 text-sm font-medium text-ink hover:bg-surface";
@@ -21,10 +26,28 @@ export function ReportDownloads({ exportSlug }: { exportSlug: string }) {
         registry. Free to reuse under CC BY 4.0 with attribution.
       </p>
       <div className="mt-4 flex flex-wrap gap-3">
-        <a href={reportExportUrl(exportSlug, "json")} className={LINK_CLASS}>
+        <a
+          href={reportExportUrl(exportSlug, "json")}
+          className={LINK_CLASS}
+          onClick={() =>
+            trackEvent(
+              reportDownloadsExportAnalyticsEvent(),
+              reportDownloadsExportAnalyticsData(exportSlug, "json"),
+            )
+          }
+        >
           <Download className="h-4 w-4" aria-hidden /> JSON
         </a>
-        <a href={reportExportUrl(exportSlug, "csv")} className={LINK_CLASS}>
+        <a
+          href={reportExportUrl(exportSlug, "csv")}
+          className={LINK_CLASS}
+          onClick={() =>
+            trackEvent(
+              reportDownloadsExportAnalyticsEvent(),
+              reportDownloadsExportAnalyticsData(exportSlug, "csv"),
+            )
+          }
+        >
           <Download className="h-4 w-4" aria-hidden /> CSV
         </a>
       </div>

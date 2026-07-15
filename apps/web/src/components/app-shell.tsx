@@ -7,6 +7,22 @@ import { useShortcuts } from "./shortcuts-dialog";
 import { ScrollProgress } from "./scroll-progress";
 import { useTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
+import { trackEvent } from "@/lib/analytics";
+import {
+  appShellCategoryAnalyticsData,
+  appShellCategoryAnalyticsEvent,
+  appShellFeedChipAnalyticsData,
+  appShellFeedChipAnalyticsEvent,
+  appShellFooterLinkAnalyticsData,
+  appShellFooterLinkAnalyticsEvent,
+  appShellHeaderAnalyticsData,
+  appShellHeaderAnalyticsEvent,
+  appShellLegalAnalyticsData,
+  appShellLegalAnalyticsEvent,
+  appShellNavAnalyticsData,
+  appShellNavAnalyticsEvent,
+  type AppShellFeedChip,
+} from "@/lib/app-shell-cta-events";
 import { NewsletterInline } from "./newsletter-inline";
 import {
   Sheet,
@@ -63,7 +79,13 @@ export function TopBar() {
           <Menu className="h-4 w-4" />
         </button>
 
-        <Link to="/" className="flex items-center gap-2">
+        <Link
+          to="/"
+          className="flex items-center gap-2"
+          onClick={() =>
+            trackEvent(appShellHeaderAnalyticsEvent(), appShellHeaderAnalyticsData("logo"))
+          }
+        >
           <span className="flex h-7 w-7 items-center justify-center rounded-md bg-ink text-background">
             <span className="font-display text-sm font-bold">hc</span>
           </span>
@@ -80,6 +102,12 @@ export function TopBar() {
                 key={item.to}
                 to={item.to}
                 aria-current={active ? "page" : undefined}
+                onClick={() =>
+                  trackEvent(
+                    appShellNavAnalyticsEvent(),
+                    appShellNavAnalyticsData(item.to, "desktop"),
+                  )
+                }
                 className={cn(
                   "relative rounded-md px-2.5 py-1.5 text-sm transition-colors duration-200 ease-out",
                   active ? "text-ink" : "text-ink-muted hover:bg-surface-2 hover:text-ink",
@@ -106,7 +134,10 @@ export function TopBar() {
           <AlertsDropdown />
           <button
             type="button"
-            onClick={toggle}
+            onClick={() => {
+              trackEvent(appShellHeaderAnalyticsEvent(), appShellHeaderAnalyticsData("theme"));
+              toggle();
+            }}
             aria-label="Toggle theme"
             className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-surface text-ink-muted hover:text-ink"
           >
@@ -118,12 +149,18 @@ export function TopBar() {
             rel="noreferrer"
             className="hidden h-9 w-9 items-center justify-center rounded-md border border-border bg-surface text-ink-muted hover:text-ink sm:inline-flex"
             aria-label="GitHub"
+            onClick={() =>
+              trackEvent(appShellHeaderAnalyticsEvent(), appShellHeaderAnalyticsData("github"))
+            }
           >
             <Github className="h-4 w-4" />
           </a>
           <Link
             to="/submit"
             className="inline-flex h-9 items-center gap-1.5 rounded-md bg-ink px-3 text-sm font-medium text-background hover:bg-ink/90"
+            onClick={() =>
+              trackEvent(appShellHeaderAnalyticsEvent(), appShellHeaderAnalyticsData("submit"))
+            }
           >
             <Send className="h-3.5 w-3.5" />
             Submit
@@ -150,7 +187,13 @@ export function TopBar() {
                       <Link
                         key={item.to}
                         to={item.to}
-                        onClick={() => setMobileNavOpen(false)}
+                        onClick={() => {
+                          trackEvent(
+                            appShellNavAnalyticsEvent(),
+                            appShellNavAnalyticsData(item.to, "mobile", section.id),
+                          );
+                          setMobileNavOpen(false);
+                        }}
                         aria-current={active ? "page" : undefined}
                         className={cn(
                           "rounded-md px-3 py-2 text-sm transition-colors duration-200 ease-out",
@@ -194,26 +237,38 @@ export function Footer() {
             reviewed before installing.
           </p>
           <div className="mt-4 flex flex-wrap items-center gap-1.5 text-[11px]">
-            <FeedChip href="/feed.xml" label="RSS" />
-            <FeedChip href="/atom.xml" label="Atom" />
-            <FeedChip href="/data/feeds/index.json" label="JSON Feed" />
-            <FeedChip href="/llms.txt" label="llms.txt" />
+            <FeedChip href="/feed.xml" label="RSS" feed="rss" />
+            <FeedChip href="/atom.xml" label="Atom" feed="atom" />
+            <FeedChip href="/data/feeds/index.json" label="JSON Feed" feed="json" />
+            <FeedChip href="/llms.txt" label="llms.txt" feed="llms" />
           </div>
         </div>
         {SHELL_FOOTER_COLUMNS.map((column) => (
-          <FooterCol key={column.id} title={column.title} links={column.links} span={column.span} />
+          <FooterCol
+            key={column.id}
+            title={column.title}
+            links={column.links}
+            span={column.span}
+            columnId={column.id}
+          />
         ))}
       </div>
       <div className="border-t border-border">
         <div className="mx-auto max-w-page px-4 py-4 sm:px-6">
           <div className="eyebrow mb-2">Categories</div>
           <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-sm text-ink-muted">
-            {CATEGORIES.map((c) => (
+            {CATEGORIES.map((c, i) => (
               <Link
                 key={c.id}
                 to="/$category"
                 params={{ category: c.id }}
                 className="hover:text-ink"
+                onClick={() =>
+                  trackEvent(
+                    appShellCategoryAnalyticsEvent(),
+                    appShellCategoryAnalyticsData(c.id, i, CATEGORIES.length),
+                  )
+                }
               >
                 {c.label}
               </Link>
@@ -225,13 +280,26 @@ export function Footer() {
         <div className="mx-auto flex max-w-page flex-col items-start gap-3 px-4 py-5 text-xs text-ink-subtle sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <span>© {new Date().getFullYear()} HeyClaude · heyclau.de</span>
           <nav aria-label="Legal" className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <Link to="/legal" className="hover:text-ink">
+            <Link
+              to="/legal"
+              className="hover:text-ink"
+              onClick={() =>
+                trackEvent(appShellLegalAnalyticsEvent(), appShellLegalAnalyticsData("legal"))
+              }
+            >
               Legal
             </Link>
             <span aria-hidden className="text-ink-subtle/60">
               ·
             </span>
-            <Link to="/legal" hash="privacy" className="hover:text-ink">
+            <Link
+              to="/legal"
+              hash="privacy"
+              className="hover:text-ink"
+              onClick={() =>
+                trackEvent(appShellLegalAnalyticsEvent(), appShellLegalAnalyticsData("privacy"))
+              }
+            >
               Privacy
             </Link>
             <span aria-hidden className="text-ink-subtle/60">
@@ -249,13 +317,16 @@ export function Footer() {
   );
 }
 
-function FeedChip({ href, label }: { href: string; label: string }) {
+function FeedChip({ href, label, feed }: { href: string; label: string; feed: AppShellFeedChip }) {
   return (
     <a
       href={href}
       target="_blank"
       rel="noreferrer"
       className="inline-flex items-center gap-1 rounded-md border border-border bg-background px-1.5 py-0.5 font-mono text-ink-muted hover:text-ink"
+      onClick={() =>
+        trackEvent(appShellFeedChipAnalyticsEvent(), appShellFeedChipAnalyticsData(feed))
+      }
     >
       <Rss className="h-2.5 w-2.5" aria-hidden />
       {label}
@@ -266,7 +337,14 @@ function FeedChip({ href, label }: { href: string; label: string }) {
 function ShortcutsFooterLink() {
   const shortcuts = useShortcuts();
   return (
-    <button type="button" onClick={() => shortcuts?.open()} className="hover:text-ink">
+    <button
+      type="button"
+      onClick={() => {
+        trackEvent(appShellHeaderAnalyticsEvent(), appShellHeaderAnalyticsData("shortcuts"));
+        shortcuts?.open();
+      }}
+      className="hover:text-ink"
+    >
       Keyboard shortcuts
     </button>
   );
@@ -276,10 +354,12 @@ function FooterCol({
   title,
   links,
   span = 2,
+  columnId,
 }: {
   title: string;
   links: { to: string; label: string }[];
   span?: 2 | 3 | 4;
+  columnId: string;
 }) {
   return (
     <div className={footerColumnSpanClass(span)}>
@@ -287,7 +367,16 @@ function FooterCol({
       <ul className="flex flex-col gap-2">
         {links.map((l) => (
           <li key={l.to}>
-            <Link to={l.to} className="text-sm text-ink-muted hover:text-ink">
+            <Link
+              to={l.to}
+              className="text-sm text-ink-muted hover:text-ink"
+              onClick={() =>
+                trackEvent(
+                  appShellFooterLinkAnalyticsEvent(),
+                  appShellFooterLinkAnalyticsData(columnId, l.to),
+                )
+              }
+            >
               {l.label}
             </Link>
           </li>
