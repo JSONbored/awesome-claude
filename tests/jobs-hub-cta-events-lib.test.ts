@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import {
   JOBS_DETAIL_SURFACE,
   JOBS_INDEX_SURFACE,
+  jobsDetailEgressAnalyticsData,
+  jobsDetailEgressAnalyticsEvent,
   jobsDetailIndexAnalyticsData,
   jobsDetailIndexAnalyticsEvent,
   jobsDetailRelatedAnalyticsData,
@@ -96,6 +98,31 @@ describe("jobs hub cta events lib", () => {
       relatedSlug: "platform-eng",
       rowIndex: 1,
       relatedCount: 4,
+    });
+    expect(jobsDetailEgressAnalyticsEvent()).toBe("jobs_detail_egress_click");
+    expect(
+      jobsDetailEgressAnalyticsData("senior-mcp", "featured", "apply"),
+    ).toEqual({
+      surface: JOBS_DETAIL_SURFACE,
+      jobSlug: "senior-mcp",
+      tier: "featured",
+      destination: "apply",
+    });
+    expect(
+      jobsDetailEgressAnalyticsData("senior-mcp", "standard", "company"),
+    ).toEqual({
+      surface: JOBS_DETAIL_SURFACE,
+      jobSlug: "senior-mcp",
+      tier: "standard",
+      destination: "company",
+    });
+    expect(
+      jobsDetailEgressAnalyticsData("senior-mcp", "free", "source"),
+    ).toEqual({
+      surface: JOBS_DETAIL_SURFACE,
+      jobSlug: "senior-mcp",
+      tier: "free",
+      destination: "source",
     });
   });
 });
