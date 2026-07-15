@@ -369,3 +369,90 @@ describe("submissions re-export compatibility", () => {
     );
   });
 });
+
+describe("submissions-lib slugify character handling", () => {
+  it("drops quotes and keeps digits while collapsing separators", () => {
+    expect(slugify("Don't Stop")).toBe("dont-stop");
+    expect(slugify('Say "Hi"')).toBe("say-hi");
+    expect(slugify("Tool 2 v3")).toBe("tool-2-v3");
+    expect(slugify("hello!!!")).toBe("hello");
+    expect(slugify("")).toBe("");
+  });
+});
+
+describe("normalizeSubmissionFields derived fields", () => {
+  it("derives name from title and slug from name", () => {
+    const normalized = normalizeSubmissionFields({
+      title: "My Cool Tool",
+      description: "A helpful thing for testing.",
+    });
+    expect(normalized.name).toBe("My Cool Tool");
+    expect(normalized.slug).toBe("my-cool-tool");
+    expect(normalized.card_description).toBe("A helpful thing for testing.");
+  });
+
+  it("normalizes a brand domain to its bare hostname", () => {
+    expect(
+      normalizeSubmissionFields({
+        name: "X",
+        slug: "x",
+        brand_domain: "https://www.Asana.com/teams",
+      }).brand_domain,
+    ).toBe("asana.com");
+  });
+
+  it("routes source_url to github, docs, or docs on parse failure", () => {
+    expect(
+      normalizeSubmissionFields({
+        name: "X",
+        slug: "x",
+        source_url: "https://github.com/a/b",
+      }).github_url,
+    ).toBe("https://github.com/a/b");
+    expect(
+      normalizeSubmissionFields({
+        name: "X",
+        slug: "x",
+        source_url: "https://example.com/x",
+      }).docs_url,
+    ).toBe("https://example.com/x");
+    expect(
+      normalizeSubmissionFields({
+        name: "X",
+        slug: "x",
+        source_url: "not a url",
+      }).docs_url,
+    ).toBe("not a url");
+  });
+
+  it("truncates an over-long card description and preserves short ones", () => {
+    const long = normalizeSubmissionFields({
+      name: "X",
+      slug: "x",
+      description: "word ".repeat(60),
+    });
+    expect(long.card_description.endsWith("...")).toBe(true);
+    expect(long.card_description.length).toBeLessThanOrEqual(140);
+
+    const short = normalizeSubmissionFields({
+      name: "X",
+      slug: "x",
+      description: "Concise summary of the entry.",
+    });
+    expect(short.card_description).toBe("Concise summary of the entry.");
+  });
+
+  it("joins tag arrays and skips null/undefined fields", () => {
+    expect(
+      normalizeSubmissionFields({ name: "X", slug: "x", tags: ["a", "b"] })
+        .tags,
+    ).toBe("a, b");
+    const skipped = normalizeSubmissionFields({
+      name: null,
+      extra: undefined,
+      title: "T",
+    });
+    expect(skipped.name).toBe("T");
+    expect("extra" in skipped).toBe(false);
+  });
+});
