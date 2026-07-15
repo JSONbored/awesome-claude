@@ -1,6 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Github } from "lucide-react";
 import { CONTRIBUTORS } from "@/data/contributors";
+import { trackEvent } from "@/lib/analytics";
+import {
+  contributorsIndexProfileAnalyticsData,
+  contributorsIndexProfileAnalyticsEvent,
+  contributorsIndexSubmitAnalyticsData,
+  contributorsIndexSubmitAnalyticsEvent,
+} from "@/lib/contributors-index-cta-events";
 import { contributorCardSummary } from "@/lib/contributor-profile-summary";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
@@ -98,11 +105,22 @@ function ContributorsPage() {
       )}
 
       <div className="mt-8 grid gap-3 stagger-children sm:grid-cols-2 lg:grid-cols-3">
-        {rest.map((c) => (
+        {rest.map((c, rowIndex) => (
           <Link
             key={c.slug}
             to="/contributors/$slug"
             params={{ slug: c.slug }}
+            onClick={() =>
+              trackEvent(
+                contributorsIndexProfileAnalyticsEvent(),
+                contributorsIndexProfileAnalyticsData(
+                  c.slug,
+                  c.acceptedCount,
+                  rowIndex,
+                  sorted.length,
+                ),
+              )
+            }
             className="group hover-lift flex items-center gap-3 rounded-xl border border-border bg-surface p-4 transition-[border-color,background-color] duration-200 ease-out hover:border-ink/20 hover:bg-surface-2"
           >
             <Monogram name={c.name || c.handle} size={40} className="rounded-full" />
@@ -140,6 +158,12 @@ function ContributorsPage() {
         </div>
         <Link
           to="/submit"
+          onClick={() =>
+            trackEvent(
+              contributorsIndexSubmitAnalyticsEvent(),
+              contributorsIndexSubmitAnalyticsData(sorted.length, total),
+            )
+          }
           className="inline-flex h-10 items-center rounded-md bg-ink px-4 text-sm font-medium text-background hover:bg-ink/90"
         >
           Submit a resource
