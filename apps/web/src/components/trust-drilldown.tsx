@@ -14,6 +14,17 @@ import {
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
+import { trackEvent } from "@/lib/analytics";
+import {
+  trustDrilldownDocAnalyticsData,
+  trustDrilldownDocAnalyticsEvent,
+  trustDrilldownMethodologyAnalyticsData,
+  trustDrilldownMethodologyAnalyticsEvent,
+  trustDrilldownOpenAnalyticsData,
+  trustDrilldownOpenAnalyticsEvent,
+  trustDrilldownSourceAnalyticsData,
+  trustDrilldownSourceAnalyticsEvent,
+} from "@/lib/trust-drilldown-cta-events";
 
 const SEV_META = {
   ok: { Icon: CheckCircle2, className: "text-trust-trusted" },
@@ -40,6 +51,17 @@ export function TrustDrilldown({
           type="button"
           aria-label={`Trust ${entry.trust}${summary ? `: ${summary}` : ""}. Open trust drilldown.`}
           className="rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60"
+          onClick={() =>
+            trackEvent(
+              trustDrilldownOpenAnalyticsEvent(),
+              trustDrilldownOpenAnalyticsData(
+                entry.category,
+                entry.slug,
+                entry.trust,
+                reasons.length,
+              ),
+            )
+          }
         >
           <TrustBadge level={entry.trust} />
         </button>
@@ -54,6 +76,12 @@ export function TrustDrilldown({
             to="/quality"
             hash="methodology"
             className="inline-flex h-7 items-center gap-1 rounded-md border border-border bg-background px-2 text-[11px] font-medium text-ink hover:bg-surface-2"
+            onClick={() =>
+              trackEvent(
+                trustDrilldownMethodologyAnalyticsEvent(),
+                trustDrilldownMethodologyAnalyticsData(entry.category, entry.slug),
+              )
+            }
           >
             Methodology
             <ArrowUpRight className="h-3 w-3" />
@@ -61,7 +89,7 @@ export function TrustDrilldown({
         </header>
         <ul className="max-h-[60vh] divide-y divide-border overflow-y-auto">
           {reasons.map((r) => (
-            <TrustReasonRow key={r.id} reason={r} />
+            <TrustReasonRow key={r.id} reason={r} category={entry.category} slug={entry.slug} />
           ))}
         </ul>
       </PopoverContent>
@@ -69,7 +97,15 @@ export function TrustDrilldown({
   );
 }
 
-function TrustReasonRow({ reason }: { reason: TrustReason }) {
+function TrustReasonRow({
+  reason,
+  category,
+  slug,
+}: {
+  reason: TrustReason;
+  category: string;
+  slug: string;
+}) {
   const meta = SEV_META[reason.severity];
   const { Icon } = meta;
   return (
@@ -91,7 +127,16 @@ function TrustReasonRow({ reason }: { reason: TrustReason }) {
         <p className="mt-1 text-xs leading-relaxed text-ink-muted">{reason.detail}</p>
         <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px]">
           {reason.docHref && (
-            <Link to={reason.docHref} className="text-ink-muted hover:text-ink">
+            <Link
+              to={reason.docHref}
+              className="text-ink-muted hover:text-ink"
+              onClick={() =>
+                trackEvent(
+                  trustDrilldownDocAnalyticsEvent(),
+                  trustDrilldownDocAnalyticsData(category, slug, reason.id, reason.severity),
+                )
+              }
+            >
               Why this matters →
             </Link>
           )}
@@ -101,6 +146,12 @@ function TrustReasonRow({ reason }: { reason: TrustReason }) {
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center gap-1 text-ink-muted hover:text-ink"
+              onClick={() =>
+                trackEvent(
+                  trustDrilldownSourceAnalyticsEvent(),
+                  trustDrilldownSourceAnalyticsData(category, slug, reason.id, reason.severity),
+                )
+              }
             >
               {reason.sourceLabel ?? "Source"} <ExternalLink className="h-3 w-3" />
             </a>
