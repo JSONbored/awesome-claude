@@ -28,6 +28,18 @@ import {
   contributorProfileEntryAnalyticsData,
   contributorProfileEntryAnalyticsEvent,
 } from "@/lib/insights-page-entry-cta-events";
+import {
+  contributorProfileCategoryAnalyticsData,
+  contributorProfileCategoryAnalyticsEvent,
+  contributorProfileIndexAnalyticsData,
+  contributorProfileIndexAnalyticsEvent,
+  contributorProfilePeerAnalyticsData,
+  contributorProfilePeerAnalyticsEvent,
+  contributorProfileSubmitAnalyticsData,
+  contributorProfileSubmitAnalyticsEvent,
+  contributorProfileSubmitterAnalyticsData,
+  contributorProfileSubmitterAnalyticsEvent,
+} from "@/lib/contributor-profile-cta-events";
 import { contributorPersonJsonLd } from "@/lib/contributor-person-jsonld-lib";
 import { ogImageUrl } from "@/lib/og-image";
 import { ogImageMetaTags } from "@/lib/og-meta-lib";
@@ -90,11 +102,21 @@ function ContributorPage() {
   const sourceLinkedCount = acceptedEntries.filter(
     (entry) => entry.sourceSubmissionUrl || entry.importPrUrl,
   ).length;
+  const peers = CONTRIBUTORS.filter((c) => c.slug !== contributor.slug);
 
   return (
     <div className="mx-auto max-w-[1100px] px-4 py-12 sm:px-6">
       <nav className="text-xs text-ink-muted">
-        <Link to="/contributors" className="hover:text-ink">
+        <Link
+          to="/contributors"
+          onClick={() =>
+            trackEvent(
+              contributorProfileIndexAnalyticsEvent(),
+              contributorProfileIndexAnalyticsData(contributor.slug, acceptedEntries.length),
+            )
+          }
+          className="hover:text-ink"
+        >
           Contributors
         </Link>
         <span className="mx-1.5">/</span>
@@ -145,6 +167,16 @@ function ContributorPage() {
                 key={item.category}
                 to="/$category"
                 params={{ category: item.category }}
+                onClick={() =>
+                  trackEvent(
+                    contributorProfileCategoryAnalyticsEvent(),
+                    contributorProfileCategoryAnalyticsData(
+                      contributor.slug,
+                      item.category,
+                      item.count,
+                    ),
+                  )
+                }
                 className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-3 py-1.5 text-sm text-ink-muted hover:border-border-strong hover:text-ink"
               >
                 <CategoryPill>{item.category}</CategoryPill>
@@ -173,7 +205,16 @@ function ContributorPage() {
 
       <div className="mt-12 rounded-xl border border-border bg-surface p-6 text-sm text-ink-muted">
         Want to contribute?{" "}
-        <Link to="/submit" className="text-ink underline">
+        <Link
+          to="/submit"
+          onClick={() =>
+            trackEvent(
+              contributorProfileSubmitAnalyticsEvent(),
+              contributorProfileSubmitAnalyticsData(contributor.slug, acceptedEntries.length),
+            )
+          }
+          className="text-ink underline"
+        >
           Submit a resource
         </Link>{" "}
         — every accepted entry credits its author and submitter.
@@ -181,11 +222,22 @@ function ContributorPage() {
 
       <div className="mt-6 flex flex-wrap gap-2 text-xs text-ink-subtle">
         Other contributors:{" "}
-        {CONTRIBUTORS.filter((c) => c.slug !== contributor.slug).map((c) => (
+        {peers.map((c, rowIndex) => (
           <Link
             key={c.slug}
             to="/contributors/$slug"
             params={{ slug: c.slug }}
+            onClick={() =>
+              trackEvent(
+                contributorProfilePeerAnalyticsEvent(),
+                contributorProfilePeerAnalyticsData(
+                  contributor.slug,
+                  c.slug,
+                  rowIndex,
+                  peers.length,
+                ),
+              )
+            }
             className="text-ink-muted hover:text-ink"
           >
             {c.handle}
@@ -334,6 +386,18 @@ function ContributionRow({
               <Link
                 to="/contributors/$slug"
                 params={{ slug: submitter.slug }}
+                onClick={() =>
+                  trackEvent(
+                    contributorProfileSubmitterAnalyticsEvent(),
+                    contributorProfileSubmitterAnalyticsData(
+                      contributor.slug,
+                      submitter.slug,
+                      role,
+                      rowIndex,
+                      rowCount,
+                    ),
+                  )
+                }
                 className="text-ink-muted hover:text-ink"
               >
                 {submitter.label}
