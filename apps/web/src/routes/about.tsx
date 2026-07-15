@@ -2,8 +2,18 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ShieldCheck, GitBranch, Users, Sparkles } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
+import { trackEvent } from "@/lib/analytics";
+import {
+  aboutPageEgressAnalyticsData,
+  aboutPageEgressAnalyticsEvent,
+  type AboutPageDestination,
+} from "@/lib/about-page-cta-events";
 import { breadcrumbScript } from "@/lib/seo-jsonld";
 import { absoluteUrl } from "@/lib/seo";
+
+function trackAboutEgress(destination: AboutPageDestination) {
+  trackEvent(aboutPageEgressAnalyticsEvent(), aboutPageEgressAnalyticsData(destination));
+}
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -104,23 +114,43 @@ function AboutPage() {
       <section className="mt-12">
         <h2 className="h-display-2 text-ink text-balance">Contribute</h2>
         <p className="mt-3 text-sm text-ink-muted">
-          <Link to="/submit" className="text-ink underline">
+          <Link
+            to="/submit"
+            className="text-ink underline"
+            onClick={() => trackAboutEgress("submit")}
+          >
             Submit a resource
           </Link>
           ,{" "}
-          <Link to="/claim" className="text-ink underline">
+          <Link
+            to="/claim"
+            className="text-ink underline"
+            onClick={() => trackAboutEgress("claim")}
+          >
             claim a listing
           </Link>
           , or browse the{" "}
-          <Link to="/contributors" className="text-ink underline">
+          <Link
+            to="/contributors"
+            className="text-ink underline"
+            onClick={() => trackAboutEgress("contributors")}
+          >
             contributors page
           </Link>
           . Commercial paths (
-          <Link to="/advertise" className="text-ink underline">
+          <Link
+            to="/advertise"
+            className="text-ink underline"
+            onClick={() => trackAboutEgress("advertise")}
+          >
             advertise
           </Link>
           ,{" "}
-          <Link to="/jobs/post" className="text-ink underline">
+          <Link
+            to="/jobs/post"
+            className="text-ink underline"
+            onClick={() => trackAboutEgress("jobs-post")}
+          >
             post a job
           </Link>
           ) are deliberately separate.
