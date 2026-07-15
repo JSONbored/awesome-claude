@@ -3,6 +3,15 @@ import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import { ENDPOINTS, OPENAPI_TAGS } from "@/data/openapi";
 import { OpenApiEndpointCard, MethodPill } from "@/components/openapi";
+import { trackEvent } from "@/lib/analytics";
+import {
+  apiDocsEndpointNavAnalyticsData,
+  apiDocsEndpointNavAnalyticsEvent,
+  apiDocsIntegrityNavAnalyticsData,
+  apiDocsIntegrityNavAnalyticsEvent,
+  apiDocsSpecAnalyticsData,
+  apiDocsSpecAnalyticsEvent,
+} from "@/lib/api-docs-page-cta-events";
 import { cn } from "@/lib/utils";
 import { breadcrumbScript } from "@/lib/seo-jsonld";
 import { absoluteUrl } from "@/lib/seo";
@@ -60,12 +69,24 @@ function ApiDocsPage() {
           <div className="mt-4 flex flex-wrap gap-2">
             <a
               href="/openapi.json"
+              onClick={() =>
+                trackEvent(
+                  apiDocsSpecAnalyticsEvent(),
+                  apiDocsSpecAnalyticsData("json", ENDPOINTS.length),
+                )
+              }
               className="rounded-md border border-border bg-surface px-2.5 py-1 text-xs text-ink hover:bg-surface-2"
             >
               OpenAPI JSON
             </a>
             <a
               href="/openapi.yaml"
+              onClick={() =>
+                trackEvent(
+                  apiDocsSpecAnalyticsEvent(),
+                  apiDocsSpecAnalyticsData("yaml", ENDPOINTS.length),
+                )
+              }
               className="rounded-md border border-border bg-surface px-2.5 py-1 text-xs text-ink hover:bg-surface-2"
             >
               OpenAPI YAML
@@ -88,10 +109,21 @@ function ApiDocsPage() {
                 <div key={tag.id}>
                   <div className="eyebrow mb-2">{tag.label}</div>
                   <ul className="space-y-1">
-                    {inTag.map((e) => (
+                    {inTag.map((e, rowIndex) => (
                       <li key={e.id}>
                         <a
                           href={`#${e.id}`}
+                          onClick={() =>
+                            trackEvent(
+                              apiDocsEndpointNavAnalyticsEvent(),
+                              apiDocsEndpointNavAnalyticsData(
+                                e.id,
+                                tag.id,
+                                rowIndex,
+                                filtered.length,
+                              ),
+                            )
+                          }
                           className="flex items-center gap-2 rounded px-1 py-0.5 text-xs text-ink-muted hover:bg-surface-2 hover:text-ink"
                         >
                           <MethodPill method={e.method} />
@@ -107,11 +139,31 @@ function ApiDocsPage() {
           <div className="mt-6 rounded-md border border-border bg-surface p-3 text-[11px] text-ink-muted">
             <div className="eyebrow mb-1">Integrity-aware sync</div>
             Use{" "}
-            <Link to="/api-docs" hash="registry-diff" className="underline">
+            <Link
+              to="/api-docs"
+              hash="registry-diff"
+              className="underline"
+              onClick={() =>
+                trackEvent(
+                  apiDocsIntegrityNavAnalyticsEvent(),
+                  apiDocsIntegrityNavAnalyticsData("registry-diff"),
+                )
+              }
+            >
               /api/registry/diff
             </Link>{" "}
             with a cursor, then verify against the SHA-256 in{" "}
-            <Link to="/api-docs" hash="registry-manifest" className="underline">
+            <Link
+              to="/api-docs"
+              hash="registry-manifest"
+              className="underline"
+              onClick={() =>
+                trackEvent(
+                  apiDocsIntegrityNavAnalyticsEvent(),
+                  apiDocsIntegrityNavAnalyticsData("registry-manifest"),
+                )
+              }
+            >
               /api/registry/manifest
             </Link>
             .
