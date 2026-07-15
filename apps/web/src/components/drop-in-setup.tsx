@@ -2,6 +2,10 @@ import * as React from "react";
 import { CopyButton } from "@/components/copy-button";
 import { IntegrationMark, platformMark } from "@/components/integration-marks";
 import { cn } from "@/lib/utils";
+import {
+  dropInSetupCopyAnalyticsData,
+  dropInSetupCopyAnalyticsEvent,
+} from "@/lib/drop-in-setup-cta-events";
 
 interface ClientSetup {
   id: string;
@@ -232,6 +236,8 @@ export function DropInSetup({
               label={`Copy ${active.label} config`}
               size="md"
               className="w-full justify-center"
+              event={dropInSetupCopyAnalyticsEvent()}
+              eventData={dropInSetupCopyAnalyticsData(active.id, active.surface, "config")}
             />
           </div>
         </div>
@@ -243,7 +249,13 @@ export function DropInSetup({
               <code className="flex-1 truncate font-mono text-[11px] text-ink">
                 {active.verify}
               </code>
-              <CopyButton value={active.verify} label="Copy" size="sm" />
+              <CopyButton
+                value={active.verify}
+                label="Copy"
+                size="sm"
+                event={dropInSetupCopyAnalyticsEvent()}
+                eventData={dropInSetupCopyAnalyticsData(active.id, active.surface, "verify")}
+              />
             </div>
           </div>
         )}
