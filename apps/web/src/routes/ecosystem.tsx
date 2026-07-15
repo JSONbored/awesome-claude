@@ -4,6 +4,19 @@ import { ArrowRight, Rss } from "lucide-react";
 import { INTEGRATIONS } from "@/data/integrations";
 import { IntegrationCard } from "@/components/integration-card";
 import { PageContainer } from "@/components/page-container";
+import { trackEvent } from "@/lib/analytics";
+import {
+  ecosystemApiDocsAnalyticsData,
+  ecosystemApiDocsAnalyticsEvent,
+  ecosystemIntegrationCardAnalyticsData,
+  ecosystemIntegrationCardAnalyticsEvent,
+  ecosystemKindFilterAnalyticsData,
+  ecosystemKindFilterAnalyticsEvent,
+  ecosystemSectionAnalyticsData,
+  ecosystemSectionAnalyticsEvent,
+  ecosystemHarnessBrowseAnalyticsData,
+  ecosystemHarnessBrowseAnalyticsEvent,
+} from "@/lib/ecosystem-page-cta-events";
 import {
   CompatibilityMatrix,
   type MatrixRow,
@@ -232,6 +245,12 @@ function EcosystemPage() {
         </div>
         <Link
           to="/api-docs"
+          onClick={() =>
+            trackEvent(
+              ecosystemApiDocsAnalyticsEvent(),
+              ecosystemApiDocsAnalyticsData(INTEGRATIONS.length, live),
+            )
+          }
           className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-md bg-ink px-3 text-sm font-medium text-background hover:bg-ink/90"
         >
           Build on the registry <ArrowRight className="h-3.5 w-3.5" />
@@ -277,7 +296,20 @@ function EcosystemPage() {
         title="Harness coverage"
         subtitle="Share of registry entries compatible with each harness. Click any card to browse just that harness."
       >
-        <HarnessCoverage />
+        <HarnessCoverage
+          onBrowseClick={(platformId, entryCount, coveragePct, rowIndex, harnessCount) =>
+            trackEvent(
+              ecosystemHarnessBrowseAnalyticsEvent(),
+              ecosystemHarnessBrowseAnalyticsData(
+                platformId,
+                entryCount,
+                coveragePct,
+                rowIndex,
+                harnessCount,
+              ),
+            )
+          }
+        />
       </Section>
 
       {/* Drop-in setup */}
@@ -361,10 +393,16 @@ function SubNav() {
       className="sticky top-14 z-30 -mx-4 mt-8 border-y border-border bg-background/85 px-4 backdrop-blur sm:-mx-6 sm:px-6"
     >
       <div className="flex gap-1 overflow-x-auto py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {SUB_NAV.map((s) => (
+        {SUB_NAV.map((s, rowIndex) => (
           <a
             key={s.id}
             href={`#${s.id}`}
+            onClick={() =>
+              trackEvent(
+                ecosystemSectionAnalyticsEvent(),
+                ecosystemSectionAnalyticsData(s.id, rowIndex, SUB_NAV.length),
+              )
+            }
             className={cn(
               "shrink-0 rounded-md px-2.5 py-1 text-xs font-medium transition-colors duration-200 ease-out",
               active === s.id
@@ -423,14 +461,33 @@ function IntegrationsGrid() {
   return (
     <>
       <div className="mb-4 flex flex-wrap items-center gap-1.5">
-        <Chip active={kind === "all"} onClick={() => setKind("all")} count={INTEGRATIONS.length}>
+        <Chip
+          active={kind === "all"}
+          onClick={() => {
+            setKind("all");
+            trackEvent(
+              ecosystemKindFilterAnalyticsEvent(),
+              ecosystemKindFilterAnalyticsData("all", INTEGRATIONS.length),
+            );
+          }}
+          count={INTEGRATIONS.length}
+        >
           All
         </Chip>
         {kinds.map((k) => (
           <Chip
             key={k}
             active={kind === k}
-            onClick={() => setKind(k)}
+            onClick={() => {
+              setKind(k);
+              trackEvent(
+                ecosystemKindFilterAnalyticsEvent(),
+                ecosystemKindFilterAnalyticsData(
+                  k,
+                  INTEGRATIONS.filter((i) => i.kind === k).length,
+                ),
+              );
+            }}
             count={INTEGRATIONS.filter((i) => i.kind === k).length}
           >
             {KIND_LABEL[k] ?? k}
@@ -438,8 +495,24 @@ function IntegrationsGrid() {
         ))}
       </div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {list.map((it) => (
-          <IntegrationCard key={it.slug} integration={it} />
+        {list.map((it, rowIndex) => (
+          <IntegrationCard
+            key={it.slug}
+            integration={it}
+            onNavigate={() =>
+              trackEvent(
+                ecosystemIntegrationCardAnalyticsEvent(),
+                ecosystemIntegrationCardAnalyticsData(
+                  it.slug,
+                  rowIndex,
+                  list.length,
+                  kind,
+                  it.status,
+                  it.kind,
+                ),
+              )
+            }
+          />
         ))}
       </div>
     </>
