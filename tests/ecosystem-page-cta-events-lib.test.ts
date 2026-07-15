@@ -27,6 +27,8 @@ import {
   ecosystemSetupClientAnalyticsEvent,
   ecosystemSetupDocAnalyticsData,
   ecosystemSetupDocAnalyticsEvent,
+  ecosystemQuickStartCopyAnalyticsData,
+  ecosystemQuickStartCopyAnalyticsEvent,
   ecosystemSectionAnalyticsData,
   ecosystemSectionAnalyticsEvent,
 } from "@/lib/ecosystem-page-cta-events-lib";
@@ -188,6 +190,15 @@ describe("ecosystem page cta events lib", () => {
       contentType: "json",
       rowIndex: 0,
       feedCount: 6,
+    });
+    expect(ecosystemQuickStartCopyAnalyticsEvent()).toBe(
+      "ecosystem_quick_start_copy_click",
+    );
+    expect(ecosystemQuickStartCopyAnalyticsData("mcp-run", 1, 3)).toEqual({
+      surface: ECOSYSTEM_PAGE_SURFACE,
+      action: "mcp-run",
+      rowIndex: 1,
+      quickStartCount: 3,
     });
   });
 });

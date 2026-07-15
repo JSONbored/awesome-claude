@@ -81,3 +81,26 @@ describe("registry-asset-lib install complexity", () => {
     ).toBe("higher");
   });
 });
+
+describe("registry-asset-lib categoryPrimaryAsset fallbacks", () => {
+  it("falls back to full_content preference for an unrecognized category", () => {
+    expect(
+      categoryPrimaryAsset({
+        category: "mystery",
+        fullCopyableContent: "hello world",
+      }),
+    ).toMatchObject({ type: "full_content", content: "hello world" });
+  });
+
+  it("returns the first available asset when no preferred type is present", () => {
+    // mcp prefers config_snippet/install_command/usage; only full_content exists,
+    // so the response falls through to the first available asset.
+    expect(
+      categoryPrimaryAsset({ category: "mcp", body: "just the body" }),
+    ).toMatchObject({ type: "full_content", content: "just the body" });
+  });
+
+  it("returns null when the entry has no copyable assets", () => {
+    expect(categoryPrimaryAsset({ category: "mcp" })).toBeNull();
+  });
+});
