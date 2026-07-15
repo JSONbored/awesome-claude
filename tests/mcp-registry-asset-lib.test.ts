@@ -66,3 +66,15 @@ describe("registry-asset-lib install complexity", () => {
     ).toBe("higher");
   });
 });
+
+describe("registry-asset-lib object content and empty entries", () => {
+  it("serializes object content as pretty JSON", () => {
+    const asset = contentAsset("items", "Items", { a: 1 }, "json");
+    expect(asset.content).toBe(JSON.stringify({ a: 1 }, null, 2));
+    expect(asset.format).toBe("json");
+  });
+
+  it("returns null primary asset when the entry has no copyable content", () => {
+    expect(categoryPrimaryAsset({ category: "mcp" })).toBeNull();
+  });
+});
