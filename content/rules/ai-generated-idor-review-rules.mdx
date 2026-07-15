@@ -1,0 +1,243 @@
+---
+title: AI-Generated IDOR (Broken Object-Level Authorization) Review Rules
+slug: ai-generated-idor-review-rules
+category: rules
+description: >-
+  Source-backed rules for reviewing AI-generated endpoints and data-access
+  code before merge for insecure direct object reference risk, covering
+  per-request object-level authorization checks, scoped database lookups,
+  identifier exposure, and consistent enforcement across read, write, and
+  admin operations.
+cardDescription: >-
+  Review AI-generated endpoints for IDOR: object-level authorization on every
+  request, scoped lookups instead of raw ID fetches, and consistent checks
+  across CRUD and admin operations.
+seoTitle: AI-Generated IDOR (Broken Object-Level Authorization) Review Rules
+seoDescription: >-
+  Practical review rules for AI-generated endpoints and data-access code:
+  enforce object-level authorization on every request, scope database lookups
+  to the current user, and avoid exposing raw identifiers without an access
+  check.
+author: lourincedaging0-commits
+submittedBy: lourincedaging0-commits
+submittedByUrl: "https://github.com/lourincedaging0-commits"
+dateAdded: "2026-07-15"
+documentationUrl: "https://cheatsheetseries.owasp.org/cheatsheets/Insecure_Direct_Object_Reference_Prevention_Cheat_Sheet.html"
+sourceUrls:
+  - "https://cheatsheetseries.owasp.org/cheatsheets/Insecure_Direct_Object_Reference_Prevention_Cheat_Sheet.html"
+  - "https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html"
+  - "https://cheatsheetseries.owasp.org/cheatsheets/REST_Security_Cheat_Sheet.html"
+  - "https://owasp.org/API-Security/editions/2023/en/0xa1-broken-object-level-authorization/"
+  - "https://cwe.mitre.org/data/definitions/639.html"
+installable: false
+usageSnippet: >-
+  Apply these rules when an AI assistant writes or edits an endpoint, query,
+  or form handler that looks up, updates, deletes, or exports an object by an
+  identifier supplied in a URL, body, or query parameter.
+copySnippet: |-
+  You are reviewing AI-generated code for insecure direct object reference
+  (IDOR) / broken object-level authorization risk.
+
+  Rules:
+  1. For every operation that looks up an object by an identifier from the
+     request (URL path, query string, or body), confirm there is a
+     server-side check that the current user is actually allowed to access
+     that specific object — not just that they are authenticated.
+  2. Prefer scoped lookups over raw lookups: fetch through the current user's
+     own relation (`current_user.projects.find(id)`) instead of a global
+     lookup by primary key (`Project.find(id)`) followed by an afterthought
+     permission check.
+  3. Apply the same authorization check to every operation on the object,
+     not just the one the happy path exercises — read, update, delete,
+     export, and any admin or bulk variant of the endpoint.
+  4. Do not trust a hidden form field, a client-supplied `user_id`/`ownerId`,
+     or any other identifier the client can edit as the source of truth for
+     whose data is being accessed; derive the acting user from server-side
+     session/auth state.
+  5. Do not treat an unguessable identifier (UUID, random token) as a
+     substitute for an authorization check — it raises the bar for guessing
+     but does not stop an attacker who already has or leaks a valid ID.
+  6. When a new route, resolver, or RPC method is added, confirm it goes
+     through the same authorization layer as sibling routes rather than
+     re-implementing an ad hoc check, and flag it if it skips a shared
+     authorization middleware/guard that similar existing routes use.
+
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - A pull request, diff, or snippet containing an AI-generated or AI-edited endpoint, resolver, or data-access function that accepts an object identifier from the request.
+  - Knowledge of the application's ownership/permission model, since what counts as "authorized" differs between single-owner resources, shared resources, and admin-only resources.
+  - Access to at least two distinct user accounts (or awareness of how to create them) to verify cross-account access is actually denied, not just assumed.
+  - Permission to block merge when an object-level authorization check is missing, inconsistent, or client-trusted.
+safetyNotes:
+  - "A missing object-level authorization check lets any authenticated (or sometimes unauthenticated) user read, modify, or delete another user's data by changing an identifier in the request — accounts, documents, orders, invoices, and support tickets are common targets."
+  - "AI assistants often generate a correct-looking handler for the current user's own data and skip the cross-user check entirely, because the happy-path test only ever exercises the requester's own objects."
+  - "Switching to random/UUID identifiers reduces guessability but is not an authorization control; do not accept it as a substitute for a server-side ownership or permission check."
+privacyNotes:
+  - "IDOR proof-of-concept testing can expose another account's real data; use synthetic test accounts and synthetic objects rather than real user records when demonstrating the issue."
+  - "Do not paste real user identifiers, documents, or other objects retrieved during testing into a public PR or issue; redact or replace them with placeholders."
+  - "Server-side logs and error messages for a denied access attempt should avoid echoing back the unauthorized object's contents, only that access was denied."
+tags:
+  - idor
+  - broken-access-control
+  - authorization
+  - api-security
+  - ai-generated-code
+  - code-review
+keywords:
+  - idor review rules
+  - broken object level authorization
+  - ai-generated code security review
+  - insecure direct object reference
+  - api authorization checklist
+---
+
+## Purpose
+
+Use these rules when an AI coding assistant writes or edits code that looks
+up, updates, deletes, or exports an object using an identifier supplied by
+the request. The goal is to stop a generated endpoint from shipping with a
+working happy path for the requester's own data while quietly allowing
+access to anyone else's data by changing an ID.
+
+This is a review policy, not an IDOR tutorial. It tells reviewers what must
+be true about a generated change's authorization checks and lookup pattern
+before the change is safe to merge.
+
+## Review Inputs
+
+Collect enough context to know what object is being accessed and who should
+be allowed to access it.
+
+- Every route, resolver, or RPC method the change adds or edits that accepts
+  an object identifier from a URL path, query string, request body, or
+  header.
+- What kind of object each identifier refers to (single-owner, shared among
+  a team, or globally readable) and who is allowed to read, write, or delete
+  it.
+- How the handler currently looks the object up: a scoped query tied to the
+  current user, or a global lookup by primary key/slug.
+- Whether sibling routes in the same area already enforce authorization
+  through a shared middleware, guard, or policy object.
+
+## Object-Level Authorization Rules
+
+- Every operation that resolves an object from a request-supplied identifier
+  must verify, server-side, that the current user is allowed to access that
+  specific object — authentication alone (proving who the user is) is not
+  authorization (proving what they may access).
+- Prefer scoped lookups that can only ever return objects the current user
+  owns or has been granted access to, over a global lookup followed by a
+  separate permission check that is easy to omit or get out of sync.
+- Derive the acting user from server-side session or token state, never from
+  a client-supplied field such as a hidden `user_id`, an `ownerId` in the
+  request body, or a bearer claim the client can influence.
+- Apply the same check to every verb and variant on the object: read,
+  update, delete, export/download, bulk operations, and admin-only variants
+  each need their own enforcement, not just the primary read path.
+- For nested or related objects (a comment on someone else's document, a
+  line item on someone else's order), verify authorization on the parent
+  object as well as the child, not just the child's own ID.
+
+## Identifier And Lookup Rules
+
+- Treat any identifier accepted from the client (URL, query, body, or
+  header) as untrusted input to a lookup, not as proof of entitlement.
+- Where practical, avoid exposing sequential or otherwise guessable
+  identifiers in URLs and forms; prefer non-enumerable identifiers (UUIDs,
+  random tokens) as a defense-in-depth measure.
+- Do not rely on identifier complexity alone: an attacker who obtains or is
+  given a valid but unauthorized ID (via a shared link, referrer leak, or
+  another vulnerability) must still be denied by the authorization check.
+- For multi-step flows, keep the object reference in server-side session
+  state rather than round-tripping it through client-editable form fields
+  across steps.
+- When adding a new data-access function, check whether an existing scoped
+  query helper for that model already exists before writing a new global
+  lookup.
+
+## Merge Blockers
+
+Block merge when any of these is true.
+
+- An endpoint resolves an object by a request-supplied identifier without a
+  server-side check that the current user may access that specific object.
+- Authorization is enforced on the read path for an object but not on its
+  update, delete, export, or admin variant.
+- The acting user or their permissions are taken from a client-supplied
+  field (hidden form value, request body `user_id`, editable claim) instead
+  of server-side session/auth state.
+- A new route bypasses a shared authorization middleware/guard/policy that
+  equivalent existing routes use, without a documented reason.
+- Non-guessable identifiers (UUIDs, tokens) are treated as the sole
+  protection for an object, with no actual authorization check behind them.
+
+## Review Checklist
+
+- [ ] {"task": "Object-level check present", "description": "Every request-supplied identifier lookup is followed by a check that the current user may access that specific object"}
+- [ ] {"task": "Scoped lookup preferred", "description": "Data access goes through a query scoped to the current user/tenant rather than a global lookup plus an afterthought check"}
+- [ ] {"task": "All operations covered", "description": "Read, update, delete, export, and admin/bulk variants all enforce the same authorization, not just the primary read path"}
+- [ ] {"task": "Server-side identity", "description": "The acting user is derived from session/auth state, never a client-supplied user/owner field"}
+- [ ] {"task": "Nested objects checked", "description": "Authorization is verified on parent objects, not just the child object's own identifier"}
+- [ ] {"task": "No false sense of security", "description": "Unguessable identifiers are not treated as a substitute for an actual authorization check"}
+
+## AI Review Rules
+
+AI assistants can write and review data-access code, but they should show
+their evidence.
+
+- Ask the assistant to list every route or resolver in the change that
+  accepts an object identifier from the request, and how each one is
+  authorized.
+- Require the assistant to state whether each lookup is scoped to the
+  current user or is a global lookup, and if global, where the permission
+  check happens.
+- Have the assistant confirm write, delete, export, and admin variants were
+  checked, not only the read path it may have tested first.
+- Do not let the assistant claim a UUID or random identifier makes the
+  endpoint safe without a server-side authorization check.
+- Re-run review after any change to routing, the permission model, or shared
+  authorization middleware.
+
+## Troubleshooting
+
+- **A legitimate cross-team share stops working after adding the check:**
+  the object likely needs an explicit shared-access grant (a membership or
+  ACL entry) rather than being reachable by anyone who has the ID; model the
+  sharing relationship instead of loosening the check.
+- **The scoped query returns nothing for an object the user should see:**
+  confirm the scoping relation actually includes shared/team-owned objects,
+  not only objects the user directly created.
+- **Tests pass but only exercise the requester's own data:** add a second
+  test account and assert that it is denied access to the first account's
+  objects across read, write, and delete.
+- **An admin panel needs to bypass per-user scoping:** give it its own
+  explicit admin-authorization check rather than removing scoping from the
+  underlying data-access function that regular routes also call.
+
+## Duplicate And History Check
+
+Before adding a new authorization check, confirm the codebase does not
+already have a shared scoping helper, policy object, or middleware for this
+model. A generated route that writes its own inline permission check next to
+an existing shared guard should be treated as suspicious — check whether the
+existing mechanism was simply not reused before introducing a second,
+parallel, and possibly inconsistent one.
+
+## Reference
+
+| Pattern                                   | Risk                                              | Fix                                                    |
+| ------------------------------------------ | -------------------------------------------------- | ------------------------------------------------------- |
+| `Model.find(params[:id])`                  | Returns any object regardless of owner            | `current_user.models.find(params[:id])`                 |
+| `user_id` read from request body           | Client chooses whose data is affected             | Derive user from server-side session/auth               |
+| Check only on the `GET` handler            | Update/delete/export siblings stay unauthorized   | Enforce the same check on every verb for the object     |
+| Sequential numeric ID as the only barrier  | Trivially enumerable                              | Non-guessable ID plus a real authorization check         |
+| Ad hoc inline permission check             | Diverges from and can miss the shared policy      | Route through the existing authorization middleware      |
+
+## Sources
+
+- OWASP Insecure Direct Object Reference Prevention Cheat Sheet
+- OWASP Authorization Cheat Sheet
+- OWASP REST Security Cheat Sheet
+- OWASP API Security Top 10: Broken Object Level Authorization
+- CWE-639: Authorization Bypass Through User-Controlled Key
