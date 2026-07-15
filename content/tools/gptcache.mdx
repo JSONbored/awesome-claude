@@ -1,0 +1,72 @@
+---
+title: GPTCache
+slug: gptcache
+category: tools
+description: Open-source semantic cache for LLM applications that stores and reuses model responses through embedding similarity to cut API cost and latency, with modular embedding, vector-store, cache-storage, and eviction components.
+cardDescription: Cache LLM responses by semantic similarity to reduce API cost and latency across chat and agent apps.
+seoTitle: GPTCache semantic cache for LLM apps
+seoDescription: GPTCache is an open-source semantic caching library for large language models that reuses stored responses via embedding similarity search, with pluggable embedding functions, vector stores, cache storage backends, similarity evaluation, and OpenAI, LangChain, and llama_index integrations.
+author: Zilliz
+submittedBy: jaytbarimbao-collab
+submittedByUrl: "https://github.com/jaytbarimbao-collab"
+dateAdded: "2026-07-15"
+websiteUrl: "https://gptcache.readthedocs.io/"
+documentationUrl: "https://gptcache.readthedocs.io/en/latest/"
+repoUrl: "https://github.com/zilliztech/GPTCache"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - llm-caching
+  - semantic-cache
+  - cost-optimization
+keywords:
+  - GPTCache
+  - semantic cache
+  - LLM caching
+  - embedding similarity
+  - response caching
+prerequisites:
+  - Python 3.8.1 or newer environment with GPTCache installed via pip and the LLM SDK being cached, for example the OpenAI client, available.
+  - Chosen embedding function such as OpenAI, Hugging Face, ONNX, SentenceTransformers, or Cohere, with model license, embedding dimensions, and provider data handling reviewed.
+  - Selected vector store such as FAISS, Milvus, Chroma, Weaviate, Qdrant, PGVector, or Hnswlib, plus a cache-storage backend such as SQLite, PostgreSQL, MySQL, or DuckDB, provisioned for the deployment.
+  - Similarity threshold and evaluation strategy defined so near-miss queries do not return misleading cached answers.
+  - Cache eviction, retention, and refresh policy decided before caching production LLM traffic.
+safetyNotes:
+  - GPTCache returns previously stored answers for semantically similar prompts, so a loose similarity threshold can serve a cached response that does not actually match the new request.
+  - Cached answers bypass the live model, so freshness, correctness, and any per-request safety or policy checks must be re-evaluated rather than assumed from the original generation.
+  - Embedding functions, vector stores, and cache-storage backends can run locally or call external providers depending on configuration, which changes where prompt and response text travels.
+  - Distributed or networked cache-storage and vector-store deployments need explicit access, network-exposure, and resource-limit decisions.
+  - Eviction policies, similarity thresholds, and invalidation should be tuned and tested so stale or incorrect answers are not reused after upstream data or prompts change.
+privacyNotes:
+  - GPTCache stores prompts, generated responses, embeddings, and metadata that can contain sensitive user or project data and should follow the same retention and deletion policy as the source conversations.
+  - Embeddings can encode information about the original prompts and should be access-controlled and expired like the underlying text.
+  - External embedding providers and hosted vector stores may process prompt or response text depending on the components chosen.
+  - Cache-storage and vector-store persistence, logs, and backups may retain user data beyond a single session unless retention and eviction are configured.
+---
+
+## Editorial notes
+
+GPTCache is useful when Claude-adjacent teams want to reduce the cost and latency of repetitive LLM traffic in chat apps, agents, and pipelines. Instead of matching identical strings, it converts each query into an embedding and runs a vector similarity search so semantically similar prompts can reuse a stored answer. It is organized as pluggable components — an embedding generator, a cache-storage backend, a vector store, a similarity evaluator, a cache manager with eviction policies, and an LLM adapter — so each layer can be swapped for the provider a team already uses.
+
+This is distinct from existing entries. Vector-database entries such as Weaviate and all-in-one frameworks such as txtai center on storing and retrieving embeddings as the primary product. GPTCache's center of gravity is a response-caching layer that happens to use an embedding function and a vector store internally to decide when a prior LLM answer can be reused; its purpose is cost and latency reduction for the model call itself, not general-purpose retrieval.
+
+## Source notes
+
+- The PyPI summary describes GPTCache as "a powerful caching library that can be used to speed up and lower the cost of chat applications that rely on the LLM service."
+- The project describes itself as a semantic cache that can reduce LLM API expense and improve response speed by storing and reusing results rather than making repeated calls.
+- The README says GPTCache converts queries into embeddings and uses a vector store for similarity search on those embeddings, so related queries already in the cache can be reused.
+- The README lists modular components including an embedding generator, cache storage, a vector store, a similarity evaluator, a cache manager with eviction policies, and an LLM adapter.
+- The README lists integrations across LLMs and frameworks such as OpenAI, LangChain, llama_index, Llamacpp, MiniGPT-4, and Dolly.
+- The README lists embedding options such as OpenAI, ONNX, Hugging Face, Cohere, and SentenceTransformers, and vector stores such as Milvus, Zilliz Cloud, FAISS, Hnswlib, PGVector, Chroma, Weaviate, and Qdrant.
+- The README lists cache-storage backends such as SQLite, PostgreSQL, MySQL, and DuckDB.
+- The package installs with `pip install gptcache`, requires Python 3.8.1 or newer, and the repository `zilliztech/GPTCache` is MIT licensed.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, open pull requests, and repository-wide content for `GPTCache`, `gptcache`, `zilliztech/GPTCache`, `semantic cache`, and `LLM caching`. No dedicated GPTCache entry, GPTCache source URL, or open duplicate PR was found; existing vector-database and retrieval entries (for example Weaviate and txtai) cover storage and retrieval rather than LLM response caching.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. GPTCache is an MIT-licensed open-source library maintained under the `zilliztech` organization.
