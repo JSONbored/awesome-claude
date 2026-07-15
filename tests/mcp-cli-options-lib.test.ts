@@ -74,3 +74,23 @@ describe("cli-options re-export compatibility", () => {
     expect(renderHelpFromWrapper()).toBe(renderHelp());
   });
 });
+
+describe("cli-options-lib flag parsing edge cases", () => {
+  it("throws when a value flag is missing its argument or gets another flag", () => {
+    expect(() => parseCliArgs(["--url"], {})).toThrow(
+      "--url requires a value.",
+    );
+    expect(() => parseCliArgs(["--url", "-x"], {})).toThrow(
+      "--url requires a value.",
+    );
+  });
+
+  it("skips the bare -- separator", () => {
+    expect(parseCliArgs(["--"], {}).mode).toBe("remote");
+  });
+
+  it("sets help for both --help and -h", () => {
+    expect(parseCliArgs(["--help"], {}).help).toBe(true);
+    expect(parseCliArgs(["-h"], {}).help).toBe(true);
+  });
+});

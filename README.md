@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>1371+ file-backed entries</strong> stay useful as both an
+        <strong>1372+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>1371</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>1372</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>AI-reviewed</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -84,7 +84,7 @@ Refreshed weekly by [`.github/workflows/gittensor-impact.yml`](.github/workflows
         </td>
 <td align="center" width="20%">
           <a href="#tools"><strong>🧰 Tools</strong></a><br>
-          <code>199</code><br>
+          <code>200</code><br>
           <sub>Apps, developer tools, services, and products for Claude-native builders.</sub>
         </td>
 <td align="center" width="20%">
@@ -793,10 +793,11 @@ packages use checksums and package trust metadata after review.
 
 Get a free API key on https://app.zyntra.app/
 
-## 🧰 Tools (199)
+## 🧰 Tools (200)
 
 - **[Activepieces](https://heyclau.de/entry/tools/activepieces)** - Open-source, self-hostable workflow automation platform with AI workflows, TypeScript pieces, human-in-the-loop steps, and a built-in MCP server.
 - **[AG2 Agent Framework](https://heyclau.de/entry/tools/ag2-agent-framework)** - Open-source Python AgentOS and multi-agent framework, evolved from AutoGen, for building conversable agents, group chats, swarms, human-in-the-loop workflows, tool use, RAG, code execution, and provider-backed agent systems.
+- **[Agent Island](https://heyclau.de/entry/tools/agent-island)** - Open-source status companion for Claude Code and Codex with live local session state, your-turn alerts, usage views, and native macOS and Windows applications.
 - **[Agenta](https://heyclau.de/entry/tools/agenta)** - Open-source LLMOps platform for prompt management, prompt versioning, evaluation, and observability across LLM applications.
 - **[AgentOps](https://heyclau.de/entry/tools/agentops)** - Open-source observability platform and SDK for tracing, debugging, replaying, and cost-monitoring AI agent and LLM application runs.
 - **[AgentScope](https://heyclau.de/entry/tools/agentscope)** - Apache-2.0 Python framework for building visible, controllable, production AI agents and multi-agent services with event streaming, permission controls, workspaces, sandbox backends, middleware, MCP support, Mem0 memory, agent teams, and multi-tenant multi-session serving.

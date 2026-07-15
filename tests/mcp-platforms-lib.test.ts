@@ -67,3 +67,18 @@ describe("platforms re-export compatibility", () => {
     expect(buildCompatibilityFromWrapper).toBe(buildSkillPlatformCompatibility);
   });
 });
+
+describe("platforms-lib slug and compatibility edge cases", () => {
+  it("keeps digits and joins ampersands adjacent to alphanumerics", () => {
+    expect(platformFeedSlug("a1&b2")).toBe("a1-andb2");
+    expect(platformFeedSlug("Claude 2 & Code 3")).toBe("claude-2-and-code-3");
+  });
+
+  it("builds default skill compatibility for a skills entry without a slug", () => {
+    const compatibility = buildSkillPlatformCompatibility({
+      category: "skills",
+    });
+    expect(compatibility.length).toBeGreaterThan(0);
+    expect(compatibility[0].platform).toBe("Claude");
+  });
+});

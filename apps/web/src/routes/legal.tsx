@@ -1,6 +1,19 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { trackEvent } from "@/lib/analytics";
+import {
+  legalPageEgressAnalyticsData,
+  legalPageEgressAnalyticsEvent,
+  legalPageSectionAnalyticsData,
+  legalPageSectionAnalyticsEvent,
+  type LegalPageDestination,
+  type LegalPageSectionId,
+} from "@/lib/legal-page-cta-events";
 import { absoluteUrl } from "@/lib/seo";
+
+function trackLegalEgress(destination: LegalPageDestination) {
+  trackEvent(legalPageEgressAnalyticsEvent(), legalPageEgressAnalyticsData(destination));
+}
 
 export const Route = createFileRoute("/legal")({
   head: () => ({
@@ -22,7 +35,7 @@ export const Route = createFileRoute("/legal")({
   component: LegalPage,
 });
 
-const SECTIONS = [
+const SECTIONS: { id: LegalPageSectionId; label: string }[] = [
   { id: "terms", label: "Terms of use" },
   { id: "privacy", label: "Privacy" },
   { id: "content", label: "Content policy" },
@@ -41,10 +54,16 @@ function LegalPage() {
           <h1 className="mt-2 h-display-2 text-ink text-balance">Plain-English legal</h1>
           <p className="mt-2 text-xs text-ink-muted">Last updated 2026-05-26.</p>
           <nav className="mt-5 space-y-1 text-sm">
-            {SECTIONS.map((s) => (
+            {SECTIONS.map((s, rowIndex) => (
               <a
                 key={s.id}
                 href={`#${s.id}`}
+                onClick={() =>
+                  trackEvent(
+                    legalPageSectionAnalyticsEvent(),
+                    legalPageSectionAnalyticsData(s.id, rowIndex, SECTIONS.length),
+                  )
+                }
                 className="block rounded-md px-2 py-1 text-ink-muted hover:bg-surface-2 hover:text-ink"
               >
                 {s.label}
@@ -69,11 +88,19 @@ function LegalPage() {
           <Section id="content" title="Content policy">
             Submitted resources must be free to use, source-backed, and not malicious. Commercial
             tools go through the{" "}
-            <Link to="/advertise" className="text-ink underline">
+            <Link
+              to="/advertise"
+              onClick={() => trackLegalEgress("advertise")}
+              className="text-ink underline"
+            >
               commercial intake
             </Link>{" "}
             and are clearly labeled. Jobs go through{" "}
-            <Link to="/jobs/post" className="text-ink underline">
+            <Link
+              to="/jobs/post"
+              onClick={() => trackLegalEgress("jobs-post")}
+              className="text-ink underline"
+            >
               post a job
             </Link>
             . Maintainers may remove anything that violates these rules.
@@ -86,7 +113,11 @@ function LegalPage() {
 
           <Section id="dmca" title="DMCA and takedown">
             If you're an author or maintainer and want a listing removed, claimed, or corrected, use{" "}
-            <Link to="/claim" className="text-ink underline">
+            <Link
+              to="/claim"
+              onClick={() => trackLegalEgress("claim")}
+              className="text-ink underline"
+            >
               claim a listing
             </Link>{" "}
             or open an issue on the public repo.
@@ -99,6 +130,7 @@ function LegalPage() {
               href="https://github.com/jsonbored/awesome-claude/issues"
               target="_blank"
               rel="noreferrer"
+              onClick={() => trackLegalEgress("github-issues")}
             >
               GitHub issue tracker
             </a>
@@ -108,6 +140,7 @@ function LegalPage() {
               href="https://github.com/jsonbored/awesome-claude"
               target="_blank"
               rel="noreferrer"
+              onClick={() => trackLegalEgress("github-repo")}
             >
               GitHub
             </a>
