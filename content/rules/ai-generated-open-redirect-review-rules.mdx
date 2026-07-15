@@ -1,0 +1,232 @@
+---
+title: AI-Generated Open Redirect Review Rules
+slug: ai-generated-open-redirect-review-rules
+category: rules
+description: >-
+  Source-backed rules for reviewing AI-generated redirect and forward logic
+  before merge for open redirect risk, covering allowlist-based destination
+  validation, relative-path/indexed-mapping alternatives to raw URLs, and the
+  privilege-escalation and phishing impact of an unvalidated redirect target.
+cardDescription: >-
+  Review AI-generated redirects for open redirect risk: allowlist
+  destinations, avoid raw user-supplied URLs, and prefer relative paths or an
+  indexed mapping over echoing the input back.
+seoTitle: AI-Generated Open Redirect Review Rules
+seoDescription: >-
+  Practical review rules for AI-generated redirect/forward code: validate
+  redirect destinations against an allowlist, avoid full attacker-controlled
+  URLs, and treat post-login/post-action redirects as a phishing and access-
+  control risk.
+author: lourincedaging0-commits
+submittedBy: lourincedaging0-commits
+submittedByUrl: "https://github.com/lourincedaging0-commits"
+dateAdded: "2026-07-15"
+documentationUrl: "https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html"
+sourceUrls:
+  - "https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html"
+  - "https://cwe.mitre.org/data/definitions/601.html"
+  - "https://portswigger.net/web-security/dom-based/open-redirection"
+  - "https://portswigger.net/kb/issues/00500100_open-redirection-reflected"
+installable: false
+usageSnippet: >-
+  Apply these rules when an AI assistant writes or edits code that redirects
+  or forwards a request to a URL that is, even partially, derived from user
+  input, a query parameter, or a stored value a user can influence.
+copySnippet: |-
+  You are reviewing AI-generated code for open redirect (unvalidated
+  redirect/forward) risk.
+
+  Rules:
+  1. Identify every redirect or forward whose destination is built from
+     request input — a query parameter (`?url=`, `?next=`, `?returnUrl=`,
+     `?redirect=`), a form field, a header, or a stored value the user can
+     set — rather than a hardcoded, developer-chosen destination.
+  2. Prefer not taking a destination from the client at all: use a fixed
+     redirect target, or an indexed/enum mapping (`"dashboard"` ->
+     `/app/dashboard`) where the client sends a key, not a URL.
+  3. When a caller-supplied return destination is genuinely required (for
+     example a post-login redirect), restrict it to a relative, same-origin
+     path and reject any value that is an absolute URL, starts with `//`
+     (protocol-relative), or contains a scheme (`http:`, `https:`,
+     `javascript:`, etc.).
+  4. If an absolute URL destination is unavoidable, validate the host
+     against an explicit allowlist of trusted domains — do not accept "the
+     path contains our domain name" or a prefix/substring check, since
+     `evil.com/mysite.com` and `mysite.com.evil.com` both satisfy a naive
+     substring check.
+  5. Treat this as more than a phishing issue: an unvalidated redirect can
+     also be chained to bypass an allowlist-based access control check (a
+     WAF or gateway that trusts the first hop) or to forward a user to a
+     privileged internal endpoint they should not reach directly.
+  6. Confirm any code that runs after the redirect call actually stops
+     (`return`/`exit`/equivalent) — in some languages the redirect response
+     header can be set without halting execution, letting the rest of the
+     handler run for a client that ignores the redirect.
+
+estimatedSetupTime: 10 minutes
+difficulty: beginner
+prerequisites:
+  - A pull request, diff, or snippet containing AI-generated or AI-edited redirect, forward, or "return to" logic.
+  - Knowledge of which query parameters, form fields, or stored values in the application currently feed a redirect destination.
+  - Awareness of the app's trusted domain(s) so an allowlist check (if one is added) can be scoped correctly.
+  - Permission to block merge when a redirect destination is taken from user input without being restricted to a relative path or a validated allowlist.
+safetyNotes:
+  - "An open redirect lets an attacker craft a link that appears to point at the trusted site but silently forwards the victim to an attacker-controlled page, commonly used to make phishing links look more credible or to complete an OAuth/SSO flow against a fake page."
+  - "AI assistants often implement a 'return to where you came from' or 'next page' feature by echoing a raw URL parameter straight into a redirect, because it is the shortest working implementation and the happy path (a same-site link) looks correct."
+  - "A naive fix that checks whether the destination string 'contains' the trusted domain is not sufficient — `https://trusted.com.attacker.com` and `https://attacker.com/?trusted.com` both pass a substring check while pointing off-site."
+privacyNotes:
+  - "Open redirect proof-of-concept links can be used to demonstrate credential phishing; avoid pointing a demonstration at a real external site or capturing real user credentials, use a controlled test domain instead."
+  - "Redirect destination parameters are sometimes logged for analytics; ensure logs of attempted-and-blocked off-site redirects don't retain full attacker payload URLs longer than needed for the security review."
+tags:
+  - open-redirect
+  - phishing
+  - web-security
+  - access-control
+  - ai-generated-code
+  - code-review
+keywords:
+  - open redirect review rules
+  - unvalidated redirects and forwards
+  - ai-generated code security review
+  - redirect allowlist validation
+  - phishing redirect prevention
+---
+
+## Purpose
+
+Use these rules when an AI coding assistant writes or edits code that
+redirects or forwards a request to a URL influenced by user input. The goal
+is to stop a generated "return to previous page," post-login redirect, or
+similar feature from becoming an open redirect that phishing campaigns or
+access-control bypasses can exploit.
+
+This is a review policy, not an open-redirect tutorial. It tells reviewers
+what must be true about a generated redirect's destination handling before
+the change is safe to merge.
+
+## Review Inputs
+
+Collect enough context to know where a redirect destination comes from and
+where it can send a user.
+
+- Every redirect, forward, or "return to" call the change adds or edits,
+  and the exact source of its destination value (query parameter, form
+  field, header, session/stored value).
+- Whether the destination is ever a full URL versus always a relative path
+  within the application.
+- The application's trusted domain(s), if an allowlist check is relevant.
+- Whether anything executes on the server after the redirect response is
+  issued.
+
+## Destination Validation Rules
+
+- Prefer a hardcoded or indexed-mapping destination over taking any part of
+  the URL from the client. If the client only needs to pick from a small
+  known set of destinations, send a key and look up the real path
+  server-side.
+- When a caller-supplied return path is required, accept only a relative,
+  same-origin path: reject values that are absolute URLs, start with `//`
+  (protocol-relative, which browsers treat as absolute), or contain a
+  scheme such as `http:`, `https:`, or `javascript:`.
+- If an absolute URL is unavoidable, validate the parsed hostname against an
+  explicit allowlist of trusted domains — parse the URL and compare the
+  host field exactly (or against an allowed-suffix list of real subdomains),
+  never a raw substring/`.includes()`/prefix check on the whole URL string.
+- Reject malformed or unparseable URLs outright rather than falling back to
+  a default that might still be attacker-influenced.
+
+## Impact And Chaining Rules
+
+- Treat an unvalidated redirect as more than a cosmetic risk: it can make
+  phishing links look legitimate (the initial domain is trusted) and can be
+  chained to bypass allowlist-based checks in a proxy, WAF, or gateway that
+  only inspects the first hop.
+- Check whether a redirect is used as part of an authentication or
+  authorization flow (OAuth callback, SSO return URL, "continue to"
+  after login) — these are higher-impact targets because a successful
+  redirect can be paired with credential phishing or token leakage.
+- Confirm the handler actually stops executing after issuing a redirect
+  response; in some frameworks/languages, setting a `Location` header does
+  not itself halt the rest of the function, so code intended to run "after
+  redirect" can still execute for a client that doesn't follow it.
+
+## Merge Blockers
+
+Block merge when any of these is true.
+
+- A redirect or forward destination is built directly from user input
+  (query parameter, form field, header, stored value) with no restriction
+  to a relative path or validated allowlist.
+- Destination validation uses a substring/prefix/`.includes()` check on the
+  trusted domain instead of parsing the URL and comparing the actual host.
+- An authentication/SSO-related redirect (login return URL, OAuth callback)
+  accepts an unvalidated destination.
+- Code intended to run after a redirect is issued does not actually stop
+  execution when the redirect is set.
+
+## Review Checklist
+
+- [ ] {"task": "Destination source identified", "description": "Every redirect's destination source (client input vs. hardcoded/mapped) is identified"}
+- [ ] {"task": "Relative path preferred", "description": "User-influenced redirects are restricted to relative, same-origin paths where possible"}
+- [ ] {"task": "Allowlist for absolute URLs", "description": "Any absolute-URL destination is validated against a real parsed-host allowlist, not a substring check"}
+- [ ] {"task": "Protocol-relative and scheme rejected", "description": "Values starting with `//` or containing a scheme (`javascript:`, `https:`, etc.) are rejected as relative paths"}
+- [ ] {"task": "Auth-flow redirects scrutinized", "description": "Login/SSO/OAuth return-URL redirects get the strictest validation, not the general-purpose one"}
+- [ ] {"task": "Execution halts on redirect", "description": "No code intended to run only after a redirect executes for clients that ignore it"}
+
+## AI Review Rules
+
+AI assistants can write and review redirect logic, but they should show
+their evidence.
+
+- Ask the assistant to list every redirect/forward in the change and the
+  exact source of its destination value.
+- Require the assistant to state whether each destination is restricted to
+  a relative path or validated against a real host allowlist, not just
+  "checked."
+- Have the assistant show the allowlist check's exact comparison logic (not
+  a substring/prefix check) when an absolute URL destination is accepted.
+- Do not let the assistant claim a redirect is safe because it "looks like"
+  it points at the right domain in the happy-path example.
+- Re-run review after any change to authentication flows, SSO callbacks, or
+  shared redirect helper functions.
+
+## Troubleshooting
+
+- **A legitimate cross-subdomain redirect gets rejected:** add the specific
+  subdomain to the allowlist explicitly rather than loosening the check to
+  a suffix or substring match that could also match attacker-registered
+  lookalike domains.
+- **The relative-path restriction breaks a valid external partner
+  redirect:** that destination needs its own reviewed, explicit allowlist
+  entry — do not remove the restriction to accommodate one case.
+- **Tests only cover a same-site redirect:** add a test asserting that an
+  off-site or protocol-relative (`//evil.example`) destination is rejected,
+  not just that the happy-path destination works.
+- **A redirect works even though a check was added:** confirm the check
+  actually runs before the redirect call and that the function returns/exits
+  after a rejection instead of falling through to redirect anyway.
+
+## Duplicate And History Check
+
+Before adding a new redirect destination check, confirm the codebase does
+not already have a shared "safe redirect" helper or allowlist. A generated
+change that builds a new ad hoc validation next to an existing shared helper
+should be treated as suspicious — check whether the existing mechanism was
+simply not reused before introducing a second, potentially inconsistent one.
+
+## Reference
+
+| Pattern                                      | Risk                                              | Fix                                                     |
+| ----------------------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------ |
+| `redirect(request.params.url)`                  | Destination fully attacker-controlled              | Indexed mapping or relative-path-only restriction             |
+| `url.includes("trusted.com")`                   | `trusted.com.evil.com` and similar bypass it       | Parse URL, compare exact host against an allowlist            |
+| Login return URL from query string, unchecked   | Chainable with credential phishing                 | Same-origin relative path only for auth-flow redirects        |
+| `//evil.example` accepted as "relative"         | Browsers treat `//` as protocol-relative (absolute)| Reject any destination starting with `//`                    |
+| Code after `sendRedirect`/`header("Location")`  | May still execute if the client ignores the redirect | Explicit `return`/`exit` immediately after issuing it        |
+
+## Sources
+
+- OWASP Unvalidated Redirects and Forwards Cheat Sheet
+- CWE-601: URL Redirection to Untrusted Site ('Open Redirect')
+- PortSwigger Web Security Academy: DOM-based open redirection
+- PortSwigger: Open redirection (reflected) issue reference
