@@ -4,8 +4,19 @@ import { useState, type FormEvent } from "react";
 import { ArrowRight } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { CommercialDisclosure } from "@/components/commercial-disclosure";
+import { trackEvent } from "@/lib/analytics";
 import { absoluteUrl } from "@/lib/seo";
 import { submitListingLead } from "@/lib/listing-lead-client";
+import {
+  toolsSubmitAdvertiseAnalyticsData,
+  toolsSubmitAdvertiseAnalyticsEvent,
+  toolsSubmitClaimAnalyticsData,
+  toolsSubmitClaimAnalyticsEvent,
+  toolsSubmitCommunityAnalyticsData,
+  toolsSubmitCommunityAnalyticsEvent,
+  toolsSubmitToolsAnalyticsData,
+  toolsSubmitToolsAnalyticsEvent,
+} from "@/lib/tools-submit-page-cta-events";
 
 export const Route = createFileRoute("/tools/submit")({
   head: () => ({
@@ -26,13 +37,33 @@ export const Route = createFileRoute("/tools/submit")({
 function SubmitTool() {
   return (
     <div className="mx-auto max-w-[900px] px-4 py-10 sm:px-6">
-      <Breadcrumbs home items={[{ label: "Tools", to: "/tools" }, { label: "Submit" }]} />
+      <Breadcrumbs
+        home
+        items={[
+          {
+            label: "Tools",
+            to: "/tools",
+            onClick: () =>
+              trackEvent(
+                toolsSubmitToolsAnalyticsEvent(),
+                toolsSubmitToolsAnalyticsData("breadcrumb"),
+              ),
+          },
+          { label: "Submit" },
+        ]}
+      />
       <section className="mt-6 rounded-2xl border border-border bg-surface p-6">
         <div className="eyebrow">Commercial routing</div>
         <h1 className="mt-3 h-display-1 text-ink text-balance">Submit a commercial tool</h1>
         <p className="mt-4 max-w-2xl text-ink-muted">
           Free, source-backed resources belong in the community directory via{" "}
-          <Link to="/submit" className="text-ink underline">
+          <Link
+            to="/submit"
+            className="text-ink underline"
+            onClick={() =>
+              trackEvent(toolsSubmitCommunityAnalyticsEvent(), toolsSubmitCommunityAnalyticsData())
+            }
+          >
             /submit
           </Link>
           . Use the forms below for commercial listings, paid trust/source review interest, or route
@@ -53,12 +84,24 @@ function SubmitTool() {
             <Link
               to="/advertise"
               className="inline-flex h-10 items-center gap-1.5 rounded-md bg-ink px-4 text-sm font-medium text-background hover:bg-ink/90"
+              onClick={() =>
+                trackEvent(
+                  toolsSubmitAdvertiseAnalyticsEvent(),
+                  toolsSubmitAdvertiseAnalyticsData("commercial-paths"),
+                )
+              }
             >
               Sponsorship waitlist <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               to="/claim"
               className="inline-flex h-10 items-center gap-1.5 rounded-md border border-border bg-background px-4 text-sm font-medium text-ink hover:bg-surface-2"
+              onClick={() =>
+                trackEvent(
+                  toolsSubmitClaimAnalyticsEvent(),
+                  toolsSubmitClaimAnalyticsData("commercial-paths"),
+                )
+              }
             >
               Claim a listing
             </Link>
