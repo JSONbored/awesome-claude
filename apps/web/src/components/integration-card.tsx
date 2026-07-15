@@ -22,9 +22,11 @@ const SURFACE_ICON = {
 export function IntegrationCard({
   integration,
   compact,
+  onNavigate,
 }: {
   integration: Integration;
   compact?: boolean;
+  onNavigate?: () => void;
 }) {
   const surface = integration.surface;
   const SurfaceIcon = surface ? SURFACE_ICON[surface.kind] : null;
@@ -32,6 +34,7 @@ export function IntegrationCard({
     <Link
       to="/integrations/$slug"
       params={{ slug: integration.slug }}
+      onClick={onNavigate}
       className="group relative flex min-w-0 flex-col gap-4 rounded-xl border border-border bg-surface p-5 transition-colors duration-200 ease-out hover:bg-surface-2"
     >
       <div className="flex items-start justify-between gap-3">

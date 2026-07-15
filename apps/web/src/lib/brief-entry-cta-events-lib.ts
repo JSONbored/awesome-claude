@@ -63,3 +63,37 @@ export function briefIssueEntryAnalyticsData(
     issueNumber,
   };
 }
+
+export type BriefIssueHubSource = "breadcrumb" | "not-found";
+
+export function briefIssueHubAnalyticsEvent(): string {
+  return "brief_issue_hub_click";
+}
+
+export function briefIssueHubAnalyticsData(
+  issueNumber: number | null,
+  source: BriefIssueHubSource,
+) {
+  return {
+    surface: BRIEF_ISSUE_SURFACE,
+    issueNumber,
+    source,
+  };
+}
+
+export function briefHubIssueAnalyticsEvent(): string {
+  return "brief_hub_issue_click";
+}
+
+export function briefHubIssueAnalyticsData(
+  issueNumber: number,
+  rowIndex: number,
+  issueCount: number,
+) {
+  return {
+    surface: BRIEF_HUB_SURFACE,
+    issueNumber,
+    rowIndex,
+    issueCount,
+  };
+}

@@ -3,6 +3,15 @@ import { INTEGRATIONS } from "@/data/integrations";
 import { IntegrationCard } from "@/components/integration-card";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
+import { trackEvent } from "@/lib/analytics";
+import {
+  integrationsIndexApiDocsAnalyticsData,
+  integrationsIndexApiDocsAnalyticsEvent,
+  integrationsIndexCardAnalyticsData,
+  integrationsIndexCardAnalyticsEvent,
+  integrationsIndexEcosystemAnalyticsData,
+  integrationsIndexEcosystemAnalyticsEvent,
+} from "@/lib/integrations-hub-cta-events";
 import { breadcrumbScript, itemListScript } from "@/lib/seo-jsonld";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
@@ -62,7 +71,16 @@ function IntegrationsPage() {
           <>
             The registry ships as an extension, a server, an API, and a set of public feeds — so
             Claude, Cursor, Windsurf, Codex, and Raycast can all read from the same source of truth.{" "}
-            <Link to="/ecosystem" className="text-ink underline">
+            <Link
+              to="/ecosystem"
+              onClick={() =>
+                trackEvent(
+                  integrationsIndexEcosystemAnalyticsEvent(),
+                  integrationsIndexEcosystemAnalyticsData(INTEGRATIONS.length),
+                )
+              }
+              className="text-ink underline"
+            >
               See the ecosystem map
             </Link>
             .
@@ -70,8 +88,23 @@ function IntegrationsPage() {
         }
       />
       <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {INTEGRATIONS.map((i) => (
-          <IntegrationCard key={i.slug} integration={i} />
+        {INTEGRATIONS.map((i, rowIndex) => (
+          <IntegrationCard
+            key={i.slug}
+            integration={i}
+            onNavigate={() =>
+              trackEvent(
+                integrationsIndexCardAnalyticsEvent(),
+                integrationsIndexCardAnalyticsData(
+                  i.slug,
+                  rowIndex,
+                  INTEGRATIONS.length,
+                  i.status,
+                  i.kind,
+                ),
+              )
+            }
+          />
         ))}
       </div>
       <div className="mt-10 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-border bg-surface p-6">
@@ -87,6 +120,12 @@ function IntegrationsPage() {
         </div>
         <Link
           to="/api-docs"
+          onClick={() =>
+            trackEvent(
+              integrationsIndexApiDocsAnalyticsEvent(),
+              integrationsIndexApiDocsAnalyticsData(INTEGRATIONS.length),
+            )
+          }
           className="inline-flex h-10 items-center rounded-md bg-ink px-4 text-sm font-medium text-background hover:bg-ink/90"
         >
           Open the API docs

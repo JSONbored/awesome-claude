@@ -4,7 +4,11 @@ import {
   BRIEF_ISSUE_SURFACE,
   briefEntryAnalyticsEvent,
   briefHubEntryAnalyticsData,
+  briefHubIssueAnalyticsData,
+  briefHubIssueAnalyticsEvent,
   briefIssueEntryAnalyticsData,
+  briefIssueHubAnalyticsData,
+  briefIssueHubAnalyticsEvent,
   parseBriefEntryRef,
 } from "@/lib/brief-entry-cta-events-lib";
 
@@ -41,6 +45,27 @@ describe("brief entry cta events lib", () => {
       rowIndex: 2,
       rowCount: 5,
       issueNumber: 12,
+    });
+  });
+
+  it("builds privacy-light brief hub and issue navigation analytics", () => {
+    expect(briefIssueHubAnalyticsEvent()).toBe("brief_issue_hub_click");
+    expect(briefIssueHubAnalyticsData(12, "breadcrumb")).toEqual({
+      surface: BRIEF_ISSUE_SURFACE,
+      issueNumber: 12,
+      source: "breadcrumb",
+    });
+    expect(briefIssueHubAnalyticsData(null, "not-found")).toEqual({
+      surface: BRIEF_ISSUE_SURFACE,
+      issueNumber: null,
+      source: "not-found",
+    });
+    expect(briefHubIssueAnalyticsEvent()).toBe("brief_hub_issue_click");
+    expect(briefHubIssueAnalyticsData(8, 1, 12)).toEqual({
+      surface: BRIEF_HUB_SURFACE,
+      issueNumber: 8,
+      rowIndex: 1,
+      issueCount: 12,
     });
   });
 });
