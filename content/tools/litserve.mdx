@@ -1,0 +1,69 @@
+---
+title: LitServe
+slug: litserve
+category: tools
+description: Lightweight open-source serving framework for building custom AI model inference APIs by defining a LitAPI with setup and predict methods, with batching, streaming, multi-GPU autoscaling, OpenAI-compatible endpoints, and support for compound, multimodal, RAG, and agent pipelines.
+cardDescription: Build custom AI model inference APIs with a LitAPI class, batching, streaming, and multi-GPU autoscaling.
+seoTitle: LitServe open-source AI model serving framework
+seoDescription: LitServe is a lightweight open-source framework from Lightning AI for building custom AI model inference servers, defining a LitAPI with setup and predict methods, with batching, streaming, multi-GPU autoscaling, OpenAI-compatible endpoints, and support for LLMs, vision, audio, RAG, and compound multimodal pipelines.
+author: Lightning AI
+submittedBy: jaytbarimbao-collab
+submittedByUrl: "https://github.com/jaytbarimbao-collab"
+dateAdded: "2026-07-16"
+websiteUrl: "https://lightning.ai/litserve"
+documentationUrl: "https://lightning-ai.github.io/litserve/"
+repoUrl: "https://github.com/Lightning-AI/litserve"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Linux, macOS
+tags:
+  - model-serving
+  - inference
+  - ai-infrastructure
+keywords:
+  - LitServe
+  - model serving
+  - inference API
+  - GPU autoscaling
+  - Lightning AI
+prerequisites:
+  - Python 3.10 or newer environment with the LitServe package and the model runtime dependencies for the models you plan to serve installed.
+  - The model, pipeline, or weights to be served, along with their licenses and any download or access requirements reviewed.
+  - A LitAPI implementation that defines the setup and predict logic for how each request is handled.
+  - GPUs with drivers if accelerated inference, batching, or multi-GPU autoscaling is needed, with VRAM and worker counts planned for the target load.
+  - A deployment target and access model chosen, whether self-hosted or a managed deployment, with networking and scaling decided.
+safetyNotes:
+  - LitServe runs a network inference server that exposes an HTTP endpoint, so authentication, network exposure, rate limits, and resource limits should be configured before production use.
+  - The server executes the setup and predict code you write and loads the models you configure, so those models and any dependencies should be trusted and reviewed.
+  - Serving downloads or loads model weights and can run multi-worker, multi-GPU, or autoscaled processes that consume significant compute.
+  - Compound applications that combine multiple models, agents, or retrieval steps can trigger downstream tool calls and network requests that need their own guardrails.
+  - Optional managed deployment runs the server on external infrastructure, which changes where code and data execute.
+privacyNotes:
+  - LitServe processes request payloads at inference time, which can include user prompts, files, or other personal information.
+  - Models, tokenizers, and weights loaded from third-party hubs are governed by those providers, and compound pipelines may call additional external services.
+  - Request logs, metrics, traces, and error output may retain payload data unless logging and retention are configured.
+  - Managed or cloud deployment sends request and model data to the hosting provider, so its data handling should be reviewed against your requirements.
+---
+
+## Editorial notes
+
+LitServe is useful when Claude-adjacent teams want to stand up an inference API for their own model or pipeline rather than run a fixed pre-built server. Instead of wiring a bespoke web service, you define a LitAPI class with `setup` (load the model) and `predict` (handle a request), and LitServe provides the server with batching, streaming, and multi-GPU autoscaling. It can serve LLMs, vision, audio, and compound or multimodal applications that combine several models, retrieval, and agents, and it can expose OpenAI-compatible endpoints.
+
+This is distinct from the model-serving entries already in the directory. `localai` is a drop-in, pre-built OpenAI-compatible server, `vllm` is a high-throughput LLM inference engine, and `ollama` runs and manages local models; LitServe is a framework for building your own inference server around arbitrary models and compound pipelines with programmatic control over request handling. It complements rather than duplicates those entries.
+
+## Source notes
+
+- The PyPI summary describes LitServe as a "Lightweight AI server."
+- The README and documentation describe LitServe as a framework for building custom AI inference servers by subclassing LitAPI and implementing setup and predict methods.
+- The project lists features including request batching, response streaming, multi-GPU autoscaling, OpenAI-compatible endpoints, and support for compound and multimodal applications that combine LLMs, vision, audio, RAG, and agents.
+- The project describes multi-worker handling optimized for AI workloads and offers self-hosted or managed deployment through Lightning AI.
+- The package is published on PyPI as `litserve` at version 0.2.17, requires Python 3.10 or newer, and the repository `Lightning-AI/litserve` is Apache-2.0 licensed. Docs are at `https://lightning-ai.github.io/litserve/`.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, open pull requests, and repository-wide content for `LitServe`, `litserve`, and `Lightning-AI/litserve`. No dedicated LitServe entry, LitServe source URL, or open duplicate PR was found. The related serving entries are `localai` (pre-built OpenAI-compatible server), `vllm` (LLM inference engine), and `ollama` (local model runner); LitServe is a distinct framework for building custom inference servers.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. The LitServe package is Apache-2.0 open-source and self-hostable; Lightning AI additionally offers an optional managed deployment. Maintained under the `Lightning-AI` organization.
