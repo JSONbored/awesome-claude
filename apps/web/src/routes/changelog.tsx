@@ -11,6 +11,8 @@ import {
   changelogDiffEntryAnalyticsEvent,
 } from "@/lib/directory-page-entry-cta-events";
 import {
+  changelogDiffDisclosureAnalyticsData,
+  changelogDiffDisclosureAnalyticsEvent,
   changelogDiffEgressAnalyticsData,
   changelogDiffEgressAnalyticsEvent,
   changelogFeedEgressAnalyticsData,
@@ -236,7 +238,20 @@ function ChangelogPage() {
                     </div>
                   )}
                   {note.diff && (
-                    <details className="mt-3 group">
+                    <details
+                      className="mt-3 group"
+                      onToggle={(e) =>
+                        trackEvent(
+                          changelogDiffDisclosureAnalyticsEvent(),
+                          changelogDiffDisclosureAnalyticsData(
+                            note.stream,
+                            i,
+                            e.currentTarget.open,
+                            items.length,
+                          ),
+                        )
+                      }
+                    >
                       <summary className="inline-flex cursor-pointer items-center gap-1 text-xs font-medium text-ink-muted hover:text-ink">
                         What changed in this build →
                       </summary>

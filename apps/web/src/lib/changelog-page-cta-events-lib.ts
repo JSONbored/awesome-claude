@@ -99,3 +99,22 @@ export function changelogPollCopyAnalyticsData(matchCount: number) {
     matchCount,
   };
 }
+
+export function changelogDiffDisclosureAnalyticsEvent(): string {
+  return "changelog_diff_disclosure_toggle";
+}
+
+export function changelogDiffDisclosureAnalyticsData(
+  releaseStream: ReleaseStream,
+  rowIndex: number,
+  open: boolean,
+  matchCount: number,
+) {
+  return {
+    surface: CHANGELOG_PAGE_SURFACE,
+    releaseStream,
+    rowIndex,
+    open,
+    matchCount,
+  };
+}

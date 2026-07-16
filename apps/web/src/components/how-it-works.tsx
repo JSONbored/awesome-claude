@@ -1,23 +1,52 @@
-import { Search, ShieldCheck, ClipboardCopy } from "lucide-react";
+import { Search, ShieldCheck, ClipboardCopy, ArrowRight } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { trackEvent } from "@/lib/analytics";
+import {
+  howItWorksStepAnalyticsData,
+  howItWorksStepAnalyticsEvent,
+  type HowItWorksDestination,
+  type HowItWorksStepId,
+} from "@/lib/how-it-works-cta-events";
 
-const STEPS = [
+const STEPS: Array<{
+  n: string;
+  Icon: typeof Search;
+  title: string;
+  body: string;
+  stepId: HowItWorksStepId;
+  destination: HowItWorksDestination;
+  to: "/browse" | "/quality" | "/platforms";
+  cta: string;
+}> = [
   {
     n: "01",
     Icon: Search,
     title: "Search by intent",
     body: 'Find resources by what they do — "postgres mcp", "release notes", "safe hook". No category-hunting.',
+    stepId: "search",
+    destination: "browse",
+    to: "/browse",
+    cta: "Open browse",
   },
   {
     n: "02",
     Icon: ShieldCheck,
     title: "Inspect before installing",
     body: "See trust level, source, safety notes, privacy notes, and prerequisites — surfaced before the install button.",
+    stepId: "inspect",
+    destination: "quality",
+    to: "/quality",
+    cta: "See quality signals",
   },
   {
     n: "03",
     Icon: ClipboardCopy,
     title: "Copy what you need",
     body: "Install command, MCP config, or full asset. One click. Configs are pinned to verified package versions.",
+    stepId: "copy",
+    destination: "platforms",
+    to: "/platforms",
+    cta: "Pick a platform",
   },
 ];
 
@@ -33,10 +62,17 @@ export function HowItWorks() {
         </div>
       </div>
       <div className="mt-6 grid gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-3">
-        {STEPS.map(({ n, Icon, title, body }) => (
-          <div
+        {STEPS.map(({ n, Icon, title, body, stepId, destination, to, cta }, stepIndex) => (
+          <Link
             key={n}
-            className="group relative flex flex-col gap-3 bg-surface p-6 transition-colors duration-200 ease-out hover:bg-surface-2"
+            to={to}
+            onClick={() =>
+              trackEvent(
+                howItWorksStepAnalyticsEvent(),
+                howItWorksStepAnalyticsData(stepId, destination, stepIndex, STEPS.length),
+              )
+            }
+            className="group relative flex flex-col gap-3 bg-surface p-6 transition-colors duration-200 ease-out hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent/60"
           >
             <div className="flex items-center justify-between">
               <span className="font-mono text-[11px] tracking-wider text-ink-subtle">{n}</span>
@@ -44,11 +80,14 @@ export function HowItWorks() {
             </div>
             <div className="font-display text-base font-semibold text-ink">{title}</div>
             <p className="text-sm text-ink-muted">{body}</p>
+            <span className="mt-auto inline-flex items-center gap-1 text-xs font-medium text-ink-muted group-hover:text-ink">
+              {cta} <ArrowRight className="h-3 w-3" aria-hidden />
+            </span>
             <span
               aria-hidden
               className="absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-accent transition-transform duration-300 group-hover:scale-x-100"
             />
-          </div>
+          </Link>
         ))}
       </div>
     </section>

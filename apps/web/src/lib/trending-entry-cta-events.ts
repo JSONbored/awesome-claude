@@ -13,8 +13,13 @@ export {
   trendingListEntryAnalyticsData,
   trendingListEntryAnalyticsEvent,
   trendingListEntryKey,
+  trendingRankingReasonOpenAnalyticsData,
+  trendingRankingReasonOpenAnalyticsEvent,
+  trendingShareAnalyticsData,
+  trendingShareAnalyticsEvent,
   type TrendingChromeDestination,
   type TrendingChromePlacement,
   type TrendingListMode,
   type TrendingListWindow,
+  type TrendingShareAction,
 } from "@/lib/trending-entry-cta-events-lib";

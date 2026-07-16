@@ -26,6 +26,12 @@ import {
   trendingFilterResetAnalyticsEvent,
   trendingListEntryAnalyticsData,
   trendingListEntryAnalyticsEvent,
+  trendingRankingReasonOpenAnalyticsData,
+  trendingRankingReasonOpenAnalyticsEvent,
+  trendingShareAnalyticsData,
+  trendingShareAnalyticsEvent,
+  type TrendingListWindow,
+  type TrendingShareAction,
 } from "@/lib/trending-entry-cta-events";
 import { cn } from "@/lib/utils";
 
@@ -158,7 +164,17 @@ function useTrendingRows() {
   return { rows, mode, signals, loading };
 }
 
-function MovementCell({ entry, mode }: { entry: TrendingEntry; mode: TrendingMode }) {
+function MovementCell({
+  entry,
+  mode,
+  window,
+  categoryFilter,
+}: {
+  entry: TrendingEntry;
+  mode: TrendingMode;
+  window: TrendingListWindow;
+  categoryFilter: string;
+}) {
   const score = entry.trendingScore ?? 0;
   const reasons = entry.trendingReasons ?? [];
   const live = mode === "live";
@@ -168,6 +184,20 @@ function MovementCell({ entry, mode }: { entry: TrendingEntry; mode: TrendingMod
         <TooltipTrigger asChild>
           <button
             type="button"
+            onClick={() =>
+              trackEvent(
+                trendingRankingReasonOpenAnalyticsEvent(),
+                trendingRankingReasonOpenAnalyticsData(
+                  entry.category,
+                  entry.slug,
+                  window,
+                  categoryFilter,
+                  mode,
+                  reasons.length,
+                  live && score > 0,
+                ),
+              )
+            }
             className={cn(
               "inline-flex items-center gap-1 rounded-sm font-mono text-sm tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60",
               live ? "text-trust-trusted" : "text-ink-muted",
@@ -269,6 +299,13 @@ function TrendingPage() {
     );
   };
 
+  const trackShare = (action: TrendingShareAction) => {
+    trackEvent(
+      trendingShareAnalyticsEvent(),
+      trendingShareAnalyticsData(sp.window, sp.category, mode, action),
+    );
+  };
+
   return (
     <PageContainer className="py-12">
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -304,6 +341,15 @@ function TrendingPage() {
             url={shareUrl}
             title="Trending Claude workflows"
             description="Live ranking of MCP servers, agents, skills, and commands."
+            onShareAction={(action) => {
+              if (
+                action === "copy-link" ||
+                action === "copy-markdown" ||
+                action === "system-share"
+              ) {
+                trackShare(action);
+              }
+            }}
           />
           <a
             href="/feeds/trending.xml"
@@ -436,7 +482,12 @@ function TrendingPage() {
                   {entry.source === "unverified" ? "unverified source" : "source-backed"}
                 </div>
               </div>
-              <MovementCell entry={entry} mode={mode} />
+              <MovementCell
+                entry={entry}
+                mode={mode}
+                window={sp.window}
+                categoryFilter={sp.category}
+              />
             </li>
           ))}
         </ol>

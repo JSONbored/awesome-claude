@@ -11,6 +11,14 @@ import {
 } from "lucide-react";
 import type { Entry, InstallType } from "@/types/registry";
 import { cn } from "@/lib/utils";
+import { trackEvent } from "@/lib/analytics";
+import { ENTRY_COMMAND_CENTER_ID } from "@/lib/entry-detail-command-center";
+import {
+  entrySetupSnapshotAnalyticsData,
+  entrySetupSnapshotAnalyticsEvent,
+  type EntrySetupSnapshotDestination,
+  type EntrySetupSnapshotTileId,
+} from "@/lib/entry-setup-snapshot-cta-events";
 
 const INSTALL_TYPE_LABEL: Record<InstallType, string> = {
   cli: "CLI install",
@@ -34,20 +42,28 @@ function StatTile({
   label,
   value,
   tone,
+  href,
+  onNavigate,
 }: {
   icon: LucideIcon;
   label: string;
   value: string;
   tone: StatTone;
+  href: string;
+  onNavigate: () => void;
 }) {
   return (
-    <article className="rounded-lg border border-border bg-background p-3">
+    <a
+      href={href}
+      onClick={onNavigate}
+      className="rounded-lg border border-border bg-background p-3 transition-colors duration-200 ease-out hover:border-accent/40 hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60"
+    >
       <div className="flex items-center gap-2">
         <Icon className={cn("h-4 w-4 shrink-0", toneText(tone))} aria-hidden />
         <p className="text-xs font-medium text-ink-muted">{label}</p>
       </div>
       <p className={cn("mt-1.5 text-sm font-semibold", toneText(tone))}>{value}</p>
-    </article>
+    </a>
   );
 }
 
@@ -79,6 +95,19 @@ export function EntrySetupSnapshotPanel({
         ? "Add the configuration to enable it."
         : "Follow the manual setup steps.";
 
+  const trackTile = (
+    tileId: EntrySetupSnapshotTileId,
+    destination: EntrySetupSnapshotDestination,
+  ) => {
+    trackEvent(
+      entrySetupSnapshotAnalyticsEvent(),
+      entrySetupSnapshotAnalyticsData(entry.category, entry.slug, tileId, destination),
+    );
+  };
+
+  const commandHref = `#${ENTRY_COMMAND_CENTER_ID}`;
+  const prereqHref = "#prerequisites";
+
   return (
     <section
       id="setup-snapshot"
@@ -107,30 +136,40 @@ export function EntrySetupSnapshotPanel({
           label="Install command"
           value={hasCommand ? "Provided" : "Not provided"}
           tone={hasCommand ? "good" : "muted"}
+          href={commandHref}
+          onNavigate={() => trackTile("install", "entry-command-center")}
         />
         <StatTile
           icon={FileCog}
           label="Config snippet"
           value={hasConfig ? "Provided" : "Not provided"}
           tone={hasConfig ? "good" : "muted"}
+          href={commandHref}
+          onNavigate={() => trackTile("config", "entry-command-center")}
         />
         <StatTile
           icon={ClipboardCopy}
           label="Copy snippet"
           value={hasCopy ? "Provided" : "Not provided"}
           tone={hasCopy ? "good" : "muted"}
+          href={commandHref}
+          onNavigate={() => trackTile("copy", "entry-command-center")}
         />
         <StatTile
           icon={ListChecks}
           label="Prerequisites"
           value={prereqCount > 0 ? `${prereqCount} to clear` : "None"}
           tone={prereqCount > 0 ? "watch" : "good"}
+          href={prereqHref}
+          onNavigate={() => trackTile("prerequisites", "prerequisites")}
         />
         <StatTile
           icon={MonitorSmartphone}
           label="Platforms"
           value={platformCount > 0 ? `${platformCount} listed` : "Not listed"}
           tone="muted"
+          href={commandHref}
+          onNavigate={() => trackTile("platforms", "entry-command-center")}
         />
         {difficulty !== null ? (
           <StatTile
@@ -138,6 +177,8 @@ export function EntrySetupSnapshotPanel({
             label="Difficulty"
             value={`${difficulty}/100`}
             tone={difficulty >= 66 ? "risk" : difficulty >= 33 ? "watch" : "good"}
+            href={commandHref}
+            onNavigate={() => trackTile("difficulty", "entry-command-center")}
           />
         ) : (
           <StatTile
@@ -145,6 +186,8 @@ export function EntrySetupSnapshotPanel({
             label="Install type"
             value={INSTALL_TYPE_LABEL[entry.installType]}
             tone="muted"
+            href={commandHref}
+            onNavigate={() => trackTile("install-type", "entry-command-center")}
           />
         )}
       </div>

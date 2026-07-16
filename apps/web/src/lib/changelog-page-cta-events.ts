@@ -3,6 +3,8 @@
  */
 export {
   CHANGELOG_PAGE_SURFACE,
+  changelogDiffDisclosureAnalyticsData,
+  changelogDiffDisclosureAnalyticsEvent,
   changelogDiffEgressAnalyticsData,
   changelogDiffEgressAnalyticsEvent,
   changelogFeedEgressAnalyticsData,

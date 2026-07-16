@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
   CHANGELOG_PAGE_SURFACE,
+  changelogDiffDisclosureAnalyticsData,
+  changelogDiffDisclosureAnalyticsEvent,
   changelogDiffEgressAnalyticsData,
   changelogDiffEgressAnalyticsEvent,
   changelogFeedEgressAnalyticsData,
@@ -73,5 +75,29 @@ describe("changelog page cta events lib", () => {
       command: "diff-since",
       matchCount: 12,
     });
+  });
+
+  it("builds changelog diff disclosure toggle analytics", () => {
+    expect(changelogDiffDisclosureAnalyticsEvent()).toBe(
+      "changelog_diff_disclosure_toggle",
+    );
+    expect(
+      changelogDiffDisclosureAnalyticsData("release", 1, true, 12),
+    ).toEqual({
+      surface: CHANGELOG_PAGE_SURFACE,
+      releaseStream: "release",
+      rowIndex: 1,
+      open: true,
+      matchCount: 12,
+    });
+    expect(changelogDiffDisclosureAnalyticsData("policy", 0, false, 8)).toEqual(
+      {
+        surface: CHANGELOG_PAGE_SURFACE,
+        releaseStream: "policy",
+        rowIndex: 0,
+        open: false,
+        matchCount: 8,
+      },
+    );
   });
 });

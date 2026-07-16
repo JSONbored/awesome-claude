@@ -10,6 +10,10 @@ import {
   trendingFilterResetAnalyticsEvent,
   trendingListEntryAnalyticsData,
   trendingListEntryAnalyticsEvent,
+  trendingRankingReasonOpenAnalyticsData,
+  trendingRankingReasonOpenAnalyticsEvent,
+  trendingShareAnalyticsData,
+  trendingShareAnalyticsEvent,
 } from "@/lib/trending-entry-cta-events-lib";
 
 describe("trending entry cta events lib", () => {
@@ -107,6 +111,69 @@ describe("trending entry cta events lib", () => {
       window: "all",
       categoryFilter: "mcp",
       mode: "unavailable",
+    });
+  });
+
+  it("builds privacy-light trending share and ranking reason analytics", () => {
+    expect(trendingShareAnalyticsEvent()).toBe("trending_share_click");
+    expect(
+      trendingShareAnalyticsData("7d", "mcp", "live", "copy-link"),
+    ).toEqual({
+      surface: TRENDING_PAGE_SURFACE,
+      window: "7d",
+      categoryFilter: "mcp",
+      mode: "live",
+      action: "copy-link",
+    });
+    expect(
+      trendingShareAnalyticsData("all", "", "fallback", "system-share"),
+    ).toEqual({
+      surface: TRENDING_PAGE_SURFACE,
+      window: "all",
+      categoryFilter: "",
+      mode: "fallback",
+      action: "system-share",
+    });
+    expect(trendingRankingReasonOpenAnalyticsEvent()).toBe(
+      "trending_ranking_reason_open",
+    );
+    expect(
+      trendingRankingReasonOpenAnalyticsData(
+        "mcp",
+        "browser",
+        "7d",
+        "mcp",
+        "live",
+        3,
+        true,
+      ),
+    ).toEqual({
+      entry: "mcp/browser",
+      surface: TRENDING_LIST_SURFACE,
+      window: "7d",
+      categoryFilter: "mcp",
+      mode: "live",
+      reasonCount: 3,
+      hasLiveScore: true,
+    });
+    expect(
+      trendingRankingReasonOpenAnalyticsData(
+        "skills",
+        "demo",
+        "30d",
+        "",
+        "fallback",
+        0,
+        false,
+      ),
+    ).toEqual({
+      entry: "skills/demo",
+      surface: TRENDING_LIST_SURFACE,
+      window: "30d",
+      categoryFilter: "",
+      mode: "fallback",
+      reasonCount: 0,
+      hasLiveScore: false,
     });
   });
 });

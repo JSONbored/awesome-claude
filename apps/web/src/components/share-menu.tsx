@@ -30,6 +30,8 @@ export interface ShareMenuProps {
   raycastUrl?: string;
   /** When set, emits detail share analytics for dropdown actions. */
   analyticsEntry?: { category: string; slug: string };
+  /** Optional caller-owned share analytics (e.g. trending page share). */
+  onShareAction?: (action: EntryDetailShareAction) => void;
 }
 
 async function copy(value: string, label: string) {
@@ -49,6 +51,7 @@ export function ShareMenu({
   ogUrl,
   raycastUrl,
   analyticsEntry,
+  onShareAction,
 }: ShareMenuProps) {
   const absolute = absoluteShareUrl(
     url,
@@ -60,13 +63,14 @@ export function ShareMenu({
 
   const trackShare = React.useCallback(
     (action: EntryDetailShareAction) => {
+      onShareAction?.(action);
       if (!analyticsEntry) return;
       trackEvent(
         entryDetailShareAnalyticsEvent(),
         entryDetailShareAnalyticsData(analyticsEntry.category, analyticsEntry.slug, action),
       );
     },
-    [analyticsEntry],
+    [analyticsEntry, onShareAction],
   );
 
   const onNativeShare = async () => {

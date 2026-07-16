@@ -102,3 +102,48 @@ export function trendingChromeAnalyticsData(
     mode,
   };
 }
+
+export type TrendingShareAction = "copy-link" | "copy-markdown" | "system-share";
+
+export function trendingShareAnalyticsEvent(): string {
+  return "trending_share_click";
+}
+
+export function trendingShareAnalyticsData(
+  window: TrendingListWindow,
+  categoryFilter: string,
+  mode: TrendingListMode,
+  action: TrendingShareAction,
+) {
+  return {
+    surface: TRENDING_PAGE_SURFACE,
+    window,
+    categoryFilter,
+    mode,
+    action,
+  };
+}
+
+export function trendingRankingReasonOpenAnalyticsEvent(): string {
+  return "trending_ranking_reason_open";
+}
+
+export function trendingRankingReasonOpenAnalyticsData(
+  category: string,
+  slug: string,
+  window: TrendingListWindow,
+  categoryFilter: string,
+  mode: TrendingListMode,
+  reasonCount: number,
+  hasLiveScore: boolean,
+) {
+  return {
+    entry: trendingListEntryKey(category, slug),
+    surface: TRENDING_LIST_SURFACE,
+    window,
+    categoryFilter,
+    mode,
+    reasonCount,
+    hasLiveScore,
+  };
+}
