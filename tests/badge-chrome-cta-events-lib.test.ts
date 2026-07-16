@@ -58,5 +58,11 @@ describe("badge chrome cta events lib", () => {
         risk: "review",
       },
     );
+    expect(
+      badgeChromeInstallRiskAnalyticsData("high", "detail-header"),
+    ).toEqual({
+      surface: "detail-header",
+      risk: "high",
+    });
   });
 });

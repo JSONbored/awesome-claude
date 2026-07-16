@@ -82,6 +82,8 @@ import { useCompare, useIsCompared } from "@/lib/compare";
 import { serializeCompareItems } from "@/lib/compare-selection";
 import { trackEvent, outboundHost } from "@/lib/analytics";
 import {
+  badgeChromeInstallRiskAnalyticsData,
+  badgeChromeInstallRiskAnalyticsEvent,
   badgeChromeSourceAnalyticsData,
   badgeChromeSourceAnalyticsEvent,
 } from "@/lib/badge-chrome-cta-events";
@@ -650,7 +652,16 @@ function Dossier() {
                 )
               }
             />
-            <InstallRiskBadge entry={entry} />
+            <InstallRiskBadge
+              entry={entry}
+              asButton
+              onActivate={(risk) =>
+                trackEvent(
+                  badgeChromeInstallRiskAnalyticsEvent(),
+                  badgeChromeInstallRiskAnalyticsData(risk, "detail-header"),
+                )
+              }
+            />
             <NotesPresenceChips entry={entry} className="ml-1" />
             {entry.claimed && (
               <span className="inline-flex items-center gap-1 rounded-md bg-surface-2 px-1.5 py-0.5 text-[11px] text-ink-muted">
