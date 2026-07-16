@@ -32,6 +32,9 @@ describe("browse trust panel cta events lib", () => {
       },
     );
     expect(browseTrustCoverageSignal("safety")).toBe("safety-notes");
+    expect(browseTrustCoverageSignal("privacy")).toBe("privacy-notes");
+    expect(browseTrustCoverageSignal("reviewed")).toBe("reviewed");
+    expect(browseTrustCoverageSignal("source-backed")).toBe("source-backed");
     expect(browseTrustCoverageSignal("claimed")).toBeNull();
   });
 });

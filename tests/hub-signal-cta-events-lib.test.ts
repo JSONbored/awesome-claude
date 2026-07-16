@@ -30,6 +30,13 @@ describe("hub signal cta events lib", () => {
       q: "postgres",
       signal: "safety-notes",
     });
+    expect(hubStatBrowseSearch("privacy", { category: "hooks" })).toEqual({
+      category: "hooks",
+      signal: "privacy-notes",
+    });
+    expect(hubStatBrowseSearch("reviewed")).toEqual({
+      signal: "reviewed",
+    });
     expect(hubStatBrowseSearch("unknown")).toBeNull();
   });
 });
