@@ -82,6 +82,8 @@ import { useCompare, useIsCompared } from "@/lib/compare";
 import { serializeCompareItems } from "@/lib/compare-selection";
 import { trackEvent, outboundHost } from "@/lib/analytics";
 import {
+  badgeChromeCategoryAnalyticsData,
+  badgeChromeCategoryAnalyticsEvent,
   badgeChromeInstallRiskAnalyticsData,
   badgeChromeInstallRiskAnalyticsEvent,
   badgeChromeSourceAnalyticsData,
@@ -640,7 +642,18 @@ function Dossier() {
       <header className="mt-6 grid grid-cols-[minmax(0,1fr)] gap-6 border-b border-border pb-8 lg:grid-cols-[minmax(0,1fr)_320px]">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <CategoryPill>{entry.category}</CategoryPill>
+            <CategoryPill
+              asLink
+              category={entry.category}
+              onNavigate={() =>
+                trackEvent(
+                  badgeChromeCategoryAnalyticsEvent(),
+                  badgeChromeCategoryAnalyticsData(entry.category, "detail-header"),
+                )
+              }
+            >
+              {entry.category}
+            </CategoryPill>
             <TrustDrilldown entry={entry} />
             <SourceBadge
               status={entry.source}

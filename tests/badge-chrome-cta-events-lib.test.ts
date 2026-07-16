@@ -63,6 +63,12 @@ describe("badge chrome cta events lib", () => {
       surface: "peek-panel",
       category: "mcp",
     });
+    expect(badgeChromeCategoryAnalyticsData("skills", "detail-header")).toEqual(
+      {
+        surface: "detail-header",
+        category: "skills",
+      },
+    );
     expect(badgeChromeNotesAnalyticsEvent()).toBe("badge_notes_scroll_click");
     expect(
       badgeChromeNotesAnalyticsData("safety", true, "detail-sticky-meta"),
