@@ -46,6 +46,16 @@ describe("badge chrome cta events lib", () => {
       surface: "contributor-profile",
       trust: "verified",
     });
+    expect(badgeChromeTrustAnalyticsData("trusted", "compare-tray")).toEqual({
+      surface: "compare-tray",
+      trust: "trusted",
+    });
+    expect(
+      badgeChromeSourceAnalyticsData("unverified", "compare-tray"),
+    ).toEqual({
+      surface: "compare-tray",
+      source: "unverified",
+    });
     expect(badgeChromeCategoryAnalyticsEvent()).toBe(
       "badge_category_browse_click",
     );

@@ -9,7 +9,8 @@ export type BadgeChromeSurface =
   | "detail-sticky-meta"
   | "peek-panel"
   | "detail-header"
-  | "contributor-profile";
+  | "contributor-profile"
+  | "compare-tray";
 
 export type BadgeChromeNoteKind = "safety" | "privacy";
 
