@@ -80,7 +80,7 @@ export function CategoryRankingTable({ entries, label }: { entries: Entry[]; lab
                 <td className="px-3 py-2.5 align-top">
                   <div className="flex flex-wrap gap-1">
                     {e.platforms.slice(0, 3).map((p) => (
-                      <PlatformChip key={p} id={p} />
+                      <PlatformChip key={p} id={p} asLink surface="category-ranking" />
                     ))}
                     {e.platforms.length > 3 ? (
                       <span className="text-xs text-ink-subtle">+{e.platforms.length - 3}</span>

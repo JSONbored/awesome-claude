@@ -181,7 +181,14 @@ export const COMPARISON_ROWS: RowDef[] = [
       );
     },
   },
-  { label: "Category", render: (e) => <CategoryPill>{e.category}</CategoryPill> },
+  {
+    label: "Category",
+    render: (e) => (
+      <CategoryPill asLink category={e.category} surface="compare-table">
+        {e.category}
+      </CategoryPill>
+    ),
+  },
   {
     label: "Source",
     render: (e) => <span className="text-sm capitalize text-ink">{e.source}</span>,
@@ -196,7 +203,7 @@ export const COMPARISON_ROWS: RowDef[] = [
     render: (e) => (
       <div className="flex flex-wrap gap-1">
         {e.platforms.map((p) => (
-          <PlatformChip key={p} id={p} />
+          <PlatformChip key={p} id={p} asLink surface="compare-table" />
         ))}
       </div>
     ),

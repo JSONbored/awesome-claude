@@ -191,7 +191,11 @@ const ROWS: RowDef[] = [
   },
   {
     label: "Category",
-    render: (e) => <CategoryPill>{e.category}</CategoryPill>,
+    render: (e) => (
+      <CategoryPill asLink category={e.category} surface="compare-drawer">
+        {e.category}
+      </CategoryPill>
+    ),
   },
   {
     label: "Author",
@@ -202,7 +206,7 @@ const ROWS: RowDef[] = [
     render: (e) => (
       <div className="flex flex-wrap gap-1">
         {e.platforms.map((p) => (
-          <PlatformChip key={p} id={p} />
+          <PlatformChip key={p} id={p} asLink surface="compare-drawer" />
         ))}
       </div>
     ),

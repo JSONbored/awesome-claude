@@ -30,6 +30,10 @@ import {
   platformChipAnalyticsEvent,
 } from "@/lib/platform-chip-cta-events";
 import {
+  categoryPillAnalyticsData,
+  categoryPillAnalyticsEvent,
+} from "@/lib/category-pill-cta-events";
+import {
   installRiskLevel,
   INSTALL_RISK_LABEL,
   INSTALL_RISK_DETAIL,
@@ -141,7 +145,16 @@ export function SourceBadge({
   return <span className={classes}>{content}</span>;
 }
 
-export function PlatformChip({ id, asLink = false }: { id: Platform; asLink?: boolean }) {
+export function PlatformChip({
+  id,
+  asLink = false,
+  surface,
+}: {
+  id: Platform;
+  asLink?: boolean;
+  /** Optional analytics surface when asLink is set. */
+  surface?: string;
+}) {
   const mark = platformMark(id);
   const base =
     "inline-flex items-center gap-1 whitespace-nowrap rounded-md border border-border px-2 py-0.5 font-mono text-[10px] leading-none text-ink-muted";
@@ -158,7 +171,9 @@ export function PlatformChip({ id, asLink = false }: { id: Platform; asLink?: bo
         to="/for/$platform"
         params={{ platform: id }}
         className={cn(base, "transition-colors hover:border-ink/20 hover:text-ink")}
-        onClick={() => trackEvent(platformChipAnalyticsEvent(), platformChipAnalyticsData(id))}
+        onClick={() =>
+          trackEvent(platformChipAnalyticsEvent(), platformChipAnalyticsData(id, surface))
+        }
       >
         {content}
       </Link>
@@ -170,20 +185,41 @@ export function PlatformChip({ id, asLink = false }: { id: Platform; asLink?: bo
 export function CategoryPill({
   children,
   className,
+  asLink = false,
+  category,
+  surface,
+  onNavigate,
 }: {
   children: React.ReactNode;
   className?: string;
+  /** Opt-in browse link — never use inside card `<Link>`s. */
+  asLink?: boolean;
+  category?: string;
+  surface?: "compare-table" | "compare-drawer";
+  onNavigate?: () => void;
 }) {
-  return (
-    <span
-      className={cn(
-        "inline-flex items-center whitespace-nowrap rounded-md bg-ink px-2 py-0.5 font-mono text-[10px] uppercase leading-none tracking-wider text-background",
-        className,
-      )}
-    >
-      {children}
-    </span>
+  const classes = cn(
+    "inline-flex items-center whitespace-nowrap rounded-md bg-ink px-2 py-0.5 font-mono text-[10px] uppercase leading-none tracking-wider text-background",
+    className,
   );
+  if (asLink && category) {
+    return (
+      <Link
+        to="/browse"
+        search={{ category }}
+        onClick={() => {
+          onNavigate?.();
+          if (surface) {
+            trackEvent(categoryPillAnalyticsEvent(), categoryPillAnalyticsData(category, surface));
+          }
+        }}
+        className={cn(classes, "transition-opacity hover:opacity-90")}
+      >
+        {children}
+      </Link>
+    );
+  }
+  return <span className={classes}>{children}</span>;
 }
 
 export function Kbd({ children }: { children: React.ReactNode }) {
