@@ -25,6 +25,8 @@ import { stringifyJsonLd } from "@/lib/json-ld";
 import { breadcrumbListJsonLd } from "@/lib/breadcrumb-jsonld-lib";
 import { trackEvent } from "@/lib/analytics";
 import {
+  badgeChromeCategoryAnalyticsData,
+  badgeChromeCategoryAnalyticsEvent,
   badgeChromeSourceAnalyticsData,
   badgeChromeSourceAnalyticsEvent,
   badgeChromeTrustAnalyticsData,
@@ -362,7 +364,18 @@ function ContributionRow({
           <RoleIcon className="h-3 w-3" aria-hidden />
           {roleLabel[role]}
         </span>
-        <CategoryPill>{entry.category}</CategoryPill>
+        <CategoryPill
+          asLink
+          category={entry.category}
+          onNavigate={() =>
+            trackEvent(
+              badgeChromeCategoryAnalyticsEvent(),
+              badgeChromeCategoryAnalyticsData(entry.category, "contributor-profile"),
+            )
+          }
+        >
+          {entry.category}
+        </CategoryPill>
         <TrustBadge
           level={entry.trust}
           asLink

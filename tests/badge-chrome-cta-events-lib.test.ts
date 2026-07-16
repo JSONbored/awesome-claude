@@ -69,6 +69,12 @@ describe("badge chrome cta events lib", () => {
         category: "skills",
       },
     );
+    expect(
+      badgeChromeCategoryAnalyticsData("hooks", "contributor-profile"),
+    ).toEqual({
+      surface: "contributor-profile",
+      category: "hooks",
+    });
     expect(badgeChromeNotesAnalyticsEvent()).toBe("badge_notes_scroll_click");
     expect(
       badgeChromeNotesAnalyticsData("safety", true, "detail-sticky-meta"),
