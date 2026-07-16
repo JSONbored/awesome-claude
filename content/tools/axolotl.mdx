@@ -1,0 +1,69 @@
+---
+title: Axolotl
+slug: axolotl
+category: tools
+description: Free open-source, config-driven LLM fine-tuning framework covering full and parameter-efficient fine-tuning (LoRA, QLoRA), preference tuning (DPO, KTO, ORPO), and reinforcement learning across many model families through declarative YAML configs.
+cardDescription: Config-driven framework for LLM fine-tuning and post-training across full, LoRA/QLoRA, preference-tuning, and RL methods.
+seoTitle: Axolotl open-source LLM fine-tuning framework
+seoDescription: Axolotl is a free open-source framework for fine-tuning and post-training large language models through declarative YAML configs, spanning full and parameter-efficient fine-tuning (LoRA, QLoRA), preference tuning (DPO, KTO, ORPO), and reinforcement learning across many model families.
+author: Axolotl AI
+submittedBy: jaytbarimbao-collab
+submittedByUrl: "https://github.com/jaytbarimbao-collab"
+dateAdded: "2026-07-16"
+websiteUrl: "https://axolotl.ai/"
+documentationUrl: "https://docs.axolotl.ai/"
+repoUrl: "https://github.com/axolotl-ai-cloud/axolotl"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Linux
+tags:
+  - fine-tuning
+  - llm-training
+  - lora
+keywords:
+  - Axolotl
+  - LLM fine-tuning
+  - LoRA
+  - QLoRA
+  - preference tuning
+prerequisites:
+  - Python 3.10 or newer environment with the Axolotl package and a compatible PyTorch and CUDA toolchain installed for the target hardware.
+  - One or more supported GPUs with drivers, plus VRAM, disk, and time budgeted for the chosen model size and training method.
+  - A base model and dataset that you are licensed to use, with the base-model license and dataset terms reviewed before training.
+  - A YAML training config that selects the model, dataset, method, sequence length, and hyperparameters for the run.
+  - Storage and a tracking or checkpointing plan for outputs, since fine-tuning produces large model weights and intermediate checkpoints.
+safetyNotes:
+  - Axolotl runs heavy, long-lived GPU training processes and can saturate local, multi-GPU, or cloud compute, so resource limits and cost controls should be set before large runs.
+  - Training downloads base models and datasets from external hubs unless local paths are provided, which determines what code and data enter the environment.
+  - Fine-tuned weights inherit the license and behavior characteristics of the base model and the training data, so downstream use should follow those licenses and be evaluated before deployment.
+  - Config-driven runs execute whatever the YAML specifies, including custom datasets, plugins, and callbacks, so configs from untrusted sources should be reviewed first.
+  - Distributed and cloud training add network, storage, and credential surfaces that need their own access and secret-handling decisions.
+privacyNotes:
+  - Training data is processed on your compute and can contain sensitive or personal information, and fine-tuned models can memorize and later surface examples from it.
+  - Base models, datasets, and tokenizers pulled from third-party hubs are fetched from and governed by those providers.
+  - Experiment-tracking integrations, logs, and checkpoints may retain samples, metrics, or metadata beyond a single run unless configured otherwise.
+  - Output weights, adapters, and logs should follow the same access, retention, and consent policies as the underlying training data.
+---
+
+## Editorial notes
+
+Axolotl is useful when Claude-adjacent teams want to fine-tune or post-train an open LLM without wiring a bespoke training loop. Instead of custom scripts, a run is described in a declarative YAML config — model, dataset, method, sequence length, and hyperparameters — and Axolotl handles the training pipeline. It spans full fine-tuning and parameter-efficient methods (LoRA, QLoRA), preference tuning (DPO, KTO, ORPO), and reinforcement learning, across many model families, with single-GPU, multi-GPU, and cloud execution.
+
+This is distinct from the fine-tuning entries already in the directory. `hugging-face-peft` is a library of parameter-efficient adapter methods you call from your own code, and `unsloth` focuses on speed- and memory-optimized fine-tuning; Axolotl is a config-driven end-to-end framework that orchestrates a training run across many methods and models from a single YAML file. It complements rather than duplicates those entries.
+
+## Source notes
+
+- The PyPI summary describes Axolotl as "A Free and Open Source LLM Fine-tuning Framework."
+- The documentation and README describe Axolotl as a tool to fine-tune and post-train large language models with a wide range of methods driven by YAML configs.
+- The project lists methods including full fine-tuning, LoRA and QLoRA, quantization-aware and GPTQ approaches, preference tuning such as DPO, IPO, KTO, ORPO, and SimPO, and reinforcement-learning methods such as GRPO, plus reward and process-reward modeling.
+- The project lists support for many model families, including Llama, Mistral, Mixtral, Pythia, Qwen, Gemma, and various vision-language models.
+- The package is published on PyPI as `axolotl` at version 0.17.0, requires Python 3.10 or newer, and the repository `axolotl-ai-cloud/axolotl` is Apache-2.0 licensed. The site is `https://axolotl.ai/` and docs are at `https://docs.axolotl.ai/`.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, open pull requests, and repository-wide content for `Axolotl`, `axolotl`, and `axolotl-ai-cloud/axolotl`. No dedicated Axolotl entry, Axolotl source URL, or open duplicate PR was found. The related fine-tuning entries are `hugging-face-peft` (an adapter-method library) and `unsloth` (speed- and memory-optimized fine-tuning); Axolotl is a distinct config-driven training framework spanning many methods and models.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Axolotl is an Apache-2.0 open-source framework maintained under the `axolotl-ai-cloud` organization.
