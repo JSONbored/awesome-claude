@@ -6,4 +6,6 @@ export {
   entryDetailBadgeCopyAnalyticsData,
   entryDetailBadgeCopyAnalyticsEvent,
   entryDetailBadgeEntryKey,
+  entryDetailBadgePreviewAnalyticsData,
+  entryDetailBadgePreviewAnalyticsEvent,
 } from "@/lib/entry-detail-badge-cta-events-lib";
