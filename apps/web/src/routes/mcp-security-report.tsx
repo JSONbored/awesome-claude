@@ -11,14 +11,19 @@ import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { DataSection, DataStat, DistTable, pctOf, type DistRow } from "@/components/data-report";
+import { withCategoryBrowseDrilldown } from "@/lib/data-report-drilldown-lib";
 import { trackEvent } from "@/lib/analytics";
 import {
   mcpSecurityReportCategoryBrowseAnalyticsData,
   mcpSecurityReportCategoryBrowseAnalyticsEvent,
   mcpSecurityReportCiteAnalyticsData,
   mcpSecurityReportCiteAnalyticsEvent,
+  mcpSecurityReportDistRowAnalyticsData,
+  mcpSecurityReportDistRowAnalyticsEvent,
   mcpSecurityReportEgressAnalyticsData,
   mcpSecurityReportEgressAnalyticsEvent,
+  mcpSecurityReportStatAnalyticsData,
+  mcpSecurityReportStatAnalyticsEvent,
   type McpSecurityReportEgressDestination,
 } from "@/lib/mcp-security-report-page-cta-events";
 
@@ -26,6 +31,21 @@ function trackMcpSecurityReportEgress(destination: McpSecurityReportEgressDestin
   trackEvent(
     mcpSecurityReportEgressAnalyticsEvent(),
     mcpSecurityReportEgressAnalyticsData(destination),
+  );
+}
+
+function trackDistRow(dimension: string, row: DistRow, rowIndex: number, rowCount: number) {
+  if (!row.rowKey) return;
+  trackEvent(
+    mcpSecurityReportDistRowAnalyticsEvent(),
+    mcpSecurityReportDistRowAnalyticsData(dimension, row.rowKey, rowIndex, rowCount),
+  );
+}
+
+function trackStat(statKey: string, destination: "browse" | "quality" = "browse") {
+  trackEvent(
+    mcpSecurityReportStatAnalyticsEvent(),
+    mcpSecurityReportStatAnalyticsData(statKey, destination),
   );
 }
 
@@ -41,53 +61,103 @@ const MCP = ENTRIES.filter((e) => e.category === "mcp");
 const TOTAL = MCP.length;
 
 const NOTES = notesCoverage(MCP);
-const NOTES_DIST: DistRow[] = [
-  { label: "Safety notes", count: NOTES.safety, pct: pctOf(NOTES.safety, TOTAL) },
-  { label: "Privacy notes", count: NOTES.privacy, pct: pctOf(NOTES.privacy, TOTAL) },
-  { label: "Both", count: NOTES.both, pct: pctOf(NOTES.both, TOTAL) },
-];
+const NOTES_DIST: DistRow[] = withCategoryBrowseDrilldown(
+  [
+    {
+      label: "Safety notes",
+      count: NOTES.safety,
+      pct: pctOf(NOTES.safety, TOTAL),
+      rowKey: "safety-notes",
+    },
+    {
+      label: "Privacy notes",
+      count: NOTES.privacy,
+      pct: pctOf(NOTES.privacy, TOTAL),
+      rowKey: "privacy-notes",
+    },
+    { label: "Both", count: NOTES.both, pct: pctOf(NOTES.both, TOTAL), rowKey: "both" },
+  ],
+  "mcp",
+);
 
 const AUTH = authDistribution(MCP);
-const AUTH_DIST: DistRow[] = AUTH.rows.map((r) => ({
-  label: r.label,
-  count: r.count,
-  pct: pctOf(r.count, AUTH.total),
-}));
+const AUTH_DIST: DistRow[] = withCategoryBrowseDrilldown(
+  AUTH.rows.map((r) => ({
+    label: r.label,
+    count: r.count,
+    pct: pctOf(r.count, AUTH.total),
+    rowKey: r.label.toLowerCase().replace(/\s+/g, "-"),
+  })),
+  "mcp",
+);
 
 const HOSTING = hostingDistribution(MCP);
-const HOSTING_DIST: DistRow[] = HOSTING.rows.map((r) => ({
-  label: r.label,
-  count: r.count,
-  pct: pctOf(r.count, HOSTING.total),
-}));
+const HOSTING_DIST: DistRow[] = withCategoryBrowseDrilldown(
+  HOSTING.rows.map((r) => ({
+    label: r.label,
+    count: r.count,
+    pct: pctOf(r.count, HOSTING.total),
+    rowKey:
+      r.label === "Local (stdio)"
+        ? "local"
+        : r.label === "Remote (hosted)"
+          ? "remote"
+          : "unspecified",
+  })),
+  "mcp",
+);
 
 const SUPPLY = supplyChainCoverage(MCP);
-const SUPPLY_DIST: DistRow[] = [
-  {
-    label: "Verified package",
-    count: SUPPLY.packageVerified,
-    pct: pctOf(SUPPLY.packageVerified, TOTAL),
-  },
-  {
-    label: "Checksummed download",
-    count: SUPPLY.checksummedDownload,
-    pct: pctOf(SUPPLY.checksummedDownload, TOTAL),
-  },
-];
+const SUPPLY_DIST: DistRow[] = withCategoryBrowseDrilldown(
+  [
+    {
+      label: "Verified package",
+      count: SUPPLY.packageVerified,
+      pct: pctOf(SUPPLY.packageVerified, TOTAL),
+      rowKey: "verified-package",
+    },
+    {
+      label: "Checksummed download",
+      count: SUPPLY.checksummedDownload,
+      pct: pctOf(SUPPLY.checksummedDownload, TOTAL),
+      rowKey: "checksummed-download",
+    },
+  ],
+  "mcp",
+);
 
 // Documentation & disclosure coverage — how well servers are documented for safe rollout.
 const WITH_PREREQS = MCP.filter((e) => (e.prerequisites?.length ?? 0) > 0).length;
 const WITH_TROUBLESHOOTING = MCP.filter((e) => e.hasTroubleshooting).length;
-const DOCS_DIST: DistRow[] = [
-  { label: "Prerequisites listed", count: WITH_PREREQS, pct: pctOf(WITH_PREREQS, TOTAL) },
-  { label: "Safety notes", count: NOTES.safety, pct: pctOf(NOTES.safety, TOTAL) },
-  { label: "Privacy notes", count: NOTES.privacy, pct: pctOf(NOTES.privacy, TOTAL) },
-  {
-    label: "Troubleshooting",
-    count: WITH_TROUBLESHOOTING,
-    pct: pctOf(WITH_TROUBLESHOOTING, TOTAL),
-  },
-];
+const DOCS_DIST: DistRow[] = withCategoryBrowseDrilldown(
+  [
+    {
+      label: "Prerequisites listed",
+      count: WITH_PREREQS,
+      pct: pctOf(WITH_PREREQS, TOTAL),
+      rowKey: "prerequisites",
+    },
+    {
+      label: "Safety notes",
+      count: NOTES.safety,
+      pct: pctOf(NOTES.safety, TOTAL),
+      rowKey: "safety-notes",
+    },
+    {
+      label: "Privacy notes",
+      count: NOTES.privacy,
+      pct: pctOf(NOTES.privacy, TOTAL),
+      rowKey: "privacy-notes",
+    },
+    {
+      label: "Troubleshooting",
+      count: WITH_TROUBLESHOOTING,
+      pct: pctOf(WITH_TROUBLESHOOTING, TOTAL),
+      rowKey: "troubleshooting",
+    },
+  ],
+  "mcp",
+);
 
 const OG_IMAGE = ogImageUrl({
   eyebrow: "Data report",
@@ -178,24 +248,41 @@ function McpSecurityReportPage() {
       <p className="mt-2 text-xs text-ink-subtle">Data as of {asOfLabel} (UTC).</p>
 
       <div className="mt-10 grid gap-px overflow-hidden rounded-xl border border-border bg-border stagger-children sm:grid-cols-4">
-        <DataStat icon={Boxes} label="MCP servers" value={TOTAL} hint="analyzed" />
+        <DataStat
+          icon={Boxes}
+          label="MCP servers"
+          value={TOTAL}
+          hint="analyzed"
+          to="/browse"
+          search={{ category: "mcp" }}
+          onNavigate={() => trackStat("total")}
+        />
         <DataStat
           icon={ShieldCheck}
           label="Safety notes"
           value={NOTES.safety}
           hint={`${pctOf(NOTES.safety, TOTAL)}% of total`}
+          to="/browse"
+          search={{ category: "mcp" }}
+          onNavigate={() => trackStat("safety-notes")}
         />
         <DataStat
           icon={Eye}
           label="Privacy notes"
           value={NOTES.privacy}
           hint={`${pctOf(NOTES.privacy, TOTAL)}% of total`}
+          to="/browse"
+          search={{ category: "mcp" }}
+          onNavigate={() => trackStat("privacy-notes")}
         />
         <DataStat
           icon={PackageCheck}
           label="Verified package"
           value={SUPPLY.packageVerified}
           hint={`${pctOf(SUPPLY.packageVerified, TOTAL)}% of total`}
+          to="/browse"
+          search={{ category: "mcp" }}
+          onNavigate={() => trackStat("verified-package")}
         />
       </div>
 
@@ -203,28 +290,44 @@ function McpSecurityReportPage() {
         title="Authentication methods"
         help="The strongest credential each server declares it needs, inferred from its prerequisites and notes. Servers may support more than one; the strongest identity (OAuth › API key › token) is counted."
       >
-        <DistTable rows={AUTH_DIST} />
+        <DistTable
+          rows={AUTH_DIST}
+          onRowClick={(row, rowIndex) => trackDistRow("auth", row, rowIndex, AUTH_DIST.length)}
+        />
       </DataSection>
 
       <DataSection
         title="Network exposure"
         help="Local (stdio) servers run as a process on your machine; hosted (HTTP/SSE) servers send your requests to a remote endpoint. Remote servers widen the trust boundary — review what they receive."
       >
-        <DistTable rows={HOSTING_DIST} />
+        <DistTable
+          rows={HOSTING_DIST}
+          onRowClick={(row, rowIndex) =>
+            trackDistRow("hosting", row, rowIndex, HOSTING_DIST.length)
+          }
+        />
       </DataSection>
 
       <DataSection
         title="Supply-chain verification"
         help="Servers whose package was verified by a maintainer, and those shipping a checksummed downloadable artifact. Both are signals that what you install matches what was reviewed."
       >
-        <DistTable rows={SUPPLY_DIST} />
+        <DistTable
+          rows={SUPPLY_DIST}
+          onRowClick={(row, rowIndex) =>
+            trackDistRow("supply-chain", row, rowIndex, SUPPLY_DIST.length)
+          }
+        />
       </DataSection>
 
       <DataSection
         title="Documentation coverage"
         help="Share of MCP servers carrying the metadata you need for a safe rollout — declared prerequisites, reviewer-checked safety and privacy notes, and troubleshooting guidance."
       >
-        <DistTable rows={DOCS_DIST} />
+        <DistTable
+          rows={DOCS_DIST}
+          onRowClick={(row, rowIndex) => trackDistRow("docs", row, rowIndex, DOCS_DIST.length)}
+        />
       </DataSection>
 
       <div className="mt-12 grid gap-6 lg:grid-cols-2">
@@ -235,7 +338,12 @@ function McpSecurityReportPage() {
             sets HeyClaude apart. Counts are of all {TOTAL} servers; entries can carry both.
           </p>
           <div className="mt-4">
-            <DistTable rows={NOTES_DIST} />
+            <DistTable
+              rows={NOTES_DIST}
+              onRowClick={(row, rowIndex) =>
+                trackDistRow("notes", row, rowIndex, NOTES_DIST.length)
+              }
+            />
           </div>
         </div>
         <div className="rounded-xl border border-border bg-surface p-6">

@@ -5,8 +5,12 @@ import {
   mcpSecurityReportCategoryBrowseAnalyticsEvent,
   mcpSecurityReportCiteAnalyticsData,
   mcpSecurityReportCiteAnalyticsEvent,
+  mcpSecurityReportDistRowAnalyticsData,
+  mcpSecurityReportDistRowAnalyticsEvent,
   mcpSecurityReportEgressAnalyticsData,
   mcpSecurityReportEgressAnalyticsEvent,
+  mcpSecurityReportStatAnalyticsData,
+  mcpSecurityReportStatAnalyticsEvent,
 } from "@/lib/mcp-security-report-page-cta-events-lib";
 
 describe("mcp security report page cta events lib", () => {
@@ -32,6 +36,29 @@ describe("mcp security report page cta events lib", () => {
     expect(mcpSecurityReportCiteAnalyticsData()).toEqual({
       surface: MCP_SECURITY_REPORT_SURFACE,
       destination: "canonical",
+    });
+  });
+
+  it("builds mcp security dist-row and stat analytics", () => {
+    expect(mcpSecurityReportDistRowAnalyticsEvent()).toBe(
+      "mcp_security_dist_row_click",
+    );
+    expect(
+      mcpSecurityReportDistRowAnalyticsData("hosting", "remote", 1, 2),
+    ).toEqual({
+      surface: MCP_SECURITY_REPORT_SURFACE,
+      dimension: "hosting",
+      rowKey: "remote",
+      rowIndex: 1,
+      rowCount: 2,
+    });
+    expect(mcpSecurityReportStatAnalyticsEvent()).toBe(
+      "mcp_security_stat_click",
+    );
+    expect(mcpSecurityReportStatAnalyticsData("total", "browse")).toEqual({
+      surface: MCP_SECURITY_REPORT_SURFACE,
+      statKey: "total",
+      destination: "browse",
     });
   });
 });

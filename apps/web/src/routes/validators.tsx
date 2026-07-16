@@ -26,7 +26,17 @@ import {
   validatorsExpertiseFilterAnalyticsData,
   validatorsExpertiseFilterAnalyticsEvent,
 } from "@/lib/validators-expertise-cta-events";
+import {
+  validatorsSummaryStatAnalyticsData,
+  validatorsSummaryStatAnalyticsEvent,
+  validatorsToolCardAnalyticsData,
+  validatorsToolCardAnalyticsEvent,
+  type ValidatorsSummaryStatId,
+  type ValidatorsToolId,
+} from "@/lib/validators-tools-cta-events";
 import atlasRegistry from "@/generated/atlas-registry.json";
+
+const VALIDATOR_TOOL_COUNT = 2;
 
 export const Route = createFileRoute("/validators")({
   head: () => ({
@@ -108,18 +118,37 @@ function ValidatorsPage() {
       />
 
       <div className="mt-8 grid gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-4">
-        <SummaryStat label="Entries" value={REVIEW_SUMMARY.total} />
+        <SummaryStat
+          label="Entries"
+          value={REVIEW_SUMMARY.total}
+          to="/browse"
+          statId="entries"
+          destination="browse"
+        />
         <SummaryStat
           label="Reviewed"
           value={`${REVIEW_SUMMARY.pct(REVIEW_SUMMARY.reviewed, REVIEW_SUMMARY.total)}%`}
           help={`${REVIEW_SUMMARY.reviewed} entries`}
+          to="/quality"
+          statId="safety-coverage"
+          destination="quality"
         />
         <SummaryStat
           label="Source-backed"
           value={`${REVIEW_SUMMARY.pct(REVIEW_SUMMARY.sourceBacked, REVIEW_SUMMARY.total)}%`}
           help={`${REVIEW_SUMMARY.sourceBacked} entries`}
+          to="/browse"
+          search={{ source: "source-backed" }}
+          statId="source-backed"
+          destination="browse"
         />
-        <SummaryStat label="Needs attention" value={REVIEW_SUMMARY.needsAttention} />
+        <SummaryStat
+          label="Needs attention"
+          value={REVIEW_SUMMARY.needsAttention}
+          to="/quality"
+          statId="needs-attention"
+          destination="quality"
+        />
       </div>
 
       <div className="mt-8 flex flex-wrap items-center gap-2">
@@ -291,11 +320,15 @@ function ValidatorsPage() {
             icon={FileJson}
             title="SKILL.md package"
             blurb="Frontmatter, package references, checksum facts, submission metadata."
+            toolId="skill-package"
+            to="/validators/skill-package"
           />
           <ToolCard
             icon={Terminal}
             title="MCP config JSON"
             blurb="Server shape, package targets, placeholders, risky shell syntax, secret-like values."
+            toolId="mcp-config"
+            to="/validators/mcp-config"
           />
         </div>
       </section>
@@ -312,21 +345,49 @@ function SummaryStat({
   label,
   value,
   help,
+  to,
+  search,
+  statId,
+  destination,
 }: {
   label: string;
   value: React.ReactNode;
   help?: string;
+  to?: "/browse" | "/quality";
+  search?: { source?: string };
+  statId?: ValidatorsSummaryStatId;
+  destination?: "browse" | "quality" | "validators-skill-package" | "validators-mcp-config";
 }) {
-  return (
-    <div className="bg-surface p-5">
+  const body = (
+    <>
       <div className="flex items-center justify-between">
         <ShieldCheck className="h-4 w-4 text-ink-subtle" />
         <span className="font-mono text-[11px] text-ink-subtle">{label}</span>
       </div>
       <div className="mt-3 font-display text-2xl font-semibold tabular-nums text-ink">{value}</div>
       {help && <div className="mt-1 font-mono text-[11px] text-ink-subtle">{help}</div>}
-    </div>
+    </>
   );
+
+  if (to && statId && destination) {
+    return (
+      <Link
+        to={to}
+        search={to === "/browse" ? search : undefined}
+        onClick={() =>
+          trackEvent(
+            validatorsSummaryStatAnalyticsEvent(),
+            validatorsSummaryStatAnalyticsData(statId, destination),
+          )
+        }
+        className="block bg-surface p-5 transition-colors duration-200 ease-out hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent/60"
+      >
+        {body}
+      </Link>
+    );
+  }
+
+  return <div className="bg-surface p-5">{body}</div>;
 }
 
 function Metric({ label, value, total }: { label: string; value: number; total: number }) {
@@ -348,18 +409,32 @@ function ToolCard({
   icon: Icon,
   title,
   blurb,
+  toolId,
+  to,
 }: {
   icon: React.ComponentType<{ className?: string }>;
   title: string;
   blurb: string;
+  toolId: ValidatorsToolId;
+  to: "/validators/skill-package" | "/validators/mcp-config";
 }) {
   return (
-    <div className="rounded-xl border border-border bg-surface p-5">
+    <Link
+      to={to}
+      onClick={() =>
+        trackEvent(
+          validatorsToolCardAnalyticsEvent(),
+          validatorsToolCardAnalyticsData(toolId, VALIDATOR_TOOL_COUNT),
+        )
+      }
+      className="rounded-xl border border-border bg-surface p-5 transition-colors duration-200 ease-out hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60"
+    >
       <div className="flex items-center gap-2">
         <Icon className="h-4 w-4 text-ink-muted" />
         <h3 className="font-display text-base font-semibold text-ink">{title}</h3>
       </div>
       <p className="mt-2 text-sm text-ink-muted">{blurb}</p>
-    </div>
+      <span className="mt-3 inline-flex text-xs font-medium text-ink-muted">Open tool →</span>
+    </Link>
   );
 }

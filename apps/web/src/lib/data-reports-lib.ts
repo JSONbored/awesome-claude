@@ -16,6 +16,8 @@ export interface DistRow {
   label: string;
   count: number;
   pct: number;
+  /** Optional stable key when a report attaches drill-down metadata. */
+  rowKey?: string;
 }
 
 /** Round `n/total` to a whole-number percentage (0 when total is 0). */

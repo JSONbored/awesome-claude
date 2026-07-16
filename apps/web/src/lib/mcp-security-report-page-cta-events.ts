@@ -7,7 +7,11 @@ export {
   mcpSecurityReportCategoryBrowseAnalyticsEvent,
   mcpSecurityReportCiteAnalyticsData,
   mcpSecurityReportCiteAnalyticsEvent,
+  mcpSecurityReportDistRowAnalyticsData,
+  mcpSecurityReportDistRowAnalyticsEvent,
   mcpSecurityReportEgressAnalyticsData,
   mcpSecurityReportEgressAnalyticsEvent,
+  mcpSecurityReportStatAnalyticsData,
+  mcpSecurityReportStatAnalyticsEvent,
   type McpSecurityReportEgressDestination,
 } from "@/lib/mcp-security-report-page-cta-events-lib";

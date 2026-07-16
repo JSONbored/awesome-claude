@@ -18,6 +18,11 @@ import { PageHeader } from "@/components/page-header";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { ReportDownloads } from "@/components/report-downloads";
 import { DataSection, DataStat, DistTable, pctOf, type DistRow } from "@/components/data-report";
+import {
+  withSourceDrilldown,
+  withTagDrilldown,
+  withTrustDrilldown,
+} from "@/lib/data-report-drilldown-lib";
 import { trackEvent } from "@/lib/analytics";
 import {
   stateReportEntryAnalyticsData,
@@ -28,8 +33,12 @@ import {
   stateReportCategoryBrowseAnalyticsEvent,
   stateReportCiteAnalyticsData,
   stateReportCiteAnalyticsEvent,
+  stateReportDistRowAnalyticsData,
+  stateReportDistRowAnalyticsEvent,
   stateReportEgressAnalyticsData,
   stateReportEgressAnalyticsEvent,
+  stateReportStatAnalyticsData,
+  stateReportStatAnalyticsEvent,
   type StateReportEgressDestination,
 } from "@/lib/state-report-page-cta-events";
 
@@ -44,6 +53,21 @@ function trackStateReportEgress(destination: StateReportEgressDestination) {
 
 function trackStateReportCite() {
   trackEvent(stateReportCiteAnalyticsEvent(), stateReportCiteAnalyticsData(REPORT_ID));
+}
+
+function trackDistRow(dimension: string, row: DistRow, rowIndex: number, rowCount: number) {
+  if (!row.rowKey) return;
+  trackEvent(
+    stateReportDistRowAnalyticsEvent(),
+    stateReportDistRowAnalyticsData(REPORT_ID, dimension, row.rowKey, rowIndex, rowCount),
+  );
+}
+
+function trackStat(statKey: string, destination: "browse" | "quality" = "browse") {
+  trackEvent(
+    stateReportStatAnalyticsEvent(),
+    stateReportStatAnalyticsData(REPORT_ID, statKey, destination),
+  );
 }
 
 const PATH = "/state-of-mcp-servers";
@@ -75,19 +99,25 @@ const REMOTE = MCP.filter((e) => hostingOf(classifyTransport(e)) === "Remote (ho
 const LOCAL = MCP.filter((e) => hostingOf(classifyTransport(e)) === "Local (stdio)").length;
 
 const TRUST_ORDER: TrustLevel[] = ["trusted", "review", "limited", "blocked"];
-const TRUST_DIST: DistRow[] = TRUST_ORDER.map((level) => {
-  const count = MCP.filter((e) => e.trust === level).length;
-  return { label: TRUST_LABEL[level], count, pct: pctOf(count, TOTAL) };
-}).filter((r) => r.count > 0);
+const TRUST_DIST: DistRow[] = withTrustDrilldown(
+  TRUST_ORDER.map((level) => {
+    const count = MCP.filter((e) => e.trust === level).length;
+    return { label: TRUST_LABEL[level], count, pct: pctOf(count, TOTAL) };
+  }).filter((r) => r.count > 0),
+  "mcp",
+);
 
 const SOURCE_ORDER: SourceStatus[] = ["first-party", "source-backed", "external", "unverified"];
 const SOURCE_BACKED = MCP.filter(
   (e) => e.source === "source-backed" || e.source === "first-party",
 ).length;
-const SOURCE_DIST: DistRow[] = SOURCE_ORDER.map((status) => {
-  const count = MCP.filter((e) => e.source === status).length;
-  return { label: SOURCE_LABEL[status], count, pct: pctOf(count, TOTAL) };
-}).filter((r) => r.count > 0);
+const SOURCE_DIST: DistRow[] = withSourceDrilldown(
+  SOURCE_ORDER.map((status) => {
+    const count = MCP.filter((e) => e.source === status).length;
+    return { label: SOURCE_LABEL[status], count, pct: pctOf(count, TOTAL) };
+  }).filter((r) => r.count > 0),
+  "mcp",
+);
 
 const INSTALL = installMethodDistribution(MCP);
 const INSTALL_DIST: DistRow[] = INSTALL.rows.map((r) => ({
@@ -106,10 +136,12 @@ for (const e of MCP) {
     TAG_COUNTS.set(t, (TAG_COUNTS.get(t) ?? 0) + 1);
   }
 }
-const TAG_DIST: DistRow[] = [...TAG_COUNTS.entries()]
-  .map(([label, count]) => ({ label, count, pct: pctOf(count, TOTAL) }))
-  .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))
-  .slice(0, 12);
+const TAG_DIST: DistRow[] = withTagDrilldown(
+  [...TAG_COUNTS.entries()]
+    .map(([label, count]) => ({ label, count, pct: pctOf(count, TOTAL) }))
+    .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))
+    .slice(0, 12),
+);
 
 const RECENT = [...MCP]
   .sort((a, b) => String(b.dateAdded).localeCompare(String(a.dateAdded)))
@@ -205,24 +237,41 @@ function StateOfMcpServersPage() {
       <p className="mt-2 text-xs text-ink-subtle">Data as of {asOfLabel} (UTC).</p>
 
       <div className="mt-10 grid gap-px overflow-hidden rounded-xl border border-border bg-border stagger-children sm:grid-cols-4">
-        <DataStat icon={Boxes} label="MCP servers" value={TOTAL} hint="in the registry" />
+        <DataStat
+          icon={Boxes}
+          label="MCP servers"
+          value={TOTAL}
+          hint="in the registry"
+          to="/browse"
+          search={{ category: "mcp" }}
+          onNavigate={() => trackStat("total")}
+        />
         <DataStat
           icon={Cloud}
           label="Hosted (remote)"
           value={REMOTE}
           hint={`${pctOf(REMOTE, TOTAL)}% of total`}
+          to="/browse"
+          search={{ category: "mcp" }}
+          onNavigate={() => trackStat("remote")}
         />
         <DataStat
           icon={HardDrive}
           label="Local (stdio)"
           value={LOCAL}
           hint={`${pctOf(LOCAL, TOTAL)}% of total`}
+          to="/browse"
+          search={{ category: "mcp" }}
+          onNavigate={() => trackStat("local")}
         />
         <DataStat
           icon={GitBranch}
           label="Source-backed"
           value={SOURCE_BACKED}
           hint={`${pctOf(SOURCE_BACKED, TOTAL)}% of total`}
+          to="/browse"
+          search={{ category: "mcp", source: "source-backed" }}
+          onNavigate={() => trackStat("source-backed")}
         />
       </div>
 
@@ -254,7 +303,12 @@ function StateOfMcpServersPage() {
             </Link>
           </p>
           <div className="mt-4">
-            <DistTable rows={TRUST_DIST} />
+            <DistTable
+              rows={TRUST_DIST}
+              onRowClick={(row, rowIndex) =>
+                trackDistRow("trust-level", row, rowIndex, TRUST_DIST.length)
+              }
+            />
           </div>
         </div>
         <div>
@@ -264,7 +318,12 @@ function StateOfMcpServersPage() {
             registry.
           </p>
           <div className="mt-4">
-            <DistTable rows={SOURCE_DIST} />
+            <DistTable
+              rows={SOURCE_DIST}
+              onRowClick={(row, rowIndex) =>
+                trackDistRow("source-provenance", row, rowIndex, SOURCE_DIST.length)
+              }
+            />
           </div>
         </div>
       </div>
@@ -280,7 +339,12 @@ function StateOfMcpServersPage() {
         title="Most common integrations"
         help="The services and capabilities these servers connect Claude to most often, by tag. Generic tags (mcp, claude) are excluded."
       >
-        <DistTable rows={TAG_DIST} />
+        <DistTable
+          rows={TAG_DIST}
+          onRowClick={(row, rowIndex) =>
+            trackDistRow("integrations", row, rowIndex, TAG_DIST.length)
+          }
+        />
       </DataSection>
 
       <ReportDownloads exportSlug="mcp-servers" />

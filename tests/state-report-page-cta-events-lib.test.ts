@@ -4,8 +4,12 @@ import {
   stateReportCategoryBrowseAnalyticsEvent,
   stateReportCiteAnalyticsData,
   stateReportCiteAnalyticsEvent,
+  stateReportDistRowAnalyticsData,
+  stateReportDistRowAnalyticsEvent,
   stateReportEgressAnalyticsData,
   stateReportEgressAnalyticsEvent,
+  stateReportStatAnalyticsData,
+  stateReportStatAnalyticsEvent,
 } from "@/lib/state-report-page-cta-events-lib";
 
 describe("state report page cta events lib", () => {
@@ -45,6 +49,35 @@ describe("state report page cta events lib", () => {
     expect(stateReportCiteAnalyticsData("agent-skills")).toEqual({
       reportId: "agent-skills",
       destination: "canonical",
+    });
+  });
+
+  it("builds state report dist-row and stat analytics", () => {
+    expect(stateReportDistRowAnalyticsEvent()).toBe(
+      "state_report_dist_row_click",
+    );
+    expect(
+      stateReportDistRowAnalyticsData(
+        "mcp-servers",
+        "trust-level",
+        "trusted",
+        0,
+        4,
+      ),
+    ).toEqual({
+      reportId: "mcp-servers",
+      dimension: "trust-level",
+      rowKey: "trusted",
+      rowIndex: 0,
+      rowCount: 4,
+    });
+    expect(stateReportStatAnalyticsEvent()).toBe("state_report_stat_click");
+    expect(
+      stateReportStatAnalyticsData("ai-agents", "total", "browse"),
+    ).toEqual({
+      reportId: "ai-agents",
+      statKey: "total",
+      destination: "browse",
     });
   });
 });

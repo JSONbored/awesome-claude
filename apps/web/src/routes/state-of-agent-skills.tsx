@@ -14,18 +14,24 @@ import { PageHeader } from "@/components/page-header";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { ReportDownloads } from "@/components/report-downloads";
 import { DataSection, DataStat, DistTable } from "@/components/data-report";
+import { withReportDimensionDrilldown } from "@/lib/data-report-drilldown-lib";
 import { trackEvent } from "@/lib/analytics";
 import {
   stateReportCategoryBrowseAnalyticsData,
   stateReportCategoryBrowseAnalyticsEvent,
   stateReportCiteAnalyticsData,
   stateReportCiteAnalyticsEvent,
+  stateReportDistRowAnalyticsData,
+  stateReportDistRowAnalyticsEvent,
   stateReportEgressAnalyticsData,
   stateReportEgressAnalyticsEvent,
+  stateReportStatAnalyticsData,
+  stateReportStatAnalyticsEvent,
   type StateReportEgressDestination,
 } from "@/lib/state-report-page-cta-events";
 
 const REPORT_ID = "agent-skills" as const;
+const REPORT_CATEGORY = "skills";
 
 function trackStateReportEgress(destination: StateReportEgressDestination) {
   trackEvent(
@@ -36,6 +42,13 @@ function trackStateReportEgress(destination: StateReportEgressDestination) {
 
 function trackStateReportCite() {
   trackEvent(stateReportCiteAnalyticsEvent(), stateReportCiteAnalyticsData(REPORT_ID));
+}
+
+function trackStat(statKey: string) {
+  trackEvent(
+    stateReportStatAnalyticsEvent(),
+    stateReportStatAnalyticsData(REPORT_ID, statKey, "browse"),
+  );
 }
 
 const AS_OF = String(REGISTRY_GENERATED_AT).slice(0, 10);
@@ -120,15 +133,36 @@ function StateOfAgentSkillsPage() {
             label={stat.label}
             value={stat.value}
             hint={statHint(stat)}
+            to="/browse"
+            search={{ category: REPORT_CATEGORY }}
+            onNavigate={() => trackStat(stat.key)}
           />
         ))}
       </div>
 
-      {MODEL.dimensions.map((dimension) => (
-        <DataSection key={dimension.key} title={dimension.title} help={dimension.help}>
-          <DistTable rows={dimension.rows} />
-        </DataSection>
-      ))}
+      {MODEL.dimensions.map((dimension) => {
+        const rows = withReportDimensionDrilldown(dimension.key, dimension.rows, REPORT_CATEGORY);
+        return (
+          <DataSection key={dimension.key} title={dimension.title} help={dimension.help}>
+            <DistTable
+              rows={rows}
+              onRowClick={(row, rowIndex) => {
+                if (!row.rowKey) return;
+                trackEvent(
+                  stateReportDistRowAnalyticsEvent(),
+                  stateReportDistRowAnalyticsData(
+                    REPORT_ID,
+                    dimension.key,
+                    row.rowKey,
+                    rowIndex,
+                    rows.length,
+                  ),
+                );
+              }}
+            />
+          </DataSection>
+        );
+      })}
 
       <ReportDownloads exportSlug={MODEL.exportSlug} />
 

@@ -44,3 +44,37 @@ export function mcpSecurityReportCiteAnalyticsData() {
     destination: "canonical",
   };
 }
+
+export function mcpSecurityReportDistRowAnalyticsEvent(): string {
+  return "mcp_security_dist_row_click";
+}
+
+export function mcpSecurityReportDistRowAnalyticsData(
+  dimension: string,
+  rowKey: string,
+  rowIndex: number,
+  rowCount: number,
+) {
+  return {
+    surface: MCP_SECURITY_REPORT_SURFACE,
+    dimension,
+    rowKey,
+    rowIndex,
+    rowCount,
+  };
+}
+
+export function mcpSecurityReportStatAnalyticsEvent(): string {
+  return "mcp_security_stat_click";
+}
+
+export function mcpSecurityReportStatAnalyticsData(
+  statKey: string,
+  destination: "browse" | "quality",
+) {
+  return {
+    surface: MCP_SECURITY_REPORT_SURFACE,
+    statKey,
+    destination,
+  };
+}

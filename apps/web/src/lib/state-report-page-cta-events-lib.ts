@@ -66,3 +66,39 @@ export function stateReportCiteAnalyticsData(reportId: StateReportId) {
     destination: "canonical",
   };
 }
+
+export function stateReportDistRowAnalyticsEvent(): string {
+  return "state_report_dist_row_click";
+}
+
+export function stateReportDistRowAnalyticsData(
+  reportId: StateReportId,
+  dimension: string,
+  rowKey: string,
+  rowIndex: number,
+  rowCount: number,
+) {
+  return {
+    reportId,
+    dimension,
+    rowKey,
+    rowIndex,
+    rowCount,
+  };
+}
+
+export function stateReportStatAnalyticsEvent(): string {
+  return "state_report_stat_click";
+}
+
+export function stateReportStatAnalyticsData(
+  reportId: StateReportId,
+  statKey: string,
+  destination: "browse" | "quality",
+) {
+  return {
+    reportId,
+    statKey,
+    destination,
+  };
+}
