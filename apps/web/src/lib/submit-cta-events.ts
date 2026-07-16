@@ -11,6 +11,8 @@ export {
   submitDraftCopyAnalyticsEvent,
   submitEgressAnalyticsData,
   submitEgressAnalyticsEvent,
+  submitPreflightNextActionAnalyticsData,
+  submitPreflightNextActionAnalyticsEvent,
   submitPreflightRetryAnalyticsData,
   submitPreflightRetryAnalyticsEvent,
   submitStartAnalyticsData,
@@ -22,6 +24,7 @@ export {
   type SubmitCompletionDestination,
   type SubmitDraftCopySource,
   type SubmitEgressDestination,
+  type SubmitPreflightRouteSuggestion,
   type SubmitStepDirection,
   type SubmitSuccessPath,
 } from "@/lib/submit-cta-events-lib";

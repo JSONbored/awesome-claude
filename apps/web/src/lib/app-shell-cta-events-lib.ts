@@ -13,7 +13,7 @@ export type AppShellFeedChip = "rss" | "atom" | "json" | "llms";
 
 export type AppShellLegalDestination = "legal" | "privacy";
 
-export type AppShellHeaderAction = "submit" | "github" | "theme" | "logo" | "shortcuts";
+export type AppShellHeaderAction = "submit" | "github" | "theme" | "logo" | "shortcuts" | "menu";
 
 export function appShellNavAnalyticsEvent(): string {
   return "app_shell_nav_click";

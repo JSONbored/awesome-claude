@@ -35,6 +35,8 @@ import {
   submitDraftCopyAnalyticsEvent,
   submitEgressAnalyticsData,
   submitEgressAnalyticsEvent,
+  submitPreflightNextActionAnalyticsData,
+  submitPreflightNextActionAnalyticsEvent,
   submitPreflightRetryAnalyticsData,
   submitPreflightRetryAnalyticsEvent,
   submitStartAnalyticsData,
@@ -488,6 +490,7 @@ function SubmitPage() {
               result={preflightResult}
               error={preflightError}
               busy={preflightBusy}
+              category={category || ""}
               onRun={() => {
                 trackEvent(
                   submitPreflightRetryAnalyticsEvent(),
@@ -570,11 +573,13 @@ function ServerPreflightBlock({
   result,
   error,
   busy,
+  category,
   onRun,
 }: {
   result: PreflightResponse | null;
   error: string;
   busy: boolean;
+  category: string;
   onRun: () => void;
 }) {
   if (busy) {
@@ -644,6 +649,12 @@ function ServerPreflightBlock({
       {result.nextAction?.url && result.routeSuggestion !== "submit_pr" && (
         <a
           href={result.nextAction.url}
+          onClick={() =>
+            trackEvent(
+              submitPreflightNextActionAnalyticsEvent(),
+              submitPreflightNextActionAnalyticsData(category, result.routeSuggestion),
+            )
+          }
           className="inline-flex text-sm font-medium text-ink underline"
         >
           {result.nextAction.label}

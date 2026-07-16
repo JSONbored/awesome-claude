@@ -70,7 +70,10 @@ export function TopBar() {
       <div className="mx-auto flex h-14 max-w-page items-center gap-4 px-4 sm:px-6">
         <button
           type="button"
-          onClick={() => setMobileNavOpen(true)}
+          onClick={() => {
+            trackEvent(appShellHeaderAnalyticsEvent(), appShellHeaderAnalyticsData("menu"));
+            setMobileNavOpen(true);
+          }}
           aria-label="Open menu"
           aria-expanded={mobileNavOpen}
           aria-controls="mobile-primary-nav"

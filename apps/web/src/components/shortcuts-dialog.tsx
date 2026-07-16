@@ -8,6 +8,13 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Kbd } from "@/components/badges";
+import { trackEvent } from "@/lib/analytics";
+import {
+  shortcutsDialogOpenAnalyticsData,
+  shortcutsDialogOpenAnalyticsEvent,
+  shortcutsGNavAnalyticsData,
+  shortcutsGNavAnalyticsEvent,
+} from "@/lib/shortcuts-chrome-cta-events";
 
 interface Shortcut {
   keys: string[];
@@ -94,6 +101,7 @@ export function ShortcutsProvider({ children }: { children: React.ReactNode }) {
         gPending.current = null;
         if (dest) {
           e.preventDefault();
+          trackEvent(shortcutsGNavAnalyticsEvent(), shortcutsGNavAnalyticsData(dest));
           navigate({ to: dest });
         }
         return;
@@ -106,6 +114,7 @@ export function ShortcutsProvider({ children }: { children: React.ReactNode }) {
       }
       if (e.key === "?" || (e.key === "/" && e.shiftKey)) {
         e.preventDefault();
+        trackEvent(shortcutsDialogOpenAnalyticsEvent(), shortcutsDialogOpenAnalyticsData("hotkey"));
         setOpen(true);
       }
     };

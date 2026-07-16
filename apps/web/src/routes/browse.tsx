@@ -78,6 +78,8 @@ import {
   browseFilterClearAllAnalyticsEvent,
   browseFilterSelectAnalyticsData,
   browseFilterSelectAnalyticsEvent,
+  browseSearchClearAnalyticsData,
+  browseSearchClearAnalyticsEvent,
   browseSortSelectAnalyticsData,
   browseSortSelectAnalyticsEvent,
   browseViewSelectAnalyticsData,
@@ -891,7 +893,13 @@ function Browse() {
               {qInput && (
                 <button
                   type="button"
-                  onClick={() => setQInput("")}
+                  onClick={() => {
+                    trackEvent(
+                      browseSearchClearAnalyticsEvent(),
+                      browseSearchClearAnalyticsData(Boolean(qInput.trim()), results.length),
+                    );
+                    setQInput("");
+                  }}
                   aria-label="Clear search"
                   className="rounded p-1 text-ink-subtle hover:text-ink"
                 >

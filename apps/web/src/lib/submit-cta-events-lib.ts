@@ -126,3 +126,24 @@ export function submitDraftCopyAnalyticsData(category: string, source: SubmitDra
     source,
   };
 }
+
+export type SubmitPreflightRouteSuggestion =
+  | "submit_pr"
+  | "form_required"
+  | "route_away"
+  | "manual_review";
+
+export function submitPreflightNextActionAnalyticsEvent(): string {
+  return "submit_preflight_next_action_click";
+}
+
+export function submitPreflightNextActionAnalyticsData(
+  category: string,
+  routeSuggestion: SubmitPreflightRouteSuggestion,
+) {
+  return {
+    surface: SUBMIT_SURFACE,
+    category,
+    routeSuggestion,
+  };
+}

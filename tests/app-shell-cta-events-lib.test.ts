@@ -35,6 +35,10 @@ describe("app shell cta events lib", () => {
       surface: APP_SHELL_SURFACE,
       action: "submit",
     });
+    expect(appShellHeaderAnalyticsData("menu")).toEqual({
+      surface: APP_SHELL_SURFACE,
+      action: "menu",
+    });
     expect(appShellFeedChipAnalyticsEvent()).toBe("app_shell_feed_chip_click");
     expect(appShellFeedChipAnalyticsData("llms")).toEqual({
       surface: APP_SHELL_SURFACE,

@@ -65,3 +65,15 @@ export function browseViewSelectAnalyticsData(view: "row" | "grid" | "compact") 
     view,
   };
 }
+
+export function browseSearchClearAnalyticsEvent(): string {
+  return "browse_search_clear_click";
+}
+
+export function browseSearchClearAnalyticsData(hadQuery: boolean, resultCount: number) {
+  return {
+    surface: BROWSE_FILTER_SURFACE,
+    hadQuery,
+    resultCount,
+  };
+}

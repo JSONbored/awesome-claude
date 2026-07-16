@@ -5,6 +5,8 @@ import {
   browseFilterClearAllAnalyticsEvent,
   browseFilterSelectAnalyticsData,
   browseFilterSelectAnalyticsEvent,
+  browseSearchClearAnalyticsData,
+  browseSearchClearAnalyticsEvent,
   browseSortSelectAnalyticsData,
   browseSortSelectAnalyticsEvent,
   browseViewSelectAnalyticsData,
@@ -41,6 +43,12 @@ describe("browse filter cta events lib", () => {
     expect(browseViewSelectAnalyticsData("grid")).toEqual({
       surface: BROWSE_FILTER_SURFACE,
       view: "grid",
+    });
+    expect(browseSearchClearAnalyticsEvent()).toBe("browse_search_clear_click");
+    expect(browseSearchClearAnalyticsData(true, 42)).toEqual({
+      surface: BROWSE_FILTER_SURFACE,
+      hadQuery: true,
+      resultCount: 42,
     });
   });
 });

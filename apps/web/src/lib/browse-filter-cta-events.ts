@@ -7,6 +7,8 @@ export {
   browseFilterClearAllAnalyticsEvent,
   browseFilterSelectAnalyticsData,
   browseFilterSelectAnalyticsEvent,
+  browseSearchClearAnalyticsData,
+  browseSearchClearAnalyticsEvent,
   browseSortSelectAnalyticsData,
   browseSortSelectAnalyticsEvent,
   browseViewSelectAnalyticsData,
