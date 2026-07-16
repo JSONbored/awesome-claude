@@ -243,7 +243,7 @@ function PeekBody({ entry, peekId }: { entry: Entry; peekId: string }) {
         <div className="mt-4 flex flex-wrap items-center gap-1">
           <span className="eyebrow mr-1">Platforms</span>
           {entry.platforms.map((p) => (
-            <PlatformChip key={p} id={p} asLink />
+            <PlatformChip key={p} id={p} asLink surface="peek-panel" />
           ))}
         </div>
       )}

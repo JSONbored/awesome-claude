@@ -18,5 +18,9 @@ describe("platform chip cta events lib", () => {
       surface: "compare-table",
       platform: "claude-desktop",
     });
+    expect(platformChipAnalyticsData("raycast", "peek-panel")).toEqual({
+      surface: "peek-panel",
+      platform: "raycast",
+    });
   });
 });
