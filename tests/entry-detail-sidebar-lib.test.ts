@@ -49,10 +49,34 @@ describe("entry-detail-sidebar-lib", () => {
       }),
     );
     expect(rows).toEqual([
-      { label: "Trust", value: "Review first", ok: false },
-      { label: "Source", value: "unverified", ok: false },
-      { label: "Safety notes", value: "Missing", ok: false },
-      { label: "Reviewed", value: "No", ok: false },
+      {
+        id: "trust",
+        label: "Trust",
+        value: "Review first",
+        ok: false,
+        scrollTargetId: "citation-facts",
+      },
+      {
+        id: "source",
+        label: "Source",
+        value: "unverified",
+        ok: false,
+        scrollTargetId: "citations",
+      },
+      {
+        id: "safety",
+        label: "Safety notes",
+        value: "Missing",
+        ok: false,
+        scrollTargetId: "safety",
+      },
+      {
+        id: "reviewed",
+        label: "Reviewed",
+        value: "No",
+        ok: false,
+        scrollTargetId: "about",
+      },
     ]);
   });
 

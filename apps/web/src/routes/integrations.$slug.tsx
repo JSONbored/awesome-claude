@@ -144,6 +144,8 @@ function IntegrationDetail() {
                 pkg={integration.npmPackage}
                 fallbackVersion={integration.version}
                 fallbackUpdatedAt={integration.updatedAt}
+                asLink
+                analyticsSurface="integrations-detail"
               />
             </div>
           ) : null}

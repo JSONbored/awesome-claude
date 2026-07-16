@@ -42,6 +42,14 @@ import {
   PEEK_PANEL_SURFACE,
 } from "@/lib/peek-panel-cta-events";
 import {
+  badgeChromeCategoryAnalyticsData,
+  badgeChromeCategoryAnalyticsEvent,
+  badgeChromeSourceAnalyticsData,
+  badgeChromeSourceAnalyticsEvent,
+  badgeChromeTrustAnalyticsData,
+  badgeChromeTrustAnalyticsEvent,
+} from "@/lib/badge-chrome-cta-events";
+import {
   harnessVariantSelectAnalyticsData,
   harnessVariantSelectAnalyticsEvent,
 } from "@/lib/harness-variant-cta-events";
@@ -171,9 +179,38 @@ function PeekBody({ entry, peekId }: { entry: Entry; peekId: string }) {
     <>
       <SheetHeader className="space-y-3 text-left">
         <div className="flex flex-wrap items-center gap-1.5">
-          <CategoryPill>{entry.category}</CategoryPill>
-          <TrustBadge level={entry.trust} />
-          <SourceBadge status={entry.source} />
+          <Link
+            to="/browse"
+            search={{ category: entry.category }}
+            onClick={() =>
+              trackEvent(
+                badgeChromeCategoryAnalyticsEvent(),
+                badgeChromeCategoryAnalyticsData(entry.category, "peek-panel"),
+              )
+            }
+          >
+            <CategoryPill>{entry.category}</CategoryPill>
+          </Link>
+          <TrustBadge
+            level={entry.trust}
+            asLink
+            onNavigate={() =>
+              trackEvent(
+                badgeChromeTrustAnalyticsEvent(),
+                badgeChromeTrustAnalyticsData(entry.trust, "peek-panel"),
+              )
+            }
+          />
+          <SourceBadge
+            status={entry.source}
+            asLink
+            onNavigate={() =>
+              trackEvent(
+                badgeChromeSourceAnalyticsEvent(),
+                badgeChromeSourceAnalyticsData(entry.source, "peek-panel"),
+              )
+            }
+          />
           <InstallRiskBadge entry={entry} size="xs" />
         </div>
         <div className="flex min-w-0 items-start gap-3">
@@ -206,7 +243,7 @@ function PeekBody({ entry, peekId }: { entry: Entry; peekId: string }) {
         <div className="mt-4 flex flex-wrap items-center gap-1">
           <span className="eyebrow mr-1">Platforms</span>
           {entry.platforms.map((p) => (
-            <PlatformChip key={p} id={p} />
+            <PlatformChip key={p} id={p} asLink />
           ))}
         </div>
       )}

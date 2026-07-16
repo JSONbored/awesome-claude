@@ -30,7 +30,12 @@ export function EntryDetailRail({
       {children}
       {readinessRows && readinessRows.length > 0 ? (
         <div className="overflow-hidden rounded-xl border border-border bg-surface">
-          <EntryDetailReadinessPanel rows={readinessRows} className="border-t-0" />
+          <EntryDetailReadinessPanel
+            rows={readinessRows}
+            category={entry.category}
+            slug={entry.slug}
+            className="border-t-0"
+          />
         </div>
       ) : null}
       {quickLinks && quickLinks.length > 0 ? (

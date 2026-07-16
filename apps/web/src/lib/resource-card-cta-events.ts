@@ -15,6 +15,8 @@ export {
   resourceCardInstallAnalyticsData,
   resourceCardInstallAnalyticsEvent,
   resourceCardInstallIntentType,
+  resourceCardTrustHintAnalyticsData,
+  resourceCardTrustHintAnalyticsEvent,
   type ResourceCardSurface,
   type ResourceCardVariant,
 } from "@/lib/resource-card-cta-events-lib";

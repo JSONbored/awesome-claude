@@ -124,3 +124,24 @@ export function resourceCardEntryAnalyticsData(
     compareCount,
   };
 }
+
+export function resourceCardTrustHintAnalyticsEvent(): string {
+  return "browse_card_trust_hint_click";
+}
+
+export function resourceCardTrustHintAnalyticsData(
+  category: string,
+  slug: string,
+  kind: string,
+  inCompareTray: boolean,
+  compareCount: number,
+  surface: ResourceCardSurface = RESOURCE_CARD_SURFACE,
+) {
+  return {
+    entry: resourceCardEntryKey(category, slug),
+    surface,
+    kind,
+    inCompareTray,
+    compareCount,
+  };
+}

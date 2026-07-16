@@ -11,6 +11,8 @@ import {
   resourceCardInstallAnalyticsData,
   resourceCardInstallAnalyticsEvent,
   resourceCardInstallIntentType,
+  resourceCardTrustHintAnalyticsData,
+  resourceCardTrustHintAnalyticsEvent,
 } from "@/lib/resource-card-cta-events-lib";
 
 describe("resource card cta events lib", () => {
@@ -84,6 +86,25 @@ describe("resource card cta events lib", () => {
       variant: "grid",
       rank: null,
       compareCount: 0,
+    });
+    expect(resourceCardTrustHintAnalyticsEvent()).toBe(
+      "browse_card_trust_hint_click",
+    );
+    expect(
+      resourceCardTrustHintAnalyticsData(
+        "mcp",
+        "browser",
+        "stronger",
+        false,
+        1,
+        "browse-grid",
+      ),
+    ).toEqual({
+      entry: "mcp/browser",
+      surface: "browse-grid",
+      kind: "stronger",
+      inCompareTray: false,
+      compareCount: 1,
     });
   });
 });

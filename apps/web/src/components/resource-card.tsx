@@ -31,6 +31,8 @@ import {
   resourceCardInstallAnalyticsData,
   resourceCardInstallAnalyticsEvent,
   resourceCardInstallIntentType,
+  resourceCardTrustHintAnalyticsData,
+  resourceCardTrustHintAnalyticsEvent,
   RESOURCE_CARD_SURFACE,
   type ResourceCardSurface,
 } from "@/lib/resource-card-cta-events";
@@ -148,6 +150,29 @@ function ResourceCardInner({
     }
   };
 
+  const onTrustHintActivate = () => {
+    if (!trustDecision) return;
+    trackEvent(
+      resourceCardTrustHintAnalyticsEvent(),
+      resourceCardTrustHintAnalyticsData(
+        entry.category,
+        entry.slug,
+        trustDecision.kind,
+        inCompare,
+        compareItems.length,
+        analyticsSurface,
+      ),
+    );
+    if (!inCompare) {
+      const changed = toggle(entry);
+      if (!changed) {
+        toast.error(resourceCardCompareFullMessage());
+        return;
+      }
+    }
+    setOpen(true);
+  };
+
   const onInstallCopied = () => {
     void recordIntentEvent(resourceCardInstallIntentType(entry), entry);
   };
@@ -232,9 +257,6 @@ function ResourceCardInner({
               <p className="mt-1.5 line-clamp-2 text-sm text-ink-muted">
                 {entry.cardDescription ?? entry.description}
               </p>
-              {trustDecision ? (
-                <ResourceCardTrustHint state={trustDecision} className="mt-2" />
-              ) : null}
             </div>
             <EntryFacets entry={entry} density="card" />
             <div className="mt-auto flex flex-wrap items-center gap-1.5">
@@ -249,6 +271,13 @@ function ResourceCardInner({
             </div>
             <NotesPresenceChips entry={entry} />
           </Link>
+          {trustDecision ? (
+            <ResourceCardTrustHint
+              state={trustDecision}
+              className="mt-1"
+              onActivate={onTrustHintActivate}
+            />
+          ) : null}
           <LazyEntryAuthorAttribution entry={entry} className="text-xs text-ink-subtle" />
         </div>
         <div className="pointer-events-none absolute right-2 top-2 z-10 flex items-center gap-1 rounded-md border border-border bg-surface/95 p-0.5 opacity-0 shadow-sm backdrop-blur transition-opacity duration-150 group-hover:opacity-100 focus-within:opacity-100 group-focus-within:opacity-100">
@@ -327,7 +356,13 @@ function ResourceCardInner({
             <LazyEntryAuthorAttribution entry={entry} />
           </div>
           <p className="line-clamp-2 max-w-3xl text-sm text-ink-muted">{entry.description}</p>
-          {trustDecision ? <ResourceCardTrustHint state={trustDecision} className="mt-1" /> : null}
+          {trustDecision ? (
+            <ResourceCardTrustHint
+              state={trustDecision}
+              className="mt-1"
+              onActivate={onTrustHintActivate}
+            />
+          ) : null}
           <div className="flex flex-wrap items-center gap-2 pt-0.5">
             <EntryFacets entry={entry} density="card" />
             <NotesPresenceChips entry={entry} />

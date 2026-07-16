@@ -1,10 +1,14 @@
 import { TRUST_LABEL, type Entry } from "@/types/registry";
 import type { InstallRisk } from "@/lib/trust";
+import type { EntryReadinessRowId } from "@/lib/entry-readiness-cta-events-lib";
 
 export type EntryReadinessRow = {
+  id: EntryReadinessRowId;
   label: string;
   value: string;
   ok: boolean;
+  /** In-page section id to scroll to when the row is activated. */
+  scrollTargetId: string;
 };
 
 export type EntryQuickLink = {
@@ -18,24 +22,32 @@ export type EntryQuickLink = {
 export function entryReadinessRows(entry: Entry): EntryReadinessRow[] {
   return [
     {
+      id: "trust",
       label: "Trust",
       value: TRUST_LABEL[entry.trust],
       ok: entry.trust === "trusted",
+      scrollTargetId: "citation-facts",
     },
     {
+      id: "source",
       label: "Source",
       value: entry.source,
       ok: entry.source !== "unverified",
+      scrollTargetId: "citations",
     },
     {
+      id: "safety",
       label: "Safety notes",
       value: entry.safetyNotes ? "Present" : "Missing",
       ok: Boolean(entry.safetyNotes),
+      scrollTargetId: "safety",
     },
     {
+      id: "reviewed",
       label: "Reviewed",
       value: entry.reviewed ? "Yes" : "No",
       ok: Boolean(entry.reviewed),
+      scrollTargetId: "about",
     },
   ];
 }

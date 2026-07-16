@@ -27,6 +27,14 @@ import {
   entryDetailStickyCopyVariantSelectAnalyticsData,
   entryDetailStickyCopyVariantSelectAnalyticsEvent,
 } from "@/lib/entry-detail-cta-events";
+import {
+  badgeChromeInstallRiskAnalyticsData,
+  badgeChromeInstallRiskAnalyticsEvent,
+  badgeChromeNotesAnalyticsData,
+  badgeChromeNotesAnalyticsEvent,
+  badgeChromeTrustAnalyticsData,
+  badgeChromeTrustAnalyticsEvent,
+} from "@/lib/badge-chrome-cta-events";
 
 /**
  * Appears once the user scrolls past the dossier header.
@@ -204,10 +212,38 @@ export function StickyMetaBar({
 
           {/* Row 2: trust + risk + copy switcher */}
           <div className="flex flex-wrap items-center gap-2 px-3 pb-2 pt-1.5">
-            <TrustBadge level={entry.trust} />
-            <InstallRiskBadge entry={entry} size="xs" />
+            <TrustBadge
+              level={entry.trust}
+              asLink
+              onNavigate={() =>
+                trackEvent(
+                  badgeChromeTrustAnalyticsEvent(),
+                  badgeChromeTrustAnalyticsData(entry.trust, "detail-sticky-meta"),
+                )
+              }
+            />
+            <InstallRiskBadge
+              entry={entry}
+              size="xs"
+              asButton
+              onActivate={(risk) =>
+                trackEvent(
+                  badgeChromeInstallRiskAnalyticsEvent(),
+                  badgeChromeInstallRiskAnalyticsData(risk, "detail-sticky-meta"),
+                )
+              }
+            />
             <span className="hidden md:inline-flex">
-              <NotesPresenceChips entry={entry} />
+              <NotesPresenceChips
+                entry={entry}
+                interactive
+                onNoteClick={(noteKind, present) =>
+                  trackEvent(
+                    badgeChromeNotesAnalyticsEvent(),
+                    badgeChromeNotesAnalyticsData(noteKind, present, "detail-sticky-meta"),
+                  )
+                }
+              />
             </span>
 
             <div className="ml-auto inline-flex items-center gap-1.5">
