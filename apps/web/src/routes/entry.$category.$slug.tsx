@@ -80,7 +80,7 @@ import { toast } from "sonner";
 import { useRecents } from "@/lib/recents";
 import { useCompare, useIsCompared } from "@/lib/compare";
 import { serializeCompareItems } from "@/lib/compare-selection";
-import { trackEvent } from "@/lib/analytics";
+import { trackEvent, outboundHost } from "@/lib/analytics";
 import {
   DOSSIER_TOC_CONTENT_OUTLINE_SURFACE,
   dossierTocSectionAnalyticsData,
@@ -114,6 +114,8 @@ import {
   entryDetailCitationPlainTextAnalyticsEvent,
   entryDetailCodeDisclosureAnalyticsData,
   entryDetailCodeDisclosureAnalyticsEvent,
+  entryDetailSchemaLinkAnalyticsData,
+  entryDetailSchemaLinkAnalyticsEvent,
   type EntryDetailCodeDisclosureKind,
 } from "@/lib/entry-detail-cta-events";
 import {
@@ -1279,7 +1281,22 @@ function SchemaDetails({ entry }: { entry: Entry }) {
         {(entry.downloadUrl || entry.packageVerified !== undefined || entry.downloadSha256) && (
           <MetadataGroup title="Package metadata" icon={Package}>
             <FieldGrid>
-              <FieldRow label="Download URL" value={entry.downloadUrl} href={entry.downloadUrl} />
+              <FieldRow
+                label="Download URL"
+                value={entry.downloadUrl}
+                href={entry.downloadUrl}
+                onLinkClick={() =>
+                  trackEvent(
+                    entryDetailSchemaLinkAnalyticsEvent(),
+                    entryDetailSchemaLinkAnalyticsData(
+                      entry.category,
+                      entry.slug,
+                      "download",
+                      outboundHost(entry.downloadUrl!),
+                    ),
+                  )
+                }
+              />
               <FieldRow label="Package verified" value={booleanLabel(entry.packageVerified)} />
               <FieldRow label="SHA-256" value={entry.downloadSha256} mono />
             </FieldGrid>
@@ -1384,7 +1401,22 @@ function SchemaDetails({ entry }: { entry: Entry }) {
           entry.operatingSystem) && (
           <MetadataGroup title="Tool listing metadata" icon={Globe2}>
             <FieldGrid>
-              <FieldRow label="Website" value={entry.websiteUrl} href={entry.websiteUrl} />
+              <FieldRow
+                label="Website"
+                value={entry.websiteUrl}
+                href={entry.websiteUrl}
+                onLinkClick={() =>
+                  trackEvent(
+                    entryDetailSchemaLinkAnalyticsEvent(),
+                    entryDetailSchemaLinkAnalyticsData(
+                      entry.category,
+                      entry.slug,
+                      "website",
+                      outboundHost(entry.websiteUrl!),
+                    ),
+                  )
+                }
+              />
               <FieldRow label="Pricing" value={entry.pricingModel} />
               <FieldRow label="Disclosure" value={entry.disclosure} />
               <FieldRow label="Application category" value={entry.applicationCategory} />
@@ -1434,11 +1466,13 @@ function FieldRow({
   value,
   href,
   mono,
+  onLinkClick,
 }: {
   label: string;
   value?: string;
   href?: string;
   mono?: boolean;
+  onLinkClick?: () => void;
 }) {
   if (!value) return null;
   return (
@@ -1446,7 +1480,13 @@ function FieldRow({
       <dt className="text-[10px] uppercase tracking-wider text-ink-subtle">{label}</dt>
       <dd className={cn("mt-0.5 break-words text-sm text-ink", mono && "font-mono text-xs")}>
         {href ? (
-          <a href={href} target="_blank" rel="noreferrer" className="hover:underline">
+          <a
+            href={href}
+            target="_blank"
+            rel="noreferrer"
+            className="hover:underline"
+            onClick={onLinkClick}
+          >
             {value}
           </a>
         ) : (

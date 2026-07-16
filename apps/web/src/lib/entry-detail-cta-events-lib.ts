@@ -472,3 +472,25 @@ export function entryDetailCodeDisclosureAnalyticsData(
     open,
   };
 }
+
+export const ENTRY_DETAIL_SCHEMA_SURFACE = "detail-schema";
+
+export type EntryDetailSchemaLinkKind = "website" | "download";
+
+export function entryDetailSchemaLinkAnalyticsEvent(): string {
+  return "detail_schema_link_click";
+}
+
+export function entryDetailSchemaLinkAnalyticsData(
+  category: string,
+  slug: string,
+  kind: EntryDetailSchemaLinkKind,
+  host: string,
+) {
+  return {
+    entry: entryDetailEntryKey(category, slug),
+    surface: ENTRY_DETAIL_SCHEMA_SURFACE,
+    kind,
+    host,
+  };
+}

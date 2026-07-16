@@ -9,6 +9,7 @@ export {
   ENTRY_DETAIL_DECISION_PLAYBOOK_SURFACE,
   ENTRY_DETAIL_MOBILE_SURFACE,
   ENTRY_DETAIL_RAIL_SURFACE,
+  ENTRY_DETAIL_SCHEMA_SURFACE,
   ENTRY_DETAIL_STICKY_META_SURFACE,
   browseCompareOpenAnalyticsData,
   browseCompareOpenAnalyticsEvent,
@@ -74,4 +75,7 @@ export {
   entryDetailCodeDisclosureAnalyticsData,
   entryDetailCodeDisclosureAnalyticsEvent,
   type EntryDetailCodeDisclosureKind,
+  entryDetailSchemaLinkAnalyticsData,
+  entryDetailSchemaLinkAnalyticsEvent,
+  type EntryDetailSchemaLinkKind,
 } from "@/lib/entry-detail-cta-events-lib";

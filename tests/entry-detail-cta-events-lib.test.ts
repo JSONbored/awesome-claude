@@ -62,7 +62,10 @@ import {
   entryDetailCitationPlainTextAnalyticsEvent,
   entryDetailCodeDisclosureAnalyticsData,
   entryDetailCodeDisclosureAnalyticsEvent,
+  entryDetailSchemaLinkAnalyticsData,
+  entryDetailSchemaLinkAnalyticsEvent,
   ENTRY_DETAIL_COMMAND_CENTER_SURFACE,
+  ENTRY_DETAIL_SCHEMA_SURFACE,
 } from "@/lib/entry-detail-cta-events-lib";
 
 describe("entry detail cta events lib", () => {
@@ -473,6 +476,35 @@ describe("entry detail cta events lib", () => {
       surface: ENTRY_DETAIL_COMMAND_CENTER_SURFACE,
       kind: "full-copy",
       open: true,
+    });
+    expect(entryDetailSchemaLinkAnalyticsEvent()).toBe(
+      "detail_schema_link_click",
+    );
+    expect(
+      entryDetailSchemaLinkAnalyticsData(
+        "tools",
+        "demo",
+        "website",
+        "example.com",
+      ),
+    ).toEqual({
+      entry: "tools/demo",
+      surface: ENTRY_DETAIL_SCHEMA_SURFACE,
+      kind: "website",
+      host: "example.com",
+    });
+    expect(
+      entryDetailSchemaLinkAnalyticsData(
+        "mcp",
+        "browser",
+        "download",
+        "cdn.example.com",
+      ),
+    ).toEqual({
+      entry: "mcp/browser",
+      surface: ENTRY_DETAIL_SCHEMA_SURFACE,
+      kind: "download",
+      host: "cdn.example.com",
     });
   });
 });
