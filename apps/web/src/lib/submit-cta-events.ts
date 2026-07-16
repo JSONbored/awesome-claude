@@ -24,7 +24,7 @@ export {
   type SubmitCompletionDestination,
   type SubmitDraftCopySource,
   type SubmitEgressDestination,
-  type SubmitPreflightRouteSuggestion,
+  type SubmitPreflightNextActionRoute,
   type SubmitStepDirection,
   type SubmitSuccessPath,
 } from "@/lib/submit-cta-events-lib";

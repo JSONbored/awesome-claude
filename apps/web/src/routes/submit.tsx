@@ -649,12 +649,14 @@ function ServerPreflightBlock({
       {result.nextAction?.url && result.routeSuggestion !== "submit_pr" && (
         <a
           href={result.nextAction.url}
-          onClick={() =>
+          onClick={() => {
+            const routeSuggestion = result.routeSuggestion;
+            if (routeSuggestion === "submit_pr") return;
             trackEvent(
               submitPreflightNextActionAnalyticsEvent(),
-              submitPreflightNextActionAnalyticsData(category, result.routeSuggestion),
-            )
-          }
+              submitPreflightNextActionAnalyticsData(category, routeSuggestion),
+            );
+          }}
           className="inline-flex text-sm font-medium text-ink underline"
         >
           {result.nextAction.label}

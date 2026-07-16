@@ -127,11 +127,7 @@ export function submitDraftCopyAnalyticsData(category: string, source: SubmitDra
   };
 }
 
-export type SubmitPreflightRouteSuggestion =
-  | "submit_pr"
-  | "form_required"
-  | "route_away"
-  | "manual_review";
+export type SubmitPreflightNextActionRoute = "form_required" | "route_away" | "manual_review";
 
 export function submitPreflightNextActionAnalyticsEvent(): string {
   return "submit_preflight_next_action_click";
@@ -139,7 +135,7 @@ export function submitPreflightNextActionAnalyticsEvent(): string {
 
 export function submitPreflightNextActionAnalyticsData(
   category: string,
-  routeSuggestion: SubmitPreflightRouteSuggestion,
+  routeSuggestion: SubmitPreflightNextActionRoute,
 ) {
   return {
     surface: SUBMIT_SURFACE,

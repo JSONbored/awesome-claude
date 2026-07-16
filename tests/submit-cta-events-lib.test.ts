@@ -120,5 +120,12 @@ describe("submit cta events lib", () => {
       category: "skills",
       routeSuggestion: "form_required",
     });
+    expect(
+      submitPreflightNextActionAnalyticsData("hooks", "manual_review"),
+    ).toEqual({
+      surface: SUBMIT_SURFACE,
+      category: "hooks",
+      routeSuggestion: "manual_review",
+    });
   });
 });
