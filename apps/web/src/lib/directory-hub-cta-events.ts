@@ -3,6 +3,7 @@
  */
 export {
   BEST_INDEX_SURFACE,
+  CATEGORY_HUB_NOTFOUND_SURFACE,
   CATEGORY_HUB_SURFACE,
   PLATFORM_CATEGORY_SURFACE,
   PLATFORM_HUB_SURFACE,
@@ -11,6 +12,8 @@ export {
   bestIndexListAnalyticsEvent,
   categoryHubBrowseAnalyticsData,
   categoryHubBrowseAnalyticsEvent,
+  categoryHubNotFoundEgressAnalyticsData,
+  categoryHubNotFoundEgressAnalyticsEvent,
   categoryHubSeeAllAnalyticsData,
   categoryHubSeeAllAnalyticsEvent,
   platformCategoryCategoryAnalyticsData,

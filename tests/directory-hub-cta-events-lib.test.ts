@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   BEST_INDEX_SURFACE,
+  CATEGORY_HUB_NOTFOUND_SURFACE,
   CATEGORY_HUB_SURFACE,
   PLATFORM_CATEGORY_SURFACE,
   PLATFORM_HUB_SURFACE,
@@ -9,6 +10,8 @@ import {
   bestIndexListAnalyticsEvent,
   categoryHubBrowseAnalyticsData,
   categoryHubBrowseAnalyticsEvent,
+  categoryHubNotFoundEgressAnalyticsData,
+  categoryHubNotFoundEgressAnalyticsEvent,
   categoryHubSeeAllAnalyticsData,
   categoryHubSeeAllAnalyticsEvent,
   platformCategoryCategoryAnalyticsData,
@@ -38,6 +41,12 @@ describe("directory hub cta events lib", () => {
       surface: CATEGORY_HUB_SURFACE,
       category: "skills",
       entryCount: 18,
+    });
+    expect(categoryHubNotFoundEgressAnalyticsEvent()).toBe(
+      "category_hub_notfound_egress_click",
+    );
+    expect(categoryHubNotFoundEgressAnalyticsData()).toEqual({
+      surface: CATEGORY_HUB_NOTFOUND_SURFACE,
     });
   });
 

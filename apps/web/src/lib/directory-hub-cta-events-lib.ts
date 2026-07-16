@@ -6,6 +6,7 @@
  */
 
 export const CATEGORY_HUB_SURFACE = "category-hub";
+export const CATEGORY_HUB_NOTFOUND_SURFACE = "category-hub-notfound";
 export const BEST_INDEX_SURFACE = "best-index";
 export const PLATFORM_INDEX_SURFACE = "platform-index";
 export const PLATFORM_HUB_SURFACE = "platform-hub";
@@ -32,6 +33,16 @@ export function categoryHubSeeAllAnalyticsData(category: string, entryCount: num
     surface: CATEGORY_HUB_SURFACE,
     category,
     entryCount,
+  };
+}
+
+export function categoryHubNotFoundEgressAnalyticsEvent(): string {
+  return "category_hub_notfound_egress_click";
+}
+
+export function categoryHubNotFoundEgressAnalyticsData() {
+  return {
+    surface: CATEGORY_HUB_NOTFOUND_SURFACE,
   };
 }
 
