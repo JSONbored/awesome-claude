@@ -21,6 +21,7 @@ import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import { CountUp } from "@/components/count-up";
 import { NewsletterInline } from "@/components/newsletter-inline";
+import { ReportDownloads } from "@/components/report-downloads";
 import { trackEvent } from "@/lib/analytics";
 import {
   stateReportEntryAnalyticsData,
@@ -280,6 +281,8 @@ function StateOfClaudeToolingPage() {
       >
         <DistTable rows={NOTES_DIST} />
       </Section>
+
+      <ReportDownloads exportSlug="claude-tooling" />
 
       <section className="mt-12">
         <div className="flex items-center gap-2">

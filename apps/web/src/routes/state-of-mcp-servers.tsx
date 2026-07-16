@@ -16,6 +16,7 @@ import { stringifyJsonLd } from "@/lib/json-ld";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import { NewsletterInline } from "@/components/newsletter-inline";
+import { ReportDownloads } from "@/components/report-downloads";
 import { DataSection, DataStat, DistTable, pctOf, type DistRow } from "@/components/data-report";
 import { trackEvent } from "@/lib/analytics";
 import {
@@ -244,7 +245,11 @@ function StateOfMcpServersPage() {
           <h2 className="h-display-2 text-ink text-balance">Trust-level distribution</h2>
           <p className="mt-2 text-sm text-ink-muted">
             Every server carries a trust signal you can verify.{" "}
-            <Link to="/quality" className="text-ink underline-offset-2 hover:underline">
+            <Link
+              to="/quality"
+              onClick={() => trackStateReportEgress("quality")}
+              className="text-ink underline-offset-2 hover:underline"
+            >
               See how we score.
             </Link>
           </p>
@@ -277,6 +282,8 @@ function StateOfMcpServersPage() {
       >
         <DistTable rows={TAG_DIST} />
       </DataSection>
+
+      <ReportDownloads exportSlug="mcp-servers" />
 
       <section className="mt-12">
         <div className="flex items-center gap-2">
