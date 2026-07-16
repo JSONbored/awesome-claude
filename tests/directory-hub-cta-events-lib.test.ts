@@ -4,6 +4,7 @@ import {
   CATEGORY_HUB_NOTFOUND_SURFACE,
   CATEGORY_HUB_SURFACE,
   PLATFORM_CATEGORY_SURFACE,
+  PLATFORM_HUB_NOTFOUND_SURFACE,
   PLATFORM_HUB_SURFACE,
   PLATFORM_INDEX_SURFACE,
   bestIndexListAnalyticsData,
@@ -20,6 +21,8 @@ import {
   platformCategoryPlatformAnalyticsEvent,
   platformHubBrowseAnalyticsData,
   platformHubBrowseAnalyticsEvent,
+  platformHubNotFoundEgressAnalyticsData,
+  platformHubNotFoundEgressAnalyticsEvent,
   platformHubSectionAnalyticsData,
   platformHubSectionAnalyticsEvent,
   platformIndexSelectAnalyticsData,
@@ -78,6 +81,12 @@ describe("directory hub cta events lib", () => {
       surface: PLATFORM_HUB_SURFACE,
       platformId: "cursor",
       entryCount: 88,
+    });
+    expect(platformHubNotFoundEgressAnalyticsEvent()).toBe(
+      "platform_hub_notfound_egress_click",
+    );
+    expect(platformHubNotFoundEgressAnalyticsData()).toEqual({
+      surface: PLATFORM_HUB_NOTFOUND_SURFACE,
     });
     expect(platformHubSectionAnalyticsEvent()).toBe(
       "platform_hub_section_click",

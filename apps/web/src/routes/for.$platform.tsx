@@ -14,6 +14,8 @@ import { trackEvent } from "@/lib/analytics";
 import {
   platformHubBrowseAnalyticsData,
   platformHubBrowseAnalyticsEvent,
+  platformHubNotFoundEgressAnalyticsData,
+  platformHubNotFoundEgressAnalyticsEvent,
   platformHubSectionAnalyticsData,
   platformHubSectionAnalyticsEvent,
 } from "@/lib/directory-hub-cta-events";
@@ -72,6 +74,12 @@ export const Route = createFileRoute("/for/$platform")({
       <Link
         to="/for"
         className="mt-6 inline-flex h-9 items-center gap-1.5 rounded-md bg-ink px-4 font-medium text-background hover:opacity-90"
+        onClick={() =>
+          trackEvent(
+            platformHubNotFoundEgressAnalyticsEvent(),
+            platformHubNotFoundEgressAnalyticsData(),
+          )
+        }
       >
         All platforms <ArrowRight className="h-4 w-4" />
       </Link>

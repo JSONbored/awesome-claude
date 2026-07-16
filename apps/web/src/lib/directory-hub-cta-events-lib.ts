@@ -10,6 +10,7 @@ export const CATEGORY_HUB_NOTFOUND_SURFACE = "category-hub-notfound";
 export const BEST_INDEX_SURFACE = "best-index";
 export const PLATFORM_INDEX_SURFACE = "platform-index";
 export const PLATFORM_HUB_SURFACE = "platform-hub";
+export const PLATFORM_HUB_NOTFOUND_SURFACE = "platform-hub-notfound";
 export const PLATFORM_CATEGORY_SURFACE = "platform-category";
 
 export function categoryHubBrowseAnalyticsEvent(): string {
@@ -93,6 +94,16 @@ export function platformHubBrowseAnalyticsData(platformId: string, entryCount: n
     surface: PLATFORM_HUB_SURFACE,
     platformId,
     entryCount,
+  };
+}
+
+export function platformHubNotFoundEgressAnalyticsEvent(): string {
+  return "platform_hub_notfound_egress_click";
+}
+
+export function platformHubNotFoundEgressAnalyticsData() {
+  return {
+    surface: PLATFORM_HUB_NOTFOUND_SURFACE,
   };
 }
 
