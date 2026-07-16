@@ -82,6 +82,12 @@ import { useCompare, useIsCompared } from "@/lib/compare";
 import { serializeCompareItems } from "@/lib/compare-selection";
 import { trackEvent } from "@/lib/analytics";
 import {
+  entryDetailCategoryHubAnalyticsData,
+  entryDetailCategoryHubAnalyticsEvent,
+  entryDetailTagAnalyticsData,
+  entryDetailTagAnalyticsEvent,
+} from "@/lib/entry-detail-tag-cta-events";
+import {
   ENTRY_DETAIL_DECISION_PLAYBOOK_SURFACE,
   entryDetailCompareAnalyticsData,
   entryDetailCompareAnalyticsEvent,
@@ -861,7 +867,7 @@ function Dossier() {
               </div>
             )}
             <div className="mt-4 flex flex-wrap gap-1.5">
-              {entry.tags.map((t) => {
+              {entry.tags.map((t, rowIndex) => {
                 const slug = tagSlug(t);
                 const base =
                   "inline-flex rounded-md border border-border bg-surface px-2 py-0.5 text-xs text-ink-muted";
@@ -878,6 +884,18 @@ function Dossier() {
                     key={t}
                     to="/tags/$tag"
                     params={{ tag: slug }}
+                    onClick={() =>
+                      trackEvent(
+                        entryDetailTagAnalyticsEvent(),
+                        entryDetailTagAnalyticsData(
+                          entry.category,
+                          entry.slug,
+                          slug,
+                          rowIndex,
+                          entry.tags.length,
+                        ),
+                      )
+                    }
                     className={`${base} hover:border-border-strong hover:text-ink`}
                   >
                     #{t}
@@ -975,6 +993,12 @@ function Dossier() {
                 <Link
                   to="/$category"
                   params={{ category: entry.category }}
+                  onClick={() =>
+                    trackEvent(
+                      entryDetailCategoryHubAnalyticsEvent(),
+                      entryDetailCategoryHubAnalyticsData(entry.category, entry.slug),
+                    )
+                  }
                   className="story-link text-xs font-medium text-ink"
                 >
                   More in {categoryLabels[entry.category] ?? entry.category} →
