@@ -6,6 +6,7 @@
  */
 
 export const DOSSIER_TOC_DETAIL_RAIL_SURFACE = "detail-dossier-toc";
+export const DOSSIER_TOC_CONTENT_OUTLINE_SURFACE = "detail-content-outline";
 
 export function dossierTocEntryKey(category: string, slug: string): string {
   return `${category}/${slug}`;

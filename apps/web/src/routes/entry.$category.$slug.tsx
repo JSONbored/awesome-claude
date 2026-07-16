@@ -82,6 +82,11 @@ import { useCompare, useIsCompared } from "@/lib/compare";
 import { serializeCompareItems } from "@/lib/compare-selection";
 import { trackEvent } from "@/lib/analytics";
 import {
+  DOSSIER_TOC_CONTENT_OUTLINE_SURFACE,
+  dossierTocSectionAnalyticsData,
+  dossierTocSectionAnalyticsEvent,
+} from "@/lib/dossier-toc-cta-events";
+import {
   entryDetailCategoryHubAnalyticsData,
   entryDetailCategoryHubAnalyticsEvent,
   entryDetailTagAnalyticsData,
@@ -871,7 +876,21 @@ function Dossier() {
                 <ul className="grid gap-1 text-xs text-ink-muted sm:grid-cols-2">
                   {entry.headings.slice(0, 16).map((heading) => (
                     <li key={heading.id}>
-                      <a href={`#${heading.id}`} className="hover:text-ink">
+                      <a
+                        href={`#${heading.id}`}
+                        className="hover:text-ink"
+                        onClick={() =>
+                          trackEvent(
+                            dossierTocSectionAnalyticsEvent(),
+                            dossierTocSectionAnalyticsData(
+                              entry.category,
+                              entry.slug,
+                              heading.id,
+                              DOSSIER_TOC_CONTENT_OUTLINE_SURFACE,
+                            ),
+                          )
+                        }
+                      >
                         {heading.text}
                       </a>
                     </li>

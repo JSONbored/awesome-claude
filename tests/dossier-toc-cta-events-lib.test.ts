@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  DOSSIER_TOC_CONTENT_OUTLINE_SURFACE,
   DOSSIER_TOC_DETAIL_RAIL_SURFACE,
   dossierTocSectionAnalyticsData,
   dossierTocSectionAnalyticsEvent,
@@ -27,5 +28,17 @@ describe("dossier toc cta events lib", () => {
         section: "signals",
       },
     );
+    expect(
+      dossierTocSectionAnalyticsData(
+        "mcp",
+        "browser",
+        "install",
+        DOSSIER_TOC_CONTENT_OUTLINE_SURFACE,
+      ),
+    ).toEqual({
+      entry: "mcp/browser",
+      surface: "detail-content-outline",
+      section: "install",
+    });
   });
 });
