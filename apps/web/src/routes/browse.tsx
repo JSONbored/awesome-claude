@@ -1079,10 +1079,22 @@ function Browse() {
                     }
                   : null
               }
+              onTrustLevelSelect={(level) => set({ trust: level === sp.trust ? "" : level })}
+              onCoverageSelect={(_coverageId, signal) =>
+                set({ signal: signal === sp.signal ? "" : signal })
+              }
               className="mt-3"
             />
           ) : null}
-          <BrowseRolloutSignalsPanel state={browseRolloutSignals} className="mt-3" />
+          <BrowseRolloutSignalsPanel
+            state={browseRolloutSignals}
+            onSignalRowSelect={(_signalId, patch) => {
+              if (patch.signal != null) {
+                set({ signal: patch.signal === sp.signal ? "" : patch.signal });
+              }
+            }}
+            className="mt-3"
+          />
           <BrowseAdoptionQueuePanel
             state={browseAdoptionQueue}
             selectedPreset={adoptionPreset}

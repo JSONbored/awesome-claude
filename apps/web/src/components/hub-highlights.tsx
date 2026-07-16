@@ -15,6 +15,14 @@ import {
   hubHighlightEntryAnalyticsData,
   hubHighlightEntryAnalyticsEvent,
 } from "@/lib/hub-entry-cta-events";
+import {
+  hubSignalStatAnalyticsData,
+  hubSignalStatAnalyticsEvent,
+  hubStatBrowseSearch,
+  type HubSignalBrowseSearch,
+  type HubSignalSurface,
+} from "@/lib/hub-signal-cta-events";
+import { cn } from "@/lib/utils";
 
 const HIGHLIGHT_ICON: Record<HighlightKind, LucideIcon> = {
   trusted: ShieldCheck,
@@ -86,9 +94,17 @@ export function HubHighlights({
   );
 }
 
-function StatBar({ stat }: { stat: HubStat }) {
-  return (
-    <div className="rounded-xl border border-border bg-surface p-4">
+function StatBar({
+  stat,
+  browseSearch,
+  surface,
+}: {
+  stat: HubStat;
+  browseSearch: HubSignalBrowseSearch | null;
+  surface?: HubSignalSurface;
+}) {
+  const body = (
+    <>
       <div className="flex items-baseline justify-between gap-2">
         <span className="text-xs font-medium text-ink-muted">{stat.label}</span>
         <span className="font-mono text-[11px] tabular-nums text-ink-subtle">{stat.pct}%</span>
@@ -99,8 +115,30 @@ function StatBar({ stat }: { stat: HubStat }) {
       <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-surface-2">
         <div className="h-full bg-ink" style={{ width: `${stat.pct}%` }} />
       </div>
-    </div>
+    </>
   );
+
+  if (browseSearch && surface) {
+    return (
+      <Link
+        to="/browse"
+        search={browseSearch}
+        onClick={() =>
+          trackEvent(
+            hubSignalStatAnalyticsEvent(),
+            hubSignalStatAnalyticsData(surface, stat.key, stat.count, stat.pct),
+          )
+        }
+        className={cn(
+          "block rounded-xl border border-border bg-surface p-4 transition-colors hover:border-ink/20 hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60",
+        )}
+      >
+        {body}
+      </Link>
+    );
+  }
+
+  return <div className="rounded-xl border border-border bg-surface p-4">{body}</div>;
 }
 
 /**
@@ -108,7 +146,17 @@ function StatBar({ stat }: { stat: HubStat }) {
  * notes, review status. Every number is counted from the entries actually on the page,
  * so no two hubs render the same breakdown unless their data is genuinely identical.
  */
-export function HubSignalStats({ stats, total }: { stats: HubStat[]; total: number }) {
+export function HubSignalStats({
+  stats,
+  total,
+  surface,
+  browseBase,
+}: {
+  stats: HubStat[];
+  total: number;
+  surface?: HubSignalSurface;
+  browseBase?: { category?: string; platform?: string; q?: string };
+}) {
   if (stats.length === 0 || total < 2) return null;
   return (
     <section className="mt-12">
@@ -119,7 +167,12 @@ export function HubSignalStats({ stats, total }: { stats: HubStat[]; total: numb
       </p>
       <div className="mt-5 grid gap-3 sm:grid-cols-3 lg:grid-cols-5">
         {stats.map((s) => (
-          <StatBar key={s.key} stat={s} />
+          <StatBar
+            key={s.key}
+            stat={s}
+            surface={surface}
+            browseSearch={surface ? hubStatBrowseSearch(s.key, browseBase) : null}
+          />
         ))}
       </div>
     </section>

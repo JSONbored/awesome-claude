@@ -183,7 +183,12 @@ function TagHub() {
         ))}
       </div>
 
-      <HubSignalStats stats={stats} total={entries.length} />
+      <HubSignalStats
+        stats={stats}
+        total={entries.length}
+        surface="tag-hub"
+        browseBase={{ q: group.slug }}
+      />
 
       <NewsletterInline
         variant="quiet"

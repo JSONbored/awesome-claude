@@ -4,6 +4,9 @@ import type { BrowseRolloutSignalsState } from "@/lib/browse-rollout-signals";
 import {
   browseRolloutFlaggedEntryAnalyticsData,
   browseRolloutFlaggedEntryAnalyticsEvent,
+  browseRolloutSignalRowAnalyticsData,
+  browseRolloutSignalRowAnalyticsEvent,
+  browseRolloutSignalSearch,
   parseBrowseRolloutEntryRef,
 } from "@/lib/browse-rollout-cta-events";
 import { trackEvent } from "@/lib/analytics";
@@ -11,9 +14,11 @@ import { cn } from "@/lib/utils";
 
 export function BrowseRolloutSignalsPanel({
   state,
+  onSignalRowSelect,
   className,
 }: {
   state: BrowseRolloutSignalsState;
+  onSignalRowSelect?: (signalId: string, patch: { signal?: string; source?: string }) => void;
   className?: string;
 }) {
   if (!state.showPanel) return null;
@@ -31,27 +36,58 @@ export function BrowseRolloutSignalsPanel({
       </div>
 
       <div className="mt-3 grid gap-2 sm:grid-cols-2">
-        {state.rows.map((row) => (
-          <article key={row.id} className="rounded-md border border-border bg-background p-2.5">
-            <div className="flex items-start justify-between gap-2">
-              <div className="min-w-0">
-                <p className="text-xs font-medium text-ink">{row.label}</p>
-                <p className="mt-0.5 text-[11px] text-ink-muted">{row.message}</p>
+        {state.rows.map((row) => {
+          const patch = browseRolloutSignalSearch(row.id);
+          const body = (
+            <>
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="text-xs font-medium text-ink">{row.label}</p>
+                  <p className="mt-0.5 text-[11px] text-ink-muted">{row.message}</p>
+                </div>
+                <span
+                  className={cn(
+                    "inline-flex rounded-full border px-1.5 py-0.5 text-[10px] uppercase tracking-wide",
+                    toneClass(row.tone),
+                  )}
+                >
+                  {row.tone}
+                </span>
               </div>
-              <span
-                className={cn(
-                  "inline-flex rounded-full border px-1.5 py-0.5 text-[10px] uppercase tracking-wide",
-                  toneClass(row.tone),
-                )}
+              <p className="mt-1.5 font-mono text-[11px] text-ink">
+                {row.coveragePercent}% ({row.presentCount}/{row.presentCount + row.missingCount})
+              </p>
+            </>
+          );
+          if (onSignalRowSelect && patch) {
+            return (
+              <button
+                key={row.id}
+                type="button"
+                onClick={() => {
+                  trackEvent(
+                    browseRolloutSignalRowAnalyticsEvent(),
+                    browseRolloutSignalRowAnalyticsData(
+                      row.id,
+                      row.tone,
+                      row.coveragePercent,
+                      state.scannedCount,
+                    ),
+                  );
+                  onSignalRowSelect(row.id, patch);
+                }}
+                className="rounded-md border border-border bg-background p-2.5 text-left transition-colors hover:border-ink/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60"
               >
-                {row.tone}
-              </span>
-            </div>
-            <p className="mt-1.5 font-mono text-[11px] text-ink">
-              {row.coveragePercent}% ({row.presentCount}/{row.presentCount + row.missingCount})
-            </p>
-          </article>
-        ))}
+                {body}
+              </button>
+            );
+          }
+          return (
+            <article key={row.id} className="rounded-md border border-border bg-background p-2.5">
+              {body}
+            </article>
+          );
+        })}
       </div>
 
       {state.flaggedEntries.length > 0 ? (

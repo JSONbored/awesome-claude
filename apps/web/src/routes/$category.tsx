@@ -220,7 +220,12 @@ function CategoryHub() {
 
       <CategoryRankingTable entries={entries.slice(0, 12)} label={label} />
 
-      <HubSignalStats stats={stats} total={entries.length} />
+      <HubSignalStats
+        stats={stats}
+        total={entries.length}
+        surface="category-hub"
+        browseBase={{ category: id }}
+      />
 
       <section className="mt-14">
         <h2 className="h-display-2 text-ink">Frequently asked</h2>
