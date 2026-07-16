@@ -14,6 +14,8 @@ export {
   browseLoadMoreAnalyticsEvent,
   browseRecentEntryClickAnalyticsData,
   browseRecentEntryClickAnalyticsEvent,
+  browseRecentsPanelToggleAnalyticsData,
+  browseRecentsPanelToggleAnalyticsEvent,
   browseSavedSearchApplyAnalyticsData,
   browseSavedSearchApplyAnalyticsEvent,
   browseSavedSearchLinkClickAnalyticsData,

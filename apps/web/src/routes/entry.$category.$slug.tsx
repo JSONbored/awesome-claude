@@ -107,6 +107,9 @@ import {
   entryDetailPlaybookActionAnalyticsEvent,
   entryDetailCitationPlainTextAnalyticsData,
   entryDetailCitationPlainTextAnalyticsEvent,
+  entryDetailCodeDisclosureAnalyticsData,
+  entryDetailCodeDisclosureAnalyticsEvent,
+  type EntryDetailCodeDisclosureKind,
 } from "@/lib/entry-detail-cta-events";
 import {
   detailDecisionPresetAnalyticsData,
@@ -1311,7 +1314,13 @@ function SchemaDetails({ entry }: { entry: Entry }) {
               <FieldRow label="Script language" value={entry.scriptLanguage} />
             </FieldGrid>
             <PillList label="Allowed tools" values={entry.allowedTools} />
-            <CodeDisclosure label="Script body" value={entry.scriptBody} />
+            <CodeDisclosure
+              label="Script body"
+              value={entry.scriptBody}
+              category={entry.category}
+              slug={entry.slug}
+              kind="script-body"
+            />
           </MetadataGroup>
         )}
 
@@ -1353,7 +1362,13 @@ function SchemaDetails({ entry }: { entry: Entry }) {
           </MetadataGroup>
         )}
 
-        <CodeDisclosure label="Full copyable content" value={entry.fullCopy ?? entry.copySnippet} />
+        <CodeDisclosure
+          label="Full copyable content"
+          value={entry.fullCopy ?? entry.copySnippet}
+          category={entry.category}
+          slug={entry.slug}
+          kind="full-copy"
+        />
       </div>
     </DossierSection>
   );
@@ -1486,10 +1501,31 @@ function CollectionItemList({
   );
 }
 
-function CodeDisclosure({ label, value }: { label: string; value?: string }) {
+function CodeDisclosure({
+  label,
+  value,
+  category,
+  slug,
+  kind,
+}: {
+  label: string;
+  value?: string;
+  category: string;
+  slug: string;
+  kind: EntryDetailCodeDisclosureKind;
+}) {
   if (!value) return null;
   return (
-    <details className="mt-3 rounded-lg border border-border bg-background">
+    <details
+      className="mt-3 rounded-lg border border-border bg-background"
+      onToggle={(e) => {
+        const open = (e.currentTarget as HTMLDetailsElement).open;
+        trackEvent(
+          entryDetailCodeDisclosureAnalyticsEvent(),
+          entryDetailCodeDisclosureAnalyticsData(category, slug, kind, open),
+        );
+      }}
+    >
       <summary className="cursor-pointer px-3 py-2 text-xs font-medium text-ink">{label}</summary>
       <pre className="max-h-96 overflow-auto border-t border-border p-3 font-mono text-[12px] leading-relaxed text-ink">
         <code>{value}</code>

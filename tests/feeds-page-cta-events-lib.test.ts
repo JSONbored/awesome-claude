@@ -5,6 +5,8 @@ import {
   feedsPageApiDocsAnalyticsEvent,
   feedsPageFeedCopyAnalyticsData,
   feedsPageFeedCopyAnalyticsEvent,
+  feedsPageEmailFollowAnalyticsData,
+  feedsPageEmailFollowAnalyticsEvent,
   feedsPageFeedOpenAnalyticsData,
   feedsPageFeedOpenAnalyticsEvent,
 } from "@/lib/feeds-page-cta-events-lib";
@@ -34,6 +36,17 @@ describe("feeds page cta events lib", () => {
       feedKind: "category",
       rowIndex: 2,
       sectionCount: 12,
+    });
+    expect(feedsPageEmailFollowAnalyticsEvent()).toBe(
+      "feeds_page_email_follow_click",
+    );
+    expect(
+      feedsPageEmailFollowAnalyticsData("changelog", "changelog", true),
+    ).toEqual({
+      surface: FEEDS_PAGE_SURFACE,
+      feedKey: "changelog",
+      feedKind: "changelog",
+      pending: true,
     });
   });
 });

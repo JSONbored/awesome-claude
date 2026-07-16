@@ -60,6 +60,9 @@ import {
   entryDetailPlaybookActionAnalyticsEvent,
   entryDetailCitationPlainTextAnalyticsData,
   entryDetailCitationPlainTextAnalyticsEvent,
+  entryDetailCodeDisclosureAnalyticsData,
+  entryDetailCodeDisclosureAnalyticsEvent,
+  ENTRY_DETAIL_COMMAND_CENTER_SURFACE,
 } from "@/lib/entry-detail-cta-events-lib";
 
 describe("entry detail cta events lib", () => {
@@ -441,6 +444,35 @@ describe("entry detail cta events lib", () => {
       entry: "mcp/filesystem",
       surface: "detail-command-center",
       destination: "plain-text",
+    });
+    expect(entryDetailCodeDisclosureAnalyticsEvent()).toBe(
+      "entry_detail_code_disclosure_click",
+    );
+    expect(
+      entryDetailCodeDisclosureAnalyticsData(
+        "skills",
+        "demo",
+        "script-body",
+        false,
+      ),
+    ).toEqual({
+      entry: "skills/demo",
+      surface: ENTRY_DETAIL_COMMAND_CENTER_SURFACE,
+      kind: "script-body",
+      open: false,
+    });
+    expect(
+      entryDetailCodeDisclosureAnalyticsData(
+        "mcp",
+        "browser",
+        "full-copy",
+        true,
+      ),
+    ).toEqual({
+      entry: "mcp/browser",
+      surface: ENTRY_DETAIL_COMMAND_CENTER_SURFACE,
+      kind: "full-copy",
+      open: true,
     });
   });
 });

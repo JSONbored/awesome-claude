@@ -56,3 +56,20 @@ export function feedsPageFeedCopyAnalyticsData(
     sectionCount,
   };
 }
+
+export function feedsPageEmailFollowAnalyticsEvent(): string {
+  return "feeds_page_email_follow_click";
+}
+
+export function feedsPageEmailFollowAnalyticsData(
+  feedKey: string,
+  feedKind: FeedsPageFeedKind,
+  pending: boolean,
+) {
+  return {
+    surface: FEEDS_PAGE_SURFACE,
+    feedKey,
+    feedKind,
+    pending,
+  };
+}

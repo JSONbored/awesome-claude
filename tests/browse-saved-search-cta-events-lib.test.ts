@@ -12,6 +12,8 @@ import {
   browseLoadMoreAnalyticsEvent,
   browseRecentEntryClickAnalyticsData,
   browseRecentEntryClickAnalyticsEvent,
+  browseRecentsPanelToggleAnalyticsData,
+  browseRecentsPanelToggleAnalyticsEvent,
   browseSavedSearchApplyAnalyticsData,
   browseSavedSearchApplyAnalyticsEvent,
   browseSavedSearchLinkClickAnalyticsData,
@@ -251,6 +253,15 @@ describe("browse saved search cta events lib", () => {
       surface: BROWSE_SAVED_SEARCH_MANAGER_SURFACE,
       open: true,
       filterCount: 3,
+    });
+    expect(browseRecentsPanelToggleAnalyticsEvent()).toBe(
+      "browse_recents_panel_toggle_click",
+    );
+    expect(browseRecentsPanelToggleAnalyticsData(true, 4, 6)).toEqual({
+      surface: BROWSE_RECENTS_PANEL_SURFACE,
+      open: true,
+      savedCount: 4,
+      recentCount: 6,
     });
   });
 });

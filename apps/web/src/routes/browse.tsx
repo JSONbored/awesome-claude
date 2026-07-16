@@ -93,6 +93,8 @@ import {
   browseLoadMoreAnalyticsEvent,
   browseRecentEntryClickAnalyticsData,
   browseRecentEntryClickAnalyticsEvent,
+  browseRecentsPanelToggleAnalyticsData,
+  browseRecentsPanelToggleAnalyticsEvent,
   browseSavedSearchApplyAnalyticsData,
   browseSavedSearchApplyAnalyticsEvent,
   browseSavedSearchLinkClickAnalyticsData,
@@ -1156,6 +1158,17 @@ function Browse() {
             <details
               className="mt-4 rounded-lg border border-border bg-surface px-3 py-2 [&[open]>summary>svg]:rotate-90"
               open={recents.saved.some((s) => s.alerts?.enabled)}
+              onToggle={(e) => {
+                const open = (e.currentTarget as HTMLDetailsElement).open;
+                trackEvent(
+                  browseRecentsPanelToggleAnalyticsEvent(),
+                  browseRecentsPanelToggleAnalyticsData(
+                    open,
+                    recents.saved.length,
+                    recentEntries.length,
+                  ),
+                );
+              }}
             >
               <summary className="flex cursor-pointer list-none items-center gap-2 text-xs text-ink-muted hover:text-ink">
                 <Clock className="h-3.5 w-3.5" />

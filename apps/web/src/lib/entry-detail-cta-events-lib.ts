@@ -452,3 +452,23 @@ export function entryDetailCitationPlainTextAnalyticsData(category: string, slug
     destination: "plain-text",
   };
 }
+
+export type EntryDetailCodeDisclosureKind = "script-body" | "full-copy";
+
+export function entryDetailCodeDisclosureAnalyticsEvent(): string {
+  return "entry_detail_code_disclosure_click";
+}
+
+export function entryDetailCodeDisclosureAnalyticsData(
+  category: string,
+  slug: string,
+  kind: EntryDetailCodeDisclosureKind,
+  open: boolean,
+) {
+  return {
+    entry: entryDetailEntryKey(category, slug),
+    surface: ENTRY_DETAIL_COMMAND_CENTER_SURFACE,
+    kind,
+    open,
+  };
+}

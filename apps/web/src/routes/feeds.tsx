@@ -9,6 +9,8 @@ import { trackEvent } from "@/lib/analytics";
 import {
   feedsPageApiDocsAnalyticsData,
   feedsPageApiDocsAnalyticsEvent,
+  feedsPageEmailFollowAnalyticsData,
+  feedsPageEmailFollowAnalyticsEvent,
   feedsPageFeedCopyAnalyticsData,
   feedsPageFeedCopyAnalyticsEvent,
   feedsPageFeedOpenAnalyticsData,
@@ -99,7 +101,17 @@ function FeedRow({
             Email
           </summary>
           <div className="mt-2 w-72">
-            <SubscribeForm segments={[segment]} source={`feeds:${segment}`} label="Follow" />
+            <SubscribeForm
+              segments={[segment]}
+              source={`feeds:${segment}`}
+              label="Follow"
+              onSubscribed={(pending) =>
+                trackEvent(
+                  feedsPageEmailFollowAnalyticsEvent(),
+                  feedsPageEmailFollowAnalyticsData(feedKey, feedKind, pending),
+                )
+              }
+            />
           </div>
         </details>
       </div>

@@ -286,3 +286,20 @@ export function browseSavedSearchManagerAlertsEditorAnalyticsData(
     filterCount,
   };
 }
+
+export function browseRecentsPanelToggleAnalyticsEvent(): string {
+  return "browse_recents_panel_toggle_click";
+}
+
+export function browseRecentsPanelToggleAnalyticsData(
+  open: boolean,
+  savedCount: number,
+  recentCount: number,
+) {
+  return {
+    surface: BROWSE_RECENTS_PANEL_SURFACE,
+    open,
+    savedCount,
+    recentCount,
+  };
+}

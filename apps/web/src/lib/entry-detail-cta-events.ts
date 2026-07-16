@@ -71,4 +71,7 @@ export {
   entryDetailPlaybookActionAnalyticsEvent,
   entryDetailCitationPlainTextAnalyticsData,
   entryDetailCitationPlainTextAnalyticsEvent,
+  entryDetailCodeDisclosureAnalyticsData,
+  entryDetailCodeDisclosureAnalyticsEvent,
+  type EntryDetailCodeDisclosureKind,
 } from "@/lib/entry-detail-cta-events-lib";

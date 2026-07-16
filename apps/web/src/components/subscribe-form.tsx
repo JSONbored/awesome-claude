@@ -3,6 +3,11 @@ import { Check, Loader2, Mail } from "lucide-react";
 import { toast } from "sonner";
 import { subscribeToNewsletter } from "@/lib/api/newsletter";
 import { useRecents } from "@/lib/recents";
+import { trackEvent } from "@/lib/analytics";
+import {
+  newsletterSubscribeAnalyticsData,
+  newsletterSubscribeAnalyticsEvent,
+} from "@/lib/conversion-cta-events";
 import { cn } from "@/lib/utils";
 
 interface SubscribeFormProps {
@@ -14,6 +19,8 @@ interface SubscribeFormProps {
   className?: string;
   /** Human-readable label for the local follow record. */
   followLabel?: string;
+  /** Optional hook after a successful subscribe (never receives email). */
+  onSubscribed?: (pending: boolean) => void;
 }
 
 export function SubscribeForm({
@@ -23,6 +30,7 @@ export function SubscribeForm({
   placeholder = "you@domain.com",
   className,
   followLabel,
+  onSubscribed,
 }: SubscribeFormProps) {
   const [email, setEmail] = React.useState("");
   const [state, setState] = React.useState<"idle" | "loading" | "ok" | "error">("idle");
@@ -39,6 +47,11 @@ export function SubscribeForm({
       setState("ok");
       setMessage("You're on the list. Check your inbox.");
       toast.success("Subscribed", { description: "Check your inbox to confirm." });
+      trackEvent(
+        newsletterSubscribeAnalyticsEvent(),
+        newsletterSubscribeAnalyticsData(source ?? "inline", res.pending),
+      );
+      onSubscribed?.(res.pending);
       // Record locally so /subscriptions can list it.
       const list = segments && segments.length > 0 ? segments : ["all"];
       for (const seg of list) {
