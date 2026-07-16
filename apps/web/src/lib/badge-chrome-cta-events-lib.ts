@@ -5,7 +5,11 @@
  * names without embedding titles or free-form note copy.
  */
 
-export type BadgeChromeSurface = "detail-sticky-meta" | "peek-panel" | "detail-header";
+export type BadgeChromeSurface =
+  | "detail-sticky-meta"
+  | "peek-panel"
+  | "detail-header"
+  | "contributor-profile";
 
 export type BadgeChromeNoteKind = "safety" | "privacy";
 

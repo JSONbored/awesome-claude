@@ -25,6 +25,12 @@ import { stringifyJsonLd } from "@/lib/json-ld";
 import { breadcrumbListJsonLd } from "@/lib/breadcrumb-jsonld-lib";
 import { trackEvent } from "@/lib/analytics";
 import {
+  badgeChromeSourceAnalyticsData,
+  badgeChromeSourceAnalyticsEvent,
+  badgeChromeTrustAnalyticsData,
+  badgeChromeTrustAnalyticsEvent,
+} from "@/lib/badge-chrome-cta-events";
+import {
   contributorProfileEntryAnalyticsData,
   contributorProfileEntryAnalyticsEvent,
 } from "@/lib/insights-page-entry-cta-events";
@@ -357,8 +363,26 @@ function ContributionRow({
           {roleLabel[role]}
         </span>
         <CategoryPill>{entry.category}</CategoryPill>
-        <TrustBadge level={entry.trust} />
-        <SourceBadge status={entry.source} />
+        <TrustBadge
+          level={entry.trust}
+          asLink
+          onNavigate={() =>
+            trackEvent(
+              badgeChromeTrustAnalyticsEvent(),
+              badgeChromeTrustAnalyticsData(entry.trust, "contributor-profile"),
+            )
+          }
+        />
+        <SourceBadge
+          status={entry.source}
+          asLink
+          onNavigate={() =>
+            trackEvent(
+              badgeChromeSourceAnalyticsEvent(),
+              badgeChromeSourceAnalyticsData(entry.source, "contributor-profile"),
+            )
+          }
+        />
       </div>
 
       <div className="mt-3">

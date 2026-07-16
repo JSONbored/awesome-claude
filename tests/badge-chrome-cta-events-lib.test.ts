@@ -34,6 +34,18 @@ describe("badge chrome cta events lib", () => {
       surface: "detail-header",
       source: "first-party",
     });
+    expect(
+      badgeChromeSourceAnalyticsData("source-backed", "contributor-profile"),
+    ).toEqual({
+      surface: "contributor-profile",
+      source: "source-backed",
+    });
+    expect(
+      badgeChromeTrustAnalyticsData("verified", "contributor-profile"),
+    ).toEqual({
+      surface: "contributor-profile",
+      trust: "verified",
+    });
     expect(badgeChromeCategoryAnalyticsEvent()).toBe(
       "badge_category_browse_click",
     );
