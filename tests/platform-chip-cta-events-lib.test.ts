@@ -12,11 +12,11 @@ describe("platform chip cta events lib", () => {
       surface: PLATFORM_CHIP_SURFACE,
       platform: "claude-code",
     });
-    expect(platformChipAnalyticsData("claude-desktop", "compare-table")).toEqual(
-      {
-        surface: "compare-table",
-        platform: "claude-desktop",
-      },
-    );
+    expect(
+      platformChipAnalyticsData("claude-desktop", "compare-table"),
+    ).toEqual({
+      surface: "compare-table",
+      platform: "claude-desktop",
+    });
   });
 });
