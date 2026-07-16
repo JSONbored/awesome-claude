@@ -20,6 +20,8 @@ import { trackEvent } from "@/lib/analytics";
 import {
   compareCuratedEgressAnalyticsData,
   compareCuratedEgressAnalyticsEvent,
+  compareCuratedNotFoundEgressAnalyticsData,
+  compareCuratedNotFoundEgressAnalyticsEvent,
 } from "@/lib/compare-curated-egress-cta-events";
 
 export const Route = createFileRoute("/compare/$slug")({
@@ -66,7 +68,16 @@ export const Route = createFileRoute("/compare/$slug")({
   notFoundComponent: () => (
     <div className="mx-auto max-w-2xl px-6 py-24 text-center">
       <h1 className="h-display-2 text-ink">Comparison not found</h1>
-      <Link to="/compare" className="mt-4 inline-block text-ink-muted hover:text-ink">
+      <Link
+        to="/compare"
+        className="mt-4 inline-block text-ink-muted hover:text-ink"
+        onClick={() =>
+          trackEvent(
+            compareCuratedNotFoundEgressAnalyticsEvent(),
+            compareCuratedNotFoundEgressAnalyticsData(),
+          )
+        }
+      >
         ← Build your own comparison
       </Link>
     </div>

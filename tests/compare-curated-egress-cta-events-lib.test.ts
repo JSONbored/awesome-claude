@@ -1,8 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
+  COMPARE_CURATED_NOTFOUND_SURFACE,
   COMPARE_CURATED_PAGE_SURFACE,
   compareCuratedEgressAnalyticsData,
   compareCuratedEgressAnalyticsEvent,
+  compareCuratedNotFoundEgressAnalyticsData,
+  compareCuratedNotFoundEgressAnalyticsEvent,
 } from "@/lib/compare-curated-egress-cta-events-lib";
 
 describe("compare curated egress cta events lib", () => {
@@ -15,6 +18,12 @@ describe("compare curated egress cta events lib", () => {
       linkKind: "interactive",
       refCount: 4,
       hasInteractive: true,
+    });
+    expect(compareCuratedNotFoundEgressAnalyticsEvent()).toBe(
+      "compare_curated_notfound_egress_click",
+    );
+    expect(compareCuratedNotFoundEgressAnalyticsData()).toEqual({
+      surface: COMPARE_CURATED_NOTFOUND_SURFACE,
     });
   });
 });
