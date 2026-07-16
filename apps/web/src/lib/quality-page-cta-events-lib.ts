@@ -1,11 +1,19 @@
 /**
  * Pure quality page navigation analytics helpers.
  *
- * Maps category browse egress, changelog navigation, and report CTAs to
- * privacy-light event names without embedding titles, URLs, or entry names.
+ * Maps category browse egress, changelog navigation, report CTAs, and
+ * methodology accordion toggles to privacy-light event names without embedding
+ * titles, URLs, or entry names.
  */
 
 export const QUALITY_PAGE_SURFACE = "quality-page";
+
+export type QualityMethodId =
+  | "source-backed"
+  | "safety-notes"
+  | "privacy-notes"
+  | "reviewed"
+  | "install-command";
 
 export function qualityPageCategoryBrowseAnalyticsEvent(): string {
   return "quality_page_category_browse_click";
@@ -54,5 +62,22 @@ export function qualityPageIssueAnalyticsEvent(): string {
 export function qualityPageIssueAnalyticsData() {
   return {
     surface: QUALITY_PAGE_SURFACE,
+  };
+}
+
+export function qualityPageMethodToggleAnalyticsEvent(): string {
+  return "quality_page_method_toggle_click";
+}
+
+export function qualityPageMethodToggleAnalyticsData(
+  methodId: QualityMethodId,
+  open: boolean,
+  methodCount: number,
+) {
+  return {
+    surface: QUALITY_PAGE_SURFACE,
+    methodId,
+    open,
+    methodCount,
   };
 }

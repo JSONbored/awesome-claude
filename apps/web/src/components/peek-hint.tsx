@@ -1,6 +1,11 @@
 import * as React from "react";
 import { X } from "lucide-react";
 import { Kbd } from "@/components/badges";
+import { trackEvent } from "@/lib/analytics";
+import {
+  peekHintDismissAnalyticsData,
+  peekHintDismissAnalyticsEvent,
+} from "@/lib/a11y-chrome-cta-events";
 import { defaultLocalStorage } from "@/lib/dossier-prefs-lib";
 import { dismissPeekHint, peekHintDismissed } from "@/lib/peek-hint-lib";
 import { cn } from "@/lib/utils";
@@ -31,12 +36,14 @@ export function PeekHint({ hovered, className }: { hovered: boolean; className?:
       setVisible(false);
       setEligible(false);
       dismissPeekHint(defaultLocalStorage());
+      trackEvent(peekHintDismissAnalyticsEvent(), peekHintDismissAnalyticsData("timeout"));
     }, 8000);
     const onKey = (e: KeyboardEvent) => {
       if (e.key.toLowerCase() === "p" && !e.metaKey && !e.ctrlKey && !e.altKey) {
         setVisible(false);
         setEligible(false);
         dismissPeekHint(defaultLocalStorage());
+        trackEvent(peekHintDismissAnalyticsEvent(), peekHintDismissAnalyticsData("hotkey"));
       }
     };
     window.addEventListener("keydown", onKey);
@@ -68,6 +75,7 @@ export function PeekHint({ hovered, className }: { hovered: boolean; className?:
           setVisible(false);
           setEligible(false);
           dismissPeekHint(defaultLocalStorage());
+          trackEvent(peekHintDismissAnalyticsEvent(), peekHintDismissAnalyticsData("button"));
         }}
         aria-label="Dismiss peek shortcut hint"
         className="inline-flex h-4 w-4 items-center justify-center rounded text-ink-subtle hover:text-ink"

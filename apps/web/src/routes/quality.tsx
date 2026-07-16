@@ -36,8 +36,13 @@ import {
   qualityPageClaimAnalyticsEvent,
   qualityPageIssueAnalyticsData,
   qualityPageIssueAnalyticsEvent,
+  qualityPageMethodToggleAnalyticsData,
+  qualityPageMethodToggleAnalyticsEvent,
+  type QualityMethodId,
 } from "@/lib/quality-page-cta-events";
 import { cn } from "@/lib/utils";
+
+const QUALITY_METHOD_COUNT = 5;
 
 const CHANGELOG_PREVIEW_COUNT = 6;
 
@@ -323,22 +328,27 @@ function QualityPage() {
           </p>
           <div className="mt-4 space-y-2">
             <Method
+              methodId="source-backed"
               label="Source-backed"
               detail="A verifiable source URL (repo, package registry, official docs) that matches the claimed author."
             />
             <Method
+              methodId="safety-notes"
               label="Safety notes"
               detail="Required for MCP, hooks, skills, and commands — anything that runs code, touches files, or holds credentials."
             />
             <Method
+              methodId="privacy-notes"
               label="Privacy notes"
               detail="Required for MCP and skills — covers what data leaves your machine."
             />
             <Method
+              methodId="reviewed"
               label="Reviewed"
               detail="A maintainer has eyeballed the metadata. Not a code audit, not a runtime sandbox."
             />
             <Method
+              methodId="install-command"
               label="Install command"
               detail="An exact, copyable command. We do not run it for you."
             />
@@ -405,12 +415,27 @@ function MethodologyCard({ id, title, body }: { id: string; title: string; body:
   );
 }
 
-function Method({ label, detail }: { label: string; detail: string }) {
+function Method({
+  methodId,
+  label,
+  detail,
+}: {
+  methodId: QualityMethodId;
+  label: string;
+  detail: string;
+}) {
   const [open, setOpen] = useState(false);
   return (
     <button
       type="button"
-      onClick={() => setOpen((v) => !v)}
+      onClick={() => {
+        const next = !open;
+        trackEvent(
+          qualityPageMethodToggleAnalyticsEvent(),
+          qualityPageMethodToggleAnalyticsData(methodId, next, QUALITY_METHOD_COUNT),
+        );
+        setOpen(next);
+      }}
       className="w-full rounded-lg border border-border bg-surface p-3 text-left transition-colors duration-200 ease-out hover:bg-surface-2"
       aria-expanded={open}
     >

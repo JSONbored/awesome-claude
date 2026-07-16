@@ -9,6 +9,8 @@ import {
   qualityPageClaimAnalyticsEvent,
   qualityPageIssueAnalyticsData,
   qualityPageIssueAnalyticsEvent,
+  qualityPageMethodToggleAnalyticsData,
+  qualityPageMethodToggleAnalyticsEvent,
 } from "@/lib/quality-page-cta-events-lib";
 
 describe("quality page cta events lib", () => {
@@ -37,6 +39,28 @@ describe("quality page cta events lib", () => {
     expect(qualityPageIssueAnalyticsEvent()).toBe("quality_page_issue_click");
     expect(qualityPageIssueAnalyticsData()).toEqual({
       surface: QUALITY_PAGE_SURFACE,
+    });
+  });
+
+  it("builds quality methodology accordion toggle analytics", () => {
+    expect(qualityPageMethodToggleAnalyticsEvent()).toBe(
+      "quality_page_method_toggle_click",
+    );
+    expect(
+      qualityPageMethodToggleAnalyticsData("source-backed", true, 5),
+    ).toEqual({
+      surface: QUALITY_PAGE_SURFACE,
+      methodId: "source-backed",
+      open: true,
+      methodCount: 5,
+    });
+    expect(
+      qualityPageMethodToggleAnalyticsData("install-command", false, 5),
+    ).toEqual({
+      surface: QUALITY_PAGE_SURFACE,
+      methodId: "install-command",
+      open: false,
+      methodCount: 5,
     });
   });
 });

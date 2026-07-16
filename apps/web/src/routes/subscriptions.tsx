@@ -14,6 +14,10 @@ import {
   subscriptionsPageEgressAnalyticsEvent,
   subscriptionsPageManageAlertsAnalyticsData,
   subscriptionsPageManageAlertsAnalyticsEvent,
+  subscriptionsPageRemoveIntentAnalyticsData,
+  subscriptionsPageRemoveIntentAnalyticsEvent,
+  subscriptionsPageRenameAnalyticsData,
+  subscriptionsPageRenameAnalyticsEvent,
 } from "@/lib/subscriptions-page-cta-events";
 import {
   AlertDialog,
@@ -103,10 +107,18 @@ function SubscriptionsPage() {
 
   const removeFollow = (id: string) => {
     const f = recents.follows.find((x) => x.id === id);
+    trackEvent(
+      subscriptionsPageRemoveIntentAnalyticsEvent(),
+      subscriptionsPageRemoveIntentAnalyticsData("follow", followCount),
+    );
     setConfirm({ kind: "follow", id, label: f?.label ?? "this stream" });
   };
   const removeSegment = (id: string) => {
     const s = recents.segments.find((x) => x.id === id);
+    trackEvent(
+      subscriptionsPageRemoveIntentAnalyticsEvent(),
+      subscriptionsPageRemoveIntentAnalyticsData("segment", segmentCount),
+    );
     setConfirm({ kind: "segment", id, label: s?.label ?? "this segment", email: s?.email });
   };
 
@@ -200,6 +212,10 @@ function SubscriptionsPage() {
                           onChange={(e) => setRenameDraft(e.target.value)}
                           onKeyDown={(e) => {
                             if (e.key === "Enter") {
+                              trackEvent(
+                                subscriptionsPageRenameAnalyticsEvent(),
+                                subscriptionsPageRenameAnalyticsData("save", followCount),
+                              );
                               recents.renameFollow(f.id, renameDraft);
                               setRenameId(null);
                             } else if (e.key === "Escape") setRenameId(null);
@@ -219,6 +235,10 @@ function SubscriptionsPage() {
                         type="button"
                         aria-label="Save"
                         onClick={() => {
+                          trackEvent(
+                            subscriptionsPageRenameAnalyticsEvent(),
+                            subscriptionsPageRenameAnalyticsData("save", followCount),
+                          );
                           recents.renameFollow(f.id, renameDraft);
                           setRenameId(null);
                         }}
@@ -231,6 +251,10 @@ function SubscriptionsPage() {
                         type="button"
                         aria-label="Rename"
                         onClick={() => {
+                          trackEvent(
+                            subscriptionsPageRenameAnalyticsEvent(),
+                            subscriptionsPageRenameAnalyticsData("start", followCount),
+                          );
                           setRenameId(f.id);
                           setRenameDraft(f.label);
                         }}

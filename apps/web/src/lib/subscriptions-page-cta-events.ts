@@ -9,6 +9,11 @@ export {
   subscriptionsPageEgressAnalyticsEvent,
   subscriptionsPageManageAlertsAnalyticsData,
   subscriptionsPageManageAlertsAnalyticsEvent,
+  subscriptionsPageRemoveIntentAnalyticsData,
+  subscriptionsPageRemoveIntentAnalyticsEvent,
+  subscriptionsPageRenameAnalyticsData,
+  subscriptionsPageRenameAnalyticsEvent,
   type SubscriptionsPageConfirmKind,
   type SubscriptionsPageDestination,
+  type SubscriptionsPageRenamePhase,
 } from "@/lib/subscriptions-page-cta-events-lib";
