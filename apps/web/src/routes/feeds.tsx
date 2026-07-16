@@ -9,6 +9,8 @@ import { trackEvent } from "@/lib/analytics";
 import {
   feedsPageApiDocsAnalyticsData,
   feedsPageApiDocsAnalyticsEvent,
+  feedsPageEmailExpandAnalyticsData,
+  feedsPageEmailExpandAnalyticsEvent,
   feedsPageEmailFollowAnalyticsData,
   feedsPageEmailFollowAnalyticsEvent,
   feedsPageFeedCopyAnalyticsData,
@@ -96,7 +98,17 @@ function FeedRow({
           event={feedsPageFeedCopyAnalyticsEvent()}
           eventData={feedsPageFeedCopyAnalyticsData(feedKey, feedKind, rowIndex, sectionCount)}
         />
-        <details className="inline-block">
+        <details
+          className="inline-block"
+          onToggle={(event) => {
+            if (event.currentTarget.open) {
+              trackEvent(
+                feedsPageEmailExpandAnalyticsEvent(),
+                feedsPageEmailExpandAnalyticsData(feedKey, feedKind),
+              );
+            }
+          }}
+        >
           <summary className="inline-flex h-8 cursor-pointer items-center rounded-md border border-border bg-surface px-2.5 text-xs text-ink hover:bg-surface-2">
             Email
           </summary>

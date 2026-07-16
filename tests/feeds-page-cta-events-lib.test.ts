@@ -5,6 +5,8 @@ import {
   feedsPageApiDocsAnalyticsEvent,
   feedsPageFeedCopyAnalyticsData,
   feedsPageFeedCopyAnalyticsEvent,
+  feedsPageEmailExpandAnalyticsData,
+  feedsPageEmailExpandAnalyticsEvent,
   feedsPageEmailFollowAnalyticsData,
   feedsPageEmailFollowAnalyticsEvent,
   feedsPageFeedOpenAnalyticsData,
@@ -47,6 +49,14 @@ describe("feeds page cta events lib", () => {
       feedKey: "changelog",
       feedKind: "changelog",
       pending: true,
+    });
+    expect(feedsPageEmailExpandAnalyticsEvent()).toBe(
+      "feeds_page_email_expand_click",
+    );
+    expect(feedsPageEmailExpandAnalyticsData("mcp", "category")).toEqual({
+      surface: FEEDS_PAGE_SURFACE,
+      feedKey: "mcp",
+      feedKind: "category",
     });
   });
 });

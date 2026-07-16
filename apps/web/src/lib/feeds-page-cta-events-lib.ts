@@ -73,3 +73,15 @@ export function feedsPageEmailFollowAnalyticsData(
     pending,
   };
 }
+
+export function feedsPageEmailExpandAnalyticsEvent(): string {
+  return "feeds_page_email_expand_click";
+}
+
+export function feedsPageEmailExpandAnalyticsData(feedKey: string, feedKind: FeedsPageFeedKind) {
+  return {
+    surface: FEEDS_PAGE_SURFACE,
+    feedKey,
+    feedKind,
+  };
+}
