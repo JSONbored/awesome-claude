@@ -1,0 +1,28 @@
+/**
+ * Pure harness badge navigation analytics helpers.
+ *
+ * Maps harness badge platform egress to privacy-light event names without
+ * embedding display labels.
+ */
+
+export const HARNESS_BADGE_SURFACE = "harness-badge";
+
+export type HarnessBadgeSurface =
+  | typeof HARNESS_BADGE_SURFACE
+  | "compare-table"
+  | "compare-drawer"
+  | "category-ranking";
+
+export function harnessBadgeAnalyticsEvent(): string {
+  return "harness_badge_click";
+}
+
+export function harnessBadgeAnalyticsData(
+  harness: string,
+  surface: string = HARNESS_BADGE_SURFACE,
+) {
+  return {
+    surface,
+    harness,
+  };
+}

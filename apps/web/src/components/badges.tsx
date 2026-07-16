@@ -33,6 +33,12 @@ import {
   categoryPillAnalyticsData,
   categoryPillAnalyticsEvent,
 } from "@/lib/category-pill-cta-events";
+import { sourceBadgeAnalyticsData, sourceBadgeAnalyticsEvent } from "@/lib/source-badge-cta-events";
+import {
+  notesPresenceAnalyticsData,
+  notesPresenceAnalyticsEvent,
+  notesPresenceBrowseSearch,
+} from "@/lib/notes-presence-cta-events";
 import {
   installRiskLevel,
   INSTALL_RISK_LABEL,
@@ -110,12 +116,15 @@ export function SourceBadge({
   status,
   className,
   asLink = false,
+  surface,
   onNavigate,
 }: {
   status: SourceStatus;
   className?: string;
   /** Opt-in browse link — never use inside card `<Link>`s. */
   asLink?: boolean;
+  /** Optional analytics surface when asLink is set. */
+  surface?: string;
   onNavigate?: () => void;
 }) {
   const Icon = sourceIcon[status];
@@ -134,7 +143,12 @@ export function SourceBadge({
       <Link
         to="/browse"
         search={{ source: status }}
-        onClick={onNavigate}
+        onClick={() => {
+          onNavigate?.();
+          if (surface) {
+            trackEvent(sourceBadgeAnalyticsEvent(), sourceBadgeAnalyticsData(status, surface));
+          }
+        }}
         className={cn(classes, "transition-colors hover:text-ink")}
         title={`${SOURCE_LABEL[status]} — browse by source`}
       >
@@ -307,12 +321,18 @@ export function NotesPresenceChips({
   entry,
   className,
   interactive = false,
+  asLink = false,
+  surface,
   onNoteClick,
 }: {
   entry: Entry;
   className?: string;
   /** Opt-in scroll buttons — never use inside card `<Link>`s. */
   interactive?: boolean;
+  /** Opt-in browse links for present notes — never use inside card `<Link>`s. */
+  asLink?: boolean;
+  /** Optional analytics surface when asLink is set. */
+  surface?: string;
   onNoteClick?: (noteKind: "safety" | "privacy", present: boolean) => void;
 }) {
   const hasSafety = !!(entry.safetyNotes || entry.safetyNotesList?.length);
@@ -327,6 +347,16 @@ export function NotesPresenceChips({
   const activate = (noteKind: "safety" | "privacy", present: boolean, targetId: string) => {
     onNoteClick?.(noteKind, present);
     document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const trackNote = (noteKind: "safety" | "privacy", present: boolean) => {
+    onNoteClick?.(noteKind, present);
+    if (surface) {
+      trackEvent(
+        notesPresenceAnalyticsEvent(),
+        notesPresenceAnalyticsData(noteKind, present, surface),
+      );
+    }
   };
 
   if (interactive) {
@@ -359,6 +389,45 @@ export function NotesPresenceChips({
           )}{" "}
           Privacy {hasPrivacy ? "✓" : "·"}
         </button>
+      </span>
+    );
+  }
+
+  if (asLink) {
+    const safetySearch = notesPresenceBrowseSearch("safety", hasSafety);
+    const privacySearch = notesPresenceBrowseSearch("privacy", hasPrivacy);
+    return (
+      <span className={cn("inline-flex items-center gap-1", className)}>
+        {safetySearch ? (
+          <Link
+            to="/browse"
+            search={safetySearch}
+            onClick={() => trackNote("safety", true)}
+            title="Safety notes present — browse by signal"
+            className={cn(chipClass(true), "transition-colors hover:border-ink/20")}
+          >
+            <Lock className="h-2.5 w-2.5" aria-hidden /> Safety ✓
+          </Link>
+        ) : (
+          <span title="Safety notes missing" className={chipClass(false)}>
+            <Lock className="h-2.5 w-2.5" aria-hidden /> Safety ·
+          </span>
+        )}
+        {privacySearch ? (
+          <Link
+            to="/browse"
+            search={privacySearch}
+            onClick={() => trackNote("privacy", true)}
+            title="Privacy notes present — browse by signal"
+            className={cn(chipClass(true), "transition-colors hover:border-ink/20")}
+          >
+            <Eye className="h-2.5 w-2.5" aria-hidden /> Privacy ✓
+          </Link>
+        ) : (
+          <span title="Privacy notes missing" className={chipClass(false)}>
+            <EyeOff className="h-2.5 w-2.5" aria-hidden /> Privacy ·
+          </span>
+        )}
       </span>
     );
   }

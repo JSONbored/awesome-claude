@@ -6,6 +6,7 @@ import {
   PlatformChip,
   InstallRiskBadge,
   NotesPresenceChips,
+  SourceBadge,
 } from "@/components/badges";
 import { TrustDrilldown } from "@/components/trust-drilldown";
 import { CopyButton } from "@/components/copy-button";
@@ -166,7 +167,10 @@ export const COMPARISON_ROWS: RowDef[] = [
   { label: "Trust", render: (e) => <TrustDrilldown entry={e} /> },
   ...DECISION_COMPARISON_ROWS,
   { label: "Install risk", render: (e) => <InstallRiskBadge entry={e} /> },
-  { label: "Notes", render: (e) => <NotesPresenceChips entry={e} /> },
+  {
+    label: "Notes",
+    render: (e) => <NotesPresenceChips entry={e} asLink surface="compare-table" />,
+  },
   {
     label: "Brand",
     render: (e) => {
@@ -191,7 +195,7 @@ export const COMPARISON_ROWS: RowDef[] = [
   },
   {
     label: "Source",
-    render: (e) => <span className="text-sm capitalize text-ink">{e.source}</span>,
+    render: (e) => <SourceBadge status={e.source} asLink surface="compare-table" />,
   },
   { label: "Author", render: (e) => <span className="text-sm text-ink">{e.author}</span> },
   {

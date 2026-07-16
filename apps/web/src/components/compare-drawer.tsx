@@ -215,14 +215,14 @@ const ROWS: RowDef[] = [
     label: "Harness",
     render: (e) =>
       e.harness && e.harness.length > 0 ? (
-        <HarnessBadgeRow ids={e.harness} />
+        <HarnessBadgeRow ids={e.harness} asLink surface="compare-drawer" />
       ) : (
         <span className="text-xs text-ink-subtle">—</span>
       ),
   },
   {
     label: "Notes",
-    render: (e) => <NotesPresenceChips entry={e} />,
+    render: (e) => <NotesPresenceChips entry={e} asLink surface="compare-drawer" />,
   },
   {
     label: "Source repo",

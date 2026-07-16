@@ -1,5 +1,10 @@
 import { Link } from "@tanstack/react-router";
-import { PlatformChip, InstallRiskBadge, NotesPresenceChips } from "@/components/badges";
+import {
+  PlatformChip,
+  InstallRiskBadge,
+  NotesPresenceChips,
+  SourceBadge,
+} from "@/components/badges";
 import { trackEvent } from "@/lib/analytics";
 import {
   hubCategoryRankingEntryAnalyticsData,
@@ -63,7 +68,9 @@ export function CategoryRankingTable({ entries, label }: { entries: Entry[]; lab
                   </Link>
                   <div className="mt-0.5 text-xs text-ink-subtle">{e.author}</div>
                 </th>
-                <td className="px-3 py-2.5 align-top text-sm capitalize text-ink">{e.source}</td>
+                <td className="px-3 py-2.5 align-top">
+                  <SourceBadge status={e.source} asLink surface="category-ranking" />
+                </td>
                 <td className="px-3 py-2.5 align-top">
                   <InstallRiskBadge entry={e} />
                 </td>
@@ -88,7 +95,7 @@ export function CategoryRankingTable({ entries, label }: { entries: Entry[]; lab
                   </div>
                 </td>
                 <td className="px-3 py-2.5 align-top">
-                  <NotesPresenceChips entry={e} />
+                  <NotesPresenceChips entry={e} asLink surface="category-ranking" />
                 </td>
               </tr>
             ))}
