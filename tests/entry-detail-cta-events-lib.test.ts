@@ -56,6 +56,9 @@ import {
   entryDetailMobileCopyIntentType,
   entryDetailMobileLinkIntentType,
   entryDetailMobileLlmsAnalyticsData,
+  entryDetailLlmsOpenAnalyticsData,
+  entryDetailLlmsOpenAnalyticsEvent,
+  ENTRY_DETAIL_CITATION_FACTS_SURFACE,
   entryDetailPlaybookActionAnalyticsData,
   entryDetailPlaybookActionAnalyticsEvent,
 } from "@/lib/entry-detail-cta-events-lib";
@@ -395,6 +398,20 @@ describe("entry detail cta events lib", () => {
       entry: "skills/demo",
       link: "llms",
       surface: "detail-mobile",
+    });
+    expect(entryDetailLlmsOpenAnalyticsEvent()).toBe("detail_llms_open");
+    expect(ENTRY_DETAIL_CITATION_FACTS_SURFACE).toBe("detail-citation-facts");
+    expect(entryDetailLlmsOpenAnalyticsData("mcp", "browser")).toEqual({
+      entry: "mcp/browser",
+      link: "llms",
+      surface: "detail-citation-facts",
+    });
+    expect(
+      entryDetailLlmsOpenAnalyticsData("mcp", "browser", "detail-custom"),
+    ).toEqual({
+      entry: "mcp/browser",
+      link: "llms",
+      surface: "detail-custom",
     });
   });
 

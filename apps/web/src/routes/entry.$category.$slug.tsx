@@ -99,6 +99,8 @@ import {
   entryDetailCompareToastOpenAnalyticsEvent,
   entryDetailCopyTabSelectAnalyticsData,
   entryDetailCopyTabSelectAnalyticsEvent,
+  entryDetailLlmsOpenAnalyticsData,
+  entryDetailLlmsOpenAnalyticsEvent,
   entryDetailMobileCompareAnalyticsData,
   entryDetailMobileCompareAnalyticsEvent,
   entryDetailMobileCompareToastOpenAnalyticsData,
@@ -744,6 +746,12 @@ function Dossier() {
               also available as{" "}
               <a
                 href={`/api/registry/entries/${entry.category}/${entry.slug}/llms`}
+                onClick={() =>
+                  trackEvent(
+                    entryDetailLlmsOpenAnalyticsEvent(),
+                    entryDetailLlmsOpenAnalyticsData(entry.category, entry.slug),
+                  )
+                }
                 className="text-ink underline-offset-2 hover:underline"
               >
                 plain text

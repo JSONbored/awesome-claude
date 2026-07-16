@@ -4,6 +4,7 @@
 export {
   BROWSE_COMPARE_SURFACE,
   COMPARE_TRAY_SURFACE,
+  ENTRY_DETAIL_CITATION_FACTS_SURFACE,
   ENTRY_DETAIL_COMMAND_CENTER_SURFACE,
   ENTRY_DETAIL_COMPARE_SURFACE,
   ENTRY_DETAIL_DECISION_PLAYBOOK_SURFACE,
@@ -67,6 +68,8 @@ export {
   entryDetailMobileCopyIntentType,
   entryDetailMobileLinkIntentType,
   entryDetailMobileLlmsAnalyticsData,
+  entryDetailLlmsOpenAnalyticsData,
+  entryDetailLlmsOpenAnalyticsEvent,
   entryDetailPlaybookActionAnalyticsData,
   entryDetailPlaybookActionAnalyticsEvent,
 } from "@/lib/entry-detail-cta-events-lib";

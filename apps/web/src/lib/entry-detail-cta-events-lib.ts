@@ -15,6 +15,7 @@ export const ENTRY_DETAIL_RAIL_SURFACE = "detail-rail";
 export const ENTRY_DETAIL_COMPARE_SURFACE = "detail-compare";
 export const ENTRY_DETAIL_DECISION_PLAYBOOK_SURFACE = "detail-decision-playbook";
 export const ENTRY_DETAIL_MOBILE_SURFACE = "detail-mobile";
+export const ENTRY_DETAIL_CITATION_FACTS_SURFACE = "detail-citation-facts";
 export const BROWSE_COMPARE_SURFACE = "browse-compare";
 export const COMPARE_TRAY_SURFACE = "compare-tray";
 
@@ -418,6 +419,22 @@ export function entryDetailMobileLlmsAnalyticsData(category: string, slug: strin
     entry: entryDetailEntryKey(category, slug),
     link: "llms",
     surface: ENTRY_DETAIL_MOBILE_SURFACE,
+  };
+}
+
+export function entryDetailLlmsOpenAnalyticsEvent(): string {
+  return "detail_llms_open";
+}
+
+export function entryDetailLlmsOpenAnalyticsData(
+  category: string,
+  slug: string,
+  surface: string = ENTRY_DETAIL_CITATION_FACTS_SURFACE,
+) {
+  return {
+    entry: entryDetailEntryKey(category, slug),
+    link: "llms",
+    surface,
   };
 }
 
