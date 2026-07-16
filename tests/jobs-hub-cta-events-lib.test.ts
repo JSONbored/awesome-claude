@@ -8,6 +8,8 @@ import {
   jobsDetailIndexAnalyticsEvent,
   jobsDetailRelatedAnalyticsData,
   jobsDetailRelatedAnalyticsEvent,
+  jobsDetailShareCopyAnalyticsData,
+  jobsDetailShareCopyAnalyticsEvent,
   jobsErrorRetryAnalyticsData,
   jobsErrorRetryAnalyticsEvent,
   jobsIndexFilterClearAnalyticsData,
@@ -132,6 +134,14 @@ describe("jobs hub cta events lib", () => {
     });
     expect(jobsErrorRetryAnalyticsData("jobs-detail")).toEqual({
       surface: "jobs-detail",
+    });
+    expect(jobsDetailShareCopyAnalyticsEvent()).toBe(
+      "jobs_detail_share_copy_click",
+    );
+    expect(jobsDetailShareCopyAnalyticsData("senior-mcp", "featured")).toEqual({
+      surface: JOBS_DETAIL_SURFACE,
+      jobSlug: "senior-mcp",
+      tier: "featured",
     });
   });
 });

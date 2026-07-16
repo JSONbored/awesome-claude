@@ -10,6 +10,8 @@ export {
   jobsDetailIndexAnalyticsEvent,
   jobsDetailRelatedAnalyticsData,
   jobsDetailRelatedAnalyticsEvent,
+  jobsDetailShareCopyAnalyticsData,
+  jobsDetailShareCopyAnalyticsEvent,
   jobsErrorRetryAnalyticsData,
   jobsErrorRetryAnalyticsEvent,
   jobsIndexFilterClearAnalyticsData,

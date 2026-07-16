@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
   CHANGELOG_PAGE_SURFACE,
+  changelogDiffEgressAnalyticsData,
+  changelogDiffEgressAnalyticsEvent,
+  changelogFeedEgressAnalyticsData,
+  changelogFeedEgressAnalyticsEvent,
   changelogQualityEgressAnalyticsData,
   changelogQualityEgressAnalyticsEvent,
   changelogReadMoreAnalyticsData,
@@ -35,6 +39,31 @@ describe("changelog page cta events lib", () => {
     expect(changelogQualityEgressAnalyticsData(12)).toEqual({
       surface: CHANGELOG_PAGE_SURFACE,
       issueCount: 12,
+    });
+  });
+
+  it("builds changelog feed and diff egress analytics", () => {
+    expect(changelogFeedEgressAnalyticsEvent()).toBe(
+      "changelog_feed_egress_click",
+    );
+    expect(changelogFeedEgressAnalyticsData("rss", 12)).toEqual({
+      surface: CHANGELOG_PAGE_SURFACE,
+      destination: "rss",
+      matchCount: 12,
+    });
+    expect(changelogFeedEgressAnalyticsData("atom", 12)).toEqual({
+      surface: CHANGELOG_PAGE_SURFACE,
+      destination: "atom",
+      matchCount: 12,
+    });
+    expect(changelogDiffEgressAnalyticsEvent()).toBe(
+      "changelog_diff_egress_click",
+    );
+    expect(changelogDiffEgressAnalyticsData("release", 1, 12)).toEqual({
+      surface: CHANGELOG_PAGE_SURFACE,
+      releaseStream: "release",
+      rowIndex: 1,
+      matchCount: 12,
     });
   });
 });

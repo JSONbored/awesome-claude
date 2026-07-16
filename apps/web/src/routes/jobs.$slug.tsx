@@ -16,6 +16,8 @@ import {
   jobsDetailIndexAnalyticsEvent,
   jobsDetailRelatedAnalyticsData,
   jobsDetailRelatedAnalyticsEvent,
+  jobsDetailShareCopyAnalyticsData,
+  jobsDetailShareCopyAnalyticsEvent,
   jobsErrorRetryAnalyticsData,
   jobsErrorRetryAnalyticsEvent,
 } from "@/lib/jobs-hub-cta-events";
@@ -292,6 +294,8 @@ function JobDetail() {
                 label="Copy link"
                 size="sm"
                 className="inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-md border border-border bg-background px-3 text-xs text-ink-muted hover:text-ink"
+                event={jobsDetailShareCopyAnalyticsEvent()}
+                eventData={jobsDetailShareCopyAnalyticsData(job.slug, job.tier)}
               />
             </div>
             <p className="mt-3 text-[11px] leading-relaxed text-ink-subtle">

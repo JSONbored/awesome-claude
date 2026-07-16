@@ -6,6 +6,8 @@ import {
   integrationsDetailActionAnalyticsEvent,
   integrationsDetailIndexAnalyticsData,
   integrationsDetailIndexAnalyticsEvent,
+  integrationsDetailInstallCopyAnalyticsData,
+  integrationsDetailInstallCopyAnalyticsEvent,
   integrationsDetailRelatedAnalyticsData,
   integrationsDetailRelatedAnalyticsEvent,
   integrationsIndexApiDocsAnalyticsData,
@@ -104,6 +106,25 @@ describe("integrations hub cta events lib", () => {
       action: "secondary",
       status: "beta",
       kind: "mcp-server",
+    });
+    expect(integrationsDetailInstallCopyAnalyticsEvent()).toBe(
+      "integrations_detail_install_copy_click",
+    );
+    expect(
+      integrationsDetailInstallCopyAnalyticsData(
+        "raycast",
+        0,
+        2,
+        "live",
+        "extension",
+      ),
+    ).toEqual({
+      surface: INTEGRATIONS_DETAIL_SURFACE,
+      integrationSlug: "raycast",
+      installIndex: 0,
+      installCount: 2,
+      status: "live",
+      kind: "extension",
     });
   });
 });

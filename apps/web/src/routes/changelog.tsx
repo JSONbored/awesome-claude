@@ -11,6 +11,10 @@ import {
   changelogDiffEntryAnalyticsEvent,
 } from "@/lib/directory-page-entry-cta-events";
 import {
+  changelogDiffEgressAnalyticsData,
+  changelogDiffEgressAnalyticsEvent,
+  changelogFeedEgressAnalyticsData,
+  changelogFeedEgressAnalyticsEvent,
   changelogQualityEgressAnalyticsData,
   changelogQualityEgressAnalyticsEvent,
   changelogReadMoreAnalyticsData,
@@ -125,12 +129,24 @@ function ChangelogPage() {
         <div className="flex flex-wrap items-center gap-2">
           <a
             href="/feed.xml"
+            onClick={() =>
+              trackEvent(
+                changelogFeedEgressAnalyticsEvent(),
+                changelogFeedEgressAnalyticsData("rss", items.length),
+              )
+            }
             className="inline-flex h-9 items-center gap-1.5 rounded-md border border-border bg-surface px-3 text-sm font-medium text-ink hover:bg-surface-2"
           >
             <Rss className="h-3.5 w-3.5" /> RSS
           </a>
           <a
             href="/atom.xml"
+            onClick={() =>
+              trackEvent(
+                changelogFeedEgressAnalyticsEvent(),
+                changelogFeedEgressAnalyticsData("atom", items.length),
+              )
+            }
             className="inline-flex h-9 items-center gap-1.5 rounded-md border border-border bg-surface px-3 text-sm font-medium text-ink hover:bg-surface-2"
           >
             Atom
@@ -267,6 +283,12 @@ function ChangelogPage() {
                       {note.prevHash && (
                         <a
                           href={`/api/registry/diff?from=${encodeURIComponent(note.prevHash)}&to=${encodeURIComponent(note.hash ?? "")}`}
+                          onClick={() =>
+                            trackEvent(
+                              changelogDiffEgressAnalyticsEvent(),
+                              changelogDiffEgressAnalyticsData(note.stream, i, items.length),
+                            )
+                          }
                           className="mt-3 inline-block text-[11px] font-mono text-ink-muted hover:text-ink"
                         >
                           Compare to {note.prevHash} →

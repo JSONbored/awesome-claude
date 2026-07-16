@@ -53,3 +53,37 @@ export function changelogQualityEgressAnalyticsData(issueCount: number) {
     issueCount,
   };
 }
+
+export type ChangelogFeedDestination = "rss" | "atom";
+
+export function changelogFeedEgressAnalyticsEvent(): string {
+  return "changelog_feed_egress_click";
+}
+
+export function changelogFeedEgressAnalyticsData(
+  destination: ChangelogFeedDestination,
+  matchCount: number,
+) {
+  return {
+    surface: CHANGELOG_PAGE_SURFACE,
+    destination,
+    matchCount,
+  };
+}
+
+export function changelogDiffEgressAnalyticsEvent(): string {
+  return "changelog_diff_egress_click";
+}
+
+export function changelogDiffEgressAnalyticsData(
+  releaseStream: ReleaseStream,
+  rowIndex: number,
+  matchCount: number,
+) {
+  return {
+    surface: CHANGELOG_PAGE_SURFACE,
+    releaseStream,
+    rowIndex,
+    matchCount,
+  };
+}

@@ -8,6 +8,8 @@ export {
   integrationsDetailActionAnalyticsEvent,
   integrationsDetailIndexAnalyticsData,
   integrationsDetailIndexAnalyticsEvent,
+  integrationsDetailInstallCopyAnalyticsData,
+  integrationsDetailInstallCopyAnalyticsEvent,
   integrationsDetailRelatedAnalyticsData,
   integrationsDetailRelatedAnalyticsEvent,
   integrationsIndexApiDocsAnalyticsData,

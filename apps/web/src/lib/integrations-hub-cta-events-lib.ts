@@ -105,3 +105,24 @@ export function integrationsDetailActionAnalyticsData(
     kind,
   };
 }
+
+export function integrationsDetailInstallCopyAnalyticsEvent(): string {
+  return "integrations_detail_install_copy_click";
+}
+
+export function integrationsDetailInstallCopyAnalyticsData(
+  integrationSlug: string,
+  installIndex: number,
+  installCount: number,
+  status: string,
+  kind: string,
+) {
+  return {
+    surface: INTEGRATIONS_DETAIL_SURFACE,
+    integrationSlug,
+    installIndex,
+    installCount,
+    status,
+    kind,
+  };
+}

@@ -17,6 +17,8 @@ import {
   integrationsDetailActionAnalyticsEvent,
   integrationsDetailIndexAnalyticsData,
   integrationsDetailIndexAnalyticsEvent,
+  integrationsDetailInstallCopyAnalyticsData,
+  integrationsDetailInstallCopyAnalyticsEvent,
   integrationsDetailRelatedAnalyticsData,
   integrationsDetailRelatedAnalyticsEvent,
 } from "@/lib/integrations-hub-cta-events";
@@ -168,17 +170,30 @@ function IntegrationDetail() {
           {integration.install && integration.install.length > 0 && (
             <Block title="Install">
               <div className="space-y-3">
-                {integration.install.map((i: { client: string; snippet: string }) => (
-                  <div key={i.client} className="rounded-md border border-border bg-surface">
-                    <div className="flex items-center justify-between border-b border-border px-3 py-1.5">
-                      <span className="text-xs font-medium text-ink">{i.client}</span>
-                      <CopyButton value={i.snippet} label="Copy" />
+                {integration.install.map(
+                  (i: { client: string; snippet: string }, installIndex: number) => (
+                    <div key={i.client} className="rounded-md border border-border bg-surface">
+                      <div className="flex items-center justify-between border-b border-border px-3 py-1.5">
+                        <span className="text-xs font-medium text-ink">{i.client}</span>
+                        <CopyButton
+                          value={i.snippet}
+                          label="Copy"
+                          event={integrationsDetailInstallCopyAnalyticsEvent()}
+                          eventData={integrationsDetailInstallCopyAnalyticsData(
+                            integration.slug,
+                            installIndex,
+                            integration.install!.length,
+                            integration.status,
+                            integration.kind,
+                          )}
+                        />
+                      </div>
+                      <pre className="overflow-auto p-3 font-mono text-[11px] text-ink">
+                        <code>{i.snippet}</code>
+                      </pre>
                     </div>
-                    <pre className="overflow-auto p-3 font-mono text-[11px] text-ink">
-                      <code>{i.snippet}</code>
-                    </pre>
-                  </div>
-                ))}
+                  ),
+                )}
               </div>
             </Block>
           )}

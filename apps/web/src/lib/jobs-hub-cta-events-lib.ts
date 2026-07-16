@@ -168,3 +168,15 @@ export function jobsErrorRetryAnalyticsData(surface: JobsErrorSurface) {
     surface,
   };
 }
+
+export function jobsDetailShareCopyAnalyticsEvent(): string {
+  return "jobs_detail_share_copy_click";
+}
+
+export function jobsDetailShareCopyAnalyticsData(jobSlug: string, tier: string) {
+  return {
+    surface: JOBS_DETAIL_SURFACE,
+    jobSlug,
+    tier,
+  };
+}
