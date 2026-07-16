@@ -8,7 +8,7 @@
 export const SOURCE_CITATIONS_DETAIL_SURFACE = "detail-source-citations";
 
 export type SourceCitationKind = "source-repo" | "repo" | "docs" | "website" | "package";
-export type SourceCitationEgressDestination = "quality-source-provenance";
+export type SourceCitationEgressDestination = "quality-source-provenance" | "contributor-profile";
 
 export function sourceCitationEntryKey(category: string, slug: string): string {
   return `${category}/${slug}`;

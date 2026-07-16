@@ -160,6 +160,12 @@ export function SourceCitations({
                   to="/contributors/$slug"
                   params={{ slug: c.contributorSlug }}
                   className="block rounded-md px-2 transition-colors duration-200 hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60"
+                  onClick={() =>
+                    trackEvent(
+                      sourceCitationEgressAnalyticsEvent(),
+                      sourceCitationEgressAnalyticsData("contributor-profile", surface),
+                    )
+                  }
                 >
                   {body}
                 </Link>
