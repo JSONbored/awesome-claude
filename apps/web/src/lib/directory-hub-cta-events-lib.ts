@@ -12,6 +12,7 @@ export const PLATFORM_INDEX_SURFACE = "platform-index";
 export const PLATFORM_HUB_SURFACE = "platform-hub";
 export const PLATFORM_HUB_NOTFOUND_SURFACE = "platform-hub-notfound";
 export const PLATFORM_CATEGORY_SURFACE = "platform-category";
+export const PLATFORM_CATEGORY_NOTFOUND_SURFACE = "platform-category-notfound";
 
 export function categoryHubBrowseAnalyticsEvent(): string {
   return "category_hub_browse_click";
@@ -159,5 +160,15 @@ export function platformCategoryCategoryAnalyticsData(
     platformId,
     category,
     entryCount,
+  };
+}
+
+export function platformCategoryNotFoundEgressAnalyticsEvent(): string {
+  return "platform_category_notfound_egress_click";
+}
+
+export function platformCategoryNotFoundEgressAnalyticsData() {
+  return {
+    surface: PLATFORM_CATEGORY_NOTFOUND_SURFACE,
   };
 }

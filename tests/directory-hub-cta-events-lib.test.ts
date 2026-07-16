@@ -3,6 +3,7 @@ import {
   BEST_INDEX_SURFACE,
   CATEGORY_HUB_NOTFOUND_SURFACE,
   CATEGORY_HUB_SURFACE,
+  PLATFORM_CATEGORY_NOTFOUND_SURFACE,
   PLATFORM_CATEGORY_SURFACE,
   PLATFORM_HUB_NOTFOUND_SURFACE,
   PLATFORM_HUB_SURFACE,
@@ -17,6 +18,8 @@ import {
   categoryHubSeeAllAnalyticsEvent,
   platformCategoryCategoryAnalyticsData,
   platformCategoryCategoryAnalyticsEvent,
+  platformCategoryNotFoundEgressAnalyticsData,
+  platformCategoryNotFoundEgressAnalyticsEvent,
   platformCategoryPlatformAnalyticsData,
   platformCategoryPlatformAnalyticsEvent,
   platformHubBrowseAnalyticsData,
@@ -116,6 +119,12 @@ describe("directory hub cta events lib", () => {
       platformId: "cursor",
       category: "mcp",
       entryCount: 12,
+    });
+    expect(platformCategoryNotFoundEgressAnalyticsEvent()).toBe(
+      "platform_category_notfound_egress_click",
+    );
+    expect(platformCategoryNotFoundEgressAnalyticsData()).toEqual({
+      surface: PLATFORM_CATEGORY_NOTFOUND_SURFACE,
     });
   });
 });
