@@ -1107,16 +1107,15 @@ function Browse() {
                 { id: "", label: "All" },
                 ...CATEGORIES.map((c) => ({ id: c.id, label: c.label })),
               ].map((c) => (
-                <Link
-                  key={c.id || "all"}
-                  to="/browse"
-                  search={{ ...sp, category: c.id }}
-                  className="shrink-0"
-                >
-                  <FilterChip role="radio" active={(sp.category || "") === c.id} onClick={() => {}}>
+                <span key={c.id || "all"} className="shrink-0">
+                  <FilterChip
+                    role="radio"
+                    active={(sp.category || "") === c.id}
+                    onClick={() => onCategoryFilter(c.id)}
+                  >
                     {c.label}
                   </FilterChip>
-                </Link>
+                </span>
               ))}
             </div>
             <span
