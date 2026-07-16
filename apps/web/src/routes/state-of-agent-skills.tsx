@@ -18,6 +18,8 @@ import { trackEvent } from "@/lib/analytics";
 import {
   stateReportCategoryBrowseAnalyticsData,
   stateReportCategoryBrowseAnalyticsEvent,
+  stateReportCiteAnalyticsData,
+  stateReportCiteAnalyticsEvent,
   stateReportEgressAnalyticsData,
   stateReportEgressAnalyticsEvent,
   type StateReportEgressDestination,
@@ -30,6 +32,10 @@ function trackStateReportEgress(destination: StateReportEgressDestination) {
     stateReportEgressAnalyticsEvent(),
     stateReportEgressAnalyticsData(REPORT_ID, destination),
   );
+}
+
+function trackStateReportCite() {
+  trackEvent(stateReportCiteAnalyticsEvent(), stateReportCiteAnalyticsData(REPORT_ID));
 }
 
 const AS_OF = String(REGISTRY_GENERATED_AT).slice(0, 10);
@@ -142,7 +148,11 @@ function StateOfAgentSkillsPage() {
         </p>
         <p className="mt-3 max-w-2xl text-sm text-ink-muted">
           Citing this report? Link to{" "}
-          <a href={absoluteUrl(PATH)} className="text-ink underline-offset-2 hover:underline">
+          <a
+            href={absoluteUrl(PATH)}
+            onClick={() => trackStateReportCite()}
+            className="text-ink underline-offset-2 hover:underline"
+          >
             heyclau.de/state-of-agent-skills
           </a>{" "}
           with the data-as-of date. See also the{" "}

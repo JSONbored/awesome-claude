@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import {
   stateReportCategoryBrowseAnalyticsData,
   stateReportCategoryBrowseAnalyticsEvent,
+  stateReportCiteAnalyticsData,
+  stateReportCiteAnalyticsEvent,
   stateReportEgressAnalyticsData,
   stateReportEgressAnalyticsEvent,
 } from "@/lib/state-report-page-cta-events-lib";
@@ -39,5 +41,10 @@ describe("state report page cta events lib", () => {
         destination: "quality",
       },
     );
+    expect(stateReportCiteAnalyticsEvent()).toBe("state_report_cite_click");
+    expect(stateReportCiteAnalyticsData("agent-skills")).toEqual({
+      reportId: "agent-skills",
+      destination: "canonical",
+    });
   });
 });

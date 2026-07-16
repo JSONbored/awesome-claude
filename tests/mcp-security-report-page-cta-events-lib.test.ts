@@ -3,6 +3,8 @@ import {
   MCP_SECURITY_REPORT_SURFACE,
   mcpSecurityReportCategoryBrowseAnalyticsData,
   mcpSecurityReportCategoryBrowseAnalyticsEvent,
+  mcpSecurityReportCiteAnalyticsData,
+  mcpSecurityReportCiteAnalyticsEvent,
   mcpSecurityReportEgressAnalyticsData,
   mcpSecurityReportEgressAnalyticsEvent,
 } from "@/lib/mcp-security-report-page-cta-events-lib";
@@ -23,6 +25,13 @@ describe("mcp security report page cta events lib", () => {
       surface: MCP_SECURITY_REPORT_SURFACE,
       category: "mcp",
       entryCount: 128,
+    });
+    expect(mcpSecurityReportCiteAnalyticsEvent()).toBe(
+      "mcp_security_report_cite_click",
+    );
+    expect(mcpSecurityReportCiteAnalyticsData()).toEqual({
+      surface: MCP_SECURITY_REPORT_SURFACE,
+      destination: "canonical",
     });
   });
 });

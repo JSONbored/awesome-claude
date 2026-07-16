@@ -69,4 +69,6 @@ export {
   entryDetailMobileLlmsAnalyticsData,
   entryDetailPlaybookActionAnalyticsData,
   entryDetailPlaybookActionAnalyticsEvent,
+  entryDetailCitationPlainTextAnalyticsData,
+  entryDetailCitationPlainTextAnalyticsEvent,
 } from "@/lib/entry-detail-cta-events-lib";

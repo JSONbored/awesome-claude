@@ -15,6 +15,8 @@ import { trackEvent } from "@/lib/analytics";
 import {
   mcpSecurityReportCategoryBrowseAnalyticsData,
   mcpSecurityReportCategoryBrowseAnalyticsEvent,
+  mcpSecurityReportCiteAnalyticsData,
+  mcpSecurityReportCiteAnalyticsEvent,
   mcpSecurityReportEgressAnalyticsData,
   mcpSecurityReportEgressAnalyticsEvent,
   type McpSecurityReportEgressDestination,
@@ -274,7 +276,16 @@ function McpSecurityReportPage() {
         </p>
         <p className="mt-3 max-w-2xl text-sm text-ink-muted">
           Citing this report? Link to{" "}
-          <a href={absoluteUrl(PATH)} className="text-ink underline-offset-2 hover:underline">
+          <a
+            href={absoluteUrl(PATH)}
+            onClick={() =>
+              trackEvent(
+                mcpSecurityReportCiteAnalyticsEvent(),
+                mcpSecurityReportCiteAnalyticsData(),
+              )
+            }
+            className="text-ink underline-offset-2 hover:underline"
+          >
             heyclau.de/mcp-security-report
           </a>{" "}
           with the data-as-of date. See also the{" "}

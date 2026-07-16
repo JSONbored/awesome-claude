@@ -33,3 +33,14 @@ export function mcpSecurityReportCategoryBrowseAnalyticsData(entryCount: number)
     entryCount,
   };
 }
+
+export function mcpSecurityReportCiteAnalyticsEvent(): string {
+  return "mcp_security_report_cite_click";
+}
+
+export function mcpSecurityReportCiteAnalyticsData() {
+  return {
+    surface: MCP_SECURITY_REPORT_SURFACE,
+    destination: "canonical",
+  };
+}

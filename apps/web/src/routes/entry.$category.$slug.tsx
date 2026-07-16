@@ -105,6 +105,8 @@ import {
   entryDetailMobileCompareToastOpenAnalyticsEvent,
   entryDetailPlaybookActionAnalyticsData,
   entryDetailPlaybookActionAnalyticsEvent,
+  entryDetailCitationPlainTextAnalyticsData,
+  entryDetailCitationPlainTextAnalyticsEvent,
 } from "@/lib/entry-detail-cta-events";
 import {
   detailDecisionPresetAnalyticsData,
@@ -744,6 +746,12 @@ function Dossier() {
               also available as{" "}
               <a
                 href={`/api/registry/entries/${entry.category}/${entry.slug}/llms`}
+                onClick={() =>
+                  trackEvent(
+                    entryDetailCitationPlainTextAnalyticsEvent(),
+                    entryDetailCitationPlainTextAnalyticsData(entry.category, entry.slug),
+                  )
+                }
                 className="text-ink underline-offset-2 hover:underline"
               >
                 plain text

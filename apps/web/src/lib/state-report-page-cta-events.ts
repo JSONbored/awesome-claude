@@ -4,6 +4,8 @@
 export {
   stateReportCategoryBrowseAnalyticsData,
   stateReportCategoryBrowseAnalyticsEvent,
+  stateReportCiteAnalyticsData,
+  stateReportCiteAnalyticsEvent,
   stateReportEgressAnalyticsData,
   stateReportEgressAnalyticsEvent,
   type StateReportEgressDestination,

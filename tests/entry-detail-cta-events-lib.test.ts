@@ -58,6 +58,8 @@ import {
   entryDetailMobileLlmsAnalyticsData,
   entryDetailPlaybookActionAnalyticsData,
   entryDetailPlaybookActionAnalyticsEvent,
+  entryDetailCitationPlainTextAnalyticsData,
+  entryDetailCitationPlainTextAnalyticsEvent,
 } from "@/lib/entry-detail-cta-events-lib";
 
 describe("entry detail cta events lib", () => {
@@ -429,6 +431,16 @@ describe("entry detail cta events lib", () => {
       surface: "detail-decision-playbook",
       compareCount: 3,
       adding: true,
+    });
+    expect(entryDetailCitationPlainTextAnalyticsEvent()).toBe(
+      "entry_detail_citation_plain_text_click",
+    );
+    expect(
+      entryDetailCitationPlainTextAnalyticsData("mcp", "filesystem"),
+    ).toEqual({
+      entry: "mcp/filesystem",
+      surface: "detail-command-center",
+      destination: "plain-text",
     });
   });
 });

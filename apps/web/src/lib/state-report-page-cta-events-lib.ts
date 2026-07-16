@@ -55,3 +55,14 @@ export function stateReportEgressAnalyticsData(
     destination,
   };
 }
+
+export function stateReportCiteAnalyticsEvent(): string {
+  return "state_report_cite_click";
+}
+
+export function stateReportCiteAnalyticsData(reportId: StateReportId) {
+  return {
+    reportId,
+    destination: "canonical",
+  };
+}

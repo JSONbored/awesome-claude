@@ -5,6 +5,8 @@ export {
   MCP_SECURITY_REPORT_SURFACE,
   mcpSecurityReportCategoryBrowseAnalyticsData,
   mcpSecurityReportCategoryBrowseAnalyticsEvent,
+  mcpSecurityReportCiteAnalyticsData,
+  mcpSecurityReportCiteAnalyticsEvent,
   mcpSecurityReportEgressAnalyticsData,
   mcpSecurityReportEgressAnalyticsEvent,
   type McpSecurityReportEgressDestination,

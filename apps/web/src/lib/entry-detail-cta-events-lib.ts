@@ -440,3 +440,15 @@ export function entryDetailPlaybookActionAnalyticsData(
     ...(typeof adding === "boolean" ? { adding } : {}),
   };
 }
+
+export function entryDetailCitationPlainTextAnalyticsEvent(): string {
+  return "entry_detail_citation_plain_text_click";
+}
+
+export function entryDetailCitationPlainTextAnalyticsData(category: string, slug: string) {
+  return {
+    entry: entryDetailEntryKey(category, slug),
+    surface: ENTRY_DETAIL_COMMAND_CENTER_SURFACE,
+    destination: "plain-text",
+  };
+}
