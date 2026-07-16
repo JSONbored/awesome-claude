@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import {
   TAGS_DETAIL_NOTFOUND_SURFACE,
   TAGS_DETAIL_SURFACE,
+  tagsDetailBrowseEgressAnalyticsData,
+  tagsDetailBrowseEgressAnalyticsEvent,
   tagsDetailNotFoundEgressAnalyticsData,
   tagsDetailNotFoundEgressAnalyticsEvent,
   tagsDetailRelatedSelectAnalyticsData,
@@ -26,6 +28,14 @@ describe("tags detail cta events lib", () => {
     );
     expect(tagsDetailNotFoundEgressAnalyticsData()).toEqual({
       surface: TAGS_DETAIL_NOTFOUND_SURFACE,
+    });
+    expect(tagsDetailBrowseEgressAnalyticsEvent()).toBe(
+      "tags_detail_browse_egress_click",
+    );
+    expect(tagsDetailBrowseEgressAnalyticsData("postgres", 18)).toEqual({
+      surface: TAGS_DETAIL_SURFACE,
+      tagSlug: "postgres",
+      entryCount: 18,
     });
   });
 });

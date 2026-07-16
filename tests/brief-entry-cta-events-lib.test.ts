@@ -6,6 +6,10 @@ import {
   briefHubEntryAnalyticsData,
   briefHubIssueAnalyticsData,
   briefHubIssueAnalyticsEvent,
+  briefHubLatestIssueAnalyticsData,
+  briefHubLatestIssueAnalyticsEvent,
+  briefHubStaticIssueAnalyticsData,
+  briefHubStaticIssueAnalyticsEvent,
   briefIssueEntryAnalyticsData,
   briefIssueHubAnalyticsData,
   briefIssueHubAnalyticsEvent,
@@ -66,6 +70,23 @@ describe("brief entry cta events lib", () => {
       issueNumber: 8,
       rowIndex: 1,
       issueCount: 12,
+    });
+    expect(briefHubLatestIssueAnalyticsEvent()).toBe(
+      "brief_hub_latest_issue_click",
+    );
+    expect(briefHubLatestIssueAnalyticsData(12, 18)).toEqual({
+      surface: BRIEF_HUB_SURFACE,
+      issueNumber: 12,
+      entryCount: 18,
+    });
+    expect(briefHubStaticIssueAnalyticsEvent()).toBe(
+      "brief_hub_static_issue_click",
+    );
+    expect(briefHubStaticIssueAnalyticsData(10, 2, 5)).toEqual({
+      surface: BRIEF_HUB_SURFACE,
+      issueNumber: 10,
+      rowIndex: 2,
+      issueCount: 5,
     });
   });
 });

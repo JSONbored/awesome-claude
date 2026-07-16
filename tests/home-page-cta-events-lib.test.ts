@@ -19,6 +19,8 @@ import {
   homePopularSearchAnalyticsEvent,
   homePulseChangelogEgressAnalyticsData,
   homePulseChangelogEgressAnalyticsEvent,
+  homePulseChangelogRowAnalyticsData,
+  homePulseChangelogRowAnalyticsEvent,
   homePulseContributorClickAnalyticsData,
   homePulseContributorClickAnalyticsEvent,
   homePulseContributorsIndexAnalyticsData,
@@ -120,6 +122,15 @@ describe("home page cta events lib", () => {
       surface: HOME_PAGE_SURFACE,
       contributorSlug: "alice",
       rowIndex: 0,
+      rowCount: 4,
+    });
+    expect(homePulseChangelogRowAnalyticsEvent()).toBe(
+      "home_pulse_changelog_row_click",
+    );
+    expect(homePulseChangelogRowAnalyticsData("added", 1, 4)).toEqual({
+      surface: HOME_PAGE_SURFACE,
+      kind: "added",
+      rowIndex: 1,
       rowCount: 4,
     });
   });

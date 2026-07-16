@@ -34,3 +34,15 @@ export function tagsDetailNotFoundEgressAnalyticsData() {
     surface: TAGS_DETAIL_NOTFOUND_SURFACE,
   };
 }
+
+export function tagsDetailBrowseEgressAnalyticsEvent(): string {
+  return "tags_detail_browse_egress_click";
+}
+
+export function tagsDetailBrowseEgressAnalyticsData(tagSlug: string, entryCount: number) {
+  return {
+    surface: TAGS_DETAIL_SURFACE,
+    tagSlug,
+    entryCount,
+  };
+}

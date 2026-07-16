@@ -118,6 +118,8 @@ import {
 import {
   entryDetailBadgeCopyAnalyticsData,
   entryDetailBadgeCopyAnalyticsEvent,
+  entryDetailBadgePreviewAnalyticsData,
+  entryDetailBadgePreviewAnalyticsEvent,
 } from "@/lib/entry-detail-badge-cta-events";
 import {
   ENTRY_DETAIL_COMPARE_EGRESS_SURFACE_COMPARE,
@@ -1183,7 +1185,17 @@ function BadgeSection({
         Markdown into your README — it renders the badge and links back to this page.
       </p>
       <div className="mt-3 flex items-center gap-3">
-        <a href={entryUrl} target="_blank" rel="noreferrer">
+        <a
+          href={entryUrl}
+          target="_blank"
+          rel="noreferrer"
+          onClick={() =>
+            trackEvent(
+              entryDetailBadgePreviewAnalyticsEvent(),
+              entryDetailBadgePreviewAnalyticsData(category, slug),
+            )
+          }
+        >
           <img src={badgeUrl} alt="Listed on HeyClaude" height={20} className="h-5 w-auto" />
         </a>
       </div>

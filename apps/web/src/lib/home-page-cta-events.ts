@@ -21,6 +21,8 @@ export {
   homePopularSearchAnalyticsEvent,
   homePulseChangelogEgressAnalyticsData,
   homePulseChangelogEgressAnalyticsEvent,
+  homePulseChangelogRowAnalyticsData,
+  homePulseChangelogRowAnalyticsEvent,
   homePulseContributorClickAnalyticsData,
   homePulseContributorClickAnalyticsEvent,
   homePulseContributorsIndexAnalyticsData,

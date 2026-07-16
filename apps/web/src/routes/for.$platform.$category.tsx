@@ -97,6 +97,12 @@ export const Route = createFileRoute("/for/$platform/$category")({
       </p>
       <Link
         to="/for"
+        onClick={() =>
+          trackEvent(
+            platformCategoryNotFoundEgressAnalyticsEvent(),
+            platformCategoryNotFoundEgressAnalyticsData(),
+          )
+        }
         className="mt-6 inline-flex h-9 items-center gap-1.5 rounded-md bg-ink px-4 font-medium text-background hover:opacity-90"
         onClick={() =>
           trackEvent(

@@ -17,6 +17,8 @@ import { ogImageMetaTags } from "@/lib/og-meta-lib";
 import { getTagGroup, relatedTags } from "@/lib/tags";
 import { trackEvent } from "@/lib/analytics";
 import {
+  tagsDetailBrowseEgressAnalyticsData,
+  tagsDetailBrowseEgressAnalyticsEvent,
   tagsDetailNotFoundEgressAnalyticsData,
   tagsDetailNotFoundEgressAnalyticsEvent,
   tagsDetailRelatedSelectAnalyticsData,
@@ -125,6 +127,22 @@ function TagHub() {
           </>
         }
       />
+
+      <div className="mt-6 max-w-3xl">
+        <Link
+          to="/browse"
+          search={{ q: group.name }}
+          onClick={() =>
+            trackEvent(
+              tagsDetailBrowseEgressAnalyticsEvent(),
+              tagsDetailBrowseEgressAnalyticsData(tag, entries.length),
+            )
+          }
+          className="inline-flex h-9 items-center gap-1.5 rounded-md bg-ink px-4 text-sm font-medium text-background hover:opacity-90"
+        >
+          Browse &amp; filter tagged resources <ArrowRight className="h-4 w-4" />
+        </Link>
+      </div>
 
       {related.length > 0 && (
         <div className="mt-6 flex flex-wrap items-center gap-2">

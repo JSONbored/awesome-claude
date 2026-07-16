@@ -1,8 +1,8 @@
 /**
  * Pure entry detail badge CTA analytics helpers.
  *
- * Maps README badge markdown copy actions to privacy-light event names
- * without embedding the copied markdown payload.
+ * Maps README badge markdown copy and badge preview opens to privacy-light
+ * event names without embedding URLs or the copied markdown payload.
  */
 
 export const ENTRY_DETAIL_BADGE_SURFACE = "detail-badge";
@@ -16,6 +16,17 @@ export function entryDetailBadgeCopyAnalyticsEvent(): string {
 }
 
 export function entryDetailBadgeCopyAnalyticsData(category: string, slug: string) {
+  return {
+    entry: entryDetailBadgeEntryKey(category, slug),
+    surface: ENTRY_DETAIL_BADGE_SURFACE,
+  };
+}
+
+export function entryDetailBadgePreviewAnalyticsEvent(): string {
+  return "detail_badge_preview_click";
+}
+
+export function entryDetailBadgePreviewAnalyticsData(category: string, slug: string) {
   return {
     entry: entryDetailBadgeEntryKey(category, slug),
     surface: ENTRY_DETAIL_BADGE_SURFACE,

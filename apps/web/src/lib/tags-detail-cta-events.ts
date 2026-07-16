@@ -4,6 +4,8 @@
 export {
   TAGS_DETAIL_NOTFOUND_SURFACE,
   TAGS_DETAIL_SURFACE,
+  tagsDetailBrowseEgressAnalyticsData,
+  tagsDetailBrowseEgressAnalyticsEvent,
   tagsDetailNotFoundEgressAnalyticsData,
   tagsDetailNotFoundEgressAnalyticsEvent,
   tagsDetailRelatedSelectAnalyticsData,

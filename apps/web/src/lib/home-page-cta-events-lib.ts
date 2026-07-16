@@ -176,3 +176,20 @@ export function homePulseContributorClickAnalyticsData(
     rowCount,
   };
 }
+
+export function homePulseChangelogRowAnalyticsEvent(): string {
+  return "home_pulse_changelog_row_click";
+}
+
+export function homePulseChangelogRowAnalyticsData(
+  kind: string,
+  rowIndex: number,
+  rowCount: number,
+) {
+  return {
+    surface: HOME_PAGE_SURFACE,
+    kind,
+    rowIndex,
+    rowCount,
+  };
+}

@@ -97,3 +97,32 @@ export function briefHubIssueAnalyticsData(
     issueCount,
   };
 }
+
+export function briefHubLatestIssueAnalyticsEvent(): string {
+  return "brief_hub_latest_issue_click";
+}
+
+export function briefHubLatestIssueAnalyticsData(issueNumber: number, entryCount: number) {
+  return {
+    surface: BRIEF_HUB_SURFACE,
+    issueNumber,
+    entryCount,
+  };
+}
+
+export function briefHubStaticIssueAnalyticsEvent(): string {
+  return "brief_hub_static_issue_click";
+}
+
+export function briefHubStaticIssueAnalyticsData(
+  issueNumber: number,
+  rowIndex: number,
+  issueCount: number,
+) {
+  return {
+    surface: BRIEF_HUB_SURFACE,
+    issueNumber,
+    rowIndex,
+    issueCount,
+  };
+}
