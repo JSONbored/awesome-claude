@@ -45,6 +45,18 @@ describe("browse rollout cta events lib", () => {
     expect(browseRolloutSignalSearch("safety")).toEqual({
       signal: "safety-notes",
     });
+    expect(browseRolloutSignalSearch("source")).toEqual({
+      signal: "source-backed",
+    });
+    expect(browseRolloutSignalSearch("reviewed")).toEqual({
+      signal: "reviewed",
+    });
+    expect(browseRolloutSignalSearch("privacy")).toEqual({
+      signal: "privacy-notes",
+    });
+    expect(browseRolloutSignalSearch("package")).toEqual({
+      signal: "trusted-package",
+    });
     expect(browseRolloutSignalSearch("install")).toBeNull();
   });
 });
