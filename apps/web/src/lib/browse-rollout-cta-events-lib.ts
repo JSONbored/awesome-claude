@@ -36,3 +36,42 @@ export function parseBrowseRolloutEntryRef(
     slug: entryRef.slice(slash + 1),
   };
 }
+
+export function browseRolloutSignalRowAnalyticsEvent(): string {
+  return "browse_rollout_signal_row_click";
+}
+
+export function browseRolloutSignalRowAnalyticsData(
+  signalId: string,
+  tone: string,
+  coveragePercent: number,
+  scannedCount: number,
+) {
+  return {
+    surface: BROWSE_ROLLOUT_SIGNALS_SURFACE,
+    signalId,
+    tone,
+    coveragePercent,
+    scannedCount,
+  };
+}
+
+/** Map rollout row ids to browse `signal` (or `source`) search values. */
+export function browseRolloutSignalSearch(
+  signalId: string,
+): { signal?: string; source?: string } | null {
+  switch (signalId) {
+    case "source":
+      return { signal: "source-backed" };
+    case "reviewed":
+      return { signal: "reviewed" };
+    case "safety":
+      return { signal: "safety-notes" };
+    case "privacy":
+      return { signal: "privacy-notes" };
+    case "package":
+      return { signal: "trusted-package" };
+    default:
+      return null;
+  }
+}

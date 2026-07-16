@@ -3,6 +3,9 @@ import {
   BROWSE_ROLLOUT_SIGNALS_SURFACE,
   browseRolloutFlaggedEntryAnalyticsData,
   browseRolloutFlaggedEntryAnalyticsEvent,
+  browseRolloutSignalRowAnalyticsData,
+  browseRolloutSignalRowAnalyticsEvent,
+  browseRolloutSignalSearch,
   parseBrowseRolloutEntryRef,
 } from "@/lib/browse-rollout-cta-events-lib";
 
@@ -24,5 +27,24 @@ describe("browse rollout cta events lib", () => {
       slug: "browser",
     });
     expect(parseBrowseRolloutEntryRef("invalid")).toBeNull();
+  });
+
+  it("maps rollout rows to browse signal search patches", () => {
+    expect(browseRolloutSignalRowAnalyticsEvent()).toBe(
+      "browse_rollout_signal_row_click",
+    );
+    expect(
+      browseRolloutSignalRowAnalyticsData("safety", "watch", 40, 12),
+    ).toEqual({
+      surface: BROWSE_ROLLOUT_SIGNALS_SURFACE,
+      signalId: "safety",
+      tone: "watch",
+      coveragePercent: 40,
+      scannedCount: 12,
+    });
+    expect(browseRolloutSignalSearch("safety")).toEqual({
+      signal: "safety-notes",
+    });
+    expect(browseRolloutSignalSearch("install")).toBeNull();
   });
 });

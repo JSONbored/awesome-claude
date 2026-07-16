@@ -144,7 +144,12 @@ function PlatformPage() {
         caption={`Standout ${label}-compatible resources, picked from their own metadata — trust tier, provenance, documentation, and recency.`}
       />
 
-      <HubSignalStats stats={stats} total={all.length} />
+      <HubSignalStats
+        stats={stats}
+        total={all.length}
+        surface="platform-hub"
+        browseBase={{ platform }}
+      />
 
       {sections.map((section, rowIndex) => (
         <section key={section.category.id} className="mt-12">

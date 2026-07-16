@@ -11,9 +11,12 @@ export function platformChipAnalyticsEvent(): string {
   return "platform_chip_click";
 }
 
-export function platformChipAnalyticsData(platform: string) {
+export function platformChipAnalyticsData(
+  platform: string,
+  surface: string = PLATFORM_CHIP_SURFACE,
+) {
   return {
-    surface: PLATFORM_CHIP_SURFACE,
+    surface,
     platform,
   };
 }
