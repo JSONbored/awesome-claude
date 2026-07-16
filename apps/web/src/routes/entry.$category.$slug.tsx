@@ -82,6 +82,10 @@ import { useCompare, useIsCompared } from "@/lib/compare";
 import { serializeCompareItems } from "@/lib/compare-selection";
 import { trackEvent, outboundHost } from "@/lib/analytics";
 import {
+  badgeChromeSourceAnalyticsData,
+  badgeChromeSourceAnalyticsEvent,
+} from "@/lib/badge-chrome-cta-events";
+import {
   DOSSIER_TOC_CONTENT_OUTLINE_SURFACE,
   dossierTocSectionAnalyticsData,
   dossierTocSectionAnalyticsEvent,
@@ -636,7 +640,16 @@ function Dossier() {
           <div className="flex flex-wrap items-center gap-2">
             <CategoryPill>{entry.category}</CategoryPill>
             <TrustDrilldown entry={entry} />
-            <SourceBadge status={entry.source} />
+            <SourceBadge
+              status={entry.source}
+              asLink
+              onNavigate={() =>
+                trackEvent(
+                  badgeChromeSourceAnalyticsEvent(),
+                  badgeChromeSourceAnalyticsData(entry.source, "detail-header"),
+                )
+              }
+            />
             <InstallRiskBadge entry={entry} />
             <NotesPresenceChips entry={entry} className="ml-1" />
             {entry.claimed && (

@@ -28,6 +28,12 @@ describe("badge chrome cta events lib", () => {
       surface: "peek-panel",
       source: "source-backed",
     });
+    expect(
+      badgeChromeSourceAnalyticsData("first-party", "detail-header"),
+    ).toEqual({
+      surface: "detail-header",
+      source: "first-party",
+    });
     expect(badgeChromeCategoryAnalyticsEvent()).toBe(
       "badge_category_browse_click",
     );
