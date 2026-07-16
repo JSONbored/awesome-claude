@@ -127,7 +127,7 @@ export function submitDraftCopyAnalyticsData(category: string, source: SubmitDra
   };
 }
 
-export type SubmitPreflightNextActionRoute = "form_required" | "route_away" | "manual_review";
+export type SubmitPreflightNextActionRoute = "fix_required" | "route_away" | "manual_review";
 
 export function submitPreflightNextActionAnalyticsEvent(): string {
   return "submit_preflight_next_action_click";
