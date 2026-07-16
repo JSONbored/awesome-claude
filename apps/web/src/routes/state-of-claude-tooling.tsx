@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { BadgeCheck, GitBranch, ShieldCheck, Layers, Boxes, CalendarClock } from "lucide-react";
+import { GitBranch, ShieldCheck, Layers, Boxes, CalendarClock } from "lucide-react";
 import {
   CATEGORIES,
   HARNESSES,
@@ -19,7 +19,6 @@ import { ogImageUrl, OG_WIDTH, OG_HEIGHT } from "@/lib/og-image";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
-import { CountUp } from "@/components/count-up";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { ReportDownloads } from "@/components/report-downloads";
 import { trackEvent } from "@/lib/analytics";
@@ -34,8 +33,11 @@ import {
   stateReportCiteAnalyticsEvent,
   stateReportEgressAnalyticsData,
   stateReportEgressAnalyticsEvent,
+  stateReportStatAnalyticsData,
+  stateReportStatAnalyticsEvent,
   type StateReportEgressDestination,
 } from "@/lib/state-report-page-cta-events";
+import { DataStat } from "@/components/data-report";
 
 const REPORT_ID = "claude-tooling" as const;
 
@@ -48,6 +50,13 @@ function trackStateReportEgress(destination: StateReportEgressDestination) {
 
 function trackStateReportCite() {
   trackEvent(stateReportCiteAnalyticsEvent(), stateReportCiteAnalyticsData(REPORT_ID));
+}
+
+function trackStat(statKey: string, destination: "browse" | "quality" = "browse") {
+  trackEvent(
+    stateReportStatAnalyticsEvent(),
+    stateReportStatAnalyticsData(REPORT_ID, statKey, destination),
+  );
 }
 
 const PATH = "/state-of-claude-tooling";
@@ -205,24 +214,36 @@ function StateOfClaudeToolingPage() {
       <p className="mt-2 text-xs text-ink-subtle">Data as of {asOfLabel} (UTC).</p>
 
       <div className="mt-10 grid gap-px overflow-hidden rounded-xl border border-border bg-border stagger-children sm:grid-cols-4">
-        <Stat icon={Boxes} label="Total resources" value={TOTAL} hint="across the registry" />
-        <Stat
+        <DataStat
+          icon={Boxes}
+          label="Total resources"
+          value={TOTAL}
+          hint="across the registry"
+          to="/browse"
+          onNavigate={() => trackStat("total")}
+        />
+        <DataStat
           icon={Layers}
           label="Categories tracked"
           value={CATEGORIES.length}
           hint="agents to statuslines"
         />
-        <Stat
+        <DataStat
           icon={GitBranch}
           label="Source-backed"
           value={QUALITY_STATS.sourceBacked}
           hint={`${pctOf(QUALITY_STATS.sourceBacked, TOTAL)}% of total`}
+          to="/browse"
+          search={{ source: "source-backed" }}
+          onNavigate={() => trackStat("source-backed")}
         />
-        <Stat
+        <DataStat
           icon={ShieldCheck}
           label="Maintainer-reviewed"
           value={QUALITY_STATS.reviewed}
           hint={`${pctOf(QUALITY_STATS.reviewed, TOTAL)}% of total`}
+          to="/quality"
+          onNavigate={() => trackStat("reviewed", "quality")}
         />
       </div>
 
@@ -448,33 +469,5 @@ function Section({
       <p className="mt-2 max-w-2xl text-sm text-ink-muted">{help}</p>
       <div className="mt-4">{children}</div>
     </section>
-  );
-}
-
-function Stat({
-  icon: Icon,
-  label,
-  value,
-  hint,
-}: {
-  icon: React.ElementType;
-  label: string;
-  value: number;
-  hint: string;
-}) {
-  return (
-    <div className="bg-surface p-5">
-      <div className="flex items-center justify-between">
-        <Icon className="h-4 w-4 text-ink-muted" />
-        <BadgeCheck className="h-3.5 w-3.5 text-ink-subtle" aria-hidden />
-      </div>
-      <div className="mt-3 font-display text-3xl font-semibold tabular-nums text-ink">
-        <CountUp value={value} />
-      </div>
-      <div className="mt-1 flex items-end justify-between gap-2">
-        <div className="text-xs text-ink-muted">{label}</div>
-        <span className="font-mono text-[11px] text-ink-subtle">{hint}</span>
-      </div>
-    </div>
   );
 }
