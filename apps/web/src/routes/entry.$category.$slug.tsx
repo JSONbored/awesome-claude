@@ -86,6 +86,8 @@ import {
   badgeChromeCategoryAnalyticsEvent,
   badgeChromeInstallRiskAnalyticsData,
   badgeChromeInstallRiskAnalyticsEvent,
+  badgeChromeNotesAnalyticsData,
+  badgeChromeNotesAnalyticsEvent,
   badgeChromeSourceAnalyticsData,
   badgeChromeSourceAnalyticsEvent,
 } from "@/lib/badge-chrome-cta-events";
@@ -675,7 +677,17 @@ function Dossier() {
                 )
               }
             />
-            <NotesPresenceChips entry={entry} className="ml-1" />
+            <NotesPresenceChips
+              entry={entry}
+              className="ml-1"
+              interactive
+              onNoteClick={(noteKind, present) =>
+                trackEvent(
+                  badgeChromeNotesAnalyticsEvent(),
+                  badgeChromeNotesAnalyticsData(noteKind, present, "detail-header"),
+                )
+              }
+            />
             {entry.claimed && (
               <span className="inline-flex items-center gap-1 rounded-md bg-surface-2 px-1.5 py-0.5 text-[11px] text-ink-muted">
                 <Sparkles className="h-3 w-3" />

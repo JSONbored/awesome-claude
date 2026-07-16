@@ -89,6 +89,13 @@ describe("badge chrome cta events lib", () => {
       noteKind: "safety",
       present: true,
     });
+    expect(
+      badgeChromeNotesAnalyticsData("privacy", false, "detail-header"),
+    ).toEqual({
+      surface: "detail-header",
+      noteKind: "privacy",
+      present: false,
+    });
     expect(badgeChromeInstallRiskAnalyticsEvent()).toBe(
       "badge_install_risk_scroll_click",
     );
