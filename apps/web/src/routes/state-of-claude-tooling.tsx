@@ -31,13 +31,22 @@ import {
   stateReportCategoryBrowseAnalyticsEvent,
   stateReportCiteAnalyticsData,
   stateReportCiteAnalyticsEvent,
+  stateReportDistRowAnalyticsData,
+  stateReportDistRowAnalyticsEvent,
   stateReportEgressAnalyticsData,
   stateReportEgressAnalyticsEvent,
   stateReportStatAnalyticsData,
   stateReportStatAnalyticsEvent,
   type StateReportEgressDestination,
 } from "@/lib/state-report-page-cta-events";
-import { DataStat } from "@/components/data-report";
+import {
+  withCategoryHubDrilldown,
+  withNotesSignalDrilldown,
+  withPlatformDrilldown,
+  withSourceDrilldown,
+  withTrustDrilldown,
+} from "@/lib/data-report-drilldown-lib";
+import { DataSection, DataStat, DistTable, type DistRow } from "@/components/data-report";
 
 const REPORT_ID = "claude-tooling" as const;
 
@@ -50,6 +59,14 @@ function trackStateReportEgress(destination: StateReportEgressDestination) {
 
 function trackStateReportCite() {
   trackEvent(stateReportCiteAnalyticsEvent(), stateReportCiteAnalyticsData(REPORT_ID));
+}
+
+function trackDistRow(dimension: string, row: DistRow, rowIndex: number, rowCount: number) {
+  if (!row.rowKey) return;
+  trackEvent(
+    stateReportDistRowAnalyticsEvent(),
+    stateReportDistRowAnalyticsData(REPORT_ID, dimension, row.rowKey, rowIndex, rowCount),
+  );
 }
 
 function trackStat(statKey: string, destination: "browse" | "quality" = "browse") {
@@ -70,40 +87,43 @@ const AS_OF = String(REGISTRY_GENERATED_AT).slice(0, 10);
 
 // ---- Derived stats (computed once at module load; the registry is static) ----
 
-interface DistRow {
-  label: string;
-  count: number;
-  pct: number;
-}
-
 const TOTAL = ENTRIES.length;
-
-const CATEGORY_DIST: DistRow[] = CATEGORIES.map((c) => {
-  const count = ENTRIES.filter((e) => e.category === c.id).length;
-  return { label: c.label, count, pct: pctOf(count, TOTAL) };
-}).sort((a, b) => b.count - a.count);
 
 const CATEGORY_ID_BY_LABEL = new Map<string, Category>(CATEGORIES.map((c) => [c.label, c.id]));
 
+const CATEGORY_DIST: DistRow[] = withCategoryHubDrilldown(
+  CATEGORIES.map((c) => {
+    const count = ENTRIES.filter((e) => e.category === c.id).length;
+    return { label: c.label, count, pct: pctOf(count, TOTAL) };
+  }).sort((a, b) => b.count - a.count),
+  CATEGORY_ID_BY_LABEL,
+);
+
 const TRUST_ORDER: TrustLevel[] = ["trusted", "review", "limited", "blocked"];
-const TRUST_DIST: DistRow[] = TRUST_ORDER.map((level) => {
-  const count = ENTRIES.filter((e) => e.trust === level).length;
-  return { label: TRUST_LABEL[level], count, pct: pctOf(count, TOTAL) };
-}).filter((row) => row.count > 0);
+const TRUST_DIST: DistRow[] = withTrustDrilldown(
+  TRUST_ORDER.map((level) => {
+    const count = ENTRIES.filter((e) => e.trust === level).length;
+    return { label: TRUST_LABEL[level], count, pct: pctOf(count, TOTAL) };
+  }).filter((row) => row.count > 0),
+);
 
 const SOURCE_ORDER: SourceStatus[] = ["first-party", "source-backed", "external", "unverified"];
-const SOURCE_DIST: DistRow[] = SOURCE_ORDER.map((status) => {
-  const count = ENTRIES.filter((e) => e.source === status).length;
-  return { label: SOURCE_LABEL[status], count, pct: pctOf(count, TOTAL) };
-}).filter((row) => row.count > 0);
+const SOURCE_DIST: DistRow[] = withSourceDrilldown(
+  SOURCE_ORDER.map((status) => {
+    const count = ENTRIES.filter((e) => e.source === status).length;
+    return { label: SOURCE_LABEL[status], count, pct: pctOf(count, TOTAL) };
+  }).filter((row) => row.count > 0),
+);
 
 // Platform coverage — how many entries declare compatibility with each harness.
-const PLATFORM_DIST: DistRow[] = HARNESSES.map((h) => {
-  const count = ENTRIES.filter((e) => e.platforms.includes(h.id as Platform)).length;
-  return { label: PLATFORM_LABEL[h.id], count, pct: pctOf(count, TOTAL) };
-})
-  .filter((row) => row.count > 0)
-  .sort((a, b) => b.count - a.count);
+const PLATFORM_DIST: DistRow[] = withPlatformDrilldown(
+  HARNESSES.map((h) => {
+    const count = ENTRIES.filter((e) => e.platforms.includes(h.id as Platform)).length;
+    return { label: PLATFORM_LABEL[h.id], count, pct: pctOf(count, TOTAL) };
+  })
+    .filter((row) => row.count > 0)
+    .sort((a, b) => b.count - a.count),
+);
 
 // Install-method distribution — derived from each entry's installCommand, over
 // the package-installable subset (file/config drop-ins have no install command).
@@ -116,11 +136,11 @@ const INSTALL_METHOD_DIST: DistRow[] = INSTALL_METHODS.rows.map((row) => ({
 
 // Safety & privacy notes coverage — HeyClaude's differentiating metadata, quantified.
 const NOTES = notesCoverage(ENTRIES);
-const NOTES_DIST: DistRow[] = [
+const NOTES_DIST: DistRow[] = withNotesSignalDrilldown([
   { label: "Safety notes", count: NOTES.safety, pct: pctOf(NOTES.safety, TOTAL) },
   { label: "Privacy notes", count: NOTES.privacy, pct: pctOf(NOTES.privacy, TOTAL) },
   { label: "Both", count: NOTES.both, pct: pctOf(NOTES.both, TOTAL) },
-];
+]);
 
 // Recent additions — newest-dated entries by dateAdded.
 const RECENT_ADDITIONS = [...ENTRIES]
@@ -247,12 +267,27 @@ function StateOfClaudeToolingPage() {
         />
       </div>
 
-      <Section
+      <DataSection
         title="Resources by category"
         help="How the catalog breaks down across the ten tracked categories."
       >
-        <DistTable rows={CATEGORY_DIST} linkCategory />
-      </Section>
+        <DistTable
+          rows={CATEGORY_DIST}
+          onRowClick={(row, rowIndex) => {
+            if (!row.rowKey) return;
+            trackEvent(
+              stateReportCategoryBrowseAnalyticsEvent(),
+              stateReportCategoryBrowseAnalyticsData(
+                REPORT_ID,
+                row.rowKey,
+                row.count,
+                rowIndex,
+                CATEGORY_DIST.length,
+              ),
+            );
+          }}
+        />
+      </DataSection>
 
       <div className="mt-12 grid gap-6 lg:grid-cols-2">
         <div>
@@ -268,7 +303,12 @@ function StateOfClaudeToolingPage() {
             </Link>
           </p>
           <div className="mt-4">
-            <DistTable rows={TRUST_DIST} />
+            <DistTable
+              rows={TRUST_DIST}
+              onRowClick={(row, rowIndex) =>
+                trackDistRow("trust-level", row, rowIndex, TRUST_DIST.length)
+              }
+            />
           </div>
         </div>
         <div>
@@ -277,31 +317,46 @@ function StateOfClaudeToolingPage() {
             Where each listing's identity comes from — repo, package registry, or first-party docs.
           </p>
           <div className="mt-4">
-            <DistTable rows={SOURCE_DIST} />
+            <DistTable
+              rows={SOURCE_DIST}
+              onRowClick={(row, rowIndex) =>
+                trackDistRow("source-provenance", row, rowIndex, SOURCE_DIST.length)
+              }
+            />
           </div>
         </div>
       </div>
 
-      <Section
+      <DataSection
         title="Platform coverage"
         help="How many resources declare compatibility with each harness. Entries can support more than one, so percentages do not sum to 100%."
       >
-        <DistTable rows={PLATFORM_DIST} />
-      </Section>
+        <DistTable
+          rows={PLATFORM_DIST}
+          onRowClick={(row, rowIndex) =>
+            trackDistRow("platform-coverage", row, rowIndex, PLATFORM_DIST.length)
+          }
+        />
+      </DataSection>
 
-      <Section
+      <DataSection
         title="Install methods"
         help={`How the ${INSTALL_METHODS.total} package-installable resources are delivered, by install command. File and config drop-ins (agents, rules, skills, and the like) install by copying into your project rather than a package manager, so they are excluded here.`}
       >
         <DistTable rows={INSTALL_METHOD_DIST} />
-      </Section>
+      </DataSection>
 
-      <Section
+      <DataSection
         title="Safety & privacy coverage"
         help="Share of the catalog carrying reviewer-checked safety and privacy notes — the execution/permissions and data-handling metadata that sets HeyClaude apart. Percentages are of the full catalog; entries can carry both."
       >
-        <DistTable rows={NOTES_DIST} />
-      </Section>
+        <DistTable
+          rows={NOTES_DIST}
+          onRowClick={(row, rowIndex) =>
+            trackDistRow("notes-coverage", row, rowIndex, NOTES_DIST.length)
+          }
+        />
+      </DataSection>
 
       <ReportDownloads exportSlug="claude-tooling" />
 
@@ -397,77 +452,5 @@ function StateOfClaudeToolingPage() {
         />
       </div>
     </PageContainer>
-  );
-
-  function DistTable({ rows, linkCategory = false }: { rows: DistRow[]; linkCategory?: boolean }) {
-    const max = rows.reduce((m, r) => Math.max(m, r.count), 0);
-    return (
-      <div className="overflow-hidden rounded-xl border border-border bg-surface">
-        {rows.map((row, rowIndex) => {
-          const categoryId = linkCategory ? CATEGORY_ID_BY_LABEL.get(row.label) : undefined;
-          const inner = (
-            <>
-              <div className="font-display text-sm font-semibold text-ink">{row.label}</div>
-              <div className="h-2 overflow-hidden rounded-full bg-surface-2">
-                <div
-                  className="h-full bg-ink"
-                  style={{ width: `${max ? Math.round((row.count / max) * 100) : 0}%` }}
-                />
-              </div>
-              <div className="text-right font-mono text-xs tabular-nums text-ink">{row.count}</div>
-              <div className="text-right font-mono text-xs tabular-nums text-ink-subtle">
-                {row.pct}%
-              </div>
-            </>
-          );
-          const className =
-            "grid grid-cols-[140px_1fr_56px_56px] items-center gap-4 border-b border-border px-5 py-3 last:border-0";
-          return categoryId ? (
-            <Link
-              key={row.label}
-              to="/$category"
-              params={{ category: categoryId }}
-              onClick={() =>
-                trackEvent(
-                  stateReportCategoryBrowseAnalyticsEvent(),
-                  stateReportCategoryBrowseAnalyticsData(
-                    REPORT_ID,
-                    categoryId,
-                    row.count,
-                    rowIndex,
-                    rows.length,
-                  ),
-                )
-              }
-              className={`${className} hover:bg-surface-2`}
-            >
-              {inner}
-            </Link>
-          ) : (
-            <div key={row.label} className={className}>
-              {inner}
-            </div>
-          );
-        })}
-      </div>
-    );
-  }
-}
-
-function Section({
-  title,
-  help,
-  children,
-}: {
-  title: string;
-  help: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section className="mt-12">
-      <h2 className="h-display-2 text-ink text-balance">{title}</h2>
-      <p className="mt-2 max-w-2xl text-sm text-ink-muted">{help}</p>
-      <div className="mt-4">{children}</div>
-    </section>
   );
 }

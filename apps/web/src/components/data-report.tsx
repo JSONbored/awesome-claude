@@ -11,6 +11,8 @@ export type DistBrowseSearch = {
   category?: string;
   trust?: string;
   source?: string;
+  platform?: string;
+  signal?: string;
 };
 
 /** In-app destination for a clickable distribution row. */
