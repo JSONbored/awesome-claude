@@ -22,6 +22,8 @@ import {
   ecosystemMatrixDocAnalyticsEvent,
   ecosystemMatrixFocusClearAnalyticsData,
   ecosystemMatrixFocusClearAnalyticsEvent,
+  ecosystemMatrixSnippetCopyAnalyticsData,
+  ecosystemMatrixSnippetCopyAnalyticsEvent,
   ecosystemMatrixSupportFocusAnalyticsData,
   ecosystemMatrixSupportFocusAnalyticsEvent,
   ecosystemFeedPathAnalyticsData,
@@ -374,6 +376,19 @@ function EcosystemPage() {
             trackEvent(
               ecosystemMatrixDocAnalyticsEvent(),
               ecosystemMatrixDocAnalyticsData(clientId, support, rowIndex, columnIndex),
+            )
+          }
+          onSnippetCopy={(clientId, support, rowIndex, columnIndex, capabilityCount, clientCount) =>
+            trackEvent(
+              ecosystemMatrixSnippetCopyAnalyticsEvent(),
+              ecosystemMatrixSnippetCopyAnalyticsData(
+                clientId,
+                support,
+                rowIndex,
+                columnIndex,
+                capabilityCount,
+                clientCount,
+              ),
             )
           }
         />

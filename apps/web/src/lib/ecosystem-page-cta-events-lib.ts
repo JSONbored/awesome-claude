@@ -200,6 +200,29 @@ export function ecosystemMatrixDocAnalyticsData(
   };
 }
 
+export function ecosystemMatrixSnippetCopyAnalyticsEvent(): string {
+  return "ecosystem_matrix_snippet_copy_click";
+}
+
+export function ecosystemMatrixSnippetCopyAnalyticsData(
+  clientId: string,
+  support: EcosystemMatrixSupport,
+  rowIndex: number,
+  columnIndex: number,
+  capabilityCount: number,
+  clientCount: number,
+) {
+  return {
+    surface: ECOSYSTEM_PAGE_SURFACE,
+    clientId,
+    support,
+    rowIndex,
+    columnIndex,
+    capabilityCount,
+    clientCount,
+  };
+}
+
 export type EcosystemSetupSurface = "mcp-host" | "adapter" | "extension" | "web";
 export type EcosystemSetupDocDestination = "external" | "internal";
 

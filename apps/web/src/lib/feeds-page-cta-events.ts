@@ -5,6 +5,8 @@ export {
   FEEDS_PAGE_SURFACE,
   feedsPageApiDocsAnalyticsData,
   feedsPageApiDocsAnalyticsEvent,
+  feedsPageFeedCopyAnalyticsData,
+  feedsPageFeedCopyAnalyticsEvent,
   feedsPageFeedOpenAnalyticsData,
   feedsPageFeedOpenAnalyticsEvent,
   type FeedsPageFeedKind,

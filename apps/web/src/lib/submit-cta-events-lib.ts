@@ -96,3 +96,33 @@ export function submitEgressAnalyticsData(destination: SubmitEgressDestination) 
     destination,
   };
 }
+
+export type SubmitCompletionDestination = "status";
+export type SubmitDraftCopySource = "manual" | "wizard";
+
+export function submitCompletionEgressAnalyticsEvent(): string {
+  return "submit_completion_egress_click";
+}
+
+export function submitCompletionEgressAnalyticsData(
+  category: string,
+  destination: SubmitCompletionDestination,
+) {
+  return {
+    surface: SUBMIT_SURFACE,
+    category,
+    destination,
+  };
+}
+
+export function submitDraftCopyAnalyticsEvent(): string {
+  return "submit_draft_copy_click";
+}
+
+export function submitDraftCopyAnalyticsData(category: string, source: SubmitDraftCopySource) {
+  return {
+    surface: SUBMIT_SURFACE,
+    category,
+    source,
+  };
+}

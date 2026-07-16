@@ -3,6 +3,10 @@ import {
   SUBMIT_SURFACE,
   submitCategorySelectAnalyticsData,
   submitCategorySelectAnalyticsEvent,
+  submitCompletionEgressAnalyticsData,
+  submitCompletionEgressAnalyticsEvent,
+  submitDraftCopyAnalyticsData,
+  submitDraftCopyAnalyticsEvent,
   submitEgressAnalyticsData,
   submitEgressAnalyticsEvent,
   submitPreflightRetryAnalyticsData,
@@ -77,6 +81,25 @@ describe("submit cta events lib", () => {
     expect(submitEgressAnalyticsData("jobs-post")).toEqual({
       surface: SUBMIT_SURFACE,
       destination: "jobs-post",
+    });
+    expect(submitCompletionEgressAnalyticsEvent()).toBe(
+      "submit_completion_egress_click",
+    );
+    expect(submitCompletionEgressAnalyticsData("mcp", "status")).toEqual({
+      surface: SUBMIT_SURFACE,
+      category: "mcp",
+      destination: "status",
+    });
+    expect(submitDraftCopyAnalyticsEvent()).toBe("submit_draft_copy_click");
+    expect(submitDraftCopyAnalyticsData("skills", "manual")).toEqual({
+      surface: SUBMIT_SURFACE,
+      category: "skills",
+      source: "manual",
+    });
+    expect(submitDraftCopyAnalyticsData("hooks", "wizard")).toEqual({
+      surface: SUBMIT_SURFACE,
+      category: "hooks",
+      source: "wizard",
     });
   });
 });

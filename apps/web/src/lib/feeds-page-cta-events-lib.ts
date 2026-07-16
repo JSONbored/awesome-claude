@@ -37,3 +37,22 @@ export function feedsPageApiDocsAnalyticsData() {
     surface: FEEDS_PAGE_SURFACE,
   };
 }
+
+export function feedsPageFeedCopyAnalyticsEvent(): string {
+  return "feeds_page_feed_copy_click";
+}
+
+export function feedsPageFeedCopyAnalyticsData(
+  feedKey: string,
+  feedKind: FeedsPageFeedKind,
+  rowIndex: number,
+  sectionCount: number,
+) {
+  return {
+    surface: FEEDS_PAGE_SURFACE,
+    feedKey,
+    feedKind,
+    rowIndex,
+    sectionCount,
+  };
+}

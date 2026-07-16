@@ -3,6 +3,8 @@ import {
   FEEDS_PAGE_SURFACE,
   feedsPageApiDocsAnalyticsData,
   feedsPageApiDocsAnalyticsEvent,
+  feedsPageFeedCopyAnalyticsData,
+  feedsPageFeedCopyAnalyticsEvent,
   feedsPageFeedOpenAnalyticsData,
   feedsPageFeedOpenAnalyticsEvent,
 } from "@/lib/feeds-page-cta-events-lib";
@@ -22,6 +24,16 @@ describe("feeds page cta events lib", () => {
     expect(feedsPageApiDocsAnalyticsEvent()).toBe("feeds_page_api_docs_click");
     expect(feedsPageApiDocsAnalyticsData()).toEqual({
       surface: FEEDS_PAGE_SURFACE,
+    });
+    expect(feedsPageFeedCopyAnalyticsEvent()).toBe(
+      "feeds_page_feed_copy_click",
+    );
+    expect(feedsPageFeedCopyAnalyticsData("mcp", "category", 2, 12)).toEqual({
+      surface: FEEDS_PAGE_SURFACE,
+      feedKey: "mcp",
+      feedKind: "category",
+      rowIndex: 2,
+      sectionCount: 12,
     });
   });
 });

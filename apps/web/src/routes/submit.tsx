@@ -29,6 +29,10 @@ import { trackEvent } from "@/lib/analytics";
 import {
   submitCategorySelectAnalyticsData,
   submitCategorySelectAnalyticsEvent,
+  submitCompletionEgressAnalyticsData,
+  submitCompletionEgressAnalyticsEvent,
+  submitDraftCopyAnalyticsData,
+  submitDraftCopyAnalyticsEvent,
   submitEgressAnalyticsData,
   submitEgressAnalyticsEvent,
   submitPreflightRetryAnalyticsData,
@@ -254,6 +258,12 @@ function SubmitPage() {
             href={done.statusUrl}
             target="_blank"
             rel="noreferrer"
+            onClick={() =>
+              trackEvent(
+                submitCompletionEgressAnalyticsEvent(),
+                submitCompletionEgressAnalyticsData(category || "", "status"),
+              )
+            }
             className="mt-6 inline-flex h-10 items-center justify-center rounded-md bg-ink px-4 text-sm font-medium text-background hover:bg-ink/90"
           >
             Open submission status
@@ -263,7 +273,12 @@ function SubmitPage() {
           <div className="mt-6 text-left">
             <div className="mb-2 flex items-center justify-between">
               <div className="eyebrow">{done.manualPr.targetPath}</div>
-              <CopyButton value={done.manualPr.body} label="Copy" />
+              <CopyButton
+                value={done.manualPr.body}
+                label="Copy"
+                event={submitDraftCopyAnalyticsEvent()}
+                eventData={submitDraftCopyAnalyticsData(category || "", "manual")}
+              />
             </div>
             <pre className="max-h-[420px] overflow-auto rounded-md border border-border bg-background p-3 text-[11px] text-ink">
               <code>{done.manualPr.body}</code>
@@ -485,7 +500,12 @@ function SubmitPage() {
             <div>
               <div className="mb-2 flex items-center justify-between">
                 <div className="eyebrow">PR draft</div>
-                <CopyButton value={prPacket} label="Copy" />
+                <CopyButton
+                  value={prPacket}
+                  label="Copy"
+                  event={submitDraftCopyAnalyticsEvent()}
+                  eventData={submitDraftCopyAnalyticsData(category || "", "wizard")}
+                />
               </div>
               <div className="mb-2 grid gap-2 rounded-md border border-border bg-background px-3 py-2 font-mono text-xs text-ink-muted">
                 <span>{prTitle}</span>

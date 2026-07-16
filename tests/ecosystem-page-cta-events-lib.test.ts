@@ -19,6 +19,8 @@ import {
   ecosystemMatrixDocAnalyticsEvent,
   ecosystemMatrixFocusClearAnalyticsData,
   ecosystemMatrixFocusClearAnalyticsEvent,
+  ecosystemMatrixSnippetCopyAnalyticsData,
+  ecosystemMatrixSnippetCopyAnalyticsEvent,
   ecosystemMatrixSupportFocusAnalyticsData,
   ecosystemMatrixSupportFocusAnalyticsEvent,
   ecosystemFeedPathAnalyticsData,
@@ -160,6 +162,20 @@ describe("ecosystem page cta events lib", () => {
       support: "native",
       rowIndex: 2,
       columnIndex: 4,
+    });
+    expect(ecosystemMatrixSnippetCopyAnalyticsEvent()).toBe(
+      "ecosystem_matrix_snippet_copy_click",
+    );
+    expect(
+      ecosystemMatrixSnippetCopyAnalyticsData("cursor", "native", 2, 4, 7, 7),
+    ).toEqual({
+      surface: ECOSYSTEM_PAGE_SURFACE,
+      clientId: "cursor",
+      support: "native",
+      rowIndex: 2,
+      columnIndex: 4,
+      capabilityCount: 7,
+      clientCount: 7,
     });
   });
 

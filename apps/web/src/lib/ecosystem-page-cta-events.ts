@@ -21,6 +21,8 @@ export {
   ecosystemMatrixDocAnalyticsEvent,
   ecosystemMatrixFocusClearAnalyticsData,
   ecosystemMatrixFocusClearAnalyticsEvent,
+  ecosystemMatrixSnippetCopyAnalyticsData,
+  ecosystemMatrixSnippetCopyAnalyticsEvent,
   ecosystemMatrixSupportFocusAnalyticsData,
   ecosystemMatrixSupportFocusAnalyticsEvent,
   ecosystemSectionAnalyticsData,

@@ -9,6 +9,8 @@ import { trackEvent } from "@/lib/analytics";
 import {
   feedsPageApiDocsAnalyticsData,
   feedsPageApiDocsAnalyticsEvent,
+  feedsPageFeedCopyAnalyticsData,
+  feedsPageFeedCopyAnalyticsEvent,
   feedsPageFeedOpenAnalyticsData,
   feedsPageFeedOpenAnalyticsEvent,
   type FeedsPageFeedKind,
@@ -86,7 +88,12 @@ function FeedRow({
         >
           Open feed
         </a>
-        <CopyButton value={href} label="Copy URL" />
+        <CopyButton
+          value={href}
+          label="Copy URL"
+          event={feedsPageFeedCopyAnalyticsEvent()}
+          eventData={feedsPageFeedCopyAnalyticsData(feedKey, feedKind, rowIndex, sectionCount)}
+        />
         <details className="inline-block">
           <summary className="inline-flex h-8 cursor-pointer items-center rounded-md border border-border bg-surface px-2.5 text-xs text-ink hover:bg-surface-2">
             Email

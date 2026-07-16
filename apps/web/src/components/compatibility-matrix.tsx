@@ -52,6 +52,7 @@ export function CompatibilityMatrix({
   onFocusClearClick,
   onCsvDownloadClick,
   onDocClick,
+  onSnippetCopy,
 }: {
   clients: readonly MatrixClient[];
   rows: MatrixRow[];
@@ -70,6 +71,14 @@ export function CompatibilityMatrix({
   onFocusClearClick?: (hadClientFocus: boolean, hadSupportFocus: boolean) => void;
   onCsvDownloadClick?: (capabilityCount: number, clientCount: number) => void;
   onDocClick?: (clientId: string, support: Support, rowIndex: number, columnIndex: number) => void;
+  onSnippetCopy?: (
+    clientId: string,
+    support: Support,
+    rowIndex: number,
+    columnIndex: number,
+    capabilityCount: number,
+    clientCount: number,
+  ) => void;
 }) {
   const [query, setQuery] = React.useState("");
   const [focusClient, setFocusClient] = React.useState<string | null>(null);
@@ -229,6 +238,19 @@ export function CompatibilityMatrix({
                                   ? () => onDocClick(c.id, v, rowIndex, columnIndex)
                                   : undefined
                               }
+                              onSnippetCopy={
+                                onSnippetCopy
+                                  ? () =>
+                                      onSnippetCopy(
+                                        c.id,
+                                        v,
+                                        rowIndex,
+                                        columnIndex,
+                                        filtered.length,
+                                        clients.length,
+                                      )
+                                  : undefined
+                              }
                             />
                           </PopoverContent>
                         </Popover>
@@ -298,12 +320,14 @@ function CellPopover({
   support,
   detail,
   onDocClick,
+  onSnippetCopy,
 }: {
   capability: string;
   client: string;
   support: Support;
   detail: CellDetail;
   onDocClick?: () => void;
+  onSnippetCopy?: () => void;
 }) {
   const meta = SUPPORT_META[support];
   return (
@@ -325,6 +349,7 @@ function CellPopover({
               label="Copy snippet"
               size="sm"
               className="w-full justify-center"
+              onCopied={onSnippetCopy}
             />
           </div>
         </div>
