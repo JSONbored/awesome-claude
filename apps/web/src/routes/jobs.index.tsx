@@ -11,6 +11,8 @@ import { JobCard } from "@/components/job-card";
 import { isFresh, pickDailySpotlight, relativePosted, sortJobs } from "@/lib/jobs-utils";
 import { trackEvent } from "@/lib/analytics";
 import {
+  jobsErrorRetryAnalyticsData,
+  jobsErrorRetryAnalyticsEvent,
   jobsIndexFilterClearAnalyticsData,
   jobsIndexFilterClearAnalyticsEvent,
   jobsIndexFilterSelectAnalyticsData,
@@ -57,7 +59,13 @@ export const Route = createFileRoute("/jobs/")({
     <div className="mx-auto max-w-xl px-4 py-16 text-center">
       <h1 className="font-display text-2xl text-ink">Couldn't load jobs</h1>
       <p className="mt-2 text-sm text-ink-muted">{error.message}</p>
-      <button onClick={reset} className="mt-4 rounded-md border border-border px-4 py-2 text-sm">
+      <button
+        onClick={() => {
+          trackEvent(jobsErrorRetryAnalyticsEvent(), jobsErrorRetryAnalyticsData("jobs-index"));
+          reset();
+        }}
+        className="mt-4 rounded-md border border-border px-4 py-2 text-sm"
+      >
         Try again
       </button>
     </div>

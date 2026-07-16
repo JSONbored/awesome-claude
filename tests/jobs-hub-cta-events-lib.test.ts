@@ -8,6 +8,8 @@ import {
   jobsDetailIndexAnalyticsEvent,
   jobsDetailRelatedAnalyticsData,
   jobsDetailRelatedAnalyticsEvent,
+  jobsErrorRetryAnalyticsData,
+  jobsErrorRetryAnalyticsEvent,
   jobsIndexFilterClearAnalyticsData,
   jobsIndexFilterClearAnalyticsEvent,
   jobsIndexFilterSelectAnalyticsData,
@@ -123,6 +125,13 @@ describe("jobs hub cta events lib", () => {
       jobSlug: "senior-mcp",
       tier: "free",
       destination: "source",
+    });
+    expect(jobsErrorRetryAnalyticsEvent()).toBe("jobs_error_retry_click");
+    expect(jobsErrorRetryAnalyticsData("jobs-index")).toEqual({
+      surface: "jobs-index",
+    });
+    expect(jobsErrorRetryAnalyticsData("jobs-detail")).toEqual({
+      surface: "jobs-detail",
     });
   });
 });

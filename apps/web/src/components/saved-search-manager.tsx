@@ -38,12 +38,20 @@ import { CopyButton } from "@/components/copy-button";
 import { cn } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
 import {
+  browseSavedSearchManagerAlertsCancelAnalyticsData,
+  browseSavedSearchManagerAlertsCancelAnalyticsEvent,
+  browseSavedSearchManagerAlertsEditorAnalyticsData,
+  browseSavedSearchManagerAlertsEditorAnalyticsEvent,
   browseSavedSearchManagerAlertsSaveAnalyticsData,
   browseSavedSearchManagerAlertsSaveAnalyticsEvent,
   browseSavedSearchManagerAlertsToggleAnalyticsData,
   browseSavedSearchManagerAlertsToggleAnalyticsEvent,
   browseSavedSearchManagerApplyAnalyticsData,
   browseSavedSearchManagerApplyAnalyticsEvent,
+  browseSavedSearchManagerCadenceSelectAnalyticsData,
+  browseSavedSearchManagerCadenceSelectAnalyticsEvent,
+  browseSavedSearchManagerChannelToggleAnalyticsData,
+  browseSavedSearchManagerChannelToggleAnalyticsEvent,
   browseSavedSearchManagerFeedCopyAnalyticsData,
   browseSavedSearchManagerFeedCopyAnalyticsEvent,
   browseSavedSearchManagerOpenAnalyticsData,
@@ -86,11 +94,20 @@ function AlertEditor({
 }) {
   const [draft, setDraft] = React.useState<AlertSchedule>(initial);
   const [busy, setBusy] = React.useState(false);
-  const toggleChannel = (c: AlertChannel) =>
+  const toggleChannel = (c: AlertChannel) => {
+    const enabled = !draft.channels.includes(c);
+    const channelCount = enabled
+      ? draft.channels.length + 1
+      : Math.max(0, draft.channels.length - 1);
+    trackEvent(
+      browseSavedSearchManagerChannelToggleAnalyticsEvent(),
+      browseSavedSearchManagerChannelToggleAnalyticsData(c, enabled, channelCount),
+    );
     setDraft((d) => ({
       ...d,
-      channels: d.channels.includes(c) ? d.channels.filter((x) => x !== c) : [...d.channels, c],
+      channels: enabled ? [...d.channels, c] : d.channels.filter((x) => x !== c),
     }));
+  };
 
   const needsEmail = draft.channels.includes("email");
   const feedHref = savedFeedUrl(search);
@@ -124,7 +141,13 @@ function AlertEditor({
           <button
             key={c}
             type="button"
-            onClick={() => setDraft((d) => ({ ...d, cadence: c }))}
+            onClick={() => {
+              trackEvent(
+                browseSavedSearchManagerCadenceSelectAnalyticsEvent(),
+                browseSavedSearchManagerCadenceSelectAnalyticsData(c, draft.channels.length),
+              );
+              setDraft((d) => ({ ...d, cadence: c }));
+            }}
             className={cn(
               "inline-flex h-6 items-center rounded-full border px-2 text-[11px] capitalize",
               draft.cadence === c
@@ -162,7 +185,13 @@ function AlertEditor({
       <div className="mt-3 flex items-center justify-end gap-1">
         <button
           type="button"
-          onClick={onCancel}
+          onClick={() => {
+            trackEvent(
+              browseSavedSearchManagerAlertsCancelAnalyticsEvent(),
+              browseSavedSearchManagerAlertsCancelAnalyticsData(savedSearchFilterCount(search)),
+            );
+            onCancel();
+          }}
           className="inline-flex h-7 items-center rounded-md border border-border bg-surface px-2 text-[11px] text-ink-muted hover:text-ink"
         >
           Cancel
@@ -190,24 +219,28 @@ function AlertEditor({
 export function SavedSearchManager({ open, onOpenChange, trigger }: ManagerProps) {
   const recents = useRecents();
   const navigate = useNavigate();
-  const openRef = React.useRef(open);
-  openRef.current = open;
+  const wasOpenRef = React.useRef(Boolean(open));
   const [editingId, setEditingId] = React.useState<string | null>(null);
   const [draftLabel, setDraftLabel] = React.useState("");
   const [alertsEditingId, setAlertsEditingId] = React.useState<string | null>(null);
   const [msg, setMsg] = React.useState<{ id: string; text: string; ok: boolean } | null>(null);
 
+  // Track open for both Dialog-driven and parent-controlled open (e.g. Manage).
+  React.useEffect(() => {
+    if (open && !wasOpenRef.current) {
+      trackEvent(
+        browseSavedSearchManagerOpenAnalyticsEvent(),
+        browseSavedSearchManagerOpenAnalyticsData(recents.saved.length),
+      );
+    }
+    wasOpenRef.current = Boolean(open);
+  }, [open, recents.saved.length]);
+
   const handleOpenChange = React.useCallback(
     (next: boolean) => {
-      if (next && !openRef.current) {
-        trackEvent(
-          browseSavedSearchManagerOpenAnalyticsEvent(),
-          browseSavedSearchManagerOpenAnalyticsData(recents.saved.length),
-        );
-      }
       onOpenChange?.(next);
     },
-    [onOpenChange, recents.saved.length],
+    [onOpenChange],
   );
 
   const close = () => handleOpenChange(false);
@@ -360,7 +393,17 @@ export function SavedSearchManager({ open, onOpenChange, trigger }: ManagerProps
                       <button
                         type="button"
                         aria-label="Edit alert schedule"
-                        onClick={() => setAlertsEditingId(isAlerting ? null : s.id)}
+                        onClick={() => {
+                          const nextOpen = !isAlerting;
+                          trackEvent(
+                            browseSavedSearchManagerAlertsEditorAnalyticsEvent(),
+                            browseSavedSearchManagerAlertsEditorAnalyticsData(
+                              nextOpen,
+                              savedSearchFilterCount(s),
+                            ),
+                          );
+                          setAlertsEditingId(nextOpen ? s.id : null);
+                        }}
                         className="rounded p-1 text-ink-muted hover:text-ink"
                       >
                         <Pencil className="h-3.5 w-3.5" />

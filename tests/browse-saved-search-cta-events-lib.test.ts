@@ -14,12 +14,20 @@ import {
   browseSavedSearchApplyAnalyticsEvent,
   browseSavedSearchLinkClickAnalyticsData,
   browseSavedSearchLinkClickAnalyticsEvent,
+  browseSavedSearchManagerAlertsCancelAnalyticsData,
+  browseSavedSearchManagerAlertsCancelAnalyticsEvent,
+  browseSavedSearchManagerAlertsEditorAnalyticsData,
+  browseSavedSearchManagerAlertsEditorAnalyticsEvent,
   browseSavedSearchManagerAlertsSaveAnalyticsData,
   browseSavedSearchManagerAlertsSaveAnalyticsEvent,
   browseSavedSearchManagerAlertsToggleAnalyticsData,
   browseSavedSearchManagerAlertsToggleAnalyticsEvent,
   browseSavedSearchManagerApplyAnalyticsData,
   browseSavedSearchManagerApplyAnalyticsEvent,
+  browseSavedSearchManagerCadenceSelectAnalyticsData,
+  browseSavedSearchManagerCadenceSelectAnalyticsEvent,
+  browseSavedSearchManagerChannelToggleAnalyticsData,
+  browseSavedSearchManagerChannelToggleAnalyticsEvent,
   browseSavedSearchManagerFeedCopyAnalyticsData,
   browseSavedSearchManagerFeedCopyAnalyticsEvent,
   browseSavedSearchManagerOpenAnalyticsData,
@@ -192,6 +200,42 @@ describe("browse saved search cta events lib", () => {
     expect(browseSavedSearchManagerRemoveAnalyticsData(2)).toEqual({
       surface: BROWSE_SAVED_SEARCH_MANAGER_SURFACE,
       savedCount: 2,
+    });
+    expect(browseSavedSearchManagerChannelToggleAnalyticsEvent()).toBe(
+      "browse_saved_search_manager_channel_toggle",
+    );
+    expect(
+      browseSavedSearchManagerChannelToggleAnalyticsData("email", true, 2),
+    ).toEqual({
+      surface: BROWSE_SAVED_SEARCH_MANAGER_SURFACE,
+      channel: "email",
+      enabled: true,
+      channelCount: 2,
+    });
+    expect(browseSavedSearchManagerCadenceSelectAnalyticsEvent()).toBe(
+      "browse_saved_search_manager_cadence_select",
+    );
+    expect(
+      browseSavedSearchManagerCadenceSelectAnalyticsData("daily", 1),
+    ).toEqual({
+      surface: BROWSE_SAVED_SEARCH_MANAGER_SURFACE,
+      cadence: "daily",
+      channelCount: 1,
+    });
+    expect(browseSavedSearchManagerAlertsCancelAnalyticsEvent()).toBe(
+      "browse_saved_search_manager_alerts_cancel",
+    );
+    expect(browseSavedSearchManagerAlertsCancelAnalyticsData(2)).toEqual({
+      surface: BROWSE_SAVED_SEARCH_MANAGER_SURFACE,
+      filterCount: 2,
+    });
+    expect(browseSavedSearchManagerAlertsEditorAnalyticsEvent()).toBe(
+      "browse_saved_search_manager_alerts_editor_click",
+    );
+    expect(browseSavedSearchManagerAlertsEditorAnalyticsData(true, 3)).toEqual({
+      surface: BROWSE_SAVED_SEARCH_MANAGER_SURFACE,
+      open: true,
+      filterCount: 3,
     });
   });
 });

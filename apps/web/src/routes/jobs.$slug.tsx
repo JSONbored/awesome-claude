@@ -16,6 +16,8 @@ import {
   jobsDetailIndexAnalyticsEvent,
   jobsDetailRelatedAnalyticsData,
   jobsDetailRelatedAnalyticsEvent,
+  jobsErrorRetryAnalyticsData,
+  jobsErrorRetryAnalyticsEvent,
 } from "@/lib/jobs-hub-cta-events";
 import type { ReactNode } from "react";
 import type { ErrorComponentProps } from "@tanstack/react-router";
@@ -96,7 +98,13 @@ export const Route = createFileRoute("/jobs/$slug")({
     <div className="mx-auto max-w-xl px-4 py-16 text-center">
       <h1 className="font-display text-2xl text-ink">Couldn't load this role</h1>
       <p className="mt-2 text-sm text-ink-muted">{error.message}</p>
-      <button onClick={reset} className="mt-4 rounded-md border border-border px-4 py-2 text-sm">
+      <button
+        onClick={() => {
+          trackEvent(jobsErrorRetryAnalyticsEvent(), jobsErrorRetryAnalyticsData("jobs-detail"));
+          reset();
+        }}
+        className="mt-4 rounded-md border border-border px-4 py-2 text-sm"
+      >
         Try again
       </button>
     </div>

@@ -28,6 +28,11 @@ import { UmamiTracker } from "@/components/umami-tracker";
 import { siteConfig } from "@/lib/site";
 import { absoluteUrl } from "@/lib/seo";
 import { stringifyJsonLd } from "@/lib/json-ld";
+import { trackEvent } from "@/lib/analytics";
+import {
+  appErrorChromeAnalyticsData,
+  appErrorChromeAnalyticsEvent,
+} from "@/lib/app-error-cta-events";
 import { twitterHandleFrom } from "@/lib/twitter-handle-lib";
 import { buildOrganizationJsonLd, buildWebsiteJsonLd } from "@heyclaude/registry/seo";
 
@@ -81,6 +86,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         <div className="mt-6 flex justify-center gap-2">
           <button
             onClick={() => {
+              trackEvent(appErrorChromeAnalyticsEvent(), appErrorChromeAnalyticsData("retry"));
               router.invalidate();
               reset();
             }}
@@ -90,6 +96,9 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
           </button>
           <a
             href="/"
+            onClick={() =>
+              trackEvent(appErrorChromeAnalyticsEvent(), appErrorChromeAnalyticsData("home"))
+            }
             className="inline-flex h-9 items-center rounded-md border border-border bg-surface px-4 text-sm font-medium text-ink hover:bg-surface-2"
           >
             Go home

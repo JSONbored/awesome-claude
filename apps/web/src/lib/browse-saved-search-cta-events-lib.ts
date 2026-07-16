@@ -5,7 +5,7 @@
  * names without embedding search labels or query strings.
  */
 
-import type { AlertCadence, SavedSearch } from "@/lib/recents-types-lib";
+import type { AlertCadence, AlertChannel, SavedSearch } from "@/lib/recents-types-lib";
 
 export const BROWSE_SAVED_SEARCH_SURFACE = "browse-saved-search";
 export const BROWSE_SAVED_SEARCH_MANAGER_SURFACE = "browse-saved-search-manager";
@@ -204,5 +204,66 @@ export function browseSavedSearchManagerRemoveAnalyticsData(savedCount: number) 
   return {
     surface: BROWSE_SAVED_SEARCH_MANAGER_SURFACE,
     savedCount,
+  };
+}
+
+export type BrowseSavedSearchAlertChannel = AlertChannel;
+export type BrowseSavedSearchAlertCadence = AlertCadence;
+
+export function browseSavedSearchManagerChannelToggleAnalyticsEvent(): string {
+  return "browse_saved_search_manager_channel_toggle";
+}
+
+export function browseSavedSearchManagerChannelToggleAnalyticsData(
+  channel: BrowseSavedSearchAlertChannel,
+  enabled: boolean,
+  channelCount: number,
+) {
+  return {
+    surface: BROWSE_SAVED_SEARCH_MANAGER_SURFACE,
+    channel,
+    enabled,
+    channelCount,
+  };
+}
+
+export function browseSavedSearchManagerCadenceSelectAnalyticsEvent(): string {
+  return "browse_saved_search_manager_cadence_select";
+}
+
+export function browseSavedSearchManagerCadenceSelectAnalyticsData(
+  cadence: BrowseSavedSearchAlertCadence,
+  channelCount: number,
+) {
+  return {
+    surface: BROWSE_SAVED_SEARCH_MANAGER_SURFACE,
+    cadence,
+    channelCount,
+  };
+}
+
+export function browseSavedSearchManagerAlertsCancelAnalyticsEvent(): string {
+  return "browse_saved_search_manager_alerts_cancel";
+}
+
+export function browseSavedSearchManagerAlertsCancelAnalyticsData(filterCount: number) {
+  return {
+    surface: BROWSE_SAVED_SEARCH_MANAGER_SURFACE,
+    filterCount,
+  };
+}
+
+export function browseSavedSearchManagerAlertsEditorAnalyticsEvent(): string {
+  return "browse_saved_search_manager_alerts_editor_click";
+}
+
+export function browseSavedSearchManagerAlertsEditorAnalyticsData(
+  open: boolean,
+  filterCount: number,
+) {
+  return {
+    surface: BROWSE_SAVED_SEARCH_MANAGER_SURFACE,
+    open,
+    filterCount,
   };
 }

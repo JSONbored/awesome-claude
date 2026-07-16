@@ -156,3 +156,15 @@ export function jobsIndexFilterClearAnalyticsData(
     jobCount,
   };
 }
+
+export type JobsErrorSurface = "jobs-index" | "jobs-detail";
+
+export function jobsErrorRetryAnalyticsEvent(): string {
+  return "jobs_error_retry_click";
+}
+
+export function jobsErrorRetryAnalyticsData(surface: JobsErrorSurface) {
+  return {
+    surface,
+  };
+}
