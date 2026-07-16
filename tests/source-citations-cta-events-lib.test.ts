@@ -59,9 +59,7 @@ describe("source citations cta events lib", () => {
       surface: "compare-table",
       destination: "quality-source-provenance",
     });
-    expect(
-      sourceCitationEgressAnalyticsData("contributor-profile"),
-    ).toEqual({
+    expect(sourceCitationEgressAnalyticsData("contributor-profile")).toEqual({
       surface: "detail-source-citations",
       destination: "contributor-profile",
     });
