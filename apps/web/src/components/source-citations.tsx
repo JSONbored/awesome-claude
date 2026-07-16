@@ -16,6 +16,8 @@ import {
   SOURCE_CITATIONS_DETAIL_SURFACE,
   sourceCitationAnalyticsData,
   sourceCitationAnalyticsEvent,
+  sourceCitationEgressAnalyticsData,
+  sourceCitationEgressAnalyticsEvent,
   type SourceCitationKind,
 } from "@/lib/source-citations-cta-events";
 
@@ -182,6 +184,12 @@ export function SourceCitations({
         to="/quality"
         hash="source-provenance"
         className="mt-2 inline-flex text-xs text-ink-muted hover:text-ink"
+        onClick={() =>
+          trackEvent(
+            sourceCitationEgressAnalyticsEvent(),
+            sourceCitationEgressAnalyticsData("quality-source-provenance", surface),
+          )
+        }
       >
         Source methodology →
       </Link>

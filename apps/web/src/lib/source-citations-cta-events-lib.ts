@@ -8,6 +8,7 @@
 export const SOURCE_CITATIONS_DETAIL_SURFACE = "detail-source-citations";
 
 export type SourceCitationKind = "source-repo" | "repo" | "docs" | "website" | "package";
+export type SourceCitationEgressDestination = "quality-source-provenance";
 
 export function sourceCitationEntryKey(category: string, slug: string): string {
   return `${category}/${slug}`;
@@ -29,5 +30,19 @@ export function sourceCitationAnalyticsData(
     surface,
     citation: kind,
     host,
+  };
+}
+
+export function sourceCitationEgressAnalyticsEvent(): string {
+  return "detail_source_citations_egress_click";
+}
+
+export function sourceCitationEgressAnalyticsData(
+  destination: SourceCitationEgressDestination,
+  surface: string = SOURCE_CITATIONS_DETAIL_SURFACE,
+) {
+  return {
+    surface,
+    destination,
   };
 }

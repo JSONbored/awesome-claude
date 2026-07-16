@@ -3,6 +3,8 @@ import {
   SOURCE_CITATIONS_DETAIL_SURFACE,
   sourceCitationAnalyticsData,
   sourceCitationAnalyticsEvent,
+  sourceCitationEgressAnalyticsData,
+  sourceCitationEgressAnalyticsEvent,
 } from "@/lib/source-citations-cta-events-lib";
 
 describe("source citations cta events lib", () => {
@@ -35,6 +37,27 @@ describe("source citations cta events lib", () => {
       surface: "compare-table",
       citation: "package",
       host: "cdn.example.com",
+    });
+  });
+
+  it("builds privacy-light source citations methodology egress analytics", () => {
+    expect(sourceCitationEgressAnalyticsEvent()).toBe(
+      "detail_source_citations_egress_click",
+    );
+    expect(
+      sourceCitationEgressAnalyticsData("quality-source-provenance"),
+    ).toEqual({
+      surface: "detail-source-citations",
+      destination: "quality-source-provenance",
+    });
+    expect(
+      sourceCitationEgressAnalyticsData(
+        "quality-source-provenance",
+        "compare-table",
+      ),
+    ).toEqual({
+      surface: "compare-table",
+      destination: "quality-source-provenance",
     });
   });
 });
