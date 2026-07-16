@@ -6,6 +6,8 @@ export {
   BROWSE_RESULTS_SURFACE,
   BROWSE_SAVED_SEARCH_MANAGER_SURFACE,
   BROWSE_SAVED_SEARCH_SURFACE,
+  browseEmptyEgressAnalyticsData,
+  browseEmptyEgressAnalyticsEvent,
   browseEmptySuggestionApplyAnalyticsData,
   browseEmptySuggestionApplyAnalyticsEvent,
   browseLoadMoreAnalyticsData,
@@ -43,6 +45,7 @@ export {
   browseSavedSearchSaveAnalyticsData,
   browseSavedSearchSaveAnalyticsEvent,
   savedSearchFilterCount,
+  type BrowseEmptyEgressDestination,
   type BrowseSavedSearchAlertCadence,
   type BrowseSavedSearchAlertChannel,
 } from "@/lib/browse-saved-search-cta-events-lib";

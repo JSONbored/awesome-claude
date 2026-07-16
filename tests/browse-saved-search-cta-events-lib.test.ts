@@ -4,6 +4,8 @@ import {
   BROWSE_RESULTS_SURFACE,
   BROWSE_SAVED_SEARCH_MANAGER_SURFACE,
   BROWSE_SAVED_SEARCH_SURFACE,
+  browseEmptyEgressAnalyticsData,
+  browseEmptyEgressAnalyticsEvent,
   browseEmptySuggestionApplyAnalyticsData,
   browseEmptySuggestionApplyAnalyticsEvent,
   browseLoadMoreAnalyticsData,
@@ -133,6 +135,19 @@ describe("browse saved search cta events lib", () => {
     expect(browseEmptySuggestionApplyAnalyticsData(8)).toEqual({
       surface: BROWSE_RESULTS_SURFACE,
       matchCount: 8,
+    });
+    expect(browseEmptyEgressAnalyticsEvent()).toBe("browse_empty_egress_click");
+    expect(browseEmptyEgressAnalyticsData("github-search", true, 2)).toEqual({
+      surface: BROWSE_RESULTS_SURFACE,
+      destination: "github-search",
+      hasQuery: true,
+      activeFilterCount: 2,
+    });
+    expect(browseEmptyEgressAnalyticsData("submit", false, 0)).toEqual({
+      surface: BROWSE_RESULTS_SURFACE,
+      destination: "submit",
+      hasQuery: false,
+      activeFilterCount: 0,
     });
     expect(
       browseSavedSearchLinkClickAnalyticsData({

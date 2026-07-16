@@ -76,6 +76,25 @@ export function browseEmptySuggestionApplyAnalyticsData(matchCount: number) {
   };
 }
 
+export type BrowseEmptyEgressDestination = "github-search" | "submit";
+
+export function browseEmptyEgressAnalyticsEvent(): string {
+  return "browse_empty_egress_click";
+}
+
+export function browseEmptyEgressAnalyticsData(
+  destination: BrowseEmptyEgressDestination,
+  hasQuery: boolean,
+  activeFilterCount: number,
+) {
+  return {
+    surface: BROWSE_RESULTS_SURFACE,
+    destination,
+    hasQuery,
+    activeFilterCount,
+  };
+}
+
 export function browseSavedSearchLinkClickAnalyticsEvent(): string {
   return "browse_saved_search_link_click";
 }

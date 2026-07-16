@@ -85,6 +85,8 @@ import {
   type BrowseFilterAxis,
 } from "@/lib/browse-filter-cta-events";
 import {
+  browseEmptyEgressAnalyticsData,
+  browseEmptyEgressAnalyticsEvent,
   browseEmptySuggestionApplyAnalyticsData,
   browseEmptySuggestionApplyAnalyticsEvent,
   browseLoadMoreAnalyticsData,
@@ -1289,6 +1291,12 @@ function Browse() {
                       href={`https://github.com/search?q=${encodeURIComponent(sp.q)}&type=repositories`}
                       target="_blank"
                       rel="noreferrer"
+                      onClick={() =>
+                        trackEvent(
+                          browseEmptyEgressAnalyticsEvent(),
+                          browseEmptyEgressAnalyticsData("github-search", true, activeCount),
+                        )
+                      }
                       className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-surface px-3 font-medium text-ink hover:bg-surface-2"
                     >
                       Search GitHub for "{sp.q}" <ExternalLink className="h-3 w-3" />
@@ -1296,6 +1304,12 @@ function Browse() {
                   )}
                   <a
                     href={sp.q ? `/submit?title=${encodeURIComponent(sp.q)}` : "/submit"}
+                    onClick={() =>
+                      trackEvent(
+                        browseEmptyEgressAnalyticsEvent(),
+                        browseEmptyEgressAnalyticsData("submit", Boolean(sp.q), activeCount),
+                      )
+                    }
                     className="inline-flex h-8 items-center gap-1.5 rounded-md bg-ink px-3 font-medium text-background hover:bg-ink/90"
                   >
                     Submit this resource
