@@ -32,6 +32,8 @@ import { trackEvent } from "@/lib/analytics";
 import {
   appErrorChromeAnalyticsData,
   appErrorChromeAnalyticsEvent,
+  appNotFoundEgressAnalyticsData,
+  appNotFoundEgressAnalyticsEvent,
 } from "@/lib/app-error-cta-events";
 import { twitterHandleFrom } from "@/lib/twitter-handle-lib";
 import { buildOrganizationJsonLd, buildWebsiteJsonLd } from "@heyclaude/registry/seo";
@@ -58,12 +60,24 @@ function NotFoundComponent() {
             <Link
               to="/browse"
               className="inline-flex h-9 items-center rounded-md bg-ink px-4 text-sm font-medium text-background hover:bg-ink/90"
+              onClick={() =>
+                trackEvent(
+                  appNotFoundEgressAnalyticsEvent(),
+                  appNotFoundEgressAnalyticsData("browse"),
+                )
+              }
             >
               Browse directory
             </Link>
             <Link
               to="/"
               className="inline-flex h-9 items-center rounded-md border border-border bg-surface px-4 text-sm font-medium text-ink hover:bg-surface-2"
+              onClick={() =>
+                trackEvent(
+                  appNotFoundEgressAnalyticsEvent(),
+                  appNotFoundEgressAnalyticsData("home"),
+                )
+              }
             >
               Home
             </Link>

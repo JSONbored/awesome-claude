@@ -1,8 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
   APP_ERROR_SURFACE,
+  APP_NOTFOUND_SURFACE,
   appErrorChromeAnalyticsData,
   appErrorChromeAnalyticsEvent,
+  appNotFoundEgressAnalyticsData,
+  appNotFoundEgressAnalyticsEvent,
 } from "@/lib/app-error-cta-events-lib";
 
 describe("app error cta events lib", () => {
@@ -14,6 +17,18 @@ describe("app error cta events lib", () => {
     });
     expect(appErrorChromeAnalyticsData("home")).toEqual({
       surface: APP_ERROR_SURFACE,
+      destination: "home",
+    });
+  });
+
+  it("builds privacy-light app not-found egress analytics", () => {
+    expect(appNotFoundEgressAnalyticsEvent()).toBe("app_notfound_egress_click");
+    expect(appNotFoundEgressAnalyticsData("browse")).toEqual({
+      surface: APP_NOTFOUND_SURFACE,
+      destination: "browse",
+    });
+    expect(appNotFoundEgressAnalyticsData("home")).toEqual({
+      surface: APP_NOTFOUND_SURFACE,
       destination: "home",
     });
   });
