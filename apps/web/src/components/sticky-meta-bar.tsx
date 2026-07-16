@@ -1,7 +1,13 @@
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { Link } from "@tanstack/react-router";
 import type { Entry, Harness } from "@/types/registry";
-import { CategoryPill, TrustBadge, InstallRiskBadge, NotesPresenceChips } from "./badges";
+import {
+  CategoryPill,
+  TrustBadge,
+  SourceBadge,
+  InstallRiskBadge,
+  NotesPresenceChips,
+} from "./badges";
 import { Star, ArrowUp, Shield, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -32,6 +38,8 @@ import {
   badgeChromeInstallRiskAnalyticsEvent,
   badgeChromeNotesAnalyticsData,
   badgeChromeNotesAnalyticsEvent,
+  badgeChromeSourceAnalyticsData,
+  badgeChromeSourceAnalyticsEvent,
   badgeChromeTrustAnalyticsData,
   badgeChromeTrustAnalyticsEvent,
 } from "@/lib/badge-chrome-cta-events";
@@ -219,6 +227,16 @@ export function StickyMetaBar({
                 trackEvent(
                   badgeChromeTrustAnalyticsEvent(),
                   badgeChromeTrustAnalyticsData(entry.trust, "detail-sticky-meta"),
+                )
+              }
+            />
+            <SourceBadge
+              status={entry.source}
+              asLink
+              onNavigate={() =>
+                trackEvent(
+                  badgeChromeSourceAnalyticsEvent(),
+                  badgeChromeSourceAnalyticsData(entry.source, "detail-sticky-meta"),
                 )
               }
             />

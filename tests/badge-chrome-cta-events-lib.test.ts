@@ -35,6 +35,12 @@ describe("badge chrome cta events lib", () => {
       source: "first-party",
     });
     expect(
+      badgeChromeSourceAnalyticsData("source-backed", "detail-sticky-meta"),
+    ).toEqual({
+      surface: "detail-sticky-meta",
+      source: "source-backed",
+    });
+    expect(
       badgeChromeSourceAnalyticsData("source-backed", "contributor-profile"),
     ).toEqual({
       surface: "contributor-profile",
