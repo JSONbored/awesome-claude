@@ -30,5 +30,9 @@ describe("harness badge cta events lib", () => {
       surface: "detail-header",
       harness: "claude-code",
     });
+    expect(harnessBadgeAnalyticsData("cursor", "peek-panel")).toEqual({
+      surface: "peek-panel",
+      harness: "cursor",
+    });
   });
 });
