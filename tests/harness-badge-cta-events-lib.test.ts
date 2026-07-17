@@ -26,5 +26,9 @@ describe("harness badge cta events lib", () => {
       surface: "category-ranking",
       harness: "vscode",
     });
+    expect(harnessBadgeAnalyticsData("claude-code", "detail-header")).toEqual({
+      surface: "detail-header",
+      harness: "claude-code",
+    });
   });
 });

@@ -11,7 +11,8 @@ export type HarnessBadgeSurface =
   | typeof HARNESS_BADGE_SURFACE
   | "compare-table"
   | "compare-drawer"
-  | "category-ranking";
+  | "category-ranking"
+  | "detail-header";
 
 export function harnessBadgeAnalyticsEvent(): string {
   return "harness_badge_click";

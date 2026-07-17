@@ -743,7 +743,7 @@ function Dossier() {
             <div className="mt-3 flex flex-wrap items-center gap-1.5">
               <span className="eyebrow mr-1">Harness</span>
               {entry.harness.map((h) => (
-                <HarnessBadge key={h} id={h} />
+                <HarnessBadge key={h} id={h} asLink surface="detail-header" />
               ))}
             </div>
           )}
