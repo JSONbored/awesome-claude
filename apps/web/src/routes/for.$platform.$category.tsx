@@ -202,7 +202,12 @@ function IntersectionPage() {
         ))}
       </div>
 
-      <HubSignalStats stats={stats} total={entries.length} />
+      <HubSignalStats
+        stats={stats}
+        total={entries.length}
+        surface="platform-category"
+        browseBase={{ platform, category }}
+      />
 
       <NewsletterInline
         variant="quiet"

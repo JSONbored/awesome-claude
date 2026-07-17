@@ -7,6 +7,9 @@ import {
   qualityPageChangelogAnalyticsEvent,
   qualityPageClaimAnalyticsData,
   qualityPageClaimAnalyticsEvent,
+  qualityPageHeadlineStatAnalyticsData,
+  qualityPageHeadlineStatAnalyticsEvent,
+  qualityPageHeadlineStatBrowseSearch,
   qualityPageIssueAnalyticsData,
   qualityPageIssueAnalyticsEvent,
   qualityPageMethodToggleAnalyticsData,
@@ -62,5 +65,36 @@ describe("quality page cta events lib", () => {
       open: false,
       methodCount: 5,
     });
+  });
+
+  it("builds headline stat analytics and browse search patches", () => {
+    expect(qualityPageHeadlineStatAnalyticsEvent()).toBe(
+      "quality_page_headline_stat_click",
+    );
+    expect(qualityPageHeadlineStatAnalyticsData("total", 1200, 100)).toEqual({
+      surface: QUALITY_PAGE_SURFACE,
+      statId: "total",
+      value: 1200,
+      percent: 100,
+    });
+    expect(
+      qualityPageHeadlineStatAnalyticsData("source-backed", 800, 67),
+    ).toEqual({
+      surface: QUALITY_PAGE_SURFACE,
+      statId: "source-backed",
+      value: 800,
+      percent: 67,
+    });
+    expect(qualityPageHeadlineStatBrowseSearch("total")).toEqual({});
+    expect(qualityPageHeadlineStatBrowseSearch("source-backed")).toEqual({
+      signal: "source-backed",
+    });
+    expect(qualityPageHeadlineStatBrowseSearch("safety-notes")).toEqual({
+      signal: "safety-notes",
+    });
+    expect(qualityPageHeadlineStatBrowseSearch("reviewed")).toEqual({
+      signal: "reviewed",
+    });
+    expect(qualityPageHeadlineStatBrowseSearch("unknown")).toBeNull();
   });
 });

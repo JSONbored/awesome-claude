@@ -12,7 +12,10 @@ export type BadgeChromeSurface =
   | "contributor-profile"
   | "compare-tray"
   | "trending-list"
-  | "trending-podium";
+  | "trending-podium"
+  | "validators-attention"
+  | "validators-recent-reviewed"
+  | "hub-highlights";
 
 export type BadgeChromeNoteKind = "safety" | "privacy";
 

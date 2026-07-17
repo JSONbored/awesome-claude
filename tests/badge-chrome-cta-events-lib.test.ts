@@ -143,5 +143,39 @@ describe("badge chrome cta events lib", () => {
       surface: "trending-podium",
       category: "skills",
     });
+    expect(
+      badgeChromeTrustAnalyticsData("limited", "validators-attention"),
+    ).toEqual({
+      surface: "validators-attention",
+      trust: "limited",
+    });
+    expect(
+      badgeChromeSourceAnalyticsData("unverified", "validators-attention"),
+    ).toEqual({
+      surface: "validators-attention",
+      source: "unverified",
+    });
+    expect(
+      badgeChromeCategoryAnalyticsData("hooks", "validators-attention"),
+    ).toEqual({
+      surface: "validators-attention",
+      category: "hooks",
+    });
+    expect(
+      badgeChromeTrustAnalyticsData("trusted", "validators-recent-reviewed"),
+    ).toEqual({
+      surface: "validators-recent-reviewed",
+      trust: "trusted",
+    });
+    expect(
+      badgeChromeCategoryAnalyticsData("mcp", "validators-recent-reviewed"),
+    ).toEqual({
+      surface: "validators-recent-reviewed",
+      category: "mcp",
+    });
+    expect(badgeChromeTrustAnalyticsData("review", "hub-highlights")).toEqual({
+      surface: "hub-highlights",
+      trust: "review",
+    });
   });
 });

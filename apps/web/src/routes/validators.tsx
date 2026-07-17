@@ -40,6 +40,14 @@ import {
   validatorsCoverageMetricBrowseSearch,
   type ValidatorsCoverageMetricId,
 } from "@/lib/validators-coverage-cta-events";
+import {
+  badgeChromeCategoryAnalyticsData,
+  badgeChromeCategoryAnalyticsEvent,
+  badgeChromeSourceAnalyticsData,
+  badgeChromeSourceAnalyticsEvent,
+  badgeChromeTrustAnalyticsData,
+  badgeChromeTrustAnalyticsEvent,
+} from "@/lib/badge-chrome-cta-events";
 import atlasRegistry from "@/generated/atlas-registry.json";
 
 const VALIDATOR_TOOL_COUNT = 2;
@@ -245,32 +253,67 @@ function ValidatorsPage() {
                 <ul className="space-y-2">
                   {coverage.needsAttention.map((entry, rowIndex) => (
                     <li key={`${entry.category}/${entry.slug}`}>
-                      <Link
-                        to="/entry/$category/$slug"
-                        params={{ category: entry.category, slug: entry.slug }}
-                        onClick={() =>
-                          trackEvent(
-                            validatorsAttentionEntryAnalyticsEvent(),
-                            validatorsAttentionEntryAnalyticsData(
-                              entry.category,
-                              entry.slug,
-                              coverage.id,
-                              rowIndex,
-                              coverage.needsAttention.length,
-                            ),
-                          )
-                        }
-                        className="block rounded-lg border border-border bg-background p-3 transition-colors hover:bg-surface-2"
-                      >
+                      <div className="rounded-lg border border-border bg-background p-3 transition-colors hover:bg-surface-2">
                         <div className="flex flex-wrap items-center gap-1.5">
-                          <CategoryPill>{entry.category}</CategoryPill>
-                          <TrustBadge level={entry.trust} />
-                          <SourceBadge status={entry.source} />
+                          <CategoryPill
+                            asLink
+                            category={entry.category}
+                            onNavigate={() =>
+                              trackEvent(
+                                badgeChromeCategoryAnalyticsEvent(),
+                                badgeChromeCategoryAnalyticsData(
+                                  entry.category,
+                                  "validators-attention",
+                                ),
+                              )
+                            }
+                          >
+                            {entry.category}
+                          </CategoryPill>
+                          <TrustBadge
+                            level={entry.trust}
+                            asLink
+                            onNavigate={() =>
+                              trackEvent(
+                                badgeChromeTrustAnalyticsEvent(),
+                                badgeChromeTrustAnalyticsData(entry.trust, "validators-attention"),
+                              )
+                            }
+                          />
+                          <SourceBadge
+                            status={entry.source}
+                            asLink
+                            onNavigate={() =>
+                              trackEvent(
+                                badgeChromeSourceAnalyticsEvent(),
+                                badgeChromeSourceAnalyticsData(
+                                  entry.source,
+                                  "validators-attention",
+                                ),
+                              )
+                            }
+                          />
                         </div>
-                        <div className="mt-1 line-clamp-1 text-sm font-medium text-ink">
+                        <Link
+                          to="/entry/$category/$slug"
+                          params={{ category: entry.category, slug: entry.slug }}
+                          onClick={() =>
+                            trackEvent(
+                              validatorsAttentionEntryAnalyticsEvent(),
+                              validatorsAttentionEntryAnalyticsData(
+                                entry.category,
+                                entry.slug,
+                                coverage.id,
+                                rowIndex,
+                                coverage.needsAttention.length,
+                              ),
+                            )
+                          }
+                          className="mt-1 block line-clamp-1 text-sm font-medium text-ink hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 rounded-sm"
+                        >
                           {entry.title}
-                        </div>
-                      </Link>
+                        </Link>
+                      </div>
                     </li>
                   ))}
                 </ul>
@@ -291,36 +334,61 @@ function ValidatorsPage() {
             </p>
           ) : (
             RECENT_REVIEWED.map((entry, rowIndex) => (
-              <Link
+              <div
                 key={`${entry.category}/${entry.slug}`}
-                to="/entry/$category/$slug"
-                params={{ category: entry.category, slug: entry.slug }}
-                onClick={() =>
-                  trackEvent(
-                    validatorsRecentReviewedEntryAnalyticsEvent(),
-                    validatorsRecentReviewedEntryAnalyticsData(
-                      entry.category,
-                      entry.slug,
-                      rowIndex,
-                      RECENT_REVIEWED.length,
-                    ),
-                  )
-                }
                 className="grid gap-3 border-b border-border px-5 py-3 text-sm last:border-0 hover:bg-surface-2 sm:grid-cols-[1fr_120px]"
               >
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-1.5">
-                    <CategoryPill>{entry.category}</CategoryPill>
-                    <TrustBadge level={entry.trust} />
+                    <CategoryPill
+                      asLink
+                      category={entry.category}
+                      onNavigate={() =>
+                        trackEvent(
+                          badgeChromeCategoryAnalyticsEvent(),
+                          badgeChromeCategoryAnalyticsData(
+                            entry.category,
+                            "validators-recent-reviewed",
+                          ),
+                        )
+                      }
+                    >
+                      {entry.category}
+                    </CategoryPill>
+                    <TrustBadge
+                      level={entry.trust}
+                      asLink
+                      onNavigate={() =>
+                        trackEvent(
+                          badgeChromeTrustAnalyticsEvent(),
+                          badgeChromeTrustAnalyticsData(entry.trust, "validators-recent-reviewed"),
+                        )
+                      }
+                    />
                   </div>
-                  <div className="mt-1 truncate font-display font-semibold text-ink">
+                  <Link
+                    to="/entry/$category/$slug"
+                    params={{ category: entry.category, slug: entry.slug }}
+                    onClick={() =>
+                      trackEvent(
+                        validatorsRecentReviewedEntryAnalyticsEvent(),
+                        validatorsRecentReviewedEntryAnalyticsData(
+                          entry.category,
+                          entry.slug,
+                          rowIndex,
+                          RECENT_REVIEWED.length,
+                        ),
+                      )
+                    }
+                    className="mt-1 block truncate font-display font-semibold text-ink hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 rounded-sm"
+                  >
                     {entry.title}
-                  </div>
+                  </Link>
                 </div>
                 <span className="font-mono text-xs text-ink-subtle sm:text-right">
                   {entry.reviewedAt?.slice(0, 10)}
                 </span>
-              </Link>
+              </div>
             ))
           )}
         </div>

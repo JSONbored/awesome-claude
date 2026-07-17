@@ -18,6 +18,10 @@ import {
   hubHighlightSourceBrowseAnalyticsEvent,
 } from "@/lib/hub-entry-cta-events";
 import {
+  badgeChromeTrustAnalyticsData,
+  badgeChromeTrustAnalyticsEvent,
+} from "@/lib/badge-chrome-cta-events";
+import {
   hubSignalStatAnalyticsData,
   hubSignalStatAnalyticsEvent,
   hubStatBrowseSearch,
@@ -86,7 +90,16 @@ export function HubHighlights({
                   <p className="mt-1 flex-1 text-xs text-ink-muted">{h.reason}</p>
                 </Link>
                 <div className="mt-3 flex flex-wrap items-center gap-1.5">
-                  <TrustBadge level={h.entry.trust} />
+                  <TrustBadge
+                    level={h.entry.trust}
+                    asLink
+                    onNavigate={() =>
+                      trackEvent(
+                        badgeChromeTrustAnalyticsEvent(),
+                        badgeChromeTrustAnalyticsData(h.entry.trust, "hub-highlights"),
+                      )
+                    }
+                  />
                   <SourceBadge
                     status={h.entry.source}
                     asLink

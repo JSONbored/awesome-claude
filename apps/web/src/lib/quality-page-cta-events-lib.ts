@@ -81,3 +81,45 @@ export function qualityPageMethodToggleAnalyticsData(
     methodCount,
   };
 }
+
+export type QualityHeadlineStatId = "total" | "source-backed" | "safety-notes" | "reviewed";
+
+export type QualityHeadlineBrowseSearch = {
+  source?: string;
+  signal?: string;
+};
+
+export function qualityPageHeadlineStatAnalyticsEvent(): string {
+  return "quality_page_headline_stat_click";
+}
+
+export function qualityPageHeadlineStatAnalyticsData(
+  statId: string,
+  value: number,
+  percent: number,
+) {
+  return {
+    surface: QUALITY_PAGE_SURFACE,
+    statId,
+    value,
+    percent,
+  };
+}
+
+/** Map a quality headline stat to a browse search patch. */
+export function qualityPageHeadlineStatBrowseSearch(
+  statId: string,
+): QualityHeadlineBrowseSearch | null {
+  switch (statId) {
+    case "total":
+      return {};
+    case "source-backed":
+      return { signal: "source-backed" };
+    case "safety-notes":
+      return { signal: "safety-notes" };
+    case "reviewed":
+      return { signal: "reviewed" };
+    default:
+      return null;
+  }
+}

@@ -16,6 +16,14 @@ describe("hub signal cta events lib", () => {
       count: 12,
       pct: 40,
     });
+    expect(
+      hubSignalStatAnalyticsData("platform-category", "reviewed", 4, 20),
+    ).toEqual({
+      surface: "platform-category",
+      statKey: "reviewed",
+      count: 4,
+      pct: 20,
+    });
     expect(hubStatBrowseSearch("trusted", { category: "mcp" })).toEqual({
       category: "mcp",
       trust: "trusted",
