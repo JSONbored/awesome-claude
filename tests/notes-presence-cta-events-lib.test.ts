@@ -47,6 +47,13 @@ describe("notes presence cta events lib", () => {
         present: true,
       },
     );
+    expect(notesPresenceAnalyticsData("safety", true, "trending-list")).toEqual(
+      {
+        surface: "trending-list",
+        noteKind: "safety",
+        present: true,
+      },
+    );
     expect(notesPresenceAnalyticsData("privacy", true, "browse-grid")).toEqual({
       surface: "browse-grid",
       noteKind: "privacy",

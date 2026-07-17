@@ -14,6 +14,7 @@ export type NotesPresenceSurface =
   | "category-ranking"
   | "peek-panel"
   | "compare-tray"
+  | "trending-list"
   | "browse-card"
   | "browse-grid"
   | "browse-row"

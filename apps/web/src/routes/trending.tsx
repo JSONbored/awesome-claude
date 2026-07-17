@@ -7,7 +7,13 @@ import { ArrowRight, Clock, Flame, Info, Rss, Star, TrendingUp } from "lucide-re
 import { BRIEF_ISSUES } from "@/data/entries";
 import { PageContainer } from "@/components/page-container";
 import { getEntry, search } from "@/data/search";
-import { CategoryPill, SourceBadge, TrustBadge } from "@/components/badges";
+import {
+  CategoryPill,
+  SourceBadge,
+  TrustBadge,
+  InstallRiskBadge,
+  NotesPresenceChips,
+} from "@/components/badges";
 import { TrendingPodium } from "@/components/trending-podium";
 import { ShareMenu } from "@/components/share-menu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -498,6 +504,8 @@ function TrendingPage() {
                       )
                     }
                   />
+                  <InstallRiskBadge entry={entry} size="xs" asLink surface="trending-list" />
+                  <NotesPresenceChips entry={entry} asLink surface="trending-list" />
                 </div>
                 <Link
                   to="/entry/$category/$slug"
