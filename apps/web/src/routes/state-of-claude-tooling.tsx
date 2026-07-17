@@ -250,6 +250,8 @@ function StateOfClaudeToolingPage() {
           label="Categories tracked"
           value={CATEGORIES.length}
           hint="agents to statuslines"
+          to="/browse"
+          onNavigate={() => trackStat("categories")}
         />
         <DataStat
           icon={GitBranch}
