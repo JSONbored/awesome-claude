@@ -5,7 +5,7 @@
  * hub titles or free-form labels beyond stable stat keys.
  */
 
-export type HubSignalSurface = "category-hub" | "platform-hub" | "tag-hub";
+export type HubSignalSurface = "category-hub" | "platform-hub" | "tag-hub" | "platform-category";
 
 export type HubSignalStatKey = "trusted" | "sourced" | "safety" | "privacy" | "reviewed";
 

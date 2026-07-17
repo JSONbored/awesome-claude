@@ -16,9 +16,27 @@ describe("hub signal cta events lib", () => {
       count: 12,
       pct: 40,
     });
+    expect(
+      hubSignalStatAnalyticsData("platform-category", "sourced", 8, 25),
+    ).toEqual({
+      surface: "platform-category",
+      statKey: "sourced",
+      count: 8,
+      pct: 25,
+    });
     expect(hubStatBrowseSearch("trusted", { category: "mcp" })).toEqual({
       category: "mcp",
       trust: "trusted",
+    });
+    expect(
+      hubStatBrowseSearch("reviewed", {
+        platform: "cursor",
+        category: "skills",
+      }),
+    ).toEqual({
+      platform: "cursor",
+      category: "skills",
+      signal: "reviewed",
     });
     expect(hubStatBrowseSearch("sourced", { platform: "claude-code" })).toEqual(
       {
