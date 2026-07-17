@@ -235,7 +235,7 @@ function PeekBody({ entry, peekId }: { entry: Entry; peekId: string }) {
               {entry.repoStats.stars.toLocaleString()} repo
             </span>
           )}
-          <NotesPresenceChips entry={entry} className="ml-auto" />
+          <NotesPresenceChips entry={entry} className="ml-auto" asLink surface="peek-panel" />
         </div>
       </SheetHeader>
 

@@ -11,7 +11,8 @@ export type NotesPresenceSurface =
   | typeof NOTES_PRESENCE_SURFACE
   | "compare-table"
   | "compare-drawer"
-  | "category-ranking";
+  | "category-ranking"
+  | "peek-panel";
 
 export type NotesPresenceKind = "safety" | "privacy";
 
