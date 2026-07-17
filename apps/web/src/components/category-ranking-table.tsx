@@ -5,6 +5,7 @@ import {
   NotesPresenceChips,
   SourceBadge,
 } from "@/components/badges";
+import { HarnessBadgeRow } from "@/components/harness-badge";
 import { trackEvent } from "@/lib/analytics";
 import {
   hubCategoryRankingEntryAnalyticsData,
@@ -33,12 +34,13 @@ export function CategoryRankingTable({ entries, label }: { entries: Entry[]; lab
       <div className="mt-5 overflow-x-auto rounded-xl border border-border">
         <table className="w-full min-w-[44rem] border-collapse text-left">
           <caption className="sr-only">
-            Top Claude {label} compared by source, install risk, setup, platform support, and
-            disclosed notes.
+            Top Claude {label} compared by source, install risk, setup, platform support, harness,
+            and disclosed notes.
           </caption>
           <thead className="bg-surface">
             <tr>
-              {["Resource", "Source", "Install risk", "Setup", "Platforms", "Notes"].map((head) => (
+              {["Resource", "Source", "Install risk", "Setup", "Platforms", "Harness", "Notes"].map(
+                (head) => (
                 <th
                   key={head}
                   scope="col"
@@ -46,7 +48,8 @@ export function CategoryRankingTable({ entries, label }: { entries: Entry[]; lab
                 >
                   {head}
                 </th>
-              ))}
+                ),
+              )}
             </tr>
           </thead>
           <tbody>
@@ -93,6 +96,13 @@ export function CategoryRankingTable({ entries, label }: { entries: Entry[]; lab
                       <span className="text-xs text-ink-subtle">+{e.platforms.length - 3}</span>
                     ) : null}
                   </div>
+                </td>
+                <td className="px-3 py-2.5 align-top">
+                  {e.harness && e.harness.length > 0 ? (
+                    <HarnessBadgeRow ids={e.harness} asLink surface="category-ranking" />
+                  ) : (
+                    <span className="text-xs text-ink-subtle">—</span>
+                  )}
                 </td>
                 <td className="px-3 py-2.5 align-top">
                   <NotesPresenceChips entry={e} asLink surface="category-ranking" />
