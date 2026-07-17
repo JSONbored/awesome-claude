@@ -1,0 +1,66 @@
+---
+title: Reflex
+slug: reflex
+category: tools
+description: Open-source full-stack web framework for building web apps entirely in Python, compiling a Python frontend to React and Next.js while keeping state management and event handling in Python, useful for building UIs, dashboards, and tools for AI apps and agents.
+cardDescription: Build full-stack web apps and AI-app UIs entirely in Python, compiled to a React and Next.js frontend.
+seoTitle: Reflex pure-Python full-stack web framework
+seoDescription: Reflex is an open-source framework for building full-stack web apps entirely in Python, compiling the frontend to React and Next.js with Python-based state management and event handling, useful for building UIs, dashboards, and tools for AI applications and agents without writing JavaScript.
+author: Reflex
+submittedBy: jaytbarimbao-collab
+submittedByUrl: "https://github.com/jaytbarimbao-collab"
+dateAdded: "2026-07-17"
+websiteUrl: "https://reflex.dev/"
+documentationUrl: "https://reflex.dev/docs/getting-started/introduction/"
+repoUrl: "https://github.com/reflex-dev/reflex"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - web-framework
+  - python
+  - ui
+keywords:
+  - Reflex
+  - Python web framework
+  - full-stack
+  - React
+  - web apps
+prerequisites:
+  - Python 3.10 or newer, up to but not including 4.0, with the Reflex package installed in the project environment.
+  - Network access on first run so Reflex can fetch and set up the frontend toolchain it manages for compiling the app to React and Next.js.
+  - A modern web browser for viewing the app during local development.
+  - A hosting target for deployment, which can be self-hosted infrastructure or a managed platform, chosen based on your requirements.
+safetyNotes:
+  - Reflex runs a local development server and, on first run, downloads and sets up a frontend toolchain, which brings external build tooling into the environment.
+  - Event handlers run as Python on the backend, so the app executes whatever server-side code the developer writes, including any calls it makes to other services.
+  - Deploying a Reflex app exposes a web server, so network exposure, authentication, and input handling need the usual web-application review before production use.
+  - Reflex offers an optional managed hosting product in addition to self-hosting, and choosing it sends the application and its runtime to that platform.
+privacyNotes:
+  - Application state and user data are handled by the Python backend the developer writes, so data handling follows that application's own design.
+  - First-run setup fetches frontend dependencies from package registries, which is governed by those registries.
+  - Optional managed hosting, analytics, or logging integrations may retain application or usage data beyond a single session unless configured otherwise.
+  - Any credentials, secrets, or user data used by event handlers should follow standard secret-management and retention practices.
+---
+
+## Editorial notes
+
+Reflex is useful when a Claude-adjacent team wants to build a web UI, dashboard, or internal tool for an AI app or agent without switching to a JavaScript frontend stack. The frontend and backend are written in Python: UI is composed from Python components, state lives in Python classes, and event handlers are plain Python (including async), while Reflex compiles the frontend to React and Next.js under the hood. That makes it a practical way to put a real interface in front of Python-based AI tooling.
+
+This is distinct from other entries in the directory. Agent and LLM-app frameworks orchestrate models, prompts, and tools; UI-component and design entries provide pieces for existing JavaScript apps. Reflex is a general full-stack web framework whose distinguishing trait is that the entire app — frontend and backend — is authored in Python. No existing entry covers a pure-Python full-stack web framework.
+
+## Source notes
+
+- The PyPI summary describes Reflex as "Web apps in pure Python."
+- The documentation and README describe writing an app's frontend and backend entirely in Python, with the frontend compiled to React and Next.js.
+- The project highlights full-stack development in a single language, Python-class-based state management, and event handling using async and await.
+- The package is published on PyPI as `reflex` at version 0.9.7, requires Python 3.10 or newer and below 4.0, and the repository `reflex-dev/reflex` is Apache-2.0 licensed. The site is `https://reflex.dev/` and docs are at `https://reflex.dev/docs/getting-started/introduction/`.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, open pull requests, and repository-wide content for `Reflex`, `reflex`, and `reflex-dev/reflex`. No dedicated Reflex entry, Reflex source URL, or open duplicate PR was found. Existing entries cover agent and LLM-app frameworks and UI components rather than a pure-Python full-stack web framework, so this entry is distinct.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Reflex is an Apache-2.0 open-source framework maintained under the `reflex-dev` organization; a separate optional managed hosting product exists but is not required to use the framework.
