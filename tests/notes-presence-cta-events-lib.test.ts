@@ -47,6 +47,16 @@ describe("notes presence cta events lib", () => {
         present: true,
       },
     );
+    expect(notesPresenceAnalyticsData("privacy", true, "browse-grid")).toEqual({
+      surface: "browse-grid",
+      noteKind: "privacy",
+      present: true,
+    });
+    expect(notesPresenceAnalyticsData("safety", false, "browse-row")).toEqual({
+      surface: "browse-row",
+      noteKind: "safety",
+      present: false,
+    });
   });
 
   it("maps present notes chips to browse signal search patches", () => {

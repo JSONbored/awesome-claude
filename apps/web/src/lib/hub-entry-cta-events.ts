@@ -8,8 +8,11 @@ export {
   hubCategoryRankingEntryAnalyticsData,
   hubCategoryRankingEntryAnalyticsEvent,
   hubEntryKey,
+  hubHighlightBrowseSignal,
   hubHighlightEntryAnalyticsData,
   hubHighlightEntryAnalyticsEvent,
+  hubHighlightSourceBrowseAnalyticsData,
+  hubHighlightSourceBrowseAnalyticsEvent,
   hubTrendingPodiumEntryAnalyticsData,
   hubTrendingPodiumEntryAnalyticsEvent,
 } from "@/lib/hub-entry-cta-events-lib";

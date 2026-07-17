@@ -3,6 +3,9 @@
  */
 export {
   RESOURCE_CARD_SURFACE,
+  resourceCardBadgeKinds,
+  resourceCardCategoryBrowseAnalyticsData,
+  resourceCardCategoryBrowseAnalyticsEvent,
   resourceCardCompareAnalyticsData,
   resourceCardCompareAnalyticsEvent,
   resourceCardCompareToastOpenAnalyticsData,
@@ -17,6 +20,7 @@ export {
   resourceCardInstallIntentType,
   resourceCardTrustHintAnalyticsData,
   resourceCardTrustHintAnalyticsEvent,
+  type ResourceCardBadgeKind,
   type ResourceCardSurface,
   type ResourceCardVariant,
 } from "@/lib/resource-card-cta-events-lib";

@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
+  resourceCardBadgeKinds,
+  resourceCardCategoryBrowseAnalyticsData,
+  resourceCardCategoryBrowseAnalyticsEvent,
   resourceCardCompareAnalyticsData,
   resourceCardCompareAnalyticsEvent,
   resourceCardCompareToastOpenAnalyticsData,
@@ -106,5 +109,42 @@ describe("resource card cta events lib", () => {
       inCompareTray: false,
       compareCount: 1,
     });
+  });
+
+  it("builds category browse analytics and badge kind maps", () => {
+    expect(resourceCardCategoryBrowseAnalyticsEvent()).toBe(
+      "browse_card_category_click",
+    );
+    expect(resourceCardCategoryBrowseAnalyticsData("mcp")).toEqual({
+      surface: "browse-card",
+      category: "mcp",
+    });
+    expect(
+      resourceCardCategoryBrowseAnalyticsData("skills", "browse-grid"),
+    ).toEqual({
+      surface: "browse-grid",
+      category: "skills",
+    });
+    expect(
+      resourceCardCategoryBrowseAnalyticsData("hooks", "home-recent"),
+    ).toEqual({
+      surface: "home-recent",
+      category: "hooks",
+    });
+    expect(resourceCardBadgeKinds("grid")).toEqual([
+      "category",
+      "source",
+      "install-risk",
+      "notes",
+    ]);
+    expect(resourceCardBadgeKinds("row")).toEqual([
+      "category",
+      "source",
+      "install-risk",
+      "platform",
+      "notes",
+    ]);
+    expect(resourceCardBadgeKinds("compact")).toEqual(["category", "source"]);
+    expect(resourceCardBadgeKinds("unknown")).toEqual([]);
   });
 });

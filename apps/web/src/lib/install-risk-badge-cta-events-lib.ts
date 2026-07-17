@@ -12,7 +12,23 @@ export type InstallRiskBadgeSurface =
   | "compare-table"
   | "compare-drawer"
   | "category-ranking"
-  | "peek-panel";
+  | "peek-panel"
+  | "browse-card"
+  | "browse-grid"
+  | "browse-row"
+  | "browse-compact"
+  | "home-recent"
+  | "home-popular"
+  | "home-newest"
+  | "home-compare-rail"
+  | "category-hub"
+  | "tag-hub"
+  | "best-index"
+  | "best-collection"
+  | "platform-hub"
+  | "platform-category"
+  | "detail-related"
+  | "detail-guides";
 
 export function installRiskBadgeAnalyticsEvent(): string {
   return "install_risk_badge_click";

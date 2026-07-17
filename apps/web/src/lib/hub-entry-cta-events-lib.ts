@@ -68,3 +68,34 @@ export function hubCategoryRankingEntryAnalyticsData(
     rowCount,
   };
 }
+
+export function hubHighlightSourceBrowseAnalyticsEvent(): string {
+  return "hub_highlight_source_browse_click";
+}
+
+export function hubHighlightSourceBrowseAnalyticsData(source: string, kind: string) {
+  return {
+    surface: HUB_HIGHLIGHTS_SURFACE,
+    source,
+    kind,
+  };
+}
+
+/** Map highlight kind to a privacy-light browse signal hint for analytics context. */
+export function hubHighlightBrowseSignal(kind: string): string | null {
+  switch (kind) {
+    case "trusted":
+      return "trusted";
+    case "sourced":
+      return "source-backed";
+    case "documented":
+      return "safety-notes";
+    case "reviewed":
+      return "reviewed";
+    case "newest":
+    case "popular":
+      return null;
+    default:
+      return null;
+  }
+}

@@ -29,6 +29,14 @@ describe("install risk badge cta events lib", () => {
       surface: "peek-panel",
       risk: "review",
     });
+    expect(installRiskBadgeAnalyticsData("high", "browse-grid")).toEqual({
+      surface: "browse-grid",
+      risk: "high",
+    });
+    expect(installRiskBadgeAnalyticsData("low", "browse-row")).toEqual({
+      surface: "browse-row",
+      risk: "low",
+    });
   });
 
   it("maps install risk levels to browse trust search patches", () => {

@@ -13,7 +13,23 @@ export type NotesPresenceSurface =
   | "compare-drawer"
   | "category-ranking"
   | "peek-panel"
-  | "compare-tray";
+  | "compare-tray"
+  | "browse-card"
+  | "browse-grid"
+  | "browse-row"
+  | "browse-compact"
+  | "home-recent"
+  | "home-popular"
+  | "home-newest"
+  | "home-compare-rail"
+  | "category-hub"
+  | "tag-hub"
+  | "best-index"
+  | "best-collection"
+  | "platform-hub"
+  | "platform-category"
+  | "detail-related"
+  | "detail-guides";
 
 export type NotesPresenceKind = "safety" | "privacy";
 
