@@ -9,6 +9,7 @@ import {
   analyzeSubmissionDraftRisk,
   directContentRequestChangesReasons,
   formatSubmissionRiskMarkdown,
+  tierFromFlags,
 } from "@heyclaude/registry/submission-risk";
 
 const dayMs = 86_400_000;
@@ -436,5 +437,44 @@ describe("submission risk invariants", () => {
     expect(markdown).toContain("### Blocking findings");
     expect(markdown).toContain("Capability buckets");
     expect(markdown).not.toMatch(/private reviewer|prompt|scoring threshold/i);
+  });
+});
+
+describe("tierFromFlags risk-tier boundaries", () => {
+  const flag = (severity: string) => ({ severity });
+
+  it("returns low when there are no flags", () => {
+    expect(tierFromFlags([])).toBe("low");
+  });
+
+  it("returns low for a single low-severity flag", () => {
+    expect(tierFromFlags([flag("low")])).toBe("low");
+  });
+
+  it("returns medium for a single medium-severity flag", () => {
+    expect(tierFromFlags([flag("medium")])).toBe("medium");
+  });
+
+  it("keeps two medium-severity flags at medium (3 + 3 = 6, below the high threshold)", () => {
+    expect(tierFromFlags([flag("medium"), flag("medium")])).toBe("medium");
+  });
+
+  it("classifies a single high-severity flag as high (regression: previously fell to medium)", () => {
+    expect(tierFromFlags([flag("high")])).toBe("high");
+  });
+
+  it("classifies a high plus a medium flag as high", () => {
+    expect(tierFromFlags([flag("high"), flag("medium")])).toBe("high");
+  });
+
+  it("classifies any critical flag as critical regardless of the rest", () => {
+    expect(tierFromFlags([flag("critical")])).toBe("critical");
+    expect(tierFromFlags([flag("low"), flag("critical")])).toBe("critical");
+  });
+
+  it("ignores info-severity flags in the score", () => {
+    expect(tierFromFlags([flag("info"), flag("info"), flag("info")])).toBe(
+      "low",
+    );
   });
 });

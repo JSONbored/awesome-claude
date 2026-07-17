@@ -19,7 +19,11 @@ const SEVERITY_WEIGHT = {
   info: 0,
   low: 1,
   medium: 3,
-  high: 6,
+  // `high` is weighted at the "high" tier threshold (7) so a single high-severity
+  // flag on its own reaches riskTier "high" and routes to maintainer review,
+  // instead of falling one point short into "medium" (auto-eligible). Kept at 7
+  // (not lowering the tier threshold to 6) so two `medium` flags stay "medium".
+  high: 7,
   critical: 100,
 };
 
@@ -1167,7 +1171,12 @@ function addDisclosureNoteSignals(report, fields) {
   }
 }
 
-function tierFromFlags(flags) {
+// Classify a set of review flags into a risk tier from their summed severity
+// weights (any `critical` flag short-circuits to "critical"). Exported for
+// focused boundary tests. Threshold 7 with SEVERITY_WEIGHT.high === 7 means a
+// single high-severity flag reaches "high"; two `medium` flags (3 + 3 = 6) stay
+// "medium".
+export function tierFromFlags(flags) {
   if (flags.some((flag) => flag.severity === "critical")) return "critical";
   const score = flags.reduce(
     (total, flag) => total + (SEVERITY_WEIGHT[flag.severity] ?? 0),
