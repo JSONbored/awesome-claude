@@ -359,6 +359,17 @@ describe("data report drilldown lib", () => {
         drilldown: { kind: "browse", search: { category: "mcp" } },
       },
     ]);
+    expect(
+      withInstallMethodDrilldown([{ label: "pnpm", count: 2, pct: 20 }]),
+    ).toEqual([
+      {
+        label: "pnpm",
+        count: 2,
+        pct: 20,
+        rowKey: "pnpm",
+        drilldown: { kind: "browse", search: {} },
+      },
+    ]);
 
     expect(
       withDocsCoverageDrilldown(

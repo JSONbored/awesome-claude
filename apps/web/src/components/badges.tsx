@@ -45,6 +45,11 @@ import {
   INSTALL_RISK_DETAIL,
   type InstallRisk,
 } from "@/lib/trust";
+import {
+  installRiskBadgeAnalyticsData,
+  installRiskBadgeAnalyticsEvent,
+  installRiskBrowseSearch,
+} from "@/lib/install-risk-badge-cta-events";
 
 const trustStyles: Record<TrustLevel, { dot: string; text: string; ring: string }> = {
   trusted: { dot: "bg-trust-trusted", text: "text-trust-trusted", ring: "ring-trust-trusted/30" },
@@ -261,6 +266,8 @@ export function InstallRiskBadge({
   className,
   size = "sm",
   asButton = false,
+  asLink = false,
+  surface,
   onActivate,
 }: {
   entry: Entry;
@@ -268,6 +275,10 @@ export function InstallRiskBadge({
   size?: "sm" | "xs";
   /** Opt-in scroll control — never use inside card `<Link>`s. */
   asButton?: boolean;
+  /** Opt-in browse link — never use inside card `<Link>`s. */
+  asLink?: boolean;
+  /** Optional analytics surface when asLink is set. */
+  surface?: string;
   onActivate?: (risk: InstallRisk) => void;
 }) {
   const level = React.useMemo(() => installRiskLevel(entry), [entry]);
@@ -304,6 +315,28 @@ export function InstallRiskBadge({
       >
         {content}
       </button>
+    );
+  }
+  const browseSearch = asLink ? installRiskBrowseSearch(level) : null;
+  if (browseSearch) {
+    return (
+      <Link
+        to="/browse"
+        search={browseSearch}
+        title={`${INSTALL_RISK_LABEL[level]} — browse by trust`}
+        onClick={() => {
+          onActivate?.(level);
+          if (surface) {
+            trackEvent(
+              installRiskBadgeAnalyticsEvent(),
+              installRiskBadgeAnalyticsData(level, surface),
+            );
+          }
+        }}
+        className={cn(classes, "transition-colors hover:border-ink/20")}
+      >
+        {content}
+      </Link>
     );
   }
   return (

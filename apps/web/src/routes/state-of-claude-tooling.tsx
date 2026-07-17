@@ -41,6 +41,7 @@ import {
 } from "@/lib/state-report-page-cta-events";
 import {
   withCategoryHubDrilldown,
+  withInstallMethodDrilldown,
   withNotesSignalDrilldown,
   withPlatformDrilldown,
   withSourceDrilldown,
@@ -128,11 +129,13 @@ const PLATFORM_DIST: DistRow[] = withPlatformDrilldown(
 // Install-method distribution — derived from each entry's installCommand, over
 // the package-installable subset (file/config drop-ins have no install command).
 const INSTALL_METHODS = installMethodDistribution(ENTRIES);
-const INSTALL_METHOD_DIST: DistRow[] = INSTALL_METHODS.rows.map((row) => ({
-  label: row.label,
-  count: row.count,
-  pct: pctOf(row.count, INSTALL_METHODS.total),
-}));
+const INSTALL_METHOD_DIST: DistRow[] = withInstallMethodDrilldown(
+  INSTALL_METHODS.rows.map((row) => ({
+    label: row.label,
+    count: row.count,
+    pct: pctOf(row.count, INSTALL_METHODS.total),
+  })),
+);
 
 // Safety & privacy notes coverage — HeyClaude's differentiating metadata, quantified.
 const NOTES = notesCoverage(ENTRIES);
@@ -343,7 +346,12 @@ function StateOfClaudeToolingPage() {
         title="Install methods"
         help={`How the ${INSTALL_METHODS.total} package-installable resources are delivered, by install command. File and config drop-ins (agents, rules, skills, and the like) install by copying into your project rather than a package manager, so they are excluded here.`}
       >
-        <DistTable rows={INSTALL_METHOD_DIST} />
+        <DistTable
+          rows={INSTALL_METHOD_DIST}
+          onRowClick={(row, rowIndex) =>
+            trackDistRow("install-methods", row, rowIndex, INSTALL_METHOD_DIST.length)
+          }
+        />
       </DataSection>
 
       <DataSection

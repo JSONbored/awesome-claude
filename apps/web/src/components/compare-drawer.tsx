@@ -10,7 +10,12 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet";
 import { useCompare } from "@/lib/compare";
-import { CategoryPill, PlatformChip, NotesPresenceChips } from "@/components/badges";
+import {
+  CategoryPill,
+  PlatformChip,
+  NotesPresenceChips,
+  InstallRiskBadge,
+} from "@/components/badges";
 import { HarnessBadgeRow } from "@/components/harness-badge";
 import { HarnessVariantPicker } from "@/components/harness-variant-picker";
 import { TrustDrilldown } from "./trust-drilldown";
@@ -223,6 +228,10 @@ const ROWS: RowDef[] = [
   {
     label: "Notes",
     render: (e) => <NotesPresenceChips entry={e} asLink surface="compare-drawer" />,
+  },
+  {
+    label: "Install risk",
+    render: (e) => <InstallRiskBadge entry={e} asLink surface="compare-drawer" />,
   },
   {
     label: "Source repo",

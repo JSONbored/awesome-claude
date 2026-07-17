@@ -72,7 +72,7 @@ export function CategoryRankingTable({ entries, label }: { entries: Entry[]; lab
                   <SourceBadge status={e.source} asLink surface="category-ranking" />
                 </td>
                 <td className="px-3 py-2.5 align-top">
-                  <InstallRiskBadge entry={e} />
+                  <InstallRiskBadge entry={e} asLink surface="category-ranking" />
                 </td>
                 <td className="px-3 py-2.5 align-top">
                   {e.installCommand ? (

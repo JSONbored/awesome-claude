@@ -166,7 +166,10 @@ const DECISION_COMPARISON_ROWS: RowDef[] = comparisonDecisionRows().map((row) =>
 export const COMPARISON_ROWS: RowDef[] = [
   { label: "Trust", render: (e) => <TrustDrilldown entry={e} /> },
   ...DECISION_COMPARISON_ROWS,
-  { label: "Install risk", render: (e) => <InstallRiskBadge entry={e} /> },
+  {
+    label: "Install risk",
+    render: (e) => <InstallRiskBadge entry={e} asLink surface="compare-table" />,
+  },
   {
     label: "Notes",
     render: (e) => <NotesPresenceChips entry={e} asLink surface="compare-table" />,

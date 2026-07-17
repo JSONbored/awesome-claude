@@ -221,11 +221,13 @@ export function withHostingDrilldown(rows: DistRow[], category: string): DistRow
   });
 }
 
-export function withInstallMethodDrilldown(rows: DistRow[], category: string): DistRow[] {
+export function withInstallMethodDrilldown(rows: DistRow[], category?: string): DistRow[] {
   return rows.map((row) => ({
     ...row,
     rowKey: installMethodKeyFromLabel(row.label),
-    drilldown: browseDrilldown({ category }),
+    drilldown: browseDrilldown({
+      ...(category ? { category } : {}),
+    }),
   }));
 }
 
