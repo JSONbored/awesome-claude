@@ -22,6 +22,7 @@ import {
 } from "./badges";
 import { CopySegmented, variantsForEntry } from "./copy-segmented";
 import { EntryBrandMark } from "./entry-brand-mark";
+import { HarnessBadge } from "./harness-badge";
 import { HarnessVariantPicker } from "./harness-variant-picker";
 import { useHarnessPref, useCopyPref, type CopyVariant } from "@/lib/dossier-prefs";
 import { entryDomId } from "@/lib/entry-identity";

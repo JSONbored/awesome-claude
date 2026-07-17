@@ -12,7 +12,8 @@ export type HarnessBadgeSurface =
   | "compare-table"
   | "compare-drawer"
   | "category-ranking"
-  | "detail-header";
+  | "detail-header"
+  | "peek-panel";
 
 export function harnessBadgeAnalyticsEvent(): string {
   return "harness_badge_click";
