@@ -13,6 +13,7 @@ export type InstallRiskBadgeSurface =
   | "compare-drawer"
   | "category-ranking"
   | "peek-panel"
+  | "compare-tray"
   | "browse-card"
   | "browse-grid"
   | "browse-row"

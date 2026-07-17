@@ -28,7 +28,13 @@ import {
   badgeChromeTrustAnalyticsEvent,
 } from "@/lib/badge-chrome-cta-events";
 import { trackEvent } from "@/lib/analytics";
-import { TrustBadge, SourceBadge, NotesPresenceChips, ReadinessDot } from "./badges";
+import {
+  TrustBadge,
+  SourceBadge,
+  NotesPresenceChips,
+  InstallRiskBadge,
+  ReadinessDot,
+} from "./badges";
 import { compareSignalToneClass } from "@/lib/compare-entry-signals";
 import { cn } from "@/lib/utils";
 import type { Entry } from "@/types/registry";
@@ -70,6 +76,13 @@ function TrayChip({
             badgeChromeSourceAnalyticsData(entry.source, "compare-tray"),
           )
         }
+      />
+      <InstallRiskBadge
+        entry={entry}
+        size="xs"
+        asLink
+        surface="compare-tray"
+        className="hidden sm:inline-flex"
       />
       <NotesPresenceChips
         entry={entry}
