@@ -323,3 +323,34 @@ export function ecosystemQuickStartCopyAnalyticsData(
     quickStartCount,
   };
 }
+
+export type EcosystemPageStatId = "entries" | "harnesses" | "integrations" | "last-build";
+
+export function ecosystemPageStatAnalyticsEvent(): string {
+  return "ecosystem_page_stat_click";
+}
+
+export function ecosystemPageStatAnalyticsData(statId: EcosystemPageStatId, count?: number) {
+  return {
+    surface: ECOSYSTEM_PAGE_SURFACE,
+    statId,
+    ...(count !== undefined ? { count } : {}),
+  };
+}
+
+/** Map an ecosystem headline stat to an in-app destination (route + optional hash). */
+export function ecosystemPageStatDestination(statId: EcosystemPageStatId): {
+  to: "/browse" | "/platforms" | "/ecosystem" | "/changelog";
+  hash?: string;
+} {
+  switch (statId) {
+    case "entries":
+      return { to: "/browse" };
+    case "harnesses":
+      return { to: "/platforms" };
+    case "integrations":
+      return { to: "/ecosystem", hash: "integrations" };
+    case "last-build":
+      return { to: "/changelog" };
+  }
+}

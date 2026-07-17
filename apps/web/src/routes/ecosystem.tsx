@@ -41,7 +41,11 @@ import {
   ecosystemSectionAnalyticsEvent,
   ecosystemHarnessBrowseAnalyticsData,
   ecosystemHarnessBrowseAnalyticsEvent,
+  ecosystemPageStatAnalyticsData,
+  ecosystemPageStatAnalyticsEvent,
+  ecosystemPageStatDestination,
   type EcosystemQuickStartAction,
+  type EcosystemPageStatId,
 } from "@/lib/ecosystem-page-cta-events";
 import {
   CompatibilityMatrix,
@@ -303,13 +307,29 @@ function EcosystemPage() {
 
       {/* Live stats */}
       <div className="mt-6 grid gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-4">
-        <Stat label="Entries indexed" value={<CountUp value={entries} />} />
-        <Stat label="Harnesses supported" value={<CountUp value={harnessCount} />} />
-        <Stat label="Integrations live" value={<CountUp value={live} />} />
+        <Stat
+          label="Entries indexed"
+          value={<CountUp value={entries} />}
+          statId="entries"
+          count={entries}
+        />
+        <Stat
+          label="Harnesses supported"
+          value={<CountUp value={harnessCount} />}
+          statId="harnesses"
+          count={harnessCount}
+        />
+        <Stat
+          label="Integrations live"
+          value={<CountUp value={live} />}
+          statId="integrations"
+          count={live}
+        />
         <Stat
           label="Last build"
           value={new Date(REGISTRY_GENERATED_AT).toISOString().slice(0, 16).replace("T", " ")}
           mono
+          statId="last-build"
         />
       </div>
 
@@ -782,9 +802,29 @@ function QuickStart({
   );
 }
 
-function Stat({ label, value, mono }: { label: string; value: React.ReactNode; mono?: boolean }) {
+function Stat({
+  label,
+  value,
+  mono,
+  statId,
+  count,
+}: {
+  label: string;
+  value: React.ReactNode;
+  mono?: boolean;
+  statId: EcosystemPageStatId;
+  count?: number;
+}) {
+  const destination = ecosystemPageStatDestination(statId);
   return (
-    <div className="bg-surface p-5">
+    <Link
+      to={destination.to}
+      hash={destination.hash}
+      onClick={() =>
+        trackEvent(ecosystemPageStatAnalyticsEvent(), ecosystemPageStatAnalyticsData(statId, count))
+      }
+      className="block bg-surface p-5 transition-colors duration-200 ease-out hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent/60"
+    >
       <div className="flex items-center justify-between">
         <span className="h-1.5 w-1.5 rounded-full bg-trust-trusted" />
         <span className="font-mono text-[11px] text-ink-subtle">{label}</span>
@@ -797,6 +837,6 @@ function Stat({ label, value, mono }: { label: string; value: React.ReactNode; m
       >
         {value}
       </div>
-    </div>
+    </Link>
   );
 }

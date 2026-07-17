@@ -35,6 +35,9 @@ import {
   ecosystemQuickStartCopyAnalyticsEvent,
   ecosystemSectionAnalyticsData,
   ecosystemSectionAnalyticsEvent,
+  ecosystemPageStatAnalyticsData,
+  ecosystemPageStatAnalyticsEvent,
+  ecosystemPageStatDestination,
 } from "@/lib/ecosystem-page-cta-events-lib";
 
 describe("ecosystem page cta events lib", () => {
@@ -229,6 +232,40 @@ describe("ecosystem page cta events lib", () => {
       action: "mcp-run",
       rowIndex: 1,
       quickStartCount: 3,
+    });
+  });
+
+  it("builds ecosystem page headline stat analytics and destinations", () => {
+    expect(ecosystemPageStatAnalyticsEvent()).toBe("ecosystem_page_stat_click");
+    expect(ecosystemPageStatAnalyticsData("entries", 1200)).toEqual({
+      surface: ECOSYSTEM_PAGE_SURFACE,
+      statId: "entries",
+      count: 1200,
+    });
+    expect(ecosystemPageStatAnalyticsData("harnesses", 7)).toEqual({
+      surface: ECOSYSTEM_PAGE_SURFACE,
+      statId: "harnesses",
+      count: 7,
+    });
+    expect(ecosystemPageStatAnalyticsData("integrations", 4)).toEqual({
+      surface: ECOSYSTEM_PAGE_SURFACE,
+      statId: "integrations",
+      count: 4,
+    });
+    expect(ecosystemPageStatAnalyticsData("last-build")).toEqual({
+      surface: ECOSYSTEM_PAGE_SURFACE,
+      statId: "last-build",
+    });
+    expect(ecosystemPageStatDestination("entries")).toEqual({ to: "/browse" });
+    expect(ecosystemPageStatDestination("harnesses")).toEqual({
+      to: "/platforms",
+    });
+    expect(ecosystemPageStatDestination("integrations")).toEqual({
+      to: "/ecosystem",
+      hash: "integrations",
+    });
+    expect(ecosystemPageStatDestination("last-build")).toEqual({
+      to: "/changelog",
     });
   });
 });
