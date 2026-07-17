@@ -40,6 +40,13 @@ describe("notes presence cta events lib", () => {
       noteKind: "safety",
       present: true,
     });
+    expect(notesPresenceAnalyticsData("privacy", true, "compare-tray")).toEqual(
+      {
+        surface: "compare-tray",
+        noteKind: "privacy",
+        present: true,
+      },
+    );
   });
 
   it("maps present notes chips to browse signal search patches", () => {

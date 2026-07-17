@@ -1,15 +1,5 @@
 import * as React from "react";
-import {
-  BadgeCheck,
-  GitCompare,
-  X,
-  ArrowRight,
-  Shield,
-  Lock,
-  Link2,
-  Package,
-  Trash2,
-} from "lucide-react";
+import { BadgeCheck, GitCompare, X, ArrowRight, Link2, Package, Trash2 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { useCompare } from "@/lib/compare";
 import {
@@ -38,7 +28,7 @@ import {
   badgeChromeTrustAnalyticsEvent,
 } from "@/lib/badge-chrome-cta-events";
 import { trackEvent } from "@/lib/analytics";
-import { TrustBadge, SourceBadge, ReadinessDot } from "./badges";
+import { TrustBadge, SourceBadge, NotesPresenceChips, ReadinessDot } from "./badges";
 import { compareSignalToneClass } from "@/lib/compare-entry-signals";
 import { cn } from "@/lib/utils";
 import type { Entry } from "@/types/registry";
@@ -81,13 +71,13 @@ function TrayChip({
           )
         }
       />
+      <NotesPresenceChips
+        entry={entry}
+        asLink
+        surface="compare-tray"
+        className="hidden sm:inline-flex"
+      />
       <span className="inline-flex items-center gap-0.5 text-ink-subtle" aria-hidden>
-        <Shield
-          className={cn("h-3 w-3", signals.hasSafetyNotes ? "text-trust-trusted" : "opacity-40")}
-        />
-        <Lock
-          className={cn("h-3 w-3", signals.hasPrivacyNotes ? "text-trust-trusted" : "opacity-40")}
-        />
         <BadgeCheck
           className={cn(
             "h-3 w-3",

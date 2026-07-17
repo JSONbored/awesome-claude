@@ -12,7 +12,8 @@ export type NotesPresenceSurface =
   | "compare-table"
   | "compare-drawer"
   | "category-ranking"
-  | "peek-panel";
+  | "peek-panel"
+  | "compare-tray";
 
 export type NotesPresenceKind = "safety" | "privacy";
 
