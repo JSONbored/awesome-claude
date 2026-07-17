@@ -8,6 +8,7 @@ import {
   NotesPresenceChips,
   SourceBadge,
 } from "@/components/badges";
+import { HarnessBadgeRow } from "@/components/harness-badge";
 import { TrustDrilldown } from "@/components/trust-drilldown";
 import { CopyButton } from "@/components/copy-button";
 import { SourceCitations } from "@/components/source-citations";
@@ -214,6 +215,15 @@ export const COMPARISON_ROWS: RowDef[] = [
         ))}
       </div>
     ),
+  },
+  {
+    label: "Harness",
+    render: (e) =>
+      e.harness && e.harness.length > 0 ? (
+        <HarnessBadgeRow ids={e.harness} asLink surface="compare-table" />
+      ) : (
+        <span className="text-xs text-ink-subtle">—</span>
+      ),
   },
   {
     label: "Source repo",
