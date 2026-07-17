@@ -54,6 +54,13 @@ describe("notes presence cta events lib", () => {
         present: true,
       },
     );
+    expect(
+      notesPresenceAnalyticsData("privacy", true, "contributor-profile"),
+    ).toEqual({
+      surface: "contributor-profile",
+      noteKind: "privacy",
+      present: true,
+    });
     expect(notesPresenceAnalyticsData("privacy", true, "browse-grid")).toEqual({
       surface: "browse-grid",
       noteKind: "privacy",

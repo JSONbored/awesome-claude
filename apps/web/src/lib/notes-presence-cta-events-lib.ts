@@ -30,7 +30,8 @@ export type NotesPresenceSurface =
   | "platform-hub"
   | "platform-category"
   | "detail-related"
-  | "detail-guides";
+  | "detail-guides"
+  | "contributor-profile";
 
 export type NotesPresenceKind = "safety" | "privacy";
 

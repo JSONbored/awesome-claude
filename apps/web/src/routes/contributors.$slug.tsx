@@ -18,7 +18,13 @@ import {
   type ContributorAcceptedEntryRole,
 } from "@/data/contributors";
 import { ENTRIES } from "@/data/entries";
-import { CategoryPill, SourceBadge, TrustBadge } from "@/components/badges";
+import {
+  CategoryPill,
+  InstallRiskBadge,
+  NotesPresenceChips,
+  SourceBadge,
+  TrustBadge,
+} from "@/components/badges";
 import { Monogram } from "@/components/monogram";
 import { absoluteUrl } from "@/lib/seo";
 import { stringifyJsonLd } from "@/lib/json-ld";
@@ -396,6 +402,8 @@ function ContributionRow({
             )
           }
         />
+        <InstallRiskBadge entry={entry} size="xs" asLink surface="contributor-profile" />
+        <NotesPresenceChips entry={entry} asLink surface="contributor-profile" />
       </div>
 
       <div className="mt-3">
