@@ -16,6 +16,9 @@ import { Link } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
 import {
+  trustDrilldownBrowseAnalyticsData,
+  trustDrilldownBrowseAnalyticsEvent,
+  trustDrilldownBrowseSearch,
   trustDrilldownDocAnalyticsData,
   trustDrilldownDocAnalyticsEvent,
   trustDrilldownMethodologyAnalyticsData,
@@ -24,6 +27,8 @@ import {
   trustDrilldownOpenAnalyticsEvent,
   trustDrilldownSourceAnalyticsData,
   trustDrilldownSourceAnalyticsEvent,
+  TRUST_DRILLDOWN_SURFACE,
+  type TrustDrilldownSurface,
 } from "@/lib/trust-drilldown-cta-events";
 
 const SEV_META = {
@@ -36,13 +41,17 @@ const SEV_META = {
 export function TrustDrilldown({
   entry,
   align = "start",
+  surface = TRUST_DRILLDOWN_SURFACE,
 }: {
   entry: Entry;
   align?: "start" | "center" | "end";
+  /** Analytics surface for drilldown opens and egress. */
+  surface?: TrustDrilldownSurface;
 }) {
   const reasons = React.useMemo(() => getTrustReasons(entry), [entry]);
   const counts = summarizeTrust(reasons);
   const summary = trustSummaryLine(counts);
+  const browseSearch = trustDrilldownBrowseSearch(entry.trust);
 
   return (
     <Popover>
@@ -59,6 +68,7 @@ export function TrustDrilldown({
                 entry.slug,
                 entry.trust,
                 reasons.length,
+                surface,
               ),
             )
           }
@@ -72,24 +82,53 @@ export function TrustDrilldown({
             <div className="eyebrow">Trust drilldown</div>
             <div className="mt-0.5 font-display text-sm font-semibold text-ink">{entry.title}</div>
           </div>
-          <Link
-            to="/quality"
-            hash="methodology"
-            className="inline-flex h-7 items-center gap-1 rounded-md border border-border bg-background px-2 text-[11px] font-medium text-ink hover:bg-surface-2"
-            onClick={() =>
-              trackEvent(
-                trustDrilldownMethodologyAnalyticsEvent(),
-                trustDrilldownMethodologyAnalyticsData(entry.category, entry.slug),
-              )
-            }
-          >
-            Methodology
-            <ArrowUpRight className="h-3 w-3" />
-          </Link>
+          <div className="flex flex-col items-end gap-1">
+            <Link
+              to="/quality"
+              hash="methodology"
+              className="inline-flex h-7 items-center gap-1 rounded-md border border-border bg-background px-2 text-[11px] font-medium text-ink hover:bg-surface-2"
+              onClick={() =>
+                trackEvent(
+                  trustDrilldownMethodologyAnalyticsEvent(),
+                  trustDrilldownMethodologyAnalyticsData(entry.category, entry.slug, surface),
+                )
+              }
+            >
+              Methodology
+              <ArrowUpRight className="h-3 w-3" />
+            </Link>
+            {browseSearch && (
+              <Link
+                to="/browse"
+                search={browseSearch}
+                className="inline-flex h-7 items-center gap-1 rounded-md border border-border bg-background px-2 text-[11px] font-medium text-ink-muted hover:bg-surface-2 hover:text-ink"
+                onClick={() =>
+                  trackEvent(
+                    trustDrilldownBrowseAnalyticsEvent(),
+                    trustDrilldownBrowseAnalyticsData(
+                      entry.category,
+                      entry.slug,
+                      entry.trust,
+                      surface,
+                    ),
+                  )
+                }
+              >
+                Browse similar
+                <ArrowUpRight className="h-3 w-3" />
+              </Link>
+            )}
+          </div>
         </header>
         <ul className="max-h-[60vh] divide-y divide-border overflow-y-auto">
           {reasons.map((r) => (
-            <TrustReasonRow key={r.id} reason={r} category={entry.category} slug={entry.slug} />
+            <TrustReasonRow
+              key={r.id}
+              reason={r}
+              category={entry.category}
+              slug={entry.slug}
+              surface={surface}
+            />
           ))}
         </ul>
       </PopoverContent>
@@ -101,10 +140,12 @@ function TrustReasonRow({
   reason,
   category,
   slug,
+  surface,
 }: {
   reason: TrustReason;
   category: string;
   slug: string;
+  surface: TrustDrilldownSurface;
 }) {
   const meta = SEV_META[reason.severity];
   const { Icon } = meta;
@@ -133,7 +174,13 @@ function TrustReasonRow({
               onClick={() =>
                 trackEvent(
                   trustDrilldownDocAnalyticsEvent(),
-                  trustDrilldownDocAnalyticsData(category, slug, reason.id, reason.severity),
+                  trustDrilldownDocAnalyticsData(
+                    category,
+                    slug,
+                    reason.id,
+                    reason.severity,
+                    surface,
+                  ),
                 )
               }
             >
@@ -149,7 +196,13 @@ function TrustReasonRow({
               onClick={() =>
                 trackEvent(
                   trustDrilldownSourceAnalyticsEvent(),
-                  trustDrilldownSourceAnalyticsData(category, slug, reason.id, reason.severity),
+                  trustDrilldownSourceAnalyticsData(
+                    category,
+                    slug,
+                    reason.id,
+                    reason.severity,
+                    surface,
+                  ),
                 )
               }
             >

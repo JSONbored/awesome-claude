@@ -1,11 +1,18 @@
 /**
  * Pure trust drilldown navigation analytics helpers.
  *
- * Maps methodology egress, reason doc links, and external source opens to
- * privacy-light event names without embedding titles, URLs, or free text.
+ * Maps methodology egress, reason doc links, external source opens, and trust
+ * browse egress to privacy-light event names without embedding titles, URLs, or
+ * free text.
  */
 
 export const TRUST_DRILLDOWN_SURFACE = "trust-drilldown";
+
+export type TrustDrilldownSurface =
+  | typeof TRUST_DRILLDOWN_SURFACE
+  | "compare-table"
+  | "compare-drawer"
+  | "detail-header";
 
 export function trustDrilldownEntryKey(category: string, slug: string): string {
   return `${category}/${slug}`;
@@ -20,9 +27,10 @@ export function trustDrilldownOpenAnalyticsData(
   slug: string,
   trust: string,
   reasonCount: number,
+  surface: string = TRUST_DRILLDOWN_SURFACE,
 ) {
   return {
-    surface: TRUST_DRILLDOWN_SURFACE,
+    surface,
     entry: trustDrilldownEntryKey(category, slug),
     trust,
     reasonCount,
@@ -33,9 +41,13 @@ export function trustDrilldownMethodologyAnalyticsEvent(): string {
   return "trust_drilldown_methodology_click";
 }
 
-export function trustDrilldownMethodologyAnalyticsData(category: string, slug: string) {
+export function trustDrilldownMethodologyAnalyticsData(
+  category: string,
+  slug: string,
+  surface: string = TRUST_DRILLDOWN_SURFACE,
+) {
   return {
-    surface: TRUST_DRILLDOWN_SURFACE,
+    surface,
     entry: trustDrilldownEntryKey(category, slug),
   };
 }
@@ -49,9 +61,10 @@ export function trustDrilldownDocAnalyticsData(
   slug: string,
   reasonId: string,
   severity: string,
+  surface: string = TRUST_DRILLDOWN_SURFACE,
 ) {
   return {
-    surface: TRUST_DRILLDOWN_SURFACE,
+    surface,
     entry: trustDrilldownEntryKey(category, slug),
     reasonId,
     severity,
@@ -67,11 +80,45 @@ export function trustDrilldownSourceAnalyticsData(
   slug: string,
   reasonId: string,
   severity: string,
+  surface: string = TRUST_DRILLDOWN_SURFACE,
 ) {
   return {
-    surface: TRUST_DRILLDOWN_SURFACE,
+    surface,
     entry: trustDrilldownEntryKey(category, slug),
     reasonId,
     severity,
   };
+}
+
+export function trustDrilldownBrowseAnalyticsEvent(): string {
+  return "trust_drilldown_browse_click";
+}
+
+export function trustDrilldownBrowseAnalyticsData(
+  category: string,
+  slug: string,
+  trust: string,
+  surface: string = TRUST_DRILLDOWN_SURFACE,
+) {
+  return {
+    surface,
+    entry: trustDrilldownEntryKey(category, slug),
+    trust,
+  };
+}
+
+/** Map a trust level to a browse `trust` search patch. */
+export function trustDrilldownBrowseSearch(trust: string): { trust: string } | null {
+  switch (trust) {
+    case "trusted":
+      return { trust: "trusted" };
+    case "review":
+      return { trust: "review" };
+    case "limited":
+      return { trust: "limited" };
+    case "blocked":
+      return { trust: "blocked" };
+    default:
+      return null;
+  }
 }

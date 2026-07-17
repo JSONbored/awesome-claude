@@ -164,7 +164,7 @@ const DECISION_COMPARISON_ROWS: RowDef[] = comparisonDecisionRows().map((row) =>
 
 /** Shared comparison field definitions — used by the interactive /compare page and curated pages. */
 export const COMPARISON_ROWS: RowDef[] = [
-  { label: "Trust", render: (e) => <TrustDrilldown entry={e} /> },
+  { label: "Trust", render: (e) => <TrustDrilldown entry={e} surface="compare-table" /> },
   ...DECISION_COMPARISON_ROWS,
   {
     label: "Install risk",

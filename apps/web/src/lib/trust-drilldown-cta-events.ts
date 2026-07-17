@@ -3,6 +3,9 @@
  */
 export {
   TRUST_DRILLDOWN_SURFACE,
+  trustDrilldownBrowseAnalyticsData,
+  trustDrilldownBrowseAnalyticsEvent,
+  trustDrilldownBrowseSearch,
   trustDrilldownDocAnalyticsData,
   trustDrilldownDocAnalyticsEvent,
   trustDrilldownEntryKey,
@@ -12,4 +15,5 @@ export {
   trustDrilldownOpenAnalyticsEvent,
   trustDrilldownSourceAnalyticsData,
   trustDrilldownSourceAnalyticsEvent,
+  type TrustDrilldownSurface,
 } from "@/lib/trust-drilldown-cta-events-lib";

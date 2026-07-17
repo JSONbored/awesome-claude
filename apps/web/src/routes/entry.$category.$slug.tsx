@@ -656,7 +656,7 @@ function Dossier() {
             >
               {entry.category}
             </CategoryPill>
-            <TrustDrilldown entry={entry} />
+            <TrustDrilldown entry={entry} surface="detail-header" />
             <SourceBadge
               status={entry.source}
               asLink

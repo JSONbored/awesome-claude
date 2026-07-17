@@ -15,6 +15,7 @@ import {
   PlatformChip,
   NotesPresenceChips,
   InstallRiskBadge,
+  SourceBadge,
 } from "@/components/badges";
 import { HarnessBadgeRow } from "@/components/harness-badge";
 import { HarnessVariantPicker } from "@/components/harness-variant-picker";
@@ -144,7 +145,7 @@ function CompareDrawerSourceCell({ entry }: { entry: Entry }) {
 const ROWS: RowDef[] = [
   {
     label: "Trust",
-    render: (e) => <TrustDrilldown entry={e} />,
+    render: (e) => <TrustDrilldown entry={e} surface="compare-drawer" />,
   },
   ...compareDrawerDecisionRows().map((row) => ({
     label: row.label,
@@ -246,6 +247,10 @@ const ROWS: RowDef[] = [
   {
     label: "Snippet",
     render: (e) => <SnippetCell entry={e} />,
+  },
+  {
+    label: "Source status",
+    render: (e) => <SourceBadge status={e.source} asLink surface="compare-drawer" />,
   },
   {
     label: "Source",
