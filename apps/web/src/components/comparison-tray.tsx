@@ -31,12 +31,6 @@ import {
   comparisonTrayViewSelectionAnalyticsData,
   comparisonTrayViewSelectionAnalyticsEvent,
 } from "@/lib/entry-detail-cta-events";
-import {
-  badgeChromeSourceAnalyticsData,
-  badgeChromeSourceAnalyticsEvent,
-  badgeChromeTrustAnalyticsData,
-  badgeChromeTrustAnalyticsEvent,
-} from "@/lib/badge-chrome-cta-events";
 import { trackEvent } from "@/lib/analytics";
 import { TrustBadge, SourceBadge, ReadinessDot } from "./badges";
 import { compareSignalToneClass } from "@/lib/compare-entry-signals";
@@ -60,26 +54,12 @@ function TrayChip({
       <span className="max-w-[9rem] truncate font-medium text-ink sm:max-w-[12rem]">
         {entry.title}
       </span>
-      <TrustBadge
-        level={entry.trust}
-        asLink
-        onNavigate={() =>
-          trackEvent(
-            badgeChromeTrustAnalyticsEvent(),
-            badgeChromeTrustAnalyticsData(entry.trust, "compare-tray"),
-          )
-        }
-      />
+      <TrustBadge level={entry.trust} asLink surface="compare-tray" />
       <SourceBadge
         status={entry.source}
         className="hidden sm:inline-flex"
         asLink
-        onNavigate={() =>
-          trackEvent(
-            badgeChromeSourceAnalyticsEvent(),
-            badgeChromeSourceAnalyticsData(entry.source, "compare-tray"),
-          )
-        }
+        surface="compare-tray"
       />
       <span className="inline-flex items-center gap-0.5 text-ink-subtle" aria-hidden>
         <Shield

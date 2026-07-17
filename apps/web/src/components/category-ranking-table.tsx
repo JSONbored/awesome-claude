@@ -4,6 +4,7 @@ import {
   InstallRiskBadge,
   NotesPresenceChips,
   SourceBadge,
+  TrustBadge,
 } from "@/components/badges";
 import { trackEvent } from "@/lib/analytics";
 import {
@@ -31,22 +32,24 @@ export function CategoryRankingTable({ entries, label }: { entries: Entry[]; lab
         HeyClaude&apos;s metadata review, not by repo popularity.
       </p>
       <div className="mt-5 overflow-x-auto rounded-xl border border-border">
-        <table className="w-full min-w-[44rem] border-collapse text-left">
+        <table className="w-full min-w-[52rem] border-collapse text-left">
           <caption className="sr-only">
-            Top Claude {label} compared by source, install risk, setup, platform support, and
+            Top Claude {label} compared by trust, source, install risk, setup, platform support, and
             disclosed notes.
           </caption>
           <thead className="bg-surface">
             <tr>
-              {["Resource", "Source", "Install risk", "Setup", "Platforms", "Notes"].map((head) => (
-                <th
-                  key={head}
-                  scope="col"
-                  className="border-b border-border px-3 py-2.5 text-xs font-semibold text-ink-muted"
-                >
-                  {head}
-                </th>
-              ))}
+              {["Resource", "Trust", "Source", "Install risk", "Setup", "Platforms", "Notes"].map(
+                (head) => (
+                  <th
+                    key={head}
+                    scope="col"
+                    className="border-b border-border px-3 py-2.5 text-xs font-semibold text-ink-muted"
+                  >
+                    {head}
+                  </th>
+                ),
+              )}
             </tr>
           </thead>
           <tbody>
@@ -68,6 +71,9 @@ export function CategoryRankingTable({ entries, label }: { entries: Entry[]; lab
                   </Link>
                   <div className="mt-0.5 text-xs text-ink-subtle">{e.author}</div>
                 </th>
+                <td className="px-3 py-2.5 align-top">
+                  <TrustBadge level={e.trust} asLink surface="category-ranking" />
+                </td>
                 <td className="px-3 py-2.5 align-top">
                   <SourceBadge status={e.source} asLink surface="category-ranking" />
                 </td>

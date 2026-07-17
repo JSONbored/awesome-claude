@@ -50,6 +50,11 @@ import {
   installRiskBadgeAnalyticsEvent,
   installRiskBrowseSearch,
 } from "@/lib/install-risk-badge-cta-events";
+import {
+  trustBadgeAnalyticsData,
+  trustBadgeAnalyticsEvent,
+  trustBrowseSearch,
+} from "@/lib/trust-badge-cta-events";
 
 const trustStyles: Record<TrustLevel, { dot: string; text: string; ring: string }> = {
   trusted: { dot: "bg-trust-trusted", text: "text-trust-trusted", ring: "ring-trust-trusted/30" },
@@ -69,12 +74,15 @@ export function TrustBadge({
   level,
   className,
   asLink = false,
+  surface,
   onNavigate,
 }: {
   level: TrustLevel;
   className?: string;
   /** Opt-in browse link — never use inside card `<Link>`s. */
   asLink?: boolean;
+  /** Optional analytics surface when asLink is set. */
+  surface?: string;
   onNavigate?: () => void;
 }) {
   const s = trustStyles[level];
@@ -90,12 +98,18 @@ export function TrustBadge({
     s.text,
     className,
   );
-  if (asLink) {
+  const browseSearch = asLink ? trustBrowseSearch(level) : null;
+  if (asLink && browseSearch) {
     return (
       <Link
         to="/browse"
-        search={{ trust: level }}
-        onClick={onNavigate}
+        search={browseSearch}
+        onClick={() => {
+          onNavigate?.();
+          if (surface) {
+            trackEvent(trustBadgeAnalyticsEvent(), trustBadgeAnalyticsData(level, surface));
+          }
+        }}
         className={cn(classes, "transition-colors hover:border-ink/20")}
         title={`${TRUST_LABEL[level]} — browse by trust`}
       >
