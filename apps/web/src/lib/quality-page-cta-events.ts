@@ -13,5 +13,9 @@ export {
   qualityPageIssueAnalyticsEvent,
   qualityPageMethodToggleAnalyticsData,
   qualityPageMethodToggleAnalyticsEvent,
+  qualityPageStatAnalyticsData,
+  qualityPageStatAnalyticsEvent,
+  qualityPageStatBrowseSearch,
   type QualityMethodId,
+  type QualityPageStatId,
 } from "@/lib/quality-page-cta-events-lib";

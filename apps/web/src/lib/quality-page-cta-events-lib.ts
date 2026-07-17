@@ -81,3 +81,39 @@ export function qualityPageMethodToggleAnalyticsData(
     methodCount,
   };
 }
+
+export type QualityPageStatId = "total" | "source-backed" | "safety-notes" | "reviewed";
+
+export function qualityPageStatAnalyticsEvent(): string {
+  return "quality_page_stat_click";
+}
+
+export function qualityPageStatAnalyticsData(
+  statId: QualityPageStatId,
+  count: number,
+  percent: number,
+) {
+  return {
+    surface: QUALITY_PAGE_SURFACE,
+    statId,
+    count,
+    percent,
+  };
+}
+
+/** Map a quality headline stat to a browse `signal` search patch (or bare browse). */
+export function qualityPageStatBrowseSearch(
+  statId: QualityPageStatId,
+): { signal?: string } | undefined {
+  switch (statId) {
+    case "source-backed":
+      return { signal: "source-backed" };
+    case "safety-notes":
+      return { signal: "safety-notes" };
+    case "reviewed":
+      return { signal: "reviewed" };
+    case "total":
+    default:
+      return undefined;
+  }
+}

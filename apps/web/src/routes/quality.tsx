@@ -38,7 +38,11 @@ import {
   qualityPageIssueAnalyticsEvent,
   qualityPageMethodToggleAnalyticsData,
   qualityPageMethodToggleAnalyticsEvent,
+  qualityPageStatAnalyticsData,
+  qualityPageStatAnalyticsEvent,
+  qualityPageStatBrowseSearch,
   type QualityMethodId,
+  type QualityPageStatId,
 } from "@/lib/quality-page-cta-events";
 import { cn } from "@/lib/utils";
 
@@ -120,24 +124,27 @@ function QualityPage() {
       </p>
 
       <div className="mt-10 grid gap-px overflow-hidden rounded-xl border border-border bg-border stagger-children sm:grid-cols-4">
-        <Stat icon={BadgeCheck} label="Total entries" value={total} percent={100} />
+        <Stat icon={BadgeCheck} label="Total entries" value={total} percent={100} statId="total" />
         <Stat
           icon={GitBranch}
           label="Source-backed"
           value={QUALITY_STATS.sourceBacked}
           percent={pct(QUALITY_STATS.sourceBacked)}
+          statId="source-backed"
         />
         <Stat
           icon={ShieldCheck}
           label="Safety notes present"
           value={QUALITY_STATS.withSafetyNotes}
           percent={pct(QUALITY_STATS.withSafetyNotes)}
+          statId="safety-notes"
         />
         <Stat
           icon={FileText}
           label="Reviewed by maintainer"
           value={QUALITY_STATS.reviewed}
           percent={pct(QUALITY_STATS.reviewed)}
+          statId="reviewed"
         />
       </div>
 
@@ -455,14 +462,26 @@ function Stat({
   label,
   value,
   percent,
+  statId,
 }: {
   icon: React.ElementType;
   label: string;
   value: number;
   percent: number;
+  statId: QualityPageStatId;
 }) {
   return (
-    <div className="bg-surface p-5">
+    <Link
+      to="/browse"
+      search={qualityPageStatBrowseSearch(statId)}
+      onClick={() =>
+        trackEvent(
+          qualityPageStatAnalyticsEvent(),
+          qualityPageStatAnalyticsData(statId, value, percent),
+        )
+      }
+      className="block bg-surface p-5 transition-colors duration-200 ease-out hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent/60"
+    >
       <div className="flex items-center justify-between">
         <Icon className="h-4 w-4 text-ink-muted" />
         <span className="font-mono text-xs tabular-nums text-ink-subtle">{percent}%</span>
@@ -474,7 +493,7 @@ function Stat({
         <div className="text-xs text-ink-muted">{label}</div>
         <span className="font-mono text-[11px] text-ink-subtle">current snapshot</span>
       </div>
-    </div>
+    </Link>
   );
 }
 
