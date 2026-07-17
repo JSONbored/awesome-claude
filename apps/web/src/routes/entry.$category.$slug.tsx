@@ -735,7 +735,7 @@ function Dossier() {
             <span>·</span>
             <div className="flex flex-wrap gap-1">
               {entry.platforms.map((p) => (
-                <PlatformChip key={p} id={p} asLink />
+                <PlatformChip key={p} id={p} asLink surface="detail-header" />
               ))}
             </div>
           </div>
