@@ -11,7 +11,8 @@ export type InstallRiskBadgeSurface =
   | typeof INSTALL_RISK_BADGE_SURFACE
   | "compare-table"
   | "compare-drawer"
-  | "category-ranking";
+  | "category-ranking"
+  | "peek-panel";
 
 export function installRiskBadgeAnalyticsEvent(): string {
   return "install_risk_badge_click";
