@@ -135,3 +135,40 @@ export function contributorProfileTraceEgressAnalyticsData(
     rowCount,
   };
 }
+
+export type ContributorProfileStatId = "accepted" | "reviewed" | "categories" | "source-linked";
+
+export function contributorProfileStatAnalyticsEvent(): string {
+  return "contributor_profile_stat_click";
+}
+
+export function contributorProfileStatAnalyticsData(
+  contributorSlug: string,
+  statId: ContributorProfileStatId,
+  count: number,
+) {
+  return {
+    surface: CONTRIBUTOR_PROFILE_SURFACE,
+    contributorSlug,
+    statId,
+    count,
+  };
+}
+
+/** Map a contributor headline stat to an in-app destination (route + hash/search). */
+export function contributorProfileStatDestination(statId: ContributorProfileStatId): {
+  to: "/contributors/$slug" | "/browse";
+  hash?: string;
+  search?: { signal?: string };
+} {
+  switch (statId) {
+    case "accepted":
+      return { to: "/contributors/$slug", hash: "accepted" };
+    case "reviewed":
+      return { to: "/contributors/$slug", hash: "reviewed" };
+    case "categories":
+      return { to: "/contributors/$slug", hash: "category-credits" };
+    case "source-linked":
+      return { to: "/browse", search: { signal: "source-backed" } };
+  }
+}

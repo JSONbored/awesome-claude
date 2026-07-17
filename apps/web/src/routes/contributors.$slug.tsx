@@ -57,6 +57,10 @@ import {
   contributorProfileSubmitterAnalyticsEvent,
   contributorProfileTraceEgressAnalyticsData,
   contributorProfileTraceEgressAnalyticsEvent,
+  contributorProfileStatAnalyticsData,
+  contributorProfileStatAnalyticsEvent,
+  contributorProfileStatDestination,
+  type ContributorProfileStatId,
   type ContributorProfileTraceDestination,
 } from "@/lib/contributor-profile-cta-events";
 import { contributorPersonJsonLd } from "@/lib/contributor-person-jsonld-lib";
@@ -175,14 +179,38 @@ function ContributorPage() {
       </header>
 
       <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <ContributorStat icon={FileCheck2} label="Accepted" value={acceptedEntries.length} />
-        <ContributorStat icon={ShieldCheck} label="Reviewed" value={reviewedEntries.length} />
-        <ContributorStat icon={Layers3} label="Categories" value={categorySummaries.length} />
-        <ContributorStat icon={GitPullRequest} label="Source-linked" value={sourceLinkedCount} />
+        <ContributorStat
+          icon={FileCheck2}
+          label="Accepted"
+          value={acceptedEntries.length}
+          contributorSlug={contributor.slug}
+          statId="accepted"
+        />
+        <ContributorStat
+          icon={ShieldCheck}
+          label="Reviewed"
+          value={reviewedEntries.length}
+          contributorSlug={contributor.slug}
+          statId="reviewed"
+        />
+        <ContributorStat
+          icon={Layers3}
+          label="Categories"
+          value={categorySummaries.length}
+          contributorSlug={contributor.slug}
+          statId="categories"
+        />
+        <ContributorStat
+          icon={GitPullRequest}
+          label="Source-linked"
+          value={sourceLinkedCount}
+          contributorSlug={contributor.slug}
+          statId="source-linked"
+        />
       </div>
 
       {categorySummaries.length > 0 && (
-        <section className="mt-10">
+        <section id="category-credits" className="mt-10 scroll-mt-24">
           <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
             Category Credits
           </h2>
@@ -213,20 +241,21 @@ function ContributorPage() {
       )}
 
       <ContributionSection
+        id="accepted"
         title="Accepted Entries"
         entries={acceptedEntries}
         contributor={contributor}
         empty="No accepted entries yet."
       />
 
-      {reviewedEntries.length > 0 && (
-        <ContributionSection
-          title="Reviewed Entries"
-          entries={reviewedEntries}
-          contributor={contributor}
-          role="reviewed"
-        />
-      )}
+      <ContributionSection
+        id="reviewed"
+        title="Reviewed Entries"
+        entries={reviewedEntries}
+        contributor={contributor}
+        role="reviewed"
+        empty="No reviewed entries yet."
+      />
 
       <div className="mt-12 rounded-xl border border-border bg-surface p-6 text-sm text-ink-muted">
         Want to contribute?{" "}
@@ -277,29 +306,48 @@ function ContributorStat({
   icon: Icon,
   label,
   value,
+  contributorSlug,
+  statId,
 }: {
   icon: ElementType;
   label: string;
   value: number;
+  contributorSlug: string;
+  statId: ContributorProfileStatId;
 }) {
+  const destination = contributorProfileStatDestination(statId);
   return (
-    <div className="rounded-xl border border-border bg-surface p-4">
+    <Link
+      to={destination.to}
+      params={destination.to === "/contributors/$slug" ? { slug: contributorSlug } : undefined}
+      hash={destination.hash}
+      search={destination.to === "/browse" ? destination.search : undefined}
+      onClick={() =>
+        trackEvent(
+          contributorProfileStatAnalyticsEvent(),
+          contributorProfileStatAnalyticsData(contributorSlug, statId, value),
+        )
+      }
+      className="rounded-xl border border-border bg-surface p-4 transition-colors duration-200 ease-out hover:border-border-strong hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60"
+    >
       <div className="flex items-center gap-2 text-xs uppercase tracking-wider text-ink-subtle">
         <Icon className="h-3.5 w-3.5" aria-hidden />
         {label}
       </div>
       <div className="mt-2 font-display text-2xl font-semibold text-ink tabular-nums">{value}</div>
-    </div>
+    </Link>
   );
 }
 
 function ContributionSection({
+  id,
   title,
   entries,
   contributor,
   role,
   empty,
 }: {
+  id: string;
   title: string;
   entries: Entry[];
   contributor: Contributor;
@@ -307,7 +355,7 @@ function ContributionSection({
   empty?: string;
 }) {
   return (
-    <section className="mt-10">
+    <section id={id} className="mt-10 scroll-mt-24">
       <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
         {title} ({entries.length})
       </h2>

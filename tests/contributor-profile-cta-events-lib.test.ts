@@ -15,6 +15,9 @@ import {
   contributorProfileSubmitterAnalyticsEvent,
   contributorProfileTraceEgressAnalyticsData,
   contributorProfileTraceEgressAnalyticsEvent,
+  contributorProfileStatAnalyticsData,
+  contributorProfileStatAnalyticsEvent,
+  contributorProfileStatDestination,
 } from "@/lib/contributor-profile-cta-events-lib";
 
 describe("contributor profile cta events lib", () => {
@@ -105,6 +108,44 @@ describe("contributor profile cta events lib", () => {
       role: "authored",
       rowIndex: 1,
       rowCount: 4,
+    });
+  });
+
+  it("builds contributor profile headline stat analytics and destinations", () => {
+    expect(contributorProfileStatAnalyticsEvent()).toBe(
+      "contributor_profile_stat_click",
+    );
+    expect(
+      contributorProfileStatAnalyticsData("alice", "accepted", 12),
+    ).toEqual({
+      surface: CONTRIBUTOR_PROFILE_SURFACE,
+      contributorSlug: "alice",
+      statId: "accepted",
+      count: 12,
+    });
+    expect(
+      contributorProfileStatAnalyticsData("alice", "source-linked", 9),
+    ).toEqual({
+      surface: CONTRIBUTOR_PROFILE_SURFACE,
+      contributorSlug: "alice",
+      statId: "source-linked",
+      count: 9,
+    });
+    expect(contributorProfileStatDestination("accepted")).toEqual({
+      to: "/contributors/$slug",
+      hash: "accepted",
+    });
+    expect(contributorProfileStatDestination("reviewed")).toEqual({
+      to: "/contributors/$slug",
+      hash: "reviewed",
+    });
+    expect(contributorProfileStatDestination("categories")).toEqual({
+      to: "/contributors/$slug",
+      hash: "category-credits",
+    });
+    expect(contributorProfileStatDestination("source-linked")).toEqual({
+      to: "/browse",
+      search: { signal: "source-backed" },
     });
   });
 });

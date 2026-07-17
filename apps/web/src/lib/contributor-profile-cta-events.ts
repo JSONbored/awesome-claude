@@ -17,5 +17,9 @@ export {
   contributorProfileSubmitterAnalyticsEvent,
   contributorProfileTraceEgressAnalyticsData,
   contributorProfileTraceEgressAnalyticsEvent,
+  contributorProfileStatAnalyticsData,
+  contributorProfileStatAnalyticsEvent,
+  contributorProfileStatDestination,
+  type ContributorProfileStatId,
   type ContributorProfileTraceDestination,
 } from "@/lib/contributor-profile-cta-events-lib";
