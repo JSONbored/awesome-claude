@@ -5,6 +5,14 @@ import { CategoryPill, TrustBadge, SourceBadge } from "@/components/badges";
 import { formatCompact } from "@/lib/format";
 import { trackEvent } from "@/lib/analytics";
 import {
+  badgeChromeCategoryAnalyticsData,
+  badgeChromeCategoryAnalyticsEvent,
+  badgeChromeSourceAnalyticsData,
+  badgeChromeSourceAnalyticsEvent,
+  badgeChromeTrustAnalyticsData,
+  badgeChromeTrustAnalyticsEvent,
+} from "@/lib/badge-chrome-cta-events";
+import {
   hubTrendingPodiumEntryAnalyticsData,
   hubTrendingPodiumEntryAnalyticsEvent,
 } from "@/lib/hub-entry-cta-events";
@@ -70,18 +78,47 @@ export function TrendingPodium({ entries }: { entries: TrendingEntry[] }) {
               </div>
             </div>
 
+            <div className="mt-3 flex flex-wrap items-center gap-1.5">
+              <CategoryPill
+                asLink
+                category={e.category}
+                onNavigate={() =>
+                  trackEvent(
+                    badgeChromeCategoryAnalyticsEvent(),
+                    badgeChromeCategoryAnalyticsData(e.category, "trending-podium"),
+                  )
+                }
+              >
+                {e.category}
+              </CategoryPill>
+              <TrustBadge
+                level={e.trust}
+                asLink
+                onNavigate={() =>
+                  trackEvent(
+                    badgeChromeTrustAnalyticsEvent(),
+                    badgeChromeTrustAnalyticsData(e.trust, "trending-podium"),
+                  )
+                }
+              />
+              <SourceBadge
+                status={e.source}
+                asLink
+                onNavigate={() =>
+                  trackEvent(
+                    badgeChromeSourceAnalyticsEvent(),
+                    badgeChromeSourceAnalyticsData(e.source, "trending-podium"),
+                  )
+                }
+              />
+            </div>
             <Link
               to="/entry/$category/$slug"
               params={{ category: e.category, slug: e.slug }}
               onClick={() => trackPodiumClick(e, i + 1)}
-              className="mt-3 min-w-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 rounded-sm"
+              className="mt-2 min-w-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 rounded-sm"
             >
-              <div className="flex flex-wrap items-center gap-1.5">
-                <CategoryPill>{e.category}</CategoryPill>
-                <TrustBadge level={e.trust} />
-                <SourceBadge status={e.source} />
-              </div>
-              <div className="mt-2 font-display text-lg font-semibold leading-snug text-ink group-hover:underline">
+              <div className="font-display text-lg font-semibold leading-snug text-ink group-hover:underline">
                 {e.title}
               </div>
               <p className="mt-1 line-clamp-2 text-sm text-ink-muted">{e.description}</p>

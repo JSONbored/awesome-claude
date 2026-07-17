@@ -111,5 +111,37 @@ describe("badge chrome cta events lib", () => {
       surface: "detail-header",
       risk: "high",
     });
+    expect(badgeChromeTrustAnalyticsData("review", "trending-list")).toEqual({
+      surface: "trending-list",
+      trust: "review",
+    });
+    expect(
+      badgeChromeSourceAnalyticsData("source-backed", "trending-list"),
+    ).toEqual({
+      surface: "trending-list",
+      source: "source-backed",
+    });
+    expect(badgeChromeCategoryAnalyticsData("mcp", "trending-list")).toEqual({
+      surface: "trending-list",
+      category: "mcp",
+    });
+    expect(badgeChromeTrustAnalyticsData("trusted", "trending-podium")).toEqual(
+      {
+        surface: "trending-podium",
+        trust: "trusted",
+      },
+    );
+    expect(
+      badgeChromeSourceAnalyticsData("first-party", "trending-podium"),
+    ).toEqual({
+      surface: "trending-podium",
+      source: "first-party",
+    });
+    expect(
+      badgeChromeCategoryAnalyticsData("skills", "trending-podium"),
+    ).toEqual({
+      surface: "trending-podium",
+      category: "skills",
+    });
   });
 });

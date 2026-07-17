@@ -34,6 +34,12 @@ import {
   type ValidatorsSummaryStatId,
   type ValidatorsToolId,
 } from "@/lib/validators-tools-cta-events";
+import {
+  validatorsCoverageMetricAnalyticsData,
+  validatorsCoverageMetricAnalyticsEvent,
+  validatorsCoverageMetricBrowseSearch,
+  type ValidatorsCoverageMetricId,
+} from "@/lib/validators-coverage-cta-events";
 import atlasRegistry from "@/generated/atlas-registry.json";
 
 const VALIDATOR_TOOL_COUNT = 2;
@@ -199,19 +205,31 @@ function ValidatorsPage() {
             </div>
 
             <div className="mt-4 grid gap-2 text-xs sm:grid-cols-2">
-              <Metric label="Reviewed" value={coverage.reviewed} total={coverage.entries} />
+              <Metric
+                label="Reviewed"
+                metricId="reviewed"
+                expertiseId={coverage.id}
+                value={coverage.reviewed}
+                total={coverage.entries}
+              />
               <Metric
                 label="Source-backed"
+                metricId="source-backed"
+                expertiseId={coverage.id}
                 value={coverage.sourceBacked}
                 total={coverage.entries}
               />
               <Metric
                 label="Safety notes"
+                metricId="safety-notes"
+                expertiseId={coverage.id}
                 value={coverage.withSafetyNotes}
                 total={coverage.entries}
               />
               <Metric
                 label="Privacy notes"
+                metricId="privacy-notes"
+                expertiseId={coverage.id}
                 value={coverage.withPrivacyNotes}
                 total={coverage.entries}
               />
@@ -390,10 +408,23 @@ function SummaryStat({
   return <div className="bg-surface p-5">{body}</div>;
 }
 
-function Metric({ label, value, total }: { label: string; value: number; total: number }) {
+function Metric({
+  label,
+  metricId,
+  expertiseId,
+  value,
+  total,
+}: {
+  label: string;
+  metricId: ValidatorsCoverageMetricId;
+  expertiseId: Expertise;
+  value: number;
+  total: number;
+}) {
   const pct = total ? Math.round((value / total) * 100) : 0;
-  return (
-    <div className="rounded-lg border border-border bg-background p-3">
+  const browseSearch = validatorsCoverageMetricBrowseSearch(expertiseId, metricId);
+  const body = (
+    <>
       <div className="flex items-center justify-between gap-2">
         <span className="text-ink-muted">{label}</span>
         <span className="font-mono text-ink">{pct}%</span>
@@ -401,7 +432,27 @@ function Metric({ label, value, total }: { label: string; value: number; total: 
       <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-surface-2">
         <div className="h-full bg-ink" style={{ width: `${Math.max(pct, value > 0 ? 3 : 0)}%` }} />
       </div>
-    </div>
+    </>
+  );
+
+  if (!browseSearch) {
+    return <div className="rounded-lg border border-border bg-background p-3">{body}</div>;
+  }
+
+  return (
+    <Link
+      to="/browse"
+      search={browseSearch}
+      onClick={() =>
+        trackEvent(
+          validatorsCoverageMetricAnalyticsEvent(),
+          validatorsCoverageMetricAnalyticsData(expertiseId, metricId, pct, value, total),
+        )
+      }
+      className="block rounded-lg border border-border bg-background p-3 transition-colors hover:border-ink/20 hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60"
+    >
+      {body}
+    </Link>
   );
 }
 

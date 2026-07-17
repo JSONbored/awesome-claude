@@ -18,6 +18,14 @@ import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/og-image";
 import { trackEvent } from "@/lib/analytics";
 import {
+  badgeChromeCategoryAnalyticsData,
+  badgeChromeCategoryAnalyticsEvent,
+  badgeChromeSourceAnalyticsData,
+  badgeChromeSourceAnalyticsEvent,
+  badgeChromeTrustAnalyticsData,
+  badgeChromeTrustAnalyticsEvent,
+} from "@/lib/badge-chrome-cta-events";
+import {
   trendingCategoryFilterAnalyticsData,
   trendingCategoryFilterAnalyticsEvent,
   trendingChromeAnalyticsData,
@@ -456,22 +464,53 @@ function TrendingPage() {
               <div className="font-display text-3xl font-semibold tabular-nums text-ink-subtle">
                 {String(index + 4).padStart(2, "0")}
               </div>
-              <Link
-                to="/entry/$category/$slug"
-                params={{ category: entry.category, slug: entry.slug }}
-                onClick={() => onTrendingListEntryClick(entry, index + 4)}
-                className="min-w-0 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60"
-              >
+              <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
-                  <CategoryPill>{entry.category}</CategoryPill>
-                  <TrustBadge level={entry.trust} />
-                  <SourceBadge status={entry.source} />
+                  <CategoryPill
+                    asLink
+                    category={entry.category}
+                    onNavigate={() =>
+                      trackEvent(
+                        badgeChromeCategoryAnalyticsEvent(),
+                        badgeChromeCategoryAnalyticsData(entry.category, "trending-list"),
+                      )
+                    }
+                  >
+                    {entry.category}
+                  </CategoryPill>
+                  <TrustBadge
+                    level={entry.trust}
+                    asLink
+                    onNavigate={() =>
+                      trackEvent(
+                        badgeChromeTrustAnalyticsEvent(),
+                        badgeChromeTrustAnalyticsData(entry.trust, "trending-list"),
+                      )
+                    }
+                  />
+                  <SourceBadge
+                    status={entry.source}
+                    asLink
+                    onNavigate={() =>
+                      trackEvent(
+                        badgeChromeSourceAnalyticsEvent(),
+                        badgeChromeSourceAnalyticsData(entry.source, "trending-list"),
+                      )
+                    }
+                  />
                 </div>
-                <div className="mt-1 font-display text-base font-semibold text-ink hover:underline">
-                  {entry.title}
-                </div>
-                <p className="line-clamp-1 text-sm text-ink-muted">{entry.description}</p>
-              </Link>
+                <Link
+                  to="/entry/$category/$slug"
+                  params={{ category: entry.category, slug: entry.slug }}
+                  onClick={() => onTrendingListEntryClick(entry, index + 4)}
+                  className="mt-1 block rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60"
+                >
+                  <div className="font-display text-base font-semibold text-ink hover:underline">
+                    {entry.title}
+                  </div>
+                  <p className="line-clamp-1 text-sm text-ink-muted">{entry.description}</p>
+                </Link>
+              </div>
               <div className="hidden flex-col items-end gap-0.5 font-mono text-xs text-ink-muted tabular-nums sm:flex">
                 {entry.repoStats?.stars !== undefined && (
                   <div className="flex items-center gap-1" title="Source repository stars">

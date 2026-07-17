@@ -10,7 +10,9 @@ export type BadgeChromeSurface =
   | "peek-panel"
   | "detail-header"
   | "contributor-profile"
-  | "compare-tray";
+  | "compare-tray"
+  | "trending-list"
+  | "trending-podium";
 
 export type BadgeChromeNoteKind = "safety" | "privacy";
 
