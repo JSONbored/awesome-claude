@@ -24,5 +24,23 @@ describe("source badge cta events lib", () => {
       surface: "category-ranking",
       source: "unverified",
     });
+    expect(sourceBadgeAnalyticsData("source-backed", "hub-highlights")).toEqual(
+      {
+        surface: "hub-highlights",
+        source: "source-backed",
+      },
+    );
+    expect(sourceBadgeAnalyticsData("first-party", "browse-grid")).toEqual({
+      surface: "browse-grid",
+      source: "first-party",
+    });
+    expect(sourceBadgeAnalyticsData("external", "browse-row")).toEqual({
+      surface: "browse-row",
+      source: "external",
+    });
+    expect(sourceBadgeAnalyticsData("unverified", "home-recent")).toEqual({
+      surface: "home-recent",
+      source: "unverified",
+    });
   });
 });

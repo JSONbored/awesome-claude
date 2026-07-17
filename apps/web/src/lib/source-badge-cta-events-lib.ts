@@ -11,7 +11,24 @@ export type SourceBadgeSurface =
   | typeof SOURCE_BADGE_SURFACE
   | "compare-table"
   | "compare-drawer"
-  | "category-ranking";
+  | "category-ranking"
+  | "hub-highlights"
+  | "browse-card"
+  | "browse-grid"
+  | "browse-row"
+  | "browse-compact"
+  | "home-recent"
+  | "home-popular"
+  | "home-newest"
+  | "home-compare-rail"
+  | "category-hub"
+  | "tag-hub"
+  | "best-index"
+  | "best-collection"
+  | "platform-hub"
+  | "platform-category"
+  | "detail-related"
+  | "detail-guides";
 
 export function sourceBadgeAnalyticsEvent(): string {
   return "source_badge_click";

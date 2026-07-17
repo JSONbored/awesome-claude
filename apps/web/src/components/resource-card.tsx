@@ -20,6 +20,8 @@ import { LazyEntryAuthorAttribution } from "./lazy-linked-attribution";
 import { useCompareActions, useIsCompared } from "@/lib/compare";
 import { recordIntentEvent } from "@/lib/intent-event-client";
 import {
+  resourceCardCategoryBrowseAnalyticsData,
+  resourceCardCategoryBrowseAnalyticsEvent,
   resourceCardCompareAnalyticsData,
   resourceCardCompareAnalyticsEvent,
   resourceCardCompareToastOpenAnalyticsData,
@@ -201,7 +203,6 @@ function ResourceCardInner({
             </span>
           )}
           <EntryBrandMark entry={entry} size="xs" />
-          <CategoryPill>{entry.category}</CategoryPill>
           <span className="min-w-0 flex-1 truncate font-medium text-ink group-hover:underline">
             {entry.title}
           </span>
@@ -211,8 +212,21 @@ function ResourceCardInner({
           <span className="hidden sm:inline-flex">
             <SourceRepoStars entry={entry} compact />
           </span>
-          <TrustBadge level={entry.trust} />
         </Link>
+        <CategoryPill
+          asLink
+          category={entry.category}
+          onNavigate={() =>
+            trackEvent(
+              resourceCardCategoryBrowseAnalyticsEvent(),
+              resourceCardCategoryBrowseAnalyticsData(entry.category, analyticsSurface),
+            )
+          }
+        >
+          {entry.category}
+        </CategoryPill>
+        <SourceBadge status={entry.source} asLink surface={analyticsSurface} />
+        <TrustBadge level={entry.trust} />
         <span className="hidden min-w-0 shrink md:inline-flex">
           <LazyEntryAuthorAttribution entry={entry} className="truncate text-xs text-ink-subtle" />
         </span>
@@ -244,7 +258,6 @@ function ResourceCardInner({
             <div className="flex items-start justify-between gap-2">
               <div className="flex min-w-0 items-center gap-2">
                 <EntryBrandMark entry={entry} size="xs" />
-                <CategoryPill>{entry.category}</CategoryPill>
               </div>
               <div className="flex min-h-4 items-center text-xs text-ink-muted tabular-nums">
                 <SourceRepoStars entry={entry} compact />
@@ -259,18 +272,32 @@ function ResourceCardInner({
               </p>
             </div>
             <EntryFacets entry={entry} density="card" />
-            <div className="mt-auto flex flex-wrap items-center gap-1.5">
-              <TrustBadge level={entry.trust} />
-              <SourceBadge status={entry.source} />
-              <InstallRiskBadge entry={entry} size="xs" />
-              {entry.dateAdded && (
-                <span className="ml-auto font-mono text-[10px] text-ink-subtle">
+            {entry.dateAdded && (
+              <div className="mt-auto">
+                <span className="font-mono text-[10px] text-ink-subtle">
                   Added {timeAgo(entry.dateAdded)}
                 </span>
-              )}
-            </div>
-            <NotesPresenceChips entry={entry} />
+              </div>
+            )}
           </Link>
+          <div className="flex flex-wrap items-center gap-1.5">
+            <CategoryPill
+              asLink
+              category={entry.category}
+              onNavigate={() =>
+                trackEvent(
+                  resourceCardCategoryBrowseAnalyticsEvent(),
+                  resourceCardCategoryBrowseAnalyticsData(entry.category, analyticsSurface),
+                )
+              }
+            >
+              {entry.category}
+            </CategoryPill>
+            <TrustBadge level={entry.trust} />
+            <SourceBadge status={entry.source} asLink surface={analyticsSurface} />
+            <InstallRiskBadge entry={entry} size="xs" asLink surface={analyticsSurface} />
+          </div>
+          <NotesPresenceChips entry={entry} asLink surface={analyticsSurface} />
           {trustDecision ? (
             <ResourceCardTrustHint
               state={trustDecision}
@@ -335,12 +362,23 @@ function ResourceCardInner({
         <EntryBrandMark entry={entry} size="sm" className="mt-0.5" />
         <div className="flex min-w-0 flex-1 flex-col gap-1.5">
           <div className="flex flex-wrap items-center gap-1.5">
-            <CategoryPill>{entry.category}</CategoryPill>
+            <CategoryPill
+              asLink
+              category={entry.category}
+              onNavigate={() =>
+                trackEvent(
+                  resourceCardCategoryBrowseAnalyticsEvent(),
+                  resourceCardCategoryBrowseAnalyticsData(entry.category, analyticsSurface),
+                )
+              }
+            >
+              {entry.category}
+            </CategoryPill>
             <TrustBadge level={entry.trust} />
-            <SourceBadge status={entry.source} />
-            <InstallRiskBadge entry={entry} size="xs" />
+            <SourceBadge status={entry.source} asLink surface={analyticsSurface} />
+            <InstallRiskBadge entry={entry} size="xs" asLink surface={analyticsSurface} />
             {entry.platforms.slice(0, 2).map((p) => (
-              <PlatformChip key={p} id={p} />
+              <PlatformChip key={p} id={p} asLink surface={analyticsSurface} />
             ))}
           </div>
 
@@ -365,7 +403,7 @@ function ResourceCardInner({
           ) : null}
           <div className="flex flex-wrap items-center gap-2 pt-0.5">
             <EntryFacets entry={entry} density="card" />
-            <NotesPresenceChips entry={entry} />
+            <NotesPresenceChips entry={entry} asLink surface={analyticsSurface} />
           </div>
         </div>
       </div>

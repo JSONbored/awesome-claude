@@ -5,8 +5,11 @@ import {
   HUB_TRENDING_PODIUM_SURFACE,
   hubCategoryRankingEntryAnalyticsData,
   hubCategoryRankingEntryAnalyticsEvent,
+  hubHighlightBrowseSignal,
   hubHighlightEntryAnalyticsData,
   hubHighlightEntryAnalyticsEvent,
+  hubHighlightSourceBrowseAnalyticsData,
+  hubHighlightSourceBrowseAnalyticsEvent,
   hubTrendingPodiumEntryAnalyticsData,
   hubTrendingPodiumEntryAnalyticsEvent,
 } from "@/lib/hub-entry-cta-events-lib";
@@ -44,5 +47,25 @@ describe("hub entry cta events lib", () => {
       rowIndex: 2,
       rowCount: 12,
     });
+  });
+
+  it("builds hub highlight source browse analytics and signal maps", () => {
+    expect(hubHighlightSourceBrowseAnalyticsEvent()).toBe(
+      "hub_highlight_source_browse_click",
+    );
+    expect(
+      hubHighlightSourceBrowseAnalyticsData("source-backed", "sourced"),
+    ).toEqual({
+      surface: HUB_HIGHLIGHTS_SURFACE,
+      source: "source-backed",
+      kind: "sourced",
+    });
+    expect(hubHighlightBrowseSignal("trusted")).toBe("trusted");
+    expect(hubHighlightBrowseSignal("sourced")).toBe("source-backed");
+    expect(hubHighlightBrowseSignal("documented")).toBe("safety-notes");
+    expect(hubHighlightBrowseSignal("reviewed")).toBe("reviewed");
+    expect(hubHighlightBrowseSignal("newest")).toBeNull();
+    expect(hubHighlightBrowseSignal("popular")).toBeNull();
+    expect(hubHighlightBrowseSignal("unknown")).toBeNull();
   });
 });

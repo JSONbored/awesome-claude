@@ -14,6 +14,8 @@ import { trackEvent } from "@/lib/analytics";
 import {
   hubHighlightEntryAnalyticsData,
   hubHighlightEntryAnalyticsEvent,
+  hubHighlightSourceBrowseAnalyticsData,
+  hubHighlightSourceBrowseAnalyticsEvent,
 } from "@/lib/hub-entry-cta-events";
 import {
   hubSignalStatAnalyticsData,
@@ -57,35 +59,46 @@ export function HubHighlights({
           const Icon = HIGHLIGHT_ICON[h.kind];
           return (
             <li key={`${h.kind}-${h.entry.category}/${h.entry.slug}`}>
-              <Link
-                to="/entry/$category/$slug"
-                params={{ category: h.entry.category, slug: h.entry.slug }}
-                onClick={() =>
-                  trackEvent(
-                    hubHighlightEntryAnalyticsEvent(),
-                    hubHighlightEntryAnalyticsData(
-                      h.entry.category,
-                      h.entry.slug,
-                      h.kind,
-                      highlights.length,
-                    ),
-                  )
-                }
-                className="group flex h-full flex-col rounded-xl border border-border bg-surface p-4 transition-colors hover:border-ink/20 hover:bg-surface-2"
-              >
-                <div className="flex items-center gap-1.5 eyebrow">
-                  <Icon className="h-3.5 w-3.5 text-accent" aria-hidden />
-                  {h.label}
-                </div>
-                <div className="mt-2 font-display text-sm font-semibold text-ink group-hover:underline">
-                  {h.entry.title}
-                </div>
-                <p className="mt-1 flex-1 text-xs text-ink-muted">{h.reason}</p>
+              <div className="group flex h-full flex-col rounded-xl border border-border bg-surface p-4 transition-colors hover:border-ink/20 hover:bg-surface-2">
+                <Link
+                  to="/entry/$category/$slug"
+                  params={{ category: h.entry.category, slug: h.entry.slug }}
+                  onClick={() =>
+                    trackEvent(
+                      hubHighlightEntryAnalyticsEvent(),
+                      hubHighlightEntryAnalyticsData(
+                        h.entry.category,
+                        h.entry.slug,
+                        h.kind,
+                        highlights.length,
+                      ),
+                    )
+                  }
+                  className="flex flex-1 flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 rounded-sm"
+                >
+                  <div className="flex items-center gap-1.5 eyebrow">
+                    <Icon className="h-3.5 w-3.5 text-accent" aria-hidden />
+                    {h.label}
+                  </div>
+                  <div className="mt-2 font-display text-sm font-semibold text-ink group-hover:underline">
+                    {h.entry.title}
+                  </div>
+                  <p className="mt-1 flex-1 text-xs text-ink-muted">{h.reason}</p>
+                </Link>
                 <div className="mt-3 flex flex-wrap items-center gap-1.5">
                   <TrustBadge level={h.entry.trust} />
-                  <SourceBadge status={h.entry.source} />
+                  <SourceBadge
+                    status={h.entry.source}
+                    asLink
+                    onNavigate={() =>
+                      trackEvent(
+                        hubHighlightSourceBrowseAnalyticsEvent(),
+                        hubHighlightSourceBrowseAnalyticsData(h.entry.source, h.kind),
+                      )
+                    }
+                  />
                 </div>
-              </Link>
+              </div>
             </li>
           );
         })}

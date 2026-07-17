@@ -125,6 +125,36 @@ export function resourceCardEntryAnalyticsData(
   };
 }
 
+export function resourceCardCategoryBrowseAnalyticsEvent(): string {
+  return "browse_card_category_click";
+}
+
+export function resourceCardCategoryBrowseAnalyticsData(
+  category: string,
+  surface: ResourceCardSurface = RESOURCE_CARD_SURFACE,
+) {
+  return {
+    surface,
+    category,
+  };
+}
+
+export type ResourceCardBadgeKind = "source" | "install-risk" | "notes" | "platform" | "category";
+
+/** Resolve which secondary badge kinds a card variant can expose as browse egress. */
+export function resourceCardBadgeKinds(variant: string): ResourceCardBadgeKind[] {
+  switch (variant) {
+    case "grid":
+      return ["category", "source", "install-risk", "notes"];
+    case "row":
+      return ["category", "source", "install-risk", "platform", "notes"];
+    case "compact":
+      return ["category", "source"];
+    default:
+      return [];
+  }
+}
+
 export function resourceCardTrustHintAnalyticsEvent(): string {
   return "browse_card_trust_hint_click";
 }

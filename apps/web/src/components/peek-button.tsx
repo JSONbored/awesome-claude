@@ -212,7 +212,7 @@ function PeekBody({ entry, peekId }: { entry: Entry; peekId: string }) {
               )
             }
           />
-          <InstallRiskBadge entry={entry} size="xs" />
+          <InstallRiskBadge entry={entry} size="xs" asLink surface="peek-panel" />
         </div>
         <div className="flex min-w-0 items-start gap-3">
           <EntryBrandMark entry={entry} size="md" priority className="mt-0.5" />
