@@ -78,3 +78,49 @@ export function mcpSecurityReportStatAnalyticsData(
     destination,
   };
 }
+
+/** Browse search used by MCP security headline stats. */
+export type McpSecurityReportStatBrowseSearch = {
+  category?: string;
+  signal?: string;
+};
+
+export type McpSecurityReportStatBrowseEgress = {
+  to: "/browse";
+  search: McpSecurityReportStatBrowseSearch;
+  destination: "browse";
+};
+
+/** Map an MCP security headline stat to a scoped browse destination. */
+export function mcpSecurityReportStatBrowseEgress(
+  statKey: string,
+): McpSecurityReportStatBrowseEgress | null {
+  switch (statKey) {
+    case "total":
+      return {
+        to: "/browse",
+        search: { category: "mcp" },
+        destination: "browse",
+      };
+    case "safety-notes":
+      return {
+        to: "/browse",
+        search: { category: "mcp", signal: "safety-notes" },
+        destination: "browse",
+      };
+    case "privacy-notes":
+      return {
+        to: "/browse",
+        search: { category: "mcp", signal: "privacy-notes" },
+        destination: "browse",
+      };
+    case "verified-package":
+      return {
+        to: "/browse",
+        search: { category: "mcp", signal: "trusted-package" },
+        destination: "browse",
+      };
+    default:
+      return null;
+  }
+}

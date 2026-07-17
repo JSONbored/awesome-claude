@@ -30,6 +30,7 @@ import {
   mcpSecurityReportEgressAnalyticsEvent,
   mcpSecurityReportStatAnalyticsData,
   mcpSecurityReportStatAnalyticsEvent,
+  mcpSecurityReportStatBrowseEgress,
   type McpSecurityReportEgressDestination,
 } from "@/lib/mcp-security-report-page-cta-events";
 
@@ -48,10 +49,12 @@ function trackDistRow(dimension: string, row: DistRow, rowIndex: number, rowCoun
   );
 }
 
-function trackStat(statKey: string, destination: "browse" | "quality" = "browse") {
+function trackStat(statKey: string) {
+  const egress = mcpSecurityReportStatBrowseEgress(statKey);
+  if (!egress) return;
   trackEvent(
     mcpSecurityReportStatAnalyticsEvent(),
-    mcpSecurityReportStatAnalyticsData(statKey, destination),
+    mcpSecurityReportStatAnalyticsData(statKey, egress.destination),
   );
 }
 
@@ -242,42 +245,52 @@ function McpSecurityReportPage() {
       <p className="mt-2 text-xs text-ink-subtle">Data as of {asOfLabel} (UTC).</p>
 
       <div className="mt-10 grid gap-px overflow-hidden rounded-xl border border-border bg-border stagger-children sm:grid-cols-4">
-        <DataStat
-          icon={Boxes}
-          label="MCP servers"
-          value={TOTAL}
-          hint="analyzed"
-          to="/browse"
-          search={{ category: "mcp" }}
-          onNavigate={() => trackStat("total")}
-        />
-        <DataStat
-          icon={ShieldCheck}
-          label="Safety notes"
-          value={NOTES.safety}
-          hint={`${pctOf(NOTES.safety, TOTAL)}% of total`}
-          to="/browse"
-          search={{ category: "mcp" }}
-          onNavigate={() => trackStat("safety-notes")}
-        />
-        <DataStat
-          icon={Eye}
-          label="Privacy notes"
-          value={NOTES.privacy}
-          hint={`${pctOf(NOTES.privacy, TOTAL)}% of total`}
-          to="/browse"
-          search={{ category: "mcp" }}
-          onNavigate={() => trackStat("privacy-notes")}
-        />
-        <DataStat
-          icon={PackageCheck}
-          label="Verified package"
-          value={SUPPLY.packageVerified}
-          hint={`${pctOf(SUPPLY.packageVerified, TOTAL)}% of total`}
-          to="/browse"
-          search={{ category: "mcp" }}
-          onNavigate={() => trackStat("verified-package")}
-        />
+        {(
+          [
+            {
+              key: "total",
+              icon: Boxes,
+              label: "MCP servers",
+              value: TOTAL,
+              hint: "analyzed",
+            },
+            {
+              key: "safety-notes",
+              icon: ShieldCheck,
+              label: "Safety notes",
+              value: NOTES.safety,
+              hint: `${pctOf(NOTES.safety, TOTAL)}% of total`,
+            },
+            {
+              key: "privacy-notes",
+              icon: Eye,
+              label: "Privacy notes",
+              value: NOTES.privacy,
+              hint: `${pctOf(NOTES.privacy, TOTAL)}% of total`,
+            },
+            {
+              key: "verified-package",
+              icon: PackageCheck,
+              label: "Verified package",
+              value: SUPPLY.packageVerified,
+              hint: `${pctOf(SUPPLY.packageVerified, TOTAL)}% of total`,
+            },
+          ] as const
+        ).map((stat) => {
+          const egress = mcpSecurityReportStatBrowseEgress(stat.key);
+          return (
+            <DataStat
+              key={stat.key}
+              icon={stat.icon}
+              label={stat.label}
+              value={stat.value}
+              hint={stat.hint}
+              to={egress?.to}
+              search={egress?.search}
+              onNavigate={() => trackStat(stat.key)}
+            />
+          );
+        })}
       </div>
 
       <DataSection

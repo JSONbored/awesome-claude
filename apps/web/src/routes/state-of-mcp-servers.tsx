@@ -42,10 +42,12 @@ import {
   stateReportEgressAnalyticsEvent,
   stateReportStatAnalyticsData,
   stateReportStatAnalyticsEvent,
+  stateReportStatBrowseEgress,
   type StateReportEgressDestination,
 } from "@/lib/state-report-page-cta-events";
 
 const REPORT_ID = "mcp-servers" as const;
+const REPORT_CATEGORY = "mcp";
 
 function trackStateReportEgress(destination: StateReportEgressDestination) {
   trackEvent(
@@ -66,10 +68,12 @@ function trackDistRow(dimension: string, row: DistRow, rowIndex: number, rowCoun
   );
 }
 
-function trackStat(statKey: string, destination: "browse" | "quality" = "browse") {
+function trackStat(statKey: string) {
+  const egress = stateReportStatBrowseEgress(statKey, REPORT_CATEGORY);
+  if (!egress) return;
   trackEvent(
     stateReportStatAnalyticsEvent(),
-    stateReportStatAnalyticsData(REPORT_ID, statKey, destination),
+    stateReportStatAnalyticsData(REPORT_ID, statKey, egress.destination),
   );
 }
 
@@ -249,42 +253,52 @@ function StateOfMcpServersPage() {
       <p className="mt-2 text-xs text-ink-subtle">Data as of {asOfLabel} (UTC).</p>
 
       <div className="mt-10 grid gap-px overflow-hidden rounded-xl border border-border bg-border stagger-children sm:grid-cols-4">
-        <DataStat
-          icon={Boxes}
-          label="MCP servers"
-          value={TOTAL}
-          hint="in the registry"
-          to="/browse"
-          search={{ category: "mcp" }}
-          onNavigate={() => trackStat("total")}
-        />
-        <DataStat
-          icon={Cloud}
-          label="Hosted (remote)"
-          value={REMOTE}
-          hint={`${pctOf(REMOTE, TOTAL)}% of total`}
-          to="/browse"
-          search={{ category: "mcp" }}
-          onNavigate={() => trackStat("remote")}
-        />
-        <DataStat
-          icon={HardDrive}
-          label="Local (stdio)"
-          value={LOCAL}
-          hint={`${pctOf(LOCAL, TOTAL)}% of total`}
-          to="/browse"
-          search={{ category: "mcp" }}
-          onNavigate={() => trackStat("local")}
-        />
-        <DataStat
-          icon={GitBranch}
-          label="Source-backed"
-          value={SOURCE_BACKED}
-          hint={`${pctOf(SOURCE_BACKED, TOTAL)}% of total`}
-          to="/browse"
-          search={{ category: "mcp", source: "source-backed" }}
-          onNavigate={() => trackStat("source-backed")}
-        />
+        {(
+          [
+            {
+              key: "total",
+              icon: Boxes,
+              label: "MCP servers",
+              value: TOTAL,
+              hint: "in the registry",
+            },
+            {
+              key: "remote",
+              icon: Cloud,
+              label: "Hosted (remote)",
+              value: REMOTE,
+              hint: `${pctOf(REMOTE, TOTAL)}% of total`,
+            },
+            {
+              key: "local",
+              icon: HardDrive,
+              label: "Local (stdio)",
+              value: LOCAL,
+              hint: `${pctOf(LOCAL, TOTAL)}% of total`,
+            },
+            {
+              key: "source-backed",
+              icon: GitBranch,
+              label: "Source-backed",
+              value: SOURCE_BACKED,
+              hint: `${pctOf(SOURCE_BACKED, TOTAL)}% of total`,
+            },
+          ] as const
+        ).map((stat) => {
+          const egress = stateReportStatBrowseEgress(stat.key, REPORT_CATEGORY);
+          return (
+            <DataStat
+              key={stat.key}
+              icon={stat.icon}
+              label={stat.label}
+              value={stat.value}
+              hint={stat.hint}
+              to={egress?.to}
+              search={egress?.search}
+              onNavigate={() => trackStat(stat.key)}
+            />
+          );
+        })}
       </div>
 
       <DataSection

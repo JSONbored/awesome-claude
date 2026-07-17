@@ -12,6 +12,9 @@ export {
   stateReportEgressAnalyticsEvent,
   stateReportStatAnalyticsData,
   stateReportStatAnalyticsEvent,
+  stateReportStatBrowseEgress,
   type StateReportEgressDestination,
   type StateReportId,
+  type StateReportStatBrowseEgress,
+  type StateReportStatBrowseSearch,
 } from "@/lib/state-report-page-cta-events-lib";

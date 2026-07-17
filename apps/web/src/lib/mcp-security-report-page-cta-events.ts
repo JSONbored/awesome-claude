@@ -13,5 +13,8 @@ export {
   mcpSecurityReportEgressAnalyticsEvent,
   mcpSecurityReportStatAnalyticsData,
   mcpSecurityReportStatAnalyticsEvent,
+  mcpSecurityReportStatBrowseEgress,
   type McpSecurityReportEgressDestination,
+  type McpSecurityReportStatBrowseEgress,
+  type McpSecurityReportStatBrowseSearch,
 } from "@/lib/mcp-security-report-page-cta-events-lib";

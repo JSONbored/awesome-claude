@@ -37,6 +37,7 @@ import {
   stateReportEgressAnalyticsEvent,
   stateReportStatAnalyticsData,
   stateReportStatAnalyticsEvent,
+  stateReportStatBrowseEgress,
   type StateReportEgressDestination,
 } from "@/lib/state-report-page-cta-events";
 import {
@@ -70,10 +71,12 @@ function trackDistRow(dimension: string, row: DistRow, rowIndex: number, rowCoun
   );
 }
 
-function trackStat(statKey: string, destination: "browse" | "quality" = "browse") {
+function trackStat(statKey: string) {
+  const egress = stateReportStatBrowseEgress(statKey);
+  if (!egress) return;
   trackEvent(
     stateReportStatAnalyticsEvent(),
-    stateReportStatAnalyticsData(REPORT_ID, statKey, destination),
+    stateReportStatAnalyticsData(REPORT_ID, statKey, egress.destination),
   );
 }
 
@@ -237,39 +240,52 @@ function StateOfClaudeToolingPage() {
       <p className="mt-2 text-xs text-ink-subtle">Data as of {asOfLabel} (UTC).</p>
 
       <div className="mt-10 grid gap-px overflow-hidden rounded-xl border border-border bg-border stagger-children sm:grid-cols-4">
-        <DataStat
-          icon={Boxes}
-          label="Total resources"
-          value={TOTAL}
-          hint="across the registry"
-          to="/browse"
-          onNavigate={() => trackStat("total")}
-        />
-        <DataStat
-          icon={Layers}
-          label="Categories tracked"
-          value={CATEGORIES.length}
-          hint="agents to statuslines"
-          to="/browse"
-          onNavigate={() => trackStat("categories")}
-        />
-        <DataStat
-          icon={GitBranch}
-          label="Source-backed"
-          value={QUALITY_STATS.sourceBacked}
-          hint={`${pctOf(QUALITY_STATS.sourceBacked, TOTAL)}% of total`}
-          to="/browse"
-          search={{ source: "source-backed" }}
-          onNavigate={() => trackStat("source-backed")}
-        />
-        <DataStat
-          icon={ShieldCheck}
-          label="Maintainer-reviewed"
-          value={QUALITY_STATS.reviewed}
-          hint={`${pctOf(QUALITY_STATS.reviewed, TOTAL)}% of total`}
-          to="/quality"
-          onNavigate={() => trackStat("reviewed", "quality")}
-        />
+        {(
+          [
+            {
+              key: "total",
+              icon: Boxes,
+              label: "Total resources",
+              value: TOTAL,
+              hint: "across the registry",
+            },
+            {
+              key: "categories",
+              icon: Layers,
+              label: "Categories tracked",
+              value: CATEGORIES.length,
+              hint: "agents to statuslines",
+            },
+            {
+              key: "source-backed",
+              icon: GitBranch,
+              label: "Source-backed",
+              value: QUALITY_STATS.sourceBacked,
+              hint: `${pctOf(QUALITY_STATS.sourceBacked, TOTAL)}% of total`,
+            },
+            {
+              key: "reviewed",
+              icon: ShieldCheck,
+              label: "Maintainer-reviewed",
+              value: QUALITY_STATS.reviewed,
+              hint: `${pctOf(QUALITY_STATS.reviewed, TOTAL)}% of total`,
+            },
+          ] as const
+        ).map((stat) => {
+          const egress = stateReportStatBrowseEgress(stat.key);
+          return (
+            <DataStat
+              key={stat.key}
+              icon={stat.icon}
+              label={stat.label}
+              value={stat.value}
+              hint={stat.hint}
+              to={egress?.to}
+              search={egress?.search}
+              onNavigate={() => trackStat(stat.key)}
+            />
+          );
+        })}
       </div>
 
       <DataSection

@@ -102,3 +102,78 @@ export function stateReportStatAnalyticsData(
     destination,
   };
 }
+
+/** Browse/quality search used by headline report stats. */
+export type StateReportStatBrowseSearch = {
+  category?: string;
+  source?: string;
+  signal?: string;
+};
+
+export type StateReportStatBrowseEgress = {
+  to: "/browse" | "/quality";
+  search?: StateReportStatBrowseSearch;
+  destination: "browse" | "quality";
+};
+
+/** Map a state-report headline stat to an in-app browse/quality destination. */
+export function stateReportStatBrowseEgress(
+  statKey: string,
+  reportCategory?: string,
+): StateReportStatBrowseEgress | null {
+  switch (statKey) {
+    case "categories":
+      return { to: "/browse", destination: "browse" };
+    case "reviewed":
+      return { to: "/quality", destination: "quality" };
+    case "source-backed":
+      return {
+        to: "/browse",
+        search: {
+          ...(reportCategory ? { category: reportCategory } : {}),
+          source: "source-backed",
+        },
+        destination: "browse",
+      };
+    case "validated":
+      return {
+        to: "/browse",
+        search: {
+          ...(reportCategory ? { category: reportCategory } : {}),
+          signal: "reviewed",
+        },
+        destination: "browse",
+      };
+    case "safety-privacy":
+      return {
+        to: "/browse",
+        search: {
+          ...(reportCategory ? { category: reportCategory } : {}),
+          signal: "safety-notes",
+        },
+        destination: "browse",
+      };
+    case "total":
+    case "remote":
+    case "local":
+    case "events":
+    case "simple":
+    case "packs":
+    case "packaged":
+    case "ready":
+    case "documented":
+      return {
+        to: "/browse",
+        search: reportCategory ? { category: reportCategory } : undefined,
+        destination: "browse",
+      };
+    default:
+      return reportCategory
+        ? {
+            to: "/browse",
+            search: { category: reportCategory },
+            destination: "browse",
+          }
+        : null;
+  }
+}
