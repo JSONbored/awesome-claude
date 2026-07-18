@@ -10,26 +10,37 @@ import {
   PLATFORM_INDEX_SURFACE,
   bestIndexListAnalyticsData,
   bestIndexListAnalyticsEvent,
+  bestIndexListDestination,
   categoryHubBrowseAnalyticsData,
   categoryHubBrowseAnalyticsEvent,
+  categoryHubBrowseDestination,
   categoryHubNotFoundEgressAnalyticsData,
   categoryHubNotFoundEgressAnalyticsEvent,
+  categoryHubNotFoundEgressDestination,
   categoryHubSeeAllAnalyticsData,
   categoryHubSeeAllAnalyticsEvent,
+  categoryHubSeeAllDestination,
   platformCategoryCategoryAnalyticsData,
   platformCategoryCategoryAnalyticsEvent,
+  platformCategoryCategoryDestination,
   platformCategoryNotFoundEgressAnalyticsData,
   platformCategoryNotFoundEgressAnalyticsEvent,
+  platformCategoryNotFoundEgressDestination,
   platformCategoryPlatformAnalyticsData,
   platformCategoryPlatformAnalyticsEvent,
+  platformCategoryPlatformDestination,
   platformHubBrowseAnalyticsData,
   platformHubBrowseAnalyticsEvent,
+  platformHubBrowseDestination,
   platformHubNotFoundEgressAnalyticsData,
   platformHubNotFoundEgressAnalyticsEvent,
+  platformHubNotFoundEgressDestination,
   platformHubSectionAnalyticsData,
   platformHubSectionAnalyticsEvent,
+  platformHubSectionDestination,
   platformIndexSelectAnalyticsData,
   platformIndexSelectAnalyticsEvent,
+  platformIndexSelectDestination,
 } from "@/lib/directory-hub-cta-events-lib";
 
 describe("directory hub cta events lib", () => {
@@ -56,6 +67,23 @@ describe("directory hub cta events lib", () => {
     });
   });
 
+  it("maps category hub destinations", () => {
+    expect(categoryHubBrowseDestination("mcp")).toEqual({
+      to: "/browse",
+      search: { category: "mcp" },
+    });
+    expect(categoryHubBrowseDestination("   ")).toBeNull();
+    expect(categoryHubSeeAllDestination("skills")).toEqual({
+      to: "/browse",
+      search: { category: "skills" },
+    });
+    expect(categoryHubSeeAllDestination("")).toBeNull();
+    expect(categoryHubNotFoundEgressDestination("browse")).toEqual({
+      to: "/browse",
+    });
+    expect(categoryHubNotFoundEgressDestination("unknown")).toBeNull();
+  });
+
   it("builds best index list navigation analytics", () => {
     expect(bestIndexListAnalyticsEvent()).toBe("best_index_list_click");
     expect(bestIndexListAnalyticsData("mcp-servers", 8, 1, 6)).toEqual({
@@ -67,6 +95,14 @@ describe("directory hub cta events lib", () => {
     });
   });
 
+  it("maps best index list destinations", () => {
+    expect(bestIndexListDestination("mcp-servers")).toEqual({
+      to: "/best/$slug",
+      params: { slug: "mcp-servers" },
+    });
+    expect(bestIndexListDestination("")).toBeNull();
+  });
+
   it("builds platform index navigation analytics", () => {
     expect(platformIndexSelectAnalyticsEvent()).toBe("platform_index_select");
     expect(platformIndexSelectAnalyticsData("claude-code", 120, 0, 7)).toEqual({
@@ -76,6 +112,14 @@ describe("directory hub cta events lib", () => {
       rowIndex: 0,
       platformCount: 7,
     });
+  });
+
+  it("maps platform index destinations", () => {
+    expect(platformIndexSelectDestination("claude-code")).toEqual({
+      to: "/for/$platform",
+      params: { platform: "claude-code" },
+    });
+    expect(platformIndexSelectDestination("  ")).toBeNull();
   });
 
   it("builds platform hub page navigation analytics", () => {
@@ -126,5 +170,37 @@ describe("directory hub cta events lib", () => {
     expect(platformCategoryNotFoundEgressAnalyticsData()).toEqual({
       surface: PLATFORM_CATEGORY_NOTFOUND_SURFACE,
     });
+  });
+
+  it("maps platform hub and platform-category destinations", () => {
+    expect(platformHubBrowseDestination("cursor")).toEqual({
+      to: "/browse",
+      search: { platform: "cursor" },
+    });
+    expect(platformHubBrowseDestination("")).toBeNull();
+    expect(platformHubNotFoundEgressDestination("platforms")).toEqual({
+      to: "/for",
+    });
+    expect(platformHubNotFoundEgressDestination("unknown")).toBeNull();
+    expect(platformHubSectionDestination("cursor", "mcp")).toEqual({
+      to: "/for/$platform/$category",
+      params: { platform: "cursor", category: "mcp" },
+    });
+    expect(platformHubSectionDestination("", "mcp")).toBeNull();
+    expect(platformHubSectionDestination("cursor", "")).toBeNull();
+    expect(platformCategoryPlatformDestination("cursor")).toEqual({
+      to: "/for/$platform",
+      params: { platform: "cursor" },
+    });
+    expect(platformCategoryPlatformDestination("")).toBeNull();
+    expect(platformCategoryCategoryDestination("mcp")).toEqual({
+      to: "/$category",
+      params: { category: "mcp" },
+    });
+    expect(platformCategoryCategoryDestination("")).toBeNull();
+    expect(platformCategoryNotFoundEgressDestination("platforms")).toEqual({
+      to: "/for",
+    });
+    expect(platformCategoryNotFoundEgressDestination("unknown")).toBeNull();
   });
 });

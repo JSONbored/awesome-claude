@@ -14,10 +14,13 @@ import { trackEvent } from "@/lib/analytics";
 import {
   platformHubBrowseAnalyticsData,
   platformHubBrowseAnalyticsEvent,
+  platformHubBrowseDestination,
   platformHubNotFoundEgressAnalyticsData,
   platformHubNotFoundEgressAnalyticsEvent,
+  platformHubNotFoundEgressDestination,
   platformHubSectionAnalyticsData,
   platformHubSectionAnalyticsEvent,
+  platformHubSectionDestination,
 } from "@/lib/directory-hub-cta-events";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { breadcrumbListJsonLd } from "@/lib/breadcrumb-jsonld-lib";
@@ -67,24 +70,29 @@ export const Route = createFileRoute("/for/$platform")({
     };
   },
   component: PlatformPage,
-  notFoundComponent: () => (
-    <div className="mx-auto max-w-2xl px-6 py-24 text-center">
-      <h1 className="h-display-2 text-ink">Platform not found</h1>
-      <p className="mt-3 text-sm text-ink-muted">That platform isn't tracked yet.</p>
-      <Link
-        to="/for"
-        className="mt-6 inline-flex h-9 items-center gap-1.5 rounded-md bg-ink px-4 font-medium text-background hover:opacity-90"
-        onClick={() =>
-          trackEvent(
-            platformHubNotFoundEgressAnalyticsEvent(),
-            platformHubNotFoundEgressAnalyticsData(),
-          )
-        }
-      >
-        All platforms <ArrowRight className="h-4 w-4" />
-      </Link>
-    </div>
-  ),
+  notFoundComponent: () => {
+    const destination = platformHubNotFoundEgressDestination("platforms");
+    return (
+      <div className="mx-auto max-w-2xl px-6 py-24 text-center">
+        <h1 className="h-display-2 text-ink">Platform not found</h1>
+        <p className="mt-3 text-sm text-ink-muted">That platform isn't tracked yet.</p>
+        {destination ? (
+          <Link
+            to={destination.to}
+            className="mt-6 inline-flex h-9 items-center gap-1.5 rounded-md bg-ink px-4 font-medium text-background hover:opacity-90"
+            onClick={() =>
+              trackEvent(
+                platformHubNotFoundEgressAnalyticsEvent(),
+                platformHubNotFoundEgressAnalyticsData(),
+              )
+            }
+          >
+            All platforms <ArrowRight className="h-4 w-4" />
+          </Link>
+        ) : null}
+      </div>
+    );
+  },
 });
 
 function PlatformPage() {
@@ -123,19 +131,25 @@ function PlatformPage() {
           {posture.trusted > 0 ? <> {posture.pct}% sit in the trusted tier.</> : null}
         </p>
         <div className="mt-6">
-          <Link
-            to="/browse"
-            search={{ platform }}
-            onClick={() =>
-              trackEvent(
-                platformHubBrowseAnalyticsEvent(),
-                platformHubBrowseAnalyticsData(platform, all.length),
-              )
-            }
-            className="inline-flex h-9 items-center gap-1.5 rounded-md bg-ink px-4 font-medium text-background hover:opacity-90"
-          >
-            Browse &amp; filter all {label} resources <ArrowRight className="h-4 w-4" />
-          </Link>
+          {(() => {
+            const destination = platformHubBrowseDestination(platform);
+            if (!destination) return null;
+            return (
+              <Link
+                to={destination.to}
+                search={destination.search}
+                onClick={() =>
+                  trackEvent(
+                    platformHubBrowseAnalyticsEvent(),
+                    platformHubBrowseAnalyticsData(platform, all.length),
+                  )
+                }
+                className="inline-flex h-9 items-center gap-1.5 rounded-md bg-ink px-4 font-medium text-background hover:opacity-90"
+              >
+                Browse &amp; filter all {label} resources <ArrowRight className="h-4 w-4" />
+              </Link>
+            );
+          })()}
         </div>
       </header>
 
@@ -157,25 +171,31 @@ function PlatformPage() {
             <h2 className="h-display-2 text-ink">
               {categoryLabels[section.category.id] ?? section.category.label}
             </h2>
-            <Link
-              to="/for/$platform/$category"
-              params={{ platform, category: section.category.id }}
-              onClick={() =>
-                trackEvent(
-                  platformHubSectionAnalyticsEvent(),
-                  platformHubSectionAnalyticsData(
-                    platform,
-                    section.category.id,
-                    section.entries.length,
-                    rowIndex,
-                    sections.length,
-                  ),
-                )
-              }
-              className="story-link text-sm font-medium text-ink"
-            >
-              All {categoryLabels[section.category.id] ?? section.category.label} for {label} →
-            </Link>
+            {(() => {
+              const destination = platformHubSectionDestination(platform, section.category.id);
+              if (!destination) return null;
+              return (
+                <Link
+                  to={destination.to}
+                  params={destination.params}
+                  onClick={() =>
+                    trackEvent(
+                      platformHubSectionAnalyticsEvent(),
+                      platformHubSectionAnalyticsData(
+                        platform,
+                        section.category.id,
+                        section.entries.length,
+                        rowIndex,
+                        sections.length,
+                      ),
+                    )
+                  }
+                  className="story-link text-sm font-medium text-ink"
+                >
+                  All {categoryLabels[section.category.id] ?? section.category.label} for {label} →
+                </Link>
+              );
+            })()}
           </div>
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {section.entries.map((e) => (

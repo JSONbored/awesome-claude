@@ -14,10 +14,13 @@ import { trackEvent } from "@/lib/analytics";
 import {
   platformCategoryCategoryAnalyticsData,
   platformCategoryCategoryAnalyticsEvent,
+  platformCategoryCategoryDestination,
   platformCategoryNotFoundEgressAnalyticsData,
   platformCategoryNotFoundEgressAnalyticsEvent,
+  platformCategoryNotFoundEgressDestination,
   platformCategoryPlatformAnalyticsData,
   platformCategoryPlatformAnalyticsEvent,
+  platformCategoryPlatformDestination,
 } from "@/lib/directory-hub-cta-events";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { breadcrumbListJsonLd } from "@/lib/breadcrumb-jsonld-lib";
@@ -89,26 +92,31 @@ export const Route = createFileRoute("/for/$platform/$category")({
     };
   },
   component: IntersectionPage,
-  notFoundComponent: () => (
-    <div className="mx-auto max-w-2xl px-6 py-24 text-center">
-      <h1 className="h-display-2 text-ink">Nothing here yet</h1>
-      <p className="mt-3 text-sm text-ink-muted">
-        No resources match that platform and category combination.
-      </p>
-      <Link
-        to="/for"
-        className="mt-6 inline-flex h-9 items-center gap-1.5 rounded-md bg-ink px-4 font-medium text-background hover:opacity-90"
-        onClick={() =>
-          trackEvent(
-            platformCategoryNotFoundEgressAnalyticsEvent(),
-            platformCategoryNotFoundEgressAnalyticsData(),
-          )
-        }
-      >
-        All platforms <ArrowRight className="h-4 w-4" />
-      </Link>
-    </div>
-  ),
+  notFoundComponent: () => {
+    const destination = platformCategoryNotFoundEgressDestination("platforms");
+    return (
+      <div className="mx-auto max-w-2xl px-6 py-24 text-center">
+        <h1 className="h-display-2 text-ink">Nothing here yet</h1>
+        <p className="mt-3 text-sm text-ink-muted">
+          No resources match that platform and category combination.
+        </p>
+        {destination ? (
+          <Link
+            to={destination.to}
+            className="mt-6 inline-flex h-9 items-center gap-1.5 rounded-md bg-ink px-4 font-medium text-background hover:opacity-90"
+            onClick={() =>
+              trackEvent(
+                platformCategoryNotFoundEgressAnalyticsEvent(),
+                platformCategoryNotFoundEgressAnalyticsData(),
+              )
+            }
+          >
+            All platforms <ArrowRight className="h-4 w-4" />
+          </Link>
+        ) : null}
+      </div>
+    );
+  },
 });
 
 function IntersectionPage() {
@@ -151,35 +159,47 @@ function IntersectionPage() {
           {newest ? <> Most recent addition: {newest.title}.</> : null}
         </p>
         <div className="mt-6 flex flex-wrap items-center gap-2 text-sm">
-          <Link
-            to="/for/$platform"
-            params={{ platform }}
-            onClick={() =>
-              trackEvent(
-                platformCategoryPlatformAnalyticsEvent(),
-                platformCategoryPlatformAnalyticsData(platform, category, entries.length),
-              )
-            }
-            className="story-link font-medium text-ink"
-          >
-            All {pLabel} resources →
-          </Link>
+          {(() => {
+            const destination = platformCategoryPlatformDestination(platform);
+            if (!destination) return null;
+            return (
+              <Link
+                to={destination.to}
+                params={destination.params}
+                onClick={() =>
+                  trackEvent(
+                    platformCategoryPlatformAnalyticsEvent(),
+                    platformCategoryPlatformAnalyticsData(platform, category, entries.length),
+                  )
+                }
+                className="story-link font-medium text-ink"
+              >
+                All {pLabel} resources →
+              </Link>
+            );
+          })()}
           <span aria-hidden className="text-ink-subtle">
             ·
           </span>
-          <Link
-            to="/$category"
-            params={{ category }}
-            onClick={() =>
-              trackEvent(
-                platformCategoryCategoryAnalyticsEvent(),
-                platformCategoryCategoryAnalyticsData(platform, category, entries.length),
-              )
-            }
-            className="story-link font-medium text-ink"
-          >
-            All Claude {cLabel} →
-          </Link>
+          {(() => {
+            const destination = platformCategoryCategoryDestination(category);
+            if (!destination) return null;
+            return (
+              <Link
+                to={destination.to}
+                params={destination.params}
+                onClick={() =>
+                  trackEvent(
+                    platformCategoryCategoryAnalyticsEvent(),
+                    platformCategoryCategoryAnalyticsData(platform, category, entries.length),
+                  )
+                }
+                className="story-link font-medium text-ink"
+              >
+                All Claude {cLabel} →
+              </Link>
+            );
+          })()}
         </div>
       </header>
 

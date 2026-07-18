@@ -7,6 +7,7 @@ import { trackEvent } from "@/lib/analytics";
 import {
   platformIndexSelectAnalyticsData,
   platformIndexSelectAnalyticsEvent,
+  platformIndexSelectDestination,
 } from "@/lib/directory-hub-cta-events";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl } from "@/lib/seo";
@@ -70,25 +71,34 @@ function PlatformsIndex() {
         description="Pick your editor or runtime to see every compatible Claude resource in the directory."
       />
       <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {PLATFORMS.map((p, rowIndex) => (
-          <Link
-            key={p}
-            to="/for/$platform"
-            params={{ platform: p }}
-            onClick={() =>
-              trackEvent(
-                platformIndexSelectAnalyticsEvent(),
-                platformIndexSelectAnalyticsData(p, counts.get(p) ?? 0, rowIndex, PLATFORMS.length),
-              )
-            }
-            className="group flex items-center justify-between rounded-xl border border-border bg-surface p-4 hover:bg-surface-2"
-          >
-            <span className="font-display text-base font-semibold text-ink">
-              {PLATFORM_LABEL[p]}
-            </span>
-            <span className="font-mono text-xs text-ink-subtle">{counts.get(p) ?? 0}</span>
-          </Link>
-        ))}
+        {PLATFORMS.map((p, rowIndex) => {
+          const destination = platformIndexSelectDestination(p);
+          if (!destination) return null;
+          return (
+            <Link
+              key={p}
+              to={destination.to}
+              params={destination.params}
+              onClick={() =>
+                trackEvent(
+                  platformIndexSelectAnalyticsEvent(),
+                  platformIndexSelectAnalyticsData(
+                    p,
+                    counts.get(p) ?? 0,
+                    rowIndex,
+                    PLATFORMS.length,
+                  ),
+                )
+              }
+              className="group flex items-center justify-between rounded-xl border border-border bg-surface p-4 hover:bg-surface-2"
+            >
+              <span className="font-display text-base font-semibold text-ink">
+                {PLATFORM_LABEL[p]}
+              </span>
+              <span className="font-mono text-xs text-ink-subtle">{counts.get(p) ?? 0}</span>
+            </Link>
+          );
+        })}
       </div>
     </PageContainer>
   );

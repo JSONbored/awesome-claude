@@ -8,6 +8,7 @@ import { trackEvent } from "@/lib/analytics";
 import {
   bestIndexListAnalyticsData,
   bestIndexListAnalyticsEvent,
+  bestIndexListDestination,
 } from "@/lib/directory-hub-cta-events";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
@@ -69,47 +70,51 @@ function BestPage() {
               return ENTRIES.find((e) => e.category === cat && e.slug === slug)?.title;
             })
             .filter((t): t is string => !!t);
-          return (
-            <Link
-              key={b.slug}
-              to="/best/$slug"
-              params={{ slug: b.slug }}
-              onClick={() =>
-                trackEvent(
-                  bestIndexListAnalyticsEvent(),
-                  bestIndexListAnalyticsData(b.slug, b.picks.length, rowIndex, BEST_LISTS.length),
-                )
-              }
-              className="group flex min-w-0 flex-col gap-3 rounded-xl border border-border bg-surface p-6 transition-colors duration-200 ease-out hover:bg-surface-2"
-            >
-              <div className="eyebrow">
-                {b.picks.length} picks · {b.category}
-              </div>
-              <h2 className="font-display text-xl font-semibold text-ink">{b.title}</h2>
-              <p className="text-sm text-ink-muted">{b.subtitle}</p>
-              {previewTitles.length > 0 && (
-                <ul className="space-y-1 border-t border-border pt-3 text-xs text-ink-muted">
-                  {previewTitles.map((t, i) => (
-                    <li key={t} className="flex items-baseline gap-2">
-                      <span className="font-mono text-[10px] text-ink-subtle">
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
-                      <span className="truncate text-ink">{t}</span>
-                    </li>
-                  ))}
-                  {b.picks.length > 3 && (
-                    <li className="text-[11px] text-ink-subtle">+{b.picks.length - 3} more</li>
-                  )}
-                </ul>
-              )}
-              <div className="mt-auto flex items-center justify-between pt-2 text-xs text-ink-subtle">
-                <span>Curated by {b.curator}</span>
-                <span className="inline-flex items-center gap-1.5 text-ink-muted group-hover:text-ink">
-                  Read list <ArrowRight className="h-4 w-4" />
-                </span>
-              </div>
-            </Link>
-          );
+          return (() => {
+            const destination = bestIndexListDestination(b.slug);
+            if (!destination) return null;
+            return (
+              <Link
+                key={b.slug}
+                to={destination.to}
+                params={destination.params}
+                onClick={() =>
+                  trackEvent(
+                    bestIndexListAnalyticsEvent(),
+                    bestIndexListAnalyticsData(b.slug, b.picks.length, rowIndex, BEST_LISTS.length),
+                  )
+                }
+                className="group flex min-w-0 flex-col gap-3 rounded-xl border border-border bg-surface p-6 transition-colors duration-200 ease-out hover:bg-surface-2"
+              >
+                <div className="eyebrow">
+                  {b.picks.length} picks · {b.category}
+                </div>
+                <h2 className="font-display text-xl font-semibold text-ink">{b.title}</h2>
+                <p className="text-sm text-ink-muted">{b.subtitle}</p>
+                {previewTitles.length > 0 && (
+                  <ul className="space-y-1 border-t border-border pt-3 text-xs text-ink-muted">
+                    {previewTitles.map((t, i) => (
+                      <li key={t} className="flex items-baseline gap-2">
+                        <span className="font-mono text-[10px] text-ink-subtle">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <span className="truncate text-ink">{t}</span>
+                      </li>
+                    ))}
+                    {b.picks.length > 3 && (
+                      <li className="text-[11px] text-ink-subtle">+{b.picks.length - 3} more</li>
+                    )}
+                  </ul>
+                )}
+                <div className="mt-auto flex items-center justify-between pt-2 text-xs text-ink-subtle">
+                  <span>Curated by {b.curator}</span>
+                  <span className="inline-flex items-center gap-1.5 text-ink-muted group-hover:text-ink">
+                    Read list <ArrowRight className="h-4 w-4" />
+                  </span>
+                </div>
+              </Link>
+            );
+          })();
         })}
       </div>
 
