@@ -137,7 +137,9 @@ function StateOfAiAgentsPage() {
             search={
               stat.key === "source-backed"
                 ? { category: REPORT_CATEGORY, source: "source-backed" }
-                : { category: REPORT_CATEGORY }
+                : stat.key === "documented"
+                  ? { category: REPORT_CATEGORY, signal: "safety-notes" }
+                  : { category: REPORT_CATEGORY }
             }
             onNavigate={() => trackStat(stat.key)}
           />

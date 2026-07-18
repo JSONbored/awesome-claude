@@ -5,6 +5,7 @@ import {
   hostingKeyFromLabel,
   installMethodKeyFromLabel,
   notesSignalFromLabel,
+  disclosureSignalFromLabel,
   platformFromLabel,
   sourceStatusFromLabel,
   supplyChainSignalFromLabel,
@@ -12,6 +13,7 @@ import {
   transportKeyFromLabel,
   trustLevelFromLabel,
   withCategoryHubDrilldown,
+  withDisclosureDrilldown,
   withDocsCoverageDrilldown,
   withHostingDrilldown,
   withInstallMethodDrilldown,
@@ -47,6 +49,10 @@ describe("data report drilldown lib", () => {
     expect(notesSignalFromLabel("Safety notes")).toBe("safety-notes");
     expect(notesSignalFromLabel("Privacy notes")).toBe("privacy-notes");
     expect(notesSignalFromLabel("Both")).toBeUndefined();
+    expect(disclosureSignalFromLabel("Safety & privacy")).toBe("safety-notes");
+    expect(disclosureSignalFromLabel("Safety only")).toBe("safety-notes");
+    expect(disclosureSignalFromLabel("Privacy only")).toBe("privacy-notes");
+    expect(disclosureSignalFromLabel("Neither documented")).toBeUndefined();
   });
 
   it("attaches browse, tag, and category drilldowns with privacy-light keys", () => {
@@ -516,10 +522,29 @@ describe("data report drilldown lib", () => {
     expect(
       withReportDimensionDrilldown(
         "disclosure",
-        [{ label: "x", count: 1, pct: 100 }],
-        "skills",
+        [{ label: "Safety only", count: 1, pct: 100 }],
+        "agents",
       )[0]?.drilldown,
-    ).toEqual({ kind: "browse", search: { category: "skills" } });
+    ).toEqual({
+      kind: "browse",
+      search: { category: "agents", signal: "safety-notes" },
+    });
+    expect(
+      withReportDimensionDrilldown(
+        "disclosure",
+        [{ label: "Neither documented", count: 1, pct: 100 }],
+        "agents",
+      )[0]?.drilldown,
+    ).toEqual({ kind: "browse", search: { category: "agents" } });
+    expect(
+      withDisclosureDrilldown(
+        [{ label: "Privacy only", count: 2, pct: 20 }],
+        "agents",
+      )[0]?.drilldown,
+    ).toEqual({
+      kind: "browse",
+      search: { category: "agents", signal: "privacy-notes" },
+    });
     expect(
       withReportDimensionDrilldown(
         "packaging",

@@ -35,6 +35,12 @@ const NOTES_SIGNAL_BY_LABEL: Record<string, string> = {
   "Privacy notes": "privacy-notes",
 };
 
+const DISCLOSURE_SIGNAL_BY_LABEL: Record<string, string> = {
+  "Safety & privacy": "safety-notes",
+  "Safety only": "safety-notes",
+  "Privacy only": "privacy-notes",
+};
+
 const SUPPLY_SIGNAL_BY_LABEL: Record<string, string> = {
   "Verified package": "trusted-package",
   "Checksummed download": "checksums",
@@ -67,6 +73,10 @@ export function platformFromLabel(label: string): Platform | undefined {
 
 export function notesSignalFromLabel(label: string): string | undefined {
   return NOTES_SIGNAL_BY_LABEL[label];
+}
+
+export function disclosureSignalFromLabel(label: string): string | undefined {
+  return DISCLOSURE_SIGNAL_BY_LABEL[label];
 }
 
 export function supplyChainSignalFromLabel(label: string): string | undefined {
@@ -160,6 +170,25 @@ export function withNotesSignalDrilldown(rows: DistRow[], category?: string): Di
         ...(category ? { category } : {}),
         signal,
       }),
+    };
+  });
+}
+
+/** Map agent disclosure buckets to notes browse signals (with category fallback). */
+export function withDisclosureDrilldown(rows: DistRow[], category: string): DistRow[] {
+  return rows.map((row) => {
+    const signal = disclosureSignalFromLabel(row.label);
+    if (!signal) {
+      return {
+        ...row,
+        rowKey: row.rowKey ?? row.label,
+        drilldown: browseDrilldown({ category }),
+      };
+    }
+    return {
+      ...row,
+      rowKey: signal,
+      drilldown: browseDrilldown({ category, signal }),
     };
   });
 }
@@ -301,8 +330,9 @@ export function withReportDimensionDrilldown(
       return withInstallMethodDrilldown(rows, category);
     case "use-cases":
       return withTagDrilldown(rows);
-    case "prerequisites":
     case "disclosure":
+      return withDisclosureDrilldown(rows, category);
+    case "prerequisites":
     case "skill-type":
     case "maturity":
     case "verification":
