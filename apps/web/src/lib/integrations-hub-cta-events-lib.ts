@@ -126,3 +126,73 @@ export function integrationsDetailInstallCopyAnalyticsData(
     kind,
   };
 }
+
+export type IntegrationsIndexCardDestination = {
+  to: "/integrations/$slug";
+  params: { slug: string };
+};
+
+/** Map an integrations index card slug to a detail destination. */
+export function integrationsIndexCardDestination(
+  slug: string,
+): IntegrationsIndexCardDestination | null {
+  const id = slug.trim();
+  switch (id) {
+    case "":
+      return null;
+    default:
+      return { to: "/integrations/$slug", params: { slug: id } };
+  }
+}
+
+export type IntegrationsIndexChromeDestination = {
+  to: "/ecosystem" | "/api-docs";
+};
+
+/** Map an integrations index chrome CTA id to ecosystem or API docs. */
+export function integrationsIndexChromeDestination(
+  destination: string,
+): IntegrationsIndexChromeDestination | null {
+  switch (destination) {
+    case "ecosystem":
+      return { to: "/ecosystem" };
+    case "api-docs":
+      return { to: "/api-docs" };
+    default:
+      return null;
+  }
+}
+
+export type IntegrationsDetailIndexDestination = {
+  to: "/integrations";
+};
+
+/** Map an integrations detail index egress id to the integrations index. */
+export function integrationsDetailIndexDestination(
+  destination: string,
+): IntegrationsDetailIndexDestination | null {
+  switch (destination) {
+    case "integrations":
+      return { to: "/integrations" };
+    default:
+      return null;
+  }
+}
+
+export type IntegrationsDetailRelatedDestination = {
+  to: "/integrations/$slug";
+  params: { slug: string };
+};
+
+/** Map a related integration slug to a detail destination. */
+export function integrationsDetailRelatedDestination(
+  slug: string,
+): IntegrationsDetailRelatedDestination | null {
+  const id = slug.trim();
+  switch (id) {
+    case "":
+      return null;
+    default:
+      return { to: "/integrations/$slug", params: { slug: id } };
+  }
+}

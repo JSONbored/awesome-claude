@@ -12,6 +12,8 @@ import {
   contributorsIndexStatDestination,
   contributorsIndexSubmitAnalyticsData,
   contributorsIndexSubmitAnalyticsEvent,
+  contributorsIndexProfileDestination,
+  contributorsIndexSubmitDestination,
 } from "@/lib/contributors-index-cta-events-lib";
 
 describe("contributors index cta events lib", () => {
@@ -97,5 +99,17 @@ describe("contributors index cta events lib", () => {
       acceptedCount: 12,
       contributorCount: 24,
     });
+  });
+
+  it("maps contributors index profile and submit destinations", () => {
+    expect(contributorsIndexProfileDestination("alice")).toEqual({
+      to: "/contributors/$slug",
+      params: { slug: "alice" },
+    });
+    expect(contributorsIndexProfileDestination("")).toBeNull();
+    expect(contributorsIndexSubmitDestination("submit")).toEqual({
+      to: "/submit",
+    });
+    expect(contributorsIndexSubmitDestination("unknown")).toBeNull();
   });
 });

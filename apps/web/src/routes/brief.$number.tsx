@@ -7,6 +7,7 @@ import { trackEvent } from "@/lib/analytics";
 import {
   briefIssueHubAnalyticsData,
   briefIssueHubAnalyticsEvent,
+  briefIssueHubDestination,
 } from "@/lib/brief-entry-cta-events";
 import { parseBriefNumber } from "@/lib/brief-number-parse-lib";
 import { absoluteUrl } from "@/lib/seo";
@@ -66,15 +67,24 @@ function BriefIssueNotFound() {
   return (
     <div className="mx-auto max-w-2xl px-6 py-24 text-center">
       <h1 className="h-display-2 text-ink">Issue not found</h1>
-      <Link
-        to="/brief"
-        onClick={() =>
-          trackEvent(briefIssueHubAnalyticsEvent(), briefIssueHubAnalyticsData(null, "not-found"))
-        }
-        className="mt-4 inline-block text-ink-muted hover:text-ink"
-      >
-        ← All Weekly Brief issues
-      </Link>
+      {(() => {
+        const destination = briefIssueHubDestination("brief");
+        if (!destination) return null;
+        return (
+          <Link
+            to={destination.to}
+            onClick={() =>
+              trackEvent(
+                briefIssueHubAnalyticsEvent(),
+                briefIssueHubAnalyticsData(null, "not-found"),
+              )
+            }
+            className="mt-4 inline-block text-ink-muted hover:text-ink"
+          >
+            ← All Weekly Brief issues
+          </Link>
+        );
+      })()}
     </div>
   );
 }
@@ -88,7 +98,7 @@ function BriefIssuePage() {
         items={[
           {
             label: "Weekly Brief",
-            to: "/brief",
+            to: briefIssueHubDestination("brief")?.to,
             onClick: () =>
               trackEvent(
                 briefIssueHubAnalyticsEvent(),

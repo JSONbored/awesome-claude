@@ -16,6 +16,7 @@ import {
   briefHubStaticIssueAnalyticsEvent,
   briefIssueHubAnalyticsData,
   briefIssueHubAnalyticsEvent,
+  briefHubIssueDestination,
   type BriefHubSectionId,
 } from "@/lib/brief-entry-cta-events";
 import { absoluteUrl } from "@/lib/seo";
@@ -79,62 +80,69 @@ function BriefPage() {
             Reviewed picks, what shipped, and what to watch. Sundays. No hype, no listicle filler.
           </p>
 
-          {latest && (
-            <Link
-              to="/brief/$number"
-              params={{ number: String(latest.number) }}
-              onClick={() =>
-                trackEvent(
-                  briefHubLatestIssueAnalyticsEvent(),
-                  briefHubLatestIssueAnalyticsData(
-                    latest.number,
-                    WEEKLY_BRIEF.newEntries.length +
-                      WEEKLY_BRIEF.trustedInstalls.length +
-                      WEEKLY_BRIEF.sourceBackedPicks.length,
-                  ),
-                )
-              }
-              className="mt-10 block overflow-hidden rounded-2xl border border-accent/30 bg-gradient-to-br from-surface to-accent/[0.06] surface-raised transition-[border-color,background-color] duration-200 ease-out hover:border-accent/50 hover:bg-accent/[0.08]"
-            >
-              <article>
-                <div className="grid gap-0 sm:grid-cols-[120px_minmax(0,1fr)]">
-                  <div className="flex flex-col items-center justify-center border-b border-accent/20 bg-accent/[0.04] p-5 sm:border-b-0 sm:border-r">
-                    <div className="eyebrow text-ink-subtle">Issue</div>
-                    <div className="font-display text-5xl font-semibold leading-none tracking-tight text-ink">
-                      {String(latest.number).padStart(2, "0")}
+          {latest &&
+            (() => {
+              const destination = briefHubIssueDestination(latest.number);
+              if (!destination) return null;
+              return (
+                <Link
+                  to={destination.to}
+                  params={destination.params}
+                  onClick={() =>
+                    trackEvent(
+                      briefHubLatestIssueAnalyticsEvent(),
+                      briefHubLatestIssueAnalyticsData(
+                        latest.number,
+                        WEEKLY_BRIEF.newEntries.length +
+                          WEEKLY_BRIEF.trustedInstalls.length +
+                          WEEKLY_BRIEF.sourceBackedPicks.length,
+                      ),
+                    )
+                  }
+                  className="mt-10 block overflow-hidden rounded-2xl border border-accent/30 bg-gradient-to-br from-surface to-accent/[0.06] surface-raised transition-[border-color,background-color] duration-200 ease-out hover:border-accent/50 hover:bg-accent/[0.08]"
+                >
+                  <article>
+                    <div className="grid gap-0 sm:grid-cols-[120px_minmax(0,1fr)]">
+                      <div className="flex flex-col items-center justify-center border-b border-accent/20 bg-accent/[0.04] p-5 sm:border-b-0 sm:border-r">
+                        <div className="eyebrow text-ink-subtle">Issue</div>
+                        <div className="font-display text-5xl font-semibold leading-none tracking-tight text-ink">
+                          {String(latest.number).padStart(2, "0")}
+                        </div>
+                        <div className="mt-2 font-mono text-[11px] text-ink-subtle">
+                          {latest.date}
+                        </div>
+                      </div>
+                      <div className="p-6">
+                        <div className="eyebrow text-accent-ink dark:text-accent">Latest issue</div>
+                        <h2 className="mt-1 h-display-2 text-ink text-balance">{latest.title}</h2>
+                        <p className="mt-2 text-pretty text-sm text-ink-muted">{latest.summary}</p>
+                        <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                          <BriefMetric label="New entries" value={WEEKLY_BRIEF.newEntries.length} />
+                          <BriefMetric
+                            label="Trusted installs"
+                            value={WEEKLY_BRIEF.trustedInstalls.length}
+                          />
+                          <BriefMetric
+                            label="Source-backed picks"
+                            value={WEEKLY_BRIEF.sourceBackedPicks.length}
+                          />
+                        </div>
+                        <div className="mt-4 flex flex-wrap gap-1.5">
+                          {latest.tags.map((t) => (
+                            <span
+                              key={t}
+                              className="inline-flex rounded-md border border-border bg-background px-2 py-0.5 text-[11px] text-ink-muted"
+                            >
+                              #{t}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
                     </div>
-                    <div className="mt-2 font-mono text-[11px] text-ink-subtle">{latest.date}</div>
-                  </div>
-                  <div className="p-6">
-                    <div className="eyebrow text-accent-ink dark:text-accent">Latest issue</div>
-                    <h2 className="mt-1 h-display-2 text-ink text-balance">{latest.title}</h2>
-                    <p className="mt-2 text-pretty text-sm text-ink-muted">{latest.summary}</p>
-                    <div className="mt-5 grid gap-3 sm:grid-cols-3">
-                      <BriefMetric label="New entries" value={WEEKLY_BRIEF.newEntries.length} />
-                      <BriefMetric
-                        label="Trusted installs"
-                        value={WEEKLY_BRIEF.trustedInstalls.length}
-                      />
-                      <BriefMetric
-                        label="Source-backed picks"
-                        value={WEEKLY_BRIEF.sourceBackedPicks.length}
-                      />
-                    </div>
-                    <div className="mt-4 flex flex-wrap gap-1.5">
-                      {latest.tags.map((t) => (
-                        <span
-                          key={t}
-                          className="inline-flex rounded-md border border-border bg-background px-2 py-0.5 text-[11px] text-ink-muted"
-                        >
-                          #{t}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </article>
-            </Link>
-          )}
+                  </article>
+                </Link>
+              );
+            })()}
 
           <div className="mt-8 grid gap-5 md:grid-cols-3">
             <BriefList
@@ -162,78 +170,88 @@ function BriefPage() {
           </div>
           {published.length > 0 ? (
             <ol className="mt-4 space-y-3 stagger-children">
-              {published.map((issue: PublishedBriefSummary, rowIndex: number) => (
-                <li
-                  key={issue.number}
-                  className="group hover-lift rounded-xl border border-border bg-surface p-5 transition-[border-color,background-color] duration-200 ease-out hover:border-ink/20 hover:bg-surface-2"
-                >
-                  <Link
-                    to="/brief/$number"
-                    params={{ number: String(issue.number) }}
-                    onClick={() =>
-                      trackEvent(
-                        briefHubIssueAnalyticsEvent(),
-                        briefHubIssueAnalyticsData(issue.number, rowIndex, published.length),
-                      )
-                    }
-                    className="block"
+              {published.map((issue: PublishedBriefSummary, rowIndex: number) => {
+                const destination = briefHubIssueDestination(issue.number);
+                if (!destination) return null;
+                return (
+                  <li
+                    key={issue.number}
+                    className="group hover-lift rounded-xl border border-border bg-surface p-5 transition-[border-color,background-color] duration-200 ease-out hover:border-ink/20 hover:bg-surface-2"
                   >
-                    <div className="flex items-center justify-between text-xs text-ink-subtle">
-                      <span className="font-mono">
-                        Issue #{String(issue.number).padStart(2, "0")}
-                      </span>
-                      <span>{issue.periodThrough}</span>
-                    </div>
-                    <h3 className="mt-2 font-display text-lg font-semibold text-ink transition-colors duration-200 ease-out group-hover:text-ink-hover">
-                      {issue.title}
-                    </h3>
-                  </Link>
-                </li>
-              ))}
+                    <Link
+                      to={destination.to}
+                      params={destination.params}
+                      onClick={() =>
+                        trackEvent(
+                          briefHubIssueAnalyticsEvent(),
+                          briefHubIssueAnalyticsData(issue.number, rowIndex, published.length),
+                        )
+                      }
+                      className="block"
+                    >
+                      <div className="flex items-center justify-between text-xs text-ink-subtle">
+                        <span className="font-mono">
+                          Issue #{String(issue.number).padStart(2, "0")}
+                        </span>
+                        <span>{issue.periodThrough}</span>
+                      </div>
+                      <h3 className="mt-2 font-display text-lg font-semibold text-ink transition-colors duration-200 ease-out group-hover:text-ink-hover">
+                        {issue.title}
+                      </h3>
+                    </Link>
+                  </li>
+                );
+              })}
             </ol>
           ) : (
             <ol className="mt-4 space-y-3 stagger-children">
-              {BRIEF_ISSUES.slice(1).map((b, rowIndex) => (
-                <li
-                  key={b.slug}
-                  className="group hover-lift rounded-xl border border-border bg-surface p-5 transition-[border-color,background-color] duration-200 ease-out hover:border-ink/20 hover:bg-surface-2"
-                >
-                  <Link
-                    to="/brief/$number"
-                    params={{ number: String(b.number) }}
-                    onClick={() =>
-                      trackEvent(
-                        briefHubStaticIssueAnalyticsEvent(),
-                        briefHubStaticIssueAnalyticsData(
-                          b.number,
-                          rowIndex,
-                          BRIEF_ISSUES.length - 1,
-                        ),
-                      )
-                    }
-                    className="block"
+              {BRIEF_ISSUES.slice(1).map((b, rowIndex) => {
+                const destination = briefHubIssueDestination(b.number);
+                if (!destination) return null;
+                return (
+                  <li
+                    key={b.slug}
+                    className="group hover-lift rounded-xl border border-border bg-surface p-5 transition-[border-color,background-color] duration-200 ease-out hover:border-ink/20 hover:bg-surface-2"
                   >
-                    <div className="flex items-center justify-between text-xs text-ink-subtle">
-                      <span className="font-mono">Issue #{String(b.number).padStart(2, "0")}</span>
-                      <span>{b.date}</span>
-                    </div>
-                    <h3 className="mt-2 font-display text-lg font-semibold text-ink transition-colors duration-200 ease-out group-hover:text-ink-hover">
-                      {b.title}
-                    </h3>
-                    <p className="mt-1 text-pretty text-sm text-ink-muted">{b.summary}</p>
-                    <div className="mt-3 flex flex-wrap gap-1.5">
-                      {b.tags.map((t) => (
-                        <span
-                          key={t}
-                          className="inline-flex rounded-md border border-border bg-background px-2 py-0.5 text-[11px] text-ink-muted"
-                        >
-                          #{t}
+                    <Link
+                      to={destination.to}
+                      params={destination.params}
+                      onClick={() =>
+                        trackEvent(
+                          briefHubStaticIssueAnalyticsEvent(),
+                          briefHubStaticIssueAnalyticsData(
+                            b.number,
+                            rowIndex,
+                            BRIEF_ISSUES.length - 1,
+                          ),
+                        )
+                      }
+                      className="block"
+                    >
+                      <div className="flex items-center justify-between text-xs text-ink-subtle">
+                        <span className="font-mono">
+                          Issue #{String(b.number).padStart(2, "0")}
                         </span>
-                      ))}
-                    </div>
-                  </Link>
-                </li>
-              ))}
+                        <span>{b.date}</span>
+                      </div>
+                      <h3 className="mt-2 font-display text-lg font-semibold text-ink transition-colors duration-200 ease-out group-hover:text-ink-hover">
+                        {b.title}
+                      </h3>
+                      <p className="mt-1 text-pretty text-sm text-ink-muted">{b.summary}</p>
+                      <div className="mt-3 flex flex-wrap gap-1.5">
+                        {b.tags.map((t) => (
+                          <span
+                            key={t}
+                            className="inline-flex rounded-md border border-border bg-background px-2 py-0.5 text-[11px] text-ink-muted"
+                          >
+                            #{t}
+                          </span>
+                        ))}
+                      </div>
+                    </Link>
+                  </li>
+                );
+              })}
             </ol>
           )}
         </div>

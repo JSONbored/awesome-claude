@@ -227,3 +227,47 @@ export function jobsIndexStatFilterPatch(statId: string): JobsIndexStatFilterPat
       return null;
   }
 }
+
+export type JobsIndexPostDestination = {
+  to: "/jobs/post";
+};
+
+/** Map a jobs index post CTA id to the job post route. */
+export function jobsIndexPostDestination(destination: string): JobsIndexPostDestination | null {
+  switch (destination) {
+    case "post":
+      return { to: "/jobs/post" };
+    default:
+      return null;
+  }
+}
+
+export type JobsDetailIndexDestination = {
+  to: "/jobs";
+};
+
+/** Map a jobs detail index egress id to the jobs index. */
+export function jobsDetailIndexDestination(destination: string): JobsDetailIndexDestination | null {
+  switch (destination) {
+    case "jobs":
+      return { to: "/jobs" };
+    default:
+      return null;
+  }
+}
+
+export type JobsDetailRelatedDestination = {
+  to: "/jobs/$slug";
+  params: { slug: string };
+};
+
+/** Map a related job slug to a jobs detail destination. */
+export function jobsDetailRelatedDestination(slug: string): JobsDetailRelatedDestination | null {
+  const id = slug.trim();
+  switch (id) {
+    case "":
+      return null;
+    default:
+      return { to: "/jobs/$slug", params: { slug: id } };
+  }
+}

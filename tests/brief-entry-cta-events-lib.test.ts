@@ -14,6 +14,8 @@ import {
   briefIssueHubAnalyticsData,
   briefIssueHubAnalyticsEvent,
   parseBriefEntryRef,
+  briefHubIssueDestination,
+  briefIssueHubDestination,
 } from "@/lib/brief-entry-cta-events-lib";
 
 describe("brief entry cta events lib", () => {
@@ -88,5 +90,15 @@ describe("brief entry cta events lib", () => {
       rowIndex: 2,
       issueCount: 5,
     });
+  });
+
+  it("maps brief hub and issue destinations", () => {
+    expect(briefHubIssueDestination(12)).toEqual({
+      to: "/brief/$number",
+      params: { number: "12" },
+    });
+    expect(briefHubIssueDestination("")).toBeNull();
+    expect(briefIssueHubDestination("brief")).toEqual({ to: "/brief" });
+    expect(briefIssueHubDestination("unknown")).toBeNull();
   });
 });

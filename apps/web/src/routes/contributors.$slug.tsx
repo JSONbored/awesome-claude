@@ -41,6 +41,7 @@ import {
 import {
   contributorProfileEntryAnalyticsData,
   contributorProfileEntryAnalyticsEvent,
+  insightsPageEntryDestination,
 } from "@/lib/insights-page-entry-cta-events";
 import {
   contributorProfileCategoryAnalyticsData,
@@ -60,6 +61,10 @@ import {
   contributorProfileStatAnalyticsData,
   contributorProfileStatAnalyticsEvent,
   contributorProfileStatDestination,
+  contributorProfileIndexDestination,
+  contributorProfileCategoryDestination,
+  contributorProfileSubmitDestination,
+  contributorProfilePeerDestination,
   type ContributorProfileStatId,
   type ContributorProfileTraceDestination,
 } from "@/lib/contributor-profile-cta-events";
@@ -130,18 +135,24 @@ function ContributorPage() {
   return (
     <div className="mx-auto max-w-[1100px] px-4 py-12 sm:px-6">
       <nav className="text-xs text-ink-muted">
-        <Link
-          to="/contributors"
-          onClick={() =>
-            trackEvent(
-              contributorProfileIndexAnalyticsEvent(),
-              contributorProfileIndexAnalyticsData(contributor.slug, acceptedEntries.length),
-            )
-          }
-          className="hover:text-ink"
-        >
-          Contributors
-        </Link>
+        {(() => {
+          const destination = contributorProfileIndexDestination("contributors");
+          if (!destination) return <span className="hover:text-ink">Contributors</span>;
+          return (
+            <Link
+              to={destination.to}
+              onClick={() =>
+                trackEvent(
+                  contributorProfileIndexAnalyticsEvent(),
+                  contributorProfileIndexAnalyticsData(contributor.slug, acceptedEntries.length),
+                )
+              }
+              className="hover:text-ink"
+            >
+              Contributors
+            </Link>
+          );
+        })()}
         <span className="mx-1.5">/</span>
         <span className="text-ink">{contributor.handle}</span>
       </nav>
@@ -215,27 +226,31 @@ function ContributorPage() {
             Category Credits
           </h2>
           <div className="mt-4 flex flex-wrap gap-2">
-            {categorySummaries.map((item) => (
-              <Link
-                key={item.category}
-                to="/$category"
-                params={{ category: item.category }}
-                onClick={() =>
-                  trackEvent(
-                    contributorProfileCategoryAnalyticsEvent(),
-                    contributorProfileCategoryAnalyticsData(
-                      contributor.slug,
-                      item.category,
-                      item.count,
-                    ),
-                  )
-                }
-                className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-3 py-1.5 text-sm text-ink-muted hover:border-border-strong hover:text-ink"
-              >
-                <CategoryPill>{item.category}</CategoryPill>
-                <span>{item.count}</span>
-              </Link>
-            ))}
+            {categorySummaries.map((item) => {
+              const destination = contributorProfileCategoryDestination(item.category);
+              if (!destination) return null;
+              return (
+                <Link
+                  key={item.category}
+                  to={destination.to}
+                  params={destination.params}
+                  onClick={() =>
+                    trackEvent(
+                      contributorProfileCategoryAnalyticsEvent(),
+                      contributorProfileCategoryAnalyticsData(
+                        contributor.slug,
+                        item.category,
+                        item.count,
+                      ),
+                    )
+                  }
+                  className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-3 py-1.5 text-sm text-ink-muted hover:border-border-strong hover:text-ink"
+                >
+                  <CategoryPill>{item.category}</CategoryPill>
+                  <span>{item.count}</span>
+                </Link>
+              );
+            })}
           </div>
         </section>
       )}
@@ -259,44 +274,54 @@ function ContributorPage() {
 
       <div className="mt-12 rounded-xl border border-border bg-surface p-6 text-sm text-ink-muted">
         Want to contribute?{" "}
-        <Link
-          to="/submit"
-          onClick={() =>
-            trackEvent(
-              contributorProfileSubmitAnalyticsEvent(),
-              contributorProfileSubmitAnalyticsData(contributor.slug, acceptedEntries.length),
-            )
-          }
-          className="text-ink underline"
-        >
-          Submit a resource
-        </Link>{" "}
+        {(() => {
+          const destination = contributorProfileSubmitDestination("submit");
+          if (!destination) return <span className="text-ink underline">Submit a resource</span>;
+          return (
+            <Link
+              to={destination.to}
+              onClick={() =>
+                trackEvent(
+                  contributorProfileSubmitAnalyticsEvent(),
+                  contributorProfileSubmitAnalyticsData(contributor.slug, acceptedEntries.length),
+                )
+              }
+              className="text-ink underline"
+            >
+              Submit a resource
+            </Link>
+          );
+        })()}{" "}
         — every accepted entry credits its author and submitter.
       </div>
 
       <div className="mt-6 flex flex-wrap gap-2 text-xs text-ink-subtle">
         Other contributors:{" "}
-        {peers.map((c, rowIndex) => (
-          <Link
-            key={c.slug}
-            to="/contributors/$slug"
-            params={{ slug: c.slug }}
-            onClick={() =>
-              trackEvent(
-                contributorProfilePeerAnalyticsEvent(),
-                contributorProfilePeerAnalyticsData(
-                  contributor.slug,
-                  c.slug,
-                  rowIndex,
-                  peers.length,
-                ),
-              )
-            }
-            className="text-ink-muted hover:text-ink"
-          >
-            {c.handle}
-          </Link>
-        ))}
+        {peers.map((c, rowIndex) => {
+          const destination = contributorProfilePeerDestination(c.slug);
+          if (!destination) return null;
+          return (
+            <Link
+              key={c.slug}
+              to={destination.to}
+              params={destination.params}
+              onClick={() =>
+                trackEvent(
+                  contributorProfilePeerAnalyticsEvent(),
+                  contributorProfilePeerAnalyticsData(
+                    contributor.slug,
+                    c.slug,
+                    rowIndex,
+                    peers.length,
+                  ),
+                )
+              }
+              className="text-ink-muted hover:text-ink"
+            >
+              {c.handle}
+            </Link>
+          );
+        })}
       </div>
     </div>
   );
@@ -455,29 +480,44 @@ function ContributionRow({
       </div>
 
       <div className="mt-3">
-        <Link
-          to="/entry/$category/$slug"
-          params={{ category: entry.category, slug: entry.slug }}
-          onClick={() =>
-            trackEvent(
-              contributorProfileEntryAnalyticsEvent(),
-              contributorProfileEntryAnalyticsData(
-                entry.category,
-                entry.slug,
-                contributor.slug,
-                role,
-                rowIndex,
-                rowCount,
-              ),
-            )
+        {(() => {
+          const destination = insightsPageEntryDestination(entry.category, entry.slug);
+          if (!destination) {
+            return (
+              <div className="inline-flex max-w-full flex-wrap items-baseline gap-x-2">
+                <h3 className="font-display text-[15px] font-semibold tracking-tight text-ink">
+                  {entry.title}
+                </h3>
+                <span className="hidden text-xs text-ink-subtle sm:inline">by {entry.author}</span>
+              </div>
+            );
           }
-          className="inline-flex max-w-full flex-wrap items-baseline gap-x-2"
-        >
-          <h3 className="font-display text-[15px] font-semibold tracking-tight text-ink group-hover:underline">
-            {entry.title}
-          </h3>
-          <span className="hidden text-xs text-ink-subtle sm:inline">by {entry.author}</span>
-        </Link>
+          return (
+            <Link
+              to={destination.to}
+              params={destination.params}
+              onClick={() =>
+                trackEvent(
+                  contributorProfileEntryAnalyticsEvent(),
+                  contributorProfileEntryAnalyticsData(
+                    entry.category,
+                    entry.slug,
+                    contributor.slug,
+                    role,
+                    rowIndex,
+                    rowCount,
+                  ),
+                )
+              }
+              className="inline-flex max-w-full flex-wrap items-baseline gap-x-2"
+            >
+              <h3 className="font-display text-[15px] font-semibold tracking-tight text-ink group-hover:underline">
+                {entry.title}
+              </h3>
+              <span className="hidden text-xs text-ink-subtle sm:inline">by {entry.author}</span>
+            </Link>
+          );
+        })()}
         <p className="mt-1 line-clamp-2 max-w-3xl text-sm text-ink-muted">{entry.description}</p>
       </div>
 
@@ -487,25 +527,31 @@ function ContributionRow({
             <UserRound className="h-3 w-3" aria-hidden />
             submitted by{" "}
             {submitter.kind === "contributor" ? (
-              <Link
-                to="/contributors/$slug"
-                params={{ slug: submitter.slug }}
-                onClick={() =>
-                  trackEvent(
-                    contributorProfileSubmitterAnalyticsEvent(),
-                    contributorProfileSubmitterAnalyticsData(
-                      contributor.slug,
-                      submitter.slug,
-                      role,
-                      rowIndex,
-                      rowCount,
-                    ),
-                  )
-                }
-                className="text-ink-muted hover:text-ink"
-              >
-                {submitter.label}
-              </Link>
+              (() => {
+                const destination = contributorProfilePeerDestination(submitter.slug);
+                if (!destination) return <span className="text-ink-muted">{submitter.label}</span>;
+                return (
+                  <Link
+                    to={destination.to}
+                    params={destination.params}
+                    onClick={() =>
+                      trackEvent(
+                        contributorProfileSubmitterAnalyticsEvent(),
+                        contributorProfileSubmitterAnalyticsData(
+                          contributor.slug,
+                          submitter.slug,
+                          role,
+                          rowIndex,
+                          rowCount,
+                        ),
+                      )
+                    }
+                    className="text-ink-muted hover:text-ink"
+                  >
+                    {submitter.label}
+                  </Link>
+                );
+              })()
             ) : submitter.kind === "external" ? (
               <a
                 href={submitter.href}

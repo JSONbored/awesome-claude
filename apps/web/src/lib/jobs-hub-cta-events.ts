@@ -36,4 +36,7 @@ export {
   type JobsIndexSortMode,
   type JobsIndexStatFilterPatch,
   type JobsIndexStatId,
+  jobsIndexPostDestination,
+  jobsDetailIndexDestination,
+  jobsDetailRelatedDestination,
 } from "@/lib/jobs-hub-cta-events-lib";

@@ -11,6 +11,8 @@ import {
   integrationsIndexCardAnalyticsEvent,
   integrationsIndexEcosystemAnalyticsData,
   integrationsIndexEcosystemAnalyticsEvent,
+  integrationsIndexCardDestination,
+  integrationsIndexChromeDestination,
 } from "@/lib/integrations-hub-cta-events";
 import { breadcrumbScript, itemListScript } from "@/lib/seo-jsonld";
 import { absoluteUrl } from "@/lib/seo";
@@ -71,18 +73,24 @@ function IntegrationsPage() {
           <>
             The registry ships as an extension, a server, an API, and a set of public feeds — so
             Claude, Cursor, Windsurf, Codex, and Raycast can all read from the same source of truth.{" "}
-            <Link
-              to="/ecosystem"
-              onClick={() =>
-                trackEvent(
-                  integrationsIndexEcosystemAnalyticsEvent(),
-                  integrationsIndexEcosystemAnalyticsData(INTEGRATIONS.length),
-                )
-              }
-              className="text-ink underline"
-            >
-              See the ecosystem map
-            </Link>
+            {(() => {
+              const destination = integrationsIndexChromeDestination("ecosystem");
+              if (!destination) return <>See the ecosystem map</>;
+              return (
+                <Link
+                  to={destination.to}
+                  onClick={() =>
+                    trackEvent(
+                      integrationsIndexEcosystemAnalyticsEvent(),
+                      integrationsIndexEcosystemAnalyticsData(INTEGRATIONS.length),
+                    )
+                  }
+                  className="text-ink underline"
+                >
+                  See the ecosystem map
+                </Link>
+              );
+            })()}
             .
           </>
         }
@@ -92,6 +100,7 @@ function IntegrationsPage() {
           <IntegrationCard
             key={i.slug}
             integration={i}
+            linkDestination={integrationsIndexCardDestination(i.slug)}
             onNavigate={() =>
               trackEvent(
                 integrationsIndexCardAnalyticsEvent(),
@@ -118,18 +127,24 @@ function IntegrationsPage() {
             manifest and register your downstream consumer in the ecosystem feed.
           </p>
         </div>
-        <Link
-          to="/api-docs"
-          onClick={() =>
-            trackEvent(
-              integrationsIndexApiDocsAnalyticsEvent(),
-              integrationsIndexApiDocsAnalyticsData(INTEGRATIONS.length),
-            )
-          }
-          className="inline-flex h-10 items-center rounded-md bg-ink px-4 text-sm font-medium text-background hover:bg-ink/90"
-        >
-          Open the API docs
-        </Link>
+        {(() => {
+          const destination = integrationsIndexChromeDestination("api-docs");
+          if (!destination) return null;
+          return (
+            <Link
+              to={destination.to}
+              onClick={() =>
+                trackEvent(
+                  integrationsIndexApiDocsAnalyticsEvent(),
+                  integrationsIndexApiDocsAnalyticsData(INTEGRATIONS.length),
+                )
+              }
+              className="inline-flex h-10 items-center rounded-md bg-ink px-4 text-sm font-medium text-background hover:bg-ink/90"
+            >
+              Open the API docs
+            </Link>
+          );
+        })()}
       </div>
     </PageContainer>
   );

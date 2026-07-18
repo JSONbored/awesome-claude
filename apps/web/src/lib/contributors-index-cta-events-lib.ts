@@ -120,3 +120,37 @@ export function contributorsIndexFeaturedProfileAnalyticsData(
     contributorCount,
   };
 }
+
+export type ContributorsIndexProfileDestination = {
+  to: "/contributors/$slug";
+  params: { slug: string };
+};
+
+/** Map a contributors index profile slug to a profile destination. */
+export function contributorsIndexProfileDestination(
+  slug: string,
+): ContributorsIndexProfileDestination | null {
+  const id = slug.trim();
+  switch (id) {
+    case "":
+      return null;
+    default:
+      return { to: "/contributors/$slug", params: { slug: id } };
+  }
+}
+
+export type ContributorsIndexSubmitDestination = {
+  to: "/submit";
+};
+
+/** Map a contributors index submit CTA id to the submission route. */
+export function contributorsIndexSubmitDestination(
+  destination: string,
+): ContributorsIndexSubmitDestination | null {
+  switch (destination) {
+    case "submit":
+      return { to: "/submit" };
+    default:
+      return null;
+  }
+}

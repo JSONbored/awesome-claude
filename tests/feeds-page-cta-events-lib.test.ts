@@ -11,6 +11,7 @@ import {
   feedsPageEmailFollowAnalyticsEvent,
   feedsPageFeedOpenAnalyticsData,
   feedsPageFeedOpenAnalyticsEvent,
+  feedsPageApiDocsDestination,
 } from "@/lib/feeds-page-cta-events-lib";
 
 describe("feeds page cta events lib", () => {
@@ -58,5 +59,12 @@ describe("feeds page cta events lib", () => {
       feedKey: "mcp",
       feedKind: "category",
     });
+  });
+
+  it("maps feeds page api docs destinations", () => {
+    expect(feedsPageApiDocsDestination("api-docs")).toEqual({
+      to: "/api-docs",
+    });
+    expect(feedsPageApiDocsDestination("unknown")).toBeNull();
   });
 });

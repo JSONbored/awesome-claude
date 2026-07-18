@@ -5,6 +5,7 @@ import {
   validatorsCoverageMetricAnalyticsData,
   validatorsCoverageMetricAnalyticsEvent,
   validatorsCoverageMetricBrowseSearch,
+  validatorsCoverageMetricDestination,
 } from "@/lib/validators-coverage-cta-events-lib";
 
 describe("validators coverage cta events lib", () => {
@@ -98,5 +99,13 @@ describe("validators coverage cta events lib", () => {
       signal: "privacy-notes",
     });
     expect(validatorsCoverageMetricBrowseSearch("MCP", "unknown")).toBeNull();
+  });
+
+  it("maps validators coverage metric destinations", () => {
+    expect(validatorsCoverageMetricDestination("MCP", "reviewed")).toEqual({
+      to: "/browse",
+      search: { category: "mcp", signal: "reviewed" },
+    });
+    expect(validatorsCoverageMetricDestination("MCP", "unknown")).toBeNull();
   });
 });

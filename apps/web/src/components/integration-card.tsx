@@ -23,24 +23,29 @@ const SURFACE_ICON = {
   api: Terminal,
 } as const;
 
+type IntegrationCardLinkDestination = {
+  to: "/integrations/$slug";
+  params: { slug: string };
+};
+
 export function IntegrationCard({
   integration,
   compact,
   onNavigate,
+  linkDestination,
 }: {
   integration: Integration;
   compact?: boolean;
   onNavigate?: () => void;
+  linkDestination?: IntegrationCardLinkDestination | null;
 }) {
   const surface = integration.surface;
   const SurfaceIcon = surface ? SURFACE_ICON[surface.kind] : null;
-  return (
-    <Link
-      to="/integrations/$slug"
-      params={{ slug: integration.slug }}
-      onClick={onNavigate}
-      className="group relative flex min-w-0 flex-col gap-4 rounded-xl border border-border bg-surface p-5 transition-colors duration-200 ease-out hover:bg-surface-2"
-    >
+  const cardClassName =
+    "group relative flex min-w-0 flex-col gap-4 rounded-xl border border-border bg-surface p-5 transition-colors duration-200 ease-out hover:bg-surface-2";
+
+  const inner = (
+    <>
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
           <IntegrationMarkTile name={integration.mark} size={compact ? 44 : 56} />
@@ -125,6 +130,26 @@ export function IntegrationCard({
           Details <ArrowUpRight className="h-3 w-3" />
         </span>
       </div>
+    </>
+  );
+
+  if (linkDestination === null) {
+    return <div className={cardClassName}>{inner}</div>;
+  }
+
+  const destination = linkDestination ?? {
+    to: "/integrations/$slug" as const,
+    params: { slug: integration.slug },
+  };
+
+  return (
+    <Link
+      to={destination.to}
+      params={destination.params}
+      onClick={onNavigate}
+      className={cardClassName}
+    >
+      {inner}
     </Link>
   );
 }

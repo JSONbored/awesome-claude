@@ -7,6 +7,7 @@ import {
   apiDocsIntegrityNavAnalyticsEvent,
   apiDocsSpecAnalyticsData,
   apiDocsSpecAnalyticsEvent,
+  apiDocsPageHashDestination,
 } from "@/lib/api-docs-page-cta-events-lib";
 
 describe("api docs page cta events lib", () => {
@@ -36,5 +37,13 @@ describe("api docs page cta events lib", () => {
       surface: API_DOCS_PAGE_SURFACE,
       endpointId: "registry-manifest",
     });
+  });
+
+  it("maps api docs page hash destinations", () => {
+    expect(apiDocsPageHashDestination("get-entries")).toEqual({
+      to: "/api-docs",
+      hash: "get-entries",
+    });
+    expect(apiDocsPageHashDestination("")).toBeNull();
   });
 });

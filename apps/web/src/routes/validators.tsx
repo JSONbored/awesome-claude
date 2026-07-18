@@ -21,6 +21,7 @@ import {
   validatorsAttentionEntryAnalyticsEvent,
   validatorsRecentReviewedEntryAnalyticsData,
   validatorsRecentReviewedEntryAnalyticsEvent,
+  insightsPageEntryDestination,
 } from "@/lib/insights-page-entry-cta-events";
 import {
   validatorsExpertiseFilterAnalyticsData,
@@ -39,7 +40,7 @@ import {
 import {
   validatorsCoverageMetricAnalyticsData,
   validatorsCoverageMetricAnalyticsEvent,
-  validatorsCoverageMetricBrowseSearch,
+  validatorsCoverageMetricDestination,
   type ValidatorsCoverageMetricId,
 } from "@/lib/validators-coverage-cta-events";
 import {
@@ -305,25 +306,40 @@ function ValidatorsPage() {
                             }
                           />
                         </div>
-                        <Link
-                          to="/entry/$category/$slug"
-                          params={{ category: entry.category, slug: entry.slug }}
-                          onClick={() =>
-                            trackEvent(
-                              validatorsAttentionEntryAnalyticsEvent(),
-                              validatorsAttentionEntryAnalyticsData(
-                                entry.category,
-                                entry.slug,
-                                coverage.id,
-                                rowIndex,
-                                coverage.needsAttention.length,
-                              ),
-                            )
+                        {(() => {
+                          const destination = insightsPageEntryDestination(
+                            entry.category,
+                            entry.slug,
+                          );
+                          if (!destination) {
+                            return (
+                              <span className="mt-1 block line-clamp-1 text-sm font-medium text-ink">
+                                {entry.title}
+                              </span>
+                            );
                           }
-                          className="mt-1 block line-clamp-1 text-sm font-medium text-ink hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 rounded-sm"
-                        >
-                          {entry.title}
-                        </Link>
+                          return (
+                            <Link
+                              to={destination.to}
+                              params={destination.params}
+                              onClick={() =>
+                                trackEvent(
+                                  validatorsAttentionEntryAnalyticsEvent(),
+                                  validatorsAttentionEntryAnalyticsData(
+                                    entry.category,
+                                    entry.slug,
+                                    coverage.id,
+                                    rowIndex,
+                                    coverage.needsAttention.length,
+                                  ),
+                                )
+                              }
+                              className="mt-1 block line-clamp-1 text-sm font-medium text-ink hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 rounded-sm"
+                            >
+                              {entry.title}
+                            </Link>
+                          );
+                        })()}
                       </div>
                     </li>
                   ))}
@@ -377,24 +393,36 @@ function ValidatorsPage() {
                       }
                     />
                   </div>
-                  <Link
-                    to="/entry/$category/$slug"
-                    params={{ category: entry.category, slug: entry.slug }}
-                    onClick={() =>
-                      trackEvent(
-                        validatorsRecentReviewedEntryAnalyticsEvent(),
-                        validatorsRecentReviewedEntryAnalyticsData(
-                          entry.category,
-                          entry.slug,
-                          rowIndex,
-                          RECENT_REVIEWED.length,
-                        ),
-                      )
+                  {(() => {
+                    const destination = insightsPageEntryDestination(entry.category, entry.slug);
+                    if (!destination) {
+                      return (
+                        <span className="mt-1 block truncate font-display font-semibold text-ink">
+                          {entry.title}
+                        </span>
+                      );
                     }
-                    className="mt-1 block truncate font-display font-semibold text-ink hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 rounded-sm"
-                  >
-                    {entry.title}
-                  </Link>
+                    return (
+                      <Link
+                        to={destination.to}
+                        params={destination.params}
+                        onClick={() =>
+                          trackEvent(
+                            validatorsRecentReviewedEntryAnalyticsEvent(),
+                            validatorsRecentReviewedEntryAnalyticsData(
+                              entry.category,
+                              entry.slug,
+                              rowIndex,
+                              RECENT_REVIEWED.length,
+                            ),
+                          )
+                        }
+                        className="mt-1 block truncate font-display font-semibold text-ink hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 rounded-sm"
+                      >
+                        {entry.title}
+                      </Link>
+                    );
+                  })()}
                 </div>
                 <span className="font-mono text-xs text-ink-subtle sm:text-right">
                   {entry.reviewedAt?.slice(0, 10)}
@@ -517,7 +545,7 @@ function Metric({
   total: number;
 }) {
   const pct = total ? Math.round((value / total) * 100) : 0;
-  const browseSearch = validatorsCoverageMetricBrowseSearch(expertiseId, metricId);
+  const destination = validatorsCoverageMetricDestination(expertiseId, metricId);
   const body = (
     <>
       <div className="flex items-center justify-between gap-2">
@@ -530,14 +558,14 @@ function Metric({
     </>
   );
 
-  if (!browseSearch) {
+  if (!destination) {
     return <div className="rounded-lg border border-border bg-background p-3">{body}</div>;
   }
 
   return (
     <Link
-      to="/browse"
-      search={browseSearch}
+      to={destination.to}
+      search={destination.search}
       onClick={() =>
         trackEvent(
           validatorsCoverageMetricAnalyticsEvent(),

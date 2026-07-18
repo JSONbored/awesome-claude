@@ -85,3 +85,19 @@ export function feedsPageEmailExpandAnalyticsData(feedKey: string, feedKind: Fee
     feedKind,
   };
 }
+
+export type FeedsPageApiDocsDestination = {
+  to: "/api-docs";
+};
+
+/** Map a feeds page API docs CTA id to the API docs route. */
+export function feedsPageApiDocsDestination(
+  destination: string,
+): FeedsPageApiDocsDestination | null {
+  switch (destination) {
+    case "api-docs":
+      return { to: "/api-docs" };
+    default:
+      return null;
+  }
+}

@@ -18,6 +18,10 @@ import {
   contributorProfileStatAnalyticsData,
   contributorProfileStatAnalyticsEvent,
   contributorProfileStatDestination,
+  contributorProfileIndexDestination,
+  contributorProfileCategoryDestination,
+  contributorProfileSubmitDestination,
+  contributorProfilePeerDestination,
 } from "@/lib/contributor-profile-cta-events-lib";
 
 describe("contributor profile cta events lib", () => {
@@ -147,5 +151,25 @@ describe("contributor profile cta events lib", () => {
       to: "/browse",
       search: { signal: "source-backed" },
     });
+  });
+
+  it("maps contributor profile route destinations", () => {
+    expect(contributorProfileIndexDestination("contributors")).toEqual({
+      to: "/contributors",
+    });
+    expect(contributorProfileIndexDestination("unknown")).toBeNull();
+    expect(contributorProfileCategoryDestination("mcp")).toEqual({
+      to: "/$category",
+      params: { category: "mcp" },
+    });
+    expect(contributorProfileCategoryDestination("")).toBeNull();
+    expect(contributorProfileSubmitDestination("submit")).toEqual({
+      to: "/submit",
+    });
+    expect(contributorProfilePeerDestination("bob")).toEqual({
+      to: "/contributors/$slug",
+      params: { slug: "bob" },
+    });
+    expect(contributorProfilePeerDestination("")).toBeNull();
   });
 });

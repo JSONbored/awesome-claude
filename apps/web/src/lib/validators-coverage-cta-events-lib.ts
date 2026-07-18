@@ -81,3 +81,22 @@ export function validatorsCoverageMetricBrowseSearch(
       return null;
   }
 }
+
+export type ValidatorsCoverageMetricDestination = {
+  to: "/browse";
+  search: ValidatorsCoverageBrowseSearch;
+};
+
+/** Map a validators coverage metric to a browse destination. */
+export function validatorsCoverageMetricDestination(
+  expertiseId: string,
+  metricId: string,
+): ValidatorsCoverageMetricDestination | null {
+  const search = validatorsCoverageMetricBrowseSearch(expertiseId, metricId);
+  switch (search) {
+    case null:
+      return null;
+    default:
+      return { to: "/browse", search };
+  }
+}

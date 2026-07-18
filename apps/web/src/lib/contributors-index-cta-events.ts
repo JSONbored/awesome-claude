@@ -17,4 +17,6 @@ export {
   type ContributorsIndexGithubVariant,
   type ContributorsIndexStatDestination,
   type ContributorsIndexStatId,
+  contributorsIndexProfileDestination,
+  contributorsIndexSubmitDestination,
 } from "@/lib/contributors-index-cta-events-lib";

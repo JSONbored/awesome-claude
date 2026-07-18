@@ -22,4 +22,8 @@ export {
   contributorProfileStatDestination,
   type ContributorProfileStatId,
   type ContributorProfileTraceDestination,
+  contributorProfileIndexDestination,
+  contributorProfileCategoryDestination,
+  contributorProfileSubmitDestination,
+  contributorProfilePeerDestination,
 } from "@/lib/contributor-profile-cta-events-lib";

@@ -19,4 +19,8 @@ export {
   integrationsIndexEcosystemAnalyticsData,
   integrationsIndexEcosystemAnalyticsEvent,
   type IntegrationsDetailActionRole,
+  integrationsIndexCardDestination,
+  integrationsIndexChromeDestination,
+  integrationsDetailIndexDestination,
+  integrationsDetailRelatedDestination,
 } from "@/lib/integrations-hub-cta-events-lib";

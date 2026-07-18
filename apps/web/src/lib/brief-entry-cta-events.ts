@@ -19,4 +19,6 @@ export {
   type BriefHubSectionId,
   type BriefIssueHubSource,
   type BriefIssueSectionId,
+  briefHubIssueDestination,
+  briefIssueHubDestination,
 } from "@/lib/brief-entry-cta-events-lib";

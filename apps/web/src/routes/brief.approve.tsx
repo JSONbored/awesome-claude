@@ -9,6 +9,7 @@ import {
   briefApproveEgressAnalyticsData,
   briefApproveEgressAnalyticsEvent,
 } from "@/lib/brief-approve-cta-events";
+import { briefIssueHubDestination } from "@/lib/brief-entry-cta-events";
 
 const tokenInput = z.object({ token: z.string() });
 const confirmInput = z.object({
@@ -173,15 +174,24 @@ function Shell({ heading, children }: { heading: string; children: ReactNode }) 
       <div className="eyebrow text-ink-subtle">Weekly Brief</div>
       <h1 className="mt-2 h-display-2 text-ink">{heading}</h1>
       <p className="mt-4 text-pretty text-ink-muted">{children}</p>
-      <Link
-        to="/brief"
-        onClick={() =>
-          trackEvent(briefApproveEgressAnalyticsEvent(), briefApproveEgressAnalyticsData("brief"))
-        }
-        className="mt-8 inline-block text-sm text-ink-muted hover:text-ink"
-      >
-        ← Back to the Weekly Brief
-      </Link>
+      {(() => {
+        const destination = briefIssueHubDestination("brief");
+        if (!destination) return null;
+        return (
+          <Link
+            to={destination.to}
+            onClick={() =>
+              trackEvent(
+                briefApproveEgressAnalyticsEvent(),
+                briefApproveEgressAnalyticsData("brief"),
+              )
+            }
+            className="mt-8 inline-block text-sm text-ink-muted hover:text-ink"
+          >
+            ← Back to the Weekly Brief
+          </Link>
+        );
+      })()}
     </div>
   );
 }

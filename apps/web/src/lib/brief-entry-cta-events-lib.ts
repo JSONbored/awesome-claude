@@ -126,3 +126,35 @@ export function briefHubStaticIssueAnalyticsData(
     issueCount,
   };
 }
+
+export type BriefHubIssueDestination = {
+  to: "/brief/$number";
+  params: { number: string };
+};
+
+/** Map a brief issue number to a brief issue destination. */
+export function briefHubIssueDestination(
+  issueNumber: number | string,
+): BriefHubIssueDestination | null {
+  const raw = String(issueNumber).trim();
+  switch (raw) {
+    case "":
+      return null;
+    default:
+      return { to: "/brief/$number", params: { number: raw } };
+  }
+}
+
+export type BriefIssueHubDestination = {
+  to: "/brief";
+};
+
+/** Map a brief issue hub egress id to the brief hub. */
+export function briefIssueHubDestination(destination: string): BriefIssueHubDestination | null {
+  switch (destination) {
+    case "brief":
+      return { to: "/brief" };
+    default:
+      return null;
+  }
+}

@@ -10,4 +10,5 @@ export {
   apiDocsSpecAnalyticsData,
   apiDocsSpecAnalyticsEvent,
   type ApiDocsSpecFormat,
+  apiDocsPageHashDestination,
 } from "@/lib/api-docs-page-cta-events-lib";

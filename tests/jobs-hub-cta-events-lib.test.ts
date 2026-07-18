@@ -25,6 +25,9 @@ import {
   jobsIndexStatAnalyticsData,
   jobsIndexStatAnalyticsEvent,
   jobsIndexStatFilterPatch,
+  jobsIndexPostDestination,
+  jobsDetailIndexDestination,
+  jobsDetailRelatedDestination,
 } from "@/lib/jobs-hub-cta-events-lib";
 
 describe("jobs hub cta events lib", () => {
@@ -170,5 +173,17 @@ describe("jobs hub cta events lib", () => {
       featuredOnly: true,
     });
     expect(jobsIndexStatFilterPatch("unknown")).toBeNull();
+  });
+
+  it("maps jobs hub route destinations", () => {
+    expect(jobsIndexPostDestination("post")).toEqual({ to: "/jobs/post" });
+    expect(jobsIndexPostDestination("unknown")).toBeNull();
+    expect(jobsDetailIndexDestination("jobs")).toEqual({ to: "/jobs" });
+    expect(jobsDetailIndexDestination("unknown")).toBeNull();
+    expect(jobsDetailRelatedDestination("staff-engineer")).toEqual({
+      to: "/jobs/$slug",
+      params: { slug: "staff-engineer" },
+    });
+    expect(jobsDetailRelatedDestination("")).toBeNull();
   });
 });

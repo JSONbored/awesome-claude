@@ -11,6 +11,7 @@ import {
   apiDocsIntegrityNavAnalyticsEvent,
   apiDocsSpecAnalyticsData,
   apiDocsSpecAnalyticsEvent,
+  apiDocsPageHashDestination,
 } from "@/lib/api-docs-page-cta-events";
 import { cn } from "@/lib/utils";
 import { breadcrumbScript } from "@/lib/seo-jsonld";
@@ -139,33 +140,45 @@ function ApiDocsPage() {
           <div className="mt-6 rounded-md border border-border bg-surface p-3 text-[11px] text-ink-muted">
             <div className="eyebrow mb-1">Integrity-aware sync</div>
             Use{" "}
-            <Link
-              to="/api-docs"
-              hash="registry-diff"
-              className="underline"
-              onClick={() =>
-                trackEvent(
-                  apiDocsIntegrityNavAnalyticsEvent(),
-                  apiDocsIntegrityNavAnalyticsData("registry-diff"),
-                )
-              }
-            >
-              /api/registry/diff
-            </Link>{" "}
+            {(() => {
+              const destination = apiDocsPageHashDestination("registry-diff");
+              if (!destination) return <>/api/registry/diff</>;
+              return (
+                <Link
+                  to={destination.to}
+                  hash={destination.hash}
+                  className="underline"
+                  onClick={() =>
+                    trackEvent(
+                      apiDocsIntegrityNavAnalyticsEvent(),
+                      apiDocsIntegrityNavAnalyticsData("registry-diff"),
+                    )
+                  }
+                >
+                  /api/registry/diff
+                </Link>
+              );
+            })()}{" "}
             with a cursor, then verify against the SHA-256 in{" "}
-            <Link
-              to="/api-docs"
-              hash="registry-manifest"
-              className="underline"
-              onClick={() =>
-                trackEvent(
-                  apiDocsIntegrityNavAnalyticsEvent(),
-                  apiDocsIntegrityNavAnalyticsData("registry-manifest"),
-                )
-              }
-            >
-              /api/registry/manifest
-            </Link>
+            {(() => {
+              const destination = apiDocsPageHashDestination("registry-manifest");
+              if (!destination) return <>/api/registry/manifest</>;
+              return (
+                <Link
+                  to={destination.to}
+                  hash={destination.hash}
+                  className="underline"
+                  onClick={() =>
+                    trackEvent(
+                      apiDocsIntegrityNavAnalyticsEvent(),
+                      apiDocsIntegrityNavAnalyticsData("registry-manifest"),
+                    )
+                  }
+                >
+                  /api/registry/manifest
+                </Link>
+              );
+            })()}
             .
           </div>
         </aside>

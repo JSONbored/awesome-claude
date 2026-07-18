@@ -18,6 +18,7 @@ import {
   feedsPageFeedOpenAnalyticsData,
   feedsPageFeedOpenAnalyticsEvent,
   type FeedsPageFeedKind,
+  feedsPageApiDocsDestination,
 } from "@/lib/feeds-page-cta-events";
 
 export const Route = createFileRoute("/feeds")({
@@ -249,15 +250,21 @@ function FeedsPage() {
 
       <p className="mt-10 text-xs text-ink-muted">
         Looking for a JSON feed?{" "}
-        <Link
-          to="/api-docs"
-          className="underline"
-          onClick={() =>
-            trackEvent(feedsPageApiDocsAnalyticsEvent(), feedsPageApiDocsAnalyticsData())
-          }
-        >
-          See the registry API.
-        </Link>
+        {(() => {
+          const destination = feedsPageApiDocsDestination("api-docs");
+          if (!destination) return null;
+          return (
+            <Link
+              to={destination.to}
+              className="underline"
+              onClick={() =>
+                trackEvent(feedsPageApiDocsAnalyticsEvent(), feedsPageApiDocsAnalyticsData())
+              }
+            >
+              See the registry API.
+            </Link>
+          );
+        })()}
       </p>
     </div>
   );

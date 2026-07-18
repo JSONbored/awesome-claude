@@ -14,4 +14,5 @@ export {
   feedsPageFeedOpenAnalyticsData,
   feedsPageFeedOpenAnalyticsEvent,
   type FeedsPageFeedKind,
+  feedsPageApiDocsDestination,
 } from "@/lib/feeds-page-cta-events-lib";

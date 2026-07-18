@@ -20,6 +20,8 @@ import {
   jobsDetailShareCopyAnalyticsEvent,
   jobsErrorRetryAnalyticsData,
   jobsErrorRetryAnalyticsEvent,
+  jobsDetailIndexDestination,
+  jobsDetailRelatedDestination,
 } from "@/lib/jobs-hub-cta-events";
 import type { ReactNode } from "react";
 import type { ErrorComponentProps } from "@tanstack/react-router";
@@ -121,18 +123,24 @@ export const Route = createFileRoute("/jobs/$slug")({
           We couldn't find a role matching <code className="font-mono">{slug}</code>. It may have
           been filled or removed.
         </p>
-        <Link
-          to="/jobs"
-          onClick={() =>
-            trackEvent(
-              jobsDetailIndexAnalyticsEvent(),
-              jobsDetailIndexAnalyticsData(null, null, "not-found"),
-            )
-          }
-          className="mt-5 inline-flex items-center gap-1.5 rounded-md bg-ink px-4 py-2 text-sm font-medium text-background hover:bg-ink/90"
-        >
-          <ArrowLeft className="h-3.5 w-3.5" /> Browse all jobs
-        </Link>
+        {(() => {
+          const destination = jobsDetailIndexDestination("jobs");
+          if (!destination) return null;
+          return (
+            <Link
+              to={destination.to}
+              onClick={() =>
+                trackEvent(
+                  jobsDetailIndexAnalyticsEvent(),
+                  jobsDetailIndexAnalyticsData(null, null, "not-found"),
+                )
+              }
+              className="mt-5 inline-flex items-center gap-1.5 rounded-md bg-ink px-4 py-2 text-sm font-medium text-background hover:bg-ink/90"
+            >
+              <ArrowLeft className="h-3.5 w-3.5" /> Browse all jobs
+            </Link>
+          );
+        })()}
       </div>
     );
   },
@@ -152,18 +160,24 @@ function JobDetail() {
         <p className="mt-2 text-sm text-ink-muted">
           We couldn't find an active role matching {slug}. It may have been filled or removed.
         </p>
-        <Link
-          to="/jobs"
-          onClick={() =>
-            trackEvent(
-              jobsDetailIndexAnalyticsEvent(),
-              jobsDetailIndexAnalyticsData(null, null, "not-found"),
-            )
-          }
-          className="mt-5 inline-flex items-center gap-1.5 rounded-md bg-ink px-4 py-2 text-sm font-medium text-background hover:bg-ink/90"
-        >
-          <ArrowLeft className="h-3.5 w-3.5" /> Browse all jobs
-        </Link>
+        {(() => {
+          const destination = jobsDetailIndexDestination("jobs");
+          if (!destination) return null;
+          return (
+            <Link
+              to={destination.to}
+              onClick={() =>
+                trackEvent(
+                  jobsDetailIndexAnalyticsEvent(),
+                  jobsDetailIndexAnalyticsData(null, null, "not-found"),
+                )
+              }
+              className="mt-5 inline-flex items-center gap-1.5 rounded-md bg-ink px-4 py-2 text-sm font-medium text-background hover:bg-ink/90"
+            >
+              <ArrowLeft className="h-3.5 w-3.5" /> Browse all jobs
+            </Link>
+          );
+        })()}
       </div>
     );
   }
@@ -347,41 +361,51 @@ function JobDetail() {
             <div className="rounded-xl border border-border bg-surface p-4">
               <div className="eyebrow mb-2">More roles</div>
               <ul className="space-y-2.5">
-                {more.map((m, rowIndex) => (
-                  <li key={m.slug}>
-                    <Link
-                      to="/jobs/$slug"
-                      params={{ slug: m.slug }}
-                      onClick={() =>
-                        trackEvent(
-                          jobsDetailRelatedAnalyticsEvent(),
-                          jobsDetailRelatedAnalyticsData(job.slug, m.slug, rowIndex, more.length),
-                        )
-                      }
-                      className="group block"
-                    >
-                      <div className="text-sm font-medium leading-snug text-ink transition-colors duration-200 ease-out group-hover:text-ink-hover">
-                        {m.title}
-                      </div>
-                      <div className="text-xs text-ink-muted">
-                        {m.company} · {relativePosted(m.postedAt)}
-                      </div>
-                    </Link>
-                  </li>
-                ))}
+                {more.map((m, rowIndex) => {
+                  const destination = jobsDetailRelatedDestination(m.slug);
+                  if (!destination) return null;
+                  return (
+                    <li key={m.slug}>
+                      <Link
+                        to={destination.to}
+                        params={destination.params}
+                        onClick={() =>
+                          trackEvent(
+                            jobsDetailRelatedAnalyticsEvent(),
+                            jobsDetailRelatedAnalyticsData(job.slug, m.slug, rowIndex, more.length),
+                          )
+                        }
+                        className="group block"
+                      >
+                        <div className="text-sm font-medium leading-snug text-ink transition-colors duration-200 ease-out group-hover:text-ink-hover">
+                          {m.title}
+                        </div>
+                        <div className="text-xs text-ink-muted">
+                          {m.company} · {relativePosted(m.postedAt)}
+                        </div>
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
-              <Link
-                to="/jobs"
-                onClick={() =>
-                  trackEvent(
-                    jobsDetailIndexAnalyticsEvent(),
-                    jobsDetailIndexAnalyticsData(job.slug, job.tier, "see-all"),
-                  )
-                }
-                className="mt-3 inline-flex items-center gap-1 text-xs text-ink-muted hover:text-ink"
-              >
-                See all roles <ArrowUpRight className="h-3 w-3" />
-              </Link>
+              {(() => {
+                const destination = jobsDetailIndexDestination("jobs");
+                if (!destination) return null;
+                return (
+                  <Link
+                    to={destination.to}
+                    onClick={() =>
+                      trackEvent(
+                        jobsDetailIndexAnalyticsEvent(),
+                        jobsDetailIndexAnalyticsData(job.slug, job.tier, "see-all"),
+                      )
+                    }
+                    className="mt-3 inline-flex items-center gap-1 text-xs text-ink-muted hover:text-ink"
+                  >
+                    See all roles <ArrowUpRight className="h-3 w-3" />
+                  </Link>
+                );
+              })()}
             </div>
           )}
         </aside>

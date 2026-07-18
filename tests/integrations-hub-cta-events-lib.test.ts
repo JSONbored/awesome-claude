@@ -16,6 +16,10 @@ import {
   integrationsIndexCardAnalyticsEvent,
   integrationsIndexEcosystemAnalyticsData,
   integrationsIndexEcosystemAnalyticsEvent,
+  integrationsIndexCardDestination,
+  integrationsIndexChromeDestination,
+  integrationsDetailIndexDestination,
+  integrationsDetailRelatedDestination,
 } from "@/lib/integrations-hub-cta-events-lib";
 
 describe("integrations hub cta events lib", () => {
@@ -125,6 +129,28 @@ describe("integrations hub cta events lib", () => {
       installCount: 2,
       status: "live",
       kind: "extension",
+    });
+  });
+
+  it("maps integrations hub destinations", () => {
+    expect(integrationsIndexCardDestination("mcp-server")).toEqual({
+      to: "/integrations/$slug",
+      params: { slug: "mcp-server" },
+    });
+    expect(integrationsIndexCardDestination("")).toBeNull();
+    expect(integrationsIndexChromeDestination("ecosystem")).toEqual({
+      to: "/ecosystem",
+    });
+    expect(integrationsIndexChromeDestination("api-docs")).toEqual({
+      to: "/api-docs",
+    });
+    expect(integrationsIndexChromeDestination("unknown")).toBeNull();
+    expect(integrationsDetailIndexDestination("integrations")).toEqual({
+      to: "/integrations",
+    });
+    expect(integrationsDetailRelatedDestination("raycast")).toEqual({
+      to: "/integrations/$slug",
+      params: { slug: "raycast" },
     });
   });
 });

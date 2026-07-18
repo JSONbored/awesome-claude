@@ -26,6 +26,7 @@ import {
   jobsIndexStatAnalyticsData,
   jobsIndexStatAnalyticsEvent,
   jobsIndexStatFilterPatch,
+  jobsIndexPostDestination,
   type JobsIndexFilterAxis,
   type JobsIndexStatId,
 } from "@/lib/jobs-hub-cta-events";
@@ -351,18 +352,24 @@ function JobsPage() {
             platforms. Click a headline stat to focus the board.
           </p>
         </div>
-        <Link
-          to="/jobs/post"
-          onClick={() =>
-            trackEvent(
-              jobsIndexPostAnalyticsEvent(),
-              jobsIndexPostAnalyticsData(jobs.length, "header"),
-            )
-          }
-          className="inline-flex h-10 items-center gap-1.5 rounded-md bg-ink px-4 text-sm font-medium text-background hover:bg-ink/90"
-        >
-          Post a role <ArrowUpRight className="h-4 w-4" />
-        </Link>
+        {(() => {
+          const destination = jobsIndexPostDestination("post");
+          if (!destination) return null;
+          return (
+            <Link
+              to={destination.to}
+              onClick={() =>
+                trackEvent(
+                  jobsIndexPostAnalyticsEvent(),
+                  jobsIndexPostAnalyticsData(jobs.length, "header"),
+                )
+              }
+              className="inline-flex h-10 items-center gap-1.5 rounded-md bg-ink px-4 text-sm font-medium text-background hover:bg-ink/90"
+            >
+              Post a role <ArrowUpRight className="h-4 w-4" />
+            </Link>
+          );
+        })()}
       </div>
 
       <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -568,18 +575,24 @@ function JobsPage() {
                 <li>· Verified employer badge on every paid tier</li>
                 <li>· Carried in the weekly brief and RSS feed</li>
               </ul>
-              <Link
-                to="/jobs/post"
-                onClick={() =>
-                  trackEvent(
-                    jobsIndexPostAnalyticsEvent(),
-                    jobsIndexPostAnalyticsData(jobs.length, "sidebar"),
-                  )
-                }
-                className="mt-3 inline-flex h-9 w-full items-center justify-center gap-1 rounded-md bg-ink text-xs font-medium text-background hover:bg-ink/90"
-              >
-                Post a role <ArrowUpRight className="h-3 w-3" />
-              </Link>
+              {(() => {
+                const destination = jobsIndexPostDestination("post");
+                if (!destination) return null;
+                return (
+                  <Link
+                    to={destination.to}
+                    onClick={() =>
+                      trackEvent(
+                        jobsIndexPostAnalyticsEvent(),
+                        jobsIndexPostAnalyticsData(jobs.length, "sidebar"),
+                      )
+                    }
+                    className="mt-3 inline-flex h-9 w-full items-center justify-center gap-1 rounded-md bg-ink text-xs font-medium text-background hover:bg-ink/90"
+                  >
+                    Post a role <ArrowUpRight className="h-3 w-3" />
+                  </Link>
+                );
+              })()}
             </div>
           </div>
         </aside>

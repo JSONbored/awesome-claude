@@ -3,10 +3,14 @@ import {
   HOME_PAGE_SURFACE,
   homeBriefAnalyticsData,
   homeBriefAnalyticsEvent,
+  homeBriefDestination,
+  homeBrowseSearchDestination,
   homeCategorySelectAnalyticsData,
   homeCategorySelectAnalyticsEvent,
+  homeCategorySelectDestination,
   homeCompareRailCtaAnalyticsData,
   homeCompareRailCtaAnalyticsEvent,
+  homeCompareRailCtaDestination,
   homeContributeCtaAnalyticsData,
   homeContributeCtaAnalyticsEvent,
   homeContributeCtaDestination,
@@ -30,6 +34,7 @@ import {
   homePulseContributorsIndexAnalyticsEvent,
   homeRailCtaAnalyticsData,
   homeRailCtaAnalyticsEvent,
+  homeRailCtaDestination,
   homeTrustStatAnalyticsData,
   homeTrustStatAnalyticsEvent,
   homeTrustStatDestination,
@@ -202,5 +207,31 @@ describe("home page cta events lib", () => {
       to: "/api-docs",
     });
     expect(homeContributeCtaDestination("unknown")).toBeNull();
+  });
+
+  it("maps home browse, category, rail, compare, and brief destinations", () => {
+    expect(homeBrowseSearchDestination("mcp browser")).toEqual({
+      to: "/browse",
+      search: { q: "mcp browser" },
+    });
+    expect(homeBrowseSearchDestination("")).toBeNull();
+    expect(homeCategorySelectDestination("mcp")).toEqual({
+      to: "/$category",
+      params: { category: "mcp" },
+    });
+    expect(homeCategorySelectDestination("")).toBeNull();
+    expect(homeRailCtaDestination("categories")).toEqual({ to: "/browse" });
+    expect(homeRailCtaDestination("popular")).toEqual({ to: "/trending" });
+    expect(homeRailCtaDestination("unknown")).toBeNull();
+    expect(homeCompareRailCtaDestination("open-compare", "a,b")).toEqual({
+      to: "/compare",
+      search: { ids: "a,b" },
+    });
+    expect(homeCompareRailCtaDestination("open-compare", "")).toBeNull();
+    expect(homeCompareRailCtaDestination("build-comparison")).toEqual({
+      to: "/compare",
+    });
+    expect(homeBriefDestination("brief")).toEqual({ to: "/brief" });
+    expect(homeBriefDestination("unknown")).toBeNull();
   });
 });

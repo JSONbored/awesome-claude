@@ -284,3 +284,95 @@ export function homeContributeCtaDestination(ctaId: string): HomeContributeCtaDe
       return null;
   }
 }
+
+export type HomeBrowseSearchDestination = {
+  to: "/browse";
+  search: { q: string };
+};
+
+/** Map a home example/popular search query to a browse destination. */
+export function homeBrowseSearchDestination(query: string): HomeBrowseSearchDestination | null {
+  const q = query.trim();
+  switch (q) {
+    case "":
+      return null;
+    default:
+      return { to: "/browse", search: { q } };
+  }
+}
+
+export type HomeCategorySelectDestination = {
+  to: "/$category";
+  params: { category: string };
+};
+
+/** Map a home category tile to its category hub destination. */
+export function homeCategorySelectDestination(
+  category: string,
+): HomeCategorySelectDestination | null {
+  const id = category.trim();
+  switch (id) {
+    case "":
+      return null;
+    default:
+      return { to: "/$category", params: { category: id } };
+  }
+}
+
+export type HomeRailCtaDestination = {
+  to: "/browse" | "/trending";
+};
+
+/** Map a home rail CTA id to browse or trending. */
+export function homeRailCtaDestination(railId: string): HomeRailCtaDestination | null {
+  switch (railId) {
+    case "categories":
+    case "recent":
+    case "newest":
+      return { to: "/browse" };
+    case "popular":
+      return { to: "/trending" };
+    default:
+      return null;
+  }
+}
+
+export type HomeCompareRailCtaDestination =
+  | { to: "/compare"; search: { ids: string } }
+  | { to: "/compare" };
+
+/** Map a home compare-rail CTA (+ optional ids) to the compare workspace. */
+export function homeCompareRailCtaDestination(
+  ctaId: string,
+  ids = "",
+): HomeCompareRailCtaDestination | null {
+  switch (ctaId) {
+    case "open-compare": {
+      const value = ids.trim();
+      switch (value) {
+        case "":
+          return null;
+        default:
+          return { to: "/compare", search: { ids: value } };
+      }
+    }
+    case "build-comparison":
+      return { to: "/compare" };
+    default:
+      return null;
+  }
+}
+
+export type HomeBriefDestination = {
+  to: "/brief";
+};
+
+/** Map a home brief CTA id to the weekly brief hub. */
+export function homeBriefDestination(destination: string): HomeBriefDestination | null {
+  switch (destination) {
+    case "brief":
+      return { to: "/brief" };
+    default:
+      return null;
+  }
+}

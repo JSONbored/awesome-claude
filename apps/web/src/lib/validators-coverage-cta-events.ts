@@ -9,4 +9,5 @@ export {
   validatorsCoverageMetricBrowseSearch,
   type ValidatorsCoverageBrowseSearch,
   type ValidatorsCoverageMetricId,
+  validatorsCoverageMetricDestination,
 } from "@/lib/validators-coverage-cta-events-lib";

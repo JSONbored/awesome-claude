@@ -21,6 +21,8 @@ import {
   integrationsDetailInstallCopyAnalyticsEvent,
   integrationsDetailRelatedAnalyticsData,
   integrationsDetailRelatedAnalyticsEvent,
+  integrationsDetailIndexDestination,
+  integrationsDetailRelatedDestination,
 } from "@/lib/integrations-hub-cta-events";
 
 export const Route = createFileRoute("/integrations/$slug")({
@@ -70,18 +72,24 @@ function IntegrationDetail() {
   return (
     <div className="mx-auto max-w-[1100px] px-4 py-10 sm:px-6">
       <nav className="text-xs text-ink-muted">
-        <Link
-          to="/integrations"
-          onClick={() =>
-            trackEvent(
-              integrationsDetailIndexAnalyticsEvent(),
-              integrationsDetailIndexAnalyticsData(integration.slug, related.length),
-            )
-          }
-          className="hover:text-ink"
-        >
-          Integrations
-        </Link>
+        {(() => {
+          const destination = integrationsDetailIndexDestination("integrations");
+          if (!destination) return <span className="hover:text-ink">Integrations</span>;
+          return (
+            <Link
+              to={destination.to}
+              onClick={() =>
+                trackEvent(
+                  integrationsDetailIndexAnalyticsEvent(),
+                  integrationsDetailIndexAnalyticsData(integration.slug, related.length),
+                )
+              }
+              className="hover:text-ink"
+            >
+              Integrations
+            </Link>
+          );
+        })()}
         <span className="mx-1.5">/</span>
         <span className="text-ink">{integration.slug}</span>
       </nav>
@@ -221,6 +229,7 @@ function IntegrationDetail() {
                   key={r.slug}
                   integration={r}
                   compact
+                  linkDestination={integrationsDetailRelatedDestination(r.slug)}
                   onNavigate={() =>
                     trackEvent(
                       integrationsDetailRelatedAnalyticsEvent(),

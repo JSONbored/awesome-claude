@@ -172,3 +172,71 @@ export function contributorProfileStatDestination(statId: ContributorProfileStat
       return { to: "/browse", search: { signal: "source-backed" } };
   }
 }
+
+export type ContributorProfileIndexDestination = {
+  to: "/contributors";
+};
+
+/** Map a contributor profile index egress id to the contributors index. */
+export function contributorProfileIndexDestination(
+  destination: string,
+): ContributorProfileIndexDestination | null {
+  switch (destination) {
+    case "contributors":
+      return { to: "/contributors" };
+    default:
+      return null;
+  }
+}
+
+export type ContributorProfileCategoryDestination = {
+  to: "/$category";
+  params: { category: string };
+};
+
+/** Map a contributor category credit to a category hub destination. */
+export function contributorProfileCategoryDestination(
+  category: string,
+): ContributorProfileCategoryDestination | null {
+  const id = category.trim();
+  switch (id) {
+    case "":
+      return null;
+    default:
+      return { to: "/$category", params: { category: id } };
+  }
+}
+
+export type ContributorProfileSubmitDestination = {
+  to: "/submit";
+};
+
+/** Map a contributor profile submit CTA id to the submission route. */
+export function contributorProfileSubmitDestination(
+  destination: string,
+): ContributorProfileSubmitDestination | null {
+  switch (destination) {
+    case "submit":
+      return { to: "/submit" };
+    default:
+      return null;
+  }
+}
+
+export type ContributorProfilePeerDestination = {
+  to: "/contributors/$slug";
+  params: { slug: string };
+};
+
+/** Map a peer/submitter slug to a contributor profile destination. */
+export function contributorProfilePeerDestination(
+  slug: string,
+): ContributorProfilePeerDestination | null {
+  const id = slug.trim();
+  switch (id) {
+    case "":
+      return null;
+    default:
+      return { to: "/contributors/$slug", params: { slug: id } };
+  }
+}

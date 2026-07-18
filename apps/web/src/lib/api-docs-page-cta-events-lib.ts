@@ -50,3 +50,19 @@ export function apiDocsIntegrityNavAnalyticsData(endpointId: string) {
     endpointId,
   };
 }
+
+export type ApiDocsPageHashDestination = {
+  to: "/api-docs";
+  hash: string;
+};
+
+/** Map an API docs sidebar/integrity nav id to an in-page hash destination. */
+export function apiDocsPageHashDestination(endpointId: string): ApiDocsPageHashDestination | null {
+  const id = endpointId.trim();
+  switch (id) {
+    case "":
+      return null;
+    default:
+      return { to: "/api-docs", hash: id };
+  }
+}
