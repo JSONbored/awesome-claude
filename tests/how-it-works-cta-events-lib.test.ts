@@ -3,6 +3,7 @@ import {
   HOW_IT_WORKS_SURFACE,
   howItWorksStepAnalyticsData,
   howItWorksStepAnalyticsEvent,
+  howItWorksStepDestination,
 } from "@/lib/how-it-works-cta-events-lib";
 
 describe("how it works cta events lib", () => {
@@ -29,5 +30,13 @@ describe("how it works cta events lib", () => {
       stepIndex: 2,
       stepCount: 3,
     });
+  });
+
+  it("maps how-it-works step destinations", () => {
+    expect(howItWorksStepDestination("search")).toEqual({ to: "/browse" });
+    expect(howItWorksStepDestination("inspect")).toEqual({ to: "/quality" });
+    expect(howItWorksStepDestination("copy")).toEqual({ to: "/platforms" });
+    expect(howItWorksStepDestination("")).toBeNull();
+    expect(howItWorksStepDestination("unknown")).toBeNull();
   });
 });

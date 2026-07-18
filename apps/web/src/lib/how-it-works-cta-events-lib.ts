@@ -28,3 +28,19 @@ export function howItWorksStepAnalyticsData(
     stepCount,
   };
 }
+
+export type HowItWorksStepRouteDestination = { to: "/browse" | "/quality" | "/platforms" };
+
+/** Map a how-it-works step id to an in-app route. */
+export function howItWorksStepDestination(stepId: string): HowItWorksStepRouteDestination | null {
+  switch (stepId) {
+    case "search":
+      return { to: "/browse" };
+    case "inspect":
+      return { to: "/quality" };
+    case "copy":
+      return { to: "/platforms" };
+    default:
+      return null;
+  }
+}

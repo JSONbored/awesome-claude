@@ -21,3 +21,17 @@ export function commercialDisclosureEgressAnalyticsData(
     destination,
   };
 }
+
+export type CommercialDisclosureRouteDestination = { to: "/legal" };
+
+/** Map a commercial disclosure egress destination id to an in-app route. */
+export function commercialDisclosureEgressDestination(
+  destination: string,
+): CommercialDisclosureRouteDestination | null {
+  switch (destination) {
+    case "legal":
+      return { to: "/legal" };
+    default:
+      return null;
+  }
+}

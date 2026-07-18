@@ -5,9 +5,12 @@ import { trackEvent } from "@/lib/analytics";
 import {
   commercialDisclosureEgressAnalyticsData,
   commercialDisclosureEgressAnalyticsEvent,
+  commercialDisclosureEgressDestination,
 } from "@/lib/commercial-disclosure-cta-events";
 
 export function CommercialDisclosure({ className = "" }: { className?: string }) {
+  const legalDestination = commercialDisclosureEgressDestination("legal");
+
   return (
     <aside
       className={`rounded-xl border border-border bg-surface p-5 text-sm text-ink-muted ${className}`}
@@ -31,18 +34,22 @@ export function CommercialDisclosure({ className = "" }: { className?: string })
           </ul>
           <p className="text-xs">
             Policy details live on{" "}
-            <Link
-              to="/legal"
-              className="text-ink underline-offset-2 hover:underline"
-              onClick={() =>
-                trackEvent(
-                  commercialDisclosureEgressAnalyticsEvent(),
-                  commercialDisclosureEgressAnalyticsData("legal"),
-                )
-              }
-            >
-              /legal
-            </Link>
+            {legalDestination ? (
+              <Link
+                to={legalDestination.to}
+                className="text-ink underline-offset-2 hover:underline"
+                onClick={() =>
+                  trackEvent(
+                    commercialDisclosureEgressAnalyticsEvent(),
+                    commercialDisclosureEgressAnalyticsData("legal"),
+                  )
+                }
+              >
+                /legal
+              </Link>
+            ) : (
+              "/legal"
+            )}
             .
           </p>
         </div>

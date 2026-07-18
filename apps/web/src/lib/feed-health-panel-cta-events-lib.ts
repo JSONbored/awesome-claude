@@ -61,3 +61,17 @@ export function feedHealthSeeAllAnalyticsData(feedCount: number, visibleCount: n
     visibleCount,
   };
 }
+
+export type FeedHealthSeeAllDestination = { to: "/feeds" };
+
+/** Map a feed health see-all destination id to an in-app route. */
+export function feedHealthSeeAllDestination(
+  destination: string,
+): FeedHealthSeeAllDestination | null {
+  switch (destination) {
+    case "feeds":
+      return { to: "/feeds" };
+    default:
+      return null;
+  }
+}

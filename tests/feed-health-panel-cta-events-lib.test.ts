@@ -9,6 +9,7 @@ import {
   feedHealthJsonAnalyticsEvent,
   feedHealthSeeAllAnalyticsData,
   feedHealthSeeAllAnalyticsEvent,
+  feedHealthSeeAllDestination,
 } from "@/lib/feed-health-panel-cta-events-lib";
 
 describe("feed health panel cta events lib", () => {
@@ -41,5 +42,11 @@ describe("feed health panel cta events lib", () => {
       feedCount: 12,
       visibleCount: 5,
     });
+  });
+
+  it("maps feed health see-all destinations", () => {
+    expect(feedHealthSeeAllDestination("feeds")).toEqual({ to: "/feeds" });
+    expect(feedHealthSeeAllDestination("")).toBeNull();
+    expect(feedHealthSeeAllDestination("unknown")).toBeNull();
   });
 });

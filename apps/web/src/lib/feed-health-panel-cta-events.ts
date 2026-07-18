@@ -11,4 +11,6 @@ export {
   feedHealthJsonAnalyticsEvent,
   feedHealthSeeAllAnalyticsData,
   feedHealthSeeAllAnalyticsEvent,
+  feedHealthSeeAllDestination,
+  type FeedHealthSeeAllDestination,
 } from "@/lib/feed-health-panel-cta-events-lib";

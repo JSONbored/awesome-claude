@@ -3,6 +3,7 @@ import {
   COMMERCIAL_DISCLOSURE_SURFACE,
   commercialDisclosureEgressAnalyticsData,
   commercialDisclosureEgressAnalyticsEvent,
+  commercialDisclosureEgressDestination,
 } from "@/lib/commercial-disclosure-cta-events-lib";
 
 describe("commercial disclosure cta events lib", () => {
@@ -14,5 +15,13 @@ describe("commercial disclosure cta events lib", () => {
       surface: COMMERCIAL_DISCLOSURE_SURFACE,
       destination: "legal",
     });
+  });
+
+  it("maps commercial disclosure egress destinations", () => {
+    expect(commercialDisclosureEgressDestination("legal")).toEqual({
+      to: "/legal",
+    });
+    expect(commercialDisclosureEgressDestination("")).toBeNull();
+    expect(commercialDisclosureEgressDestination("unknown")).toBeNull();
   });
 });

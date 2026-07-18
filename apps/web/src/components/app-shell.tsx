@@ -11,16 +11,21 @@ import { trackEvent } from "@/lib/analytics";
 import {
   appShellCategoryAnalyticsData,
   appShellCategoryAnalyticsEvent,
+  appShellCategoryDestination,
   appShellFeedChipAnalyticsData,
   appShellFeedChipAnalyticsEvent,
+  appShellFeedChipHrefDestination,
   appShellFooterLinkAnalyticsData,
   appShellFooterLinkAnalyticsEvent,
   appShellHeaderAnalyticsData,
   appShellHeaderAnalyticsEvent,
+  appShellHeaderSubmitDestination,
   appShellLegalAnalyticsData,
   appShellLegalAnalyticsEvent,
+  appShellLegalRouteDestination,
   appShellNavAnalyticsData,
   appShellNavAnalyticsEvent,
+  appShellNavRouteDestination,
   type AppShellFeedChip,
 } from "@/lib/app-shell-cta-events";
 import { NewsletterInline } from "./newsletter-inline";
@@ -49,6 +54,7 @@ export function TopBar() {
   const isHome = pathname === "/";
   const [elevated, setElevated] = React.useState(false);
   const [mobileNavOpen, setMobileNavOpen] = React.useState(false);
+  const submitDestination = appShellHeaderSubmitDestination("submit");
   React.useEffect(() => {
     const onScroll = () => setElevated(window.scrollY > 8);
     onScroll();
@@ -101,9 +107,9 @@ export function TopBar() {
           {SHELL_PRIMARY_NAV.map((item) => {
             const active = shellNavItemActive(pathname, item.to);
             return (
-              <Link
+              <ShellNavLink
                 key={item.to}
-                to={item.to}
+                path={item.to}
                 aria-current={active ? "page" : undefined}
                 onClick={() =>
                   trackEvent(
@@ -123,7 +129,7 @@ export function TopBar() {
                     className="absolute inset-x-2.5 -bottom-px h-0.5 rounded-full bg-accent"
                   />
                 )}
-              </Link>
+              </ShellNavLink>
             );
           })}
         </nav>
@@ -158,16 +164,18 @@ export function TopBar() {
           >
             <Github className="h-4 w-4" />
           </a>
-          <Link
-            to="/submit"
-            className="inline-flex h-9 items-center gap-1.5 rounded-md bg-ink px-3 text-sm font-medium text-background hover:bg-ink/90"
-            onClick={() =>
-              trackEvent(appShellHeaderAnalyticsEvent(), appShellHeaderAnalyticsData("submit"))
-            }
-          >
-            <Send className="h-3.5 w-3.5" />
-            Submit
-          </Link>
+          {submitDestination ? (
+            <Link
+              to={submitDestination.to}
+              className="inline-flex h-9 items-center gap-1.5 rounded-md bg-ink px-3 text-sm font-medium text-background hover:bg-ink/90"
+              onClick={() =>
+                trackEvent(appShellHeaderAnalyticsEvent(), appShellHeaderAnalyticsData("submit"))
+              }
+            >
+              <Send className="h-3.5 w-3.5" />
+              Submit
+            </Link>
+          ) : null}
         </div>
       </div>
 
@@ -187,9 +195,9 @@ export function TopBar() {
                   {section.links.map((item) => {
                     const active = shellNavItemActive(pathname, item.to);
                     return (
-                      <Link
+                      <ShellNavLink
                         key={item.to}
-                        to={item.to}
+                        path={item.to}
                         onClick={() => {
                           trackEvent(
                             appShellNavAnalyticsEvent(),
@@ -206,7 +214,7 @@ export function TopBar() {
                         )}
                       >
                         {item.label}
-                      </Link>
+                      </ShellNavLink>
                     );
                   })}
                 </div>
@@ -220,6 +228,9 @@ export function TopBar() {
 }
 
 export function Footer() {
+  const legalDestination = appShellLegalRouteDestination("legal");
+  const privacyDestination = appShellLegalRouteDestination("privacy");
+
   return (
     <footer className="mt-24 border-t border-border bg-surface">
       <NewsletterInline
@@ -240,10 +251,10 @@ export function Footer() {
             reviewed before installing.
           </p>
           <div className="mt-4 flex flex-wrap items-center gap-1.5 text-[11px]">
-            <FeedChip href="/feed.xml" label="RSS" feed="rss" />
-            <FeedChip href="/atom.xml" label="Atom" feed="atom" />
-            <FeedChip href="/data/feeds/index.json" label="JSON Feed" feed="json" />
-            <FeedChip href="/llms.txt" label="llms.txt" feed="llms" />
+            <FeedChip label="RSS" feed="rss" />
+            <FeedChip label="Atom" feed="atom" />
+            <FeedChip label="JSON Feed" feed="json" />
+            <FeedChip label="llms.txt" feed="llms" />
           </div>
         </div>
         {SHELL_FOOTER_COLUMNS.map((column) => (
@@ -260,22 +271,26 @@ export function Footer() {
         <div className="mx-auto max-w-page px-4 py-4 sm:px-6">
           <div className="eyebrow mb-2">Categories</div>
           <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-sm text-ink-muted">
-            {CATEGORIES.map((c, i) => (
-              <Link
-                key={c.id}
-                to="/$category"
-                params={{ category: c.id }}
-                className="hover:text-ink"
-                onClick={() =>
-                  trackEvent(
-                    appShellCategoryAnalyticsEvent(),
-                    appShellCategoryAnalyticsData(c.id, i, CATEGORIES.length),
-                  )
-                }
-              >
-                {c.label}
-              </Link>
-            ))}
+            {CATEGORIES.map((c, i) => {
+              const destination = appShellCategoryDestination(c.id);
+              if (!destination) return null;
+              return (
+                <Link
+                  key={c.id}
+                  to={destination.to}
+                  params={destination.params}
+                  className="hover:text-ink"
+                  onClick={() =>
+                    trackEvent(
+                      appShellCategoryAnalyticsEvent(),
+                      appShellCategoryAnalyticsData(c.id, i, CATEGORIES.length),
+                    )
+                  }
+                >
+                  {c.label}
+                </Link>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -283,28 +298,32 @@ export function Footer() {
         <div className="mx-auto flex max-w-page flex-col items-start gap-3 px-4 py-5 text-xs text-ink-subtle sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <span>© {new Date().getFullYear()} HeyClaude · heyclau.de</span>
           <nav aria-label="Legal" className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <Link
-              to="/legal"
-              className="hover:text-ink"
-              onClick={() =>
-                trackEvent(appShellLegalAnalyticsEvent(), appShellLegalAnalyticsData("legal"))
-              }
-            >
-              Legal
-            </Link>
+            {legalDestination ? (
+              <Link
+                to={legalDestination.to}
+                className="hover:text-ink"
+                onClick={() =>
+                  trackEvent(appShellLegalAnalyticsEvent(), appShellLegalAnalyticsData("legal"))
+                }
+              >
+                Legal
+              </Link>
+            ) : null}
             <span aria-hidden className="text-ink-subtle/60">
               ·
             </span>
-            <Link
-              to="/legal"
-              hash="privacy"
-              className="hover:text-ink"
-              onClick={() =>
-                trackEvent(appShellLegalAnalyticsEvent(), appShellLegalAnalyticsData("privacy"))
-              }
-            >
-              Privacy
-            </Link>
+            {privacyDestination ? (
+              <Link
+                to={privacyDestination.to}
+                {...("hash" in privacyDestination ? { hash: privacyDestination.hash } : {})}
+                className="hover:text-ink"
+                onClick={() =>
+                  trackEvent(appShellLegalAnalyticsEvent(), appShellLegalAnalyticsData("privacy"))
+                }
+              >
+                Privacy
+              </Link>
+            ) : null}
             <span aria-hidden className="text-ink-subtle/60">
               ·
             </span>
@@ -320,10 +339,42 @@ export function Footer() {
   );
 }
 
-function FeedChip({ href, label, feed }: { href: string; label: string; feed: AppShellFeedChip }) {
+function ShellNavLink({
+  path,
+  className,
+  children,
+  onClick,
+  ...props
+}: {
+  path: string;
+  className?: string;
+  children: React.ReactNode;
+  onClick?: () => void;
+  "aria-current"?: "page" | undefined;
+}) {
+  const destination = appShellNavRouteDestination(path);
+  if (!destination) {
+    return <span className={className}>{children}</span>;
+  }
+  return (
+    <Link
+      to={destination.to}
+      {...("params" in destination ? { params: destination.params } : {})}
+      className={className}
+      onClick={onClick}
+      {...props}
+    >
+      {children}
+    </Link>
+  );
+}
+
+function FeedChip({ label, feed }: { label: string; feed: AppShellFeedChip }) {
+  const hrefDestination = appShellFeedChipHrefDestination(feed);
+  if (!hrefDestination) return null;
   return (
     <a
-      href={href}
+      href={hrefDestination.href}
       target="_blank"
       rel="noreferrer"
       className="inline-flex items-center gap-1 rounded-md border border-border bg-background px-1.5 py-0.5 font-mono text-ink-muted hover:text-ink"
@@ -368,22 +419,30 @@ function FooterCol({
     <div className={footerColumnSpanClass(span)}>
       <div className="eyebrow mb-3">{title}</div>
       <ul className="flex flex-col gap-2">
-        {links.map((l) => (
-          <li key={l.to}>
-            <Link
-              to={l.to}
-              className="text-sm text-ink-muted hover:text-ink"
-              onClick={() =>
-                trackEvent(
-                  appShellFooterLinkAnalyticsEvent(),
-                  appShellFooterLinkAnalyticsData(columnId, l.to),
-                )
-              }
-            >
-              {l.label}
-            </Link>
-          </li>
-        ))}
+        {links.map((l) => {
+          const destination = appShellNavRouteDestination(l.to);
+          return (
+            <li key={l.to}>
+              {destination ? (
+                <Link
+                  to={destination.to}
+                  {...("params" in destination ? { params: destination.params } : {})}
+                  className="text-sm text-ink-muted hover:text-ink"
+                  onClick={() =>
+                    trackEvent(
+                      appShellFooterLinkAnalyticsEvent(),
+                      appShellFooterLinkAnalyticsData(columnId, l.to),
+                    )
+                  }
+                >
+                  {l.label}
+                </Link>
+              ) : (
+                <span className="text-sm text-ink-muted">{l.label}</span>
+              )}
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

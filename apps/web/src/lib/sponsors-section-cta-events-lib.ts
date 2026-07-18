@@ -23,6 +23,22 @@ export function sponsorsSectionEgressAnalyticsData(destination: SponsorsSectionD
   };
 }
 
+export type SponsorsSectionRouteDestination = { to: "/legal" | "/advertise" };
+
+/** Map a sponsors section egress destination id to an in-app route. */
+export function sponsorsSectionEgressDestination(
+  destination: string,
+): SponsorsSectionRouteDestination | null {
+  switch (destination) {
+    case "legal":
+      return { to: "/legal" };
+    case "advertise":
+      return { to: "/advertise" };
+    default:
+      return null;
+  }
+}
+
 export function sponsorsSectionCreditAnalyticsEvent(): string {
   return "sponsors_section_credit_click";
 }

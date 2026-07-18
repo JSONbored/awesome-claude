@@ -32,8 +32,10 @@ import { trackEvent } from "@/lib/analytics";
 import {
   appErrorChromeAnalyticsData,
   appErrorChromeAnalyticsEvent,
+  appErrorChromeDestination,
   appNotFoundEgressAnalyticsData,
   appNotFoundEgressAnalyticsEvent,
+  appNotFoundEgressDestination,
 } from "@/lib/app-error-cta-events";
 import { twitterHandleFrom } from "@/lib/twitter-handle-lib";
 import { buildOrganizationJsonLd, buildWebsiteJsonLd } from "@heyclaude/registry/seo";
@@ -44,6 +46,9 @@ const twitterHandle = twitterHandleFrom(siteConfig.twitterUrl);
 const defaultOgImage = absoluteUrl("/og-image.png");
 
 function NotFoundComponent() {
+  const browseDestination = appNotFoundEgressDestination("browse");
+  const homeDestination = appNotFoundEgressDestination("home");
+
   return (
     <div className="flex min-h-screen flex-col">
       <TopBar />
@@ -57,30 +62,34 @@ function NotFoundComponent() {
             It might have been moved, renamed, or never indexed. Try searching the directory.
           </p>
           <div className="mt-6 flex justify-center gap-2">
-            <Link
-              to="/browse"
-              className="inline-flex h-9 items-center rounded-md bg-ink px-4 text-sm font-medium text-background hover:bg-ink/90"
-              onClick={() =>
-                trackEvent(
-                  appNotFoundEgressAnalyticsEvent(),
-                  appNotFoundEgressAnalyticsData("browse"),
-                )
-              }
-            >
-              Browse directory
-            </Link>
-            <Link
-              to="/"
-              className="inline-flex h-9 items-center rounded-md border border-border bg-surface px-4 text-sm font-medium text-ink hover:bg-surface-2"
-              onClick={() =>
-                trackEvent(
-                  appNotFoundEgressAnalyticsEvent(),
-                  appNotFoundEgressAnalyticsData("home"),
-                )
-              }
-            >
-              Home
-            </Link>
+            {browseDestination ? (
+              <Link
+                to={browseDestination.to}
+                className="inline-flex h-9 items-center rounded-md bg-ink px-4 text-sm font-medium text-background hover:bg-ink/90"
+                onClick={() =>
+                  trackEvent(
+                    appNotFoundEgressAnalyticsEvent(),
+                    appNotFoundEgressAnalyticsData("browse"),
+                  )
+                }
+              >
+                Browse directory
+              </Link>
+            ) : null}
+            {homeDestination ? (
+              <Link
+                to={homeDestination.to}
+                className="inline-flex h-9 items-center rounded-md border border-border bg-surface px-4 text-sm font-medium text-ink hover:bg-surface-2"
+                onClick={() =>
+                  trackEvent(
+                    appNotFoundEgressAnalyticsEvent(),
+                    appNotFoundEgressAnalyticsData("home"),
+                  )
+                }
+              >
+                Home
+              </Link>
+            ) : null}
           </div>
         </div>
       </div>
@@ -91,6 +100,8 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
+  const homeDestination = appErrorChromeDestination("home");
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
@@ -108,15 +119,17 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
           >
             Try again
           </button>
-          <a
-            href="/"
-            onClick={() =>
-              trackEvent(appErrorChromeAnalyticsEvent(), appErrorChromeAnalyticsData("home"))
-            }
-            className="inline-flex h-9 items-center rounded-md border border-border bg-surface px-4 text-sm font-medium text-ink hover:bg-surface-2"
-          >
-            Go home
-          </a>
+          {homeDestination ? (
+            <Link
+              to={homeDestination.to}
+              onClick={() =>
+                trackEvent(appErrorChromeAnalyticsEvent(), appErrorChromeAnalyticsData("home"))
+              }
+              className="inline-flex h-9 items-center rounded-md border border-border bg-surface px-4 text-sm font-medium text-ink hover:bg-surface-2"
+            >
+              Go home
+            </Link>
+          ) : null}
         </div>
       </div>
     </div>

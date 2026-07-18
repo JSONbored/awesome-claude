@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Link } from "@tanstack/react-router";
 import { CheckCircle2, AlertTriangle, ExternalLink, Loader2 } from "lucide-react";
 import { CopyButton } from "@/components/copy-button";
 import { timeAgo } from "@/lib/format-lib";
@@ -13,6 +14,7 @@ import {
   feedHealthJsonAnalyticsEvent,
   feedHealthSeeAllAnalyticsData,
   feedHealthSeeAllAnalyticsEvent,
+  feedHealthSeeAllDestination,
 } from "@/lib/feed-health-panel-cta-events";
 
 interface FeedHealth {
@@ -147,22 +149,28 @@ export function FeedHealthPanel({ compact = false }: { compact?: boolean }) {
           </div>
         ))}
       </div>
-      {compact && data.feeds.length > visible.length && (
-        <div className="border-t border-border px-4 py-2 text-right text-xs">
-          <a
-            href="/feeds"
-            className="text-ink-muted hover:text-ink"
-            onClick={() =>
-              trackEvent(
-                feedHealthSeeAllAnalyticsEvent(),
-                feedHealthSeeAllAnalyticsData(data.feeds.length, visible.length),
-              )
-            }
-          >
-            See all {data.feeds.length} feeds →
-          </a>
-        </div>
-      )}
+      {compact &&
+        data.feeds.length > visible.length &&
+        (() => {
+          const destination = feedHealthSeeAllDestination("feeds");
+          if (!destination) return null;
+          return (
+            <div className="border-t border-border px-4 py-2 text-right text-xs">
+              <Link
+                to={destination.to}
+                className="text-ink-muted hover:text-ink"
+                onClick={() =>
+                  trackEvent(
+                    feedHealthSeeAllAnalyticsEvent(),
+                    feedHealthSeeAllAnalyticsData(data.feeds.length, visible.length),
+                  )
+                }
+              >
+                See all {data.feeds.length} feeds →
+              </Link>
+            </div>
+          );
+        })()}
     </div>
   );
 }

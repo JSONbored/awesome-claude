@@ -7,6 +7,8 @@ export {
   agentNativeStripCopyAnalyticsEvent,
   agentNativeStripEgressAnalyticsData,
   agentNativeStripEgressAnalyticsEvent,
+  agentNativeStripEgressDestination,
   type AgentNativeStripCardId,
   type AgentNativeStripDestination,
+  type AgentNativeStripRouteDestination,
 } from "@/lib/agent-native-strip-cta-events-lib";

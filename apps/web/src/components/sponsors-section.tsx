@@ -24,6 +24,7 @@ import {
   sponsorsSectionCreditAnalyticsEvent,
   sponsorsSectionEgressAnalyticsData,
   sponsorsSectionEgressAnalyticsEvent,
+  sponsorsSectionEgressDestination,
   sponsorsSectionInquiryOpenAnalyticsData,
   sponsorsSectionInquiryOpenAnalyticsEvent,
   sponsorsSectionPartnerAnalyticsData,
@@ -37,6 +38,8 @@ import { cn } from "@/lib/utils";
 export function SponsorsSection() {
   const filled = PARTNERS.filter((p) => p.slotState === "filled");
   const open = PARTNERS.filter((p) => p.slotState === "open");
+  const legalDestination = sponsorsSectionEgressDestination("legal");
+  const advertiseDestination = sponsorsSectionEgressDestination("advertise");
 
   return (
     <div className="flex flex-col gap-10">
@@ -49,18 +52,20 @@ export function SponsorsSection() {
               Credits + infrastructure
             </h3>
           </div>
-          <Link
-            to="/legal"
-            className="text-xs font-medium text-ink-muted hover:text-ink"
-            onClick={() =>
-              trackEvent(
-                sponsorsSectionEgressAnalyticsEvent(),
-                sponsorsSectionEgressAnalyticsData("legal"),
-              )
-            }
-          >
-            Sponsorship policy →
-          </Link>
+          {legalDestination ? (
+            <Link
+              to={legalDestination.to}
+              className="text-xs font-medium text-ink-muted hover:text-ink"
+              onClick={() =>
+                trackEvent(
+                  sponsorsSectionEgressAnalyticsEvent(),
+                  sponsorsSectionEgressAnalyticsData("legal"),
+                )
+              }
+            >
+              Sponsorship policy →
+            </Link>
+          ) : null}
         </div>
         <ul className="mt-4 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-3 lg:grid-cols-6">
           {SPONSORS.map((s, i) => (
@@ -140,18 +145,22 @@ export function SponsorsSection() {
               <li>Every paid placement carries a visible "Sponsor" label.</li>
               <li>
                 Paid featured listings and Brief sponsorships are handled separately on{" "}
-                <Link
-                  to="/advertise"
-                  className="text-ink underline-offset-2 hover:underline"
-                  onClick={() =>
-                    trackEvent(
-                      sponsorsSectionEgressAnalyticsEvent(),
-                      sponsorsSectionEgressAnalyticsData("advertise"),
-                    )
-                  }
-                >
-                  /advertise
-                </Link>
+                {advertiseDestination ? (
+                  <Link
+                    to={advertiseDestination.to}
+                    className="text-ink underline-offset-2 hover:underline"
+                    onClick={() =>
+                      trackEvent(
+                        sponsorsSectionEgressAnalyticsEvent(),
+                        sponsorsSectionEgressAnalyticsData("advertise"),
+                      )
+                    }
+                  >
+                    /advertise
+                  </Link>
+                ) : (
+                  "/advertise"
+                )}
                 .
               </li>
             </ul>

@@ -5,6 +5,7 @@ import {
   sponsorsSectionCreditAnalyticsEvent,
   sponsorsSectionEgressAnalyticsData,
   sponsorsSectionEgressAnalyticsEvent,
+  sponsorsSectionEgressDestination,
   sponsorsSectionInquiryOpenAnalyticsData,
   sponsorsSectionInquiryOpenAnalyticsEvent,
   sponsorsSectionPartnerAnalyticsData,
@@ -72,5 +73,14 @@ describe("sponsors section cta events lib", () => {
       surface: SPONSORS_SECTION_SURFACE,
       hasRole: true,
     });
+  });
+
+  it("maps sponsors section egress destinations", () => {
+    expect(sponsorsSectionEgressDestination("legal")).toEqual({ to: "/legal" });
+    expect(sponsorsSectionEgressDestination("advertise")).toEqual({
+      to: "/advertise",
+    });
+    expect(sponsorsSectionEgressDestination("")).toBeNull();
+    expect(sponsorsSectionEgressDestination("unknown")).toBeNull();
   });
 });

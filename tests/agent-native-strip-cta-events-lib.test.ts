@@ -5,6 +5,7 @@ import {
   agentNativeStripCopyAnalyticsEvent,
   agentNativeStripEgressAnalyticsData,
   agentNativeStripEgressAnalyticsEvent,
+  agentNativeStripEgressDestination,
 } from "@/lib/agent-native-strip-cta-events-lib";
 
 describe("agent native strip cta events lib", () => {
@@ -45,5 +46,24 @@ describe("agent native strip cta events lib", () => {
       surface: AGENT_NATIVE_STRIP_SURFACE,
       cardId: "llms",
     });
+  });
+
+  it("maps agent-native strip egress destinations", () => {
+    expect(agentNativeStripEgressDestination("integrations-mcp")).toEqual({
+      to: "/integrations/$slug",
+      params: { slug: "mcp-server" },
+    });
+    expect(agentNativeStripEgressDestination("integrations-raycast")).toEqual({
+      to: "/integrations/$slug",
+      params: { slug: "raycast" },
+    });
+    expect(agentNativeStripEgressDestination("api-docs")).toEqual({
+      to: "/api-docs",
+    });
+    expect(agentNativeStripEgressDestination("ecosystem")).toEqual({
+      to: "/ecosystem",
+    });
+    expect(agentNativeStripEgressDestination("")).toBeNull();
+    expect(agentNativeStripEgressDestination("unknown")).toBeNull();
   });
 });

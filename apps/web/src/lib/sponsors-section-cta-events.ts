@@ -7,6 +7,7 @@ export {
   sponsorsSectionCreditAnalyticsEvent,
   sponsorsSectionEgressAnalyticsData,
   sponsorsSectionEgressAnalyticsEvent,
+  sponsorsSectionEgressDestination,
   sponsorsSectionInquiryOpenAnalyticsData,
   sponsorsSectionInquiryOpenAnalyticsEvent,
   sponsorsSectionPartnerAnalyticsData,
@@ -15,4 +16,5 @@ export {
   sponsorsSectionSubmitAnalyticsEvent,
   type SponsorsSectionDestination,
   type SponsorsSectionInquirySource,
+  type SponsorsSectionRouteDestination,
 } from "@/lib/sponsors-section-cta-events-lib";

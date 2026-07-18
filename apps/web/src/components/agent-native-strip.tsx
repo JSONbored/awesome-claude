@@ -7,6 +7,7 @@ import {
   agentNativeStripCopyAnalyticsEvent,
   agentNativeStripEgressAnalyticsData,
   agentNativeStripEgressAnalyticsEvent,
+  agentNativeStripEgressDestination,
   type AgentNativeStripCardId,
   type AgentNativeStripDestination,
 } from "@/lib/agent-native-strip-cta-events";
@@ -19,7 +20,6 @@ type Card = {
   title: string;
   body: string;
   snippet: string;
-  to: string;
   ctaLabel: string;
 };
 
@@ -32,7 +32,6 @@ const CARDS: Card[] = [
     title: "Use HeyClaude inside Claude Code",
     body: "Read-only remote MCP server. Search, plan workflows, inspect trust without leaving the agent.",
     snippet: "npx -y heyclaude/mcp",
-    to: "/integrations/mcp-server",
     ctaLabel: "MCP setup",
   },
   {
@@ -43,7 +42,6 @@ const CARDS: Card[] = [
     title: "Search from anywhere",
     body: "Copy install commands, configs, and full assets straight from Raycast. Jobs and submissions included.",
     snippet: "raycast://extensions/heyclaude",
-    to: "/integrations/raycast",
     ctaLabel: "Get the extension",
   },
   {
@@ -54,12 +52,13 @@ const CARDS: Card[] = [
     title: "Pipe the registry into your agent",
     body: "Full registry as llms-full.txt, plus JSON indices and per-entry artifacts. Stable, hashed, versioned.",
     snippet: "curl heyclau.de/llms-full.txt",
-    to: "/api-docs",
     ctaLabel: "API docs",
   },
 ];
 
 export function AgentNativeStrip() {
+  const ecosystemDestination = agentNativeStripEgressDestination("ecosystem");
+
   return (
     <section className="mx-auto max-w-page px-4 py-12 sm:px-6">
       <div className="flex items-end justify-between gap-4">
@@ -69,58 +68,66 @@ export function AgentNativeStrip() {
             One registry, every surface
           </h2>
         </div>
-        <Link
-          to="/ecosystem"
-          className="text-sm text-ink-muted hover:text-ink"
-          onClick={() =>
-            trackEvent(
-              agentNativeStripEgressAnalyticsEvent(),
-              agentNativeStripEgressAnalyticsData("ecosystem"),
-            )
-          }
-        >
-          All integrations →
-        </Link>
+        {ecosystemDestination ? (
+          <Link
+            to={ecosystemDestination.to}
+            className="text-sm text-ink-muted hover:text-ink"
+            onClick={() =>
+              trackEvent(
+                agentNativeStripEgressAnalyticsEvent(),
+                agentNativeStripEgressAnalyticsData("ecosystem"),
+              )
+            }
+          >
+            All integrations →
+          </Link>
+        ) : null}
       </div>
       <div className="mt-6 grid gap-4 lg:grid-cols-3">
-        {CARDS.map((c) => (
-          <div
-            key={c.id}
-            className="group flex flex-col gap-4 rounded-xl border border-border bg-surface p-5 transition-colors duration-200 ease-out hover:bg-surface-2"
-          >
-            <div className="flex items-center justify-between">
-              <span className="inline-flex items-center gap-2 text-xs">
-                <c.Icon className="h-3.5 w-3.5 text-ink-muted" />
-                <span className="eyebrow">{c.eyebrow}</span>
-              </span>
-            </div>
-            <div>
-              <div className="font-display text-base font-semibold text-ink">{c.title}</div>
-              <p className="mt-1.5 text-sm text-ink-muted">{c.body}</p>
-            </div>
-            <div className="flex items-center gap-2 rounded-md border border-border bg-surface-2 px-3 py-2 font-mono text-xs text-ink">
-              <span className="flex-1 truncate">{c.snippet}</span>
-              <CopyButton
-                value={c.snippet}
-                label="Copy"
-                event={agentNativeStripCopyAnalyticsEvent()}
-                eventData={agentNativeStripCopyAnalyticsData(c.id)}
-              />
-            </div>
-            <Link
-              to={c.to}
-              className="story-link mt-auto inline-flex items-center gap-1 text-sm font-medium text-ink hover:text-ink-hover"
-              onClick={() =>
-                trackEvent(
-                  agentNativeStripEgressAnalyticsEvent(),
-                  agentNativeStripEgressAnalyticsData(c.destination),
-                )
-              }
+        {CARDS.map((c) => {
+          const routeDestination = agentNativeStripEgressDestination(c.destination);
+          return (
+            <div
+              key={c.id}
+              className="group flex flex-col gap-4 rounded-xl border border-border bg-surface p-5 transition-colors duration-200 ease-out hover:bg-surface-2"
             >
-              {c.ctaLabel} <span aria-hidden>→</span>
-            </Link>
-          </div>
-        ))}
+              <div className="flex items-center justify-between">
+                <span className="inline-flex items-center gap-2 text-xs">
+                  <c.Icon className="h-3.5 w-3.5 text-ink-muted" />
+                  <span className="eyebrow">{c.eyebrow}</span>
+                </span>
+              </div>
+              <div>
+                <div className="font-display text-base font-semibold text-ink">{c.title}</div>
+                <p className="mt-1.5 text-sm text-ink-muted">{c.body}</p>
+              </div>
+              <div className="flex items-center gap-2 rounded-md border border-border bg-surface-2 px-3 py-2 font-mono text-xs text-ink">
+                <span className="flex-1 truncate">{c.snippet}</span>
+                <CopyButton
+                  value={c.snippet}
+                  label="Copy"
+                  event={agentNativeStripCopyAnalyticsEvent()}
+                  eventData={agentNativeStripCopyAnalyticsData(c.id)}
+                />
+              </div>
+              {routeDestination ? (
+                <Link
+                  to={routeDestination.to}
+                  {...("params" in routeDestination ? { params: routeDestination.params } : {})}
+                  className="story-link mt-auto inline-flex items-center gap-1 text-sm font-medium text-ink hover:text-ink-hover"
+                  onClick={() =>
+                    trackEvent(
+                      agentNativeStripEgressAnalyticsEvent(),
+                      agentNativeStripEgressAnalyticsData(c.destination),
+                    )
+                  }
+                >
+                  {c.ctaLabel} <span aria-hidden>→</span>
+                </Link>
+              ) : null}
+            </div>
+          );
+        })}
       </div>
     </section>
   );

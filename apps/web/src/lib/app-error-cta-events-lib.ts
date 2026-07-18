@@ -32,3 +32,32 @@ export function appNotFoundEgressAnalyticsData(destination: AppNotFoundDestinati
     destination,
   };
 }
+
+export type AppNotFoundRouteDestination = { to: "/browse" | "/" };
+
+/** Map a not-found egress destination id to an in-app route. */
+export function appNotFoundEgressDestination(
+  destination: string,
+): AppNotFoundRouteDestination | null {
+  switch (destination) {
+    case "browse":
+      return { to: "/browse" };
+    case "home":
+      return { to: "/" };
+    default:
+      return null;
+  }
+}
+
+export type AppErrorChromeRouteDestination = { to: "/" } | null;
+
+/** Map an app error chrome destination id to an in-app route (retry has no route). */
+export function appErrorChromeDestination(destination: string): { to: "/" } | null {
+  switch (destination) {
+    case "home":
+      return { to: "/" };
+    case "retry":
+    default:
+      return null;
+  }
+}

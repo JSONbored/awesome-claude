@@ -24,12 +24,15 @@ import { cn } from "@/lib/utils";
 import { filterCommandActions } from "@/lib/command-bar-actions-lib";
 import { trackEvent } from "@/lib/analytics";
 import {
+  commandBarActionDestination,
   commandBarActionSelectAnalyticsData,
   commandBarActionSelectAnalyticsEvent,
+  commandBarEntryDestination,
   commandBarResultSelectAnalyticsData,
   commandBarResultSelectAnalyticsEvent,
   commandBarScopeSelectAnalyticsData,
   commandBarScopeSelectAnalyticsEvent,
+  commandBarSearchDestination,
   commandBarSearchSubmitAnalyticsData,
   commandBarSearchSubmitAnalyticsEvent,
 } from "@/lib/command-bar-cta-events";
@@ -107,69 +110,74 @@ export function CommandBar({
   );
 
   const actions = React.useMemo<ActionItem[]>(() => {
+    const nav = (actionId: string) => {
+      const destination = commandBarActionDestination(actionId);
+      if (!destination) return;
+      navigate({ to: destination.to });
+    };
     const all: ActionItem[] = [
       {
         id: "go-browse",
         label: "Browse all resources",
         hint: "/browse",
         Icon: Compass,
-        run: () => navigate({ to: "/browse" }),
+        run: () => nav("go-browse"),
       },
       {
         id: "go-trending",
         label: "Trending this week",
         hint: "/trending",
         Icon: Flame,
-        run: () => navigate({ to: "/trending" }),
+        run: () => nav("go-trending"),
       },
       {
         id: "go-ecosystem",
         label: "Ecosystem & integrations",
         hint: "/ecosystem",
         Icon: GitBranch,
-        run: () => navigate({ to: "/ecosystem" }),
+        run: () => nav("go-ecosystem"),
       },
       {
         id: "go-quality",
         label: "Registry quality",
         hint: "/quality",
         Icon: ShieldCheck,
-        run: () => navigate({ to: "/quality" }),
+        run: () => nav("go-quality"),
       },
       {
         id: "go-best",
         label: "Best of HeyClaude",
         hint: "/best",
         Icon: Sparkles,
-        run: () => navigate({ to: "/best" }),
+        run: () => nav("go-best"),
       },
       {
         id: "go-submit",
         label: "Submit a resource",
         hint: "/submit",
         Icon: Send,
-        run: () => navigate({ to: "/submit" }),
+        run: () => nav("go-submit"),
       },
       {
         id: "go-feeds",
         label: "RSS feeds & email subscriptions",
         hint: "/feeds",
         Icon: GitBranch,
-        run: () => navigate({ to: "/feeds" }),
+        run: () => nav("go-feeds"),
       },
       {
         id: "go-subscriptions",
         label: "Manage subscriptions",
         hint: "/subscriptions",
         Icon: Sparkles,
-        run: () => navigate({ to: "/subscriptions" }),
+        run: () => nav("go-subscriptions"),
       },
       {
         id: "go-saved",
         label: "Saved searches",
         hint: "/browse",
         Icon: Sparkles,
-        run: () => navigate({ to: "/browse" }),
+        run: () => nav("go-saved"),
       },
       { id: "toggle-theme", label: "Toggle theme", Icon: Sun, run: () => toggleTheme() },
       {
@@ -198,13 +206,13 @@ export function CommandBar({
   }, [q]);
 
   const submit = () => {
-    const query = q.trim();
-    if (!query) return;
+    const destination = commandBarSearchDestination(q);
+    if (!destination) return;
     trackEvent(
       commandBarSearchSubmitAnalyticsEvent(),
-      commandBarSearchSubmitAnalyticsData(query.length, results.length, quickCat),
+      commandBarSearchSubmitAnalyticsData(queryLength, results.length, quickCat),
     );
-    navigate({ to: "/browse", search: { q } });
+    navigate({ to: destination.to, search: destination.search });
   };
 
   const queryLength = q.trim().length;
@@ -236,11 +244,10 @@ export function CommandBar({
     const opt = options[i];
     if (!opt) return submit();
     if (opt.kind === "result") {
+      const destination = commandBarEntryDestination(opt.r.category, opt.r.slug);
+      if (!destination) return submit();
       trackResultSelect(opt.r.category, opt.r.slug, i);
-      navigate({
-        to: "/entry/$category/$slug",
-        params: { category: opt.r.category, slug: opt.r.slug },
-      });
+      navigate({ to: destination.to, params: destination.params });
     } else {
       trackEvent(
         commandBarActionSelectAnalyticsEvent(),
@@ -387,6 +394,8 @@ export function CommandBar({
               </li>
             )}
             {results.map((r, i) => {
+              const destination = commandBarEntryDestination(r.category, r.slug);
+              if (!destination) return null;
               const hasSafety = Boolean(r.safetyNotes);
               const hasPrivacy = Boolean(r.privacyNotes);
               const installable = Boolean(r.installCommand);
@@ -399,8 +408,8 @@ export function CommandBar({
                   aria-selected={active === i}
                 >
                   <Link
-                    to="/entry/$category/$slug"
-                    params={{ category: r.category, slug: r.slug }}
+                    to={destination.to}
+                    params={destination.params}
                     onMouseEnter={() => setActive(i)}
                     onClick={() => trackResultSelect(r.category, r.slug, i)}
                     className={cn(
