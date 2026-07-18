@@ -80,6 +80,10 @@ describe("Atlas production data wiring", () => {
       path.join(repoRoot, "apps/web/src/components/app-shell.tsx"),
       "utf8",
     );
+    const appShellFeedDestinations = fs.readFileSync(
+      path.join(repoRoot, "apps/web/src/lib/app-shell-cta-events-lib.ts"),
+      "utf8",
+    );
     const feedsRoute = fs.readFileSync(
       path.join(repoRoot, "apps/web/src/routes/feeds.$slug.ts"),
       "utf8",
@@ -90,8 +94,9 @@ describe("Atlas production data wiring", () => {
     );
     const retiredFeedPath = ["/feeds", "ecosystem.json"].join("/");
 
-    expect(appShell).toContain("/data/feeds/index.json");
+    expect(appShellFeedDestinations).toContain("/data/feeds/index.json");
     expect(appShell).not.toContain(retiredFeedPath);
+    expect(appShellFeedDestinations).not.toContain(retiredFeedPath);
     expect(feedsRoute).toContain('slug === "trending"');
     expect(sitemapRoute).toContain('"/feeds/trending.xml"');
     // /data/** is robots-disallowed, so it is intentionally excluded from the sitemap.
