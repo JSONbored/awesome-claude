@@ -6,6 +6,7 @@ import {
   trendingCategoryFilterAnalyticsEvent,
   trendingChromeAnalyticsData,
   trendingChromeAnalyticsEvent,
+  trendingChromeDestination,
   trendingFilterResetAnalyticsData,
   trendingFilterResetAnalyticsEvent,
   trendingListEntryAnalyticsData,
@@ -112,6 +113,19 @@ describe("trending entry cta events lib", () => {
       categoryFilter: "mcp",
       mode: "unavailable",
     });
+    expect(trendingChromeDestination("rss")).toEqual({
+      kind: "href",
+      href: "/feeds/trending.xml",
+    });
+    expect(trendingChromeDestination("brief")).toEqual({
+      kind: "route",
+      to: "/brief",
+    });
+    expect(trendingChromeDestination("browse")).toEqual({
+      kind: "route",
+      to: "/browse",
+    });
+    expect(trendingChromeDestination("unknown")).toBeNull();
   });
 
   it("builds privacy-light trending share and ranking reason analytics", () => {

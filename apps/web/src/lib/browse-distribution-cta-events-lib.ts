@@ -95,3 +95,29 @@ export function browseFreshnessBucketSignal(bucketId: string): string | null {
       return null;
   }
 }
+
+export type BrowseFreshnessBucketBrowseSearch = {
+  sort?: "popular" | "newest" | "title";
+};
+
+export type BrowseFreshnessBucketDestination =
+  | { to: "/browse"; search: BrowseFreshnessBucketBrowseSearch }
+  | { to: "/quality"; hash: "freshness" };
+
+/** Map a freshness bucket id to browse sort or quality freshness egress. */
+export function browseFreshnessBucketDestination(
+  bucketId: string,
+): BrowseFreshnessBucketDestination | null {
+  switch (bucketId) {
+    case "fresh":
+      return { to: "/browse", search: { sort: "newest" } };
+    case "recent":
+      return { to: "/browse", search: { sort: "newest" } };
+    case "aging":
+      return { to: "/quality", hash: "freshness" };
+    case "stale":
+      return { to: "/quality", hash: "freshness" };
+    default:
+      return null;
+  }
+}

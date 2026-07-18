@@ -103,6 +103,26 @@ export function trendingChromeAnalyticsData(
   };
 }
 
+export type TrendingChromeRouteDestination =
+  | { kind: "href"; href: string }
+  | { kind: "route"; to: "/brief" | "/browse" };
+
+/** Map a trending chrome destination id to an href or in-app route. */
+export function trendingChromeDestination(
+  destination: string,
+): TrendingChromeRouteDestination | null {
+  switch (destination) {
+    case "rss":
+      return { kind: "href", href: "/feeds/trending.xml" };
+    case "brief":
+      return { kind: "route", to: "/brief" };
+    case "browse":
+      return { kind: "route", to: "/browse" };
+    default:
+      return null;
+  }
+}
+
 export type TrendingShareAction = "copy-link" | "copy-markdown" | "system-share";
 
 export function trendingShareAnalyticsEvent(): string {

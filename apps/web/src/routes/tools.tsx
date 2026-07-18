@@ -14,8 +14,12 @@ import {
 import {
   toolsPageBrowseAnalyticsData,
   toolsPageBrowseAnalyticsEvent,
+  toolsPageChromeDestination,
   toolsPageSubmitAnalyticsData,
   toolsPageSubmitAnalyticsEvent,
+  toolsPageTagAnalyticsData,
+  toolsPageTagAnalyticsEvent,
+  toolsPageTagDestination,
 } from "@/lib/tools-page-cta-events";
 
 // Same card for og:image and twitter:image; the inputs are static.
@@ -67,6 +71,9 @@ export const Route = createFileRoute("/tools")({
 });
 
 function ToolsPage() {
+  const browseDestination = toolsPageChromeDestination("browse");
+  const submitDestination = toolsPageChromeDestination("submit");
+
   return (
     <PageContainer>
       <div className="flex flex-wrap items-end justify-between gap-4">
@@ -77,33 +84,39 @@ function ToolsPage() {
           </h1>
           <p className="mt-2 max-w-2xl text-ink-muted">
             Editorial picks and disclosed partners. Free, open-source community resources live in{" "}
-            <Link
-              to="/browse"
-              onClick={() =>
-                trackEvent(
-                  toolsPageBrowseAnalyticsEvent(),
-                  toolsPageBrowseAnalyticsData(COMMERCIAL_TOOLS.length),
-                )
-              }
-              className="text-ink underline"
-            >
-              the directory
-            </Link>
+            {browseDestination ? (
+              <Link
+                to={browseDestination.to}
+                onClick={() =>
+                  trackEvent(
+                    toolsPageBrowseAnalyticsEvent(),
+                    toolsPageBrowseAnalyticsData(COMMERCIAL_TOOLS.length),
+                  )
+                }
+                className="text-ink underline"
+              >
+                the directory
+              </Link>
+            ) : (
+              "the directory"
+            )}
             .
           </p>
         </div>
-        <Link
-          to="/tools/submit"
-          onClick={() =>
-            trackEvent(
-              toolsPageSubmitAnalyticsEvent(),
-              toolsPageSubmitAnalyticsData(COMMERCIAL_TOOLS.length),
-            )
-          }
-          className="inline-flex h-10 items-center rounded-md bg-ink px-4 text-sm font-medium text-background hover:bg-ink/90"
-        >
-          Submit a tool
-        </Link>
+        {submitDestination ? (
+          <Link
+            to={submitDestination.to}
+            onClick={() =>
+              trackEvent(
+                toolsPageSubmitAnalyticsEvent(),
+                toolsPageSubmitAnalyticsData(COMMERCIAL_TOOLS.length),
+              )
+            }
+            className="inline-flex h-10 items-center rounded-md bg-ink px-4 text-sm font-medium text-background hover:bg-ink/90"
+          >
+            Submit a tool
+          </Link>
+        ) : null}
       </div>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -135,14 +148,39 @@ function ToolsPage() {
             <p className="line-clamp-3 text-sm text-ink-muted">{t.tagline}</p>
             <div className="mt-auto flex items-center justify-between text-xs text-ink-muted">
               <div className="flex flex-wrap gap-1">
-                {t.tags.slice(0, 3).map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded border border-border px-1.5 py-0.5 font-mono text-[10px]"
-                  >
-                    {tag}
-                  </span>
-                ))}
+                {t.tags.slice(0, 3).map((tag) => {
+                  const destination = toolsPageTagDestination(tag);
+                  if (!destination) {
+                    return (
+                      <span
+                        key={tag}
+                        className="rounded border border-border px-1.5 py-0.5 font-mono text-[10px]"
+                      >
+                        {tag}
+                      </span>
+                    );
+                  }
+                  return (
+                    <a
+                      key={tag}
+                      href={`/tags/${destination.params.tag}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        trackEvent(
+                          toolsPageTagAnalyticsEvent(),
+                          toolsPageTagAnalyticsData(
+                            destination.params.tag,
+                            t.slug,
+                            COMMERCIAL_TOOLS.length,
+                          ),
+                        );
+                      }}
+                      className="rounded border border-border px-1.5 py-0.5 font-mono text-[10px] hover:border-ink/30 hover:bg-surface-2 hover:text-ink"
+                    >
+                      {tag}
+                    </a>
+                  );
+                })}
               </div>
               <span className="inline-flex items-center gap-1 text-ink group-hover:underline">
                 Open <ArrowUpRight className="h-3 w-3" />

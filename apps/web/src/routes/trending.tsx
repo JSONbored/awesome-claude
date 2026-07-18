@@ -36,6 +36,7 @@ import {
   trendingCategoryFilterAnalyticsEvent,
   trendingChromeAnalyticsData,
   trendingChromeAnalyticsEvent,
+  trendingChromeDestination,
   trendingFilterResetAnalyticsData,
   trendingFilterResetAnalyticsEvent,
   trendingListEntryAnalyticsData,
@@ -340,15 +341,19 @@ function TrendingPage() {
               source-backed popular entries instead of simulated momentum.
             </div>
           )}
-          {latestBrief && (
-            <Link
-              to="/brief"
-              onClick={() => trackChrome("brief", "header")}
-              className="mt-3 inline-flex items-center gap-2 text-sm text-ink-muted hover:text-ink"
-            >
-              Featured in Brief #{latestBrief.number} · {latestBrief.title} →
-            </Link>
-          )}
+          {latestBrief &&
+            (() => {
+              const destination = trendingChromeDestination("brief");
+              return destination?.kind === "route" ? (
+                <Link
+                  to={destination.to}
+                  onClick={() => trackChrome("brief", "header")}
+                  className="mt-3 inline-flex items-center gap-2 text-sm text-ink-muted hover:text-ink"
+                >
+                  Featured in Brief #{latestBrief.number} · {latestBrief.title} →
+                </Link>
+              ) : null;
+            })()}
         </div>
         <div className="flex items-center gap-2">
           <ShareMenu
@@ -365,13 +370,18 @@ function TrendingPage() {
               }
             }}
           />
-          <a
-            href="/feeds/trending.xml"
-            onClick={() => trackChrome("rss", "header")}
-            className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-surface px-3 text-xs font-medium text-ink-muted hover:bg-surface-2 hover:text-ink"
-          >
-            <Rss className="h-3.5 w-3.5" /> RSS
-          </a>
+          {(() => {
+            const destination = trendingChromeDestination("rss");
+            return destination?.kind === "href" ? (
+              <a
+                href={destination.href}
+                onClick={() => trackChrome("rss", "header")}
+                className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-surface px-3 text-xs font-medium text-ink-muted hover:bg-surface-2 hover:text-ink"
+              >
+                <Rss className="h-3.5 w-3.5" /> RSS
+              </a>
+            ) : null;
+          })()}
         </div>
       </div>
 
@@ -545,27 +555,43 @@ function TrendingPage() {
           <Rss className="h-4 w-4" /> Subscribe to the trending feed
         </div>
         <div className="flex flex-wrap gap-2">
-          <a
-            href="/feeds/trending.xml"
-            onClick={() => trackChrome("rss", "footer")}
-            className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-surface px-3 text-xs font-medium text-ink transition-transform hover:bg-surface-2 active:translate-y-px"
-          >
-            <Rss className="h-3.5 w-3.5" /> RSS
-          </a>
-          <Link
-            to="/brief"
-            onClick={() => trackChrome("brief", "footer")}
-            className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-surface px-3 text-xs font-medium text-ink transition-transform hover:bg-surface-2 active:translate-y-px"
-          >
-            Weekly Brief →
-          </Link>
-          <Link
-            to="/browse"
-            onClick={() => trackChrome("browse", "footer")}
-            className="inline-flex h-8 items-center gap-1.5 rounded-md bg-ink px-3 text-xs font-medium text-background transition-transform hover:opacity-90 active:translate-y-px"
-          >
-            Browse all <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
+          {(
+            [
+              { destination: "rss" as const, label: "RSS", icon: true },
+              { destination: "brief" as const, label: "Weekly Brief →", icon: false },
+              { destination: "browse" as const, label: "Browse all", icon: false, primary: true },
+            ] as const
+          ).map((item) => {
+            const destination = trendingChromeDestination(item.destination);
+            if (!destination) return null;
+            const className = item.primary
+              ? "inline-flex h-8 items-center gap-1.5 rounded-md bg-ink px-3 text-xs font-medium text-background transition-transform hover:opacity-90 active:translate-y-px"
+              : "inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-surface px-3 text-xs font-medium text-ink transition-transform hover:bg-surface-2 active:translate-y-px";
+            if (destination.kind === "href") {
+              return (
+                <a
+                  key={item.destination}
+                  href={destination.href}
+                  onClick={() => trackChrome(item.destination, "footer")}
+                  className={className}
+                >
+                  {item.icon ? <Rss className="h-3.5 w-3.5" /> : null}
+                  {item.label}
+                </a>
+              );
+            }
+            return (
+              <Link
+                key={item.destination}
+                to={destination.to}
+                onClick={() => trackChrome(item.destination, "footer")}
+                className={className}
+              >
+                {item.label}
+                {item.destination === "browse" ? <ArrowRight className="h-3.5 w-3.5" /> : null}
+              </Link>
+            );
+          })}
         </div>
       </div>
     </PageContainer>

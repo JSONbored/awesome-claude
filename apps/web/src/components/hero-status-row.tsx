@@ -2,8 +2,10 @@ import { Link } from "@tanstack/react-router";
 import { LiveVersionBadge } from "./live-version-badge";
 import { trackEvent } from "@/lib/analytics";
 import {
+  heroStatusRowDestination,
   heroStatusRowEgressAnalyticsData,
   heroStatusRowEgressAnalyticsEvent,
+  type HeroStatusRowDestination,
 } from "@/lib/hero-status-row-cta-events";
 
 /**
@@ -26,8 +28,11 @@ export function HeroStatusRow({
   indexedAt: string;
 }) {
   const indexedLabel = indexedAt ? indexedAt.slice(0, 16).replace("T", " ") : "latest build";
-  const egressData = (destination: "mcp-server" | "brief") =>
+  const egressData = (destination: HeroStatusRowDestination) =>
     heroStatusRowEgressAnalyticsData(destination, resourceCount, reviewedCount, briefNumber);
+
+  const mcpDestination = heroStatusRowDestination("mcp-server");
+  const briefDestination = heroStatusRowDestination("brief");
 
   return (
     <div className="flex flex-wrap items-center gap-2 text-xs">
@@ -38,24 +43,28 @@ export function HeroStatusRow({
         </span>
         Indexed {indexedLabel} · {resourceCount} resources · {reviewedCount} reviewed
       </span>
-      <Link
-        to="/integrations/$slug"
-        params={{ slug: "mcp-server" }}
-        className="hidden sm:inline-flex"
-        onClick={() => trackEvent(heroStatusRowEgressAnalyticsEvent(), egressData("mcp-server"))}
-      >
-        <LiveVersionBadge pkg="@heyclaude/mcp" fallbackVersion="0.3.1" showDownloads={false} />
-      </Link>
-      <Link
-        to="/brief"
-        className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-2.5 py-1 text-ink-muted hover:text-ink"
-        onClick={() => trackEvent(heroStatusRowEgressAnalyticsEvent(), egressData("brief"))}
-      >
-        <span className="font-mono text-ink">Brief #{briefNumber}</span>
-        <span className="text-ink-subtle">·</span>
-        <span>{briefDate}</span>
-        <span aria-hidden>→</span>
-      </Link>
+      {mcpDestination?.to === "/integrations/$slug" ? (
+        <Link
+          to={mcpDestination.to}
+          params={mcpDestination.params}
+          className="hidden sm:inline-flex"
+          onClick={() => trackEvent(heroStatusRowEgressAnalyticsEvent(), egressData("mcp-server"))}
+        >
+          <LiveVersionBadge pkg="@heyclaude/mcp" fallbackVersion="0.3.1" showDownloads={false} />
+        </Link>
+      ) : null}
+      {briefDestination?.to === "/brief" ? (
+        <Link
+          to={briefDestination.to}
+          className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-2.5 py-1 text-ink-muted hover:text-ink"
+          onClick={() => trackEvent(heroStatusRowEgressAnalyticsEvent(), egressData("brief"))}
+        >
+          <span className="font-mono text-ink">Brief #{briefNumber}</span>
+          <span className="text-ink-subtle">·</span>
+          <span>{briefDate}</span>
+          <span aria-hidden>→</span>
+        </Link>
+      ) : null}
     </div>
   );
 }

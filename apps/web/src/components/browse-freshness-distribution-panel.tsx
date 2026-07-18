@@ -4,19 +4,22 @@ import type { BrowseFreshnessDistributionState } from "@/lib/browse-freshness-di
 import {
   browseFreshnessBucketAnalyticsData,
   browseFreshnessBucketAnalyticsEvent,
-  browseFreshnessBucketSignal,
+  browseFreshnessBucketDestination,
   browseFreshnessStaleEntryAnalyticsData,
   browseFreshnessStaleEntryAnalyticsEvent,
   parseBrowseFreshnessEntryRef,
+  type BrowseFreshnessBucketBrowseSearch,
 } from "@/lib/browse-distribution-cta-events";
 import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 export function BrowseFreshnessDistributionPanel({
   state,
+  onBucketSelect,
   className,
 }: {
   state: BrowseFreshnessDistributionState;
+  onBucketSelect?: (bucketId: string, search: BrowseFreshnessBucketBrowseSearch) => void;
   className?: string;
 }) {
   if (!state.showPanel) return null;
@@ -35,26 +38,9 @@ export function BrowseFreshnessDistributionPanel({
 
       <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
         {state.buckets.map((bucket) => {
-          const signal = browseFreshnessBucketSignal(bucket.id);
-          return (
-            <button
-              key={bucket.id}
-              type="button"
-              disabled={!signal}
-              onClick={() => {
-                if (!signal) return;
-                trackEvent(
-                  browseFreshnessBucketAnalyticsEvent(),
-                  browseFreshnessBucketAnalyticsData(
-                    bucket.id,
-                    bucket.count,
-                    bucket.percent,
-                    state.scannedCount,
-                  ),
-                );
-              }}
-              className="rounded-md border border-border bg-background p-2.5 text-left transition-colors duration-200 ease-out hover:border-border-strong hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 disabled:cursor-default disabled:opacity-100"
-            >
+          const destination = browseFreshnessBucketDestination(bucket.id);
+          const body = (
+            <>
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
                   <p className="text-xs font-medium text-ink">{bucket.label}</p>
@@ -72,7 +58,57 @@ export function BrowseFreshnessDistributionPanel({
               <p className="mt-1.5 font-mono text-[11px] text-ink">
                 {bucket.count} {bucket.count === 1 ? "entry" : "entries"}
               </p>
-            </button>
+            </>
+          );
+
+          if (!destination) {
+            return (
+              <article
+                key={bucket.id}
+                className="rounded-md border border-border bg-background p-2.5"
+              >
+                {body}
+              </article>
+            );
+          }
+
+          const track = () =>
+            trackEvent(
+              browseFreshnessBucketAnalyticsEvent(),
+              browseFreshnessBucketAnalyticsData(
+                bucket.id,
+                bucket.count,
+                bucket.percent,
+                state.scannedCount,
+              ),
+            );
+
+          if (destination.to === "/browse" && onBucketSelect) {
+            return (
+              <button
+                key={bucket.id}
+                type="button"
+                onClick={() => {
+                  track();
+                  onBucketSelect(bucket.id, destination.search);
+                }}
+                className="rounded-md border border-border bg-background p-2.5 text-left transition-colors duration-200 ease-out hover:border-border-strong hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60"
+              >
+                {body}
+              </button>
+            );
+          }
+
+          return (
+            <Link
+              key={bucket.id}
+              to={destination.to}
+              hash={destination.to === "/quality" ? destination.hash : undefined}
+              onClick={track}
+              className="rounded-md border border-border bg-background p-2.5 text-left transition-colors duration-200 ease-out hover:border-border-strong hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60"
+            >
+              {body}
+            </Link>
           );
         })}
       </div>

@@ -4,6 +4,7 @@ import {
   BROWSE_THEME_DISTRIBUTION_SURFACE,
   browseFreshnessBucketAnalyticsData,
   browseFreshnessBucketAnalyticsEvent,
+  browseFreshnessBucketDestination,
   browseFreshnessBucketSignal,
   browseFreshnessStaleEntryAnalyticsData,
   browseFreshnessStaleEntryAnalyticsEvent,
@@ -67,5 +68,25 @@ describe("browse distribution cta events lib", () => {
     expect(browseFreshnessBucketSignal("aging")).toBe("aging");
     expect(browseFreshnessBucketSignal("stale")).toBe("stale");
     expect(browseFreshnessBucketSignal("unknown")).toBeNull();
+  });
+
+  it("maps browse freshness buckets to browse or quality destinations", () => {
+    expect(browseFreshnessBucketDestination("fresh")).toEqual({
+      to: "/browse",
+      search: { sort: "newest" },
+    });
+    expect(browseFreshnessBucketDestination("recent")).toEqual({
+      to: "/browse",
+      search: { sort: "newest" },
+    });
+    expect(browseFreshnessBucketDestination("aging")).toEqual({
+      to: "/quality",
+      hash: "freshness",
+    });
+    expect(browseFreshnessBucketDestination("stale")).toEqual({
+      to: "/quality",
+      hash: "freshness",
+    });
+    expect(browseFreshnessBucketDestination("unknown")).toBeNull();
   });
 });

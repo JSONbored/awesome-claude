@@ -27,3 +27,21 @@ export function heroStatusRowEgressAnalyticsData(
     briefNumber,
   };
 }
+
+export type HeroStatusRowRouteDestination =
+  | { to: "/integrations/$slug"; params: { slug: string } }
+  | { to: "/brief" };
+
+/** Map a hero status row egress id to an in-app route. */
+export function heroStatusRowDestination(
+  destination: string,
+): HeroStatusRowRouteDestination | null {
+  switch (destination) {
+    case "mcp-server":
+      return { to: "/integrations/$slug", params: { slug: "mcp-server" } };
+    case "brief":
+      return { to: "/brief" };
+    default:
+      return null;
+  }
+}
