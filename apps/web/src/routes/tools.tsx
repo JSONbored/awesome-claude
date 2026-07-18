@@ -121,31 +121,35 @@ function ToolsPage() {
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {COMMERCIAL_TOOLS.map((t, cardIndex) => (
-          <Link
+          <article
             key={t.slug}
-            to="/entry/$category/$slug"
-            params={{ category: "tools", slug: t.slug }}
-            onClick={() =>
-              trackEvent(
-                toolsDirectoryEntryAnalyticsEvent(),
-                toolsDirectoryEntryAnalyticsData(t.slug, cardIndex, COMMERCIAL_TOOLS.length),
-              )
-            }
             className="group flex flex-col gap-3 rounded-xl border border-border bg-surface p-5 transition-colors duration-200 ease-out hover:bg-surface-2"
           >
-            <div className="flex items-start justify-between gap-2">
-              <div className="flex min-w-0 items-start gap-3">
-                <EntryBrandMark entry={t} size="md" className="mt-0.5" />
-                <div className="min-w-0">
-                  <div className="font-display text-lg font-semibold text-ink">{t.name}</div>
-                  <div className="mt-0.5 text-xs text-ink-muted">
-                    {t.category} · {t.pricingModel}
+            <Link
+              to="/entry/$category/$slug"
+              params={{ category: "tools", slug: t.slug }}
+              onClick={() =>
+                trackEvent(
+                  toolsDirectoryEntryAnalyticsEvent(),
+                  toolsDirectoryEntryAnalyticsData(t.slug, cardIndex, COMMERCIAL_TOOLS.length),
+                )
+              }
+              className="flex flex-col gap-3"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex min-w-0 items-start gap-3">
+                  <EntryBrandMark entry={t} size="md" className="mt-0.5" />
+                  <div className="min-w-0">
+                    <div className="font-display text-lg font-semibold text-ink">{t.name}</div>
+                    <div className="mt-0.5 text-xs text-ink-muted">
+                      {t.category} · {t.pricingModel}
+                    </div>
                   </div>
                 </div>
+                <DisclosureBadge value={t.disclosure} />
               </div>
-              <DisclosureBadge value={t.disclosure} />
-            </div>
-            <p className="line-clamp-3 text-sm text-ink-muted">{t.tagline}</p>
+              <p className="line-clamp-3 text-sm text-ink-muted">{t.tagline}</p>
+            </Link>
             <div className="mt-auto flex items-center justify-between text-xs text-ink-muted">
               <div className="flex flex-wrap gap-1">
                 {t.tags.slice(0, 3).map((tag) => {
@@ -161,11 +165,11 @@ function ToolsPage() {
                     );
                   }
                   return (
-                    <a
+                    <Link
                       key={tag}
-                      href={`/tags/${destination.params.tag}`}
-                      onClick={(e) => {
-                        e.stopPropagation();
+                      to={destination.to}
+                      params={destination.params}
+                      onClick={() =>
                         trackEvent(
                           toolsPageTagAnalyticsEvent(),
                           toolsPageTagAnalyticsData(
@@ -173,20 +177,30 @@ function ToolsPage() {
                             t.slug,
                             COMMERCIAL_TOOLS.length,
                           ),
-                        );
-                      }}
+                        )
+                      }
                       className="rounded border border-border px-1.5 py-0.5 font-mono text-[10px] hover:border-ink/30 hover:bg-surface-2 hover:text-ink"
                     >
                       {tag}
-                    </a>
+                    </Link>
                   );
                 })}
               </div>
-              <span className="inline-flex items-center gap-1 text-ink group-hover:underline">
+              <Link
+                to="/entry/$category/$slug"
+                params={{ category: "tools", slug: t.slug }}
+                onClick={() =>
+                  trackEvent(
+                    toolsDirectoryEntryAnalyticsEvent(),
+                    toolsDirectoryEntryAnalyticsData(t.slug, cardIndex, COMMERCIAL_TOOLS.length),
+                  )
+                }
+                className="inline-flex items-center gap-1 text-ink group-hover:underline"
+              >
                 Open <ArrowUpRight className="h-3 w-3" />
-              </span>
+              </Link>
             </div>
-          </Link>
+          </article>
         ))}
       </div>
     </PageContainer>
