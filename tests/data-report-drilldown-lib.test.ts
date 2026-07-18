@@ -6,6 +6,7 @@ import {
   installMethodKeyFromLabel,
   notesSignalFromLabel,
   disclosureSignalFromLabel,
+  verificationSignalFromLabel,
   platformFromLabel,
   sourceStatusFromLabel,
   supplyChainSignalFromLabel,
@@ -14,6 +15,7 @@ import {
   trustLevelFromLabel,
   withCategoryHubDrilldown,
   withDisclosureDrilldown,
+  withVerificationDrilldown,
   withDocsCoverageDrilldown,
   withHostingDrilldown,
   withInstallMethodDrilldown,
@@ -53,6 +55,9 @@ describe("data report drilldown lib", () => {
     expect(disclosureSignalFromLabel("Safety only")).toBe("safety-notes");
     expect(disclosureSignalFromLabel("Privacy only")).toBe("privacy-notes");
     expect(disclosureSignalFromLabel("Neither documented")).toBeUndefined();
+    expect(verificationSignalFromLabel("Validated")).toBe("reviewed");
+    expect(verificationSignalFromLabel("Production")).toBe("reviewed");
+    expect(verificationSignalFromLabel("Draft")).toBeUndefined();
   });
 
   it("attaches browse, tag, and category drilldowns with privacy-light keys", () => {
@@ -579,10 +584,36 @@ describe("data report drilldown lib", () => {
     expect(
       withReportDimensionDrilldown(
         "verification",
-        [{ label: "x", count: 1, pct: 100 }],
+        [{ label: "Validated", count: 1, pct: 100 }],
+        "skills",
+      )[0]?.drilldown,
+    ).toEqual({
+      kind: "browse",
+      search: { category: "skills", signal: "reviewed" },
+    });
+    expect(
+      withReportDimensionDrilldown(
+        "verification",
+        [{ label: "Draft", count: 1, pct: 100 }],
         "skills",
       )[0]?.drilldown,
     ).toEqual({ kind: "browse", search: { category: "skills" } });
+    expect(
+      withVerificationDrilldown(
+        [{ label: "Production", count: 2, pct: 40 }],
+        "skills",
+      )[0]?.drilldown,
+    ).toEqual({
+      kind: "browse",
+      search: { category: "skills", signal: "reviewed" },
+    });
+    expect(
+      withReportDimensionDrilldown(
+        "complexity",
+        [{ label: "Simple (score 1–2)", count: 1, pct: 100 }],
+        "hooks",
+      )[0]?.drilldown,
+    ).toEqual({ kind: "browse", search: { category: "hooks" } });
     expect(
       withReportDimensionDrilldown(
         "hook-events",
