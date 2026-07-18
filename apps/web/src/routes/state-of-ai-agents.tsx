@@ -27,6 +27,7 @@ import {
   stateReportEgressAnalyticsEvent,
   stateReportStatAnalyticsData,
   stateReportStatAnalyticsEvent,
+  stateReportStatDestination,
   type StateReportEgressDestination,
 } from "@/lib/state-report-page-cta-events";
 
@@ -45,9 +46,11 @@ function trackStateReportCite() {
 }
 
 function trackStat(statKey: string) {
+  const destination = stateReportStatDestination(REPORT_ID, statKey);
+  if (!destination) return;
   trackEvent(
     stateReportStatAnalyticsEvent(),
-    stateReportStatAnalyticsData(REPORT_ID, statKey, "browse"),
+    stateReportStatAnalyticsData(REPORT_ID, statKey, destination.destination),
   );
 }
 
@@ -126,24 +129,21 @@ function StateOfAiAgentsPage() {
       <p className="mt-2 text-xs text-ink-subtle">Data as of {asOfLabel} (UTC).</p>
 
       <div className="mt-10 grid gap-px overflow-hidden rounded-xl border border-border bg-border stagger-children sm:grid-cols-4">
-        {MODEL.stats.map((stat) => (
-          <DataStat
-            key={stat.key}
-            icon={STAT_ICON[stat.key] ?? Bot}
-            label={stat.label}
-            value={stat.value}
-            hint={statHint(stat)}
-            to="/browse"
-            search={
-              stat.key === "source-backed"
-                ? { category: REPORT_CATEGORY, source: "source-backed" }
-                : stat.key === "documented"
-                  ? { category: REPORT_CATEGORY, signal: "safety-notes" }
-                  : { category: REPORT_CATEGORY }
-            }
-            onNavigate={() => trackStat(stat.key)}
-          />
-        ))}
+        {MODEL.stats.map((stat) => {
+          const destination = stateReportStatDestination(REPORT_ID, stat.key);
+          return (
+            <DataStat
+              key={stat.key}
+              icon={STAT_ICON[stat.key] ?? Bot}
+              label={stat.label}
+              value={stat.value}
+              hint={statHint(stat)}
+              to={destination?.to}
+              search={destination?.search}
+              onNavigate={() => trackStat(stat.key)}
+            />
+          );
+        })}
       </div>
 
       {MODEL.dimensions.map((dimension) => {

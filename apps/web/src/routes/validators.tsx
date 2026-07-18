@@ -29,8 +29,10 @@ import {
 import {
   validatorsSummaryStatAnalyticsData,
   validatorsSummaryStatAnalyticsEvent,
+  validatorsSummaryStatDestination,
   validatorsToolCardAnalyticsData,
   validatorsToolCardAnalyticsEvent,
+  validatorsToolCardDestination,
   type ValidatorsSummaryStatId,
   type ValidatorsToolId,
 } from "@/lib/validators-tools-cta-events";
@@ -132,37 +134,46 @@ function ValidatorsPage() {
       />
 
       <div className="mt-8 grid gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-4">
-        <SummaryStat
-          label="Entries"
-          value={REVIEW_SUMMARY.total}
-          to="/browse"
-          statId="entries"
-          destination="browse"
-        />
-        <SummaryStat
-          label="Reviewed"
-          value={`${REVIEW_SUMMARY.pct(REVIEW_SUMMARY.reviewed, REVIEW_SUMMARY.total)}%`}
-          help={`${REVIEW_SUMMARY.reviewed} entries`}
-          to="/quality"
-          statId="safety-coverage"
-          destination="quality"
-        />
-        <SummaryStat
-          label="Source-backed"
-          value={`${REVIEW_SUMMARY.pct(REVIEW_SUMMARY.sourceBacked, REVIEW_SUMMARY.total)}%`}
-          help={`${REVIEW_SUMMARY.sourceBacked} entries`}
-          to="/browse"
-          search={{ source: "source-backed" }}
-          statId="source-backed"
-          destination="browse"
-        />
-        <SummaryStat
-          label="Needs attention"
-          value={REVIEW_SUMMARY.needsAttention}
-          to="/quality"
-          statId="needs-attention"
-          destination="quality"
-        />
+        {(
+          [
+            {
+              label: "Entries",
+              value: REVIEW_SUMMARY.total,
+              statId: "entries" as const,
+            },
+            {
+              label: "Reviewed",
+              value: `${REVIEW_SUMMARY.pct(REVIEW_SUMMARY.reviewed, REVIEW_SUMMARY.total)}%`,
+              help: `${REVIEW_SUMMARY.reviewed} entries`,
+              statId: "safety-coverage" as const,
+            },
+            {
+              label: "Source-backed",
+              value: `${REVIEW_SUMMARY.pct(REVIEW_SUMMARY.sourceBacked, REVIEW_SUMMARY.total)}%`,
+              help: `${REVIEW_SUMMARY.sourceBacked} entries`,
+              statId: "source-backed" as const,
+            },
+            {
+              label: "Needs attention",
+              value: REVIEW_SUMMARY.needsAttention,
+              statId: "needs-attention" as const,
+            },
+          ] as const
+        ).map((stat) => {
+          const destination = validatorsSummaryStatDestination(stat.statId);
+          return (
+            <SummaryStat
+              key={stat.statId}
+              label={stat.label}
+              value={stat.value}
+              help={"help" in stat ? stat.help : undefined}
+              to={destination?.to}
+              search={destination?.search}
+              statId={stat.statId}
+              destination={destination?.destination}
+            />
+          );
+        })}
       </div>
 
       <div className="mt-8 flex flex-wrap items-center gap-2">
@@ -402,20 +413,36 @@ function ValidatorsPage() {
           or install approval.
         </p>
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
-          <ToolCard
-            icon={FileJson}
-            title="SKILL.md package"
-            blurb="Frontmatter, package references, checksum facts, submission metadata."
-            toolId="skill-package"
-            to="/validators/skill-package"
-          />
-          <ToolCard
-            icon={Terminal}
-            title="MCP config JSON"
-            blurb="Server shape, package targets, placeholders, risky shell syntax, secret-like values."
-            toolId="mcp-config"
-            to="/validators/mcp-config"
-          />
+          {(
+            [
+              {
+                icon: FileJson,
+                title: "SKILL.md package",
+                blurb: "Frontmatter, package references, checksum facts, submission metadata.",
+                toolId: "skill-package" as const,
+              },
+              {
+                icon: Terminal,
+                title: "MCP config JSON",
+                blurb:
+                  "Server shape, package targets, placeholders, risky shell syntax, secret-like values.",
+                toolId: "mcp-config" as const,
+              },
+            ] as const
+          ).map((tool) => {
+            const destination = validatorsToolCardDestination(tool.toolId);
+            if (!destination) return null;
+            return (
+              <ToolCard
+                key={tool.toolId}
+                icon={tool.icon}
+                title={tool.title}
+                blurb={tool.blurb}
+                toolId={tool.toolId}
+                to={destination.to}
+              />
+            );
+          })}
         </div>
       </section>
 

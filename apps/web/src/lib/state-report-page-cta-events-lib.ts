@@ -118,8 +118,7 @@ export type StateReportStatDestination = {
 
 /**
  * Map a state-report headline stat to browse/quality egress.
- * Wired for claude-tooling / mcp-servers / claude-code-hooks; other report
- * ids return null so open PRs covering ai-agents/skills stay conflict-free.
+ * Covers all five public state reports (tooling, mcp, hooks, agents, skills).
  */
 export function stateReportStatDestination(
   reportId: string,
@@ -175,6 +174,49 @@ export function stateReportStatDestination(
           return {
             to: "/browse",
             search: { category: "hooks" },
+            destination: "browse",
+          };
+        default:
+          return null;
+      }
+    case "ai-agents":
+      switch (statKey) {
+        case "documented":
+          return {
+            to: "/browse",
+            search: { category: "agents", signal: "safety-notes" },
+            destination: "browse",
+          };
+        case "source-backed":
+          return {
+            to: "/browse",
+            search: { category: "agents", source: "source-backed" },
+            destination: "browse",
+          };
+        case "total":
+        case "ready":
+          return {
+            to: "/browse",
+            search: { category: "agents" },
+            destination: "browse",
+          };
+        default:
+          return null;
+      }
+    case "agent-skills":
+      switch (statKey) {
+        case "packaged":
+          return {
+            to: "/browse",
+            search: { category: "skills", signal: "trusted-package" },
+            destination: "browse",
+          };
+        case "total":
+        case "validated":
+        case "packs":
+          return {
+            to: "/browse",
+            search: { category: "skills" },
             destination: "browse",
           };
         default:

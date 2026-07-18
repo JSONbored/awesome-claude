@@ -152,8 +152,50 @@ describe("state report page cta events lib", () => {
       stateReportStatDestination("claude-code-hooks", "unknown"),
     ).toBeNull();
 
-    expect(stateReportStatDestination("ai-agents", "total")).toBeNull();
-    expect(stateReportStatDestination("agent-skills", "total")).toBeNull();
+    expect(stateReportStatDestination("ai-agents", "total")).toEqual({
+      to: "/browse",
+      search: { category: "agents" },
+      destination: "browse",
+    });
+    expect(stateReportStatDestination("ai-agents", "documented")).toEqual({
+      to: "/browse",
+      search: { category: "agents", signal: "safety-notes" },
+      destination: "browse",
+    });
+    expect(stateReportStatDestination("ai-agents", "source-backed")).toEqual({
+      to: "/browse",
+      search: { category: "agents", source: "source-backed" },
+      destination: "browse",
+    });
+    expect(stateReportStatDestination("ai-agents", "ready")).toEqual({
+      to: "/browse",
+      search: { category: "agents" },
+      destination: "browse",
+    });
+    expect(stateReportStatDestination("ai-agents", "unknown")).toBeNull();
+
+    expect(stateReportStatDestination("agent-skills", "total")).toEqual({
+      to: "/browse",
+      search: { category: "skills" },
+      destination: "browse",
+    });
+    expect(stateReportStatDestination("agent-skills", "validated")).toEqual({
+      to: "/browse",
+      search: { category: "skills" },
+      destination: "browse",
+    });
+    expect(stateReportStatDestination("agent-skills", "packs")).toEqual({
+      to: "/browse",
+      search: { category: "skills" },
+      destination: "browse",
+    });
+    expect(stateReportStatDestination("agent-skills", "packaged")).toEqual({
+      to: "/browse",
+      search: { category: "skills", signal: "trusted-package" },
+      destination: "browse",
+    });
+    expect(stateReportStatDestination("agent-skills", "unknown")).toBeNull();
+
     expect(stateReportStatDestination("unknown-report", "total")).toBeNull();
   });
 });

@@ -3,8 +3,10 @@ import {
   VALIDATORS_TOOLS_SURFACE,
   validatorsSummaryStatAnalyticsData,
   validatorsSummaryStatAnalyticsEvent,
+  validatorsSummaryStatDestination,
   validatorsToolCardAnalyticsData,
   validatorsToolCardAnalyticsEvent,
+  validatorsToolCardDestination,
 } from "@/lib/validators-tools-cta-events-lib";
 
 describe("validators tools cta events lib", () => {
@@ -37,5 +39,36 @@ describe("validators tools cta events lib", () => {
       statId: "needs-attention",
       destination: "quality",
     });
+  });
+
+  it("maps validators summary stats and tool cards to destinations", () => {
+    expect(validatorsSummaryStatDestination("entries")).toEqual({
+      to: "/browse",
+      destination: "browse",
+    });
+    expect(validatorsSummaryStatDestination("safety-coverage")).toEqual({
+      to: "/quality",
+      destination: "quality",
+    });
+    expect(validatorsSummaryStatDestination("source-backed")).toEqual({
+      to: "/browse",
+      search: { source: "source-backed" },
+      destination: "browse",
+    });
+    expect(validatorsSummaryStatDestination("needs-attention")).toEqual({
+      to: "/quality",
+      destination: "quality",
+    });
+    expect(validatorsSummaryStatDestination("unknown")).toBeNull();
+
+    expect(validatorsToolCardDestination("skill-package")).toEqual({
+      to: "/validators/skill-package",
+      destination: "validators-skill-package",
+    });
+    expect(validatorsToolCardDestination("mcp-config")).toEqual({
+      to: "/validators/mcp-config",
+      destination: "validators-mcp-config",
+    });
+    expect(validatorsToolCardDestination("unknown")).toBeNull();
   });
 });
