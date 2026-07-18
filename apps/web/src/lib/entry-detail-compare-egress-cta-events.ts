@@ -6,6 +6,7 @@ export {
   ENTRY_DETAIL_COMPARE_EGRESS_SURFACE_FEATURED,
   entryDetailCompareEgressAnalyticsData,
   entryDetailCompareEgressAnalyticsEvent,
+  entryDetailCompareEgressDestination,
   entryDetailCompareEgressEntryKey,
   type EntryDetailCompareEgressLinkKind,
   type EntryDetailCompareEgressSurface,

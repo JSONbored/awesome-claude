@@ -43,3 +43,36 @@ export function entryDetailCompareEgressAnalyticsData(
     hasInteractive,
   };
 }
+
+export type EntryDetailCompareEgressDestination =
+  | { to: "/best/$slug"; params: { slug: string } }
+  | { to: "/compare/$slug"; params: { slug: string } }
+  | { to: "/compare"; search: { ids: string } };
+
+/**
+ * Map a compare-egress link kind + target (list/comparison slug, or interactive
+ * ids payload) to a route destination.
+ */
+export function entryDetailCompareEgressDestination(
+  linkKind: string,
+  target: string,
+): EntryDetailCompareEgressDestination | null {
+  const value = target.trim();
+  switch (value) {
+    case "":
+      return null;
+    default:
+      switch (linkKind) {
+        case "best-list":
+          return { to: "/best/$slug", params: { slug: value } };
+        case "comparison-page":
+          return { to: "/compare/$slug", params: { slug: value } };
+        case "best-list-interactive":
+        case "comparison-interactive":
+        case "dossier-interactive":
+          return { to: "/compare", search: { ids: value } };
+        default:
+          return null;
+      }
+  }
+}

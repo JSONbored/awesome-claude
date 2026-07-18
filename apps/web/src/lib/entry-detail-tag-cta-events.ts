@@ -6,7 +6,9 @@ export {
   ENTRY_DETAIL_TAGS_SURFACE,
   entryDetailCategoryHubAnalyticsData,
   entryDetailCategoryHubAnalyticsEvent,
+  entryDetailCategoryHubDestination,
   entryDetailTagAnalyticsData,
   entryDetailTagAnalyticsEvent,
   entryDetailTagEntryKey,
+  entryDetailTagSelectDestination,
 } from "@/lib/entry-detail-tag-cta-events-lib";

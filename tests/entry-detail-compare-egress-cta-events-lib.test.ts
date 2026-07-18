@@ -4,6 +4,7 @@ import {
   ENTRY_DETAIL_COMPARE_EGRESS_SURFACE_FEATURED,
   entryDetailCompareEgressAnalyticsData,
   entryDetailCompareEgressAnalyticsEvent,
+  entryDetailCompareEgressDestination,
   entryDetailCompareEgressEntryKey,
 } from "@/lib/entry-detail-compare-egress-cta-events-lib";
 
@@ -63,5 +64,43 @@ describe("entry detail compare egress cta events lib", () => {
       refCount: 4,
       hasInteractive: true,
     });
+  });
+
+  it("maps compare egress destinations", () => {
+    expect(entryDetailCompareEgressDestination("best-list", "top-mcp")).toEqual(
+      {
+        to: "/best/$slug",
+        params: { slug: "top-mcp" },
+      },
+    );
+    expect(
+      entryDetailCompareEgressDestination("comparison-page", "browser-vs-fs"),
+    ).toEqual({
+      to: "/compare/$slug",
+      params: { slug: "browser-vs-fs" },
+    });
+    expect(
+      entryDetailCompareEgressDestination("dossier-interactive", "a,b,c"),
+    ).toEqual({
+      to: "/compare",
+      search: { ids: "a,b,c" },
+    });
+    expect(
+      entryDetailCompareEgressDestination("best-list-interactive", "x,y"),
+    ).toEqual({
+      to: "/compare",
+      search: { ids: "x,y" },
+    });
+    expect(
+      entryDetailCompareEgressDestination("comparison-interactive", "p,q"),
+    ).toEqual({
+      to: "/compare",
+      search: { ids: "p,q" },
+    });
+    expect(entryDetailCompareEgressDestination("best-list", "")).toBeNull();
+    expect(entryDetailCompareEgressDestination("best-list", "  ")).toBeNull();
+    expect(
+      entryDetailCompareEgressDestination("unknown", "top-mcp"),
+    ).toBeNull();
   });
 });

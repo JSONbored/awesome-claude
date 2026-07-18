@@ -5,5 +5,6 @@ export {
   ENTRY_DETAIL_COLLECTION_ITEMS_SURFACE,
   entryDetailCollectionEntryAnalyticsData,
   entryDetailCollectionEntryAnalyticsEvent,
+  entryDetailCollectionEntryDestination,
   entryDetailCollectionEntryKey,
 } from "@/lib/entry-detail-collection-cta-events-lib";

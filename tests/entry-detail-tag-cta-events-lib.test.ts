@@ -4,8 +4,10 @@ import {
   ENTRY_DETAIL_TAGS_SURFACE,
   entryDetailCategoryHubAnalyticsData,
   entryDetailCategoryHubAnalyticsEvent,
+  entryDetailCategoryHubDestination,
   entryDetailTagAnalyticsData,
   entryDetailTagAnalyticsEvent,
+  entryDetailTagSelectDestination,
 } from "@/lib/entry-detail-tag-cta-events-lib";
 
 describe("entry detail tag cta events lib", () => {
@@ -28,5 +30,20 @@ describe("entry detail tag cta events lib", () => {
       surface: ENTRY_DETAIL_RELATED_SURFACE,
       category: "skills",
     });
+  });
+
+  it("maps tag select and category hub destinations", () => {
+    expect(entryDetailTagSelectDestination("browser")).toEqual({
+      to: "/tags/$tag",
+      params: { tag: "browser" },
+    });
+    expect(entryDetailTagSelectDestination("")).toBeNull();
+    expect(entryDetailTagSelectDestination("  ")).toBeNull();
+    expect(entryDetailCategoryHubDestination("mcp")).toEqual({
+      to: "/$category",
+      params: { category: "mcp" },
+    });
+    expect(entryDetailCategoryHubDestination("")).toBeNull();
+    expect(entryDetailCategoryHubDestination("  ")).toBeNull();
   });
 });

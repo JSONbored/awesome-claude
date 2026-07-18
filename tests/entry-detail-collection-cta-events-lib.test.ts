@@ -3,6 +3,7 @@ import {
   ENTRY_DETAIL_COLLECTION_ITEMS_SURFACE,
   entryDetailCollectionEntryAnalyticsData,
   entryDetailCollectionEntryAnalyticsEvent,
+  entryDetailCollectionEntryDestination,
 } from "@/lib/entry-detail-collection-cta-events-lib";
 
 describe("entry detail collection cta events lib", () => {
@@ -25,5 +26,16 @@ describe("entry detail collection cta events lib", () => {
       itemIndex: 1,
       itemCount: 5,
     });
+  });
+
+  it("maps collection entry destinations", () => {
+    expect(entryDetailCollectionEntryDestination("mcp", "browser")).toEqual({
+      to: "/entry/$category/$slug",
+      params: { category: "mcp", slug: "browser" },
+    });
+    expect(entryDetailCollectionEntryDestination("", "browser")).toBeNull();
+    expect(entryDetailCollectionEntryDestination("mcp", "")).toBeNull();
+    expect(entryDetailCollectionEntryDestination("  ", "browser")).toBeNull();
+    expect(entryDetailCollectionEntryDestination("mcp", "  ")).toBeNull();
   });
 });

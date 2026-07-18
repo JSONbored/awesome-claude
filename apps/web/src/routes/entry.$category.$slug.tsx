@@ -99,8 +99,10 @@ import {
 import {
   entryDetailCategoryHubAnalyticsData,
   entryDetailCategoryHubAnalyticsEvent,
+  entryDetailCategoryHubDestination,
   entryDetailTagAnalyticsData,
   entryDetailTagAnalyticsEvent,
+  entryDetailTagSelectDestination,
 } from "@/lib/entry-detail-tag-cta-events";
 import {
   ENTRY_DETAIL_DECISION_PLAYBOOK_SURFACE,
@@ -143,12 +145,14 @@ import {
   ENTRY_DETAIL_COMPARE_EGRESS_SURFACE_FEATURED,
   entryDetailCompareEgressAnalyticsData,
   entryDetailCompareEgressAnalyticsEvent,
+  entryDetailCompareEgressDestination,
   type EntryDetailCompareEgressLinkKind,
   type EntryDetailCompareEgressSurface,
 } from "@/lib/entry-detail-compare-egress-cta-events";
 import {
   entryDetailCollectionEntryAnalyticsData,
   entryDetailCollectionEntryAnalyticsEvent,
+  entryDetailCollectionEntryDestination,
 } from "@/lib/entry-detail-collection-cta-events";
 import { resourceCardCompareFullMessage } from "@/lib/resource-card-compare-ui";
 import { useCopyPref, useHarnessPref, type CopyVariant } from "@/lib/dossier-prefs";
@@ -962,11 +966,19 @@ function Dossier() {
                     </span>
                   );
                 }
+                const destination = entryDetailTagSelectDestination(slug);
+                if (!destination) {
+                  return (
+                    <span key={t} className={base}>
+                      #{t}
+                    </span>
+                  );
+                }
                 return (
                   <Link
                     key={t}
-                    to="/tags/$tag"
-                    params={{ tag: slug }}
+                    to={destination.to}
+                    params={destination.params}
                     onClick={() =>
                       trackEvent(
                         entryDetailTagAnalyticsEvent(),
@@ -1019,24 +1031,33 @@ function Dossier() {
                 </div>
               ) : null}
               <ComparisonTable entries={[entry, ...alternatives]} showNextActions />
-              {dossierCompareUi.interactiveSearch ? (
-                <Link
-                  to="/compare"
-                  search={dossierCompareUi.interactiveSearch}
-                  className="mt-4 inline-flex items-center gap-1.5 text-sm text-ink-muted hover:text-ink"
-                  onClick={() =>
-                    trackCompareEgress(
-                      ENTRY_DETAIL_COMPARE_EGRESS_SURFACE_COMPARE,
+              {dossierCompareUi.interactiveSearch
+                ? (() => {
+                    const destination = entryDetailCompareEgressDestination(
                       "dossier-interactive",
-                      alternatives.length + 1,
-                      true,
-                    )
-                  }
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                  {dossierCompareUi.interactiveLinkLabel}
-                </Link>
-              ) : null}
+                      dossierCompareUi.interactiveSearch.ids,
+                    );
+                    if (!destination || !("search" in destination)) return null;
+                    return (
+                      <Link
+                        to={destination.to}
+                        search={destination.search}
+                        className="mt-4 inline-flex items-center gap-1.5 text-sm text-ink-muted hover:text-ink"
+                        onClick={() =>
+                          trackCompareEgress(
+                            ENTRY_DETAIL_COMPARE_EGRESS_SURFACE_COMPARE,
+                            "dossier-interactive",
+                            alternatives.length + 1,
+                            true,
+                          )
+                        }
+                      >
+                        <ArrowLeft className="h-4 w-4" />
+                        {dossierCompareUi.interactiveLinkLabel}
+                      </Link>
+                    );
+                  })()
+                : null}
             </DossierSection>
           )}
 
@@ -1073,19 +1094,25 @@ function Dossier() {
                 </div>
               )}
               <div className="mt-3 text-right">
-                <Link
-                  to="/$category"
-                  params={{ category: entry.category }}
-                  onClick={() =>
-                    trackEvent(
-                      entryDetailCategoryHubAnalyticsEvent(),
-                      entryDetailCategoryHubAnalyticsData(entry.category, entry.slug),
-                    )
-                  }
-                  className="story-link text-xs font-medium text-ink"
-                >
-                  More in {categoryLabels[entry.category] ?? entry.category} →
-                </Link>
+                {(() => {
+                  const destination = entryDetailCategoryHubDestination(entry.category);
+                  if (!destination) return null;
+                  return (
+                    <Link
+                      to={destination.to}
+                      params={destination.params}
+                      onClick={() =>
+                        trackEvent(
+                          entryDetailCategoryHubAnalyticsEvent(),
+                          entryDetailCategoryHubAnalyticsData(entry.category, entry.slug),
+                        )
+                      }
+                      className="story-link text-xs font-medium text-ink"
+                    >
+                      More in {categoryLabels[entry.category] ?? entry.category} →
+                    </Link>
+                  );
+                })()}
               </div>
             </DossierSection>
           )}
@@ -1115,14 +1142,22 @@ function Dossier() {
                   const bestListLink = featuredUi.bestListLinks.find(
                     (link) => link.slug === l.slug,
                   );
+                  const listDestination = entryDetailCompareEgressDestination("best-list", l.slug);
+                  const interactiveDestination =
+                    bestListLink?.search &&
+                    entryDetailCompareEgressDestination(
+                      "best-list-interactive",
+                      bestListLink.search.ids,
+                    );
+                  if (!listDestination || !("params" in listDestination)) return null;
                   return (
                     <li
                       key={`best-${l.slug}`}
                       className="flex flex-wrap items-baseline gap-x-2 gap-y-1"
                     >
                       <Link
-                        to="/best/$slug"
-                        params={{ slug: l.slug }}
+                        to={listDestination.to}
+                        params={listDestination.params}
                         className="story-link text-ink"
                         onClick={() =>
                           trackCompareEgress(
@@ -1135,10 +1170,10 @@ function Dossier() {
                       >
                         Best list: {l.title}
                       </Link>
-                      {bestListLink?.search ? (
+                      {interactiveDestination && "search" in interactiveDestination ? (
                         <Link
-                          to="/compare"
-                          search={bestListLink.search}
+                          to={interactiveDestination.to}
+                          search={interactiveDestination.search}
                           className="text-xs text-ink-muted hover:text-ink"
                           onClick={() =>
                             trackCompareEgress(
@@ -1149,7 +1184,7 @@ function Dossier() {
                             )
                           }
                         >
-                          {bestListLink.label}
+                          {bestListLink?.label}
                         </Link>
                       ) : null}
                     </li>
@@ -1159,14 +1194,25 @@ function Dossier() {
                   const featuredLink = featuredUi.comparisonLinks.find(
                     (link) => link.slug === c.slug,
                   );
+                  const pageDestination = entryDetailCompareEgressDestination(
+                    "comparison-page",
+                    c.slug,
+                  );
+                  const interactiveDestination =
+                    featuredLink?.search &&
+                    entryDetailCompareEgressDestination(
+                      "comparison-interactive",
+                      featuredLink.search.ids,
+                    );
+                  if (!pageDestination || !("params" in pageDestination)) return null;
                   return (
                     <li
                       key={`cmp-${c.slug}`}
                       className="flex flex-wrap items-baseline gap-x-2 gap-y-1"
                     >
                       <Link
-                        to="/compare/$slug"
-                        params={{ slug: c.slug }}
+                        to={pageDestination.to}
+                        params={pageDestination.params}
                         className="story-link text-ink"
                         onClick={() =>
                           trackCompareEgress(
@@ -1179,10 +1225,10 @@ function Dossier() {
                       >
                         Comparison: {c.title}
                       </Link>
-                      {featuredLink?.search ? (
+                      {interactiveDestination && "search" in interactiveDestination ? (
                         <Link
-                          to="/compare"
-                          search={featuredLink.search}
+                          to={interactiveDestination.to}
+                          search={interactiveDestination.search}
                           className="text-xs text-ink-muted hover:text-ink"
                           onClick={() =>
                             trackCompareEgress(
@@ -1193,7 +1239,7 @@ function Dossier() {
                             )
                           }
                         >
-                          {featuredLink.label}
+                          {featuredLink?.label}
                         </Link>
                       ) : null}
                     </li>
@@ -1584,11 +1630,22 @@ function CollectionItemList({
         {values.map((value, itemIndex) => {
           const [category, slug] = value.split("/");
           if (category && slug) {
+            const destination = entryDetailCollectionEntryDestination(category, slug);
+            if (!destination) {
+              return (
+                <span
+                  key={value}
+                  className="inline-flex rounded-md border border-border bg-surface px-2 py-0.5 font-mono text-xs text-ink-muted"
+                >
+                  {value}
+                </span>
+              );
+            }
             return (
               <Link
                 key={value}
-                to="/entry/$category/$slug"
-                params={{ category, slug }}
+                to={destination.to}
+                params={destination.params}
                 onClick={() =>
                   trackEvent(
                     entryDetailCollectionEntryAnalyticsEvent(),

@@ -43,3 +43,39 @@ export function entryDetailCategoryHubAnalyticsData(category: string, slug: stri
     category,
   };
 }
+
+export type EntryDetailTagSelectDestination = {
+  to: "/tags/$tag";
+  params: { tag: string };
+};
+
+/** Map a tag slug to a tags hub destination. */
+export function entryDetailTagSelectDestination(
+  tagSlug: string,
+): EntryDetailTagSelectDestination | null {
+  const slug = tagSlug.trim();
+  switch (slug) {
+    case "":
+      return null;
+    default:
+      return { to: "/tags/$tag", params: { tag: slug } };
+  }
+}
+
+export type EntryDetailCategoryHubDestination = {
+  to: "/$category";
+  params: { category: string };
+};
+
+/** Map an entry category to its category hub destination. */
+export function entryDetailCategoryHubDestination(
+  category: string,
+): EntryDetailCategoryHubDestination | null {
+  const id = category.trim();
+  switch (id) {
+    case "":
+      return null;
+    default:
+      return { to: "/$category", params: { category: id } };
+  }
+}
