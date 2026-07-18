@@ -8,6 +8,7 @@ import { trackEvent } from "@/lib/analytics";
 import {
   advertisePageEgressAnalyticsData,
   advertisePageEgressAnalyticsEvent,
+  advertisePageEgressDestination,
   advertisePagePlanSelectAnalyticsData,
   advertisePagePlanSelectAnalyticsEvent,
   advertisePageSubmitAnalyticsData,
@@ -112,21 +113,25 @@ function AdvertisePage() {
       <CommercialLeadSuccess
         title="Interest received"
         body="We'll review fit and reply within two business days. Paid placements are labeled and never affect organic ranking."
-        action={
-          <Link
-            to="/advertise"
-            className="inline-flex h-10 items-center rounded-md border border-border bg-surface px-4 text-sm text-ink hover:bg-surface-2"
-            onClick={() => {
-              trackEvent(
-                advertisePageEgressAnalyticsEvent(),
-                advertisePageEgressAnalyticsData("retry"),
-              );
-              setDone(false);
-            }}
-          >
-            Submit another request
-          </Link>
-        }
+        action={(() => {
+          const destination = advertisePageEgressDestination("retry");
+          if (!destination) return null;
+          return (
+            <Link
+              to={destination.to}
+              className="inline-flex h-10 items-center rounded-md border border-border bg-surface px-4 text-sm text-ink hover:bg-surface-2"
+              onClick={() => {
+                trackEvent(
+                  advertisePageEgressAnalyticsEvent(),
+                  advertisePageEgressAnalyticsData("retry"),
+                );
+                setDone(false);
+              }}
+            >
+              Submit another request
+            </Link>
+          );
+        })()}
       />
     );
   }
@@ -182,18 +187,24 @@ function AdvertisePage() {
           <div className="eyebrow">Get in touch</div>
           <p className="mt-2 text-sm text-ink-muted">
             Free directory submissions stay on{" "}
-            <Link
-              to="/submit"
-              onClick={() =>
-                trackEvent(
-                  advertisePageEgressAnalyticsEvent(),
-                  advertisePageEgressAnalyticsData("submit"),
-                )
-              }
-              className="text-ink underline"
-            >
-              /submit
-            </Link>
+            {(() => {
+              const destination = advertisePageEgressDestination("submit");
+              if (!destination) return "/submit";
+              return (
+                <Link
+                  to={destination.to}
+                  onClick={() =>
+                    trackEvent(
+                      advertisePageEgressAnalyticsEvent(),
+                      advertisePageEgressAnalyticsData("submit"),
+                    )
+                  }
+                  className="text-ink underline"
+                >
+                  /submit
+                </Link>
+              );
+            })()}
             . This form is for paid placement interest only.
           </p>
           <div className="mt-4 space-y-4">

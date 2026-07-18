@@ -6,6 +6,7 @@ import { trackEvent } from "@/lib/analytics";
 import {
   aboutPageEgressAnalyticsData,
   aboutPageEgressAnalyticsEvent,
+  aboutPageEgressDestination,
   type AboutPageDestination,
 } from "@/lib/about-page-cta-events";
 import { breadcrumbScript } from "@/lib/seo-jsonld";
@@ -13,6 +14,22 @@ import { absoluteUrl } from "@/lib/seo";
 
 function trackAboutEgress(destination: AboutPageDestination) {
   trackEvent(aboutPageEgressAnalyticsEvent(), aboutPageEgressAnalyticsData(destination));
+}
+
+function AboutEgressLink({
+  destination,
+  children,
+}: {
+  destination: AboutPageDestination;
+  children: React.ReactNode;
+}) {
+  const dest = aboutPageEgressDestination(destination);
+  if (!dest) return <>{children}</>;
+  return (
+    <Link to={dest.to} className="text-ink underline" onClick={() => trackAboutEgress(destination)}>
+      {children}
+    </Link>
+  );
 }
 
 export const Route = createFileRoute("/about")({
@@ -95,77 +112,23 @@ function AboutPage() {
         <h2 className="h-display-2 text-ink text-balance">Three surfaces, one registry</h2>
         <p className="mt-3 text-sm text-ink-muted">
           The website, the public read-only API, and our{" "}
-          <Link
-            to="/integrations"
-            className="text-ink underline"
-            onClick={() => trackAboutEgress("integrations")}
-          >
-            integrations
-          </Link>{" "}
-          (Raycast extension, MCP server, editor adapters) all read from the same content with the
-          same contracts. If you build on one, you can build on all of them — see the{" "}
-          <Link
-            to="/api-docs"
-            className="text-ink underline"
-            onClick={() => trackAboutEgress("api-docs")}
-          >
-            API docs
-          </Link>{" "}
-          and{" "}
-          <Link
-            to="/quality"
-            className="text-ink underline"
-            onClick={() => trackAboutEgress("quality")}
-          >
-            quality dashboard
-          </Link>
-          .
+          <AboutEgressLink destination="integrations">integrations</AboutEgressLink> (Raycast
+          extension, MCP server, editor adapters) all read from the same content with the same
+          contracts. If you build on one, you can build on all of them — see the{" "}
+          <AboutEgressLink destination="api-docs">API docs</AboutEgressLink> and{" "}
+          <AboutEgressLink destination="quality">quality dashboard</AboutEgressLink>.
         </p>
       </section>
 
       <section className="mt-12">
         <h2 className="h-display-2 text-ink text-balance">Contribute</h2>
         <p className="mt-3 text-sm text-ink-muted">
-          <Link
-            to="/submit"
-            className="text-ink underline"
-            onClick={() => trackAboutEgress("submit")}
-          >
-            Submit a resource
-          </Link>
-          ,{" "}
-          <Link
-            to="/claim"
-            className="text-ink underline"
-            onClick={() => trackAboutEgress("claim")}
-          >
-            claim a listing
-          </Link>
-          , or browse the{" "}
-          <Link
-            to="/contributors"
-            className="text-ink underline"
-            onClick={() => trackAboutEgress("contributors")}
-          >
-            contributors page
-          </Link>
-          . Commercial paths (
-          <Link
-            to="/advertise"
-            className="text-ink underline"
-            onClick={() => trackAboutEgress("advertise")}
-          >
-            advertise
-          </Link>
-          ,{" "}
-          <Link
-            to="/jobs/post"
-            className="text-ink underline"
-            onClick={() => trackAboutEgress("jobs-post")}
-          >
-            post a job
-          </Link>
-          ) are deliberately separate.
+          <AboutEgressLink destination="submit">Submit a resource</AboutEgressLink>,{" "}
+          <AboutEgressLink destination="claim">claim a listing</AboutEgressLink>, or browse the{" "}
+          <AboutEgressLink destination="contributors">contributors page</AboutEgressLink>.
+          Commercial paths (<AboutEgressLink destination="advertise">advertise</AboutEgressLink>,{" "}
+          <AboutEgressLink destination="jobs-post">post a job</AboutEgressLink>) are deliberately
+          separate.
         </p>
       </section>
 

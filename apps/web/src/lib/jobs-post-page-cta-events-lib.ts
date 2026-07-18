@@ -43,3 +43,19 @@ export function jobsPostPageEgressAnalyticsData(destination: JobsPostPageDestina
     destination,
   };
 }
+
+export type JobsPostPageRouteDestination = {
+  to: "/jobs";
+};
+
+/** Map a jobs-post page egress destination id to an in-app route. */
+export function jobsPostPageEgressDestination(
+  destination: string,
+): JobsPostPageRouteDestination | null {
+  switch (destination) {
+    case "jobs-index":
+      return { to: "/jobs" };
+    default:
+      return null;
+  }
+}

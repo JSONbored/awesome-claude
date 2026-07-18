@@ -3,6 +3,7 @@ import {
   ADVERTISE_PAGE_SURFACE,
   advertisePageEgressAnalyticsData,
   advertisePageEgressAnalyticsEvent,
+  advertisePageEgressDestination,
   advertisePagePlanSelectAnalyticsData,
   advertisePagePlanSelectAnalyticsEvent,
   advertisePageSubmitAnalyticsData,
@@ -36,5 +37,10 @@ describe("advertise page cta events lib", () => {
       surface: ADVERTISE_PAGE_SURFACE,
       destination: "retry",
     });
+    expect(advertisePageEgressDestination("submit")).toEqual({ to: "/submit" });
+    expect(advertisePageEgressDestination("retry")).toEqual({
+      to: "/advertise",
+    });
+    expect(advertisePageEgressDestination("unknown")).toBeNull();
   });
 });

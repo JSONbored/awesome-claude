@@ -49,3 +49,45 @@ export function legalPageEgressAnalyticsData(destination: LegalPageDestination) 
     destination,
   };
 }
+
+export type LegalPageRouteDestination =
+  | { kind: "route"; to: "/advertise" | "/jobs/post" | "/claim" }
+  | { kind: "href"; href: string };
+
+/** Map a legal page egress destination id to a route or external href. */
+export function legalPageEgressDestination(destination: string): LegalPageRouteDestination | null {
+  switch (destination) {
+    case "advertise":
+      return { kind: "route", to: "/advertise" };
+    case "jobs-post":
+      return { kind: "route", to: "/jobs/post" };
+    case "claim":
+      return { kind: "route", to: "/claim" };
+    case "github-issues":
+      return { kind: "href", href: "https://github.com/jsonbored/awesome-claude/issues" };
+    case "github-repo":
+      return { kind: "href", href: "https://github.com/jsonbored/awesome-claude" };
+    default:
+      return null;
+  }
+}
+
+export type LegalPageSectionDestination = {
+  kind: "href";
+  href: string;
+};
+
+/** Map a legal page section id to an in-page hash destination. */
+export function legalPageSectionDestination(sectionId: string): LegalPageSectionDestination | null {
+  switch (sectionId) {
+    case "terms":
+    case "privacy":
+    case "content":
+    case "trademarks":
+    case "dmca":
+    case "contact":
+      return { kind: "href", href: `#${sectionId}` };
+    default:
+      return null;
+  }
+}

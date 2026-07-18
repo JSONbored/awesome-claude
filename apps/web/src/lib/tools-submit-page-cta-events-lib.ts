@@ -79,3 +79,23 @@ export function toolsSubmitReviewSubmitAnalyticsData(hasEntryRef: boolean) {
     hasEntryRef,
   };
 }
+
+export type ToolsSubmitChromeDestination = {
+  to: "/tools" | "/submit" | "/advertise" | "/claim";
+};
+
+/** Map a tools-submit chrome CTA id to an in-app route. */
+export function toolsSubmitChromeDestination(ctaId: string): ToolsSubmitChromeDestination | null {
+  switch (ctaId) {
+    case "tools":
+      return { to: "/tools" };
+    case "community":
+      return { to: "/submit" };
+    case "advertise":
+      return { to: "/advertise" };
+    case "claim":
+      return { to: "/claim" };
+    default:
+      return null;
+  }
+}

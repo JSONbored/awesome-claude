@@ -27,3 +27,39 @@ export function aboutPageEgressAnalyticsData(destination: AboutPageDestination) 
     destination,
   };
 }
+
+export type AboutPageRouteDestination = {
+  to:
+    | "/integrations"
+    | "/api-docs"
+    | "/quality"
+    | "/submit"
+    | "/claim"
+    | "/contributors"
+    | "/advertise"
+    | "/jobs/post";
+};
+
+/** Map an about page egress destination id to an in-app route. */
+export function aboutPageEgressDestination(destination: string): AboutPageRouteDestination | null {
+  switch (destination) {
+    case "integrations":
+      return { to: "/integrations" };
+    case "api-docs":
+      return { to: "/api-docs" };
+    case "quality":
+      return { to: "/quality" };
+    case "submit":
+      return { to: "/submit" };
+    case "claim":
+      return { to: "/claim" };
+    case "contributors":
+      return { to: "/contributors" };
+    case "advertise":
+      return { to: "/advertise" };
+    case "jobs-post":
+      return { to: "/jobs/post" };
+    default:
+      return null;
+  }
+}

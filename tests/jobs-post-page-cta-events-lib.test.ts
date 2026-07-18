@@ -3,6 +3,7 @@ import {
   JOBS_POST_PAGE_SURFACE,
   jobsPostPageEgressAnalyticsData,
   jobsPostPageEgressAnalyticsEvent,
+  jobsPostPageEgressDestination,
   jobsPostPageSubmitAnalyticsData,
   jobsPostPageSubmitAnalyticsEvent,
   jobsPostPageTierSelectAnalyticsData,
@@ -32,5 +33,9 @@ describe("jobs post page cta events lib", () => {
       surface: JOBS_POST_PAGE_SURFACE,
       destination: "jobs-index",
     });
+    expect(jobsPostPageEgressDestination("jobs-index")).toEqual({
+      to: "/jobs",
+    });
+    expect(jobsPostPageEgressDestination("unknown")).toBeNull();
   });
 });

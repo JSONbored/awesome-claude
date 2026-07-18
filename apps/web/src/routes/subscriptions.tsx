@@ -12,6 +12,7 @@ import {
   subscriptionsPageConfirmAnalyticsEvent,
   subscriptionsPageEgressAnalyticsData,
   subscriptionsPageEgressAnalyticsEvent,
+  subscriptionsPageEgressDestination,
   subscriptionsPageManageAlertsAnalyticsData,
   subscriptionsPageManageAlertsAnalyticsEvent,
   subscriptionsPageRemoveIntentAnalyticsData,
@@ -168,30 +169,48 @@ function SubscriptionsPage() {
                 body="Follow categories or changelog streams to get email or RSS alerts when they update."
                 action={
                   <div className="flex gap-2">
-                    <Link
-                      to="/feeds"
-                      className="inline-flex h-8 items-center gap-1.5 rounded-md bg-ink px-3 text-xs font-medium text-background hover:bg-ink/90"
-                      onClick={() =>
-                        trackEvent(
-                          subscriptionsPageEgressAnalyticsEvent(),
-                          subscriptionsPageEgressAnalyticsData("feeds"),
-                        )
-                      }
-                    >
-                      <Rss className="h-3.5 w-3.5" /> Browse feeds
-                    </Link>
-                    <Link
-                      to="/browse"
-                      className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-surface px-3 text-xs font-medium text-ink hover:bg-surface-2"
-                      onClick={() =>
-                        trackEvent(
-                          subscriptionsPageEgressAnalyticsEvent(),
-                          subscriptionsPageEgressAnalyticsData("browse"),
-                        )
-                      }
-                    >
-                      <Compass className="h-3.5 w-3.5" /> Browse directory
-                    </Link>
+                    {(
+                      [
+                        {
+                          destination: "feeds" as const,
+                          label: (
+                            <>
+                              <Rss className="h-3.5 w-3.5" /> Browse feeds
+                            </>
+                          ),
+                          className:
+                            "inline-flex h-8 items-center gap-1.5 rounded-md bg-ink px-3 text-xs font-medium text-background hover:bg-ink/90",
+                        },
+                        {
+                          destination: "browse" as const,
+                          label: (
+                            <>
+                              <Compass className="h-3.5 w-3.5" /> Browse directory
+                            </>
+                          ),
+                          className:
+                            "inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-surface px-3 text-xs font-medium text-ink hover:bg-surface-2",
+                        },
+                      ] as const
+                    ).map((item) => {
+                      const destination = subscriptionsPageEgressDestination(item.destination);
+                      if (!destination) return null;
+                      return (
+                        <Link
+                          key={item.destination}
+                          to={destination.to}
+                          className={item.className}
+                          onClick={() =>
+                            trackEvent(
+                              subscriptionsPageEgressAnalyticsEvent(),
+                              subscriptionsPageEgressAnalyticsData(item.destination),
+                            )
+                          }
+                        >
+                          {item.label}
+                        </Link>
+                      );
+                    })}
                   </div>
                 }
                 className="border-0 bg-transparent p-4"

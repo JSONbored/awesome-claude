@@ -9,6 +9,7 @@ import {
   claimPageChangeListingAnalyticsEvent,
   claimPageEgressAnalyticsData,
   claimPageEgressAnalyticsEvent,
+  claimPageEgressDestination,
   claimPageEntrySelectAnalyticsData,
   claimPageEntrySelectAnalyticsEvent,
   claimPageFileAnalyticsData,
@@ -491,15 +492,24 @@ function ClaimPage() {
         </div>
         <p className="mt-3 text-xs text-ink-subtle">
           Want to file a fresh submission instead?{" "}
-          <Link
-            to="/submit"
-            className="text-ink hover:underline"
-            onClick={() =>
-              trackEvent(claimPageEgressAnalyticsEvent(), claimPageEgressAnalyticsData("submit"))
-            }
-          >
-            Submit a resource →
-          </Link>
+          {(() => {
+            const destination = claimPageEgressDestination("submit");
+            if (!destination) return "Submit a resource →";
+            return (
+              <Link
+                to={destination.to}
+                className="text-ink hover:underline"
+                onClick={() =>
+                  trackEvent(
+                    claimPageEgressAnalyticsEvent(),
+                    claimPageEgressAnalyticsData("submit"),
+                  )
+                }
+              >
+                Submit a resource →
+              </Link>
+            );
+          })()}
         </p>
       </section>
     </div>

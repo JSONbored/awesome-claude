@@ -5,6 +5,7 @@ import {
   subscriptionsPageConfirmAnalyticsEvent,
   subscriptionsPageEgressAnalyticsData,
   subscriptionsPageEgressAnalyticsEvent,
+  subscriptionsPageEgressDestination,
   subscriptionsPageManageAlertsAnalyticsData,
   subscriptionsPageManageAlertsAnalyticsEvent,
   subscriptionsPageRemoveIntentAnalyticsData,
@@ -26,6 +27,13 @@ describe("subscriptions page cta events lib", () => {
       surface: SUBSCRIPTIONS_PAGE_SURFACE,
       destination: "browse",
     });
+    expect(subscriptionsPageEgressDestination("feeds")).toEqual({
+      to: "/feeds",
+    });
+    expect(subscriptionsPageEgressDestination("browse")).toEqual({
+      to: "/browse",
+    });
+    expect(subscriptionsPageEgressDestination("unknown")).toBeNull();
     expect(subscriptionsPageManageAlertsAnalyticsEvent()).toBe(
       "subscriptions_page_manage_alerts_click",
     );

@@ -43,3 +43,21 @@ export function advertisePageEgressAnalyticsData(destination: AdvertisePageDesti
     destination,
   };
 }
+
+export type AdvertisePageRouteDestination = {
+  to: "/submit" | "/advertise";
+};
+
+/** Map an advertise page egress destination id to an in-app route. */
+export function advertisePageEgressDestination(
+  destination: string,
+): AdvertisePageRouteDestination | null {
+  switch (destination) {
+    case "submit":
+      return { to: "/submit" };
+    case "retry":
+      return { to: "/advertise" };
+    default:
+      return null;
+  }
+}

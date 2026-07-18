@@ -7,6 +7,7 @@ export {
   claimPageChangeListingAnalyticsEvent,
   claimPageEgressAnalyticsData,
   claimPageEgressAnalyticsEvent,
+  claimPageEgressDestination,
   claimPageEntrySelectAnalyticsData,
   claimPageEntrySelectAnalyticsEvent,
   claimPageFileAnalyticsData,
@@ -18,6 +19,7 @@ export {
   claimPageTypeSelectAnalyticsData,
   claimPageTypeSelectAnalyticsEvent,
   type ClaimPageEgressDestination,
+  type ClaimPageRouteDestination,
   type ClaimPageFileOutcome,
   type ClaimPageType,
 } from "@/lib/claim-page-cta-events-lib";
