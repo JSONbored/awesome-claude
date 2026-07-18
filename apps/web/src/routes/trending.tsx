@@ -557,8 +557,8 @@ function TrendingPage() {
         <div className="flex flex-wrap gap-2">
           {(
             [
-              { destination: "rss" as const, label: "RSS", icon: true },
-              { destination: "brief" as const, label: "Weekly Brief →", icon: false },
+              { destination: "rss" as const, label: "RSS", icon: true, primary: false },
+              { destination: "brief" as const, label: "Weekly Brief →", icon: false, primary: false },
               { destination: "browse" as const, label: "Browse all", icon: false, primary: true },
             ] as const
           ).map((item) => {
