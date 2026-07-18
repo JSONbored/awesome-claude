@@ -35,7 +35,12 @@ describe("registry-normalize-lib platform aliases", () => {
     expect(normalizePlatform("   ")).toBe("");
   });
 
+  it("resolves antigravity MCP install target aliases", () => {
+    expect(normalizePlatform("Antigravity")).toBe("antigravity");
+    expect(normalizePlatform("antigravity")).toBe("antigravity");
+  });
+
   it("preserves unknown platform labels without alias mapping", () => {
-    expect(normalizePlatform("Antigravity")).toBe("Antigravity");
+    expect(normalizePlatform("Zed Pro")).toBe("Zed Pro");
   });
 });

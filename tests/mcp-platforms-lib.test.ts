@@ -20,9 +20,78 @@ describe("platforms-lib feed slugs", () => {
 });
 
 describe("platforms-lib skill compatibility", () => {
-  it("builds default skill compatibility while preserving explicit metadata", () => {
+  it("returns empty compatibility for mcp entries without install metadata", () => {
     expect(buildSkillPlatformCompatibility({ category: "mcp" })).toEqual([]);
+    expect(buildSkillPlatformCompatibility({ category: "agents" })).toEqual([]);
+  });
 
+  it("builds MCP install-target compatibility from config snippets", () => {
+    const compatibility = buildSkillPlatformCompatibility({
+      category: "mcp",
+      slug: "demo-server",
+      configSnippet: JSON.stringify({
+        mcpServers: {
+          demo: {
+            command: "npx",
+            args: ["-y", "@example/demo-mcp"],
+          },
+        },
+      }),
+    });
+
+    expect(compatibility.map((item) => item.platform)).toEqual([
+      "Claude Code",
+      "Codex",
+      "Cursor",
+      "Antigravity",
+    ]);
+    expect(compatibility[0]).toMatchObject({
+      platform: "Claude Code",
+      support: "native-mcp",
+      artifact: "MCP server config",
+    });
+    expect(compatibility[2]).toMatchObject({
+      platform: "Cursor",
+      support: "mcp-config",
+    });
+  });
+
+  it("excludes codex for sse configs while preserving explicit MCP metadata", () => {
+    const sseCompatibility = buildSkillPlatformCompatibility({
+      category: "mcp",
+      slug: "sse-server",
+      configSnippet: JSON.stringify({
+        mcpServers: {
+          sse: {
+            type: "sse",
+            url: "https://example.com/sse",
+          },
+        },
+      }),
+    });
+    expect(sseCompatibility.map((item) => item.platform)).toEqual([
+      "Claude Code",
+      "Cursor",
+      "Antigravity",
+    ]);
+
+    const explicit = [
+      {
+        platform: "Custom MCP",
+        support: "manual",
+        artifact: "custom",
+        installHint: "Use the custom installer.",
+      },
+    ];
+    expect(
+      buildSkillPlatformCompatibility({
+        category: "mcp",
+        platformCompatibility: explicit,
+      }),
+    ).toBe(explicit);
+  });
+
+  it("builds default skill compatibility while preserving explicit metadata", () => {
     const explicit = [
       {
         platform: "Custom",

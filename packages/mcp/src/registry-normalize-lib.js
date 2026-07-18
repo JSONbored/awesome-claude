@@ -28,6 +28,7 @@ const platformAliases = new Map([
   ["agents", "cli"],
   ["agents-context", "cli"],
   ["agents-md", "cli"],
+  ["antigravity", "antigravity"],
 ]);
 
 export function normalizeText(value) {

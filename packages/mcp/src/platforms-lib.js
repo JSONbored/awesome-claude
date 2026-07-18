@@ -7,7 +7,49 @@
  * The public surface (`platforms.js` / `@heyclaude/mcp/platforms`) re-exports
  * everything below so existing imports stay unchanged.
  */
+import { resolveMcpInstallConfig } from "./mcp-install-config-lib.js";
+
 export const SITE_URL = "https://heyclau.de";
+
+const MCP_PLATFORM_COMPATIBILITY = {
+  "claude-code": {
+    platform: "Claude Code",
+    support: "native-mcp",
+    artifact: "MCP server config",
+    installHint: "Add the config snippet to your Claude Code MCP settings.",
+  },
+  codex: {
+    platform: "Codex",
+    support: "native-mcp",
+    artifact: "MCP server config",
+    installHint: "Add the config snippet to your Codex MCP settings.",
+  },
+  cursor: {
+    platform: "Cursor",
+    support: "mcp-config",
+    artifact: "MCP server config",
+    installHint: "Add the config snippet to your Cursor mcp.json settings.",
+  },
+  antigravity: {
+    platform: "Antigravity",
+    support: "mcp-config",
+    artifact: "MCP server config",
+    installHint: "Add the config snippet to your Antigravity MCP settings.",
+  },
+};
+
+function buildMcpPlatformCompatibility(entry) {
+  if (Array.isArray(entry.platformCompatibility)) {
+    return entry.platformCompatibility;
+  }
+
+  const installConfig = resolveMcpInstallConfig(entry);
+  if (!installConfig?.targets?.length) return [];
+
+  return installConfig.targets
+    .map((target) => MCP_PLATFORM_COMPATIBILITY[target])
+    .filter(Boolean);
+}
 
 function slugPart(value, options = {}) {
   const text = String(value || "")
@@ -44,6 +86,9 @@ export function platformFeedSlug(platform) {
 }
 
 export function buildSkillPlatformCompatibility(entry) {
+  if (entry?.category === "mcp") {
+    return buildMcpPlatformCompatibility(entry);
+  }
   if (entry?.category !== "skills") return [];
   if (Array.isArray(entry.platformCompatibility)) {
     return entry.platformCompatibility;

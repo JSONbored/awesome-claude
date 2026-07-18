@@ -1108,7 +1108,12 @@ describe("non-UI branch matrix", () => {
       count: 1,
     });
     expect(buildArtifactHash({ ok: true })).toMatch(/^[a-f0-9]{64}$/);
-    expect(buildSkillPlatformCompatibility(entry("mcp"))).toEqual([]);
+    expect(buildSkillPlatformCompatibility(entry("mcp")).map((item) => item.platform)).toEqual([
+      "Claude Code",
+      "Codex",
+      "Cursor",
+      "Antigravity",
+    ]);
   });
 
   it("covers commercial policy helpers and command safety classifications", () => {

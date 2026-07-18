@@ -14,6 +14,7 @@ describe("MCP platform helpers", () => {
 
   it("builds default skill compatibility while preserving explicit metadata", () => {
     expect(buildSkillPlatformCompatibility({ category: "mcp" })).toEqual([]);
+    expect(buildSkillPlatformCompatibility({ category: "agents" })).toEqual([]);
 
     const explicit = [
       {
