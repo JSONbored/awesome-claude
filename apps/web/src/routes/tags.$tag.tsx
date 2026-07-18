@@ -19,10 +19,13 @@ import { trackEvent } from "@/lib/analytics";
 import {
   tagsDetailBrowseEgressAnalyticsData,
   tagsDetailBrowseEgressAnalyticsEvent,
+  tagsDetailBrowseEgressDestination,
   tagsDetailNotFoundEgressAnalyticsData,
   tagsDetailNotFoundEgressAnalyticsEvent,
+  tagsDetailNotFoundEgressDestination,
   tagsDetailRelatedSelectAnalyticsData,
   tagsDetailRelatedSelectAnalyticsEvent,
+  tagsDetailRelatedSelectDestination,
 } from "@/lib/tags-detail-cta-events";
 
 // The categories a tag's entries actually span — used to vary intro copy per tag so no
@@ -66,24 +69,29 @@ export const Route = createFileRoute("/tags/$tag")({
     };
   },
   component: TagHub,
-  notFoundComponent: () => (
-    <div className="mx-auto max-w-2xl px-6 py-24 text-center">
-      <h1 className="h-display-2 text-ink">Tag not found</h1>
-      <p className="mt-3 text-sm text-ink-muted">No resources use that tag yet.</p>
-      <Link
-        to="/tags"
-        className="mt-6 inline-flex h-9 items-center gap-1.5 rounded-md bg-ink px-4 font-medium text-background hover:opacity-90"
-        onClick={() =>
-          trackEvent(
-            tagsDetailNotFoundEgressAnalyticsEvent(),
-            tagsDetailNotFoundEgressAnalyticsData(),
-          )
-        }
-      >
-        Browse all tags <ArrowRight className="h-4 w-4" />
-      </Link>
-    </div>
-  ),
+  notFoundComponent: () => {
+    const destination = tagsDetailNotFoundEgressDestination("tags");
+    return (
+      <div className="mx-auto max-w-2xl px-6 py-24 text-center">
+        <h1 className="h-display-2 text-ink">Tag not found</h1>
+        <p className="mt-3 text-sm text-ink-muted">No resources use that tag yet.</p>
+        {destination ? (
+          <Link
+            to={destination.to}
+            className="mt-6 inline-flex h-9 items-center gap-1.5 rounded-md bg-ink px-4 font-medium text-background hover:opacity-90"
+            onClick={() =>
+              trackEvent(
+                tagsDetailNotFoundEgressAnalyticsEvent(),
+                tagsDetailNotFoundEgressAnalyticsData(),
+              )
+            }
+          >
+            Browse all tags <ArrowRight className="h-4 w-4" />
+          </Link>
+        ) : null}
+      </div>
+    );
+  },
 });
 
 function TagHub() {
@@ -129,40 +137,50 @@ function TagHub() {
       />
 
       <div className="mt-6 max-w-3xl">
-        <Link
-          to="/browse"
-          search={{ q: group.name }}
-          onClick={() =>
-            trackEvent(
-              tagsDetailBrowseEgressAnalyticsEvent(),
-              tagsDetailBrowseEgressAnalyticsData(tag, entries.length),
-            )
-          }
-          className="inline-flex h-9 items-center gap-1.5 rounded-md bg-ink px-4 text-sm font-medium text-background hover:opacity-90"
-        >
-          Browse &amp; filter tagged resources <ArrowRight className="h-4 w-4" />
-        </Link>
+        {(() => {
+          const destination = tagsDetailBrowseEgressDestination(group.name);
+          if (!destination) return null;
+          return (
+            <Link
+              to={destination.to}
+              search={destination.search}
+              onClick={() =>
+                trackEvent(
+                  tagsDetailBrowseEgressAnalyticsEvent(),
+                  tagsDetailBrowseEgressAnalyticsData(tag, entries.length),
+                )
+              }
+              className="inline-flex h-9 items-center gap-1.5 rounded-md bg-ink px-4 text-sm font-medium text-background hover:opacity-90"
+            >
+              Browse &amp; filter tagged resources <ArrowRight className="h-4 w-4" />
+            </Link>
+          );
+        })()}
       </div>
 
       {related.length > 0 && (
         <div className="mt-6 flex flex-wrap items-center gap-2">
           <span className="eyebrow mr-1">Related topics</span>
-          {related.map((g) => (
-            <Link
-              key={g.slug}
-              to="/tags/$tag"
-              params={{ tag: g.slug }}
-              onClick={() =>
-                trackEvent(
-                  tagsDetailRelatedSelectAnalyticsEvent(),
-                  tagsDetailRelatedSelectAnalyticsData(tag, g.slug, g.entries.length),
-                )
-              }
-              className="rounded-md border border-border bg-surface px-2 py-0.5 text-xs text-ink-muted transition-colors hover:border-ink/20 hover:text-ink"
-            >
-              {g.name}
-            </Link>
-          ))}
+          {related.map((g) => {
+            const destination = tagsDetailRelatedSelectDestination(g.slug);
+            if (!destination) return null;
+            return (
+              <Link
+                key={g.slug}
+                to={destination.to}
+                params={destination.params}
+                onClick={() =>
+                  trackEvent(
+                    tagsDetailRelatedSelectAnalyticsEvent(),
+                    tagsDetailRelatedSelectAnalyticsData(tag, g.slug, g.entries.length),
+                  )
+                }
+                className="rounded-md border border-border bg-surface px-2 py-0.5 text-xs text-ink-muted transition-colors hover:border-ink/20 hover:text-ink"
+              >
+                {g.name}
+              </Link>
+            );
+          })}
         </div>
       )}
 

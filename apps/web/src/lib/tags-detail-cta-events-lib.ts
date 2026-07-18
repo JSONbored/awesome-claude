@@ -46,3 +46,55 @@ export function tagsDetailBrowseEgressAnalyticsData(tagSlug: string, entryCount:
     entryCount,
   };
 }
+
+export type TagsDetailRelatedSelectDestination = {
+  to: "/tags/$tag";
+  params: { tag: string };
+};
+
+/** Map a related-tag slug to a tag hub destination. */
+export function tagsDetailRelatedSelectDestination(
+  tagSlug: string,
+): TagsDetailRelatedSelectDestination | null {
+  const slug = tagSlug.trim();
+  switch (slug) {
+    case "":
+      return null;
+    default:
+      return { to: "/tags/$tag", params: { tag: slug } };
+  }
+}
+
+export type TagsDetailBrowseEgressDestination = {
+  to: "/browse";
+  search: { q: string };
+};
+
+/** Map a tags-detail browse CTA to a directory search destination. */
+export function tagsDetailBrowseEgressDestination(
+  query: string,
+): TagsDetailBrowseEgressDestination | null {
+  const q = query.trim();
+  switch (q) {
+    case "":
+      return null;
+    default:
+      return { to: "/browse", search: { q } };
+  }
+}
+
+export type TagsDetailNotFoundEgressDestination = {
+  to: "/tags";
+};
+
+/** Map a tags-detail not-found egress id to the tags index. */
+export function tagsDetailNotFoundEgressDestination(
+  destination: string,
+): TagsDetailNotFoundEgressDestination | null {
+  switch (destination) {
+    case "tags":
+      return { to: "/tags" };
+    default:
+      return null;
+  }
+}

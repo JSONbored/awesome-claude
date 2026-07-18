@@ -49,3 +49,37 @@ export function tagsIndexBrowseEgressAnalyticsData() {
     surface: TAGS_INDEX_SURFACE,
   };
 }
+
+export type TagsIndexTagSelectDestination = {
+  to: "/tags/$tag";
+  params: { tag: string };
+};
+
+/** Map a tags-index tag slug to a tag hub destination. */
+export function tagsIndexTagSelectDestination(
+  tagSlug: string,
+): TagsIndexTagSelectDestination | null {
+  const slug = tagSlug.trim();
+  switch (slug) {
+    case "":
+      return null;
+    default:
+      return { to: "/tags/$tag", params: { tag: slug } };
+  }
+}
+
+export type TagsIndexBrowseEgressDestination = {
+  to: "/browse";
+};
+
+/** Map a tags-index empty-state egress id to directory browse. */
+export function tagsIndexBrowseEgressDestination(
+  destination: string,
+): TagsIndexBrowseEgressDestination | null {
+  switch (destination) {
+    case "browse":
+      return { to: "/browse" };
+    default:
+      return null;
+  }
+}

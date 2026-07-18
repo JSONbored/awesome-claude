@@ -3,10 +3,12 @@ import {
   TAGS_INDEX_SURFACE,
   tagsIndexBrowseEgressAnalyticsData,
   tagsIndexBrowseEgressAnalyticsEvent,
+  tagsIndexBrowseEgressDestination,
   tagsIndexFilterAnalyticsData,
   tagsIndexFilterAnalyticsEvent,
   tagsIndexTagSelectAnalyticsData,
   tagsIndexTagSelectAnalyticsEvent,
+  tagsIndexTagSelectDestination,
 } from "@/lib/tags-index-cta-events-lib";
 
 describe("tags index cta events lib", () => {
@@ -39,5 +41,17 @@ describe("tags index cta events lib", () => {
     expect(tagsIndexBrowseEgressAnalyticsData()).toEqual({
       surface: TAGS_INDEX_SURFACE,
     });
+  });
+
+  it("maps tags index destinations", () => {
+    expect(tagsIndexTagSelectDestination("postgres")).toEqual({
+      to: "/tags/$tag",
+      params: { tag: "postgres" },
+    });
+    expect(tagsIndexTagSelectDestination("")).toBeNull();
+    expect(tagsIndexBrowseEgressDestination("browse")).toEqual({
+      to: "/browse",
+    });
+    expect(tagsIndexBrowseEgressDestination("unknown")).toBeNull();
   });
 });

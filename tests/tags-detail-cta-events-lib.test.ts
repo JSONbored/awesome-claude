@@ -4,10 +4,13 @@ import {
   TAGS_DETAIL_SURFACE,
   tagsDetailBrowseEgressAnalyticsData,
   tagsDetailBrowseEgressAnalyticsEvent,
+  tagsDetailBrowseEgressDestination,
   tagsDetailNotFoundEgressAnalyticsData,
   tagsDetailNotFoundEgressAnalyticsEvent,
+  tagsDetailNotFoundEgressDestination,
   tagsDetailRelatedSelectAnalyticsData,
   tagsDetailRelatedSelectAnalyticsEvent,
+  tagsDetailRelatedSelectDestination,
 } from "@/lib/tags-detail-cta-events-lib";
 
 describe("tags detail cta events lib", () => {
@@ -37,5 +40,22 @@ describe("tags detail cta events lib", () => {
       tagSlug: "postgres",
       entryCount: 18,
     });
+  });
+
+  it("maps tags detail destinations", () => {
+    expect(tagsDetailRelatedSelectDestination("database")).toEqual({
+      to: "/tags/$tag",
+      params: { tag: "database" },
+    });
+    expect(tagsDetailRelatedSelectDestination("")).toBeNull();
+    expect(tagsDetailBrowseEgressDestination("Postgres")).toEqual({
+      to: "/browse",
+      search: { q: "Postgres" },
+    });
+    expect(tagsDetailBrowseEgressDestination("  ")).toBeNull();
+    expect(tagsDetailNotFoundEgressDestination("tags")).toEqual({
+      to: "/tags",
+    });
+    expect(tagsDetailNotFoundEgressDestination("unknown")).toBeNull();
   });
 });

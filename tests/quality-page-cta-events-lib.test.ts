@@ -3,17 +3,21 @@ import {
   QUALITY_PAGE_SURFACE,
   qualityPageCategoryBrowseAnalyticsData,
   qualityPageCategoryBrowseAnalyticsEvent,
+  qualityPageCategoryBrowseDestination,
   qualityPageChangelogAnalyticsData,
   qualityPageChangelogAnalyticsEvent,
+  qualityPageChromeDestination,
   qualityPageClaimAnalyticsData,
   qualityPageClaimAnalyticsEvent,
   qualityPageIssueAnalyticsData,
   qualityPageIssueAnalyticsEvent,
   qualityPageMethodToggleAnalyticsData,
   qualityPageMethodToggleAnalyticsEvent,
+  qualityPageQueueEntryDestination,
   qualityPageStatAnalyticsData,
   qualityPageStatAnalyticsEvent,
   qualityPageStatBrowseSearch,
+  qualityPageStatDestination,
 } from "@/lib/quality-page-cta-events-lib";
 
 describe("quality page cta events lib", () => {
@@ -91,5 +95,46 @@ describe("quality page cta events lib", () => {
     expect(qualityPageStatBrowseSearch("reviewed")).toEqual({
       signal: "reviewed",
     });
+  });
+
+  it("maps quality page destinations", () => {
+    expect(qualityPageCategoryBrowseDestination("mcp")).toEqual({
+      to: "/browse",
+      search: { category: "mcp" },
+    });
+    expect(qualityPageCategoryBrowseDestination("")).toBeNull();
+    expect(qualityPageStatDestination("total")).toEqual({ to: "/browse" });
+    expect(qualityPageStatDestination("source-backed")).toEqual({
+      to: "/browse",
+      search: { signal: "source-backed" },
+    });
+    expect(qualityPageStatDestination("safety-notes")).toEqual({
+      to: "/browse",
+      search: { signal: "safety-notes" },
+    });
+    expect(qualityPageStatDestination("reviewed")).toEqual({
+      to: "/browse",
+      search: { signal: "reviewed" },
+    });
+    expect(qualityPageStatDestination("unknown")).toBeNull();
+    expect(qualityPageChromeDestination("changelog")).toEqual({
+      kind: "route",
+      to: "/changelog",
+    });
+    expect(qualityPageChromeDestination("claim")).toEqual({
+      kind: "route",
+      to: "/claim",
+    });
+    expect(qualityPageChromeDestination("issues")).toEqual({
+      kind: "href",
+      href: "https://github.com/jsonbored/awesome-claude/issues",
+    });
+    expect(qualityPageChromeDestination("unknown")).toBeNull();
+    expect(qualityPageQueueEntryDestination("mcp", "browser")).toEqual({
+      to: "/entry/$category/$slug",
+      params: { category: "mcp", slug: "browser" },
+    });
+    expect(qualityPageQueueEntryDestination("", "browser")).toBeNull();
+    expect(qualityPageQueueEntryDestination("mcp", "")).toBeNull();
   });
 });

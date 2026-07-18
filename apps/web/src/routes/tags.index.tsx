@@ -12,10 +12,12 @@ import { trackEvent } from "@/lib/analytics";
 import {
   tagsIndexBrowseEgressAnalyticsData,
   tagsIndexBrowseEgressAnalyticsEvent,
+  tagsIndexBrowseEgressDestination,
   tagsIndexFilterAnalyticsData,
   tagsIndexFilterAnalyticsEvent,
   tagsIndexTagSelectAnalyticsData,
   tagsIndexTagSelectAnalyticsEvent,
+  tagsIndexTagSelectDestination,
   type TagsIndexTagVariant,
 } from "@/lib/tags-index-cta-events";
 import { cn } from "@/lib/utils";
@@ -57,10 +59,12 @@ export const Route = createFileRoute("/tags/")({
 // Derive a lightweight, sorted view-model (by entry count desc) with the category
 // each tag mostly spans — enough context to make the index scannable.
 function FeaturedTagCard({ tag, onSelect }: { tag: TagView; onSelect: () => void }) {
+  const destination = tagsIndexTagSelectDestination(tag.slug);
+  if (!destination) return null;
   return (
     <Link
-      to="/tags/$tag"
-      params={{ tag: tag.slug }}
+      to={destination.to}
+      params={destination.params}
       onClick={onSelect}
       className="group flex flex-col rounded-xl border border-border bg-surface p-4 transition-colors duration-200 ease-out hover:border-border-strong hover:bg-surface-2"
     >
@@ -89,10 +93,12 @@ function TagPill({
   strong?: boolean;
   onSelect: () => void;
 }) {
+  const destination = tagsIndexTagSelectDestination(tag.slug);
+  if (!destination) return null;
   return (
     <Link
-      to="/tags/$tag"
-      params={{ tag: tag.slug }}
+      to={destination.to}
+      params={destination.params}
       onClick={onSelect}
       className={cn(
         "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition-colors duration-200 ease-out",
@@ -197,18 +203,24 @@ function TagsIndex() {
         ) : (
           <p className="mt-4 text-sm text-ink-muted">
             No topics match “{query}”. Try a broader term, or{" "}
-            <Link
-              to="/browse"
-              className="text-ink underline"
-              onClick={() =>
-                trackEvent(
-                  tagsIndexBrowseEgressAnalyticsEvent(),
-                  tagsIndexBrowseEgressAnalyticsData(),
-                )
-              }
-            >
-              browse the full directory
-            </Link>
+            {(() => {
+              const destination = tagsIndexBrowseEgressDestination("browse");
+              if (!destination) return "browse the full directory";
+              return (
+                <Link
+                  to={destination.to}
+                  className="text-ink underline"
+                  onClick={() =>
+                    trackEvent(
+                      tagsIndexBrowseEgressAnalyticsEvent(),
+                      tagsIndexBrowseEgressAnalyticsData(),
+                    )
+                  }
+                >
+                  browse the full directory
+                </Link>
+              );
+            })()}
             .
           </p>
         )}

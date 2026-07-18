@@ -30,17 +30,20 @@ import {
 import {
   qualityPageCategoryBrowseAnalyticsData,
   qualityPageCategoryBrowseAnalyticsEvent,
+  qualityPageCategoryBrowseDestination,
   qualityPageChangelogAnalyticsData,
   qualityPageChangelogAnalyticsEvent,
+  qualityPageChromeDestination,
   qualityPageClaimAnalyticsData,
   qualityPageClaimAnalyticsEvent,
   qualityPageIssueAnalyticsData,
   qualityPageIssueAnalyticsEvent,
   qualityPageMethodToggleAnalyticsData,
   qualityPageMethodToggleAnalyticsEvent,
+  qualityPageQueueEntryDestination,
   qualityPageStatAnalyticsData,
   qualityPageStatAnalyticsEvent,
-  qualityPageStatBrowseSearch,
+  qualityPageStatDestination,
   type QualityMethodId,
   type QualityPageStatId,
 } from "@/lib/quality-page-cta-events";
@@ -196,11 +199,13 @@ function QualityPage() {
       <div className="mt-4 overflow-x-auto rounded-xl border border-border bg-surface">
         {CATEGORIES.map((c, rowIndex) => {
           const cov = CATEGORY_COVERAGE.get(c.id)!;
+          const destination = qualityPageCategoryBrowseDestination(c.id);
+          if (!destination) return null;
           return (
             <Link
               key={c.id}
-              to="/browse"
-              search={{ category: c.id }}
+              to={destination.to}
+              search={destination.search}
               onClick={() =>
                 trackEvent(
                   qualityPageCategoryBrowseAnalyticsEvent(),
@@ -314,18 +319,24 @@ function QualityPage() {
               </li>
             ))}
           </ol>
-          <Link
-            to="/changelog"
-            onClick={() =>
-              trackEvent(
-                qualityPageChangelogAnalyticsEvent(),
-                qualityPageChangelogAnalyticsData(CHANGELOG_PREVIEW_COUNT),
-              )
-            }
-            className="mt-3 inline-flex items-center gap-1 text-xs text-ink-muted hover:text-ink"
-          >
-            Full changelog →
-          </Link>
+          {(() => {
+            const destination = qualityPageChromeDestination("changelog");
+            if (!destination || destination.kind !== "route") return null;
+            return (
+              <Link
+                to={destination.to}
+                onClick={() =>
+                  trackEvent(
+                    qualityPageChangelogAnalyticsEvent(),
+                    qualityPageChangelogAnalyticsData(CHANGELOG_PREVIEW_COUNT),
+                  )
+                }
+                className="mt-3 inline-flex items-center gap-1 text-xs text-ink-muted hover:text-ink"
+              >
+                Full changelog →
+              </Link>
+            );
+          })()}
         </div>
 
         <div className="min-w-0">
@@ -378,26 +389,38 @@ function QualityPage() {
           </div>
         </div>
         <div className="flex flex-col gap-2 sm:flex-row">
-          <Link
-            to="/claim"
-            onClick={() =>
-              trackEvent(qualityPageClaimAnalyticsEvent(), qualityPageClaimAnalyticsData())
-            }
-            className="inline-flex h-10 items-center rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink hover:opacity-90"
-          >
-            Claim a listing
-          </Link>
-          <a
-            href="https://github.com/jsonbored/awesome-claude/issues"
-            target="_blank"
-            rel="noreferrer"
-            onClick={() =>
-              trackEvent(qualityPageIssueAnalyticsEvent(), qualityPageIssueAnalyticsData())
-            }
-            className="inline-flex h-10 items-center rounded-md border border-background/30 px-4 text-sm font-medium hover:bg-background/10"
-          >
-            Open an issue
-          </a>
+          {(() => {
+            const destination = qualityPageChromeDestination("claim");
+            if (!destination || destination.kind !== "route") return null;
+            return (
+              <Link
+                to={destination.to}
+                onClick={() =>
+                  trackEvent(qualityPageClaimAnalyticsEvent(), qualityPageClaimAnalyticsData())
+                }
+                className="inline-flex h-10 items-center rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink hover:opacity-90"
+              >
+                Claim a listing
+              </Link>
+            );
+          })()}
+          {(() => {
+            const destination = qualityPageChromeDestination("issues");
+            if (!destination || destination.kind !== "href") return null;
+            return (
+              <a
+                href={destination.href}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() =>
+                  trackEvent(qualityPageIssueAnalyticsEvent(), qualityPageIssueAnalyticsData())
+                }
+                className="inline-flex h-10 items-center rounded-md border border-background/30 px-4 text-sm font-medium hover:bg-background/10"
+              >
+                Open an issue
+              </a>
+            );
+          })()}
         </div>
       </div>
 
@@ -470,10 +493,12 @@ function Stat({
   percent: number;
   statId: QualityPageStatId;
 }) {
+  const destination = qualityPageStatDestination(statId);
+  if (!destination) return null;
   return (
     <Link
-      to="/browse"
-      search={qualityPageStatBrowseSearch(statId)}
+      to={destination.to}
+      search={destination.search}
       onClick={() =>
         trackEvent(
           qualityPageStatAnalyticsEvent(),
@@ -529,43 +554,50 @@ function Queue({
         <p className="text-xs text-ink-muted">{help}</p>
       </div>
       <ul>
-        {rows.map((r, rowIndex) => (
-          <li key={entryRef(r.entry)} className="border-b border-border px-5 py-3 last:border-0">
-            <div className="flex items-center justify-between gap-3">
-              <Link
-                to="/entry/$category/$slug"
-                params={{ category: r.entry.category, slug: r.entry.slug }}
-                onClick={() =>
-                  trackEvent(
-                    qualityQueueEntryAnalyticsEvent(),
-                    qualityQueueEntryAnalyticsData(
-                      r.entry.category,
-                      r.entry.slug,
-                      queueId,
-                      r.score,
-                      rowIndex,
-                      rows.length,
-                    ),
-                  )
-                }
-                className="truncate text-sm font-medium text-ink hover:underline"
-              >
-                {r.entry.title}
-              </Link>
-              <span className="shrink-0 font-mono text-xs text-ink-subtle">{r.score}/100</span>
-            </div>
-            {r.recommendations.length > 0 && (
-              <ul className="mt-1 space-y-0.5 text-[11px] text-ink-muted">
-                {r.recommendations.slice(0, 2).map((rec, i) => (
-                  <li key={i} className="flex items-start gap-1.5">
-                    <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0 text-trust-review" />
-                    {rec}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </li>
-        ))}
+        {rows.map((r, rowIndex) => {
+          const destination = qualityPageQueueEntryDestination(r.entry.category, r.entry.slug);
+          return (
+            <li key={entryRef(r.entry)} className="border-b border-border px-5 py-3 last:border-0">
+              <div className="flex items-center justify-between gap-3">
+                {destination ? (
+                  <Link
+                    to={destination.to}
+                    params={destination.params}
+                    onClick={() =>
+                      trackEvent(
+                        qualityQueueEntryAnalyticsEvent(),
+                        qualityQueueEntryAnalyticsData(
+                          r.entry.category,
+                          r.entry.slug,
+                          queueId,
+                          r.score,
+                          rowIndex,
+                          rows.length,
+                        ),
+                      )
+                    }
+                    className="truncate text-sm font-medium text-ink hover:underline"
+                  >
+                    {r.entry.title}
+                  </Link>
+                ) : (
+                  <span className="truncate text-sm font-medium text-ink">{r.entry.title}</span>
+                )}
+                <span className="shrink-0 font-mono text-xs text-ink-subtle">{r.score}/100</span>
+              </div>
+              {r.recommendations.length > 0 && (
+                <ul className="mt-1 space-y-0.5 text-[11px] text-ink-muted">
+                  {r.recommendations.slice(0, 2).map((rec, i) => (
+                    <li key={i} className="flex items-start gap-1.5">
+                      <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0 text-trust-review" />
+                      {rec}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

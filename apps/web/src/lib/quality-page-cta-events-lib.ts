@@ -117,3 +117,88 @@ export function qualityPageStatBrowseSearch(
       return undefined;
   }
 }
+
+export type QualityPageCategoryBrowseDestination = {
+  to: "/browse";
+  search: { category: string };
+};
+
+/** Map a quality category coverage row to a directory browse destination. */
+export function qualityPageCategoryBrowseDestination(
+  category: string,
+): QualityPageCategoryBrowseDestination | null {
+  const id = category.trim();
+  switch (id) {
+    case "":
+      return null;
+    default:
+      return { to: "/browse", search: { category: id } };
+  }
+}
+
+export type QualityPageStatDestination = {
+  to: "/browse";
+  search?: { signal: string };
+};
+
+/** Map a quality headline stat id to a directory browse destination. */
+export function qualityPageStatDestination(statId: string): QualityPageStatDestination | null {
+  switch (statId) {
+    case "source-backed":
+      return { to: "/browse", search: { signal: "source-backed" } };
+    case "safety-notes":
+      return { to: "/browse", search: { signal: "safety-notes" } };
+    case "reviewed":
+      return { to: "/browse", search: { signal: "reviewed" } };
+    case "total":
+      return { to: "/browse" };
+    default:
+      return null;
+  }
+}
+
+export type QualityPageChromeDestination =
+  | { kind: "route"; to: "/changelog" | "/claim" }
+  | { kind: "href"; href: string };
+
+/** Map a quality chrome CTA id to a route or external href. */
+export function qualityPageChromeDestination(ctaId: string): QualityPageChromeDestination | null {
+  switch (ctaId) {
+    case "changelog":
+      return { kind: "route", to: "/changelog" };
+    case "claim":
+      return { kind: "route", to: "/claim" };
+    case "issues":
+      return { kind: "href", href: "https://github.com/jsonbored/awesome-claude/issues" };
+    default:
+      return null;
+  }
+}
+
+export type QualityPageQueueEntryDestination = {
+  to: "/entry/$category/$slug";
+  params: { category: string; slug: string };
+};
+
+/** Map a quality queue row to an entry detail destination. */
+export function qualityPageQueueEntryDestination(
+  category: string,
+  slug: string,
+): QualityPageQueueEntryDestination | null {
+  const categoryId = category.trim();
+  const entrySlug = slug.trim();
+  switch (categoryId) {
+    case "":
+      return null;
+    default:
+      switch (entrySlug) {
+        case "":
+          return null;
+        default:
+          return {
+            to: "/entry/$category/$slug",
+            params: { category: categoryId, slug: entrySlug },
+          };
+      }
+  }
+}
