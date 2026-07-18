@@ -3,6 +3,7 @@ import {
   PLATFORM_CHIP_SURFACE,
   platformChipAnalyticsData,
   platformChipAnalyticsEvent,
+  platformChipHubDestination,
 } from "@/lib/platform-chip-cta-events-lib";
 
 describe("platform chip cta events lib", () => {
@@ -26,5 +27,18 @@ describe("platform chip cta events lib", () => {
       surface: "detail-header",
       platform: "claude-code",
     });
+  });
+
+  it("maps platform ids to hub destinations", () => {
+    expect(platformChipHubDestination("claude-code")).toEqual({
+      to: "/for/$platform",
+      params: { platform: "claude-code" },
+    });
+    expect(platformChipHubDestination("  raycast  ")).toEqual({
+      to: "/for/$platform",
+      params: { platform: "raycast" },
+    });
+    expect(platformChipHubDestination("")).toBeNull();
+    expect(platformChipHubDestination("   ")).toBeNull();
   });
 });

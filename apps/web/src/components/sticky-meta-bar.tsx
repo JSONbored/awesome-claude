@@ -43,6 +43,7 @@ import {
   badgeChromeTrustAnalyticsData,
   badgeChromeTrustAnalyticsEvent,
 } from "@/lib/badge-chrome-cta-events";
+import { categoryPillBrowseDestination } from "@/lib/category-pill-cta-events";
 
 /**
  * Appears once the user scrolls past the dossier header.
@@ -171,15 +172,23 @@ export function StickyMetaBar({
         <div className="pointer-events-auto relative overflow-hidden rounded-xl border border-border bg-surface/95 shadow-sm backdrop-blur">
           {/* Row 1: identity */}
           <div className="flex min-w-0 items-start gap-2 px-3 pt-2 sm:items-center sm:gap-3">
-            <Link
-              to="/browse"
-              search={{ category: entry.category }}
-              className="shrink-0"
-              aria-label={`Back to ${entry.category}`}
-              onClick={onStickyBrowseCategory}
-            >
-              <CategoryPill>{entry.category}</CategoryPill>
-            </Link>
+            {(() => {
+              const destination = categoryPillBrowseDestination(entry.category);
+              if (!destination) {
+                return <CategoryPill>{entry.category}</CategoryPill>;
+              }
+              return (
+                <Link
+                  to={destination.to}
+                  search={destination.search}
+                  className="shrink-0"
+                  aria-label={`Back to ${entry.category}`}
+                  onClick={onStickyBrowseCategory}
+                >
+                  <CategoryPill>{entry.category}</CategoryPill>
+                </Link>
+              );
+            })()}
             <EntryBrandMark entry={entry} size="xs" />
             <span className="min-w-0 flex-1 truncate text-sm font-medium text-ink sm:truncate">
               <span className="line-clamp-2 sm:line-clamp-1">{entry.title}</span>

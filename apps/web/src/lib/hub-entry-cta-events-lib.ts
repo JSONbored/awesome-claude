@@ -99,3 +99,16 @@ export function hubHighlightBrowseSignal(kind: string): string | null {
       return null;
   }
 }
+
+export type HubEntryDestination = {
+  to: "/entry/$category/$slug";
+  params: { category: string; slug: string };
+};
+
+/** Map a hub entry ref to an entry detail destination. */
+export function hubEntryDestination(category: string, slug: string): HubEntryDestination | null {
+  const cat = category.trim();
+  const id = slug.trim();
+  if (!cat || !id) return null;
+  return { to: "/entry/$category/$slug", params: { category: cat, slug: id } };
+}

@@ -3,6 +3,7 @@ import {
   CONTRIBUTOR_ATTRIBUTION_SURFACE,
   contributorAttributionAnalyticsData,
   contributorAttributionAnalyticsEvent,
+  contributorAttributionProfileDestination,
 } from "@/lib/contributor-attribution-cta-events-lib";
 
 describe("contributor attribution cta events lib", () => {
@@ -34,5 +35,18 @@ describe("contributor attribution cta events lib", () => {
       role: "identity",
       contributorSlug: null,
     });
+  });
+
+  it("maps contributor slugs to profile destinations", () => {
+    expect(contributorAttributionProfileDestination("alice")).toEqual({
+      to: "/contributors/$slug",
+      params: { slug: "alice" },
+    });
+    expect(contributorAttributionProfileDestination("  bob  ")).toEqual({
+      to: "/contributors/$slug",
+      params: { slug: "bob" },
+    });
+    expect(contributorAttributionProfileDestination("")).toBeNull();
+    expect(contributorAttributionProfileDestination("   ")).toBeNull();
   });
 });

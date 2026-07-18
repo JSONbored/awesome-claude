@@ -11,6 +11,7 @@ import { trackEvent } from "@/lib/analytics";
 import {
   contributorAttributionAnalyticsData,
   contributorAttributionAnalyticsEvent,
+  contributorAttributionProfileDestination,
   type ContributorAttributionRole,
 } from "@/lib/contributor-attribution-cta-events";
 
@@ -25,10 +26,14 @@ function ContributorProfileLink({
   role: ContributorAttributionRole;
   className?: string;
 }) {
+  const destination = contributorAttributionProfileDestination(contributor.slug);
+  if (!destination) {
+    return <span className={className}>{label}</span>;
+  }
   return (
     <Link
-      to="/contributors/$slug"
-      params={{ slug: contributor.slug }}
+      to={destination.to}
+      params={destination.params}
       className={className}
       onClick={() =>
         trackEvent(

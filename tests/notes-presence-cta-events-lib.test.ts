@@ -3,6 +3,7 @@ import {
   NOTES_PRESENCE_SURFACE,
   notesPresenceAnalyticsData,
   notesPresenceAnalyticsEvent,
+  notesPresenceBrowseDestination,
   notesPresenceBrowseSearch,
 } from "@/lib/notes-presence-cta-events-lib";
 
@@ -83,5 +84,20 @@ describe("notes presence cta events lib", () => {
     expect(notesPresenceBrowseSearch("safety", false)).toBeNull();
     expect(notesPresenceBrowseSearch("privacy", false)).toBeNull();
     expect(notesPresenceBrowseSearch("unknown", true)).toBeNull();
+  });
+
+  it("maps present notes chips to browse destinations", () => {
+    expect(notesPresenceBrowseDestination("safety", true)).toEqual({
+      to: "/browse",
+      search: { signal: "safety-notes" },
+    });
+    expect(notesPresenceBrowseDestination("privacy", true)).toEqual({
+      to: "/browse",
+      search: { signal: "privacy-notes" },
+    });
+    expect(notesPresenceBrowseDestination("safety", false)).toBeNull();
+    expect(notesPresenceBrowseDestination("privacy", false)).toBeNull();
+    expect(notesPresenceBrowseDestination("unknown", true)).toBeNull();
+    expect(notesPresenceBrowseDestination("", true)).toBeNull();
   });
 });

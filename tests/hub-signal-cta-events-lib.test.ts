@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   hubSignalStatAnalyticsData,
   hubSignalStatAnalyticsEvent,
+  hubSignalStatDestination,
   hubStatBrowseSearch,
 } from "@/lib/hub-signal-cta-events-lib";
 
@@ -46,5 +47,32 @@ describe("hub signal cta events lib", () => {
       signal: "reviewed",
     });
     expect(hubStatBrowseSearch("unknown")).toBeNull();
+  });
+
+  it("maps hub signal stat keys to browse destinations", () => {
+    expect(hubSignalStatDestination("trusted", { category: "mcp" })).toEqual({
+      to: "/browse",
+      search: { category: "mcp", trust: "trusted" },
+    });
+    expect(
+      hubSignalStatDestination("sourced", { platform: "claude-code" }),
+    ).toEqual({
+      to: "/browse",
+      search: { platform: "claude-code", signal: "source-backed" },
+    });
+    expect(hubSignalStatDestination("safety", { q: "postgres" })).toEqual({
+      to: "/browse",
+      search: { q: "postgres", signal: "safety-notes" },
+    });
+    expect(hubSignalStatDestination("privacy", { category: "hooks" })).toEqual({
+      to: "/browse",
+      search: { category: "hooks", signal: "privacy-notes" },
+    });
+    expect(hubSignalStatDestination("reviewed")).toEqual({
+      to: "/browse",
+      search: { signal: "reviewed" },
+    });
+    expect(hubSignalStatDestination("unknown")).toBeNull();
+    expect(hubSignalStatDestination("")).toBeNull();
   });
 });

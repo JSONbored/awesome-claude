@@ -3,12 +3,14 @@ import {
   TRUST_DRILLDOWN_SURFACE,
   trustDrilldownBrowseAnalyticsData,
   trustDrilldownBrowseAnalyticsEvent,
+  trustDrilldownBrowseDestination,
   trustDrilldownBrowseSearch,
   trustDrilldownDocAnalyticsData,
   trustDrilldownDocAnalyticsEvent,
   trustDrilldownEntryKey,
   trustDrilldownMethodologyAnalyticsData,
   trustDrilldownMethodologyAnalyticsEvent,
+  trustDrilldownMethodologyDestination,
   trustDrilldownOpenAnalyticsData,
   trustDrilldownOpenAnalyticsEvent,
   trustDrilldownSourceAnalyticsData,
@@ -165,5 +167,32 @@ describe("trust drilldown cta events lib", () => {
     expect(trustDrilldownBrowseSearch("limited")).toEqual({ trust: "limited" });
     expect(trustDrilldownBrowseSearch("blocked")).toEqual({ trust: "blocked" });
     expect(trustDrilldownBrowseSearch("unknown")).toBeNull();
+  });
+
+  it("maps trust drilldown egress ids to destinations", () => {
+    expect(trustDrilldownMethodologyDestination("methodology")).toEqual({
+      to: "/quality",
+      hash: "methodology",
+    });
+    expect(trustDrilldownMethodologyDestination("unknown")).toBeNull();
+    expect(trustDrilldownMethodologyDestination("")).toBeNull();
+    expect(trustDrilldownBrowseDestination("trusted")).toEqual({
+      to: "/browse",
+      search: { trust: "trusted" },
+    });
+    expect(trustDrilldownBrowseDestination("review")).toEqual({
+      to: "/browse",
+      search: { trust: "review" },
+    });
+    expect(trustDrilldownBrowseDestination("limited")).toEqual({
+      to: "/browse",
+      search: { trust: "limited" },
+    });
+    expect(trustDrilldownBrowseDestination("blocked")).toEqual({
+      to: "/browse",
+      search: { trust: "blocked" },
+    });
+    expect(trustDrilldownBrowseDestination("unknown")).toBeNull();
+    expect(trustDrilldownBrowseDestination("")).toBeNull();
   });
 });

@@ -3,6 +3,7 @@ import {
   INSTALL_RISK_BADGE_SURFACE,
   installRiskBadgeAnalyticsData,
   installRiskBadgeAnalyticsEvent,
+  installRiskBadgeBrowseDestination,
   installRiskBrowseSearch,
 } from "@/lib/install-risk-badge-cta-events-lib";
 
@@ -58,5 +59,22 @@ describe("install risk badge cta events lib", () => {
     expect(installRiskBrowseSearch("review")).toEqual({ trust: "review" });
     expect(installRiskBrowseSearch("high")).toEqual({ trust: "blocked" });
     expect(installRiskBrowseSearch("unknown")).toBeNull();
+  });
+
+  it("maps install risk levels to browse destinations", () => {
+    expect(installRiskBadgeBrowseDestination("low")).toEqual({
+      to: "/browse",
+      search: { trust: "trusted" },
+    });
+    expect(installRiskBadgeBrowseDestination("review")).toEqual({
+      to: "/browse",
+      search: { trust: "review" },
+    });
+    expect(installRiskBadgeBrowseDestination("high")).toEqual({
+      to: "/browse",
+      search: { trust: "blocked" },
+    });
+    expect(installRiskBadgeBrowseDestination("unknown")).toBeNull();
+    expect(installRiskBadgeBrowseDestination("")).toBeNull();
   });
 });

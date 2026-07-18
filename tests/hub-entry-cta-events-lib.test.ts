@@ -10,6 +10,7 @@ import {
   hubHighlightEntryAnalyticsEvent,
   hubHighlightSourceBrowseAnalyticsData,
   hubHighlightSourceBrowseAnalyticsEvent,
+  hubEntryDestination,
   hubTrendingPodiumEntryAnalyticsData,
   hubTrendingPodiumEntryAnalyticsEvent,
 } from "@/lib/hub-entry-cta-events-lib";
@@ -67,5 +68,19 @@ describe("hub entry cta events lib", () => {
     expect(hubHighlightBrowseSignal("newest")).toBeNull();
     expect(hubHighlightBrowseSignal("popular")).toBeNull();
     expect(hubHighlightBrowseSignal("unknown")).toBeNull();
+  });
+
+  it("maps hub entry refs to entry detail destinations", () => {
+    expect(hubEntryDestination("mcp", "browser")).toEqual({
+      to: "/entry/$category/$slug",
+      params: { category: "mcp", slug: "browser" },
+    });
+    expect(hubEntryDestination("  skills ", " demo ")).toEqual({
+      to: "/entry/$category/$slug",
+      params: { category: "skills", slug: "demo" },
+    });
+    expect(hubEntryDestination("", "demo")).toBeNull();
+    expect(hubEntryDestination("mcp", "")).toBeNull();
+    expect(hubEntryDestination("   ", "   ")).toBeNull();
   });
 });

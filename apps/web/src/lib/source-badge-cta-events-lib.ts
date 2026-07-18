@@ -40,3 +40,18 @@ export function sourceBadgeAnalyticsData(source: string, surface: string = SOURC
     source,
   };
 }
+
+export type SourceBadgeBrowseDestination = { to: "/browse"; search: { source: string } };
+
+/** Map a source badge status to a directory browse destination. */
+export function sourceBadgeBrowseDestination(source: string): SourceBadgeBrowseDestination | null {
+  switch (source) {
+    case "source-backed":
+    case "first-party":
+    case "external":
+    case "unverified":
+      return { to: "/browse", search: { source } };
+    default:
+      return null;
+  }
+}

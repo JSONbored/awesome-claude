@@ -14,6 +14,7 @@ export {
   resourceCardCompareToastOpenAnalyticsEvent,
   resourceCardEntryAnalyticsData,
   resourceCardEntryAnalyticsEvent,
+  resourceCardEntryDestination,
   resourceCardSourceAnalyticsData,
   resourceCardSourceAnalyticsEvent,
   resourceCardEntryKey,
@@ -23,6 +24,7 @@ export {
   resourceCardTrustHintAnalyticsData,
   resourceCardTrustHintAnalyticsEvent,
   type ResourceCardBadgeKind,
+  type ResourceCardEntryDestination,
   type ResourceCardSurface,
   type ResourceCardVariant,
 } from "@/lib/resource-card-cta-events-lib";

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   categoryPillAnalyticsData,
   categoryPillAnalyticsEvent,
+  categoryPillBrowseDestination,
 } from "@/lib/category-pill-cta-events-lib";
 
 describe("category pill cta events lib", () => {
@@ -15,5 +16,18 @@ describe("category pill cta events lib", () => {
       surface: "compare-drawer",
       category: "skills",
     });
+  });
+
+  it("maps category ids to browse destinations", () => {
+    expect(categoryPillBrowseDestination("mcp")).toEqual({
+      to: "/browse",
+      search: { category: "mcp" },
+    });
+    expect(categoryPillBrowseDestination("  hooks  ")).toEqual({
+      to: "/browse",
+      search: { category: "hooks" },
+    });
+    expect(categoryPillBrowseDestination("")).toBeNull();
+    expect(categoryPillBrowseDestination("   ")).toBeNull();
   });
 });

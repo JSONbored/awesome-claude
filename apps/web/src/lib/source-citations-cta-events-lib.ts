@@ -46,3 +46,35 @@ export function sourceCitationEgressAnalyticsData(
     destination,
   };
 }
+
+export type SourceCitationContributorDestination = {
+  to: "/contributors/$slug";
+  params: { slug: string };
+};
+
+/** Map a contributor slug to a contributor profile destination. */
+export function sourceCitationContributorDestination(
+  slug: string,
+): SourceCitationContributorDestination | null {
+  const id = slug.trim();
+  switch (id) {
+    case "":
+      return null;
+    default:
+      return { to: "/contributors/$slug", params: { slug: id } };
+  }
+}
+
+export type SourceCitationQualityDestination = { to: "/quality"; hash: "source-provenance" };
+
+/** Map a source citations quality egress id to a quality page destination. */
+export function sourceCitationQualityDestination(
+  destination: string,
+): SourceCitationQualityDestination | null {
+  switch (destination) {
+    case "quality-source-provenance":
+      return { to: "/quality", hash: "source-provenance" };
+    default:
+      return null;
+  }
+}

@@ -20,3 +20,16 @@ export function platformChipAnalyticsData(
     platform,
   };
 }
+
+export type PlatformChipHubDestination = { to: "/for/$platform"; params: { platform: string } };
+
+/** Map a platform chip id to a platform hub destination. */
+export function platformChipHubDestination(platform: string): PlatformChipHubDestination | null {
+  const id = platform.trim();
+  switch (id) {
+    case "":
+      return null;
+    default:
+      return { to: "/for/$platform", params: { platform: id } };
+  }
+}

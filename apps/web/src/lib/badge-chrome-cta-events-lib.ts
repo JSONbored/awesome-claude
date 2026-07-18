@@ -79,3 +79,20 @@ export function badgeChromeInstallRiskAnalyticsData(risk: string, surface: Badge
     risk,
   };
 }
+
+export type BadgeChromeTrustBrowseDestination = { to: "/browse"; search: { trust: string } };
+
+/** Map a trust badge level to a directory browse destination. */
+export function badgeChromeTrustBrowseDestination(
+  trust: string,
+): BadgeChromeTrustBrowseDestination | null {
+  switch (trust) {
+    case "trusted":
+    case "review":
+    case "limited":
+    case "blocked":
+      return { to: "/browse", search: { trust } };
+    default:
+      return null;
+  }
+}

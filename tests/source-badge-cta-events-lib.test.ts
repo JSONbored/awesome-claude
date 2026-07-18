@@ -3,6 +3,7 @@ import {
   SOURCE_BADGE_SURFACE,
   sourceBadgeAnalyticsData,
   sourceBadgeAnalyticsEvent,
+  sourceBadgeBrowseDestination,
 } from "@/lib/source-badge-cta-events-lib";
 
 describe("source badge cta events lib", () => {
@@ -42,5 +43,26 @@ describe("source badge cta events lib", () => {
       surface: "home-recent",
       source: "unverified",
     });
+  });
+
+  it("maps source badge statuses to browse destinations", () => {
+    expect(sourceBadgeBrowseDestination("source-backed")).toEqual({
+      to: "/browse",
+      search: { source: "source-backed" },
+    });
+    expect(sourceBadgeBrowseDestination("first-party")).toEqual({
+      to: "/browse",
+      search: { source: "first-party" },
+    });
+    expect(sourceBadgeBrowseDestination("external")).toEqual({
+      to: "/browse",
+      search: { source: "external" },
+    });
+    expect(sourceBadgeBrowseDestination("unverified")).toEqual({
+      to: "/browse",
+      search: { source: "unverified" },
+    });
+    expect(sourceBadgeBrowseDestination("unknown")).toBeNull();
+    expect(sourceBadgeBrowseDestination("")).toBeNull();
   });
 });

@@ -11,6 +11,7 @@ import {
   resourceCardCompareToastOpenAnalyticsEvent,
   resourceCardEntryAnalyticsData,
   resourceCardEntryAnalyticsEvent,
+  resourceCardEntryDestination,
   resourceCardSourceAnalyticsData,
   resourceCardSourceAnalyticsEvent,
   resourceCardInstallAnalyticsData,
@@ -167,5 +168,19 @@ describe("resource card cta events lib", () => {
       "trust",
     ]);
     expect(resourceCardBadgeKinds("unknown")).toEqual([]);
+  });
+
+  it("maps browse card entry refs to entry detail destinations", () => {
+    expect(resourceCardEntryDestination("mcp", "browser")).toEqual({
+      to: "/entry/$category/$slug",
+      params: { category: "mcp", slug: "browser" },
+    });
+    expect(resourceCardEntryDestination("  skills ", " demo ")).toEqual({
+      to: "/entry/$category/$slug",
+      params: { category: "skills", slug: "demo" },
+    });
+    expect(resourceCardEntryDestination("", "browser")).toBeNull();
+    expect(resourceCardEntryDestination("mcp", "")).toBeNull();
+    expect(resourceCardEntryDestination("   ", "   ")).toBeNull();
   });
 });

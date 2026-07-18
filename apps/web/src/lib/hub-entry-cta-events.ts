@@ -8,6 +8,7 @@ export {
   hubCategoryRankingEntryAnalyticsData,
   hubCategoryRankingEntryAnalyticsEvent,
   hubEntryKey,
+  hubEntryDestination,
   hubHighlightBrowseSignal,
   hubHighlightEntryAnalyticsData,
   hubHighlightEntryAnalyticsEvent,
@@ -15,4 +16,5 @@ export {
   hubHighlightSourceBrowseAnalyticsEvent,
   hubTrendingPodiumEntryAnalyticsData,
   hubTrendingPodiumEntryAnalyticsEvent,
+  type HubEntryDestination,
 } from "@/lib/hub-entry-cta-events-lib";

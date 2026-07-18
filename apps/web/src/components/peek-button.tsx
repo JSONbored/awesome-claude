@@ -38,6 +38,8 @@ import {
   peekPanelActionAnalyticsEvent,
   peekPanelOpenAnalyticsData,
   peekPanelOpenAnalyticsEvent,
+  peekPanelCategoryDestination,
+  peekPanelEntryDestination,
   peekSnippetVariantSelectAnalyticsData,
   peekSnippetVariantSelectAnalyticsEvent,
   PEEK_PANEL_SURFACE,
@@ -137,6 +139,8 @@ export const PeekButton = React.forwardRef<PeekHandle, Props>(function PeekButto
 });
 
 function PeekBody({ entry, peekId }: { entry: Entry; peekId: string }) {
+  const categoryDestination = peekPanelCategoryDestination(entry.category);
+  const entryDestination = peekPanelEntryDestination(entry.category, entry.slug);
   const harnessAvailable = React.useMemo<Harness[]>(
     () => (entry.harnessVariants ? (Object.keys(entry.harnessVariants) as Harness[]) : []),
     [entry.harnessVariants],
@@ -180,18 +184,22 @@ function PeekBody({ entry, peekId }: { entry: Entry; peekId: string }) {
     <>
       <SheetHeader className="space-y-3 text-left">
         <div className="flex flex-wrap items-center gap-1.5">
-          <Link
-            to="/browse"
-            search={{ category: entry.category }}
-            onClick={() =>
-              trackEvent(
-                badgeChromeCategoryAnalyticsEvent(),
-                badgeChromeCategoryAnalyticsData(entry.category, "peek-panel"),
-              )
-            }
-          >
+          {categoryDestination ? (
+            <Link
+              to={categoryDestination.to}
+              search={categoryDestination.search}
+              onClick={() =>
+                trackEvent(
+                  badgeChromeCategoryAnalyticsEvent(),
+                  badgeChromeCategoryAnalyticsData(entry.category, "peek-panel"),
+                )
+              }
+            >
+              <CategoryPill>{entry.category}</CategoryPill>
+            </Link>
+          ) : (
             <CategoryPill>{entry.category}</CategoryPill>
-          </Link>
+          )}
           <TrustBadge
             level={entry.trust}
             asLink
@@ -307,14 +315,16 @@ function PeekBody({ entry, peekId }: { entry: Entry; peekId: string }) {
       </div>
 
       <div className="mt-5 flex flex-wrap items-center gap-2">
-        <Link
-          to="/entry/$category/$slug"
-          params={{ category: entry.category, slug: entry.slug }}
-          onClick={() => onPeekAction("dossier")}
-          className="inline-flex h-8 items-center gap-1.5 rounded-md bg-ink px-3 text-xs font-medium text-background hover:bg-ink/90"
-        >
-          Open dossier <ArrowUpRight className="h-3 w-3" />
-        </Link>
+        {entryDestination ? (
+          <Link
+            to={entryDestination.to}
+            params={entryDestination.params}
+            onClick={() => onPeekAction("dossier")}
+            className="inline-flex h-8 items-center gap-1.5 rounded-md bg-ink px-3 text-xs font-medium text-background hover:bg-ink/90"
+          >
+            Open dossier <ArrowUpRight className="h-3 w-3" />
+          </Link>
+        ) : null}
         {entry.sourceUrl && (
           <a
             href={entry.sourceUrl}

@@ -195,3 +195,19 @@ export function resourceCardTrustHintAnalyticsData(
     compareCount,
   };
 }
+
+export type ResourceCardEntryDestination = {
+  to: "/entry/$category/$slug";
+  params: { category: string; slug: string };
+};
+
+/** Map a browse card entry ref to an entry detail destination. */
+export function resourceCardEntryDestination(
+  category: string,
+  slug: string,
+): ResourceCardEntryDestination | null {
+  const cat = category.trim();
+  const id = slug.trim();
+  if (!cat || !id) return null;
+  return { to: "/entry/$category/$slug", params: { category: cat, slug: id } };
+}

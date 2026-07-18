@@ -15,6 +15,7 @@ import {
 import {
   hubCategoryRankingEntryAnalyticsData,
   hubCategoryRankingEntryAnalyticsEvent,
+  hubEntryDestination,
 } from "@/lib/hub-entry-cta-events";
 import type { Entry } from "@/types/registry";
 
@@ -68,19 +69,32 @@ export function CategoryRankingTable({ entries, label }: { entries: Entry[]; lab
             {entries.map((e, i) => (
               <tr key={`${e.category}/${e.slug}`} className={i % 2 === 1 ? "bg-surface-2/30" : ""}>
                 <th scope="row" className="px-3 py-2.5 align-top">
-                  <Link
-                    to="/entry/$category/$slug"
-                    params={{ category: e.category, slug: e.slug }}
-                    onClick={() =>
-                      trackEvent(
-                        hubCategoryRankingEntryAnalyticsEvent(),
-                        hubCategoryRankingEntryAnalyticsData(e.category, e.slug, i, entries.length),
-                      )
+                  {(() => {
+                    const destination = hubEntryDestination(e.category, e.slug);
+                    if (!destination) {
+                      return <span className="text-sm font-medium text-ink">{e.title}</span>;
                     }
-                    className="story-link text-sm font-medium text-ink"
-                  >
-                    {e.title}
-                  </Link>
+                    return (
+                      <Link
+                        to={destination.to}
+                        params={destination.params}
+                        onClick={() =>
+                          trackEvent(
+                            hubCategoryRankingEntryAnalyticsEvent(),
+                            hubCategoryRankingEntryAnalyticsData(
+                              e.category,
+                              e.slug,
+                              i,
+                              entries.length,
+                            ),
+                          )
+                        }
+                        className="story-link text-sm font-medium text-ink"
+                      >
+                        {e.title}
+                      </Link>
+                    );
+                  })()}
                   <div className="mt-0.5 text-xs text-ink-subtle">{e.author}</div>
                 </th>
                 <td className="px-3 py-2.5 align-top">

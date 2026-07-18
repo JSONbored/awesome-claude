@@ -60,3 +60,14 @@ export function installRiskBrowseSearch(risk: string): { trust: string } | null 
       return null;
   }
 }
+
+export type InstallRiskBadgeBrowseDestination = { to: "/browse"; search: { trust: string } };
+
+/** Map an install-risk level to a directory browse destination. */
+export function installRiskBadgeBrowseDestination(
+  risk: string,
+): InstallRiskBadgeBrowseDestination | null {
+  const search = installRiskBrowseSearch(risk);
+  if (!search) return null;
+  return { to: "/browse", search };
+}

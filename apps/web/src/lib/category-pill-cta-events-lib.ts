@@ -17,3 +17,18 @@ export function categoryPillAnalyticsData(category: string, surface: CategoryPil
     category,
   };
 }
+
+export type CategoryPillBrowseDestination = { to: "/browse"; search: { category: string } };
+
+/** Map a category pill id to a directory browse destination. */
+export function categoryPillBrowseDestination(
+  category: string,
+): CategoryPillBrowseDestination | null {
+  const id = category.trim();
+  switch (id) {
+    case "":
+      return null;
+    default:
+      return { to: "/browse", search: { category: id } };
+  }
+}

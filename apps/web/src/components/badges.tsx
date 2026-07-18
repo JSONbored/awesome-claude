@@ -28,16 +28,22 @@ import { trackEvent } from "@/lib/analytics";
 import {
   platformChipAnalyticsData,
   platformChipAnalyticsEvent,
+  platformChipHubDestination,
 } from "@/lib/platform-chip-cta-events";
 import {
   categoryPillAnalyticsData,
   categoryPillAnalyticsEvent,
+  categoryPillBrowseDestination,
 } from "@/lib/category-pill-cta-events";
-import { sourceBadgeAnalyticsData, sourceBadgeAnalyticsEvent } from "@/lib/source-badge-cta-events";
+import {
+  sourceBadgeAnalyticsData,
+  sourceBadgeAnalyticsEvent,
+  sourceBadgeBrowseDestination,
+} from "@/lib/source-badge-cta-events";
 import {
   notesPresenceAnalyticsData,
   notesPresenceAnalyticsEvent,
-  notesPresenceBrowseSearch,
+  notesPresenceBrowseDestination,
 } from "@/lib/notes-presence-cta-events";
 import {
   installRiskLevel,
@@ -48,8 +54,9 @@ import {
 import {
   installRiskBadgeAnalyticsData,
   installRiskBadgeAnalyticsEvent,
-  installRiskBrowseSearch,
+  installRiskBadgeBrowseDestination,
 } from "@/lib/install-risk-badge-cta-events";
+import { badgeChromeTrustBrowseDestination } from "@/lib/badge-chrome-cta-events";
 
 const trustStyles: Record<TrustLevel, { dot: string; text: string; ring: string }> = {
   trusted: { dot: "bg-trust-trusted", text: "text-trust-trusted", ring: "ring-trust-trusted/30" },
@@ -91,10 +98,18 @@ export function TrustBadge({
     className,
   );
   if (asLink) {
+    const destination = badgeChromeTrustBrowseDestination(level);
+    if (!destination) {
+      return (
+        <span className={classes} title={`${TRUST_LABEL[level]} — review before installing`}>
+          {content}
+        </span>
+      );
+    }
     return (
       <Link
-        to="/browse"
-        search={{ trust: level }}
+        to={destination.to}
+        search={destination.search}
         onClick={onNavigate}
         className={cn(classes, "transition-colors hover:border-ink/20")}
         title={`${TRUST_LABEL[level]} — browse by trust`}
@@ -144,10 +159,14 @@ export function SourceBadge({
     className,
   );
   if (asLink) {
+    const destination = sourceBadgeBrowseDestination(status);
+    if (!destination) {
+      return <span className={classes}>{content}</span>;
+    }
     return (
       <Link
-        to="/browse"
-        search={{ source: status }}
+        to={destination.to}
+        search={destination.search}
         onClick={() => {
           onNavigate?.();
           if (surface) {
@@ -185,10 +204,14 @@ export function PlatformChip({
   );
   // asLink is opt-in: never used inside card <Link>s (would nest anchors); only on detail pages.
   if (asLink) {
+    const destination = platformChipHubDestination(id);
+    if (!destination) {
+      return <span className={base}>{content}</span>;
+    }
     return (
       <Link
-        to="/for/$platform"
-        params={{ platform: id }}
+        to={destination.to}
+        params={destination.params}
         className={cn(base, "transition-colors hover:border-ink/20 hover:text-ink")}
         onClick={() =>
           trackEvent(platformChipAnalyticsEvent(), platformChipAnalyticsData(id, surface))
@@ -222,10 +245,14 @@ export function CategoryPill({
     className,
   );
   if (asLink && category) {
+    const destination = categoryPillBrowseDestination(category);
+    if (!destination) {
+      return <span className={classes}>{children}</span>;
+    }
     return (
       <Link
-        to="/browse"
-        search={{ category }}
+        to={destination.to}
+        search={destination.search}
         onClick={() => {
           onNavigate?.();
           if (surface) {
@@ -317,12 +344,12 @@ export function InstallRiskBadge({
       </button>
     );
   }
-  const browseSearch = asLink ? installRiskBrowseSearch(level) : null;
-  if (browseSearch) {
+  const destination = asLink ? installRiskBadgeBrowseDestination(level) : null;
+  if (destination) {
     return (
       <Link
-        to="/browse"
-        search={browseSearch}
+        to={destination.to}
+        search={destination.search}
         title={`${INSTALL_RISK_LABEL[level]} — browse by trust`}
         onClick={() => {
           onActivate?.(level);
@@ -427,14 +454,14 @@ export function NotesPresenceChips({
   }
 
   if (asLink) {
-    const safetySearch = notesPresenceBrowseSearch("safety", hasSafety);
-    const privacySearch = notesPresenceBrowseSearch("privacy", hasPrivacy);
+    const safetyDestination = notesPresenceBrowseDestination("safety", hasSafety);
+    const privacyDestination = notesPresenceBrowseDestination("privacy", hasPrivacy);
     return (
       <span className={cn("inline-flex items-center gap-1", className)}>
-        {safetySearch ? (
+        {safetyDestination ? (
           <Link
-            to="/browse"
-            search={safetySearch}
+            to={safetyDestination.to}
+            search={safetyDestination.search}
             onClick={() => trackNote("safety", true)}
             title="Safety notes present — browse by signal"
             className={cn(chipClass(true), "transition-colors hover:border-ink/20")}
@@ -446,10 +473,10 @@ export function NotesPresenceChips({
             <Lock className="h-2.5 w-2.5" aria-hidden /> Safety ·
           </span>
         )}
-        {privacySearch ? (
+        {privacyDestination ? (
           <Link
-            to="/browse"
-            search={privacySearch}
+            to={privacyDestination.to}
+            search={privacyDestination.search}
             onClick={() => trackNote("privacy", true)}
             title="Privacy notes present — browse by signal"
             className={cn(chipClass(true), "transition-colors hover:border-ink/20")}

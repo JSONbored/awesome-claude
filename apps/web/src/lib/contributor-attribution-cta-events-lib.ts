@@ -27,3 +27,21 @@ export function contributorAttributionAnalyticsData(
     contributorSlug,
   };
 }
+
+export type ContributorAttributionProfileDestination = {
+  to: "/contributors/$slug";
+  params: { slug: string };
+};
+
+/** Map a contributor slug to a contributor profile destination. */
+export function contributorAttributionProfileDestination(
+  slug: string,
+): ContributorAttributionProfileDestination | null {
+  const id = slug.trim();
+  switch (id) {
+    case "":
+      return null;
+    default:
+      return { to: "/contributors/$slug", params: { slug: id } };
+  }
+}

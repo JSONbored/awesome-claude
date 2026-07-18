@@ -3,6 +3,7 @@ import {
   HARNESS_BADGE_SURFACE,
   harnessBadgeAnalyticsData,
   harnessBadgeAnalyticsEvent,
+  harnessBadgeHubDestination,
 } from "@/lib/harness-badge-cta-events-lib";
 
 describe("harness badge cta events lib", () => {
@@ -34,5 +35,18 @@ describe("harness badge cta events lib", () => {
       surface: "peek-panel",
       harness: "cursor",
     });
+  });
+
+  it("maps harness ids to hub destinations", () => {
+    expect(harnessBadgeHubDestination("claude-code")).toEqual({
+      to: "/for/$platform",
+      params: { platform: "claude-code" },
+    });
+    expect(harnessBadgeHubDestination("  cursor  ")).toEqual({
+      to: "/for/$platform",
+      params: { platform: "cursor" },
+    });
+    expect(harnessBadgeHubDestination("")).toBeNull();
+    expect(harnessBadgeHubDestination("   ")).toBeNull();
   });
 });

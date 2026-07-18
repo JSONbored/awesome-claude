@@ -16,6 +16,7 @@ import {
   hubHighlightEntryAnalyticsEvent,
   hubHighlightSourceBrowseAnalyticsData,
   hubHighlightSourceBrowseAnalyticsEvent,
+  hubEntryDestination,
 } from "@/lib/hub-entry-cta-events";
 import {
   badgeChromeTrustAnalyticsData,
@@ -24,8 +25,8 @@ import {
 import {
   hubSignalStatAnalyticsData,
   hubSignalStatAnalyticsEvent,
-  hubStatBrowseSearch,
-  type HubSignalBrowseSearch,
+  hubSignalStatDestination,
+  type HubSignalStatDestination,
   type HubSignalSurface,
 } from "@/lib/hub-signal-cta-events";
 import { cn } from "@/lib/utils";
@@ -61,34 +62,48 @@ export function HubHighlights({
       <ul className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {highlights.map((h) => {
           const Icon = HIGHLIGHT_ICON[h.kind];
+          const entryDestination = hubEntryDestination(h.entry.category, h.entry.slug);
           return (
             <li key={`${h.kind}-${h.entry.category}/${h.entry.slug}`}>
               <div className="group flex h-full flex-col rounded-xl border border-border bg-surface p-4 transition-colors hover:border-ink/20 hover:bg-surface-2">
-                <Link
-                  to="/entry/$category/$slug"
-                  params={{ category: h.entry.category, slug: h.entry.slug }}
-                  onClick={() =>
-                    trackEvent(
-                      hubHighlightEntryAnalyticsEvent(),
-                      hubHighlightEntryAnalyticsData(
-                        h.entry.category,
-                        h.entry.slug,
-                        h.kind,
-                        highlights.length,
-                      ),
-                    )
-                  }
-                  className="flex flex-1 flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 rounded-sm"
-                >
-                  <div className="flex items-center gap-1.5 eyebrow">
-                    <Icon className="h-3.5 w-3.5 text-accent" aria-hidden />
-                    {h.label}
+                {entryDestination ? (
+                  <Link
+                    to={entryDestination.to}
+                    params={entryDestination.params}
+                    onClick={() =>
+                      trackEvent(
+                        hubHighlightEntryAnalyticsEvent(),
+                        hubHighlightEntryAnalyticsData(
+                          h.entry.category,
+                          h.entry.slug,
+                          h.kind,
+                          highlights.length,
+                        ),
+                      )
+                    }
+                    className="flex flex-1 flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 rounded-sm"
+                  >
+                    <div className="flex items-center gap-1.5 eyebrow">
+                      <Icon className="h-3.5 w-3.5 text-accent" aria-hidden />
+                      {h.label}
+                    </div>
+                    <div className="mt-2 font-display text-sm font-semibold text-ink group-hover:underline">
+                      {h.entry.title}
+                    </div>
+                    <p className="mt-1 flex-1 text-xs text-ink-muted">{h.reason}</p>
+                  </Link>
+                ) : (
+                  <div className="flex flex-1 flex-col">
+                    <div className="flex items-center gap-1.5 eyebrow">
+                      <Icon className="h-3.5 w-3.5 text-accent" aria-hidden />
+                      {h.label}
+                    </div>
+                    <div className="mt-2 font-display text-sm font-semibold text-ink">
+                      {h.entry.title}
+                    </div>
+                    <p className="mt-1 flex-1 text-xs text-ink-muted">{h.reason}</p>
                   </div>
-                  <div className="mt-2 font-display text-sm font-semibold text-ink group-hover:underline">
-                    {h.entry.title}
-                  </div>
-                  <p className="mt-1 flex-1 text-xs text-ink-muted">{h.reason}</p>
-                </Link>
+                )}
                 <div className="mt-3 flex flex-wrap items-center gap-1.5">
                   <TrustBadge
                     level={h.entry.trust}
@@ -122,11 +137,11 @@ export function HubHighlights({
 
 function StatBar({
   stat,
-  browseSearch,
+  browseDestination,
   surface,
 }: {
   stat: HubStat;
-  browseSearch: HubSignalBrowseSearch | null;
+  browseDestination: HubSignalStatDestination | null;
   surface?: HubSignalSurface;
 }) {
   const body = (
@@ -144,11 +159,11 @@ function StatBar({
     </>
   );
 
-  if (browseSearch && surface) {
+  if (browseDestination && surface) {
     return (
       <Link
-        to="/browse"
-        search={browseSearch}
+        to={browseDestination.to}
+        search={browseDestination.search}
         onClick={() =>
           trackEvent(
             hubSignalStatAnalyticsEvent(),
@@ -197,7 +212,7 @@ export function HubSignalStats({
             key={s.key}
             stat={s}
             surface={surface}
-            browseSearch={surface ? hubStatBrowseSearch(s.key, browseBase) : null}
+            browseDestination={surface ? hubSignalStatDestination(s.key, browseBase) : null}
           />
         ))}
       </div>

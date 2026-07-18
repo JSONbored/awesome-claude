@@ -66,3 +66,15 @@ export function notesPresenceBrowseSearch(
       return null;
   }
 }
+
+export type NotesPresenceBrowseDestination = { to: "/browse"; search: { signal: string } };
+
+/** Map a present notes chip to a directory browse destination. */
+export function notesPresenceBrowseDestination(
+  noteKind: string,
+  present: boolean,
+): NotesPresenceBrowseDestination | null {
+  const search = notesPresenceBrowseSearch(noteKind, present);
+  if (!search) return null;
+  return { to: "/browse", search };
+}

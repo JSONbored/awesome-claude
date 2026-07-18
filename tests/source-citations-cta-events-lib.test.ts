@@ -3,8 +3,10 @@ import {
   SOURCE_CITATIONS_DETAIL_SURFACE,
   sourceCitationAnalyticsData,
   sourceCitationAnalyticsEvent,
+  sourceCitationContributorDestination,
   sourceCitationEgressAnalyticsData,
   sourceCitationEgressAnalyticsEvent,
+  sourceCitationQualityDestination,
 } from "@/lib/source-citations-cta-events-lib";
 
 describe("source citations cta events lib", () => {
@@ -63,5 +65,26 @@ describe("source citations cta events lib", () => {
       surface: "detail-source-citations",
       destination: "contributor-profile",
     });
+  });
+
+  it("maps source citation egress ids to destinations", () => {
+    expect(sourceCitationContributorDestination("alice")).toEqual({
+      to: "/contributors/$slug",
+      params: { slug: "alice" },
+    });
+    expect(sourceCitationContributorDestination("  bob  ")).toEqual({
+      to: "/contributors/$slug",
+      params: { slug: "bob" },
+    });
+    expect(sourceCitationContributorDestination("")).toBeNull();
+    expect(sourceCitationContributorDestination("   ")).toBeNull();
+    expect(
+      sourceCitationQualityDestination("quality-source-provenance"),
+    ).toEqual({
+      to: "/quality",
+      hash: "source-provenance",
+    });
+    expect(sourceCitationQualityDestination("unknown")).toBeNull();
+    expect(sourceCitationQualityDestination("")).toBeNull();
   });
 });

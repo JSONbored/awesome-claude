@@ -30,6 +30,7 @@ import {
   resourceCardCompareToastOpenAnalyticsEvent,
   resourceCardEntryAnalyticsData,
   resourceCardEntryAnalyticsEvent,
+  resourceCardEntryDestination,
   resourceCardSourceAnalyticsData,
   resourceCardSourceAnalyticsEvent,
   resourceCardInstallAnalyticsData,
@@ -186,6 +187,7 @@ function ResourceCardInner({
     entry.slug,
     analyticsSurface,
   );
+  const entryDestination = resourceCardEntryDestination(entry.category, entry.slug);
 
   if (variant === "compact") {
     return (
@@ -193,28 +195,40 @@ function ResourceCardInner({
         {...peekListeners}
         className="group relative flex items-center gap-3 border-b border-border px-4 py-2 text-sm transition-colors duration-200 ease-out hover:bg-surface-2 sm:px-6"
       >
-        <Link
-          to="/entry/$category/$slug"
-          params={{ category: entry.category, slug: entry.slug }}
-          onClick={onEntryClick}
-          className="flex min-w-0 flex-1 items-center gap-3 focus-visible:outline-none"
-        >
-          {typeof rank === "number" && (
-            <span className="w-7 shrink-0 font-mono text-[11px] tabular-nums text-ink-subtle">
-              {String(rank).padStart(2, "0")}
+        {entryDestination ? (
+          <Link
+            to={entryDestination.to}
+            params={entryDestination.params}
+            onClick={onEntryClick}
+            className="flex min-w-0 flex-1 items-center gap-3 focus-visible:outline-none"
+          >
+            {typeof rank === "number" && (
+              <span className="w-7 shrink-0 font-mono text-[11px] tabular-nums text-ink-subtle">
+                {String(rank).padStart(2, "0")}
+              </span>
+            )}
+            <EntryBrandMark entry={entry} size="xs" />
+            <span className="min-w-0 flex-1 truncate font-medium text-ink group-hover:underline">
+              {entry.title}
             </span>
-          )}
-          <EntryBrandMark entry={entry} size="xs" />
-          <span className="min-w-0 flex-1 truncate font-medium text-ink group-hover:underline">
-            {entry.title}
-          </span>
-          <span className="hidden min-w-0 max-w-[40%] truncate text-xs text-ink-muted sm:inline">
-            {entry.cardDescription ?? entry.description}
-          </span>
-          <span className="hidden sm:inline-flex">
-            <SourceRepoStars entry={entry} compact />
-          </span>
-        </Link>
+            <span className="hidden min-w-0 max-w-[40%] truncate text-xs text-ink-muted sm:inline">
+              {entry.cardDescription ?? entry.description}
+            </span>
+            <span className="hidden sm:inline-flex">
+              <SourceRepoStars entry={entry} compact />
+            </span>
+          </Link>
+        ) : (
+          <div className="flex min-w-0 flex-1 items-center gap-3">
+            {typeof rank === "number" && (
+              <span className="w-7 shrink-0 font-mono text-[11px] tabular-nums text-ink-subtle">
+                {String(rank).padStart(2, "0")}
+              </span>
+            )}
+            <EntryBrandMark entry={entry} size="xs" />
+            <span className="min-w-0 flex-1 truncate font-medium text-ink">{entry.title}</span>
+          </div>
+        )}
         <CategoryPill
           asLink
           category={entry.category}
@@ -260,37 +274,48 @@ function ResourceCardInner({
         )}
       >
         <div className="flex flex-1 flex-col gap-3 p-4">
-          <Link
-            to="/entry/$category/$slug"
-            params={{ category: entry.category, slug: entry.slug }}
-            onClick={onEntryClick}
-            className="flex flex-1 flex-col gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent/60 rounded-lg"
-          >
-            <div className="flex items-start justify-between gap-2">
-              <div className="flex min-w-0 items-center gap-2">
+          {entryDestination ? (
+            <Link
+              to={entryDestination.to}
+              params={entryDestination.params}
+              onClick={onEntryClick}
+              className="flex flex-1 flex-col gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent/60 rounded-lg"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex min-w-0 items-center gap-2">
+                  <EntryBrandMark entry={entry} size="xs" />
+                </div>
+                <div className="flex min-h-4 items-center text-xs text-ink-muted tabular-nums">
+                  <SourceRepoStars entry={entry} compact />
+                </div>
+              </div>
+              <div>
+                <h3 className="font-display text-base font-semibold leading-tight text-ink">
+                  {entry.title}
+                </h3>
+                <p className="mt-1.5 line-clamp-2 text-sm text-ink-muted">
+                  {entry.cardDescription ?? entry.description}
+                </p>
+              </div>
+              <EntryFacets entry={entry} density="card" />
+              {entry.dateAdded && (
+                <div className="mt-auto">
+                  <span className="font-mono text-[10px] text-ink-subtle">
+                    Added {timeAgo(entry.dateAdded)}
+                  </span>
+                </div>
+              )}
+            </Link>
+          ) : (
+            <div className="flex flex-1 flex-col gap-3">
+              <div className="flex items-start justify-between gap-2">
                 <EntryBrandMark entry={entry} size="xs" />
               </div>
-              <div className="flex min-h-4 items-center text-xs text-ink-muted tabular-nums">
-                <SourceRepoStars entry={entry} compact />
-              </div>
-            </div>
-            <div>
               <h3 className="font-display text-base font-semibold leading-tight text-ink">
                 {entry.title}
               </h3>
-              <p className="mt-1.5 line-clamp-2 text-sm text-ink-muted">
-                {entry.cardDescription ?? entry.description}
-              </p>
             </div>
-            <EntryFacets entry={entry} density="card" />
-            {entry.dateAdded && (
-              <div className="mt-auto">
-                <span className="font-mono text-[10px] text-ink-subtle">
-                  Added {timeAgo(entry.dateAdded)}
-                </span>
-              </div>
-            )}
-          </Link>
+          )}
           <div className="flex flex-wrap items-center gap-1.5">
             <CategoryPill
               asLink
@@ -412,14 +437,20 @@ function ResourceCardInner({
           </div>
 
           <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-            <Link
-              to="/entry/$category/$slug"
-              params={{ category: entry.category, slug: entry.slug }}
-              onClick={onEntryClick}
-              className="font-display text-[15px] font-semibold tracking-tight text-ink group-hover:underline"
-            >
-              {entry.title}
-            </Link>
+            {entryDestination ? (
+              <Link
+                to={entryDestination.to}
+                params={entryDestination.params}
+                onClick={onEntryClick}
+                className="font-display text-[15px] font-semibold tracking-tight text-ink group-hover:underline"
+              >
+                {entry.title}
+              </Link>
+            ) : (
+              <span className="font-display text-[15px] font-semibold tracking-tight text-ink">
+                {entry.title}
+              </span>
+            )}
             <LazyEntryAuthorAttribution entry={entry} />
           </div>
           <p className="line-clamp-2 max-w-3xl text-sm text-ink-muted">{entry.description}</p>

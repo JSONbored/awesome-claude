@@ -6,6 +6,7 @@ import { trackEvent } from "@/lib/analytics";
 import {
   harnessBadgeAnalyticsData,
   harnessBadgeAnalyticsEvent,
+  harnessBadgeHubDestination,
 } from "@/lib/harness-badge-cta-events";
 
 export function HarnessBadge({
@@ -39,10 +40,18 @@ export function HarnessBadge({
     </>
   );
   if (asLink) {
+    const destination = harnessBadgeHubDestination(id);
+    if (!destination) {
+      return (
+        <span className={classes} title={`Works with ${PLATFORM_LABEL[id]}`}>
+          {content}
+        </span>
+      );
+    }
     return (
       <Link
-        to="/for/$platform"
-        params={{ platform: id }}
+        to={destination.to}
+        params={destination.params}
         title={`Works with ${PLATFORM_LABEL[id]} — open platform hub`}
         onClick={() =>
           trackEvent(harnessBadgeAnalyticsEvent(), harnessBadgeAnalyticsData(id, surface))

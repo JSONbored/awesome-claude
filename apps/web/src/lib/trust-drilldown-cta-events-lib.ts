@@ -122,3 +122,28 @@ export function trustDrilldownBrowseSearch(trust: string): { trust: string } | n
       return null;
   }
 }
+
+export type TrustDrilldownMethodologyDestination = { to: "/quality"; hash: "methodology" };
+
+/** Map a trust drilldown methodology egress id to a quality page destination. */
+export function trustDrilldownMethodologyDestination(
+  destination: string,
+): TrustDrilldownMethodologyDestination | null {
+  switch (destination) {
+    case "methodology":
+      return { to: "/quality", hash: "methodology" };
+    default:
+      return null;
+  }
+}
+
+export type TrustDrilldownBrowseDestination = { to: "/browse"; search: { trust: string } };
+
+/** Map a trust level to a directory browse destination. */
+export function trustDrilldownBrowseDestination(
+  trust: string,
+): TrustDrilldownBrowseDestination | null {
+  const search = trustDrilldownBrowseSearch(trust);
+  if (!search) return null;
+  return { to: "/browse", search };
+}

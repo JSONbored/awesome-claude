@@ -54,3 +54,15 @@ export function hubStatBrowseSearch(
       return null;
   }
 }
+
+export type HubSignalStatDestination = { to: "/browse"; search: HubSignalBrowseSearch };
+
+/** Map a hub signal stat key to a directory browse destination. */
+export function hubSignalStatDestination(
+  statKey: string,
+  base: { category?: string; platform?: string; q?: string } = {},
+): HubSignalStatDestination | null {
+  const search = hubStatBrowseSearch(statKey, base);
+  if (!search) return null;
+  return { to: "/browse", search };
+}

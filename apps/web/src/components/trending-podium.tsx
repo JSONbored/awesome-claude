@@ -15,6 +15,7 @@ import {
 import {
   hubTrendingPodiumEntryAnalyticsData,
   hubTrendingPodiumEntryAnalyticsEvent,
+  hubEntryDestination,
 } from "@/lib/hub-entry-cta-events";
 import { cn } from "@/lib/utils";
 import type { Entry } from "@/types/registry";
@@ -49,6 +50,7 @@ export function TrendingPodium({ entries }: { entries: TrendingEntry[] }) {
       {top.map((e, i) => {
         const style = RANK_STYLES[i] ?? RANK_STYLES[2];
         const isFirst = i === 0;
+        const entryDestination = hubEntryDestination(e.category, e.slug);
         return (
           <div
             key={`${e.category}/${e.slug}`}
@@ -112,17 +114,26 @@ export function TrendingPodium({ entries }: { entries: TrendingEntry[] }) {
                 }
               />
             </div>
-            <Link
-              to="/entry/$category/$slug"
-              params={{ category: e.category, slug: e.slug }}
-              onClick={() => trackPodiumClick(e, i + 1)}
-              className="mt-2 min-w-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 rounded-sm"
-            >
-              <div className="font-display text-lg font-semibold leading-snug text-ink group-hover:underline">
-                {e.title}
+            {entryDestination ? (
+              <Link
+                to={entryDestination.to}
+                params={entryDestination.params}
+                onClick={() => trackPodiumClick(e, i + 1)}
+                className="mt-2 min-w-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 rounded-sm"
+              >
+                <div className="font-display text-lg font-semibold leading-snug text-ink group-hover:underline">
+                  {e.title}
+                </div>
+                <p className="mt-1 line-clamp-2 text-sm text-ink-muted">{e.description}</p>
+              </Link>
+            ) : (
+              <div className="mt-2 min-w-0">
+                <div className="font-display text-lg font-semibold leading-snug text-ink">
+                  {e.title}
+                </div>
+                <p className="mt-1 line-clamp-2 text-sm text-ink-muted">{e.description}</p>
               </div>
-              <p className="mt-1 line-clamp-2 text-sm text-ink-muted">{e.description}</p>
-            </Link>
+            )}
 
             <div className="mt-3 flex items-end justify-between gap-3">
               <div className="min-w-0 text-[11px] text-ink-subtle">
@@ -140,14 +151,16 @@ export function TrendingPodium({ entries }: { entries: TrendingEntry[] }) {
               </div>
             </div>
 
-            <Link
-              to="/entry/$category/$slug"
-              params={{ category: e.category, slug: e.slug }}
-              onClick={() => trackPodiumClick(e, i + 1)}
-              className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-ink-muted hover:text-ink"
-            >
-              Inspect <ArrowUpRight className="h-3 w-3" />
-            </Link>
+            {entryDestination ? (
+              <Link
+                to={entryDestination.to}
+                params={entryDestination.params}
+                onClick={() => trackPodiumClick(e, i + 1)}
+                className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-ink-muted hover:text-ink"
+              >
+                Inspect <ArrowUpRight className="h-3 w-3" />
+              </Link>
+            ) : null}
           </div>
         );
       })}

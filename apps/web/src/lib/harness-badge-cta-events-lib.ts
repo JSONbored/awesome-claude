@@ -28,3 +28,16 @@ export function harnessBadgeAnalyticsData(
     harness,
   };
 }
+
+export type HarnessBadgeHubDestination = { to: "/for/$platform"; params: { platform: string } };
+
+/** Map a harness badge id to a platform hub destination. */
+export function harnessBadgeHubDestination(harness: string): HarnessBadgeHubDestination | null {
+  const id = harness.trim();
+  switch (id) {
+    case "":
+      return null;
+    default:
+      return { to: "/for/$platform", params: { platform: id } };
+  }
+}

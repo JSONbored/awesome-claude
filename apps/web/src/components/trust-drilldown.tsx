@@ -18,11 +18,12 @@ import { trackEvent } from "@/lib/analytics";
 import {
   trustDrilldownBrowseAnalyticsData,
   trustDrilldownBrowseAnalyticsEvent,
-  trustDrilldownBrowseSearch,
+  trustDrilldownBrowseDestination,
   trustDrilldownDocAnalyticsData,
   trustDrilldownDocAnalyticsEvent,
   trustDrilldownMethodologyAnalyticsData,
   trustDrilldownMethodologyAnalyticsEvent,
+  trustDrilldownMethodologyDestination,
   trustDrilldownOpenAnalyticsData,
   trustDrilldownOpenAnalyticsEvent,
   trustDrilldownSourceAnalyticsData,
@@ -51,7 +52,8 @@ export function TrustDrilldown({
   const reasons = React.useMemo(() => getTrustReasons(entry), [entry]);
   const counts = summarizeTrust(reasons);
   const summary = trustSummaryLine(counts);
-  const browseSearch = trustDrilldownBrowseSearch(entry.trust);
+  const methodologyDestination = trustDrilldownMethodologyDestination("methodology");
+  const browseDestination = trustDrilldownBrowseDestination(entry.trust);
 
   return (
     <Popover>
@@ -83,24 +85,26 @@ export function TrustDrilldown({
             <div className="mt-0.5 font-display text-sm font-semibold text-ink">{entry.title}</div>
           </div>
           <div className="flex flex-col items-end gap-1">
-            <Link
-              to="/quality"
-              hash="methodology"
-              className="inline-flex h-7 items-center gap-1 rounded-md border border-border bg-background px-2 text-[11px] font-medium text-ink hover:bg-surface-2"
-              onClick={() =>
-                trackEvent(
-                  trustDrilldownMethodologyAnalyticsEvent(),
-                  trustDrilldownMethodologyAnalyticsData(entry.category, entry.slug, surface),
-                )
-              }
-            >
-              Methodology
-              <ArrowUpRight className="h-3 w-3" />
-            </Link>
-            {browseSearch && (
+            {methodologyDestination ? (
               <Link
-                to="/browse"
-                search={browseSearch}
+                to={methodologyDestination.to}
+                hash={methodologyDestination.hash}
+                className="inline-flex h-7 items-center gap-1 rounded-md border border-border bg-background px-2 text-[11px] font-medium text-ink hover:bg-surface-2"
+                onClick={() =>
+                  trackEvent(
+                    trustDrilldownMethodologyAnalyticsEvent(),
+                    trustDrilldownMethodologyAnalyticsData(entry.category, entry.slug, surface),
+                  )
+                }
+              >
+                Methodology
+                <ArrowUpRight className="h-3 w-3" />
+              </Link>
+            ) : null}
+            {browseDestination ? (
+              <Link
+                to={browseDestination.to}
+                search={browseDestination.search}
                 className="inline-flex h-7 items-center gap-1 rounded-md border border-border bg-background px-2 text-[11px] font-medium text-ink-muted hover:bg-surface-2 hover:text-ink"
                 onClick={() =>
                   trackEvent(
@@ -117,7 +121,7 @@ export function TrustDrilldown({
                 Browse similar
                 <ArrowUpRight className="h-3 w-3" />
               </Link>
-            )}
+            ) : null}
           </div>
         </header>
         <ul className="max-h-[60vh] divide-y divide-border overflow-y-auto">

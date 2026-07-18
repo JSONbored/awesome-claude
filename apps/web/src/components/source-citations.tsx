@@ -16,8 +16,10 @@ import {
   SOURCE_CITATIONS_DETAIL_SURFACE,
   sourceCitationAnalyticsData,
   sourceCitationAnalyticsEvent,
+  sourceCitationContributorDestination,
   sourceCitationEgressAnalyticsData,
   sourceCitationEgressAnalyticsEvent,
+  sourceCitationQualityDestination,
   type SourceCitationKind,
 } from "@/lib/source-citations-cta-events";
 
@@ -131,6 +133,8 @@ export function SourceCitations({
     );
   }
 
+  const qualityDestination = sourceCitationQualityDestination("quality-source-provenance");
+
   return (
     <div>
       <ul className="divide-y divide-border">
@@ -156,19 +160,27 @@ export function SourceCitations({
           return (
             <li key={c.label}>
               {c.contributorSlug ? (
-                <Link
-                  to="/contributors/$slug"
-                  params={{ slug: c.contributorSlug }}
-                  className="block rounded-md px-2 transition-colors duration-200 hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60"
-                  onClick={() =>
-                    trackEvent(
-                      sourceCitationEgressAnalyticsEvent(),
-                      sourceCitationEgressAnalyticsData("contributor-profile", surface),
-                    )
+                (() => {
+                  const destination = sourceCitationContributorDestination(c.contributorSlug);
+                  if (!destination) {
+                    return <div className="px-2">{body}</div>;
                   }
-                >
-                  {body}
-                </Link>
+                  return (
+                    <Link
+                      to={destination.to}
+                      params={destination.params}
+                      className="block rounded-md px-2 transition-colors duration-200 hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60"
+                      onClick={() =>
+                        trackEvent(
+                          sourceCitationEgressAnalyticsEvent(),
+                          sourceCitationEgressAnalyticsData("contributor-profile", surface),
+                        )
+                      }
+                    >
+                      {body}
+                    </Link>
+                  );
+                })()
               ) : c.href ? (
                 <a
                   href={c.href}
@@ -186,19 +198,21 @@ export function SourceCitations({
           );
         })}
       </ul>
-      <Link
-        to="/quality"
-        hash="source-provenance"
-        className="mt-2 inline-flex text-xs text-ink-muted hover:text-ink"
-        onClick={() =>
-          trackEvent(
-            sourceCitationEgressAnalyticsEvent(),
-            sourceCitationEgressAnalyticsData("quality-source-provenance", surface),
-          )
-        }
-      >
-        Source methodology →
-      </Link>
+      {qualityDestination ? (
+        <Link
+          to={qualityDestination.to}
+          hash={qualityDestination.hash}
+          className="mt-2 inline-flex text-xs text-ink-muted hover:text-ink"
+          onClick={() =>
+            trackEvent(
+              sourceCitationEgressAnalyticsEvent(),
+              sourceCitationEgressAnalyticsData("quality-source-provenance", surface),
+            )
+          }
+        >
+          Source methodology →
+        </Link>
+      ) : null}
     </div>
   );
 }

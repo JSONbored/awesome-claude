@@ -12,6 +12,8 @@ export {
   badgeChromeSourceAnalyticsEvent,
   badgeChromeTrustAnalyticsData,
   badgeChromeTrustAnalyticsEvent,
+  badgeChromeTrustBrowseDestination,
   type BadgeChromeNoteKind,
   type BadgeChromeSurface,
+  type BadgeChromeTrustBrowseDestination,
 } from "@/lib/badge-chrome-cta-events-lib";

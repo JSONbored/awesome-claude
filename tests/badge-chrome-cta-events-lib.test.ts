@@ -10,6 +10,7 @@ import {
   badgeChromeSourceAnalyticsEvent,
   badgeChromeTrustAnalyticsData,
   badgeChromeTrustAnalyticsEvent,
+  badgeChromeTrustBrowseDestination,
 } from "@/lib/badge-chrome-cta-events-lib";
 
 describe("badge chrome cta events lib", () => {
@@ -183,5 +184,26 @@ describe("badge chrome cta events lib", () => {
       surface: "category-ranking",
       trust: "trusted",
     });
+  });
+
+  it("maps trust levels to browse destinations", () => {
+    expect(badgeChromeTrustBrowseDestination("trusted")).toEqual({
+      to: "/browse",
+      search: { trust: "trusted" },
+    });
+    expect(badgeChromeTrustBrowseDestination("review")).toEqual({
+      to: "/browse",
+      search: { trust: "review" },
+    });
+    expect(badgeChromeTrustBrowseDestination("limited")).toEqual({
+      to: "/browse",
+      search: { trust: "limited" },
+    });
+    expect(badgeChromeTrustBrowseDestination("blocked")).toEqual({
+      to: "/browse",
+      search: { trust: "blocked" },
+    });
+    expect(badgeChromeTrustBrowseDestination("unknown")).toBeNull();
+    expect(badgeChromeTrustBrowseDestination("")).toBeNull();
   });
 });

@@ -11,7 +11,11 @@ export {
   peekSnippetVariantSelectAnalyticsEvent,
   peekPanelActionAnalyticsData,
   peekPanelActionAnalyticsEvent,
+  peekPanelCategoryDestination,
+  peekPanelEntryDestination,
   peekPanelEntryKey,
   peekPanelOpenAnalyticsData,
   peekPanelOpenAnalyticsEvent,
+  type PeekPanelCategoryDestination,
+  type PeekPanelEntryDestination,
 } from "@/lib/peek-panel-cta-events-lib";
