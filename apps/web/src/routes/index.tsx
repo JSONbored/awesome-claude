@@ -294,18 +294,27 @@ function Home() {
               })}
             </div>
             <div className="mt-5 flex flex-wrap items-center gap-2 text-sm">
-              <Link
-                to={homeHeroCtaDestination("browse-all")?.to ?? "/browse"}
-                onClick={() =>
-                  trackEvent(homeHeroCtaAnalyticsEvent(), homeHeroCtaAnalyticsData("browse-all"))
-                }
-                className="inline-flex h-9 items-center gap-1.5 rounded-md bg-ink px-4 font-medium text-background hover:opacity-90"
-              >
-                Browse all <ArrowRight className="h-4 w-4" />
-              </Link>
+              {(() => {
+                const destination = homeHeroCtaDestination("browse-all");
+                if (!destination) return null;
+                return (
+                  <Link
+                    to={destination.to}
+                    onClick={() =>
+                      trackEvent(
+                        homeHeroCtaAnalyticsEvent(),
+                        homeHeroCtaAnalyticsData("browse-all"),
+                      )
+                    }
+                    className="inline-flex h-9 items-center gap-1.5 rounded-md bg-ink px-4 font-medium text-background hover:opacity-90"
+                  >
+                    Browse all <ArrowRight className="h-4 w-4" />
+                  </Link>
+                );
+              })()}
               {(() => {
                 const destination = homeHeroCtaDestination("setup-mcp");
-                if (!destination) return null;
+                if (!destination || !("params" in destination)) return null;
                 return (
                   <Link
                     to={destination.to}
@@ -321,15 +330,21 @@ function Home() {
                   </Link>
                 );
               })()}
-              <Link
-                to={homeHeroCtaDestination("best")?.to ?? "/best"}
-                onClick={() =>
-                  trackEvent(homeHeroCtaAnalyticsEvent(), homeHeroCtaAnalyticsData("best"))
-                }
-                className="inline-flex h-9 items-center gap-1.5 rounded-md border border-transparent px-2 font-medium text-ink-muted hover:text-ink"
-              >
-                Best of HeyClaude →
-              </Link>
+              {(() => {
+                const destination = homeHeroCtaDestination("best");
+                if (!destination) return null;
+                return (
+                  <Link
+                    to={destination.to}
+                    onClick={() =>
+                      trackEvent(homeHeroCtaAnalyticsEvent(), homeHeroCtaAnalyticsData("best"))
+                    }
+                    className="inline-flex h-9 items-center gap-1.5 rounded-md border border-transparent px-2 font-medium text-ink-muted hover:text-ink"
+                  >
+                    Best of HeyClaude →
+                  </Link>
+                );
+              })()}
             </div>
           </div>
         </div>
