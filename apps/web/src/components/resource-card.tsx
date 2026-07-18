@@ -22,6 +22,8 @@ import { recordIntentEvent } from "@/lib/intent-event-client";
 import {
   resourceCardCategoryBrowseAnalyticsData,
   resourceCardCategoryBrowseAnalyticsEvent,
+  resourceCardTrustBrowseAnalyticsData,
+  resourceCardTrustBrowseAnalyticsEvent,
   resourceCardCompareAnalyticsData,
   resourceCardCompareAnalyticsEvent,
   resourceCardCompareToastOpenAnalyticsData,
@@ -226,7 +228,16 @@ function ResourceCardInner({
           {entry.category}
         </CategoryPill>
         <SourceBadge status={entry.source} asLink surface={analyticsSurface} />
-        <TrustBadge level={entry.trust} />
+        <TrustBadge
+          level={entry.trust}
+          asLink
+          onNavigate={() =>
+            trackEvent(
+              resourceCardTrustBrowseAnalyticsEvent(),
+              resourceCardTrustBrowseAnalyticsData(entry.trust, analyticsSurface),
+            )
+          }
+        />
         <span className="hidden min-w-0 shrink md:inline-flex">
           <LazyEntryAuthorAttribution entry={entry} className="truncate text-xs text-ink-subtle" />
         </span>
@@ -293,7 +304,16 @@ function ResourceCardInner({
             >
               {entry.category}
             </CategoryPill>
-            <TrustBadge level={entry.trust} />
+            <TrustBadge
+              level={entry.trust}
+              asLink
+              onNavigate={() =>
+                trackEvent(
+                  resourceCardTrustBrowseAnalyticsEvent(),
+                  resourceCardTrustBrowseAnalyticsData(entry.trust, analyticsSurface),
+                )
+              }
+            />
             <SourceBadge status={entry.source} asLink surface={analyticsSurface} />
             <InstallRiskBadge entry={entry} size="xs" asLink surface={analyticsSurface} />
           </div>
@@ -374,7 +394,16 @@ function ResourceCardInner({
             >
               {entry.category}
             </CategoryPill>
-            <TrustBadge level={entry.trust} />
+            <TrustBadge
+              level={entry.trust}
+              asLink
+              onNavigate={() =>
+                trackEvent(
+                  resourceCardTrustBrowseAnalyticsEvent(),
+                  resourceCardTrustBrowseAnalyticsData(entry.trust, analyticsSurface),
+                )
+              }
+            />
             <SourceBadge status={entry.source} asLink surface={analyticsSurface} />
             <InstallRiskBadge entry={entry} size="xs" asLink surface={analyticsSurface} />
             {entry.platforms.slice(0, 2).map((p) => (

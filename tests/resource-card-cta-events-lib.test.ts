@@ -3,6 +3,8 @@ import {
   resourceCardBadgeKinds,
   resourceCardCategoryBrowseAnalyticsData,
   resourceCardCategoryBrowseAnalyticsEvent,
+  resourceCardTrustBrowseAnalyticsData,
+  resourceCardTrustBrowseAnalyticsEvent,
   resourceCardCompareAnalyticsData,
   resourceCardCompareAnalyticsEvent,
   resourceCardCompareToastOpenAnalyticsData,
@@ -131,20 +133,39 @@ describe("resource card cta events lib", () => {
       surface: "home-recent",
       category: "hooks",
     });
+    expect(resourceCardTrustBrowseAnalyticsEvent()).toBe(
+      "browse_card_trust_click",
+    );
+    expect(resourceCardTrustBrowseAnalyticsData("trusted")).toEqual({
+      surface: "browse-card",
+      trust: "trusted",
+    });
+    expect(
+      resourceCardTrustBrowseAnalyticsData("review", "browse-grid"),
+    ).toEqual({
+      surface: "browse-grid",
+      trust: "review",
+    });
     expect(resourceCardBadgeKinds("grid")).toEqual([
       "category",
+      "trust",
       "source",
       "install-risk",
       "notes",
     ]);
     expect(resourceCardBadgeKinds("row")).toEqual([
       "category",
+      "trust",
       "source",
       "install-risk",
       "platform",
       "notes",
     ]);
-    expect(resourceCardBadgeKinds("compact")).toEqual(["category", "source"]);
+    expect(resourceCardBadgeKinds("compact")).toEqual([
+      "category",
+      "source",
+      "trust",
+    ]);
     expect(resourceCardBadgeKinds("unknown")).toEqual([]);
   });
 });

@@ -6,6 +6,8 @@ export {
   resourceCardBadgeKinds,
   resourceCardCategoryBrowseAnalyticsData,
   resourceCardCategoryBrowseAnalyticsEvent,
+  resourceCardTrustBrowseAnalyticsData,
+  resourceCardTrustBrowseAnalyticsEvent,
   resourceCardCompareAnalyticsData,
   resourceCardCompareAnalyticsEvent,
   resourceCardCompareToastOpenAnalyticsData,

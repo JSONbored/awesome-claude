@@ -139,17 +139,37 @@ export function resourceCardCategoryBrowseAnalyticsData(
   };
 }
 
-export type ResourceCardBadgeKind = "source" | "install-risk" | "notes" | "platform" | "category";
+export function resourceCardTrustBrowseAnalyticsEvent(): string {
+  return "browse_card_trust_click";
+}
+
+export function resourceCardTrustBrowseAnalyticsData(
+  trust: string,
+  surface: ResourceCardSurface = RESOURCE_CARD_SURFACE,
+) {
+  return {
+    surface,
+    trust,
+  };
+}
+
+export type ResourceCardBadgeKind =
+  | "source"
+  | "install-risk"
+  | "notes"
+  | "platform"
+  | "category"
+  | "trust";
 
 /** Resolve which secondary badge kinds a card variant can expose as browse egress. */
 export function resourceCardBadgeKinds(variant: string): ResourceCardBadgeKind[] {
   switch (variant) {
     case "grid":
-      return ["category", "source", "install-risk", "notes"];
+      return ["category", "trust", "source", "install-risk", "notes"];
     case "row":
-      return ["category", "source", "install-risk", "platform", "notes"];
+      return ["category", "trust", "source", "install-risk", "platform", "notes"];
     case "compact":
-      return ["category", "source"];
+      return ["category", "source", "trust"];
     default:
       return [];
   }
