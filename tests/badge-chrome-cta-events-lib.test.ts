@@ -177,5 +177,11 @@ describe("badge chrome cta events lib", () => {
       surface: "hub-highlights",
       trust: "review",
     });
+    expect(
+      badgeChromeTrustAnalyticsData("trusted", "category-ranking"),
+    ).toEqual({
+      surface: "category-ranking",
+      trust: "trusted",
+    });
   });
 });

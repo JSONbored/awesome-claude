@@ -15,7 +15,8 @@ export type BadgeChromeSurface =
   | "trending-podium"
   | "validators-attention"
   | "validators-recent-reviewed"
-  | "hub-highlights";
+  | "hub-highlights"
+  | "category-ranking";
 
 export type BadgeChromeNoteKind = "safety" | "privacy";
 

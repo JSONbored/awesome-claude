@@ -4,9 +4,14 @@ import {
   InstallRiskBadge,
   NotesPresenceChips,
   SourceBadge,
+  TrustBadge,
 } from "@/components/badges";
 import { HarnessBadgeRow } from "@/components/harness-badge";
 import { trackEvent } from "@/lib/analytics";
+import {
+  badgeChromeTrustAnalyticsData,
+  badgeChromeTrustAnalyticsEvent,
+} from "@/lib/badge-chrome-cta-events";
 import {
   hubCategoryRankingEntryAnalyticsData,
   hubCategoryRankingEntryAnalyticsEvent,
@@ -28,19 +33,27 @@ export function CategoryRankingTable({ entries, label }: { entries: Entry[]; lab
       <h2 className="h-display-2 text-ink">Top {label}, compared</h2>
       <p className="mt-2 max-w-3xl text-sm text-ink-muted">
         The leading {label.toLowerCase()} side by side on the signals that matter before you install
-        — source provenance, install risk, setup, and disclosed safety notes. Ordered by
+        — trust tier, source provenance, install risk, setup, and disclosed safety notes. Ordered by
         HeyClaude&apos;s metadata review, not by repo popularity.
       </p>
       <div className="mt-5 overflow-x-auto rounded-xl border border-border">
-        <table className="w-full min-w-[44rem] border-collapse text-left">
+        <table className="w-full min-w-[48rem] border-collapse text-left">
           <caption className="sr-only">
-            Top Claude {label} compared by source, install risk, setup, platform support, harness,
-            and disclosed notes.
+            Top Claude {label} compared by trust, source, install risk, setup, platform support,
+            harness, and disclosed notes.
           </caption>
           <thead className="bg-surface">
             <tr>
-              {["Resource", "Source", "Install risk", "Setup", "Platforms", "Harness", "Notes"].map(
-                (head) => (
+              {[
+                "Resource",
+                "Trust",
+                "Source",
+                "Install risk",
+                "Setup",
+                "Platforms",
+                "Harness",
+                "Notes",
+              ].map((head) => (
                 <th
                   key={head}
                   scope="col"
@@ -48,8 +61,7 @@ export function CategoryRankingTable({ entries, label }: { entries: Entry[]; lab
                 >
                   {head}
                 </th>
-                ),
-              )}
+              ))}
             </tr>
           </thead>
           <tbody>
@@ -71,6 +83,18 @@ export function CategoryRankingTable({ entries, label }: { entries: Entry[]; lab
                   </Link>
                   <div className="mt-0.5 text-xs text-ink-subtle">{e.author}</div>
                 </th>
+                <td className="px-3 py-2.5 align-top">
+                  <TrustBadge
+                    level={e.trust}
+                    asLink
+                    onNavigate={() =>
+                      trackEvent(
+                        badgeChromeTrustAnalyticsEvent(),
+                        badgeChromeTrustAnalyticsData(e.trust, "category-ranking"),
+                      )
+                    }
+                  />
+                </td>
                 <td className="px-3 py-2.5 align-top">
                   <SourceBadge status={e.source} asLink surface="category-ranking" />
                 </td>
