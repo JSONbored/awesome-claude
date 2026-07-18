@@ -11,6 +11,7 @@ import {
   mcpSecurityReportEgressAnalyticsEvent,
   mcpSecurityReportStatAnalyticsData,
   mcpSecurityReportStatAnalyticsEvent,
+  mcpSecurityReportStatBrowseSearch,
 } from "@/lib/mcp-security-report-page-cta-events-lib";
 
 describe("mcp security report page cta events lib", () => {
@@ -59,6 +60,21 @@ describe("mcp security report page cta events lib", () => {
       surface: MCP_SECURITY_REPORT_SURFACE,
       statKey: "total",
       destination: "browse",
+    });
+    expect(mcpSecurityReportStatBrowseSearch("total")).toEqual({
+      category: "mcp",
+    });
+    expect(mcpSecurityReportStatBrowseSearch("safety-notes")).toEqual({
+      category: "mcp",
+      signal: "safety-notes",
+    });
+    expect(mcpSecurityReportStatBrowseSearch("privacy-notes")).toEqual({
+      category: "mcp",
+      signal: "privacy-notes",
+    });
+    expect(mcpSecurityReportStatBrowseSearch("verified-package")).toEqual({
+      category: "mcp",
+      signal: "trusted-package",
     });
   });
 });

@@ -78,3 +78,27 @@ export function mcpSecurityReportStatAnalyticsData(
     destination,
   };
 }
+
+export type McpSecurityReportStatId =
+  | "total"
+  | "safety-notes"
+  | "privacy-notes"
+  | "verified-package";
+
+/** Map an MCP security headline stat to a browse search patch. */
+export function mcpSecurityReportStatBrowseSearch(statId: McpSecurityReportStatId): {
+  category: string;
+  signal?: string;
+} {
+  switch (statId) {
+    case "safety-notes":
+      return { category: "mcp", signal: "safety-notes" };
+    case "privacy-notes":
+      return { category: "mcp", signal: "privacy-notes" };
+    case "verified-package":
+      return { category: "mcp", signal: "trusted-package" };
+    case "total":
+    default:
+      return { category: "mcp" };
+  }
+}

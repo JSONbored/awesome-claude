@@ -30,6 +30,7 @@ import {
   mcpSecurityReportEgressAnalyticsEvent,
   mcpSecurityReportStatAnalyticsData,
   mcpSecurityReportStatAnalyticsEvent,
+  mcpSecurityReportStatBrowseSearch,
   type McpSecurityReportEgressDestination,
 } from "@/lib/mcp-security-report-page-cta-events";
 
@@ -248,7 +249,7 @@ function McpSecurityReportPage() {
           value={TOTAL}
           hint="analyzed"
           to="/browse"
-          search={{ category: "mcp" }}
+          search={mcpSecurityReportStatBrowseSearch("total")}
           onNavigate={() => trackStat("total")}
         />
         <DataStat
@@ -257,7 +258,7 @@ function McpSecurityReportPage() {
           value={NOTES.safety}
           hint={`${pctOf(NOTES.safety, TOTAL)}% of total`}
           to="/browse"
-          search={{ category: "mcp" }}
+          search={mcpSecurityReportStatBrowseSearch("safety-notes")}
           onNavigate={() => trackStat("safety-notes")}
         />
         <DataStat
@@ -266,7 +267,7 @@ function McpSecurityReportPage() {
           value={NOTES.privacy}
           hint={`${pctOf(NOTES.privacy, TOTAL)}% of total`}
           to="/browse"
-          search={{ category: "mcp" }}
+          search={mcpSecurityReportStatBrowseSearch("privacy-notes")}
           onNavigate={() => trackStat("privacy-notes")}
         />
         <DataStat
@@ -275,7 +276,7 @@ function McpSecurityReportPage() {
           value={SUPPLY.packageVerified}
           hint={`${pctOf(SUPPLY.packageVerified, TOTAL)}% of total`}
           to="/browse"
-          search={{ category: "mcp" }}
+          search={mcpSecurityReportStatBrowseSearch("verified-package")}
           onNavigate={() => trackStat("verified-package")}
         />
       </div>
