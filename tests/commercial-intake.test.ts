@@ -510,10 +510,22 @@ describe("commercial intake contracts", () => {
 
     expect(toolsSubmit).toContain("submitListingLead");
     expect(toolsSubmit).toContain("interest:paid-trust-source-review");
-    expect(toolsSubmit).toContain('to="/submit"');
-    expect(toolsSubmit).toContain('to="/advertise"');
-    expect(toolsSubmit).toContain('to="/claim"');
+    expect(toolsSubmit).toContain("toolsSubmitChromeDestination");
+    expect(toolsSubmit).toContain('toolsSubmitChromeDestination("community")');
+    expect(toolsSubmit).toContain('toolsSubmitChromeDestination("advertise")');
+    expect(toolsSubmit).toContain('toolsSubmitChromeDestination("claim")');
     expect(toolsSubmit).not.toContain("currentTarget.reset");
+
+    const toolsSubmitLib = fs.readFileSync(
+      path.join(
+        repoRoot,
+        "apps/web/src/lib/tools-submit-page-cta-events-lib.ts",
+      ),
+      "utf8",
+    );
+    expect(toolsSubmitLib).toContain('return { to: "/submit" }');
+    expect(toolsSubmitLib).toContain('return { to: "/advertise" }');
+    expect(toolsSubmitLib).toContain('return { to: "/claim" }');
 
     expect(jobsPost).toContain("Waitlist");
     expect(jobsPost).toContain("waitlist-first");
