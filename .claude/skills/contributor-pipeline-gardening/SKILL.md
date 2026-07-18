@@ -74,6 +74,15 @@ partial work open. Given this repo starts with a near-empty gittensor backlog, m
 little or nothing to sweep here until the backlog this skill builds has had time to accumulate
 real activity — that's expected, not a sign the check is broken.
 
+**Verify against synced upstream, not a stale local checkout.** Before treating any local grep/read
+as evidence that an issue's described work does or doesn't exist, confirm the code you're reading
+matches the default branch's current tip — fetch and fast-forward the checkout (or use a disposable
+worktree off `origin/main` if the primary checkout is dirty or has unpushed work on another branch)
+before doing any verification. A checkout that's merely *clean* isn't the same as *current* — a
+stale-but-clean checkout silently produced false "already done"/"not done" conclusions in the sibling
+loopover/metagraphed repos' gardening runs on 2026-07-17/18, causing duplicate issues to be filed for
+already-shipped work. Confirm sync every run; never assume a previous run's freshness carried over.
+
 Also check issue #550 (the growth-sprint umbrella) and any other checklist-style tracker each run:
 sync stale checkboxes against real child-issue state, same as the sibling repos' Pass 1. Do not
 add new child issues to #550's shallow analytics-wiring pattern (see above) even if asked to "keep
