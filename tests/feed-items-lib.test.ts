@@ -34,6 +34,16 @@ describe("feedLastBuilt", () => {
     ).toBe("2026-02-02");
   });
 
+  it("returns the newest item's pubDate when the array is not sorted by date", () => {
+    expect(
+      feedLastBuilt([
+        { pubDate: "2026-01-01" },
+        { pubDate: "2026-02-02" },
+        { pubDate: "2026-01-15" },
+      ]),
+    ).toBe("2026-02-02");
+  });
+
   it("falls back to the epoch ISO string for an empty feed", () => {
     expect(feedLastBuilt([])).toBe(new Date(0).toISOString());
   });
