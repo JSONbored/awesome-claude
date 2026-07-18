@@ -6,6 +6,7 @@ import {
   installMethodKeyFromLabel,
   notesSignalFromLabel,
   disclosureSignalFromLabel,
+  skillTypeTagFromLabel,
   platformFromLabel,
   sourceStatusFromLabel,
   supplyChainSignalFromLabel,
@@ -14,6 +15,7 @@ import {
   trustLevelFromLabel,
   withCategoryHubDrilldown,
   withDisclosureDrilldown,
+  withSkillTypeDrilldown,
   withDocsCoverageDrilldown,
   withHostingDrilldown,
   withInstallMethodDrilldown,
@@ -53,6 +55,8 @@ describe("data report drilldown lib", () => {
     expect(disclosureSignalFromLabel("Safety only")).toBe("safety-notes");
     expect(disclosureSignalFromLabel("Privacy only")).toBe("privacy-notes");
     expect(disclosureSignalFromLabel("Neither documented")).toBeUndefined();
+    expect(skillTypeTagFromLabel("Capability pack")).toBe("capability-pack");
+    expect(skillTypeTagFromLabel("General")).toBeUndefined();
   });
 
   it("attaches browse, tag, and category drilldowns with privacy-light keys", () => {
@@ -565,10 +569,29 @@ describe("data report drilldown lib", () => {
     expect(
       withReportDimensionDrilldown(
         "skill-type",
-        [{ label: "x", count: 1, pct: 100 }],
+        [{ label: "Capability pack", count: 1, pct: 100 }],
+        "skills",
+      )[0]?.drilldown,
+    ).toEqual({ kind: "tag", tag: "capability-pack" });
+    expect(
+      withReportDimensionDrilldown(
+        "skill-type",
+        [{ label: "General", count: 1, pct: 100 }],
         "skills",
       )[0]?.drilldown,
     ).toEqual({ kind: "browse", search: { category: "skills" } });
+    expect(
+      withSkillTypeDrilldown(
+        [{ label: "Capability pack", count: 12, pct: 60 }],
+        "skills",
+      )[0],
+    ).toEqual({
+      label: "Capability pack",
+      count: 12,
+      pct: 60,
+      rowKey: "capability-pack",
+      drilldown: { kind: "tag", tag: "capability-pack" },
+    });
     expect(
       withReportDimensionDrilldown(
         "maturity",

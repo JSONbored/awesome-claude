@@ -41,6 +41,10 @@ const DISCLOSURE_SIGNAL_BY_LABEL: Record<string, string> = {
   "Privacy only": "privacy-notes",
 };
 
+const SKILL_TYPE_TAG_BY_LABEL: Record<string, string> = {
+  "Capability pack": "capability-pack",
+};
+
 const SUPPLY_SIGNAL_BY_LABEL: Record<string, string> = {
   "Verified package": "trusted-package",
   "Checksummed download": "checksums",
@@ -77,6 +81,10 @@ export function notesSignalFromLabel(label: string): string | undefined {
 
 export function disclosureSignalFromLabel(label: string): string | undefined {
   return DISCLOSURE_SIGNAL_BY_LABEL[label];
+}
+
+export function skillTypeTagFromLabel(label: string): string | undefined {
+  return SKILL_TYPE_TAG_BY_LABEL[label];
 }
 
 export function supplyChainSignalFromLabel(label: string): string | undefined {
@@ -189,6 +197,25 @@ export function withDisclosureDrilldown(rows: DistRow[], category: string): Dist
       ...row,
       rowKey: signal,
       drilldown: browseDrilldown({ category, signal }),
+    };
+  });
+}
+
+/** Map skill-type buckets to tag hubs (General stays category browse). */
+export function withSkillTypeDrilldown(rows: DistRow[], category: string): DistRow[] {
+  return rows.map((row) => {
+    const tag = skillTypeTagFromLabel(row.label);
+    if (!tag) {
+      return {
+        ...row,
+        rowKey: row.rowKey ?? row.label,
+        drilldown: browseDrilldown({ category }),
+      };
+    }
+    return {
+      ...row,
+      rowKey: tag,
+      drilldown: tagDrilldown(tag),
     };
   });
 }
@@ -332,8 +359,9 @@ export function withReportDimensionDrilldown(
       return withTagDrilldown(rows);
     case "disclosure":
       return withDisclosureDrilldown(rows, category);
-    case "prerequisites":
     case "skill-type":
+      return withSkillTypeDrilldown(rows, category);
+    case "prerequisites":
     case "maturity":
     case "verification":
     case "hook-events":
