@@ -87,6 +87,20 @@ export function claimPageEgressAnalyticsData(destination: ClaimPageEgressDestina
   };
 }
 
+export type ClaimPageRouteDestination = {
+  to: "/submit";
+};
+
+/** Map a claim page egress destination id to an in-app route. */
+export function claimPageEgressDestination(destination: string): ClaimPageRouteDestination | null {
+  switch (destination) {
+    case "submit":
+      return { to: "/submit" };
+    default:
+      return null;
+  }
+}
+
 export function claimPageFileAnalyticsEvent(): string {
   return "claim_page_file_click";
 }

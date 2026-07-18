@@ -10,6 +10,7 @@ import { trackEvent } from "@/lib/analytics";
 import {
   jobsPostPageEgressAnalyticsData,
   jobsPostPageEgressAnalyticsEvent,
+  jobsPostPageEgressDestination,
   jobsPostPageSubmitAnalyticsData,
   jobsPostPageSubmitAnalyticsEvent,
   jobsPostPageTierSelectAnalyticsData,
@@ -121,7 +122,7 @@ function PostJobPage() {
           We'll verify the source and reach out within two business days.
         </p>
         <Link
-          to="/jobs"
+          to={jobsPostPageEgressDestination("jobs-index")?.to ?? "/jobs"}
           onClick={() =>
             trackEvent(
               jobsPostPageEgressAnalyticsEvent(),

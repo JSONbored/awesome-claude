@@ -5,6 +5,7 @@ import {
   claimPageChangeListingAnalyticsEvent,
   claimPageEgressAnalyticsData,
   claimPageEgressAnalyticsEvent,
+  claimPageEgressDestination,
   claimPageEntrySelectAnalyticsData,
   claimPageEntrySelectAnalyticsEvent,
   claimPageFileAnalyticsData,
@@ -56,6 +57,8 @@ describe("claim page cta events lib", () => {
       surface: CLAIM_PAGE_SURFACE,
       destination: "submit",
     });
+    expect(claimPageEgressDestination("submit")).toEqual({ to: "/submit" });
+    expect(claimPageEgressDestination("unknown")).toBeNull();
     expect(claimPageFileAnalyticsEvent()).toBe("claim_page_file_click");
     expect(claimPageFileAnalyticsData("maintain", "success", 4, 3)).toEqual({
       surface: CLAIM_PAGE_SURFACE,

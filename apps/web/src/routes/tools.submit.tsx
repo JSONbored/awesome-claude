@@ -10,6 +10,7 @@ import { submitListingLead } from "@/lib/listing-lead-client";
 import {
   toolsSubmitAdvertiseAnalyticsData,
   toolsSubmitAdvertiseAnalyticsEvent,
+  toolsSubmitChromeDestination,
   toolsSubmitClaimAnalyticsData,
   toolsSubmitClaimAnalyticsEvent,
   toolsSubmitCommunityAnalyticsData,
@@ -39,6 +40,11 @@ export const Route = createFileRoute("/tools/submit")({
 });
 
 function SubmitTool() {
+  const toolsDestination = toolsSubmitChromeDestination("tools");
+  const communityDestination = toolsSubmitChromeDestination("community");
+  const advertiseDestination = toolsSubmitChromeDestination("advertise");
+  const claimDestination = toolsSubmitChromeDestination("claim");
+
   return (
     <div className="mx-auto max-w-[900px] px-4 py-10 sm:px-6">
       <Breadcrumbs
@@ -46,7 +52,7 @@ function SubmitTool() {
         items={[
           {
             label: "Tools",
-            to: "/tools",
+            to: toolsDestination?.to ?? "/tools",
             onClick: () =>
               trackEvent(
                 toolsSubmitToolsAnalyticsEvent(),
@@ -61,15 +67,22 @@ function SubmitTool() {
         <h1 className="mt-3 h-display-1 text-ink text-balance">Submit a commercial tool</h1>
         <p className="mt-4 max-w-2xl text-ink-muted">
           Free, source-backed resources belong in the community directory via{" "}
-          <Link
-            to="/submit"
-            className="text-ink underline"
-            onClick={() =>
-              trackEvent(toolsSubmitCommunityAnalyticsEvent(), toolsSubmitCommunityAnalyticsData())
-            }
-          >
-            /submit
-          </Link>
+          {communityDestination ? (
+            <Link
+              to={communityDestination.to}
+              className="text-ink underline"
+              onClick={() =>
+                trackEvent(
+                  toolsSubmitCommunityAnalyticsEvent(),
+                  toolsSubmitCommunityAnalyticsData(),
+                )
+              }
+            >
+              /submit
+            </Link>
+          ) : (
+            "/submit"
+          )}
           . Use the forms below for commercial listings, paid trust/source review interest, or route
           sponsorship and claim requests through the dedicated lead flows.
         </p>
@@ -85,30 +98,34 @@ function SubmitTool() {
             Sponsorship slots and listing ownership use separate review queues.
           </p>
           <div className="mt-4 flex flex-wrap gap-3">
-            <Link
-              to="/advertise"
-              className="inline-flex h-10 items-center gap-1.5 rounded-md bg-ink px-4 text-sm font-medium text-background hover:bg-ink/90"
-              onClick={() =>
-                trackEvent(
-                  toolsSubmitAdvertiseAnalyticsEvent(),
-                  toolsSubmitAdvertiseAnalyticsData("commercial-paths"),
-                )
-              }
-            >
-              Sponsorship waitlist <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link
-              to="/claim"
-              className="inline-flex h-10 items-center gap-1.5 rounded-md border border-border bg-background px-4 text-sm font-medium text-ink hover:bg-surface-2"
-              onClick={() =>
-                trackEvent(
-                  toolsSubmitClaimAnalyticsEvent(),
-                  toolsSubmitClaimAnalyticsData("commercial-paths"),
-                )
-              }
-            >
-              Claim a listing
-            </Link>
+            {advertiseDestination ? (
+              <Link
+                to={advertiseDestination.to}
+                className="inline-flex h-10 items-center gap-1.5 rounded-md bg-ink px-4 text-sm font-medium text-background hover:bg-ink/90"
+                onClick={() =>
+                  trackEvent(
+                    toolsSubmitAdvertiseAnalyticsEvent(),
+                    toolsSubmitAdvertiseAnalyticsData("commercial-paths"),
+                  )
+                }
+              >
+                Sponsorship waitlist <ArrowRight className="h-4 w-4" />
+              </Link>
+            ) : null}
+            {claimDestination ? (
+              <Link
+                to={claimDestination.to}
+                className="inline-flex h-10 items-center gap-1.5 rounded-md border border-border bg-background px-4 text-sm font-medium text-ink hover:bg-surface-2"
+                onClick={() =>
+                  trackEvent(
+                    toolsSubmitClaimAnalyticsEvent(),
+                    toolsSubmitClaimAnalyticsData("commercial-paths"),
+                  )
+                }
+              >
+                Claim a listing
+              </Link>
+            ) : null}
           </div>
         </section>
       </div>

@@ -3,6 +3,7 @@ import {
   TOOLS_SUBMIT_PAGE_SURFACE,
   toolsSubmitAdvertiseAnalyticsData,
   toolsSubmitAdvertiseAnalyticsEvent,
+  toolsSubmitChromeDestination,
   toolsSubmitClaimAnalyticsData,
   toolsSubmitClaimAnalyticsEvent,
   toolsSubmitCommunityAnalyticsData,
@@ -40,6 +41,15 @@ describe("tools submit page cta events lib", () => {
       surface: TOOLS_SUBMIT_PAGE_SURFACE,
       source: "commercial-paths",
     });
+    expect(toolsSubmitChromeDestination("tools")).toEqual({ to: "/tools" });
+    expect(toolsSubmitChromeDestination("community")).toEqual({
+      to: "/submit",
+    });
+    expect(toolsSubmitChromeDestination("advertise")).toEqual({
+      to: "/advertise",
+    });
+    expect(toolsSubmitChromeDestination("claim")).toEqual({ to: "/claim" });
+    expect(toolsSubmitChromeDestination("unknown")).toBeNull();
   });
 
   it("builds tools submit form submit analytics", () => {

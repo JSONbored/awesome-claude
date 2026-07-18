@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useId, useMemo, useState } from "react";
 import {
   AlertTriangle,
@@ -35,6 +35,7 @@ import {
   submitDraftCopyAnalyticsEvent,
   submitEgressAnalyticsData,
   submitEgressAnalyticsEvent,
+  submitEgressDestination,
   submitPreflightNextActionAnalyticsData,
   submitPreflightNextActionAnalyticsEvent,
   submitPreflightRetryAnalyticsData,
@@ -309,25 +310,37 @@ function SubmitPage() {
       <p className="mt-2 text-sm text-ink-muted">
         Free, source-backed, useful. The site opens a single-entry GitHub PR for private-gate
         review. Commercial tools go through{" "}
-        <a
-          href="/advertise"
-          className="text-ink underline"
-          onClick={() =>
-            trackEvent(submitEgressAnalyticsEvent(), submitEgressAnalyticsData("advertise"))
-          }
-        >
-          advertise
-        </a>
+        {(() => {
+          const destination = submitEgressDestination("advertise");
+          if (!destination) return "advertise";
+          return (
+            <Link
+              to={destination.to}
+              className="text-ink underline"
+              onClick={() =>
+                trackEvent(submitEgressAnalyticsEvent(), submitEgressAnalyticsData("advertise"))
+              }
+            >
+              advertise
+            </Link>
+          );
+        })()}
         . Jobs go through{" "}
-        <a
-          href="/jobs/post"
-          className="text-ink underline"
-          onClick={() =>
-            trackEvent(submitEgressAnalyticsEvent(), submitEgressAnalyticsData("jobs-post"))
-          }
-        >
-          post a job
-        </a>
+        {(() => {
+          const destination = submitEgressDestination("jobs-post");
+          if (!destination) return "post a job";
+          return (
+            <Link
+              to={destination.to}
+              className="text-ink underline"
+              onClick={() =>
+                trackEvent(submitEgressAnalyticsEvent(), submitEgressAnalyticsData("jobs-post"))
+              }
+            >
+              post a job
+            </Link>
+          );
+        })()}
         .
       </p>
 
@@ -414,15 +427,24 @@ function SubmitPage() {
             {unsupportedWebCategory && (
               <div className="mt-4 rounded-md border border-border bg-background p-3 text-xs text-ink-muted">
                 This category is not enabled for website-created PRs yet. Use{" "}
-                <a
-                  href="/advertise"
-                  className="text-ink underline"
-                  onClick={() =>
-                    trackEvent(submitEgressAnalyticsEvent(), submitEgressAnalyticsData("advertise"))
-                  }
-                >
-                  commercial intake
-                </a>{" "}
+                {(() => {
+                  const destination = submitEgressDestination("advertise");
+                  if (!destination) return "commercial intake";
+                  return (
+                    <Link
+                      to={destination.to}
+                      className="text-ink underline"
+                      onClick={() =>
+                        trackEvent(
+                          submitEgressAnalyticsEvent(),
+                          submitEgressAnalyticsData("advertise"),
+                        )
+                      }
+                    >
+                      commercial intake
+                    </Link>
+                  );
+                })()}{" "}
                 for tools or contact a maintainer for special routing.
               </div>
             )}

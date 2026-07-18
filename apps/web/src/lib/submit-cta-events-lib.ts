@@ -97,6 +97,22 @@ export function submitEgressAnalyticsData(destination: SubmitEgressDestination) 
   };
 }
 
+export type SubmitEgressRouteDestination = {
+  to: "/advertise" | "/jobs/post";
+};
+
+/** Map a submit commercial egress destination id to an in-app route. */
+export function submitEgressDestination(destination: string): SubmitEgressRouteDestination | null {
+  switch (destination) {
+    case "advertise":
+      return { to: "/advertise" };
+    case "jobs-post":
+      return { to: "/jobs/post" };
+    default:
+      return null;
+  }
+}
+
 export type SubmitCompletionDestination = "status";
 export type SubmitDraftCopySource = "manual" | "wizard";
 

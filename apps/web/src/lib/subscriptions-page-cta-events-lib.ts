@@ -25,6 +25,24 @@ export function subscriptionsPageEgressAnalyticsData(destination: SubscriptionsP
   };
 }
 
+export type SubscriptionsPageRouteDestination = {
+  to: "/feeds" | "/browse";
+};
+
+/** Map a subscriptions page egress destination id to an in-app route. */
+export function subscriptionsPageEgressDestination(
+  destination: string,
+): SubscriptionsPageRouteDestination | null {
+  switch (destination) {
+    case "feeds":
+      return { to: "/feeds" };
+    case "browse":
+      return { to: "/browse" };
+    default:
+      return null;
+  }
+}
+
 export function subscriptionsPageManageAlertsAnalyticsEvent(): string {
   return "subscriptions_page_manage_alerts_click";
 }

@@ -9,6 +9,7 @@ import {
   submitDraftCopyAnalyticsEvent,
   submitEgressAnalyticsData,
   submitEgressAnalyticsEvent,
+  submitEgressDestination,
   submitPreflightNextActionAnalyticsData,
   submitPreflightNextActionAnalyticsEvent,
   submitPreflightRetryAnalyticsData,
@@ -84,6 +85,9 @@ describe("submit cta events lib", () => {
       surface: SUBMIT_SURFACE,
       destination: "jobs-post",
     });
+    expect(submitEgressDestination("advertise")).toEqual({ to: "/advertise" });
+    expect(submitEgressDestination("jobs-post")).toEqual({ to: "/jobs/post" });
+    expect(submitEgressDestination("unknown")).toBeNull();
     expect(submitCompletionEgressAnalyticsEvent()).toBe(
       "submit_completion_egress_click",
     );
