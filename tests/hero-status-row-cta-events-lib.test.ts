@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   HERO_STATUS_ROW_SURFACE,
+  heroStatusRowDestination,
   heroStatusRowEgressAnalyticsData,
   heroStatusRowEgressAnalyticsEvent,
 } from "@/lib/hero-status-row-cta-events-lib";
@@ -26,5 +27,14 @@ describe("hero status row cta events lib", () => {
       reviewedCount: 8,
       briefNumber: 1,
     });
+  });
+
+  it("maps hero status row destinations to routes", () => {
+    expect(heroStatusRowDestination("mcp-server")).toEqual({
+      to: "/integrations/$slug",
+      params: { slug: "mcp-server" },
+    });
+    expect(heroStatusRowDestination("brief")).toEqual({ to: "/brief" });
+    expect(heroStatusRowDestination("unknown")).toBeNull();
   });
 });

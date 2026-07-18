@@ -1107,7 +1107,13 @@ function Browse() {
             onSelectPreset={onConfidencePresetSelect}
             className="mt-3"
           />
-          <BrowseFreshnessDistributionPanel state={browseFreshness} className="mt-3" />
+          <BrowseFreshnessDistributionPanel
+            state={browseFreshness}
+            onBucketSelect={(_bucketId, search) => {
+              if (search.sort) set({ sort: search.sort });
+            }}
+            className="mt-3"
+          />
           <BrowseThemeDistributionPanel state={browseThemes} className="mt-3" />
 
           {sp.category &&
