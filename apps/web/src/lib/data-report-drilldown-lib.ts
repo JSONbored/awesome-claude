@@ -167,7 +167,14 @@ export function withNotesSignalDrilldown(rows: DistRow[], category?: string): Di
 export function withSupplyChainSignalDrilldown(rows: DistRow[], category?: string): DistRow[] {
   return rows.map((row) => {
     const signal = supplyChainSignalFromLabel(row.label);
-    if (!signal) return row;
+    if (!signal) {
+      if (!category) return row;
+      return {
+        ...row,
+        rowKey: row.rowKey ?? row.label,
+        drilldown: browseDrilldown({ category }),
+      };
+    }
     return {
       ...row,
       rowKey: signal,
@@ -282,6 +289,8 @@ export function withReportDimensionDrilldown(
       return withNotesSignalDrilldown(rows, category);
     case "supply-chain":
       return withSupplyChainSignalDrilldown(rows, category);
+    case "packaging":
+      return withSupplyChainSignalDrilldown(rows, category);
     case "docs-coverage":
       return withDocsCoverageDrilldown(rows, category);
     case "transport":
@@ -294,7 +303,6 @@ export function withReportDimensionDrilldown(
       return withTagDrilldown(rows);
     case "prerequisites":
     case "disclosure":
-    case "packaging":
     case "skill-type":
     case "maturity":
     case "verification":

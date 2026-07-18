@@ -326,6 +326,20 @@ describe("data report drilldown lib", () => {
       },
     ]);
     expect(
+      withSupplyChainSignalDrilldown(
+        [{ label: "Source only", count: 3, pct: 30 }],
+        "skills",
+      ),
+    ).toEqual([
+      {
+        label: "Source only",
+        count: 3,
+        pct: 30,
+        rowKey: "Source only",
+        drilldown: { kind: "browse", search: { category: "skills" } },
+      },
+    ]);
+    expect(
       withSupplyChainSignalDrilldown([
         { label: "Checksummed download", count: 1, pct: 10 },
       ]),
@@ -343,7 +357,15 @@ describe("data report drilldown lib", () => {
         [{ label: "Unknown", count: 1, pct: 10 }],
         "mcp",
       ),
-    ).toEqual([{ label: "Unknown", count: 1, pct: 10 }]);
+    ).toEqual([
+      {
+        label: "Unknown",
+        count: 1,
+        pct: 10,
+        rowKey: "Unknown",
+        drilldown: { kind: "browse", search: { category: "mcp" } },
+      },
+    ]);
 
     expect(
       withInstallMethodDrilldown(
@@ -501,7 +523,17 @@ describe("data report drilldown lib", () => {
     expect(
       withReportDimensionDrilldown(
         "packaging",
-        [{ label: "x", count: 1, pct: 100 }],
+        [{ label: "Verified package", count: 1, pct: 100 }],
+        "skills",
+      )[0]?.drilldown,
+    ).toEqual({
+      kind: "browse",
+      search: { category: "skills", signal: "trusted-package" },
+    });
+    expect(
+      withReportDimensionDrilldown(
+        "packaging",
+        [{ label: "Source only", count: 1, pct: 100 }],
         "skills",
       )[0]?.drilldown,
     ).toEqual({ kind: "browse", search: { category: "skills" } });

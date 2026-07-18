@@ -134,7 +134,11 @@ function StateOfAgentSkillsPage() {
             value={stat.value}
             hint={statHint(stat)}
             to="/browse"
-            search={{ category: REPORT_CATEGORY }}
+            search={
+              stat.key === "packaged"
+                ? { category: REPORT_CATEGORY, signal: "trusted-package" }
+                : { category: REPORT_CATEGORY }
+            }
             onNavigate={() => trackStat(stat.key)}
           />
         ))}
