@@ -7,10 +7,12 @@ import {
   changelogDiffEgressAnalyticsEvent,
   changelogFeedEgressAnalyticsData,
   changelogFeedEgressAnalyticsEvent,
+  changelogFeedEgressDestination,
   changelogPollCopyAnalyticsData,
   changelogPollCopyAnalyticsEvent,
   changelogQualityEgressAnalyticsData,
   changelogQualityEgressAnalyticsEvent,
+  changelogQualityEgressDestination,
   changelogReadMoreAnalyticsData,
   changelogReadMoreAnalyticsEvent,
   changelogStreamFilterAnalyticsData,
@@ -99,5 +101,19 @@ describe("changelog page cta events lib", () => {
         matchCount: 8,
       },
     );
+  });
+
+  it("maps changelog feed and quality destinations", () => {
+    expect(changelogFeedEgressDestination("rss")).toEqual({
+      href: "/feed.xml",
+    });
+    expect(changelogFeedEgressDestination("atom")).toEqual({
+      href: "/atom.xml",
+    });
+    expect(changelogFeedEgressDestination("unknown")).toBeNull();
+    expect(changelogQualityEgressDestination("quality")).toEqual({
+      to: "/quality",
+    });
+    expect(changelogQualityEgressDestination("unknown")).toBeNull();
   });
 });

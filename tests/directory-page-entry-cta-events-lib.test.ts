@@ -5,6 +5,7 @@ import {
   TOOLS_DIRECTORY_SURFACE,
   changelogDiffEntryAnalyticsData,
   changelogDiffEntryAnalyticsEvent,
+  directoryPageEntryDestination,
   platformsMatrixEntryAnalyticsData,
   platformsMatrixEntryAnalyticsEvent,
   toolsDirectoryEntryAnalyticsData,
@@ -68,5 +69,16 @@ describe("directory page entry cta events lib", () => {
       cardIndex: 1,
       toolCount: 12,
     });
+  });
+
+  it("maps directory page entry destinations", () => {
+    expect(directoryPageEntryDestination("mcp", "browser")).toEqual({
+      to: "/entry/$category/$slug",
+      params: { category: "mcp", slug: "browser" },
+    });
+    expect(directoryPageEntryDestination("", "browser")).toBeNull();
+    expect(directoryPageEntryDestination("mcp", "")).toBeNull();
+    expect(directoryPageEntryDestination("  ", "browser")).toBeNull();
+    expect(directoryPageEntryDestination("mcp", "  ")).toBeNull();
   });
 });

@@ -78,3 +78,31 @@ export function toolsDirectoryEntryAnalyticsData(
     toolCount,
   };
 }
+
+export type DirectoryPageEntryDestination = {
+  to: "/entry/$category/$slug";
+  params: { category: string; slug: string };
+};
+
+/** Map a directory page entry ref to an entry detail destination. */
+export function directoryPageEntryDestination(
+  category: string,
+  slug: string,
+): DirectoryPageEntryDestination | null {
+  const categoryId = category.trim();
+  const entrySlug = slug.trim();
+  switch (categoryId) {
+    case "":
+      return null;
+    default:
+      switch (entrySlug) {
+        case "":
+          return null;
+        default:
+          return {
+            to: "/entry/$category/$slug",
+            params: { category: categoryId, slug: entrySlug },
+          };
+      }
+  }
+}

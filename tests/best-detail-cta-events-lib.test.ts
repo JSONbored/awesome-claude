@@ -3,10 +3,13 @@ import {
   BEST_DETAIL_SURFACE,
   bestDetailCompareAnalyticsData,
   bestDetailCompareAnalyticsEvent,
+  bestDetailCompareDestination,
   bestDetailIndexAnalyticsData,
   bestDetailIndexAnalyticsEvent,
+  bestDetailIndexDestination,
   bestDetailSubmitAnalyticsData,
   bestDetailSubmitAnalyticsEvent,
+  bestDetailSubmitDestination,
 } from "@/lib/best-detail-cta-events-lib";
 
 describe("best detail cta events lib", () => {
@@ -49,5 +52,18 @@ describe("best detail cta events lib", () => {
       pickCount: null,
       source: "not-found",
     });
+  });
+
+  it("maps best detail destinations", () => {
+    expect(bestDetailIndexDestination("best")).toEqual({ to: "/best" });
+    expect(bestDetailIndexDestination("unknown")).toBeNull();
+    expect(bestDetailCompareDestination("a,b,c")).toEqual({
+      to: "/compare",
+      search: { ids: "a,b,c" },
+    });
+    expect(bestDetailCompareDestination("")).toBeNull();
+    expect(bestDetailCompareDestination("  ")).toBeNull();
+    expect(bestDetailSubmitDestination("submit")).toEqual({ to: "/submit" });
+    expect(bestDetailSubmitDestination("unknown")).toBeNull();
   });
 });

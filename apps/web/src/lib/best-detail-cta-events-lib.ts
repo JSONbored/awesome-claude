@@ -61,3 +61,49 @@ export function bestDetailIndexAnalyticsData(
     source,
   };
 }
+
+export type BestDetailIndexDestination = {
+  to: "/best";
+};
+
+/** Map a best-detail index back-link id to the best lists index. */
+export function bestDetailIndexDestination(destination: string): BestDetailIndexDestination | null {
+  switch (destination) {
+    case "best":
+      return { to: "/best" };
+    default:
+      return null;
+  }
+}
+
+export type BestDetailCompareDestination = {
+  to: "/compare";
+  search: { ids: string };
+};
+
+/** Map interactive compare ids to the compare workspace destination. */
+export function bestDetailCompareDestination(ids: string): BestDetailCompareDestination | null {
+  const value = ids.trim();
+  switch (value) {
+    case "":
+      return null;
+    default:
+      return { to: "/compare", search: { ids: value } };
+  }
+}
+
+export type BestDetailSubmitDestination = {
+  to: "/submit";
+};
+
+/** Map a best-detail submit CTA id to the submission route. */
+export function bestDetailSubmitDestination(
+  destination: string,
+): BestDetailSubmitDestination | null {
+  switch (destination) {
+    case "submit":
+      return { to: "/submit" };
+    default:
+      return null;
+  }
+}

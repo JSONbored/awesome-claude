@@ -25,3 +25,21 @@ export function platformsPageHubAnalyticsData(
     matrixEntryCount,
   };
 }
+
+export type PlatformsPageHubDestination = {
+  to: "/for/$platform";
+  params: { platform: string };
+};
+
+/** Map a platforms matrix card to its platform hub destination. */
+export function platformsPageHubDestination(
+  platformId: string,
+): PlatformsPageHubDestination | null {
+  const id = platformId.trim();
+  switch (id) {
+    case "":
+      return null;
+    default:
+      return { to: "/for/$platform", params: { platform: id } };
+  }
+}

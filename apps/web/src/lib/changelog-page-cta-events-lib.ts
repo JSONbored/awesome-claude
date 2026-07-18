@@ -118,3 +118,37 @@ export function changelogDiffDisclosureAnalyticsData(
     matchCount,
   };
 }
+
+export type ChangelogFeedHrefDestination = {
+  href: string;
+};
+
+/** Map a changelog feed egress id to its XML feed href. */
+export function changelogFeedEgressDestination(
+  destination: string,
+): ChangelogFeedHrefDestination | null {
+  switch (destination) {
+    case "rss":
+      return { href: "/feed.xml" };
+    case "atom":
+      return { href: "/atom.xml" };
+    default:
+      return null;
+  }
+}
+
+export type ChangelogQualityEgressDestination = {
+  to: "/quality";
+};
+
+/** Map a changelog quality sidebar CTA id to the quality page. */
+export function changelogQualityEgressDestination(
+  destination: string,
+): ChangelogQualityEgressDestination | null {
+  switch (destination) {
+    case "quality":
+      return { to: "/quality" };
+    default:
+      return null;
+  }
+}

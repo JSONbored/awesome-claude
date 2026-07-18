@@ -7,6 +7,7 @@ export {
   TOOLS_DIRECTORY_SURFACE,
   changelogDiffEntryAnalyticsData,
   changelogDiffEntryAnalyticsEvent,
+  directoryPageEntryDestination,
   directoryPageEntryKey,
   platformsMatrixEntryAnalyticsData,
   platformsMatrixEntryAnalyticsEvent,

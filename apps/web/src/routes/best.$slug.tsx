@@ -13,10 +13,13 @@ import { trackEvent } from "@/lib/analytics";
 import {
   bestDetailCompareAnalyticsData,
   bestDetailCompareAnalyticsEvent,
+  bestDetailCompareDestination,
   bestDetailIndexAnalyticsData,
   bestDetailIndexAnalyticsEvent,
+  bestDetailIndexDestination,
   bestDetailSubmitAnalyticsData,
   bestDetailSubmitAnalyticsEvent,
+  bestDetailSubmitDestination,
 } from "@/lib/best-detail-cta-events";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { bestListItemListJsonLd } from "@/lib/best-list-jsonld-lib";
@@ -67,21 +70,24 @@ export const Route = createFileRoute("/best/$slug")({
 });
 
 function BestNotFound() {
+  const destination = bestDetailIndexDestination("best");
   return (
     <div className="mx-auto max-w-2xl px-6 py-24 text-center">
       <h1 className="font-display text-3xl text-ink">List not found</h1>
-      <Link
-        to="/best"
-        onClick={() =>
-          trackEvent(
-            bestDetailIndexAnalyticsEvent(),
-            bestDetailIndexAnalyticsData(null, null, "not-found"),
-          )
-        }
-        className="mt-4 inline-block text-ink-muted hover:text-ink"
-      >
-        ← Back to all lists
-      </Link>
+      {destination ? (
+        <Link
+          to={destination.to}
+          onClick={() =>
+            trackEvent(
+              bestDetailIndexAnalyticsEvent(),
+              bestDetailIndexAnalyticsData(null, null, "not-found"),
+            )
+          }
+          className="mt-4 inline-block text-ink-muted hover:text-ink"
+        >
+          ← Back to all lists
+        </Link>
+      ) : null}
     </div>
   );
 }
@@ -101,6 +107,8 @@ function BestDetail() {
 
   const compareEntries = useMemo(() => resolved.slice(0, 5).map((p) => p.entry), [resolved]);
   const compareUi = useMemo(() => compareBestInteractiveUiState(compareEntries), [compareEntries]);
+  const indexDestination = bestDetailIndexDestination("best");
+  const submitDestination = bestDetailSubmitDestination("submit");
 
   return (
     <PageContainer className="py-12">
@@ -109,7 +117,7 @@ function BestDetail() {
         items={[
           {
             label: "Best lists",
-            to: "/best",
+            to: indexDestination?.to ?? "/best",
             onClick: () =>
               trackEvent(
                 bestDetailIndexAnalyticsEvent(),
@@ -181,27 +189,33 @@ function BestDetail() {
           <div className="mt-5">
             <ComparisonTable entries={compareEntries} showNextActions />
           </div>
-          {compareUi.interactiveSearch ? (
-            <Link
-              to="/compare"
-              search={compareUi.interactiveSearch}
-              onClick={() =>
-                trackEvent(
-                  bestDetailCompareAnalyticsEvent(),
-                  bestDetailCompareAnalyticsData(
-                    list.slug,
-                    resolved.length,
-                    compareEntries.length,
-                    true,
-                  ),
-                )
-              }
-              className="mt-4 inline-flex items-center gap-1.5 text-sm text-ink-muted hover:text-ink"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              {compareUi.interactiveLinkLabel}
-            </Link>
-          ) : null}
+          {compareUi.interactiveSearch
+            ? (() => {
+                const destination = bestDetailCompareDestination(compareUi.interactiveSearch.ids);
+                if (!destination) return null;
+                return (
+                  <Link
+                    to={destination.to}
+                    search={destination.search}
+                    onClick={() =>
+                      trackEvent(
+                        bestDetailCompareAnalyticsEvent(),
+                        bestDetailCompareAnalyticsData(
+                          list.slug,
+                          resolved.length,
+                          compareEntries.length,
+                          true,
+                        ),
+                      )
+                    }
+                    className="mt-4 inline-flex items-center gap-1.5 text-sm text-ink-muted hover:text-ink"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    {compareUi.interactiveLinkLabel}
+                  </Link>
+                );
+              })()
+            : null}
         </section>
       ) : null}
 
@@ -238,18 +252,20 @@ function BestDetail() {
           Missing a pick? Propose an edit to this list — every change goes through the same review
           queue as new entries.
         </p>
-        <Link
-          to="/submit"
-          onClick={() =>
-            trackEvent(
-              bestDetailSubmitAnalyticsEvent(),
-              bestDetailSubmitAnalyticsData(list.slug, resolved.length, list.category),
-            )
-          }
-          className="inline-flex h-9 items-center rounded-md bg-ink px-3 text-sm font-medium text-background hover:bg-ink/90"
-        >
-          Suggest a pick
-        </Link>
+        {submitDestination ? (
+          <Link
+            to={submitDestination.to}
+            onClick={() =>
+              trackEvent(
+                bestDetailSubmitAnalyticsEvent(),
+                bestDetailSubmitAnalyticsData(list.slug, resolved.length, list.category),
+              )
+            }
+            className="inline-flex h-9 items-center rounded-md bg-ink px-3 text-sm font-medium text-background hover:bg-ink/90"
+          >
+            Suggest a pick
+          </Link>
+        ) : null}
       </div>
 
       <div className="mt-12">

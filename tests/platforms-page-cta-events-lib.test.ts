@@ -3,6 +3,7 @@ import {
   PLATFORMS_PAGE_SURFACE,
   platformsPageHubAnalyticsData,
   platformsPageHubAnalyticsEvent,
+  platformsPageHubDestination,
 } from "@/lib/platforms-page-cta-events-lib";
 
 describe("platforms page cta events lib", () => {
@@ -15,5 +16,14 @@ describe("platforms page cta events lib", () => {
       platformCount: 12,
       matrixEntryCount: 8,
     });
+  });
+
+  it("maps platforms page hub destinations", () => {
+    expect(platformsPageHubDestination("cursor")).toEqual({
+      to: "/for/$platform",
+      params: { platform: "cursor" },
+    });
+    expect(platformsPageHubDestination("")).toBeNull();
+    expect(platformsPageHubDestination("  ")).toBeNull();
   });
 });

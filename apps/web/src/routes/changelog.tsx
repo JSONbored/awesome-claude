@@ -9,6 +9,7 @@ import { trackEvent } from "@/lib/analytics";
 import {
   changelogDiffEntryAnalyticsData,
   changelogDiffEntryAnalyticsEvent,
+  directoryPageEntryDestination,
 } from "@/lib/directory-page-entry-cta-events";
 import {
   changelogDiffDisclosureAnalyticsData,
@@ -17,10 +18,12 @@ import {
   changelogDiffEgressAnalyticsEvent,
   changelogFeedEgressAnalyticsData,
   changelogFeedEgressAnalyticsEvent,
+  changelogFeedEgressDestination,
   changelogPollCopyAnalyticsData,
   changelogPollCopyAnalyticsEvent,
   changelogQualityEgressAnalyticsData,
   changelogQualityEgressAnalyticsEvent,
+  changelogQualityEgressDestination,
   changelogReadMoreAnalyticsData,
   changelogReadMoreAnalyticsEvent,
   changelogStreamFilterAnalyticsData,
@@ -132,30 +135,31 @@ function ChangelogPage() {
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <a
-            href="/feed.xml"
-            onClick={() =>
-              trackEvent(
-                changelogFeedEgressAnalyticsEvent(),
-                changelogFeedEgressAnalyticsData("rss", items.length),
-              )
-            }
-            className="inline-flex h-9 items-center gap-1.5 rounded-md border border-border bg-surface px-3 text-sm font-medium text-ink hover:bg-surface-2"
-          >
-            <Rss className="h-3.5 w-3.5" /> RSS
-          </a>
-          <a
-            href="/atom.xml"
-            onClick={() =>
-              trackEvent(
-                changelogFeedEgressAnalyticsEvent(),
-                changelogFeedEgressAnalyticsData("atom", items.length),
-              )
-            }
-            className="inline-flex h-9 items-center gap-1.5 rounded-md border border-border bg-surface px-3 text-sm font-medium text-ink hover:bg-surface-2"
-          >
-            Atom
-          </a>
+          {(["rss", "atom"] as const).map((feedId) => {
+            const destination = changelogFeedEgressDestination(feedId);
+            if (!destination) return null;
+            return (
+              <a
+                key={feedId}
+                href={destination.href}
+                onClick={() =>
+                  trackEvent(
+                    changelogFeedEgressAnalyticsEvent(),
+                    changelogFeedEgressAnalyticsData(feedId, items.length),
+                  )
+                }
+                className="inline-flex h-9 items-center gap-1.5 rounded-md border border-border bg-surface px-3 text-sm font-medium text-ink hover:bg-surface-2"
+              >
+                {feedId === "rss" ? (
+                  <>
+                    <Rss className="h-3.5 w-3.5" /> RSS
+                  </>
+                ) : (
+                  "Atom"
+                )}
+              </a>
+            );
+          })}
         </div>
       </div>
 
@@ -269,30 +273,43 @@ function ChangelogPage() {
                                 <Icon className="h-3 w-3" /> {k} · {items.length}
                               </div>
                               <ul className="space-y-1 text-xs">
-                                {items.map((d, rowIndex) => (
-                                  <li key={`${d.category}/${d.slug}`} className="truncate">
-                                    <Link
-                                      to="/entry/$category/$slug"
-                                      params={{ category: d.category, slug: d.slug }}
-                                      onClick={() =>
-                                        trackEvent(
-                                          changelogDiffEntryAnalyticsEvent(),
-                                          changelogDiffEntryAnalyticsData(
-                                            d.category,
-                                            d.slug,
-                                            k,
-                                            rowIndex,
-                                            items.length,
-                                            note.stream,
-                                          ),
-                                        )
-                                      }
-                                      className="text-ink hover:underline"
-                                    >
-                                      {d.title}
-                                    </Link>
-                                  </li>
-                                ))}
+                                {items.map((d, rowIndex) => {
+                                  const destination = directoryPageEntryDestination(
+                                    d.category,
+                                    d.slug,
+                                  );
+                                  if (!destination) {
+                                    return (
+                                      <li key={`${d.category}/${d.slug}`} className="truncate">
+                                        <span className="text-ink">{d.title}</span>
+                                      </li>
+                                    );
+                                  }
+                                  return (
+                                    <li key={`${d.category}/${d.slug}`} className="truncate">
+                                      <Link
+                                        to={destination.to}
+                                        params={destination.params}
+                                        onClick={() =>
+                                          trackEvent(
+                                            changelogDiffEntryAnalyticsEvent(),
+                                            changelogDiffEntryAnalyticsData(
+                                              d.category,
+                                              d.slug,
+                                              k,
+                                              rowIndex,
+                                              items.length,
+                                              note.stream,
+                                            ),
+                                          )
+                                        }
+                                        className="text-ink hover:underline"
+                                      >
+                                        {d.title}
+                                      </Link>
+                                    </li>
+                                  );
+                                })}
                               </ul>
                             </div>
                           );
@@ -382,18 +399,24 @@ function ChangelogPage() {
                 );
               })}
             </ul>
-            <Link
-              to="/quality"
-              onClick={() =>
-                trackEvent(
-                  changelogQualityEgressAnalyticsEvent(),
-                  changelogQualityEgressAnalyticsData(items.length),
-                )
-              }
-              className="mt-3 inline-block text-xs font-medium text-ink hover:underline"
-            >
-              See registry quality →
-            </Link>
+            {(() => {
+              const destination = changelogQualityEgressDestination("quality");
+              if (!destination) return null;
+              return (
+                <Link
+                  to={destination.to}
+                  onClick={() =>
+                    trackEvent(
+                      changelogQualityEgressAnalyticsEvent(),
+                      changelogQualityEgressAnalyticsData(items.length),
+                    )
+                  }
+                  className="mt-3 inline-block text-xs font-medium text-ink hover:underline"
+                >
+                  See registry quality →
+                </Link>
+              );
+            })()}
           </div>
         </aside>
       </div>
