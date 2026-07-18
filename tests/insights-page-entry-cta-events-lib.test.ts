@@ -7,6 +7,7 @@ import {
   VALIDATORS_RECENT_REVIEWED_SURFACE,
   contributorProfileEntryAnalyticsData,
   contributorProfileEntryAnalyticsEvent,
+  insightsPageEntryDestination,
   qualityQueueEntryAnalyticsData,
   qualityQueueEntryAnalyticsEvent,
   stateReportEntryAnalyticsData,
@@ -99,5 +100,14 @@ describe("insights page entry cta events lib", () => {
       rowIndex: 0,
       rowCount: 10,
     });
+  });
+
+  it("maps insights page entry destinations", () => {
+    expect(insightsPageEntryDestination("mcp", "browser")).toEqual({
+      to: "/entry/$category/$slug",
+      params: { category: "mcp", slug: "browser" },
+    });
+    expect(insightsPageEntryDestination("", "browser")).toBeNull();
+    expect(insightsPageEntryDestination("mcp", "")).toBeNull();
   });
 });

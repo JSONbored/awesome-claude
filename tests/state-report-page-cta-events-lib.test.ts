@@ -8,6 +8,7 @@ import {
   stateReportDistRowAnalyticsEvent,
   stateReportEgressAnalyticsData,
   stateReportEgressAnalyticsEvent,
+  stateReportEgressRouteDestination,
   stateReportStatAnalyticsData,
   stateReportStatAnalyticsEvent,
   stateReportStatDestination,
@@ -197,5 +198,38 @@ describe("state report page cta events lib", () => {
     expect(stateReportStatDestination("agent-skills", "unknown")).toBeNull();
 
     expect(stateReportStatDestination("unknown-report", "total")).toBeNull();
+  });
+
+  it("maps state report egress route destinations", () => {
+    expect(stateReportEgressRouteDestination("browse")).toEqual({
+      to: "/browse",
+    });
+    expect(stateReportEgressRouteDestination("quality")).toEqual({
+      to: "/quality",
+    });
+    expect(stateReportEgressRouteDestination("mcp-security-report")).toEqual({
+      to: "/mcp-security-report",
+    });
+    expect(stateReportEgressRouteDestination("claude-tooling")).toEqual({
+      to: "/state-of-claude-tooling",
+    });
+    expect(stateReportEgressRouteDestination("mcp-servers")).toEqual({
+      to: "/state-of-mcp-servers",
+    });
+    expect(stateReportEgressRouteDestination("claude-code-hooks")).toEqual({
+      to: "/state-of-claude-code-hooks",
+    });
+    expect(stateReportEgressRouteDestination("agent-skills")).toEqual({
+      to: "/state-of-agent-skills",
+    });
+    expect(stateReportEgressRouteDestination("ai-agents")).toEqual({
+      to: "/state-of-ai-agents",
+    });
+    expect(stateReportEgressRouteDestination("category", "mcp")).toEqual({
+      to: "/$category",
+      params: { category: "mcp" },
+    });
+    expect(stateReportEgressRouteDestination("category", "")).toBeNull();
+    expect(stateReportEgressRouteDestination("unknown")).toBeNull();
   });
 });

@@ -23,6 +23,7 @@ import { NewsletterInline } from "@/components/newsletter-inline";
 import { ReportDownloads } from "@/components/report-downloads";
 import { trackEvent } from "@/lib/analytics";
 import {
+  insightsPageEntryDestination,
   stateReportEntryAnalyticsData,
   stateReportEntryAnalyticsEvent,
 } from "@/lib/insights-page-entry-cta-events";
@@ -35,6 +36,7 @@ import {
   stateReportDistRowAnalyticsEvent,
   stateReportEgressAnalyticsData,
   stateReportEgressAnalyticsEvent,
+  stateReportEgressRouteDestination,
   stateReportStatAnalyticsData,
   stateReportStatAnalyticsEvent,
   stateReportStatDestination,
@@ -315,13 +317,19 @@ function StateOfClaudeToolingPage() {
           <h2 className="h-display-2 text-ink text-balance">Trust-level distribution</h2>
           <p className="mt-2 text-sm text-ink-muted">
             Every entry carries a trust signal you can verify yourself.{" "}
-            <Link
-              to="/quality"
-              onClick={() => trackStateReportEgress("quality")}
-              className="text-ink underline-offset-2 hover:underline"
-            >
-              See how we score.
-            </Link>
+            {(() => {
+              const destination = stateReportEgressRouteDestination("quality");
+              if (!destination) return "See how we score.";
+              return (
+                <Link
+                  to={destination.to}
+                  onClick={() => trackStateReportEgress("quality")}
+                  className="text-ink underline-offset-2 hover:underline"
+                >
+                  See how we score.
+                </Link>
+              );
+            })()}
           </p>
           <div className="mt-4">
             <DistTable
@@ -400,25 +408,35 @@ function StateOfClaudeToolingPage() {
               key={`${e.category}/${e.slug}`}
               className="flex items-center justify-between gap-3 border-b border-border px-5 py-3 last:border-0"
             >
-              <Link
-                to="/entry/$category/$slug"
-                params={{ category: e.category, slug: e.slug }}
-                onClick={() =>
-                  trackEvent(
-                    stateReportEntryAnalyticsEvent(),
-                    stateReportEntryAnalyticsData(
-                      e.category,
-                      e.slug,
-                      "claude-tooling",
-                      rowIndex,
-                      RECENT_ADDITIONS.length,
-                    ),
-                  )
+              {(() => {
+                const destination = insightsPageEntryDestination(e.category, e.slug);
+                if (!destination) {
+                  return (
+                    <span className="min-w-0 truncate text-sm font-medium text-ink">{e.title}</span>
+                  );
                 }
-                className="min-w-0 truncate text-sm font-medium text-ink hover:underline"
-              >
-                {e.title}
-              </Link>
+                return (
+                  <Link
+                    to={destination.to}
+                    params={destination.params}
+                    onClick={() =>
+                      trackEvent(
+                        stateReportEntryAnalyticsEvent(),
+                        stateReportEntryAnalyticsData(
+                          e.category,
+                          e.slug,
+                          "claude-tooling",
+                          rowIndex,
+                          RECENT_ADDITIONS.length,
+                        ),
+                      )
+                    }
+                    className="min-w-0 truncate text-sm font-medium text-ink hover:underline"
+                  >
+                    {e.title}
+                  </Link>
+                );
+              })()}
               <div className="flex shrink-0 items-center gap-3">
                 <span className="rounded-md border border-border bg-surface-2 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-ink-subtle">
                   {e.category}
@@ -450,21 +468,33 @@ function StateOfClaudeToolingPage() {
             heyclau.de/state-of-claude-tooling
           </a>{" "}
           and reference the data-as-of date. Browse the underlying catalog on the{" "}
-          <Link
-            to="/browse"
-            onClick={() => trackStateReportEgress("browse")}
-            className="text-ink underline-offset-2 hover:underline"
-          >
-            directory
-          </Link>{" "}
+          {(() => {
+            const destination = stateReportEgressRouteDestination("browse");
+            if (!destination) return "directory";
+            return (
+              <Link
+                to={destination.to}
+                onClick={() => trackStateReportEgress("browse")}
+                className="text-ink underline-offset-2 hover:underline"
+              >
+                directory
+              </Link>
+            );
+          })()}{" "}
           or review the{" "}
-          <Link
-            to="/quality"
-            onClick={() => trackStateReportEgress("quality")}
-            className="text-ink underline-offset-2 hover:underline"
-          >
-            quality methodology
-          </Link>
+          {(() => {
+            const destination = stateReportEgressRouteDestination("quality");
+            if (!destination) return "quality methodology";
+            return (
+              <Link
+                to={destination.to}
+                onClick={() => trackStateReportEgress("quality")}
+                className="text-ink underline-offset-2 hover:underline"
+              >
+                quality methodology
+              </Link>
+            );
+          })()}
           .
         </p>
       </section>

@@ -9,6 +9,7 @@ export {
   VALIDATORS_RECENT_REVIEWED_SURFACE,
   contributorProfileEntryAnalyticsData,
   contributorProfileEntryAnalyticsEvent,
+  insightsPageEntryDestination,
   insightsPageEntryKey,
   qualityQueueEntryAnalyticsData,
   qualityQueueEntryAnalyticsEvent,

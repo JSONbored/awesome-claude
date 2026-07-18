@@ -122,3 +122,31 @@ export function stateReportEntryAnalyticsData(
     rowCount,
   };
 }
+
+export type InsightsPageEntryDestination = {
+  to: "/entry/$category/$slug";
+  params: { category: string; slug: string };
+};
+
+/** Map an insights/report entry ref to an entry detail destination. */
+export function insightsPageEntryDestination(
+  category: string,
+  slug: string,
+): InsightsPageEntryDestination | null {
+  const categoryId = category.trim();
+  const entrySlug = slug.trim();
+  switch (categoryId) {
+    case "":
+      return null;
+    default:
+      switch (entrySlug) {
+        case "":
+          return null;
+        default:
+          return {
+            to: "/entry/$category/$slug",
+            params: { category: categoryId, slug: entrySlug },
+          };
+      }
+  }
+}

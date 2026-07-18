@@ -51,6 +51,7 @@ import {
 import {
   comparePageDecisionBriefSurface,
   comparePageEvidenceGapsSurface,
+  comparePanelEntryDestination,
 } from "@/lib/compare-panel-entry-cta-events";
 import {
   comparePageShareLinkCopyAnalyticsData,
@@ -59,6 +60,7 @@ import {
 import {
   comparePageEmptyEgressAnalyticsData,
   comparePageEmptyEgressAnalyticsEvent,
+  comparePageEmptyEgressDestination,
 } from "@/lib/compare-page-empty-egress-cta-events";
 import {
   comparePageAddOpenAnalyticsData,
@@ -72,7 +74,11 @@ import {
   comparePageRemoveAnalyticsData,
   comparePageRemoveAnalyticsEvent,
 } from "@/lib/compare-page-selection-cta-events";
-import { claimCtaAnalyticsData, claimCtaAnalyticsEvent } from "@/lib/conversion-cta-events";
+import {
+  claimCtaAnalyticsData,
+  claimCtaAnalyticsEvent,
+  claimCtaDestination,
+} from "@/lib/conversion-cta-events";
 import { sameEntry } from "@/lib/entry-identity";
 import { search } from "@/data/search";
 import { cn } from "@/lib/utils";
@@ -285,18 +291,24 @@ function ComparePage() {
             <p className="mt-2 text-sm text-amber-800">{emptyUi.invalidUrlHint}</p>
           ) : null}
           <div className="mt-5 flex justify-center gap-2">
-            <Link
-              to="/browse"
-              className="inline-flex h-9 items-center rounded-md bg-ink px-4 text-sm font-medium text-background hover:bg-ink/90"
-              onClick={() =>
-                trackEvent(
-                  comparePageEmptyEgressAnalyticsEvent(),
-                  comparePageEmptyEgressAnalyticsData("browse-directory"),
-                )
-              }
-            >
-              Browse the directory
-            </Link>
+            {(() => {
+              const destination = comparePageEmptyEgressDestination("browse-directory");
+              if (!destination) return null;
+              return (
+                <Link
+                  to={destination.to}
+                  className="inline-flex h-9 items-center rounded-md bg-ink px-4 text-sm font-medium text-background hover:bg-ink/90"
+                  onClick={() =>
+                    trackEvent(
+                      comparePageEmptyEgressAnalyticsEvent(),
+                      comparePageEmptyEgressAnalyticsData("browse-directory"),
+                    )
+                  }
+                >
+                  Browse the directory
+                </Link>
+              );
+            })()}
           </div>
           <div className="mt-6">
             <div className="eyebrow mb-2">Popular comparisons</div>
@@ -304,14 +316,25 @@ function ComparePage() {
               {emptyUi.popularComparisonLinks.map((comparison) => {
                 const refCount =
                   COMPARISONS.find((item) => item.slug === comparison.slug)?.refs.length ?? 0;
+                const curatedDestination = comparePageEmptyEgressDestination(
+                  "curated-page",
+                  comparison.slug,
+                );
+                const interactiveDestination =
+                  comparison.interactiveSearch &&
+                  comparePageEmptyEgressDestination(
+                    "interactive",
+                    comparison.interactiveSearch.ids,
+                  );
+                if (!curatedDestination || !("params" in curatedDestination)) return null;
                 return (
                   <div
                     key={comparison.slug}
                     className="inline-flex flex-wrap items-center justify-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5"
                   >
                     <Link
-                      to="/compare/$slug"
-                      params={{ slug: comparison.slug }}
+                      to={curatedDestination.to}
+                      params={curatedDestination.params}
                       className="text-xs text-ink-muted hover:text-ink"
                       onClick={() =>
                         trackEvent(
@@ -326,10 +349,10 @@ function ComparePage() {
                     >
                       {comparison.heading}
                     </Link>
-                    {comparison.interactiveSearch ? (
+                    {interactiveDestination && "search" in interactiveDestination ? (
                       <Link
-                        to="/compare"
-                        search={comparison.interactiveSearch}
+                        to={interactiveDestination.to}
+                        search={interactiveDestination.search}
                         className="text-[10px] text-ink-subtle hover:text-ink"
                         onClick={() =>
                           trackEvent(
@@ -455,14 +478,25 @@ function ComparePage() {
                   className="min-w-[260px] max-w-[320px] border-b border-r border-border bg-surface p-3 text-left align-top"
                 >
                   <div className="flex items-start justify-between gap-2">
-                    <Link
-                      to="/entry/$category/$slug"
-                      params={{ category: e.category, slug: e.slug }}
-                      onClick={() => onOpenDossier(e)}
-                      className="font-display text-sm font-semibold text-ink hover:underline"
-                    >
-                      {e.title}
-                    </Link>
+                    {(() => {
+                      const destination = comparePanelEntryDestination(e.category, e.slug);
+                      if (!destination)
+                        return (
+                          <span className="font-display text-sm font-semibold text-ink">
+                            {e.title}
+                          </span>
+                        );
+                      return (
+                        <Link
+                          to={destination.to}
+                          params={destination.params}
+                          onClick={() => onOpenDossier(e)}
+                          className="font-display text-sm font-semibold text-ink hover:underline"
+                        >
+                          {e.title}
+                        </Link>
+                      );
+                    })()}
                     <button
                       type="button"
                       onClick={() => removeItem(e)}
@@ -473,14 +507,20 @@ function ComparePage() {
                     </button>
                   </div>
                   <p className="mt-1 line-clamp-2 text-xs text-ink-muted">{e.description}</p>
-                  <Link
-                    to="/entry/$category/$slug"
-                    params={{ category: e.category, slug: e.slug }}
-                    onClick={() => onOpenDossier(e)}
-                    className="mt-2 inline-flex items-center gap-1 text-[11px] text-ink-muted hover:text-ink"
-                  >
-                    Open dossier <ArrowRight className="h-3 w-3" />
-                  </Link>
+                  {(() => {
+                    const destination = comparePanelEntryDestination(e.category, e.slug);
+                    if (!destination) return null;
+                    return (
+                      <Link
+                        to={destination.to}
+                        params={destination.params}
+                        onClick={() => onOpenDossier(e)}
+                        className="mt-2 inline-flex items-center gap-1 text-[11px] text-ink-muted hover:text-ink"
+                      >
+                        Open dossier <ArrowRight className="h-3 w-3" />
+                      </Link>
+                    );
+                  })()}
                 </th>
               ))}
               {items.length < 4 && (
@@ -644,10 +684,12 @@ function CompareActionButton({ entry, action }: { entry: Entry; action: CompareA
 
   if (action.kind === "link") {
     if (action.id === "dossier") {
+      const destination = comparePanelEntryDestination(entry.category, entry.slug);
+      if (!destination) return null;
       return (
         <Link
-          to="/entry/$category/$slug"
-          params={{ category: entry.category, slug: entry.slug }}
+          to={destination.to}
+          params={destination.params}
           onClick={() => {
             if (action.analyticsEvent) {
               trackEvent(action.analyticsEvent, { entry: eventKey, surface: COMPARE_PAGE_SURFACE });
@@ -662,9 +704,11 @@ function CompareActionButton({ entry, action }: { entry: Entry; action: CompareA
     }
 
     if (action.id === "claim") {
+      const destination = claimCtaDestination("claim");
+      if (!destination) return null;
       return (
         <Link
-          to="/claim"
+          to={destination.to}
           onClick={() => {
             trackEvent(
               claimCtaAnalyticsEvent(),

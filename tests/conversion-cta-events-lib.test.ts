@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   claimCtaAnalyticsData,
   claimCtaAnalyticsEvent,
+  claimCtaDestination,
   newsletterSubscribeAnalyticsData,
   newsletterSubscribeAnalyticsEvent,
   sanitizeNewsletterSource,
@@ -27,6 +28,11 @@ describe("conversion cta events lib", () => {
       surface: "compare-page",
       entry: "mcp/browser",
     });
+  });
+
+  it("maps claim CTA destinations", () => {
+    expect(claimCtaDestination("claim")).toEqual({ to: "/claim" });
+    expect(claimCtaDestination("unknown")).toBeNull();
   });
 
   it("builds newsletter subscribe analytics without email or PII", () => {

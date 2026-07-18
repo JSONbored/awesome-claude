@@ -10,6 +10,7 @@ export {
   stateReportDistRowAnalyticsEvent,
   stateReportEgressAnalyticsData,
   stateReportEgressAnalyticsEvent,
+  stateReportEgressRouteDestination,
   stateReportStatAnalyticsData,
   stateReportStatAnalyticsEvent,
   stateReportStatDestination,

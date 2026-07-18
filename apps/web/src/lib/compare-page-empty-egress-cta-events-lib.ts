@@ -31,3 +31,42 @@ export function comparePageEmptyEgressAnalyticsData(
     hasInteractive,
   };
 }
+
+export type ComparePageEmptyEgressDestination =
+  | { to: "/browse" }
+  | { to: "/compare/$slug"; params: { slug: string } }
+  | { to: "/compare"; search: { ids: string } };
+
+/**
+ * Map an empty-state compare egress link kind (+ optional slug/ids target) to a
+ * route destination.
+ */
+export function comparePageEmptyEgressDestination(
+  linkKind: string,
+  target = "",
+): ComparePageEmptyEgressDestination | null {
+  switch (linkKind) {
+    case "browse-directory":
+      return { to: "/browse" };
+    case "curated-page": {
+      const slug = target.trim();
+      switch (slug) {
+        case "":
+          return null;
+        default:
+          return { to: "/compare/$slug", params: { slug } };
+      }
+    }
+    case "interactive": {
+      const ids = target.trim();
+      switch (ids) {
+        case "":
+          return null;
+        default:
+          return { to: "/compare", search: { ids } };
+      }
+    }
+    default:
+      return null;
+  }
+}

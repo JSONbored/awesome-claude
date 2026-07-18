@@ -226,3 +226,53 @@ export function stateReportStatDestination(
       return null;
   }
 }
+
+export type StateReportEgressRouteDestination =
+  | { to: "/browse" }
+  | { to: "/quality" }
+  | { to: "/mcp-security-report" }
+  | { to: "/state-of-claude-tooling" }
+  | { to: "/state-of-mcp-servers" }
+  | { to: "/state-of-claude-code-hooks" }
+  | { to: "/state-of-agent-skills" }
+  | { to: "/state-of-ai-agents" }
+  | { to: "/$category"; params: { category: string } };
+
+/**
+ * Map a state-report egress destination id (+ optional category) to an in-app
+ * route.
+ */
+export function stateReportEgressRouteDestination(
+  destination: string,
+  category = "",
+): StateReportEgressRouteDestination | null {
+  switch (destination) {
+    case "browse":
+      return { to: "/browse" };
+    case "quality":
+      return { to: "/quality" };
+    case "mcp-security-report":
+      return { to: "/mcp-security-report" };
+    case "claude-tooling":
+      return { to: "/state-of-claude-tooling" };
+    case "mcp-servers":
+      return { to: "/state-of-mcp-servers" };
+    case "claude-code-hooks":
+      return { to: "/state-of-claude-code-hooks" };
+    case "agent-skills":
+      return { to: "/state-of-agent-skills" };
+    case "ai-agents":
+      return { to: "/state-of-ai-agents" };
+    case "category": {
+      const id = category.trim();
+      switch (id) {
+        case "":
+          return null;
+        default:
+          return { to: "/$category", params: { category: id } };
+      }
+    }
+    default:
+      return null;
+  }
+}

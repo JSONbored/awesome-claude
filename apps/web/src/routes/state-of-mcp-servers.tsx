@@ -28,6 +28,7 @@ import {
 } from "@/lib/data-report-drilldown-lib";
 import { trackEvent } from "@/lib/analytics";
 import {
+  insightsPageEntryDestination,
   stateReportEntryAnalyticsData,
   stateReportEntryAnalyticsEvent,
 } from "@/lib/insights-page-entry-cta-events";
@@ -40,6 +41,7 @@ import {
   stateReportDistRowAnalyticsEvent,
   stateReportEgressAnalyticsData,
   stateReportEgressAnalyticsEvent,
+  stateReportEgressRouteDestination,
   stateReportStatAnalyticsData,
   stateReportStatAnalyticsEvent,
   stateReportStatDestination,
@@ -329,13 +331,19 @@ function StateOfMcpServersPage() {
           <h2 className="h-display-2 text-ink text-balance">Trust-level distribution</h2>
           <p className="mt-2 text-sm text-ink-muted">
             Every server carries a trust signal you can verify.{" "}
-            <Link
-              to="/quality"
-              onClick={() => trackStateReportEgress("quality")}
-              className="text-ink underline-offset-2 hover:underline"
-            >
-              See how we score.
-            </Link>
+            {(() => {
+              const destination = stateReportEgressRouteDestination("quality");
+              if (!destination) return "See how we score.";
+              return (
+                <Link
+                  to={destination.to}
+                  onClick={() => trackStateReportEgress("quality")}
+                  className="text-ink underline-offset-2 hover:underline"
+                >
+                  See how we score.
+                </Link>
+              );
+            })()}
           </p>
           <div className="mt-4">
             <DistTable
@@ -403,25 +411,34 @@ function StateOfMcpServersPage() {
               key={`${e.category}/${e.slug}`}
               className="flex items-center justify-between gap-3 border-b border-border px-5 py-3 last:border-0"
             >
-              <Link
-                to="/entry/$category/$slug"
-                params={{ category: e.category, slug: e.slug }}
-                onClick={() =>
-                  trackEvent(
-                    stateReportEntryAnalyticsEvent(),
-                    stateReportEntryAnalyticsData(
-                      e.category,
-                      e.slug,
-                      "mcp-servers",
-                      rowIndex,
-                      RECENT.length,
-                    ),
-                  )
-                }
-                className="min-w-0 truncate text-sm font-medium text-ink hover:underline"
-              >
-                {e.title}
-              </Link>
+              {(() => {
+                const destination = insightsPageEntryDestination(e.category, e.slug);
+                if (!destination)
+                  return (
+                    <span className="min-w-0 truncate text-sm font-medium text-ink">{e.title}</span>
+                  );
+                return (
+                  <Link
+                    to={destination.to}
+                    params={destination.params}
+                    onClick={() =>
+                      trackEvent(
+                        stateReportEntryAnalyticsEvent(),
+                        stateReportEntryAnalyticsData(
+                          e.category,
+                          e.slug,
+                          "mcp-servers",
+                          rowIndex,
+                          RECENT.length,
+                        ),
+                      )
+                    }
+                    className="min-w-0 truncate text-sm font-medium text-ink hover:underline"
+                  >
+                    {e.title}
+                  </Link>
+                );
+              })()}
               <span className="shrink-0 font-mono text-xs text-ink-subtle">
                 {String(e.dateAdded).slice(0, 10)}
               </span>
@@ -449,35 +466,53 @@ function StateOfMcpServersPage() {
             heyclau.de/state-of-mcp-servers
           </a>{" "}
           with the data-as-of date. See also the{" "}
-          <Link
-            to="/mcp-security-report"
-            onClick={() => trackStateReportEgress("mcp-security-report")}
-            className="text-ink underline-offset-2 hover:underline"
-          >
-            MCP Security &amp; Privacy Report
-          </Link>{" "}
+          {(() => {
+            const destination = stateReportEgressRouteDestination("mcp-security-report");
+            if (!destination) return "MCP Security & Privacy Report";
+            return (
+              <Link
+                to={destination.to}
+                onClick={() => trackStateReportEgress("mcp-security-report")}
+                className="text-ink underline-offset-2 hover:underline"
+              >
+                MCP Security &amp; Privacy Report
+              </Link>
+            );
+          })()}{" "}
           and the broader{" "}
-          <Link
-            to="/state-of-claude-tooling"
-            onClick={() => trackStateReportEgress("claude-tooling")}
-            className="text-ink underline-offset-2 hover:underline"
-          >
-            State of Claude Tooling
-          </Link>
+          {(() => {
+            const destination = stateReportEgressRouteDestination("claude-tooling");
+            if (!destination) return "State of Claude Tooling";
+            return (
+              <Link
+                to={destination.to}
+                onClick={() => trackStateReportEgress("claude-tooling")}
+                className="text-ink underline-offset-2 hover:underline"
+              >
+                State of Claude Tooling
+              </Link>
+            );
+          })()}
           . Browse all{" "}
-          <Link
-            to="/$category"
-            params={{ category: "mcp" }}
-            onClick={() =>
-              trackEvent(
-                stateReportCategoryBrowseAnalyticsEvent(),
-                stateReportCategoryBrowseAnalyticsData(REPORT_ID, "mcp", TOTAL, 0, 1),
-              )
-            }
-            className="text-ink underline-offset-2 hover:underline"
-          >
-            MCP servers
-          </Link>
+          {(() => {
+            const destination = stateReportEgressRouteDestination("category", "mcp");
+            if (!destination || !("params" in destination)) return "MCP servers";
+            return (
+              <Link
+                to={destination.to}
+                params={destination.params}
+                onClick={() =>
+                  trackEvent(
+                    stateReportCategoryBrowseAnalyticsEvent(),
+                    stateReportCategoryBrowseAnalyticsData(REPORT_ID, "mcp", TOTAL, 0, 1),
+                  )
+                }
+                className="text-ink underline-offset-2 hover:underline"
+              >
+                MCP servers
+              </Link>
+            );
+          })()}
           .
         </p>
       </section>

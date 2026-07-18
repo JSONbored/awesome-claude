@@ -6,6 +6,7 @@ export {
   NEWSLETTER_CTA_SURFACE,
   claimCtaAnalyticsData,
   claimCtaAnalyticsEvent,
+  claimCtaDestination,
   newsletterSubscribeAnalyticsData,
   newsletterSubscribeAnalyticsEvent,
   sanitizeNewsletterSource,

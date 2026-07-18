@@ -25,6 +25,7 @@ import {
   stateReportDistRowAnalyticsEvent,
   stateReportEgressAnalyticsData,
   stateReportEgressAnalyticsEvent,
+  stateReportEgressRouteDestination,
   stateReportStatAnalyticsData,
   stateReportStatAnalyticsEvent,
   stateReportStatDestination,
@@ -197,27 +198,39 @@ function StateOfClaudeCodeHooksPage() {
             heyclau.de/state-of-claude-code-hooks
           </a>{" "}
           with the data-as-of date. See also the broader{" "}
-          <Link
-            to="/state-of-claude-tooling"
-            onClick={() => trackStateReportEgress("claude-tooling")}
-            className="text-ink underline-offset-2 hover:underline"
-          >
-            State of Claude Tooling
-          </Link>
+          {(() => {
+            const destination = stateReportEgressRouteDestination("claude-tooling");
+            if (!destination) return "State of Claude Tooling";
+            return (
+              <Link
+                to={destination.to}
+                onClick={() => trackStateReportEgress("claude-tooling")}
+                className="text-ink underline-offset-2 hover:underline"
+              >
+                State of Claude Tooling
+              </Link>
+            );
+          })()}
           . Browse all{" "}
-          <Link
-            to="/$category"
-            params={{ category: "hooks" }}
-            onClick={() =>
-              trackEvent(
-                stateReportCategoryBrowseAnalyticsEvent(),
-                stateReportCategoryBrowseAnalyticsData(REPORT_ID, "hooks", MODEL.total, 0, 1),
-              )
-            }
-            className="text-ink underline-offset-2 hover:underline"
-          >
-            hooks
-          </Link>
+          {(() => {
+            const destination = stateReportEgressRouteDestination("category", "hooks");
+            if (!destination || !("params" in destination)) return "hooks";
+            return (
+              <Link
+                to={destination.to}
+                params={destination.params}
+                onClick={() =>
+                  trackEvent(
+                    stateReportCategoryBrowseAnalyticsEvent(),
+                    stateReportCategoryBrowseAnalyticsData(REPORT_ID, "hooks", MODEL.total, 0, 1),
+                  )
+                }
+                className="text-ink underline-offset-2 hover:underline"
+              >
+                hooks
+              </Link>
+            );
+          })()}
           .
         </p>
       </section>

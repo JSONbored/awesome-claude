@@ -20,5 +20,6 @@ export {
   compareRolloutReadinessEntryAnalyticsEvent,
   compareScenarioRankingEntryAnalyticsData,
   compareScenarioRankingEntryAnalyticsEvent,
+  comparePanelEntryDestination,
   parseComparePanelEntryRef,
 } from "@/lib/compare-panel-entry-cta-events-lib";

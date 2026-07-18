@@ -36,3 +36,32 @@ export function compareCuratedNotFoundEgressAnalyticsData() {
     surface: COMPARE_CURATED_NOTFOUND_SURFACE,
   };
 }
+
+export type CompareCuratedEgressDestination =
+  | { to: "/compare"; search: { ids: string } }
+  | { to: "/compare" };
+
+/**
+ * Map a curated compare egress id (+ optional interactive ids payload) to a
+ * compare workspace destination.
+ */
+export function compareCuratedEgressDestination(
+  linkKind: string,
+  ids = "",
+): CompareCuratedEgressDestination | null {
+  switch (linkKind) {
+    case "interactive": {
+      const value = ids.trim();
+      switch (value) {
+        case "":
+          return null;
+        default:
+          return { to: "/compare", search: { ids: value } };
+      }
+    }
+    case "not-found":
+      return { to: "/compare" };
+    default:
+      return null;
+  }
+}

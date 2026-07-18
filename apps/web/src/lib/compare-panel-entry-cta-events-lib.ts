@@ -201,3 +201,31 @@ export function parseComparePanelEntryRef(
     slug: entryRef.slice(slash + 1),
   };
 }
+
+export type ComparePanelEntryDestination = {
+  to: "/entry/$category/$slug";
+  params: { category: string; slug: string };
+};
+
+/** Map a compare panel entry ref to an entry detail destination. */
+export function comparePanelEntryDestination(
+  category: string,
+  slug: string,
+): ComparePanelEntryDestination | null {
+  const categoryId = category.trim();
+  const entrySlug = slug.trim();
+  switch (categoryId) {
+    case "":
+      return null;
+    default:
+      switch (entrySlug) {
+        case "":
+          return null;
+        default:
+          return {
+            to: "/entry/$category/$slug",
+            params: { category: categoryId, slug: entrySlug },
+          };
+      }
+  }
+}

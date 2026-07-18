@@ -102,3 +102,50 @@ export function mcpSecurityReportStatBrowseSearch(statId: McpSecurityReportStatI
       return { category: "mcp" };
   }
 }
+
+export type McpSecurityReportStatDestination = {
+  to: "/browse";
+  search: { category: string; signal?: string };
+};
+
+/** Map an MCP security headline stat id to a browse destination. */
+export function mcpSecurityReportStatDestination(
+  statId: string,
+): McpSecurityReportStatDestination | null {
+  switch (statId) {
+    case "total":
+    case "safety-notes":
+    case "privacy-notes":
+    case "verified-package":
+      return {
+        to: "/browse",
+        search: mcpSecurityReportStatBrowseSearch(statId),
+      };
+    default:
+      return null;
+  }
+}
+
+export type McpSecurityReportRouteDestination =
+  | { to: "/guides/$slug"; params: { slug: string } }
+  | { to: "/state-of-mcp-servers" }
+  | { to: "/$category"; params: { category: string } };
+
+/** Map an MCP security report chrome egress id to an in-app route. */
+export function mcpSecurityReportRouteDestination(
+  destination: string,
+): McpSecurityReportRouteDestination | null {
+  switch (destination) {
+    case "threat-model-guide":
+      return {
+        to: "/guides/$slug",
+        params: { slug: "threat-model-mcp-servers-before-installation" },
+      };
+    case "state-of-mcp-servers":
+      return { to: "/state-of-mcp-servers" };
+    case "mcp-category":
+      return { to: "/$category", params: { category: "mcp" } };
+    default:
+      return null;
+  }
+}

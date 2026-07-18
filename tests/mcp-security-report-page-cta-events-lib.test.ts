@@ -12,6 +12,8 @@ import {
   mcpSecurityReportStatAnalyticsData,
   mcpSecurityReportStatAnalyticsEvent,
   mcpSecurityReportStatBrowseSearch,
+  mcpSecurityReportStatDestination,
+  mcpSecurityReportRouteDestination,
 } from "@/lib/mcp-security-report-page-cta-events-lib";
 
 describe("mcp security report page cta events lib", () => {
@@ -76,5 +78,29 @@ describe("mcp security report page cta events lib", () => {
       category: "mcp",
       signal: "trusted-package",
     });
+  });
+
+  it("maps mcp security report destinations", () => {
+    expect(mcpSecurityReportStatDestination("total")).toEqual({
+      to: "/browse",
+      search: { category: "mcp" },
+    });
+    expect(mcpSecurityReportStatDestination("safety-notes")).toEqual({
+      to: "/browse",
+      search: { category: "mcp", signal: "safety-notes" },
+    });
+    expect(mcpSecurityReportStatDestination("unknown")).toBeNull();
+    expect(mcpSecurityReportRouteDestination("threat-model-guide")).toEqual({
+      to: "/guides/$slug",
+      params: { slug: "threat-model-mcp-servers-before-installation" },
+    });
+    expect(mcpSecurityReportRouteDestination("state-of-mcp-servers")).toEqual({
+      to: "/state-of-mcp-servers",
+    });
+    expect(mcpSecurityReportRouteDestination("mcp-category")).toEqual({
+      to: "/$category",
+      params: { category: "mcp" },
+    });
+    expect(mcpSecurityReportRouteDestination("unknown")).toBeNull();
   });
 });

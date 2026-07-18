@@ -24,6 +24,20 @@ export function claimCtaAnalyticsData(surface: ClaimCtaSurface, category?: strin
   };
 }
 
+export type ClaimCtaDestination = {
+  to: "/claim";
+};
+
+/** Map a claim CTA id to the claim route. */
+export function claimCtaDestination(destination: string): ClaimCtaDestination | null {
+  switch (destination) {
+    case "claim":
+      return { to: "/claim" };
+    default:
+      return null;
+  }
+}
+
 export function newsletterSubscribeAnalyticsEvent(): string {
   return "newsletter-subscribe";
 }

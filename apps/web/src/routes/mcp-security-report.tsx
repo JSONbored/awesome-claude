@@ -28,9 +28,10 @@ import {
   mcpSecurityReportDistRowAnalyticsEvent,
   mcpSecurityReportEgressAnalyticsData,
   mcpSecurityReportEgressAnalyticsEvent,
+  mcpSecurityReportRouteDestination,
   mcpSecurityReportStatAnalyticsData,
   mcpSecurityReportStatAnalyticsEvent,
-  mcpSecurityReportStatBrowseSearch,
+  mcpSecurityReportStatDestination,
   type McpSecurityReportEgressDestination,
 } from "@/lib/mcp-security-report-page-cta-events";
 
@@ -243,42 +244,53 @@ function McpSecurityReportPage() {
       <p className="mt-2 text-xs text-ink-subtle">Data as of {asOfLabel} (UTC).</p>
 
       <div className="mt-10 grid gap-px overflow-hidden rounded-xl border border-border bg-border stagger-children sm:grid-cols-4">
-        <DataStat
-          icon={Boxes}
-          label="MCP servers"
-          value={TOTAL}
-          hint="analyzed"
-          to="/browse"
-          search={mcpSecurityReportStatBrowseSearch("total")}
-          onNavigate={() => trackStat("total")}
-        />
-        <DataStat
-          icon={ShieldCheck}
-          label="Safety notes"
-          value={NOTES.safety}
-          hint={`${pctOf(NOTES.safety, TOTAL)}% of total`}
-          to="/browse"
-          search={mcpSecurityReportStatBrowseSearch("safety-notes")}
-          onNavigate={() => trackStat("safety-notes")}
-        />
-        <DataStat
-          icon={Eye}
-          label="Privacy notes"
-          value={NOTES.privacy}
-          hint={`${pctOf(NOTES.privacy, TOTAL)}% of total`}
-          to="/browse"
-          search={mcpSecurityReportStatBrowseSearch("privacy-notes")}
-          onNavigate={() => trackStat("privacy-notes")}
-        />
-        <DataStat
-          icon={PackageCheck}
-          label="Verified package"
-          value={SUPPLY.packageVerified}
-          hint={`${pctOf(SUPPLY.packageVerified, TOTAL)}% of total`}
-          to="/browse"
-          search={mcpSecurityReportStatBrowseSearch("verified-package")}
-          onNavigate={() => trackStat("verified-package")}
-        />
+        {(
+          [
+            {
+              icon: Boxes,
+              label: "MCP servers",
+              value: TOTAL,
+              hint: "analyzed",
+              statId: "total" as const,
+            },
+            {
+              icon: ShieldCheck,
+              label: "Safety notes",
+              value: NOTES.safety,
+              hint: `${pctOf(NOTES.safety, TOTAL)}% of total`,
+              statId: "safety-notes" as const,
+            },
+            {
+              icon: Eye,
+              label: "Privacy notes",
+              value: NOTES.privacy,
+              hint: `${pctOf(NOTES.privacy, TOTAL)}% of total`,
+              statId: "privacy-notes" as const,
+            },
+            {
+              icon: PackageCheck,
+              label: "Verified package",
+              value: SUPPLY.packageVerified,
+              hint: `${pctOf(SUPPLY.packageVerified, TOTAL)}% of total`,
+              statId: "verified-package" as const,
+            },
+          ] as const
+        ).map((stat) => {
+          const destination = mcpSecurityReportStatDestination(stat.statId);
+          if (!destination) return null;
+          return (
+            <DataStat
+              key={stat.statId}
+              icon={stat.icon}
+              label={stat.label}
+              value={stat.value}
+              hint={stat.hint}
+              to={destination.to}
+              search={destination.search}
+              onNavigate={() => trackStat(stat.statId)}
+            />
+          );
+        })}
       </div>
 
       <DataSection
@@ -354,14 +366,20 @@ function McpSecurityReportPage() {
             <li>Prefer verified packages and checksummed artifacts over unpinned installs.</li>
             <li>
               Read the{" "}
-              <Link
-                to="/guides/$slug"
-                params={{ slug: "threat-model-mcp-servers-before-installation" }}
-                onClick={() => trackMcpSecurityReportEgress("threat-model-guide")}
-                className="text-ink underline-offset-2 hover:underline"
-              >
-                MCP threat-model guide
-              </Link>{" "}
+              {(() => {
+                const destination = mcpSecurityReportRouteDestination("threat-model-guide");
+                if (!destination || !("params" in destination)) return "MCP threat-model guide";
+                return (
+                  <Link
+                    to={destination.to}
+                    params={destination.params}
+                    onClick={() => trackMcpSecurityReportEgress("threat-model-guide")}
+                    className="text-ink underline-offset-2 hover:underline"
+                  >
+                    MCP threat-model guide
+                  </Link>
+                );
+              })()}{" "}
               before a team rollout.
             </li>
           </ul>
@@ -392,27 +410,39 @@ function McpSecurityReportPage() {
             heyclau.de/mcp-security-report
           </a>{" "}
           with the data-as-of date. See also the{" "}
-          <Link
-            to="/state-of-mcp-servers"
-            onClick={() => trackMcpSecurityReportEgress("state-of-mcp-servers")}
-            className="text-ink underline-offset-2 hover:underline"
-          >
-            State of MCP Servers
-          </Link>{" "}
+          {(() => {
+            const destination = mcpSecurityReportRouteDestination("state-of-mcp-servers");
+            if (!destination || "params" in destination) return "State of MCP Servers";
+            return (
+              <Link
+                to={destination.to}
+                onClick={() => trackMcpSecurityReportEgress("state-of-mcp-servers")}
+                className="text-ink underline-offset-2 hover:underline"
+              >
+                State of MCP Servers
+              </Link>
+            );
+          })()}{" "}
           report. Browse all{" "}
-          <Link
-            to="/$category"
-            params={{ category: "mcp" }}
-            onClick={() =>
-              trackEvent(
-                mcpSecurityReportCategoryBrowseAnalyticsEvent(),
-                mcpSecurityReportCategoryBrowseAnalyticsData(TOTAL),
-              )
-            }
-            className="text-ink underline-offset-2 hover:underline"
-          >
-            MCP servers
-          </Link>
+          {(() => {
+            const destination = mcpSecurityReportRouteDestination("mcp-category");
+            if (!destination || !("params" in destination)) return "MCP servers";
+            return (
+              <Link
+                to={destination.to}
+                params={destination.params}
+                onClick={() =>
+                  trackEvent(
+                    mcpSecurityReportCategoryBrowseAnalyticsEvent(),
+                    mcpSecurityReportCategoryBrowseAnalyticsData(TOTAL),
+                  )
+                }
+                className="text-ink underline-offset-2 hover:underline"
+              >
+                MCP servers
+              </Link>
+            );
+          })()}
           .
         </p>
       </section>

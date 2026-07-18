@@ -18,6 +18,7 @@ import {
   compareRolloutReadinessEntryAnalyticsEvent,
   compareScenarioRankingEntryAnalyticsData,
   compareScenarioRankingEntryAnalyticsEvent,
+  comparePanelEntryDestination,
   parseComparePanelEntryRef,
 } from "@/lib/compare-panel-entry-cta-events-lib";
 
@@ -162,6 +163,12 @@ describe("compare panel entry cta events lib", () => {
       slug: "browser",
     });
     expect(parseComparePanelEntryRef("invalid")).toBeNull();
+    expect(comparePanelEntryDestination("mcp", "browser")).toEqual({
+      to: "/entry/$category/$slug",
+      params: { category: "mcp", slug: "browser" },
+    });
+    expect(comparePanelEntryDestination("", "browser")).toBeNull();
+    expect(comparePanelEntryDestination("mcp", "")).toBeNull();
     expect(comparePageEvidenceGapsSurface()).toBe("compare-page-evidence-gaps");
     expect(compareDrawerEvidenceGapsSurface()).toBe(
       "compare-drawer-evidence-gaps",

@@ -25,6 +25,7 @@ import {
   stateReportDistRowAnalyticsEvent,
   stateReportEgressAnalyticsData,
   stateReportEgressAnalyticsEvent,
+  stateReportEgressRouteDestination,
   stateReportStatAnalyticsData,
   stateReportStatAnalyticsEvent,
   stateReportStatDestination,
@@ -196,35 +197,53 @@ function StateOfAiAgentsPage() {
             heyclau.de/state-of-ai-agents
           </a>{" "}
           with the data-as-of date. See also the{" "}
-          <Link
-            to="/state-of-agent-skills"
-            onClick={() => trackStateReportEgress("agent-skills")}
-            className="text-ink underline-offset-2 hover:underline"
-          >
-            State of Agent Skills
-          </Link>{" "}
+          {(() => {
+            const destination = stateReportEgressRouteDestination("agent-skills");
+            if (!destination) return "State of Agent Skills";
+            return (
+              <Link
+                to={destination.to}
+                onClick={() => trackStateReportEgress("agent-skills")}
+                className="text-ink underline-offset-2 hover:underline"
+              >
+                State of Agent Skills
+              </Link>
+            );
+          })()}{" "}
           and the broader{" "}
-          <Link
-            to="/state-of-claude-tooling"
-            onClick={() => trackStateReportEgress("claude-tooling")}
-            className="text-ink underline-offset-2 hover:underline"
-          >
-            State of Claude Tooling
-          </Link>
+          {(() => {
+            const destination = stateReportEgressRouteDestination("claude-tooling");
+            if (!destination) return "State of Claude Tooling";
+            return (
+              <Link
+                to={destination.to}
+                onClick={() => trackStateReportEgress("claude-tooling")}
+                className="text-ink underline-offset-2 hover:underline"
+              >
+                State of Claude Tooling
+              </Link>
+            );
+          })()}
           . Browse all{" "}
-          <Link
-            to="/$category"
-            params={{ category: "agents" }}
-            onClick={() =>
-              trackEvent(
-                stateReportCategoryBrowseAnalyticsEvent(),
-                stateReportCategoryBrowseAnalyticsData(REPORT_ID, "agents", MODEL.total, 0, 1),
-              )
-            }
-            className="text-ink underline-offset-2 hover:underline"
-          >
-            agents
-          </Link>
+          {(() => {
+            const destination = stateReportEgressRouteDestination("category", "agents");
+            if (!destination || !("params" in destination)) return "agents";
+            return (
+              <Link
+                to={destination.to}
+                params={destination.params}
+                onClick={() =>
+                  trackEvent(
+                    stateReportCategoryBrowseAnalyticsEvent(),
+                    stateReportCategoryBrowseAnalyticsData(REPORT_ID, "agents", MODEL.total, 0, 1),
+                  )
+                }
+                className="text-ink underline-offset-2 hover:underline"
+              >
+                agents
+              </Link>
+            );
+          })()}
           .
         </p>
       </section>

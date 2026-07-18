@@ -20,6 +20,7 @@ import { trackEvent } from "@/lib/analytics";
 import {
   compareCuratedEgressAnalyticsData,
   compareCuratedEgressAnalyticsEvent,
+  compareCuratedEgressDestination,
   compareCuratedNotFoundEgressAnalyticsData,
   compareCuratedNotFoundEgressAnalyticsEvent,
 } from "@/lib/compare-curated-egress-cta-events";
@@ -65,23 +66,28 @@ export const Route = createFileRoute("/compare/$slug")({
     };
   },
   component: ComparisonPage,
-  notFoundComponent: () => (
-    <div className="mx-auto max-w-2xl px-6 py-24 text-center">
-      <h1 className="h-display-2 text-ink">Comparison not found</h1>
-      <Link
-        to="/compare"
-        className="mt-4 inline-block text-ink-muted hover:text-ink"
-        onClick={() =>
-          trackEvent(
-            compareCuratedNotFoundEgressAnalyticsEvent(),
-            compareCuratedNotFoundEgressAnalyticsData(),
-          )
-        }
-      >
-        ← Build your own comparison
-      </Link>
-    </div>
-  ),
+  notFoundComponent: () => {
+    const destination = compareCuratedEgressDestination("not-found");
+    return (
+      <div className="mx-auto max-w-2xl px-6 py-24 text-center">
+        <h1 className="h-display-2 text-ink">Comparison not found</h1>
+        {destination ? (
+          <Link
+            to={destination.to}
+            className="mt-4 inline-block text-ink-muted hover:text-ink"
+            onClick={() =>
+              trackEvent(
+                compareCuratedNotFoundEgressAnalyticsEvent(),
+                compareCuratedNotFoundEgressAnalyticsData(),
+              )
+            }
+          >
+            ← Build your own comparison
+          </Link>
+        ) : null}
+      </div>
+    );
+  },
 });
 
 function ComparisonPage() {
@@ -115,21 +121,30 @@ function ComparisonPage() {
             ))}
           </div>
         ) : null}
-        {interactiveSearch ? (
-          <Link
-            to="/compare"
-            search={interactiveSearch}
-            className="mt-4 inline-flex items-center gap-1.5 text-sm text-ink-muted hover:text-ink"
-            onClick={() =>
-              trackEvent(
-                compareCuratedEgressAnalyticsEvent(),
-                compareCuratedEgressAnalyticsData("interactive", entries.length, true),
-              )
-            }
-          >
-            <ArrowLeft className="h-4 w-4" /> {interactiveLinkLabel}
-          </Link>
-        ) : null}
+        {interactiveSearch
+          ? (() => {
+              const destination = compareCuratedEgressDestination(
+                "interactive",
+                interactiveSearch.ids,
+              );
+              if (!destination || !("search" in destination)) return null;
+              return (
+                <Link
+                  to={destination.to}
+                  search={destination.search}
+                  className="mt-4 inline-flex items-center gap-1.5 text-sm text-ink-muted hover:text-ink"
+                  onClick={() =>
+                    trackEvent(
+                      compareCuratedEgressAnalyticsEvent(),
+                      compareCuratedEgressAnalyticsData("interactive", entries.length, true),
+                    )
+                  }
+                >
+                  <ArrowLeft className="h-4 w-4" /> {interactiveLinkLabel}
+                </Link>
+              );
+            })()
+          : null}
       </header>
 
       <div className="mt-8">
