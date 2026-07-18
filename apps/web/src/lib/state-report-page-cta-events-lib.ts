@@ -102,3 +102,85 @@ export function stateReportStatAnalyticsData(
     destination,
   };
 }
+
+/** Browse/quality destination for a state-report headline stat. */
+export type StateReportStatBrowseSearch = {
+  category?: string;
+  source?: string;
+  signal?: string;
+};
+
+export type StateReportStatDestination = {
+  to: "/browse" | "/quality";
+  search?: StateReportStatBrowseSearch;
+  destination: "browse" | "quality";
+};
+
+/**
+ * Map a state-report headline stat to browse/quality egress.
+ * Wired for claude-tooling / mcp-servers / claude-code-hooks; other report
+ * ids return null so open PRs covering ai-agents/skills stay conflict-free.
+ */
+export function stateReportStatDestination(
+  reportId: string,
+  statKey: string,
+): StateReportStatDestination | null {
+  switch (reportId) {
+    case "claude-tooling":
+      switch (statKey) {
+        case "source-backed":
+          return {
+            to: "/browse",
+            search: { source: "source-backed" },
+            destination: "browse",
+          };
+        case "reviewed":
+          return { to: "/quality", destination: "quality" };
+        case "total":
+        case "categories":
+          return { to: "/browse", destination: "browse" };
+        default:
+          return null;
+      }
+    case "mcp-servers":
+      switch (statKey) {
+        case "source-backed":
+          return {
+            to: "/browse",
+            search: { category: "mcp", source: "source-backed" },
+            destination: "browse",
+          };
+        case "total":
+        case "remote":
+        case "local":
+          return {
+            to: "/browse",
+            search: { category: "mcp" },
+            destination: "browse",
+          };
+        default:
+          return null;
+      }
+    case "claude-code-hooks":
+      switch (statKey) {
+        case "safety-privacy":
+          return {
+            to: "/browse",
+            search: { category: "hooks", signal: "safety-notes" },
+            destination: "browse",
+          };
+        case "total":
+        case "events":
+        case "simple":
+          return {
+            to: "/browse",
+            search: { category: "hooks" },
+            destination: "browse",
+          };
+        default:
+          return null;
+      }
+    default:
+      return null;
+  }
+}

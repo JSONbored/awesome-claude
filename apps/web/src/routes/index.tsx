@@ -36,8 +36,10 @@ import {
   homeCompareRailCtaAnalyticsEvent,
   homeContributeCtaAnalyticsData,
   homeContributeCtaAnalyticsEvent,
+  homeContributeCtaDestination,
   homeHeroCtaAnalyticsData,
   homeHeroCtaAnalyticsEvent,
+  homeHeroCtaDestination,
   homeHeroExampleSearchAnalyticsData,
   homeHeroExampleSearchAnalyticsEvent,
   homePopularSearchAnalyticsData,
@@ -46,6 +48,8 @@ import {
   homeRailCtaAnalyticsEvent,
   homeTrustStatAnalyticsData,
   homeTrustStatAnalyticsEvent,
+  homeTrustStatDestination,
+  type HomeContributeCtaId,
   type HomeTrustStatId,
 } from "@/lib/home-page-cta-events";
 import { useRecents } from "@/lib/recents";
@@ -282,7 +286,7 @@ function Home() {
             </div>
             <div className="mt-5 flex flex-wrap items-center gap-2 text-sm">
               <Link
-                to="/browse"
+                to={homeHeroCtaDestination("browse-all")?.to ?? "/browse"}
                 onClick={() =>
                   trackEvent(homeHeroCtaAnalyticsEvent(), homeHeroCtaAnalyticsData("browse-all"))
                 }
@@ -292,7 +296,10 @@ function Home() {
               </Link>
               <Link
                 to="/integrations/$slug"
-                params={{ slug: "mcp-server" }}
+                params={(() => {
+                  const dest = homeHeroCtaDestination("setup-mcp");
+                  return dest?.to === "/integrations/$slug" ? dest.params : { slug: "mcp-server" };
+                })()}
                 title="View the MCP setup snippet and config"
                 aria-label="Set up the HeyClaude MCP server inside Claude Code"
                 onClick={() =>
@@ -303,7 +310,7 @@ function Home() {
                 <Server className="h-4 w-4" /> Set up MCP
               </Link>
               <Link
-                to="/best"
+                to={homeHeroCtaDestination("best")?.to ?? "/best"}
                 onClick={() =>
                   trackEvent(homeHeroCtaAnalyticsEvent(), homeHeroCtaAnalyticsData("best"))
                 }
@@ -319,49 +326,59 @@ function Home() {
       {/* Trust strip — moved up under hero */}
       <section className="mx-auto max-w-page px-4 py-8 sm:px-6">
         <div className="grid gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-5">
-          <TrustStat
-            icon={ShieldCheck}
-            label="Trusted"
-            value={TRUSTED_COUNT}
-            hint="metadata reviewed"
-            to="/browse"
-            search={{ trust: "trusted" }}
-            statId="trusted"
-          />
-          <TrustStat
-            icon={GitBranch}
-            label="Source-backed"
-            value={SOURCE_BACKED_COUNT}
-            hint="repo verified"
-            to="/browse"
-            search={{ source: "source-backed" }}
-            statId="source-backed"
-          />
-          <TrustStat
-            icon={Sparkles}
-            label="Reviewed"
-            value={REVIEWED_COUNT}
-            hint="maintainer-checked"
-            to="/browse"
-            search={{ sort: "newest" }}
-            statId="reviewed"
-          />
-          <TrustStat
-            icon={Flame}
-            label="Live signals"
-            value={TOTAL}
-            hint="tracked entries"
-            to="/trending"
-            statId="live-signals"
-          />
-          <TrustStat
-            icon={Package}
-            label="Categories"
-            value={CATEGORIES.length}
-            hint="surfaces indexed"
-            to="/browse"
-            statId="categories"
-          />
+          {(
+            [
+              {
+                icon: ShieldCheck,
+                label: "Trusted",
+                value: TRUSTED_COUNT,
+                hint: "metadata reviewed",
+                statId: "trusted" as const,
+              },
+              {
+                icon: GitBranch,
+                label: "Source-backed",
+                value: SOURCE_BACKED_COUNT,
+                hint: "repo verified",
+                statId: "source-backed" as const,
+              },
+              {
+                icon: Sparkles,
+                label: "Reviewed",
+                value: REVIEWED_COUNT,
+                hint: "maintainer-checked",
+                statId: "reviewed" as const,
+              },
+              {
+                icon: Flame,
+                label: "Live signals",
+                value: TOTAL,
+                hint: "tracked entries",
+                statId: "live-signals" as const,
+              },
+              {
+                icon: Package,
+                label: "Categories",
+                value: CATEGORIES.length,
+                hint: "surfaces indexed",
+                statId: "categories" as const,
+              },
+            ] as const
+          ).map((stat) => {
+            const destination = homeTrustStatDestination(stat.statId);
+            return (
+              <TrustStat
+                key={stat.statId}
+                icon={stat.icon}
+                label={stat.label}
+                value={stat.value}
+                hint={stat.hint}
+                to={destination?.to}
+                search={destination?.search}
+                statId={stat.statId}
+              />
+            );
+          })}
         </div>
       </section>
 
@@ -605,42 +622,50 @@ function Home() {
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Link
-                to="/submit"
-                onClick={() =>
-                  trackEvent(
-                    homeContributeCtaAnalyticsEvent(),
-                    homeContributeCtaAnalyticsData("submit"),
-                  )
-                }
-                className="inline-flex h-10 items-center gap-1.5 rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink hover:opacity-90"
-              >
-                Submit a resource <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link
-                to="/claim"
-                onClick={() =>
-                  trackEvent(
-                    homeContributeCtaAnalyticsEvent(),
-                    homeContributeCtaAnalyticsData("claim"),
-                  )
-                }
-                className="inline-flex h-10 items-center rounded-md border border-background/20 px-4 text-sm font-medium hover:bg-background/10"
-              >
-                Claim listing
-              </Link>
-              <Link
-                to="/api-docs"
-                onClick={() =>
-                  trackEvent(
-                    homeContributeCtaAnalyticsEvent(),
-                    homeContributeCtaAnalyticsData("api-docs"),
-                  )
-                }
-                className="inline-flex h-10 items-center rounded-md border border-transparent px-2 text-sm font-medium text-background/70 hover:text-background"
-              >
-                Submission spec →
-              </Link>
+              {(
+                [
+                  {
+                    ctaId: "submit" as const,
+                    className:
+                      "inline-flex h-10 items-center gap-1.5 rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink hover:opacity-90",
+                    children: (
+                      <>
+                        Submit a resource <ArrowRight className="h-4 w-4" />
+                      </>
+                    ),
+                  },
+                  {
+                    ctaId: "claim" as const,
+                    className:
+                      "inline-flex h-10 items-center rounded-md border border-background/20 px-4 text-sm font-medium hover:bg-background/10",
+                    children: <>Claim listing</>,
+                  },
+                  {
+                    ctaId: "api-docs" as const,
+                    className:
+                      "inline-flex h-10 items-center rounded-md border border-transparent px-2 text-sm font-medium text-background/70 hover:text-background",
+                    children: <>Submission spec →</>,
+                  },
+                ] as const
+              ).map((cta) => {
+                const destination = homeContributeCtaDestination(cta.ctaId);
+                if (!destination) return null;
+                return (
+                  <Link
+                    key={cta.ctaId}
+                    to={destination.to}
+                    onClick={() =>
+                      trackEvent(
+                        homeContributeCtaAnalyticsEvent(),
+                        homeContributeCtaAnalyticsData(cta.ctaId as HomeContributeCtaId),
+                      )
+                    }
+                    className={cta.className}
+                  >
+                    {cta.children}
+                  </Link>
+                );
+              })}
             </div>
           </div>
         </div>

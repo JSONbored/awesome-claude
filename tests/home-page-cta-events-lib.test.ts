@@ -9,10 +9,13 @@ import {
   homeCompareRailCtaAnalyticsEvent,
   homeContributeCtaAnalyticsData,
   homeContributeCtaAnalyticsEvent,
+  homeContributeCtaDestination,
   homeHeroCtaAnalyticsData,
   homeHeroCtaAnalyticsEvent,
+  homeHeroCtaDestination,
   homeHeroExampleSearchAnalyticsData,
   homeHeroExampleSearchAnalyticsEvent,
+  homeIntentBrowseSearch,
   homeIntentSelectAnalyticsData,
   homeIntentSelectAnalyticsEvent,
   homePopularSearchAnalyticsData,
@@ -29,6 +32,7 @@ import {
   homeRailCtaAnalyticsEvent,
   homeTrustStatAnalyticsData,
   homeTrustStatAnalyticsEvent,
+  homeTrustStatDestination,
 } from "@/lib/home-page-cta-events-lib";
 
 describe("home page cta events lib", () => {
@@ -133,5 +137,70 @@ describe("home page cta events lib", () => {
       rowIndex: 1,
       rowCount: 4,
     });
+  });
+
+  it("maps home trust strip stats to browse destinations", () => {
+    expect(homeTrustStatDestination("trusted")).toEqual({
+      to: "/browse",
+      search: { trust: "trusted" },
+    });
+    expect(homeTrustStatDestination("source-backed")).toEqual({
+      to: "/browse",
+      search: { source: "source-backed" },
+    });
+    expect(homeTrustStatDestination("reviewed")).toEqual({
+      to: "/browse",
+      search: { signal: "reviewed" },
+    });
+    expect(homeTrustStatDestination("live-signals")).toEqual({
+      to: "/trending",
+    });
+    expect(homeTrustStatDestination("categories")).toEqual({
+      to: "/browse",
+    });
+    expect(homeTrustStatDestination("unknown")).toBeNull();
+  });
+
+  it("maps home intent chips to browse search patches", () => {
+    expect(homeIntentBrowseSearch("ship-faster")).toEqual({
+      category: "agents",
+      sort: "popular",
+    });
+    expect(homeIntentBrowseSearch("review-safely")).toEqual({
+      q: "code review",
+      trust: "trusted",
+      sort: "popular",
+    });
+    expect(homeIntentBrowseSearch("connect-data")).toEqual({
+      category: "mcp",
+      sort: "popular",
+    });
+    expect(homeIntentBrowseSearch("automate")).toEqual({
+      q: "automation",
+      category: "hooks",
+      sort: "popular",
+    });
+    expect(homeIntentBrowseSearch("harden-agents")).toEqual({
+      category: "hooks",
+      trust: "trusted",
+      sort: "popular",
+    });
+    expect(homeIntentBrowseSearch("unknown")).toBeNull();
+  });
+
+  it("maps home hero and contribute CTAs to destinations", () => {
+    expect(homeHeroCtaDestination("browse-all")).toEqual({ to: "/browse" });
+    expect(homeHeroCtaDestination("setup-mcp")).toEqual({
+      to: "/integrations/$slug",
+      params: { slug: "mcp-server" },
+    });
+    expect(homeHeroCtaDestination("best")).toEqual({ to: "/best" });
+    expect(homeHeroCtaDestination("unknown")).toBeNull();
+    expect(homeContributeCtaDestination("submit")).toEqual({ to: "/submit" });
+    expect(homeContributeCtaDestination("claim")).toEqual({ to: "/claim" });
+    expect(homeContributeCtaDestination("api-docs")).toEqual({
+      to: "/api-docs",
+    });
+    expect(homeContributeCtaDestination("unknown")).toBeNull();
   });
 });

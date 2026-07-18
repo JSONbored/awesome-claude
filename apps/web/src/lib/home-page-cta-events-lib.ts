@@ -193,3 +193,94 @@ export function homePulseChangelogRowAnalyticsData(
     rowCount,
   };
 }
+
+/** Browse/trending destination for a home trust-strip headline stat. */
+export type HomeTrustStatDestination = {
+  to: "/browse" | "/trending";
+  search?: {
+    trust?: string;
+    source?: string;
+    signal?: string;
+  };
+};
+
+export function homeTrustStatDestination(statId: string): HomeTrustStatDestination | null {
+  switch (statId) {
+    case "trusted":
+      return { to: "/browse", search: { trust: "trusted" } };
+    case "source-backed":
+      return { to: "/browse", search: { source: "source-backed" } };
+    case "reviewed":
+      return { to: "/browse", search: { signal: "reviewed" } };
+    case "live-signals":
+      return { to: "/trending" };
+    case "categories":
+      return { to: "/browse" };
+    default:
+      return null;
+  }
+}
+
+/** Browse search patch for a home intent chip. */
+export type HomeIntentBrowseSearch = {
+  q?: string;
+  category?: string;
+  trust?: string;
+  source?: string;
+  platform?: string;
+  sort?: "popular" | "newest" | "title";
+};
+
+export function homeIntentBrowseSearch(intentId: string): HomeIntentBrowseSearch | null {
+  switch (intentId) {
+    case "ship-faster":
+      return { category: "agents", sort: "popular" };
+    case "review-safely":
+      return { q: "code review", trust: "trusted", sort: "popular" };
+    case "connect-data":
+      return { category: "mcp", sort: "popular" };
+    case "automate":
+      return { q: "automation", category: "hooks", sort: "popular" };
+    case "harden-agents":
+      return { category: "hooks", trust: "trusted", sort: "popular" };
+    default:
+      return null;
+  }
+}
+
+/** In-app destination for a home hero CTA. */
+export type HomeHeroCtaDestination =
+  | { to: "/browse" }
+  | { to: "/best" }
+  | { to: "/integrations/$slug"; params: { slug: string } };
+
+export function homeHeroCtaDestination(ctaId: string): HomeHeroCtaDestination | null {
+  switch (ctaId) {
+    case "browse-all":
+      return { to: "/browse" };
+    case "setup-mcp":
+      return { to: "/integrations/$slug", params: { slug: "mcp-server" } };
+    case "best":
+      return { to: "/best" };
+    default:
+      return null;
+  }
+}
+
+/** In-app destination for a home contribute CTA. */
+export type HomeContributeCtaDestination = {
+  to: "/submit" | "/claim" | "/api-docs";
+};
+
+export function homeContributeCtaDestination(ctaId: string): HomeContributeCtaDestination | null {
+  switch (ctaId) {
+    case "submit":
+      return { to: "/submit" };
+    case "claim":
+      return { to: "/claim" };
+    case "api-docs":
+      return { to: "/api-docs" };
+    default:
+      return null;
+  }
+}

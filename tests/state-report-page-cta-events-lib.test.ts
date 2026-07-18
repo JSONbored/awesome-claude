@@ -10,6 +10,7 @@ import {
   stateReportEgressAnalyticsEvent,
   stateReportStatAnalyticsData,
   stateReportStatAnalyticsEvent,
+  stateReportStatDestination,
 } from "@/lib/state-report-page-cta-events-lib";
 
 describe("state report page cta events lib", () => {
@@ -79,5 +80,80 @@ describe("state report page cta events lib", () => {
       statKey: "total",
       destination: "browse",
     });
+  });
+
+  it("maps state report headline stats to browse destinations", () => {
+    expect(stateReportStatDestination("claude-tooling", "total")).toEqual({
+      to: "/browse",
+      destination: "browse",
+    });
+    expect(stateReportStatDestination("claude-tooling", "categories")).toEqual({
+      to: "/browse",
+      destination: "browse",
+    });
+    expect(
+      stateReportStatDestination("claude-tooling", "source-backed"),
+    ).toEqual({
+      to: "/browse",
+      search: { source: "source-backed" },
+      destination: "browse",
+    });
+    expect(stateReportStatDestination("claude-tooling", "reviewed")).toEqual({
+      to: "/quality",
+      destination: "quality",
+    });
+    expect(stateReportStatDestination("claude-tooling", "unknown")).toBeNull();
+
+    expect(stateReportStatDestination("mcp-servers", "total")).toEqual({
+      to: "/browse",
+      search: { category: "mcp" },
+      destination: "browse",
+    });
+    expect(stateReportStatDestination("mcp-servers", "remote")).toEqual({
+      to: "/browse",
+      search: { category: "mcp" },
+      destination: "browse",
+    });
+    expect(stateReportStatDestination("mcp-servers", "local")).toEqual({
+      to: "/browse",
+      search: { category: "mcp" },
+      destination: "browse",
+    });
+    expect(stateReportStatDestination("mcp-servers", "source-backed")).toEqual({
+      to: "/browse",
+      search: { category: "mcp", source: "source-backed" },
+      destination: "browse",
+    });
+    expect(stateReportStatDestination("mcp-servers", "unknown")).toBeNull();
+
+    expect(stateReportStatDestination("claude-code-hooks", "total")).toEqual({
+      to: "/browse",
+      search: { category: "hooks" },
+      destination: "browse",
+    });
+    expect(stateReportStatDestination("claude-code-hooks", "events")).toEqual({
+      to: "/browse",
+      search: { category: "hooks" },
+      destination: "browse",
+    });
+    expect(stateReportStatDestination("claude-code-hooks", "simple")).toEqual({
+      to: "/browse",
+      search: { category: "hooks" },
+      destination: "browse",
+    });
+    expect(
+      stateReportStatDestination("claude-code-hooks", "safety-privacy"),
+    ).toEqual({
+      to: "/browse",
+      search: { category: "hooks", signal: "safety-notes" },
+      destination: "browse",
+    });
+    expect(
+      stateReportStatDestination("claude-code-hooks", "unknown"),
+    ).toBeNull();
+
+    expect(stateReportStatDestination("ai-agents", "total")).toBeNull();
+    expect(stateReportStatDestination("agent-skills", "total")).toBeNull();
+    expect(stateReportStatDestination("unknown-report", "total")).toBeNull();
   });
 });
