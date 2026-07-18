@@ -211,8 +211,13 @@ export function stateReportStatDestination(
             search: { category: "skills", signal: "trusted-package" },
             destination: "browse",
           };
-        case "total":
         case "validated":
+          return {
+            to: "/browse",
+            search: { category: "skills", signal: "reviewed" },
+            destination: "browse",
+          };
+        case "total":
         case "packs":
           return {
             to: "/browse",

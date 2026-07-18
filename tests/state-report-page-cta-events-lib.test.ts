@@ -182,7 +182,7 @@ describe("state report page cta events lib", () => {
     });
     expect(stateReportStatDestination("agent-skills", "validated")).toEqual({
       to: "/browse",
-      search: { category: "skills" },
+      search: { category: "skills", signal: "reviewed" },
       destination: "browse",
     });
     expect(stateReportStatDestination("agent-skills", "packs")).toEqual({
