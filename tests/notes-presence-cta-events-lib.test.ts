@@ -76,6 +76,24 @@ describe("notes presence cta events lib", () => {
       noteKind: "privacy",
       present: true,
     });
+    expect(
+      notesPresenceAnalyticsData("safety", true, "validators-attention"),
+    ).toEqual({
+      surface: "validators-attention",
+      noteKind: "safety",
+      present: true,
+    });
+    expect(
+      notesPresenceAnalyticsData(
+        "privacy",
+        false,
+        "validators-recent-reviewed",
+      ),
+    ).toEqual({
+      surface: "validators-recent-reviewed",
+      noteKind: "privacy",
+      present: false,
+    });
     expect(notesPresenceAnalyticsData("privacy", true, "browse-grid")).toEqual({
       surface: "browse-grid",
       noteKind: "privacy",

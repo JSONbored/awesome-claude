@@ -33,7 +33,9 @@ export type NotesPresenceSurface =
   | "platform-category"
   | "detail-related"
   | "detail-guides"
-  | "contributor-profile";
+  | "contributor-profile"
+  | "validators-attention"
+  | "validators-recent-reviewed";
 
 export type NotesPresenceKind = "safety" | "privacy";
 

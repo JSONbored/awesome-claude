@@ -52,6 +52,18 @@ describe("install risk badge cta events lib", () => {
         risk: "low",
       },
     );
+    expect(
+      installRiskBadgeAnalyticsData("review", "validators-attention"),
+    ).toEqual({
+      surface: "validators-attention",
+      risk: "review",
+    });
+    expect(
+      installRiskBadgeAnalyticsData("high", "validators-recent-reviewed"),
+    ).toEqual({
+      surface: "validators-recent-reviewed",
+      risk: "high",
+    });
     expect(installRiskBadgeAnalyticsData("high", "browse-grid")).toEqual({
       surface: "browse-grid",
       risk: "high",

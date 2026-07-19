@@ -33,7 +33,9 @@ export type InstallRiskBadgeSurface =
   | "platform-category"
   | "detail-related"
   | "detail-guides"
-  | "contributor-profile";
+  | "contributor-profile"
+  | "validators-attention"
+  | "validators-recent-reviewed";
 
 export function installRiskBadgeAnalyticsEvent(): string {
   return "install_risk_badge_click";

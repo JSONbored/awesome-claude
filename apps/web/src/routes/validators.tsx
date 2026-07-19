@@ -10,7 +10,13 @@ import {
   REVIEW_SUMMARY,
   type Expertise,
 } from "@/data/validators";
-import { CategoryPill, SourceBadge, TrustBadge } from "@/components/badges";
+import {
+  CategoryPill,
+  SourceBadge,
+  TrustBadge,
+  InstallRiskBadge,
+  NotesPresenceChips,
+} from "@/components/badges";
 import { FilterChip, FilterChipGroup } from "@/components/filter-chip";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { absoluteUrl } from "@/lib/seo";
@@ -305,6 +311,13 @@ function ValidatorsPage() {
                               )
                             }
                           />
+                          <InstallRiskBadge
+                            entry={entry}
+                            size="xs"
+                            asLink
+                            surface="validators-attention"
+                          />
+                          <NotesPresenceChips entry={entry} asLink surface="validators-attention" />
                         </div>
                         {(() => {
                           const destination = insightsPageEntryDestination(
@@ -392,6 +405,13 @@ function ValidatorsPage() {
                         )
                       }
                     />
+                    <InstallRiskBadge
+                      entry={entry}
+                      size="xs"
+                      asLink
+                      surface="validators-recent-reviewed"
+                    />
+                    <NotesPresenceChips entry={entry} asLink surface="validators-recent-reviewed" />
                   </div>
                   {(() => {
                     const destination = insightsPageEntryDestination(entry.category, entry.slug);
