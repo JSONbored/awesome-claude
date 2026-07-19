@@ -130,11 +130,15 @@ export function stateReportStatDestination(
         case "source-backed":
           return {
             to: "/browse",
-            search: { source: "source-backed" },
+            search: { signal: "source-backed" },
             destination: "browse",
           };
         case "reviewed":
-          return { to: "/quality", destination: "quality" };
+          return {
+            to: "/browse",
+            search: { signal: "reviewed" },
+            destination: "browse",
+          };
         case "total":
         case "categories":
           return { to: "/browse", destination: "browse" };
@@ -146,7 +150,7 @@ export function stateReportStatDestination(
         case "source-backed":
           return {
             to: "/browse",
-            search: { category: "mcp", source: "source-backed" },
+            search: { category: "mcp", signal: "source-backed" },
             destination: "browse",
           };
         case "total":
@@ -190,7 +194,7 @@ export function stateReportStatDestination(
         case "source-backed":
           return {
             to: "/browse",
-            search: { category: "agents", source: "source-backed" },
+            search: { category: "agents", signal: "source-backed" },
             destination: "browse",
           };
         case "total":

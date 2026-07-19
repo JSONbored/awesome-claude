@@ -47,12 +47,13 @@ describe("validators tools cta events lib", () => {
       destination: "browse",
     });
     expect(validatorsSummaryStatDestination("safety-coverage")).toEqual({
-      to: "/quality",
-      destination: "quality",
+      to: "/browse",
+      search: { signal: "reviewed" },
+      destination: "browse",
     });
     expect(validatorsSummaryStatDestination("source-backed")).toEqual({
       to: "/browse",
-      search: { source: "source-backed" },
+      search: { signal: "source-backed" },
       destination: "browse",
     });
     expect(validatorsSummaryStatDestination("needs-attention")).toEqual({
