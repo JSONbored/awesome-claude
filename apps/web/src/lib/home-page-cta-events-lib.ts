@@ -209,7 +209,7 @@ export function homeTrustStatDestination(statId: string): HomeTrustStatDestinati
     case "trusted":
       return { to: "/browse", search: { trust: "trusted" } };
     case "source-backed":
-      return { to: "/browse", search: { source: "source-backed" } };
+      return { to: "/browse", search: { signal: "source-backed" } };
     case "reviewed":
       return { to: "/browse", search: { signal: "reviewed" } };
     case "live-signals":

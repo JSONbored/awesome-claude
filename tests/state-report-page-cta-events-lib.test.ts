@@ -96,7 +96,7 @@ describe("state report page cta events lib", () => {
       stateReportStatDestination("claude-tooling", "source-backed"),
     ).toEqual({
       to: "/browse",
-      search: { source: "source-backed" },
+      search: { signal: "source-backed" },
       destination: "browse",
     });
     expect(stateReportStatDestination("claude-tooling", "reviewed")).toEqual({
@@ -122,7 +122,7 @@ describe("state report page cta events lib", () => {
     });
     expect(stateReportStatDestination("mcp-servers", "source-backed")).toEqual({
       to: "/browse",
-      search: { category: "mcp", source: "source-backed" },
+      search: { category: "mcp", signal: "source-backed" },
       destination: "browse",
     });
     expect(stateReportStatDestination("mcp-servers", "unknown")).toBeNull();
@@ -165,7 +165,7 @@ describe("state report page cta events lib", () => {
     });
     expect(stateReportStatDestination("ai-agents", "source-backed")).toEqual({
       to: "/browse",
-      search: { category: "agents", source: "source-backed" },
+      search: { category: "agents", signal: "source-backed" },
       destination: "browse",
     });
     expect(stateReportStatDestination("ai-agents", "ready")).toEqual({

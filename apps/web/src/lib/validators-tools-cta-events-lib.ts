@@ -59,7 +59,7 @@ export function validatorsSummaryStatDestination(
     case "source-backed":
       return {
         to: "/browse",
-        search: { source: "source-backed" },
+        search: { signal: "source-backed" },
         destination: "browse",
       };
     case "needs-attention":
