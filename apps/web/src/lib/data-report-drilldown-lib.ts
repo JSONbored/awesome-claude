@@ -41,6 +41,11 @@ const DISCLOSURE_SIGNAL_BY_LABEL: Record<string, string> = {
   "Privacy only": "privacy-notes",
 };
 
+const VERIFICATION_SIGNAL_BY_LABEL: Record<string, string> = {
+  Validated: "reviewed",
+  Production: "reviewed",
+};
+
 const SKILL_TYPE_TAG_BY_LABEL: Record<string, string> = {
   "Capability pack": "capability-pack",
 };
@@ -81,6 +86,10 @@ export function notesSignalFromLabel(label: string): string | undefined {
 
 export function disclosureSignalFromLabel(label: string): string | undefined {
   return DISCLOSURE_SIGNAL_BY_LABEL[label];
+}
+
+export function verificationSignalFromLabel(label: string): string | undefined {
+  return VERIFICATION_SIGNAL_BY_LABEL[label];
 }
 
 export function skillTypeTagFromLabel(label: string): string | undefined {
@@ -216,6 +225,25 @@ export function withSkillTypeDrilldown(rows: DistRow[], category: string): DistR
       ...row,
       rowKey: tag,
       drilldown: tagDrilldown(tag),
+    };
+  });
+}
+
+/** Map skill verification buckets to reviewed browse signal (Draft stays category-only). */
+export function withVerificationDrilldown(rows: DistRow[], category: string): DistRow[] {
+  return rows.map((row) => {
+    const signal = verificationSignalFromLabel(row.label);
+    if (!signal) {
+      return {
+        ...row,
+        rowKey: row.rowKey ?? row.label,
+        drilldown: browseDrilldown({ category }),
+      };
+    }
+    return {
+      ...row,
+      rowKey: signal,
+      drilldown: browseDrilldown({ category, signal }),
     };
   });
 }
@@ -361,9 +389,11 @@ export function withReportDimensionDrilldown(
       return withDisclosureDrilldown(rows, category);
     case "skill-type":
       return withSkillTypeDrilldown(rows, category);
+    case "verification":
+      return withVerificationDrilldown(rows, category);
+    case "complexity":
     case "prerequisites":
     case "maturity":
-    case "verification":
     case "hook-events":
       return withCategoryBrowseDrilldown(rows, category);
     default:
