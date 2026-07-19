@@ -56,6 +56,13 @@ describe("notes presence cta events lib", () => {
       },
     );
     expect(
+      notesPresenceAnalyticsData("privacy", true, "trending-podium"),
+    ).toEqual({
+      surface: "trending-podium",
+      noteKind: "privacy",
+      present: true,
+    });
+    expect(
       notesPresenceAnalyticsData("privacy", true, "contributor-profile"),
     ).toEqual({
       surface: "contributor-profile",

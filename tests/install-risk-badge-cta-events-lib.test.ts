@@ -38,6 +38,10 @@ describe("install risk badge cta events lib", () => {
       surface: "trending-list",
       risk: "review",
     });
+    expect(installRiskBadgeAnalyticsData("high", "trending-podium")).toEqual({
+      surface: "trending-podium",
+      risk: "high",
+    });
     expect(installRiskBadgeAnalyticsData("low", "contributor-profile")).toEqual(
       {
         surface: "contributor-profile",

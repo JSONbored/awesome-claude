@@ -1,7 +1,13 @@
 import * as React from "react";
 import { Link } from "@tanstack/react-router";
 import { Star, ArrowUpRight, TrendingUp } from "lucide-react";
-import { CategoryPill, TrustBadge, SourceBadge } from "@/components/badges";
+import {
+  CategoryPill,
+  TrustBadge,
+  SourceBadge,
+  InstallRiskBadge,
+  NotesPresenceChips,
+} from "@/components/badges";
 import { formatCompact } from "@/lib/format";
 import { trackEvent } from "@/lib/analytics";
 import {
@@ -113,6 +119,8 @@ export function TrendingPodium({ entries }: { entries: TrendingEntry[] }) {
                   )
                 }
               />
+              <InstallRiskBadge entry={e} size="xs" asLink surface="trending-podium" />
+              <NotesPresenceChips entry={e} asLink surface="trending-podium" />
             </div>
             {entryDestination ? (
               <Link

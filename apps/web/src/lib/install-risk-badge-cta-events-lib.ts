@@ -15,6 +15,7 @@ export type InstallRiskBadgeSurface =
   | "peek-panel"
   | "compare-tray"
   | "trending-list"
+  | "trending-podium"
   | "browse-card"
   | "browse-grid"
   | "browse-row"
