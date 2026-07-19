@@ -33,6 +33,8 @@ const PLATFORM_BY_LABEL = Object.fromEntries(
 const NOTES_SIGNAL_BY_LABEL: Record<string, string> = {
   "Safety notes": "safety-notes",
   "Privacy notes": "privacy-notes",
+  // Same proxy as disclosure "Safety & privacy" — browse entries with safety notes.
+  Both: "safety-notes",
 };
 
 const DISCLOSURE_SIGNAL_BY_LABEL: Record<string, string> = {

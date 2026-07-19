@@ -52,7 +52,7 @@ describe("data report drilldown lib", () => {
     expect(platformFromLabel("Unknown")).toBeUndefined();
     expect(notesSignalFromLabel("Safety notes")).toBe("safety-notes");
     expect(notesSignalFromLabel("Privacy notes")).toBe("privacy-notes");
-    expect(notesSignalFromLabel("Both")).toBeUndefined();
+    expect(notesSignalFromLabel("Both")).toBe("safety-notes");
     expect(disclosureSignalFromLabel("Safety & privacy")).toBe("safety-notes");
     expect(disclosureSignalFromLabel("Safety only")).toBe("safety-notes");
     expect(disclosureSignalFromLabel("Privacy only")).toBe("privacy-notes");
@@ -190,7 +190,15 @@ describe("data report drilldown lib", () => {
     ]);
     expect(
       withNotesSignalDrilldown([{ label: "Both", count: 1, pct: 10 }]),
-    ).toEqual([{ label: "Both", count: 1, pct: 10 }]);
+    ).toEqual([
+      {
+        label: "Both",
+        count: 1,
+        pct: 10,
+        rowKey: "safety-notes",
+        drilldown: { kind: "browse", search: { signal: "safety-notes" } },
+      },
+    ]);
     expect(
       withNotesSignalDrilldown(
         [{ label: "Both", count: 1, pct: 10, rowKey: "both" }],
@@ -201,8 +209,11 @@ describe("data report drilldown lib", () => {
         label: "Both",
         count: 1,
         pct: 10,
-        rowKey: "both",
-        drilldown: { kind: "browse", search: { category: "mcp" } },
+        rowKey: "safety-notes",
+        drilldown: {
+          kind: "browse",
+          search: { category: "mcp", signal: "safety-notes" },
+        },
       },
     ]);
     expect(
@@ -212,8 +223,11 @@ describe("data report drilldown lib", () => {
         label: "Both",
         count: 1,
         pct: 10,
-        rowKey: "Both",
-        drilldown: { kind: "browse", search: { category: "mcp" } },
+        rowKey: "safety-notes",
+        drilldown: {
+          kind: "browse",
+          search: { category: "mcp", signal: "safety-notes" },
+        },
       },
     ]);
     expect(
