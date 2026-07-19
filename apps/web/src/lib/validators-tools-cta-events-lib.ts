@@ -43,7 +43,7 @@ export function validatorsSummaryStatAnalyticsData(
 
 export type ValidatorsSummaryStatDestination = {
   to: "/browse" | "/quality";
-  search?: { source?: string };
+  search?: { source?: string; signal?: string };
   destination: "browse" | "quality";
 };
 
