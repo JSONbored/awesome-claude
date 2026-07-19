@@ -42,3 +42,27 @@ describe("hashSearch", () => {
     );
   });
 });
+
+describe("hashSearch delimiter escaping", () => {
+  it("does not collide when content shifts across a field boundary", () => {
+    // Regression: both inputs previously joined to "foo|bar|baz|||" and hashed
+    // to the same value, so two unrelated saved searches shared one alert segment.
+    expect(hashSearch(search({ q: "foo", category: "bar|baz" }))).not.toBe(
+      hashSearch(search({ q: "foo|bar", category: "baz" })),
+    );
+  });
+
+  it("does not collide when a field contains the escape character", () => {
+    expect(hashSearch(search({ q: "a\\", category: "b" }))).not.toBe(
+      hashSearch(search({ q: "a", category: "\b" })),
+    );
+  });
+
+  it("keeps hashes stable for searches without delimiter characters", () => {
+    // Escaping is a no-op for delimiter-free fields, so existing alert
+    // segments keep their key.
+    expect(
+      hashSearch(search({ q: "browser", category: "mcp", trust: "verified" })),
+    ).toBe("7l9kg2");
+  });
+});

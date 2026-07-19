@@ -46,3 +46,27 @@ describe("savedSearchSignature", () => {
     );
   });
 });
+
+describe("savedSearchSignature delimiter escaping", () => {
+  it("does not collide when a tab shifts across a field boundary", () => {
+    // Regression: a tab inside `label` previously merged into the next field,
+    // making two different alert configurations produce one signature.
+    expect(savedSearchSignature([search({ label: "x\ty", q: "z" })])).not.toBe(
+      savedSearchSignature([search({ label: "x", q: "y\tz" })]),
+    );
+  });
+
+  it("does not collide when a newline shifts across an entry boundary", () => {
+    expect(savedSearchSignature([search({ label: "a\nb" })])).not.toBe(
+      savedSearchSignature([search({ label: "a" }), search({ label: "b" })]),
+    );
+  });
+
+  it("keeps signatures stable for delimiter-free fields", () => {
+    expect(
+      savedSearchSignature([
+        search({ id: "1", label: "L", q: "Q", category: "mcp" }),
+      ]),
+    ).toBe("1\tL\tQ\tmcp\t\t\t\t0\t");
+  });
+});
