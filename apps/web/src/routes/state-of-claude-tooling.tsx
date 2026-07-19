@@ -283,7 +283,8 @@ function StateOfClaudeToolingPage() {
               value={stat.value}
               hint={stat.hint}
               to={destination?.to}
-              search={destination?.search}
+              search={destination && "search" in destination ? destination.search : undefined}
+              params={destination && "params" in destination ? destination.params : undefined}
               onNavigate={() => trackStat(stat.key)}
             />
           );

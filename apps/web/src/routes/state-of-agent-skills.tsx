@@ -140,7 +140,8 @@ function StateOfAgentSkillsPage() {
               value={stat.value}
               hint={statHint(stat)}
               to={destination?.to}
-              search={destination?.search}
+              search={destination && "search" in destination ? destination.search : undefined}
+              params={destination && "params" in destination ? destination.params : undefined}
               onNavigate={() => trackStat(stat.key)}
             />
           );

@@ -186,9 +186,9 @@ describe("state report page cta events lib", () => {
       destination: "browse",
     });
     expect(stateReportStatDestination("agent-skills", "packs")).toEqual({
-      to: "/browse",
-      search: { category: "skills" },
-      destination: "browse",
+      to: "/tags/$tag",
+      params: { tag: "capability-pack" },
+      destination: "tag",
     });
     expect(stateReportStatDestination("agent-skills", "packaged")).toEqual({
       to: "/browse",

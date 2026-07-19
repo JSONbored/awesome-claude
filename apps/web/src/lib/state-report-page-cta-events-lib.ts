@@ -94,7 +94,7 @@ export function stateReportStatAnalyticsEvent(): string {
 export function stateReportStatAnalyticsData(
   reportId: StateReportId,
   statKey: string,
-  destination: "browse" | "quality",
+  destination: "browse" | "quality" | "tag",
 ) {
   return {
     reportId,
@@ -103,21 +103,31 @@ export function stateReportStatAnalyticsData(
   };
 }
 
-/** Browse/quality destination for a state-report headline stat. */
+/** Browse/quality/tag destination for a state-report headline stat. */
 export type StateReportStatBrowseSearch = {
   category?: string;
   source?: string;
   signal?: string;
 };
 
-export type StateReportStatDestination = {
-  to: "/browse" | "/quality";
-  search?: StateReportStatBrowseSearch;
-  destination: "browse" | "quality";
-};
+export type StateReportStatDestination =
+  | {
+      to: "/browse";
+      search?: StateReportStatBrowseSearch;
+      destination: "browse";
+    }
+  | {
+      to: "/quality";
+      destination: "quality";
+    }
+  | {
+      to: "/tags/$tag";
+      params: { tag: string };
+      destination: "tag";
+    };
 
 /**
- * Map a state-report headline stat to browse/quality egress.
+ * Map a state-report headline stat to browse/quality/tag egress.
  * Covers all five public state reports (tooling, mcp, hooks, agents, skills).
  */
 export function stateReportStatDestination(
@@ -218,11 +228,16 @@ export function stateReportStatDestination(
             destination: "browse",
           };
         case "total":
-        case "packs":
           return {
             to: "/browse",
             search: { category: "skills" },
             destination: "browse",
+          };
+        case "packs":
+          return {
+            to: "/tags/$tag",
+            params: { tag: "capability-pack" },
+            destination: "tag",
           };
         default:
           return null;

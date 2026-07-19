@@ -45,14 +45,16 @@ export function DataStat({
   hint,
   to,
   search,
+  params,
   onNavigate,
 }: {
   icon: React.ElementType;
   label: string;
   value: number;
   hint: string;
-  to?: "/browse" | "/quality";
+  to?: "/browse" | "/quality" | "/tags/$tag";
   search?: DistBrowseSearch;
+  params?: { tag: string };
   onNavigate?: () => void;
 }) {
   const body = (
@@ -76,6 +78,7 @@ export function DataStat({
       <Link
         to={to}
         search={to === "/browse" ? search : undefined}
+        params={to === "/tags/$tag" ? params : undefined}
         onClick={onNavigate}
         className="block bg-surface p-5 transition-colors duration-200 ease-out hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent/60"
       >
