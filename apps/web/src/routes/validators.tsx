@@ -495,7 +495,7 @@ function SummaryStat({
   value: React.ReactNode;
   help?: string;
   to?: "/browse" | "/quality";
-  search?: { source?: string };
+  search?: { source?: string; signal?: string };
   statId?: ValidatorsSummaryStatId;
   destination?: "browse" | "quality" | "validators-skill-package" | "validators-mcp-config";
 }) {
