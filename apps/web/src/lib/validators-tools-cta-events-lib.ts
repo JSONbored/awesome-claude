@@ -43,7 +43,7 @@ export function validatorsSummaryStatAnalyticsData(
 
 export type ValidatorsSummaryStatDestination = {
   to: "/browse" | "/quality";
-  search?: { source?: string };
+  search?: { source?: string; signal?: string };
   destination: "browse" | "quality";
 };
 
@@ -59,7 +59,7 @@ export function validatorsSummaryStatDestination(
     case "source-backed":
       return {
         to: "/browse",
-        search: { source: "source-backed" },
+        search: { signal: "source-backed" },
         destination: "browse",
       };
     case "needs-attention":

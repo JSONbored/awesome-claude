@@ -52,7 +52,7 @@ describe("validators tools cta events lib", () => {
     });
     expect(validatorsSummaryStatDestination("source-backed")).toEqual({
       to: "/browse",
-      search: { source: "source-backed" },
+      search: { signal: "source-backed" },
       destination: "browse",
     });
     expect(validatorsSummaryStatDestination("needs-attention")).toEqual({

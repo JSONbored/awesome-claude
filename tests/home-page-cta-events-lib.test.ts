@@ -151,7 +151,7 @@ describe("home page cta events lib", () => {
     });
     expect(homeTrustStatDestination("source-backed")).toEqual({
       to: "/browse",
-      search: { source: "source-backed" },
+      search: { signal: "source-backed" },
     });
     expect(homeTrustStatDestination("reviewed")).toEqual({
       to: "/browse",
