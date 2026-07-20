@@ -12,7 +12,10 @@ emails are generated in-worker and sent programmatically.
   `buildDigestEmail`. No tracking pixels.
 - **Confirm (double opt-in):** `api/newsletter/subscribe` emails a signed
   (HMAC) confirm link; `api/public/newsletter/confirm` verifies it (POST, rate
-  limited, single-use, 8 KB body cap) and adds the contact to the Resend audience.
+  limited, 8 KB body cap) and adds the contact to the Resend audience. Token
+  replay is best-effort de-duped in an in-memory `Map` within a single Worker
+  isolate (not durable across isolates); true idempotency comes from Resend's
+  contact-create duplicate handling (HTTP 409).
 - **Welcome:** sent transactionally on first-time confirm.
 - **Weekly digest:** `plugins/newsletter-digest-scheduled.ts`, Cloudflare cron
   `0 16 * * SUN` (Sundays 16:00 UTC). Selects entries added in the last 7 days,
