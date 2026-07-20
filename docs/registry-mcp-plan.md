@@ -22,41 +22,62 @@ artifact directory.
 
 ## Tools
 
-- `search_registry`
-- `server_info`
-- `list_category_entries`
-- `get_recent_updates`
-- `get_related_entries`
-- `get_entry_detail`
-- `get_copyable_asset`
-- `compare_entries`
-- `get_registry_stats`
-- `get_client_setup`
-- `get_compatibility`
-- `get_install_guidance`
-- `get_platform_adapter`
-- `list_distribution_feeds`
-- `get_submission_schema`
-- `validate_submission_draft`
-- `search_duplicate_entries`
-- `build_submission_urls`
-- `get_category_submission_guidance`
-- `prepare_submission_draft`
-- `get_submission_examples`
-- `review_submission_draft`
+Source of truth: `TOOL_DEFINITIONS` in `packages/mcp/src/registry-tools-lib.js`.
+
+- `registry.search`
+- `registry.plan`
+- `registry.recommend`
+- `registry.info`
+- `registry.list`
+- `registry.updates`
+- `entry.related`
+- `entry.detail`
+- `entry.asset`
+- `entry.compare`
+- `registry.stats`
+- `install.setup`
+- `install.compatibility`
+- `install.guidance`
+- `install.adapter`
+- `registry.feeds`
+- `submission.schema`
+- `submission.validate`
+- `submission.duplicates`
+- `submission.urls`
+- `submission.guidance`
+- `submission.prepare`
+- `submission.examples`
+- `submission.review`
+- `submission.policy`
+- `entry.trust`
+- `entry.safety`
+- `entry.coverage`
 
 ## Resources
 
-- `heyclaude://feeds/directory`
-- `heyclaude://category/{category}`
+Source of truth: `RESOURCE_TEMPLATES` and `DISCOVERY_RESOURCES` in
+`packages/mcp/src/registry-resource-metadata-lib.js`.
+
+Templates:
+
 - `heyclaude://entry/{category}/{slug}`
+- `heyclaude://category/{category}`
+
+Fixed discovery URIs:
+
+- `heyclaude://registry/recent`
+- `heyclaude://registry/trending`
+- `heyclaude://jobs/active`
 
 ## Prompts
 
-- `find_best_asset`
-- `prepare_submission`
-- `review_submission_before_pr`
-- `install_asset_safely`
+Source of truth: `PROMPT_DEFINITIONS` in
+`packages/mcp/src/registry-prompts-lib.js`.
+
+- `asset.find`
+- `submission.prepare`
+- `submission.review`
+- `install.asset`
 
 ## Access and rate limits
 
