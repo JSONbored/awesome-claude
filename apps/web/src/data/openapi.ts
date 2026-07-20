@@ -192,6 +192,7 @@ const BODY_EXAMPLES: Partial<Record<ApiRouteId, unknown>> = {
   "votes.query": { keys: ["mcp:github-mcp-server"], clientId: "anon-client-1234" },
   "votes.toggle": { key: "mcp:github-mcp-server", clientId: "anon-client-1234", vote: true },
   "newsletter.subscribe": { email: "reader@example.com", source: "api-docs" },
+  "newsletter.unsubscribe": { email: "reader@example.com" },
   "newsletter.webhook": { type: "contact.created", data: { email: "reader@example.com" } },
   "submissions.preflight": {
     fields: {
@@ -346,6 +347,7 @@ const RESPONSE_EXAMPLES: Partial<Record<ApiRouteId, unknown>> = {
   },
   "votes.toggle": { ok: true, key: "mcp:github-mcp-server", voted: true, count: 12 },
   "newsletter.subscribe": { ok: true, subscribed: true },
+  "newsletter.unsubscribe": { ok: true, unsubscribed: true },
   "newsletter.webhook": { ok: true, accepted: true },
   "submissions.preflight": {
     ok: true,

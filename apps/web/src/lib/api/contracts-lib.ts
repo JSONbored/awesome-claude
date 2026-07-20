@@ -527,6 +527,15 @@ export const newsletterConfirmBodySchema = z.object({
   token: z.string().trim().min(1).max(4096),
 });
 
+export const newsletterUnsubscribeBodySchema = z.object({
+  email: safeEmailSchema,
+  segments: z.array(newsletterSegmentIdSchema).max(20).optional().default([]),
+});
+
+export const newsletterUnsubscribeResponseSchema = z.object({
+  ok: z.literal(true),
+});
+
 export const newsletterWebhookBodySchema = z
   .object({
     type: z.string().optional(),
@@ -1142,6 +1151,23 @@ export const apiRouteDefinitions = {
     bodyLimitBytes: 8 * 1024,
     rateLimit: {
       scope: "newsletter-confirm",
+      limit: 15,
+      windowMs: 60_000,
+      binding: "API_STRICT_RATE_LIMIT",
+    },
+  }),
+  "newsletter.unsubscribe": route({
+    id: "newsletter.unsubscribe",
+    method: "POST",
+    path: "/api/public/newsletter/unsubscribe",
+    summary: "Unsubscribe an email from newsletter segments",
+    tags: ["Newsletter"],
+    originCheck: true,
+    bodySchema: newsletterUnsubscribeBodySchema,
+    responseSchema: newsletterUnsubscribeResponseSchema,
+    bodyLimitBytes: 8 * 1024,
+    rateLimit: {
+      scope: "newsletter-unsubscribe",
       limit: 15,
       windowMs: 60_000,
       binding: "API_STRICT_RATE_LIMIT",
