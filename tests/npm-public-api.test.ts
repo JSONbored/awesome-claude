@@ -4,6 +4,9 @@ import {
   GET,
   __resetNpmMetaCacheForTest,
 } from "../apps/web/src/routes/api/public/npm/$";
+import { getApiRouteDefinition } from "../apps/web/src/lib/api/contracts";
+
+const globalWithEnv = globalThis as typeof globalThis & { __env__?: unknown };
 
 function pkgFromUrl(input: string) {
   const url = new URL(input);
@@ -24,14 +27,31 @@ function okJson(body: unknown) {
   });
 }
 
+function requestFor(pkg: string, ip = "203.0.113.50") {
+  return new Request(`https://heyclau.de/api/public/npm/${pkg}`, {
+    headers: { "cf-connecting-ip": ip },
+  });
+}
+
 describe("public npm metadata API cache", () => {
   beforeEach(() => {
     __resetNpmMetaCacheForTest();
+    delete globalWithEnv.__env__;
   });
 
   afterEach(() => {
+    delete globalWithEnv.__env__;
     vi.unstubAllGlobals();
     vi.restoreAllMocks();
+  });
+
+  it("registers a durable Cloudflare rate-limit binding", () => {
+    expect(getApiRouteDefinition("publicNpm.read").rateLimit).toMatchObject({
+      scope: "public-npm",
+      limit: 120,
+      windowMs: 60_000,
+      binding: "API_DYNAMIC_RATE_LIMIT",
+    });
   });
 
   it("serves repeat requests from isolate cache", async () => {
@@ -51,9 +71,13 @@ describe("public npm metadata API cache", () => {
     });
     vi.stubGlobal("fetch", fetchMock);
 
-    await GET({ params: { _splat: "cacheable-package" } });
+    await GET(requestFor("cacheable-package"), {
+      params: { _splat: "cacheable-package" },
+    });
     const firstCallCount = fetchMock.mock.calls.length;
-    await GET({ params: { _splat: "cacheable-package" } });
+    await GET(requestFor("cacheable-package"), {
+      params: { _splat: "cacheable-package" },
+    });
     expect(fetchMock.mock.calls.length).toBe(firstCallCount);
   });
 
@@ -75,12 +99,34 @@ describe("public npm metadata API cache", () => {
     vi.stubGlobal("fetch", fetchMock);
 
     for (let i = 0; i < 257; i += 1) {
-      await GET({ params: { _splat: `pkg-${i}` } });
+      // Unique IPs so the in-memory fallback limit does not trip mid-loop.
+      await GET(requestFor(`pkg-${i}`, `198.51.100.${i % 250}`), {
+        params: { _splat: `pkg-${i}` },
+      });
     }
     const beforeRefetch = fetchMock.mock.calls.length;
-    await GET({ params: { _splat: "pkg-0" } });
+    await GET(requestFor("pkg-0", "198.51.100.250"), {
+      params: { _splat: "pkg-0" },
+    });
 
     // 3 upstream calls per miss: latest + downloads + packument.
     expect(fetchMock.mock.calls.length - beforeRefetch).toBe(3);
+  });
+
+  it("returns 429 before upstream fetch when the Cloudflare binding denies", async () => {
+    const fetchMock = vi.fn(async () => okJson({ name: "x", version: "1.0.0" }));
+    vi.stubGlobal("fetch", fetchMock);
+    globalWithEnv.__env__ = {
+      API_DYNAMIC_RATE_LIMIT: {
+        limit: async () => ({ success: false }),
+      },
+    };
+
+    const response = await GET(requestFor("rate-limited-package"), {
+      params: { _splat: "rate-limited-package" },
+    });
+
+    expect(response.status).toBe(429);
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 });
