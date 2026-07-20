@@ -8,6 +8,7 @@ import { createApiFileRoute } from "@/lib/api/file-route";
  *
  * Cached at the edge: s-maxage 600, stale-while-revalidate 3600.
  */
+import { apiJson, createApiHandler } from "@/lib/api/router";
 
 interface NpmMeta {
   name: string;
@@ -101,16 +102,13 @@ export function __resetNpmMetaCacheForTest() {
   cache.clear();
 }
 
-export const Route = createApiFileRoute("/api/public/npm/$")({
-  server: {
-    handlers: {
-      GET,
-    },
-  },
-});
+function packageFromParams(params: unknown) {
+  const record = (params ?? {}) as Record<string, string>;
+  return record._splat ?? record.pkg ?? "";
+}
 
-export async function GET({ params }: { params: Record<string, string> }) {
-  const pkg = params._splat ?? "";
+export const GET = createApiHandler("publicNpm.read", async ({ params }) => {
+  const pkg = packageFromParams(params);
   if (!pkg || !/^@?[a-z0-9][\w./@-]{0,213}$/i.test(pkg)) {
     return new Response(JSON.stringify({ error: "Invalid package name" }), {
       status: 400,
@@ -119,10 +117,8 @@ export async function GET({ params }: { params: Record<string, string> }) {
   }
   try {
     const data = await fetchMeta(pkg);
-    return new Response(JSON.stringify(data), {
-      status: 200,
+    return apiJson(data, {
       headers: {
-        "Content-Type": "application/json",
         "Cache-Control": "public, s-maxage=600, stale-while-revalidate=3600",
       },
     });
@@ -133,4 +129,12 @@ export async function GET({ params }: { params: Record<string, string> }) {
       headers: { "Content-Type": "application/json" },
     });
   }
-}
+});
+
+export const Route = createApiFileRoute("/api/public/npm/$")({
+  server: {
+    handlers: {
+      GET: async ({ request, params }) => GET(request, { params }),
+    },
+  },
+});
