@@ -33,6 +33,7 @@ const apiRoutes = [
   "/api/newsletter/subscribe",
   "/api/newsletter/webhook",
   "/api/public/newsletter/confirm",
+  "/api/public/newsletter/unsubscribe",
   "/api/og",
   "/api/submissions/preflight",
   "/api/download",
