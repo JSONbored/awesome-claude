@@ -57,7 +57,11 @@ async function fetchShieldsStars(repo: { owner: string; repo: string }, fetcher:
   }
 }
 
-export async function fetchGitHubSourceSignal(repoKey: string, fetcher: Fetcher = fetch) {
+export async function fetchGitHubSourceSignal(
+  repoKey: string,
+  fetcher: Fetcher = fetch,
+  options: { githubToken?: string | null } = {},
+) {
   const parsed = parseGitHubRepoKey(repoKey);
   if (!parsed) throw new Error(`invalid_repo:${repoKey}`);
   const { owner, repo } = parsed;
@@ -67,6 +71,10 @@ export async function fetchGitHubSourceSignal(repoKey: string, fetcher: Fetcher 
     "user-agent": "heyclau.de-source-signals",
     "x-github-api-version": GITHUB_API_VERSION,
   };
+  const token = String(options.githubToken || "").trim();
+  if (token) {
+    headers.authorization = `Bearer ${token}`;
+  }
   const response = await fetcher(buildGitHubRepoApiUrl(owner, repo), {
     headers,
     signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),

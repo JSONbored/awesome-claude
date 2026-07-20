@@ -4,6 +4,7 @@ import { getSiteDb, type D1DatabaseLike } from "@/lib/db";
 import {
   applySourceRepoSignal,
   collectSourceRepos,
+  compareSourceRepoRefreshPriority,
   normalizeSourceRepoSignalRow,
   parseGitHubRepoUrl,
   refreshLimit,
@@ -172,17 +173,22 @@ export async function refreshSourceRepoSignalsForEntries(
   const fetchedAt = now.toISOString();
   const work = repos
     .filter((repo) => shouldRefreshSourceRepoSignal(existing.get(repo), now.getTime()))
+    .sort(
+      (a, b) =>
+        compareSourceRepoRefreshPriority(existing.get(a), existing.get(b)) || a.localeCompare(b),
+    )
     .slice(0, refreshLimit(options.limit ?? getEnvString("SOURCE_REPO_SIGNAL_REFRESH_LIMIT")));
 
   let refreshed = 0;
   let failed = 0;
   const fetcher = options.fetcher ?? fetch;
+  const githubToken = getEnvString("GITHUB_TOKEN");
 
   for (const batch of chunk(work, 4)) {
     await Promise.all(
       batch.map(async (repo) => {
         try {
-          const signal = await fetchGitHubSourceSignal(repo, fetcher);
+          const signal = await fetchGitHubSourceSignal(repo, fetcher, { githubToken });
           await upsertSourceRepoSignalSuccess(db, repo, signal, fetchedAt);
           refreshed += 1;
         } catch (error) {

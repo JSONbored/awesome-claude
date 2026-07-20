@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   applySourceRepoSignal,
   collectSourceRepos,
+  compareSourceRepoRefreshPriority,
   DEFAULT_REFRESH_LIMIT,
   GITHUB_API_VERSION,
   normalizeSourceRepoSignalRow,
@@ -4672,7 +4673,7 @@ describe("source-repo-signals-lib shouldRefreshSourceRepoSignal", () => {
   it("returns true when signal missing", () => {
     expect(shouldRefreshSourceRepoSignal(undefined, now)).toBe(true);
   });
-  it("returns true for error status", () => {
+  it("returns false for recent error status within backoff window", () => {
     const signal: SourceRepoSignal = {
       repo: "a/b",
       stars: null,
@@ -4682,7 +4683,41 @@ describe("source-repo-signals-lib shouldRefreshSourceRepoSignal", () => {
       status: "error",
       lastError: "boom",
     };
+    expect(shouldRefreshSourceRepoSignal(signal, now)).toBe(false);
+  });
+  it("returns true for error status after backoff window", () => {
+    const signal: SourceRepoSignal = {
+      repo: "a/b",
+      stars: null,
+      forks: null,
+      repoUpdatedAt: null,
+      fetchedAt: "2026-06-01T00:00:00.000Z",
+      status: "error",
+      lastError: "boom",
+    };
     expect(shouldRefreshSourceRepoSignal(signal, now)).toBe(true);
+  });
+  it("prefers missing and ok signals over error in refresh priority", () => {
+    const errorSignal: SourceRepoSignal = {
+      repo: "z/broken",
+      stars: null,
+      forks: null,
+      repoUpdatedAt: null,
+      fetchedAt: "2026-06-01T00:00:00.000Z",
+      status: "error",
+      lastError: "boom",
+    };
+    const okSignal: SourceRepoSignal = {
+      repo: "a/ok",
+      stars: 1,
+      forks: null,
+      repoUpdatedAt: null,
+      fetchedAt: "2026-06-01T00:00:00.000Z",
+      status: "ok",
+      lastError: null,
+    };
+    expect(compareSourceRepoRefreshPriority(undefined, errorSignal)).toBeLessThan(0);
+    expect(compareSourceRepoRefreshPriority(okSignal, errorSignal)).toBeLessThan(0);
   });
   it("returns false for fresh ok signal", () => {
     const signal: SourceRepoSignal = {

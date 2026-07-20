@@ -250,7 +250,7 @@ describe("source repo signals", () => {
     });
   });
 
-  it("does not send configured GitHub tokens for content-controlled repo lookups", async () => {
+  it("does not auto-bind process.env GITHUB_TOKEN in the fetch helper", async () => {
     const previousToken = process.env.GITHUB_TOKEN;
     process.env.GITHUB_TOKEN = "secret-token";
     const seenHeaders: HeadersInit[] = [];
@@ -280,6 +280,97 @@ describe("source repo signals", () => {
     expect(JSON.stringify(seenHeaders[0]).toLowerCase()).not.toContain(
       "authorization",
     );
+  });
+
+  it("sends GITHUB_TOKEN from the refresh job when configured", async () => {
+    const previousToken = process.env.GITHUB_TOKEN;
+    process.env.GITHUB_TOKEN = "job-token";
+    const seenAuth: Array<string | null> = [];
+    const db = new FakeD1();
+
+    try {
+      await refreshSourceRepoSignalsForEntries(
+        [{ repoUrl: "https://github.com/example/tool" }],
+        {
+          db,
+          now: new Date("2026-06-02T12:00:00Z"),
+          fetcher: async (_url, init) => {
+            seenAuth.push(new Headers(init?.headers).get("authorization"));
+            return new Response(
+              JSON.stringify({
+                stargazers_count: 10,
+                forks_count: 2,
+                updated_at: "2026-06-02T11:00:00Z",
+              }),
+              { status: 200 },
+            );
+          },
+        },
+      );
+    } finally {
+      if (previousToken === undefined) {
+        delete process.env.GITHUB_TOKEN;
+      } else {
+        process.env.GITHUB_TOKEN = previousToken;
+      }
+    }
+
+    expect(seenAuth).toEqual(["Bearer job-token"]);
+  });
+
+  it("skips error rows still inside the backoff window so stale-ok repos can refresh", async () => {
+    const db = new FakeD1();
+    db.rows.set("aaa/broken", {
+      repo: "aaa/broken",
+      stars: null,
+      forks: null,
+      repo_updated_at: null,
+      fetched_at: "2026-06-02T00:00:00Z",
+      status: "error",
+      last_error: "github_api_404",
+    });
+    db.rows.set("zzz/stale", {
+      repo: "zzz/stale",
+      stars: 1,
+      forks: 0,
+      repo_updated_at: "2026-05-01T00:00:00Z",
+      fetched_at: "2026-06-01T00:00:00Z",
+      status: "ok",
+      last_error: null,
+    });
+
+    const fetched: string[] = [];
+    const result = await refreshSourceRepoSignalsForEntries(
+      [
+        { repoUrl: "https://github.com/aaa/broken" },
+        { repoUrl: "https://github.com/zzz/stale" },
+      ],
+      {
+        db,
+        now: new Date("2026-06-03T12:00:00Z"),
+        limit: 1,
+        fetcher: async (url) => {
+          const href = String(url);
+          if (href.includes("api.github.com")) {
+            const match = href.match(/repos\/([^/]+\/[^/]+)/);
+            if (match) fetched.push(match[1].toLowerCase());
+            return new Response(
+              JSON.stringify({
+                stargazers_count: 9,
+                forks_count: 1,
+                updated_at: "2026-06-03T00:00:00Z",
+              }),
+              { status: 200 },
+            );
+          }
+          return new Response("nope", { status: 404 });
+        },
+      },
+    );
+
+    expect(result).toMatchObject({ refreshed: 1, failed: 0 });
+    expect(fetched).toEqual(["zzz/stale"]);
+    expect(db.rows.get("aaa/broken")).toMatchObject({ status: "error" });
   });
 
   it("rejects private GitHub repository payloads before caching", async () => {

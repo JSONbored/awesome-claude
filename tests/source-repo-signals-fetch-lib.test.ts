@@ -1971,6 +1971,42 @@ describe("source-repo-signals-fetch-lib fetchGitHubSourceSignal", () => {
     );
     expect(signal.stars).toBe(99);
   });
+  it("sends Authorization when githubToken is provided", async () => {
+    let auth: string | null = null;
+    await fetchGitHubSourceSignal(
+      "demo/repo",
+      async (_url, init) => {
+        const headers = new Headers(init?.headers);
+        auth = headers.get("authorization");
+        return new Response(
+          JSON.stringify({
+            stargazers_count: 1,
+            forks_count: 0,
+            updated_at: "2026-01-01",
+          }),
+          { status: 200 },
+        );
+      },
+      { githubToken: "ghp_test_token" },
+    );
+    expect(auth).toBe("Bearer ghp_test_token");
+  });
+  it("omits Authorization when githubToken is absent", async () => {
+    let auth: string | null = "sentinel";
+    await fetchGitHubSourceSignal("demo/repo", async (_url, init) => {
+      const headers = new Headers(init?.headers);
+      auth = headers.get("authorization");
+      return new Response(
+        JSON.stringify({
+          stargazers_count: 1,
+          forks_count: 0,
+          updated_at: "2026-01-01",
+        }),
+        { status: 200 },
+      );
+    });
+    expect(auth).toBeNull();
+  });
   it("falls back to shields on API failure", async () => {
     let calls = 0;
     const fetcher = async (url: string | URL | Request) => {

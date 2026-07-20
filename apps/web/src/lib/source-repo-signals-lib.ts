@@ -4,6 +4,8 @@ export const GITHUB_API_VERSION = "2022-11-28";
 export const REQUEST_TIMEOUT_MS = 5000;
 export const DEFAULT_REFRESH_LIMIT = 25;
 export const REFRESH_STALE_MS = 24 * 60 * 60 * 1000;
+/** Error rows reuse `fetchedAt` as last-attempt time; wait this long before retrying. */
+export const ERROR_REFRESH_BACKOFF_MS = 7 * 24 * 60 * 60 * 1000;
 
 type EntryWithRepoStats = {
   repoUrl?: string | null;
@@ -140,7 +142,28 @@ export function refreshLimit(value: unknown) {
 
 export function shouldRefreshSourceRepoSignal(signal: SourceRepoSignal | undefined, nowMs: number) {
   if (!signal) return true;
-  if (signal.status === "error") return true;
   const fetchedMs = Date.parse(signal.fetchedAt);
-  return !Number.isFinite(fetchedMs) || nowMs - fetchedMs > REFRESH_STALE_MS;
+  if (!Number.isFinite(fetchedMs)) return true;
+  const ageMs = nowMs - fetchedMs;
+  if (signal.status === "error") {
+    // Permanently-broken / rate-limited repos must not consume every run's budget.
+    return ageMs > ERROR_REFRESH_BACKOFF_MS;
+  }
+  return ageMs > REFRESH_STALE_MS;
+}
+
+/**
+ * Prefer missing, then stale-ok, then error-backoff-due repos so broken repos
+ * cannot starve healthy refreshes within the per-run limit.
+ */
+export function compareSourceRepoRefreshPriority(
+  a: SourceRepoSignal | undefined,
+  b: SourceRepoSignal | undefined,
+) {
+  const rank = (signal: SourceRepoSignal | undefined) => {
+    if (!signal) return 0;
+    if (signal.status !== "error") return 1;
+    return 2;
+  };
+  return rank(a) - rank(b);
 }
