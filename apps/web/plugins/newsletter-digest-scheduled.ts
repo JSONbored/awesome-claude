@@ -36,6 +36,18 @@ type CloudflareScheduledPayload = {
 };
 
 /**
+ * Names of the falsy entries in `conditions`, for skip logs that say exactly
+ * which requirement was unmet. A silent early return on the send path means an
+ * approved brief never reaches the audience with nothing in the Worker logs to
+ * explain it, so every skip names its cause.
+ */
+function missingNames(conditions: Record<string, unknown>): string[] {
+  return Object.entries(conditions)
+    .filter(([, value]) => !value)
+    .map(([name]) => name);
+}
+
+/**
  * The Weekly Brief pipeline — the single weekly newsletter send. Friday:
  * generate a draft + email the maintainer an approve link. 6-hourly and Sunday
  * 16:00 UTC: send any approved-and-due brief to the Resend audience
@@ -95,6 +107,16 @@ export default definePlugin((nitroApp) => {
               });
               await sendResendEmail({ apiKey, from, to: reviewEmail, subject, html, text });
               console.log("[brief-generate] preview sent", { number: draft.number });
+            } else {
+              console.warn(
+                `[brief-generate] preview skipped: ${missingNames({
+                  draft: wrote && draft,
+                  BRIEF_REVIEW_EMAIL: reviewEmail,
+                  NEWSLETTER_CONFIRM_SECRET: secret,
+                  RESEND_API_KEY: apiKey,
+                  RESEND_FROM: from,
+                }).join("/")}`,
+              );
             }
           } catch (error) {
             console.error("[brief-generate] generation failed", error);
@@ -112,7 +134,16 @@ export default definePlugin((nitroApp) => {
             const apiKey = getEnvString("RESEND_API_KEY");
             const segmentId = getEnvString("RESEND_SEGMENT_ID");
             const from = getEnvString("RESEND_FROM");
-            if (!apiKey || !segmentId || !from) return;
+            if (!apiKey || !segmentId || !from) {
+              console.warn(
+                `[brief-send] skipped: missing ${missingNames({
+                  RESEND_API_KEY: apiKey,
+                  RESEND_SEGMENT_ID: segmentId,
+                  RESEND_FROM: from,
+                }).join("/")}`,
+              );
+              return;
+            }
             const due = await getDueApprovedBriefs(new Date().toISOString());
             for (const issue of due) {
               const { subject, html, text } = buildBriefEmail({

@@ -20,4 +20,25 @@ describe("weekly brief schedule", () => {
     expect(plugin).toContain(sundaySendCron);
     expect(wranglerConfig).toContain(sundaySendCron);
   });
+
+  // A silent early return on the send path means an approved brief never
+  // reaches the audience, with nothing in the Worker logs to explain why.
+  it("logs a named reason on both silent-skip paths", () => {
+    const plugin = readFileSync(
+      join(repoRoot, "apps/web/plugins/newsletter-digest-scheduled.ts"),
+      "utf8",
+    );
+
+    expect(plugin).toContain("[brief-send] skipped: missing ");
+    expect(plugin).toContain("[brief-generate] preview skipped: ");
+    for (const secret of [
+      "RESEND_API_KEY",
+      "RESEND_SEGMENT_ID",
+      "RESEND_FROM",
+    ]) {
+      expect(plugin, secret).toContain(`${secret}: `);
+    }
+    // The skip must still return without sending - logging-only change.
+    expect(plugin).toMatch(/\[brief-send\] skipped[\s\S]{0,400}?return;/);
+  });
 });
