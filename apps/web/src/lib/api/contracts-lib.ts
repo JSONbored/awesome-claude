@@ -607,9 +607,25 @@ const submissionPreflightNonPrResponseSchema = submissionPreflightBaseResponseSc
   })
   .strict();
 
+/**
+ * Honeypot short-circuit: a filled honeypot field is discarded without
+ * validating or queueing anything, so the response carries none of the analysis
+ * fields the other variants do, plus a `queued` flag they lack. It is a
+ * permanent, intentional code path, so the published contract describes it
+ * rather than leaving consumers to infer a shape the endpoint can return.
+ */
+const submissionPreflightDiscardedResponseSchema = z
+  .object({
+    ok: z.literal(true),
+    valid: z.literal(false),
+    queued: z.literal(false),
+  })
+  .strict();
+
 export const submissionPreflightResponseSchema = z.union([
   submissionPreflightPrReadyResponseSchema,
   submissionPreflightNonPrResponseSchema,
+  submissionPreflightDiscardedResponseSchema,
 ]);
 
 export const downloadQuerySchema = z.object({

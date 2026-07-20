@@ -5,6 +5,7 @@ import { parse } from "yaml";
 
 import { ENDPOINTS, OPENAPI_TAGS } from "../apps/web/src/data/openapi";
 import { listApiRouteDefinitions } from "../apps/web/src/lib/api/contracts";
+import { submissionPreflightResponseSchema } from "../apps/web/src/lib/api/contracts-lib";
 import { repoRoot } from "./helpers/registry-fixtures";
 
 function findRouteFiles(directory: string): string[] {
@@ -410,5 +411,32 @@ describe("OpenAPI route coverage", () => {
     expect(schema).toContain("lastVerifiedAt");
     expect(schema).toContain("adapterGenerated");
     expect(schema).toContain("RSS, changelog, category feeds, platform feeds");
+  });
+});
+
+describe("submissions preflight response contract", () => {
+  // The honeypot short-circuit is a permanent code path (see
+  // tests/submission-api.test.ts, "silently discards honeypot submissions"),
+  // so the published contract has to accept exactly what it returns.
+  const honeypotResponse = { ok: true, valid: false, queued: false };
+
+  it("accepts the honeypot discard response", () => {
+    expect(
+      submissionPreflightResponseSchema.safeParse(honeypotResponse).success,
+    ).toBe(true);
+  });
+
+  it("still rejects near-miss shapes", () => {
+    for (const invalid of [
+      { ok: true, valid: false },
+      { ok: true, valid: false, queued: true },
+      { ok: true, valid: false, queued: false, extra: 1 },
+      { ok: false, valid: false, queued: false },
+    ]) {
+      expect(
+        submissionPreflightResponseSchema.safeParse(invalid).success,
+        JSON.stringify(invalid),
+      ).toBe(false);
+    }
   });
 });
