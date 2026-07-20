@@ -13,6 +13,23 @@
 const SEND_DOW = 0; // 0=Sun..6=Sat; Sunday
 const SEND_HOUR_UTC = 16;
 
+const DAY_NAMES = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+] as const;
+
+/**
+ * Human-readable name of the send slot ("Sunday 16:00 UTC"), derived from the
+ * constants above so UI copy can't drift from the schedule it describes — the
+ * approval page had hardcoded a stale "Tuesday 15:00 UTC".
+ */
+export const SEND_SLOT_LABEL = `${DAY_NAMES[SEND_DOW]} ${String(SEND_HOUR_UTC).padStart(2, "0")}:00 UTC`;
+
 /**
  * The next Sunday 16:00 UTC strictly at or after `from` (today if it's Sunday
  * before 16:00, otherwise the following Sunday). Returned as an ISO string for

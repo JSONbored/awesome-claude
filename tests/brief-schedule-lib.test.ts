@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import { nextSendSlot } from "../apps/web/src/lib/brief-schedule-lib";
+import {
+  nextSendSlot,
+  SEND_SLOT_LABEL,
+} from "../apps/web/src/lib/brief-schedule-lib";
 
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -70,5 +73,19 @@ describe("nextSendSlot", () => {
     expect(nextSendSlot(new Date("2026-06-01T00:00:00Z"))).toMatch(
       /^\d{4}-\d{2}-\d{2}T16:00:00\.000Z$/,
     );
+  });
+});
+
+describe("SEND_SLOT_LABEL", () => {
+  // The approval page renders this label as the promise of when a brief will
+  // go out, so it has to describe the slot nextSendSlot actually returns.
+  it("describes the same day and hour that nextSendSlot schedules", () => {
+    const slot = new Date(nextSendSlot(new Date("2026-06-01T00:00:00Z")));
+    const day = slot.toLocaleDateString("en-US", {
+      weekday: "long",
+      timeZone: "UTC",
+    });
+    const hour = String(slot.getUTCHours()).padStart(2, "0");
+    expect(SEND_SLOT_LABEL).toBe(`${day} ${hour}:00 UTC`);
   });
 });
