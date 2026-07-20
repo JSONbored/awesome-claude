@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  DOWNLOAD_CACHE_CONTROL,
   filenameFromAsset,
   getContentType,
   isAllowedAssetPath,
@@ -41,5 +42,24 @@ describe("filenameFromAsset", () => {
   it("falls back to 'download' when there is no segment", () => {
     expect(filenameFromAsset("///")).toBe("download");
     expect(filenameFromAsset("")).toBe("download");
+  });
+});
+
+describe("DOWNLOAD_CACHE_CONTROL", () => {
+  // getDownloadHref builds /api/download?asset=/downloads/<kind>/<slug>.<ext>
+  // from the slug alone, so a rebuilt package serves new bytes at the same URL.
+  // Promising immutability over that URL is what this guards against.
+  it("does not promise immutability for a non-content-addressed URL", () => {
+    expect(DOWNLOAD_CACHE_CONTROL).not.toContain("immutable");
+  });
+
+  it("stays cacheable but revalidates within an hour", () => {
+    expect(DOWNLOAD_CACHE_CONTROL).toContain("public");
+    expect(DOWNLOAD_CACHE_CONTROL).toContain("must-revalidate");
+
+    const maxAge = Number(/max-age=(\d+)/.exec(DOWNLOAD_CACHE_CONTROL)?.[1]);
+    expect(Number.isFinite(maxAge)).toBe(true);
+    expect(maxAge).toBeGreaterThan(0);
+    expect(maxAge).toBeLessThanOrEqual(3600);
   });
 });
