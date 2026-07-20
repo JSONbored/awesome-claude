@@ -5054,6 +5054,16 @@
                         "routeSuggestion"
                       ],
                       "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "ok": { "type": "boolean", "enum": [true] },
+                        "valid": { "type": "boolean", "enum": [false] },
+                        "queued": { "type": "boolean", "enum": [false] }
+                      },
+                      "required": ["ok", "valid", "queued"],
+                      "additionalProperties": false
                     }
                   ]
                 }
