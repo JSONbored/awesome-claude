@@ -478,3 +478,53 @@ describe("tierFromFlags risk-tier boundaries", () => {
     );
   });
 });
+
+describe("www.github.com source URL normalization", () => {
+  it("registers www.github.com repo URLs as GitHub sources like bare github.com", () => {
+    const bare = analyzeDirectContentRisk({
+      pullRequest: {
+        number: 901,
+        title: "content(mcp): add bare github source",
+        user: { login: "contributor" },
+        head: { repo: { full_name: "contributor/awesome-claude" } },
+        base: { repo: { full_name: "JSONbored/awesome-claude" } },
+      },
+      files: [
+        sourceFile(
+          validMcpMdx({
+            title: "Bare Source MCP",
+            slug: "bare-source-mcp",
+            repoUrl: "https://github.com/example/www-parity-mcp",
+          }),
+          "content/mcp/bare-source-mcp.mdx",
+        ),
+      ],
+    });
+    const www = analyzeDirectContentRisk({
+      pullRequest: {
+        number: 902,
+        title: "content(mcp): add www github source",
+        user: { login: "contributor" },
+        head: { repo: { full_name: "contributor/awesome-claude" } },
+        base: { repo: { full_name: "JSONbored/awesome-claude" } },
+      },
+      files: [
+        sourceFile(
+          validMcpMdx({
+            title: "Www Source MCP",
+            slug: "www-source-mcp",
+            repoUrl: "https://www.github.com/example/www-parity-mcp",
+          }),
+          "content/mcp/www-source-mcp.mdx",
+        ),
+      ],
+    });
+
+    expect(bare.trustSignals).toEqual(
+      expect.arrayContaining(["GitHub source: example/www-parity-mcp"]),
+    );
+    expect(www.trustSignals).toEqual(
+      expect.arrayContaining(["GitHub source: example/www-parity-mcp"]),
+    );
+  });
+});

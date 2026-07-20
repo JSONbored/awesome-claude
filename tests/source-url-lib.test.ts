@@ -124,6 +124,18 @@ describe("public URL userinfo helpers", () => {
     );
   });
 
+  it("accepts www.github.com profile URLs like bare github.com", () => {
+    expect(isPublicGitHubProfileUrl("https://www.github.com/octocat")).toBe(
+      true,
+    );
+    expect(isPublicGitHubProfileUrl("https://WWW.GitHub.com/octocat")).toBe(
+      true,
+    );
+    expect(
+      isPublicGitHubProfileUrl("https://www.github.com/octocat/repo"),
+    ).toBe(false);
+  });
+
   it("rejects non-http(s) URLs even on a GitHub host", () => {
     // A GitHub hostname over ftp/ws is not a public GitHub web URL; the protocol
     // guard matches the sibling public-URL validators.

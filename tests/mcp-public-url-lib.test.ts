@@ -132,6 +132,8 @@ describe("isPublicGitHubProfileUrl", () => {
     ["https://github.com/user_name", true],
     ["https://github.com/a", true],
     ["https://GITHUB.COM/octocat", true],
+    ["https://www.github.com/octocat", true],
+    ["https://WWW.GitHub.com/octocat", true],
   ])("accepts single-segment profile URL %s", (url) => {
     expect(isPublicGitHubProfileUrl(url)).toBe(true);
   });
@@ -143,7 +145,6 @@ describe("isPublicGitHubProfileUrl", () => {
     ["https://github.com/octocat/repo/issues", false],
     ["https://github.com/", false],
     ["https://github.com", false],
-    ["https://www.github.com/octocat", false],
     ["https://gist.github.com/octocat", false],
     ["https://raw.githubusercontent.com/user/repo/main/file", false],
   ])("rejects non-profile GitHub URL %s", (url) => {

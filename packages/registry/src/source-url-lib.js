@@ -143,11 +143,12 @@ export function isPublicGitHubProfileUrl(value) {
   const url = parseUrl(value);
   if (!url) return false;
   const segments = url.pathname.split("/").filter(Boolean);
+  const hostname = url.hostname.replace(/^www\./i, "").toLowerCase();
   return (
     url.protocol === "https:" &&
     url.username === "" &&
     url.password === "" &&
-    url.hostname === "github.com" &&
+    hostname === "github.com" &&
     segments.length === 1 &&
     !RESERVED_OWNERS.has(segments[0].toLowerCase())
   );

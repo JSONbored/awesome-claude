@@ -296,7 +296,8 @@ function hostname(value) {
 function githubRepoFromUrl(value) {
   try {
     const url = new URL(normalizeText(value));
-    if (!isPublicHttpsUrl(value) || url.hostname !== "github.com") {
+    const hostname = url.hostname.replace(/^www\./i, "").toLowerCase();
+    if (!isPublicHttpsUrl(value) || hostname !== "github.com") {
       return "";
     }
     const [owner, repo] = url.pathname.split("/").filter(Boolean);

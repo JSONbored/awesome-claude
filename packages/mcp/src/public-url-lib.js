@@ -34,11 +34,12 @@ export function isPublicHttpsUrl(value) {
 export function isPublicGitHubProfileUrl(value) {
   const url = parseUrl(value);
   if (!url) return false;
+  const hostname = url.hostname.replace(/^www\./i, "").toLowerCase();
   return (
     url.protocol === "https:" &&
     url.username === "" &&
     url.password === "" &&
-    url.hostname === "github.com" &&
+    hostname === "github.com" &&
     url.pathname.split("/").filter(Boolean).length === 1
   );
 }
