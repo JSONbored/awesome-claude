@@ -42,6 +42,7 @@ describe("parseArgs", () => {
 describe("getToken", () => {
   it("prefers ADMIN_API_TOKEN, then the fallbacks, and trims", () => {
     expect(getToken({ ADMIN_API_TOKEN: "  a  " })).toBe("a");
+    expect(getToken({ JOBS_ADMIN_API_TOKEN: "jobs" })).toBe("jobs");
     expect(getToken({ LEADS_ADMIN_TOKEN: "b" })).toBe("b");
     expect(getToken({ ADMIN_LEADS_TOKEN: "c" })).toBe("c");
   });
@@ -62,12 +63,14 @@ describe("getBaseUrl", () => {
     expect(getBaseUrl({}, { HEYCLAUDE_ADMIN_BASE_URL: "https://a.dev" })).toBe(
       "https://a.dev",
     );
-    expect(getBaseUrl({}, { HEYCLOUD_BASE_URL: "https://b.dev" })).toBe(
+    expect(getBaseUrl({}, { HEYCLAUDE_BASE_URL: "https://b.dev" })).toBe(
       "https://b.dev",
     );
   });
 
   it("throws when neither a flag nor an env var provides a base URL", () => {
-    expect(() => getBaseUrl({}, {})).toThrow(/Missing --base-url/);
+    expect(() => getBaseUrl({}, {})).toThrow(
+      /Missing --base-url or HEYCLAUDE_ADMIN_BASE_URL/,
+    );
   });
 });

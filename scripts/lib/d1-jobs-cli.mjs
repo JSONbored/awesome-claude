@@ -25,7 +25,11 @@ export function parseArgs(argv) {
 /** Resolve the admin API token from the accepted environment variables. */
 export function getToken(env = process.env) {
   return String(
-    env.ADMIN_API_TOKEN || env.LEADS_ADMIN_TOKEN || env.ADMIN_LEADS_TOKEN || "",
+    env.ADMIN_API_TOKEN ||
+      env.JOBS_ADMIN_API_TOKEN ||
+      env.LEADS_ADMIN_TOKEN ||
+      env.ADMIN_LEADS_TOKEN ||
+      "",
   ).trim();
 }
 
@@ -38,12 +42,10 @@ export function getBaseUrl(args, env = process.env) {
     args["base-url"] ||
       env.HEYCLAUDE_ADMIN_BASE_URL ||
       env.HEYCLAUDE_BASE_URL ||
-      env.HEYCLOUD_ADMIN_BASE_URL ||
-      env.HEYCLOUD_BASE_URL ||
       "",
   ).trim();
   if (!baseUrl) {
-    throw new Error("Missing --base-url or HEYCLOUD_ADMIN_BASE_URL.");
+    throw new Error("Missing --base-url or HEYCLAUDE_ADMIN_BASE_URL.");
   }
   return baseUrl.replace(/\/$/, "");
 }
