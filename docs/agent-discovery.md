@@ -16,8 +16,12 @@ classic SEO surface (`sitemap.xml`, `robots.txt`, JSON-LD).
 | WebMCP in-page tool | `apps/web/src/components/webmcp-provider.tsx` | `navigator.modelContext` → `search_heyclaude` |
 
 Notes:
-- The MCP server card's `MCP_VERSION` and tool list must be kept in sync with
-  `packages/mcp/package.json` and `packages/mcp/src/registry.js` on each MCP release.
+- The MCP server card stays in sync automatically: version comes from
+  `packages/mcp/package.json` via `mcpPackage.version` in
+  `apps/web/src/data/integrations.ts` (`getIntegration("mcp-server")`), and the
+  tool/resource lists come from `@heyclaude/mcp/registry`
+  (`TOOL_DEFINITIONS` / `RESOURCE_TEMPLATES` in `packages/mcp/src/registry.js`).
+  The server-card route imports both, so neither can drift from the real server.
 - The agent-skills index is generated from the registry: only `skills` entries that have a
   built package (`downloadUrl` + `downloadSha256`) are listed.
 - OAuth/OIDC discovery (`/.well-known/openid-configuration`,
