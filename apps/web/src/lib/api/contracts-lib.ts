@@ -661,6 +661,16 @@ export const publicFeedsHealthResponseSchema = z.object({
     .max(100),
 });
 
+export const publicNpmMetaResponseSchema = z.object({
+  name: z.string(),
+  version: z.string(),
+  publishedAt: z.string().nullable(),
+  weeklyDownloads: z.number().nullable(),
+  homepage: z.string().nullable(),
+  repository: z.string().nullable(),
+  fetchedAt: z.string(),
+});
+
 export const listingLeadBodySchema = z
   .object({
     kind: z.enum(["job", "tool", "claim"]),
@@ -1453,6 +1463,22 @@ export const apiRouteDefinitions = {
     responseSchema: publicFeedsHealthResponseSchema,
     rateLimit: {
       scope: "public-feeds-health",
+      limit: 120,
+      windowMs: 60_000,
+      binding: "API_DYNAMIC_RATE_LIMIT",
+    },
+  }),
+  "publicNpm.read": route({
+    id: "publicNpm.read",
+    method: "GET",
+    path: "/api/public/npm/{pkg}",
+    summary: "Read cached npm package metadata",
+    description:
+      "Proxies npm registry latest metadata and weekly downloads for a package name. Uses the shared dynamic Cloudflare rate-limit binding before any upstream fetch.",
+    tags: ["Dynamic"],
+    responseSchema: publicNpmMetaResponseSchema,
+    rateLimit: {
+      scope: "public-npm",
       limit: 120,
       windowMs: 60_000,
       binding: "API_DYNAMIC_RATE_LIMIT",

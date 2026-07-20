@@ -80,6 +80,7 @@ function exampleForPathParam(name: string, path: string) {
   if (name === "kind") return "icon";
   if (name === "domain") return "anthropic.com";
   if (name === "report") return "agent-skills.json";
+  if (name === "pkg") return "@heyclaude/mcp";
   return "example";
 }
 
@@ -425,6 +426,15 @@ const RESPONSE_EXAMPLES: Partial<Record<ApiRouteId, unknown>> = {
   "githubStats.read": { ok: true, repo: "jsonbored/awesome-claude", stars: 123 },
   "publicAlerts.read": { ok: true, events: [] },
   "publicFeeds.health": { ok: true, feeds: [] },
+  "publicNpm.read": {
+    name: "@heyclaude/mcp",
+    version: "1.0.0",
+    publishedAt: "2026-01-01T00:00:00.000Z",
+    weeklyDownloads: 123,
+    homepage: "https://heyclau.de",
+    repository: "git+https://github.com/JSONbored/awesome-claude.git",
+    fetchedAt: "2026-07-16T00:00:00.000Z",
+  },
   "static.rss": "RSS XML response.",
   "static.atom": "Atom XML response.",
   "static.feedIndex": { schemaVersion: 1, feeds: [] },

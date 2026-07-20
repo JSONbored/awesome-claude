@@ -48,6 +48,7 @@ const apiRoutes = [
   "/api/github-stats",
   "/api/public/alerts",
   "/api/public/feeds/health",
+  "/api/public/npm/{pkg}",
   "/feed.xml",
   "/atom.xml",
   "/data/feeds/index.json",
