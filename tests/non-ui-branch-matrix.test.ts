@@ -2195,6 +2195,8 @@ describe("non-UI branch matrix", () => {
         headers: { Authorization: { secret: true } },
       }),
     ).toBeNull();
+    // Multi-server maps install their first usable server rather than
+    // resolving to nothing at all.
     expect(
       extractMcpServerConfig({
         mcpServers: {
@@ -2202,7 +2204,7 @@ describe("non-UI branch matrix", () => {
           two: { command: "node" },
         },
       }),
-    ).toBeNull();
+    ).toEqual({ name: "one", config: { command: "node", type: "stdio" } });
     expect(() => extractMcpServerConfig("not json")).toThrow();
     expect(formatMcpConfigSnippet("", { command: "node" })).toContain(
       '"heyclaude-mcp"',

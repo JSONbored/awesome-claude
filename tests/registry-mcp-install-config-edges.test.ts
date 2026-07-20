@@ -24,13 +24,13 @@ describe("mcp-install-config-lib extractMcpServerConfig", () => {
     expect(extractMcpServerConfig({ mcpServers: "nope" })).toBeNull();
   });
 
-  it("rejects a map that does not hold exactly one server", () => {
+  it("rejects an empty map but installs the first of several servers", () => {
+    expect(extractMcpServerConfig({ mcpServers: {} })).toBeNull();
     expect(
       extractMcpServerConfig({
         mcpServers: { a: { command: "x" }, b: { command: "y" } },
       }),
-    ).toBeNull();
-    expect(extractMcpServerConfig({ mcpServers: {} })).toBeNull();
+    ).toEqual({ name: "a", config: { command: "x", type: "stdio" } });
   });
 
   it("extracts a single normalized stdio server", () => {

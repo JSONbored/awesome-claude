@@ -131,22 +131,27 @@ export function normalizeMcpServerConfig(value) {
   return config;
 }
 
-function singleServerFromMap(value) {
+// One-click install targets a single named server. A `mcpServers` map may
+// legitimately declare several (e.g. an SSE and a streamable variant of the
+// same backend), so take the first one that normalizes rather than refusing
+// the whole snippet — a user offered one working install target is better
+// served than one offered none. The remaining servers stay visible in the
+// entry's own configSnippet for anyone who wants them.
+function installableServerFromMap(value) {
   if (!isRecord(value)) return null;
-  const servers = Object.entries(value).filter(([, config]) =>
-    isRecord(config),
-  );
-  if (servers.length !== 1) return null;
-  const [name, config] = servers[0];
-  const normalized = normalizeMcpServerConfig(config);
-  return normalized ? { name, config: normalized } : null;
+  for (const [name, config] of Object.entries(value)) {
+    if (!isRecord(config)) continue;
+    const normalized = normalizeMcpServerConfig(config);
+    if (normalized) return { name, config: normalized };
+  }
+  return null;
 }
 
 export function extractMcpServerConfig(value) {
   const parsed = typeof value === "string" ? JSON.parse(value.trim()) : value;
   if (!isRecord(parsed)) return null;
 
-  return singleServerFromMap(parsed.mcpServers);
+  return installableServerFromMap(parsed.mcpServers);
 }
 
 function bearerTokenEnvVar(config) {

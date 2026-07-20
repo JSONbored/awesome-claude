@@ -194,16 +194,8 @@ describe("extractMcpServerConfig", () => {
     expect(extracted?.config.url).toBe("https://remote.example.com/mcp");
   });
 
-  it("rejects maps with zero or multiple servers and invalid inner configs", () => {
+  it("rejects empty maps and invalid inner configs", () => {
     expect(extractMcpServerConfig({ mcpServers: {} })).toBeNull();
-    expect(
-      extractMcpServerConfig({
-        mcpServers: {
-          a: { command: "npx" },
-          b: { command: "node" },
-        },
-      }),
-    ).toBeNull();
     expect(
       extractMcpServerConfig({
         mcpServers: {
@@ -212,6 +204,46 @@ describe("extractMcpServerConfig", () => {
       }),
     ).toBeNull();
     expect(() => extractMcpServerConfig("not json")).toThrow(SyntaxError);
+  });
+
+  it("takes the first installable server from a multi-server map", () => {
+    // Shape of the published ai-aliengiraffe-spotdb-mcp-server entry: one
+    // backend exposed as both an SSE and a streamable server.
+    const extracted = extractMcpServerConfig({
+      mcpServers: {
+        "spotdb-sse": {
+          command: "npx",
+          args: ["-y", "mcp-remote", "https://sse.example.com/sse"],
+        },
+        "spotdb-streamable": {
+          command: "npx",
+          args: ["-y", "mcp-remote", "https://stream.example.com/mcp"],
+        },
+      },
+    });
+    expect(extracted?.name).toBe("spotdb-sse");
+    expect(extracted?.config.args).toContain("https://sse.example.com/sse");
+  });
+
+  it("skips leading servers that do not normalize", () => {
+    const extracted = extractMcpServerConfig({
+      mcpServers: {
+        broken: { transport: "sse", url: "https://example.com/sse" },
+        usable: { type: "http", url: "https://api.example.com/mcp" },
+      },
+    });
+    expect(extracted?.name).toBe("usable");
+  });
+
+  it("returns null when no server in a multi-server map normalizes", () => {
+    expect(
+      extractMcpServerConfig({
+        mcpServers: {
+          a: { transport: "sse", url: "https://a.example.com/sse" },
+          b: { type: "http", url: "http://insecure.example.com/mcp" },
+        },
+      }),
+    ).toBeNull();
   });
 
   it("returns null when the payload or its mcpServers is not a record", () => {
