@@ -4,14 +4,14 @@
 
 - Added `/atom.xml` as a registry update feed alongside `/feed.xml`.
 - Added factual `trustSignals` metadata to registry search, feeds, and entry detail artifacts.
-- Added a dry-run-first Resend Templates sync command for dashboard review without app-side sending.
+- ~~Added a dry-run-first Resend Templates sync command for dashboard review without app-side sending.~~ **Superseded:** React Email / Resend Templates sync was removed; newsletter send is fully automated via the Worker + Resend (see `docs/newsletter-resend-playbook.md` and `apps/web/src/lib/newsletter-emails.ts`).
 - Strengthened generated README validation so category counts and every file-backed entry stay aligned.
 - Added sharded distribution feeds under `/data/feeds/` for category and platform consumers.
 - Added IndexNow release submission tooling guarded to production URLs.
 - Added the browser-side Agent Skill package validator at `/tools/skill-validator`.
 - Added platform compatibility pages under `/platforms/` for Agent Skills and generated adapters.
 - Added the read-only `@heyclaude/mcp` package for registry search, detail, compatibility, install guidance, adapter lookup, and feed discovery.
-- Added React Email source templates with rendered Resend Broadcast HTML/text artifacts.
+- ~~Added React Email source templates with rendered Resend Broadcast HTML/text artifacts.~~ **Superseded:** same as above — templates are in-worker string builders, not React Email.
 - Added generated skill platform compatibility metadata for native Agent Skills platforms and adapter targets.
 - Added generated Cursor `.mdc` skill adapters under `/data/skill-adapters/cursor/`.
 - Added deployment artifact validation for preview release candidates.
