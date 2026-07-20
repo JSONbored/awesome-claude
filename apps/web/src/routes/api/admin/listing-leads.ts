@@ -132,10 +132,26 @@ export const PATCH = createApiHandler(
       return apiError("invalid_transition", 400, { requestId });
     }
 
-    await db
-      .prepare("UPDATE listing_leads SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?")
-      .bind(nextStatus, id)
+    // Compare-and-swap on the status we read: the UPDATE only matches if the
+    // row's status hasn't changed since the SELECT above. If another concurrent
+    // request already transitioned it, no row matches (meta.changes === 0) and
+    // we return 409 instead of silently reporting success for a write that a
+    // lost-update race dropped.
+    const update = await db
+      .prepare(
+        "UPDATE listing_leads SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND status = ?",
+      )
+      .bind(nextStatus, id, current.status)
       .run();
+
+    if (Number(update.meta?.changes ?? 0) === 0) {
+      logApiWarn(request, "admin.listing_leads.status_conflict", {
+        id,
+        expected: current.status,
+        to: nextStatus,
+      });
+      return apiError("status_conflict", 409, { requestId });
+    }
 
     logApiInfo(request, "admin.listing_leads.status_updated", {
       id,
