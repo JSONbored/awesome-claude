@@ -298,12 +298,29 @@ if (fs.existsSync(tasksPath)) {
     }
   }
 
-  const completedLines = tasks
-    .split("\n")
-    .filter((line) => line.trim().startsWith("- [x]"));
+  // Kept in step with scripts/validate-tasks.mjs: both entry points
+  // (`pnpm validate:clean` and `pnpm validate:tasks`) enforce one TASKS.md
+  // policy, so a tracker that one rejects must not pass the other.
+  const taskLines = tasks.split("\n");
+  const completedLines = taskLines.filter((line) =>
+    line.trim().startsWith("- [x]"),
+  );
+  if (!completedLines.length) {
+    failures.push("TASKS.md has no completed items with evidence");
+  }
   for (const line of completedLines) {
     if (!line.includes("Evidence:") || !line.includes("`")) {
       failures.push(`Completed TASKS.md item lacks command evidence: ${line}`);
+    }
+  }
+
+  for (const line of taskLines.filter((entry) =>
+    /^- \[[ ~]\]/.test(entry.trim()),
+  )) {
+    if (line.includes("Evidence:")) {
+      failures.push(
+        `Non-complete TASKS.md item should not claim evidence: ${line}`,
+      );
     }
   }
 
