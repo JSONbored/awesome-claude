@@ -26,6 +26,7 @@ import {
   stripCodeBlocks,
   validateEntry,
 } from "../packages/registry/src/content-schema-lib.js";
+import { parseSafeFrontmatter } from "../packages/registry/src/frontmatter-lib.js";
 
 const CATEGORIES = [
   "agents",
@@ -1066,6 +1067,40 @@ describe("inferStructuredFields carries explicit optional fields", () => {
     );
     expect(inferred.verifiedAt).toBe("2026-01-02");
     expect(inferred.testedPlatforms).toEqual(["Claude", "Codex"]);
+  });
+
+  it("Date-guards unquoted YAML dateAdded when deriving verifiedAt", () => {
+    const source = [
+      "---",
+      "title: Demo skill",
+      "slug: demo-skill",
+      "description: Demo",
+      "dateAdded: 2025-09-18",
+      "---",
+      "Body.",
+    ].join("\n");
+    const { data } = parseSafeFrontmatter(source);
+    expect(data.dateAdded).toBeInstanceOf(Date);
+
+    const before = String(data.dateAdded).trim();
+    expect(before).not.toMatch(/^\d{4}-\d{2}-\d{2}$/);
+
+    const inferred = inferStructuredFields(data, "Body.", "skills");
+    expect(inferred.verifiedAt).toBe("2025-09-18");
+    expect(inferred.verifiedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  });
+
+  it("keeps quoted-string dateAdded verifiedAt fallback unchanged", () => {
+    const inferred = inferStructuredFields(
+      {
+        title: "T",
+        slug: "demo",
+        dateAdded: "2025-09-18",
+      },
+      "Body.",
+      "skills",
+    );
+    expect(inferred.verifiedAt).toBe("2025-09-18");
   });
 
   it("drops copySnippet/usageSnippet from an agents entry's recommended gaps", () => {

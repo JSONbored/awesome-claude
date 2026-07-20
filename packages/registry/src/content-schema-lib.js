@@ -461,6 +461,21 @@ const FIRST_CODE_BLOCK_INSTALL_CATEGORIES = new Set([
   "statuslines",
 ]);
 
+/**
+ * Normalize a frontmatter date-like value to YYYY-MM-DD.
+ * Mirrors content-builder-lib's normalizeDateAdded without importing it
+ * (that module already imports inferStructuredFields from here).
+ */
+function normalizeIsoDateField(value) {
+  if (!value) return "";
+  if (value instanceof Date && !Number.isNaN(value.getTime())) {
+    return value.toISOString().slice(0, 10);
+  }
+  const normalized = String(value).trim();
+  const isoMatch = normalized.match(/^\d{4}-\d{2}-\d{2}/);
+  return isoMatch?.[0] ?? normalized;
+}
+
 export function inferStructuredFields(data, body, category) {
   const codeBlocks = extractCodeBlocks(body);
   const firstCodeBlock = codeBlocks[0];
@@ -574,9 +589,9 @@ export function inferStructuredFields(data, body, category) {
   const verifiedAt =
     category === "skills"
       ? data.verifiedAt
-        ? String(data.verifiedAt).trim()
+        ? normalizeIsoDateField(data.verifiedAt)
         : data.dateAdded
-          ? String(data.dateAdded).trim()
+          ? normalizeIsoDateField(data.dateAdded)
           : ""
       : "";
   const retrievalSources = Array.isArray(data.retrievalSources)
