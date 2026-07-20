@@ -607,9 +607,19 @@ const submissionPreflightNonPrResponseSchema = submissionPreflightBaseResponseSc
   })
   .strict();
 
+/** Silent honeypot discard — intentionally sparse so bots learn nothing. */
+const submissionPreflightHoneypotResponseSchema = z
+  .object({
+    ok: z.literal(true),
+    valid: z.literal(false),
+    queued: z.literal(false),
+  })
+  .strict();
+
 export const submissionPreflightResponseSchema = z.union([
   submissionPreflightPrReadyResponseSchema,
   submissionPreflightNonPrResponseSchema,
+  submissionPreflightHoneypotResponseSchema,
 ]);
 
 export const downloadQuerySchema = z.object({
