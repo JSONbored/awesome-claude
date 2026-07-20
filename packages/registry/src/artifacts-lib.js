@@ -886,12 +886,15 @@ export function buildCursorSkillAdapter(entry) {
     "",
     "Use this rule when the user asks for this reusable skill workflow in Cursor. Cursor does not natively install Agent Skills from this package, so follow the SKILL.md instructions as a scoped workflow adapter.",
     "",
-    install ? "## Install" : "",
-    install ? codeBlock("bash", install) : "",
+    // `undefined` omits the optional Install block; `""` entries are intentional
+    // blank-line separators that must survive the filter (the previous `!== ""`
+    // filter stripped every blank line, collapsing the adapter into one block).
+    install ? "## Install" : undefined,
+    install ? codeBlock("bash", install) : undefined,
     "## Source",
     source,
   ]
-    .filter((line) => line !== "")
+    .filter((line) => line !== undefined)
     .join("\n");
 }
 

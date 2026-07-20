@@ -146,22 +146,27 @@ export function buildEntryCitationFacts(entry, params = {}) {
 export function renderEntryLlms(entry, params = {}) {
   const siteUrl = params.siteUrl || "https://heyclau.de";
   const permalink = `${siteUrl.replace(/\/$/, "")}/entry/${entry.category}/${entry.slug}`;
+  // `undefined` marks a line to omit entirely; `""` is an intentional blank-line
+  // separator that must survive the filter. (A single `""` sentinel for both
+  // intents is the bug this fixes — `.filter(Boolean)` dropped every blank line.)
   const lines = [
     `# ${clean(entry.title)}`,
     "",
     `URL: ${permalink}`,
     `Category: ${entry.category}`,
-    entry.author ? `Author: ${entry.author}` : "",
-    entry.submittedBy ? `Submitted by: ${entry.submittedBy}` : "",
+    entry.author ? `Author: ${entry.author}` : undefined,
+    entry.submittedBy ? `Submitted by: ${entry.submittedBy}` : undefined,
     entry.sourceSubmissionUrl
       ? `Original submission: ${entry.sourceSubmissionUrl}`
-      : "",
-    entry.importPrUrl ? `Import PR: ${entry.importPrUrl}` : "",
-    entry.dateAdded ? `Date added: ${entry.dateAdded}` : "",
-    entry.documentationUrl ? `Documentation: ${entry.documentationUrl}` : "",
-    entry.repoUrl ? `Repository: ${entry.repoUrl}` : "",
-    entry.githubUrl ? `Directory source: ${entry.githubUrl}` : "",
-    entry.downloadUrl ? `Download: ${entry.downloadUrl}` : "",
+      : undefined,
+    entry.importPrUrl ? `Import PR: ${entry.importPrUrl}` : undefined,
+    entry.dateAdded ? `Date added: ${entry.dateAdded}` : undefined,
+    entry.documentationUrl
+      ? `Documentation: ${entry.documentationUrl}`
+      : undefined,
+    entry.repoUrl ? `Repository: ${entry.repoUrl}` : undefined,
+    entry.githubUrl ? `Directory source: ${entry.githubUrl}` : undefined,
+    entry.downloadUrl ? `Download: ${entry.downloadUrl}` : undefined,
     "",
     "## Citation Facts",
     buildEntryCitationFacts(entry, { siteUrl }),
@@ -174,16 +179,16 @@ export function renderEntryLlms(entry, params = {}) {
       ? entry.tags.map((tag) => `- ${tag}`).join("\n")
       : "- none",
     "",
-    entry.safetyNotes?.length ? "## Safety Notes" : "",
+    entry.safetyNotes?.length ? "## Safety Notes" : undefined,
     ...bulletList(entry.safetyNotes),
-    entry.safetyNotes?.length ? "" : "",
-    entry.privacyNotes?.length ? "## Privacy Notes" : "",
+    entry.safetyNotes?.length ? "" : undefined,
+    entry.privacyNotes?.length ? "## Privacy Notes" : undefined,
     ...bulletList(entry.privacyNotes),
-    entry.privacyNotes?.length ? "" : "",
+    entry.privacyNotes?.length ? "" : undefined,
     "## Content",
     sectionText(entry),
     "",
-  ].filter(Boolean);
+  ].filter((line) => line !== undefined);
 
   return trimLineEndings(lines.join("\n"));
 }

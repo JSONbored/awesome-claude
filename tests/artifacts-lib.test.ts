@@ -888,6 +888,16 @@ describe("buildCursorSkillAdapter", () => {
     );
     expect(adapter).toContain("https://github.com/example/synthetic");
   });
+
+  it("keeps blank-line separators, including right after the closing frontmatter", () => {
+    const adapter = buildCursorSkillAdapter(FIXTURE_SKILLS);
+    // Blank line between the closing `---` and the body heading.
+    expect(adapter).toContain("---\n\n# skills lint-helper");
+    // Blank line before the optional Install section (not glued to the intro).
+    expect(adapter).toContain("\n\n## Install");
+    // The document is not collapsed into a single blank-line-free block.
+    expect(adapter).toMatch(/\n\n/);
+  });
 });
 
 describe("buildArtifactEnvelope", () => {

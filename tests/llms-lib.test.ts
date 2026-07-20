@@ -325,6 +325,31 @@ describe("renderEntryLlms", () => {
     expect(output).not.toContain("## Privacy Notes");
   });
 
+  it("keeps blank-line separators between every section", () => {
+    const output = renderEntryLlms(
+      entry({
+        author: "Ada",
+        tags: ["claude"],
+        safetyNotes: ["Runs locally"],
+        privacyNotes: ["No telemetry"],
+        body: "Do helpful things.",
+      }),
+    );
+    // A blank line follows the title and precedes each section header, rather
+    // than every blank line being stripped by the old `.filter(Boolean)`.
+    expect(output).toContain("# Demo Agent\n\n");
+    for (const header of [
+      "Citation Facts",
+      "Summary",
+      "Tags",
+      "Safety Notes",
+      "Privacy Notes",
+      "Content",
+    ]) {
+      expect(output).toContain(`\n\n## ${header}\n`);
+    }
+  });
+
   it("renders structured section content instead of raw body", () => {
     const output = renderEntryLlms(
       entry({
