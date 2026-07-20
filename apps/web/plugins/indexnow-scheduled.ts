@@ -2,6 +2,10 @@ import { definePlugin } from "nitro";
 
 import { getEnvString, runWithCloudflareRuntime } from "@/lib/cloudflare-env.server";
 import { getDirectoryEntries } from "@/lib/content.server";
+import {
+  INDEXNOW_CHANGE_WINDOW_MS,
+  isWithinIndexNowChangeWindow,
+} from "@/lib/indexnow-change-window-lib";
 import { siteConfig } from "@/lib/site";
 
 // Daily 05:00 UTC. Must match the string in wrangler.jsonc triggers.crons
@@ -13,9 +17,11 @@ const DAILY_CRON = "0 5 * * *";
 // ignores it and uses sitemap lastmod instead). We submit ONLY the URLs that
 // changed recently, never the whole sitemap: resubmitting unchanged URLs gives
 // no benefit and reads as spam. The key file is served from the site root.
+//
+// Window is ~26h (see INDEXNOW_CHANGE_WINDOW_MS): wider than the 24h cadence for
+// slight cron skew, but under 48h so a normal daily pair does not double-submit.
 const INDEXNOW_ENDPOINT = "https://api.indexnow.org/indexnow";
 const INDEXNOW_KEY = "48486ebc7ddc47af875118345161ae70";
-const WINDOW_MS = 48 * 60 * 60 * 1000; // entries added/updated in the last 48h
 const MAX_URLS = 1000; // IndexNow per-request cap
 
 type CloudflareScheduledPayload = {
@@ -61,7 +67,6 @@ export default definePlugin((nitroApp) => {
           }
 
           const now = Date.now();
-          const cutoff = now - WINDOW_MS;
           const entries = await getDirectoryEntries();
 
           const seen = new Set<string>();
@@ -69,7 +74,7 @@ export default definePlugin((nitroApp) => {
           for (const entry of entries) {
             const stampSource = entry.contentUpdatedAt ?? entry.dateAdded ?? "";
             const stamp = Date.parse(stampSource);
-            if (!Number.isFinite(stamp) || stamp < cutoff || stamp > now) continue;
+            if (!isWithinIndexNowChangeWindow(stamp, now, INDEXNOW_CHANGE_WINDOW_MS)) continue;
 
             // IndexNow rejects a batch if any URL's host differs from the
             // submitted `host`, so only trust canonicalUrl when it's HTTPS AND
@@ -86,7 +91,7 @@ export default definePlugin((nitroApp) => {
           }
 
           if (!urls.length) {
-            console.log("[indexnow] skipped: no URLs changed in the last 48h");
+            console.log("[indexnow] skipped: no URLs changed in the change window");
             return;
           }
 
