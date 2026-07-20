@@ -36,14 +36,24 @@ publishing.
 
 ## Release Checklist
 
-1. Update `packages/mcp/package.json` and `packages/mcp/CHANGELOG.md`.
-2. Merge the release PR to `main` after CI passes.
-3. Run the `Publish MCP Package` workflow manually from `main`.
-4. Approve the `npm-production` environment.
+Primary path (automated by release-please):
+
+1. Let release-please open/update the Release PR for `packages/mcp` (it bumps
+   `packages/mcp/package.json` and regenerates `packages/mcp/CHANGELOG.md` from
+   conventional commits — do not hand-edit those for a normal release).
+2. Review and merge the Release PR to `main` after CI passes.
+3. release-please tags `mcp-vX.Y.Z`, creates the GitHub Release, and dispatches
+   `Publish MCP Package` (`publish-mcp-npm.yml`) automatically.
+4. Approve the `npm-production` environment when prompted.
 5. Confirm npm and GitHub release outputs:
    - `npm view @heyclaude/mcp@<version>`
    - `npm exec -y @heyclaude/mcp@<version> -- --version`
    - GitHub release `mcp-v<version>`
+
+Override path only: if the automatic publish dispatch failed or must be re-run,
+manually `workflow_dispatch` `Publish MCP Package` from `main` (bare manual
+dispatch self-tags; do not use this as the primary release step, or you risk a
+double publish after a successful release-please dispatch).
 
 For release publishing, endpoint validation should use `--strict-tools` and
 `MCP_ENDPOINT_REQUIRE_SAFETY_METADATA=1` after the matching Worker code has
