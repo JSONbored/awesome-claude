@@ -4716,8 +4716,12 @@ describe("source-repo-signals-lib shouldRefreshSourceRepoSignal", () => {
       status: "ok",
       lastError: null,
     };
-    expect(compareSourceRepoRefreshPriority(undefined, errorSignal)).toBeLessThan(0);
-    expect(compareSourceRepoRefreshPriority(okSignal, errorSignal)).toBeLessThan(0);
+    expect(
+      compareSourceRepoRefreshPriority(undefined, errorSignal),
+    ).toBeLessThan(0);
+    expect(
+      compareSourceRepoRefreshPriority(okSignal, errorSignal),
+    ).toBeLessThan(0);
   });
   it("returns false for fresh ok signal", () => {
     const signal: SourceRepoSignal = {
