@@ -1,5 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { absoluteUrl } from "@/lib/seo";
+import { ogImageUrl } from "@/lib/og-image";
+import { ogImageMetaTags } from "@/lib/og-meta-lib";
 import { breadcrumbScript } from "@/lib/seo-jsonld";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
@@ -77,6 +79,7 @@ export const Route = createFileRoute("/jobs/$slug")({
     const url = absoluteUrl(`/jobs/${params.slug}`);
     const title = `${job.title} at ${job.company}`;
     const description = job.description || "Source-verified role from the HeyClaude jobs board.";
+    const ogImage = ogImageUrl({ title, eyebrow: "Job", description });
     return {
       meta: [
         { title: `${title} — HeyClaude jobs` },
@@ -84,7 +87,7 @@ export const Route = createFileRoute("/jobs/$slug")({
         { property: "og:title", content: title },
         { property: "og:description", content: description },
         { property: "og:url", content: url },
-        { property: "og:type", content: "article" },
+        ...ogImageMetaTags(ogImage, "article"),
       ],
       links: [{ rel: "canonical", href: url }],
       scripts: [
