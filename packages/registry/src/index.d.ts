@@ -370,10 +370,6 @@ export type RegistryCategorySpecEntry = {
   usageHint: string;
   quickstart?: string[];
   template: string;
-  requiresAssetContent: boolean;
-  requiresUsageSnippet: boolean;
-  supportsSkillMetadata: boolean;
-  supportsDownloadUrl: boolean;
 };
 
 export type RegistryCategorySpec = {

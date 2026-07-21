@@ -80,10 +80,6 @@
       "contentRequired": ["title", "slug", "description", "cardDescription"],
       "contentRecommended": ["usageSnippet", "copySnippet"],
       "submissionRequired": ["full_copyable_content"],
-      "requiresUsageSnippet": false,
-      "requiresAssetContent": true,
-      "supportsSkillMetadata": false,
-      "supportsDownloadUrl": false,
       "quickstart": [
         "Open the full asset and review the role boundaries.",
         "Copy the complete prompt into your Claude agent definition.",
@@ -104,10 +100,6 @@
         "configSnippet"
       ],
       "submissionRequired": ["install_command", "usage_snippet"],
-      "requiresUsageSnippet": true,
-      "requiresAssetContent": false,
-      "supportsSkillMetadata": false,
-      "supportsDownloadUrl": true,
       "quickstart": [
         "Run the install command from a trusted source.",
         "Copy the Claude config into your MCP configuration.",
@@ -135,11 +127,6 @@
         "operatingSystem"
       ],
       "submissionRequired": [],
-      "requiresUsageSnippet": false,
-      "requiresAssetContent": false,
-      "supportsSkillMetadata": false,
-      "supportsDownloadUrl": false,
-      "commercialSubmission": true,
       "quickstart": [
         "Open the website and verify the product matches your use case.",
         "Review pricing, source links, and any sponsorship disclosure.",
@@ -171,10 +158,6 @@
         "skill_level",
         "verification_status"
       ],
-      "requiresUsageSnippet": true,
-      "requiresAssetContent": false,
-      "supportsSkillMetadata": true,
-      "supportsDownloadUrl": true,
       "quickstart": [
         "Review the source, install command, or full copyable content.",
         "Review retrieval sources and tested platforms.",
@@ -190,10 +173,6 @@
       "contentRequired": ["title", "slug", "description", "cardDescription"],
       "contentRecommended": ["copySnippet"],
       "submissionRequired": ["full_copyable_content"],
-      "requiresUsageSnippet": false,
-      "requiresAssetContent": true,
-      "supportsSkillMetadata": false,
-      "supportsDownloadUrl": false,
       "quickstart": [
         "Read the rule for scope and caveats.",
         "Copy the full rule into CLAUDE.md or your rule system.",
@@ -213,10 +192,6 @@
         "usage_snippet",
         "full_copyable_content"
       ],
-      "requiresUsageSnippet": true,
-      "requiresAssetContent": true,
-      "supportsSkillMetadata": false,
-      "supportsDownloadUrl": false,
       "quickstart": [
         "Copy the command syntax.",
         "Paste the full command asset into your command registry.",
@@ -242,10 +217,6 @@
         "usage_snippet",
         "full_copyable_content"
       ],
-      "requiresUsageSnippet": true,
-      "requiresAssetContent": true,
-      "supportsSkillMetadata": false,
-      "supportsDownloadUrl": false,
       "quickstart": [
         "Copy the hook script into your repo.",
         "Add the config under the listed Claude Code trigger.",
@@ -261,10 +232,6 @@
       "contentRequired": ["title", "slug", "description", "cardDescription"],
       "contentRecommended": ["usageSnippet"],
       "submissionRequired": ["guide_content"],
-      "requiresUsageSnippet": false,
-      "requiresAssetContent": true,
-      "supportsSkillMetadata": false,
-      "supportsDownloadUrl": false,
       "quickstart": [
         "Scan prerequisites first.",
         "Follow the guide steps in order.",
@@ -280,10 +247,6 @@
       "contentRequired": ["title", "slug", "description", "cardDescription"],
       "contentRecommended": ["items"],
       "submissionRequired": ["items"],
-      "requiresUsageSnippet": false,
-      "requiresAssetContent": false,
-      "supportsSkillMetadata": false,
-      "supportsDownloadUrl": false,
       "quickstart": [
         "Review the included entries.",
         "Follow the recommended installation order when present.",
@@ -309,10 +272,6 @@
         "usage_snippet",
         "full_copyable_content"
       ],
-      "requiresUsageSnippet": true,
-      "requiresAssetContent": true,
-      "supportsSkillMetadata": false,
-      "supportsDownloadUrl": false,
       "quickstart": [
         "Copy the statusline config.",
         "Install or adapt the script asset.",
