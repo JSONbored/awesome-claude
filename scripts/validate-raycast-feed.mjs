@@ -253,6 +253,7 @@ for (const entry of payload.entries) {
   if (
     entry.copyText !== undefined &&
     entry.copyTextTruncated &&
+    typeof detail.copyText === "string" &&
     detail.copyText.length <= String(entry.copyText ?? "").length
   ) {
     fail(`${key}: truncated feed entry must have longer detail copyText`);

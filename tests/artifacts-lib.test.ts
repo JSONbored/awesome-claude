@@ -781,6 +781,13 @@ describe("buildRaycastDetail", () => {
     expect(detail.safetyNotes).toEqual(FIXTURE_MCP.safetyNotes);
     expect(detail.privacyNotes).toEqual(FIXTURE_MCP.privacyNotes);
   });
+
+  it("includes full copyText for detail payloads", () => {
+    const detail = buildRaycastDetail(FIXTURE_MCP);
+    expect(typeof detail.copyText).toBe("string");
+    expect(detail.copyText?.length).toBeGreaterThan(0);
+    expect(detail.copyTextTruncated).toBe(false);
+  });
 });
 
 describe("buildRaycastEntries", () => {
@@ -801,6 +808,41 @@ describe("buildRaycastEntries", () => {
     );
     expect(mcpRow?.platformCompatibility).toEqual(
       buildEntryTrustSignals(FIXTURE_MCP).platforms,
+    );
+  });
+
+  it("includes preview-capped copyText on feed rows", () => {
+    const longBody = "x".repeat(RAYCAST_COPY_PREVIEW_LIMIT + 50);
+    const row = buildRaycastEntries([
+      {
+        ...FIXTURE_MCP,
+        body: longBody,
+        installCommand: "",
+        configSnippet: "",
+        copySnippet: "",
+        usageSnippet: "",
+        documentationUrl: "",
+        repoUrl: "",
+      },
+    ])[0];
+    const detail = buildRaycastDetail({
+      ...FIXTURE_MCP,
+      body: longBody,
+      installCommand: "",
+      configSnippet: "",
+      copySnippet: "",
+      usageSnippet: "",
+      documentationUrl: "",
+      repoUrl: "",
+    });
+
+    expect(row?.copyText).toBeDefined();
+    expect(String(row?.copyText).length).toBeLessThanOrEqual(
+      RAYCAST_COPY_PREVIEW_LIMIT,
+    );
+    expect(row?.copyTextTruncated).toBe(true);
+    expect(detail.copyText?.length).toBeGreaterThan(
+      String(row?.copyText ?? "").length,
     );
   });
 });

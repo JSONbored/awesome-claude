@@ -99,6 +99,24 @@ function raycastPackageTrust(entry) {
   return "no package download";
 }
 
+function buildRaycastCopyFields(entry, { preview = false } = {}) {
+  const full = String(getCopyText(entry) || "").trim();
+  if (!full) return {};
+
+  if (!preview) {
+    return {
+      copyText: full,
+      copyTextTruncated: false,
+    };
+  }
+
+  const copyText = truncateText(full, RAYCAST_COPY_PREVIEW_LIMIT);
+  return {
+    copyText,
+    copyTextTruncated: full.length > RAYCAST_COPY_PREVIEW_LIMIT,
+  };
+}
+
 function pushRaycastTrustSection(lines, entry) {
   const source =
     entry.repoUrl || entry.documentationUrl
@@ -918,6 +936,7 @@ export function buildRaycastEntries(entries) {
       downloadTrust: entry.downloadTrust,
       verificationStatus: entry.verificationStatus || "",
       ...buildCompactInstallFields(entry),
+      ...buildRaycastCopyFields(entry, { preview: true }),
       platformCompatibility:
         entry.category === "skills"
           ? buildSkillPlatformCompatibility(entry)
@@ -979,6 +998,7 @@ export function buildRaycastDetail(entry) {
     packageVerified: Boolean(entry.packageVerified),
     trustSignals: buildEntryTrustSignals(entry),
     ...buildRaycastInstallDetailFields(entry),
+    ...buildRaycastCopyFields(entry, { preview: false }),
   };
 }
 
