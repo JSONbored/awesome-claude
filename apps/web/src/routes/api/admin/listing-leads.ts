@@ -132,10 +132,23 @@ export const PATCH = createApiHandler(
       return apiError("invalid_transition", 400, { requestId });
     }
 
-    await db
-      .prepare("UPDATE listing_leads SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?")
-      .bind(nextStatus, id)
+    // Condition the write on the status we just read so a concurrent PATCH
+    // cannot silently overwrite a different transition (lost-update race).
+    const result = await db
+      .prepare(
+        "UPDATE listing_leads SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND status = ?",
+      )
+      .bind(nextStatus, id, current.status)
       .run();
+
+    if (Number(result.meta?.changes ?? 0) === 0) {
+      logApiWarn(request, "admin.listing_leads.status_conflict", {
+        id,
+        from: current.status,
+        attempted: nextStatus,
+      });
+      return apiError("conflict", 409, { requestId });
+    }
 
     logApiInfo(request, "admin.listing_leads.status_updated", {
       id,
