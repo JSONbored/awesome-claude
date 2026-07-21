@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import { getApiRouteDefinition } from "../apps/web/src/lib/api/contracts";
 import { POST } from "../apps/web/src/routes/api/public/newsletter/unsubscribe";
 
 const WEBHOOK_URL = "https://heyclau.de/api/public/newsletter/unsubscribe";
@@ -30,6 +31,36 @@ describe("newsletter unsubscribe route", () => {
     delete globalWithEnv.__env__;
     vi.unstubAllGlobals();
     vi.restoreAllMocks();
+  });
+
+  it("registers a durable Cloudflare rate-limit binding", () => {
+    expect(
+      getApiRouteDefinition("newsletter.unsubscribe").rateLimit,
+    ).toMatchObject({
+      scope: "newsletter-unsubscribe",
+      limit: 15,
+      windowMs: 60_000,
+      binding: "API_STRICT_RATE_LIMIT",
+    });
+  });
+
+  it("returns 429 before upstream fetch when the Cloudflare binding denies", async () => {
+    const fetchMock = vi.fn(async () => new Response("ok", { status: 200 }));
+    vi.stubGlobal("fetch", fetchMock);
+    globalWithEnv.__env__ = {
+      RESEND_API_KEY: "resend-key",
+      RESEND_SEGMENT_ID: "seg-general",
+      API_STRICT_RATE_LIMIT: {
+        limit: async () => ({ success: false }),
+      },
+    };
+
+    const response = await POST(
+      unsubscribeRequest({ email: "user@example.com" }),
+    );
+
+    expect(response.status).toBe(429);
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it("returns provider_error when upstream calls fail with network errors", async () => {

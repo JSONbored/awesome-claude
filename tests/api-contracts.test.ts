@@ -155,6 +155,12 @@ describe("OpenAPI route coverage", () => {
       ]),
     });
     expect(
+      ENDPOINTS.find((endpoint) => endpoint.id === "newsletter-unsubscribe"),
+    ).toMatchObject({
+      method: "POST",
+      path: "/api/public/newsletter/unsubscribe",
+    });
+    expect(
       ENDPOINTS.find((endpoint) => endpoint.id === "submissions-preflight"),
     ).toMatchObject({
       liveRequest: false,
