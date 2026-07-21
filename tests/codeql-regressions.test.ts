@@ -76,7 +76,7 @@ describe("CodeQL regression coverage", () => {
     const confirmRoute = read(
       "apps/web/src/routes/api/public/newsletter/confirm.ts",
     );
-    const newsletterClient = read("apps/web/src/lib/api/newsletter.ts");
+    const newsletterClient = read("apps/web/src/lib/newsletter-api-client-lib.ts");
 
     expect(subscribeRoute).not.toContain("Access-Control-Allow-Origin");
     expect(subscribeRoute).not.toContain("request.json()");
