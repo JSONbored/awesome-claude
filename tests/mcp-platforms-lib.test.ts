@@ -22,6 +22,7 @@ describe("platforms-lib feed slugs", () => {
 describe("platforms-lib skill compatibility", () => {
   it("builds default skill compatibility while preserving explicit metadata", () => {
     expect(buildSkillPlatformCompatibility({ category: "mcp" })).toEqual([]);
+    expect(buildSkillPlatformCompatibility({ category: "tools" })).toEqual([]);
 
     const explicit = [
       {
@@ -56,6 +57,32 @@ describe("platforms-lib skill compatibility", () => {
       support: "adapter",
       artifact: ".cursor/rules/branch-matrix.mdc",
       adapterUrl: "/data/skill-adapters/cursor/branch-matrix.mdc",
+    });
+  });
+
+  it("maps mcp configSnippet targets into platformCompatibility", () => {
+    const compatibility = buildSkillPlatformCompatibility({
+      category: "mcp",
+      slug: "example-mcp",
+      configSnippet: JSON.stringify({
+        mcpServers: {
+          example: {
+            command: "npx",
+            args: ["-y", "example-mcp@latest"],
+          },
+        },
+      }),
+    });
+
+    expect(compatibility.map((item) => item.platform)).toEqual([
+      "claude-code",
+      "codex",
+      "cursor",
+      "antigravity",
+    ]);
+    expect(compatibility[0]).toMatchObject({
+      support: "native-mcp",
+      artifact: "MCP server config",
     });
   });
 });
