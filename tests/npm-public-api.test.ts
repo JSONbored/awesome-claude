@@ -131,4 +131,21 @@ describe("public npm metadata API cache", () => {
     expect(response.status).toBe(429);
     expect(fetchMock).not.toHaveBeenCalled();
   });
+
+  it("rejects invalid package names with 400 before any upstream fetch", async () => {
+    const fetchMock = vi.fn(async () =>
+      okJson({ name: "x", version: "1.0.0" }),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    const response = await GET(requestFor("../evil"), {
+      params: { _splat: "../evil" },
+    });
+
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toEqual({
+      error: "Invalid package name",
+    });
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
 });

@@ -141,6 +141,19 @@ describe("OpenAPI route coverage", () => {
       ]),
     });
     expect(
+      ENDPOINTS.find((endpoint) => endpoint.id === "publicNpm-read"),
+    ).toMatchObject({
+      method: "GET",
+      path: "/api/public/npm/{pkg}",
+      parameters: expect.arrayContaining([
+        expect.objectContaining({
+          name: "pkg",
+          in: "path",
+          example: "@heyclaude/mcp",
+        }),
+      ]),
+    });
+    expect(
       ENDPOINTS.find((endpoint) => endpoint.id === "submissions-preflight"),
     ).toMatchObject({
       liveRequest: false,
