@@ -255,7 +255,7 @@ describe("registry artifacts", () => {
     // These budgets are growth guards, not fixed caps. The public registry
     // grows with curated content, so keep them per-entry to catch runaway
     // artifact bloat without failing every normal catalog expansion.
-    expect(artifactTreeSize(".")).toBeLessThan(2_000_000 + entryCount * 38_500);
+    expect(artifactTreeSize(".")).toBeLessThan(2_000_000 + entryCount * 41_500);
     expect(artifactSize("directory-index.json")).toBeLessThan(
       200_000 + entryCount * 2_150,
     );
@@ -263,7 +263,7 @@ describe("registry artifacts", () => {
       125_000 + entryCount * 1_600,
     );
     expect(artifactSize("raycast-index.json")).toBeLessThan(
-      100_000 + entryCount * 1_100,
+      100_000 + entryCount * 1_900,
     );
     expect(artifactSize("relation-graph.json")).toBeLessThan(
       150_000 + entryCount * 1_500,
@@ -1390,14 +1390,30 @@ Use this hook after reviewing the notes.`,
         key,
         llmsUrl: `/api/registry/entries/${entry.category}/${entry.slug}/llms`,
       });
-      expect(raycastDetail).not.toHaveProperty("copyText");
+      const fullCopyText = getCopyText(entry).trim();
+      if (fullCopyText) {
+        expect(raycastDetail.copyText).toBe(fullCopyText);
+        expect(raycastDetail.copyTextTruncated).toBe(false);
+        expect(typeof raycastFeedEntry.copyText).toBe("string");
+        expect(String(raycastFeedEntry.copyText).length).toBeLessThanOrEqual(
+          RAYCAST_COPY_PREVIEW_LIMIT,
+        );
+        expect(typeof raycastFeedEntry.copyTextTruncated).toBe("boolean");
+        if (raycastFeedEntry.copyTextTruncated) {
+          expect(String(raycastDetail.copyText).length).toBeGreaterThan(
+            String(raycastFeedEntry.copyText).length,
+          );
+        }
+      } else {
+        expect(raycastDetail).not.toHaveProperty("copyText");
+        expect(raycastFeedEntry).not.toHaveProperty("copyText");
+        expect(raycastFeedEntry).not.toHaveProperty("copyTextTruncated");
+      }
       expect(raycastFeedEntry.canonicalUrl).toBe(
         `https://heyclau.de/entry/${entry.category}/${entry.slug}`,
       );
       expect(raycastFeedEntry).not.toHaveProperty("llmsUrl");
-      expect(raycastFeedEntry).not.toHaveProperty("copyText");
       expect(raycastFeedEntry).not.toHaveProperty("copyTextLength");
-      expect(raycastFeedEntry).not.toHaveProperty("copyTextTruncated");
       expect(raycastFeedEntry).not.toHaveProperty("detailMarkdown");
     }
     expect(fs.existsSync(path.join(dataRoot, "llms"))).toBe(false);
