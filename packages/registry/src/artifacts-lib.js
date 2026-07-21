@@ -549,6 +549,19 @@ function buildListTrustSignals(entry) {
   };
 }
 
+/** Sparse note flags for Raycast local browse filters — omit when both false. */
+function buildRaycastFeedTrustSignals(entry) {
+  const hasSafetyNotes = noteList(entry.safetyNotes).length > 0;
+  const hasPrivacyNotes = noteList(entry.privacyNotes).length > 0;
+  if (!hasSafetyNotes && !hasPrivacyNotes) {
+    return undefined;
+  }
+  return {
+    hasSafetyNotes,
+    hasPrivacyNotes,
+  };
+}
+
 function buildCompactInstallFields(entry) {
   const mcpInstallConfig =
     entry.category === "mcp" ? resolveRaycastMcpInstallConfig(entry) : null;
@@ -922,6 +935,7 @@ export function buildRaycastEntries(entries) {
         entry.category === "skills"
           ? buildSkillPlatformCompatibility(entry)
           : buildEntryPlatformNames(entry),
+      trustSignals: buildRaycastFeedTrustSignals(entry),
     });
   });
 }
