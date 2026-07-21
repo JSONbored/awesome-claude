@@ -114,7 +114,9 @@ describe("public npm metadata API cache", () => {
   });
 
   it("returns 429 before upstream fetch when the Cloudflare binding denies", async () => {
-    const fetchMock = vi.fn(async () => okJson({ name: "x", version: "1.0.0" }));
+    const fetchMock = vi.fn(async () =>
+      okJson({ name: "x", version: "1.0.0" }),
+    );
     vi.stubGlobal("fetch", fetchMock);
     globalWithEnv.__env__ = {
       API_DYNAMIC_RATE_LIMIT: {
