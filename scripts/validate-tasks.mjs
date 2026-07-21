@@ -1,7 +1,15 @@
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const repoRoot = path.resolve(new URL("..", import.meta.url).pathname);
+// `new URL(...).pathname` yields a leading-slash path ("/C:/...") on Windows,
+// which resolves to "C:\C:\..." and never matches the repo - the gate then
+// reports "TASKS.md is not present" and exits 0 even for an invalid tracker.
+// Every sibling script uses fileURLToPath for exactly this reason.
+const repoRoot = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "..",
+);
 const tasksPath = path.join(repoRoot, "TASKS.md");
 const requireTasks =
   String(process.env.REQUIRE_TASKS ?? "")
