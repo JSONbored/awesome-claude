@@ -105,7 +105,7 @@ describe("crawler and AI citation policy", () => {
       "utf8",
     );
     const llmsHelperSource = fs.readFileSync(
-      path.join(repoRoot, "apps/web/src/lib/llms.ts"),
+      path.join(repoRoot, "apps/web/src/lib/llms-text-route-lib.ts"),
       "utf8",
     );
     const fullRouteSource = fs.readFileSync(
