@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  DOWNLOAD_CACHE_CONTROL,
   filenameFromAsset,
   getContentType,
   isAllowedAssetPath,
@@ -41,5 +42,15 @@ describe("filenameFromAsset", () => {
   it("falls back to 'download' when there is no segment", () => {
     expect(filenameFromAsset("///")).toBe("download");
     expect(filenameFromAsset("")).toBe("download");
+  });
+});
+
+describe("DOWNLOAD_CACHE_CONTROL", () => {
+  it("keeps long-lived caching without immutable pinning", () => {
+    expect(DOWNLOAD_CACHE_CONTROL).toContain("max-age=");
+    expect(DOWNLOAD_CACHE_CONTROL).toContain("s-maxage=");
+    expect(DOWNLOAD_CACHE_CONTROL).toContain("stale-while-revalidate=");
+    expect(DOWNLOAD_CACHE_CONTROL).not.toContain("immutable");
+    expect(DOWNLOAD_CACHE_CONTROL).not.toContain("31536000");
   });
 });

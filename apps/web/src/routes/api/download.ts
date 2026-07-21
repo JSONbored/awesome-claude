@@ -4,7 +4,12 @@ import { downloadQuerySchema } from "@/lib/api/contracts";
 import { apiError, createApiHandler, type InferApiQuery } from "@/lib/api/router";
 import { logApiError, logApiInfo, logApiWarn, sample } from "@/lib/api-logs";
 import { readDownloadAsset } from "@/lib/download-assets.server";
-import { filenameFromAsset, getContentType, isAllowedAssetPath } from "@/lib/download-asset-lib";
+import {
+  filenameFromAsset,
+  getContentType,
+  isAllowedAssetPath,
+  DOWNLOAD_CACHE_CONTROL,
+} from "@/lib/download-asset-lib";
 
 export const GET = createApiHandler("download", async ({ request, query, requestId }) => {
   const { asset } = query as InferApiQuery<typeof downloadQuerySchema>;
@@ -31,7 +36,7 @@ export const GET = createApiHandler("download", async ({ request, query, request
       headers: {
         "content-type": getContentType(asset),
         "content-disposition": `attachment; filename="${filename}"`,
-        "cache-control": "public, max-age=31536000, immutable",
+        "cache-control": DOWNLOAD_CACHE_CONTROL,
         "x-content-type-options": "nosniff",
       },
     });
