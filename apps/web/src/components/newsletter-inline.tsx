@@ -152,11 +152,20 @@ export function NewsletterInline({
             )}
           </button>
         </form>
-        <p className="mt-3 text-[11px] text-ink-subtle">
-          {done
-            ? successMessage
-            : error || "Unsubscribe any time. No tracking pixels. No partner blasts."}
-        </p>
+        {done ? (
+          <p className="mt-3 text-[11px] text-ink-subtle">{successMessage}</p>
+        ) : (
+          <>
+            {error && (
+              <p role="alert" className="mt-3 text-[11px] text-trust-blocked">
+                {error}
+              </p>
+            )}
+            <p className="mt-3 text-[11px] text-ink-subtle">
+              Unsubscribe any time. No tracking pixels. No partner blasts.
+            </p>
+          </>
+        )}
       </section>
     );
   }
