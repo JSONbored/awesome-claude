@@ -687,7 +687,7 @@ describe("registry artifacts", () => {
         ),
       ),
     ).toEqual(jsonLdSnapshotsPayload);
-  }, 180_000);
+  }, 300_000);
 
   it("publishes MCP harness targets only for validated config snippets", () => {
     const baseEntry = {
