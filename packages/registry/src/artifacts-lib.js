@@ -556,10 +556,11 @@ function buildRaycastFeedTrustSignals(entry) {
   if (!hasSafetyNotes && !hasPrivacyNotes) {
     return undefined;
   }
-  return {
-    hasSafetyNotes,
-    hasPrivacyNotes,
-  };
+  // Only emit true flags — filters/accessories use truthy checks via `?.`.
+  return compactDefinedObject({
+    hasSafetyNotes: hasSafetyNotes || undefined,
+    hasPrivacyNotes: hasPrivacyNotes || undefined,
+  });
 }
 
 function buildCompactInstallFields(entry) {

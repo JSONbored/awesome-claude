@@ -807,10 +807,17 @@ describe("buildRaycastEntries", () => {
   it("includes sparse note trustSignals for local Has Safety/Privacy filters", () => {
     const withNotes = buildRaycastEntries([FIXTURE_MCP])[0];
     const withoutNotes = buildRaycastEntries([SPARSE_ENTRY])[0];
+    const safetyOnly = buildRaycastEntries([
+      syntheticEntry("mcp", "safety-only", {
+        safetyNotes: ["Careful"],
+        privacyNotes: [],
+      }),
+    ])[0];
     expect(withNotes?.trustSignals).toEqual({
       hasSafetyNotes: true,
       hasPrivacyNotes: true,
     });
+    expect(safetyOnly?.trustSignals).toEqual({ hasSafetyNotes: true });
     expect(withoutNotes?.trustSignals).toBeUndefined();
     expect(withNotes?.trustSignals).not.toHaveProperty("platforms");
     expect(withNotes?.trustSignals).not.toHaveProperty("supportLevels");

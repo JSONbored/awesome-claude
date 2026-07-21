@@ -263,7 +263,9 @@ describe("registry artifacts", () => {
       125_000 + entryCount * 1_600,
     );
     expect(artifactSize("raycast-index.json")).toBeLessThan(
-      100_000 + entryCount * 1_100,
+      // Sparse trustSignals note flags (~2 bools/entry when notes exist) need
+      // a slightly higher per-entry allowance than the pre-#5240 feed shape.
+      100_000 + entryCount * 1_150,
     );
     expect(artifactSize("relation-graph.json")).toBeLessThan(
       150_000 + entryCount * 1_500,
