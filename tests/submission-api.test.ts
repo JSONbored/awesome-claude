@@ -534,7 +534,8 @@ describe("website submission preflight API", () => {
   });
 
   it("validates the honeypot discard response against the published response schema", async () => {
-    const { submissionPreflightResponseSchema } = await import("@/lib/api/contracts");
+    const { submissionPreflightResponseSchema } =
+      await import("@/lib/api/contracts");
     const { POST } = await import("@/routes/api/submissions/preflight");
     const response = await POST(
       preflightRequest({ fields: validFields(), honeypot: "bot" }),
@@ -542,12 +543,15 @@ describe("website submission preflight API", () => {
     const body = await response.json();
 
     // The real runtime response must validate as a documented variant.
-    expect(submissionPreflightResponseSchema.safeParse(body).success).toBe(true);
+    expect(submissionPreflightResponseSchema.safeParse(body).success).toBe(
+      true,
+    );
 
     // Near-misses must still be rejected, so the schema stays exact rather
     // than accidentally loosening to accept any `{ ok, valid }` object.
     expect(
-      submissionPreflightResponseSchema.safeParse({ ok: true, valid: false }).success,
+      submissionPreflightResponseSchema.safeParse({ ok: true, valid: false })
+        .success,
     ).toBe(false);
     expect(
       submissionPreflightResponseSchema.safeParse({
