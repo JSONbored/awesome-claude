@@ -262,6 +262,17 @@ describe("OpenAPI route coverage", () => {
     expect(schema).toContain("status transition");
   });
 
+  it("paginates the admin listing-leads endpoint with an offset query param", () => {
+    expect(
+      parsedSchema.paths["/api/admin/listing-leads"]?.get?.parameters,
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ name: "limit", in: "query" }),
+        expect.objectContaining({ name: "offset", in: "query" }),
+      ]),
+    );
+  });
+
   it("documents platform-aware search and social preview generation", () => {
     expect(parsedSchema.paths["/api/registry/search"]?.get?.parameters).toEqual(
       expect.arrayContaining([

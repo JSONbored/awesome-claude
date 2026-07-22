@@ -15,7 +15,7 @@ import {
 } from "@/lib/api/router";
 import { isLeadsAdminAuthorized } from "@/lib/admin-auth";
 import { logApiError, logApiInfo, logApiWarn } from "@/lib/api-logs";
-import { leadsToCsv, normalizeKind } from "@/lib/listing-leads-csv-lib";
+import { clampListingLeadsOffset, leadsToCsv, normalizeKind } from "@/lib/listing-leads-csv-lib";
 import { getSiteDb } from "@/lib/db";
 
 const MAX_LIMIT = 100;
@@ -38,6 +38,7 @@ export const GET = createApiHandler(
     const kind = normalizeKind(query.kind);
     const status = normalizeCommercialStatus(query.status);
     const limit = Math.max(1, Math.min(MAX_LIMIT, Math.trunc(query.limit)));
+    const offset = clampListingLeadsOffset(query.offset);
     const format = query.format;
 
     const where = [];
@@ -71,9 +72,9 @@ export const GET = createApiHandler(
       FROM listing_leads
       ${whereSql}
       ORDER BY created_at DESC
-      LIMIT ?`,
+      LIMIT ? OFFSET ?`,
       )
-      .bind(...values, limit)
+      .bind(...values, limit, offset)
       .all();
 
     if (format === "csv") {

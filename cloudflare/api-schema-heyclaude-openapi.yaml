@@ -8139,6 +8139,16 @@ paths:
           name: limit
           in: query
         - schema:
+            type:
+              - integer
+              - "null"
+            minimum: 0
+            maximum: 10000
+            default: 0
+          required: false
+          name: offset
+          in: query
+        - schema:
             type: string
             default: ""
           required: false
