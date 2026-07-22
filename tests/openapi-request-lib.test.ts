@@ -4,7 +4,10 @@ import type {
   OpenApiEndpoint,
   OpenApiParam,
 } from "../apps/web/src/data/openapi";
-import { buildRequestUrl } from "../apps/web/src/lib/openapi-request-lib";
+import {
+  buildCurlCommand,
+  buildRequestUrl,
+} from "../apps/web/src/lib/openapi-request-lib";
 
 const param = (
   over: Partial<OpenApiParam> & Pick<OpenApiParam, "name" | "in">,
@@ -73,5 +76,63 @@ describe("buildRequestUrl", () => {
       ],
     });
     expect(buildRequestUrl(ep, {})).toBe("/api/v1/subnets/7");
+  });
+});
+
+describe("buildCurlCommand", () => {
+  it("builds a simple GET curl from documented path/query examples", () => {
+    const ep = endpoint({
+      method: "GET",
+      path: "/api/v1/entries",
+      parameters: [param({ name: "category", in: "query", example: "mcp" })],
+    });
+    expect(buildCurlCommand(ep)).toBe(
+      "curl 'https://heyclau.de/api/v1/entries?category=mcp'",
+    );
+  });
+
+  it("uses the live playground body for POST curl -d payload", () => {
+    const ep = endpoint({
+      id: "votes.toggle",
+      method: "POST",
+      path: "/api/v1/votes/toggle",
+      body: {
+        contentType: "application/json",
+        example: '{\n  "key": "mcp:old",\n  "vote": true\n}',
+      },
+    });
+    const edited =
+      '{"key":"mcp:github-mcp-server","clientId":"anon","vote":false}';
+    expect(buildCurlCommand(ep, edited)).toBe(
+      'curl -X POST \'https://heyclau.de/api/v1/votes/toggle\' \\\n  -H \'content-type: application/json\' \\\n  -d \'{"key":"mcp:github-mcp-server","clientId":"anon","vote":false}\'',
+    );
+  });
+
+  it("falls back to the documented body example when no live body is passed", () => {
+    const ep = endpoint({
+      method: "PATCH",
+      path: "/api/v1/example",
+      body: {
+        contentType: "application/json",
+        example: '{\n  "status": "active"\n}',
+      },
+    });
+    expect(buildCurlCommand(ep)).toBe(
+      "curl -X PATCH 'https://heyclau.de/api/v1/example' \\\n  -H 'content-type: application/json' \\\n  -d '{  \"status\": \"active\"}'",
+    );
+  });
+
+  it("strips newlines from the live body the same way the static example did", () => {
+    const ep = endpoint({
+      method: "POST",
+      path: "/api/v1/newsletter/subscribe",
+      body: {
+        contentType: "application/json",
+        example: '{"email":"a@b.c"}',
+      },
+    });
+    expect(buildCurlCommand(ep, '{\n  "email": "reader@example.com"\n}')).toBe(
+      "curl -X POST 'https://heyclau.de/api/v1/newsletter/subscribe' \\\n  -H 'content-type: application/json' \\\n  -d '{  \"email\": \"reader@example.com\"}'",
+    );
   });
 });

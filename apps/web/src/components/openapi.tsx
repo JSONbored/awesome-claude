@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Send, Loader2, ChevronDown } from "lucide-react";
 import { CopyButton } from "@/components/copy-button";
 import type { OpenApiEndpoint, OpenApiParam } from "@/data/openapi";
-import { buildRequestUrl } from "@/lib/openapi-request-lib";
+import { buildCurlCommand, buildRequestUrl } from "@/lib/openapi-request-lib";
 import { trackEvent } from "@/lib/analytics";
 import {
   openApiAdvancedToggleAnalyticsData,
@@ -34,6 +34,9 @@ export function MethodPill({ method }: { method: OpenApiEndpoint["method"] }) {
 }
 
 export function OpenApiEndpointCard({ endpoint }: { endpoint: OpenApiEndpoint }) {
+  // Lift body state so playground edits drive the left-column curl snippet.
+  const [body, setBody] = useState(endpoint.body?.example ?? "");
+
   return (
     <article id={endpoint.id} className="scroll-mt-24 rounded-xl border border-border bg-surface">
       <header className="flex flex-wrap items-center gap-3 border-b border-border px-5 py-3">
@@ -96,30 +99,16 @@ export function OpenApiEndpointCard({ endpoint }: { endpoint: OpenApiEndpoint })
               <code>{endpoint.responseExample}</code>
             </pre>
           </div>
-          <CurlBlock endpoint={endpoint} />
+          <CurlBlock endpoint={endpoint} body={body} />
         </div>
-        <OpenApiPlayground endpoint={endpoint} />
+        <OpenApiPlayground endpoint={endpoint} body={body} onBodyChange={setBody} />
       </div>
     </article>
   );
 }
 
-function CurlBlock({ endpoint }: { endpoint: OpenApiEndpoint }) {
-  const base = "https://heyclau.de";
-  const params =
-    endpoint.parameters
-      ?.filter((p) => p.in === "query" && p.example)
-      .map((p) => `${p.name}=${p.example}`)
-      .join("&") ?? "";
-  const url = endpoint.path.replace(/\{(\w+)\}/g, (_m, name) => {
-    const ex = endpoint.parameters?.find((p) => p.in === "path" && p.name === name)?.example;
-    return ex ?? `:${name}`;
-  });
-  const fullUrl = `${base}${url}${params ? `?${params}` : ""}`;
-  const curl =
-    endpoint.method === "GET"
-      ? `curl '${fullUrl}'`
-      : `curl -X ${endpoint.method} '${fullUrl}' \\\n  -H 'content-type: application/json' \\\n  -d '${endpoint.body?.example.replace(/\n/g, "") ?? ""}'`;
+function CurlBlock({ endpoint, body }: { endpoint: OpenApiEndpoint; body: string }) {
+  const curl = buildCurlCommand(endpoint, body);
   return (
     <div>
       <div className="mb-2 flex items-center justify-between">
@@ -138,13 +127,20 @@ function CurlBlock({ endpoint }: { endpoint: OpenApiEndpoint }) {
   );
 }
 
-export function OpenApiPlayground({ endpoint }: { endpoint: OpenApiEndpoint }) {
+export function OpenApiPlayground({
+  endpoint,
+  body,
+  onBodyChange,
+}: {
+  endpoint: OpenApiEndpoint;
+  body: string;
+  onBodyChange: (body: string) => void;
+}) {
   const [values, setValues] = useState<Record<string, string>>(() => {
     const init: Record<string, string> = {};
     endpoint.parameters?.forEach((p) => (init[p.name] = p.example ?? ""));
     return init;
   });
-  const [body, setBody] = useState(endpoint.body?.example ?? "");
   const [sending, setSending] = useState(false);
   const [response, setResponse] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -203,8 +199,10 @@ export function OpenApiPlayground({ endpoint }: { endpoint: OpenApiEndpoint }) {
           <div className="eyebrow mb-1.5">Body</div>
           <textarea
             value={body}
-            onChange={(e) => setBody(e.target.value)}
+            onChange={(e) => onBodyChange(e.target.value)}
             rows={6}
+            spellCheck={false}
+            aria-label="Request body"
             className="w-full rounded-md border border-border bg-background p-3 font-mono text-[11px] text-ink focus:outline-none focus:ring-2 focus:ring-accent/40"
           />
         </div>
