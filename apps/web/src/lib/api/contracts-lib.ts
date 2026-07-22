@@ -616,9 +616,23 @@ const submissionPreflightNonPrResponseSchema = submissionPreflightBaseResponseSc
   })
   .strict();
 
+// The honeypot short-circuit in preflight.ts returns this exact sparse shape
+// instead of the full preflight response - documented here as its own variant
+// so the published contract matches reality. Runtime behavior is unchanged:
+// this must stay a silent `ok: true` discard with no signal that the request
+// was detected as a bot.
+const submissionPreflightHoneypotResponseSchema = z
+  .object({
+    ok: z.literal(true),
+    valid: z.literal(false),
+    queued: z.literal(false),
+  })
+  .strict();
+
 export const submissionPreflightResponseSchema = z.union([
   submissionPreflightPrReadyResponseSchema,
   submissionPreflightNonPrResponseSchema,
+  submissionPreflightHoneypotResponseSchema,
 ]);
 
 export const downloadQuerySchema = z.object({

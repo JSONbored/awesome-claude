@@ -532,4 +532,50 @@ describe("website submission preflight API", () => {
       queued: false,
     });
   });
+
+  it("validates the honeypot discard response against the published response schema", async () => {
+    const { submissionPreflightResponseSchema } =
+      await import("@/lib/api/contracts");
+    const { POST } = await import("@/routes/api/submissions/preflight");
+    const response = await POST(
+      preflightRequest({ fields: validFields(), honeypot: "bot" }),
+    );
+    const body = await response.json();
+
+    // The real runtime response must be exactly this shape and validate as a
+    // documented variant of the published contract.
+    expect(body).toEqual({ ok: true, valid: false, queued: false });
+    expect(submissionPreflightResponseSchema.safeParse(body).success).toBe(
+      true,
+    );
+
+    // Near-misses must still be rejected, so the schema stays exact rather
+    // than accidentally loosening to accept any `{ ok, valid }` object.
+    expect(
+      submissionPreflightResponseSchema.safeParse({ ok: true, valid: false })
+        .success,
+    ).toBe(false);
+    expect(
+      submissionPreflightResponseSchema.safeParse({
+        ok: true,
+        valid: false,
+        queued: true,
+      }).success,
+    ).toBe(false);
+    expect(
+      submissionPreflightResponseSchema.safeParse({
+        ok: false,
+        valid: false,
+        queued: false,
+      }).success,
+    ).toBe(false);
+    expect(
+      submissionPreflightResponseSchema.safeParse({
+        ok: true,
+        valid: false,
+        queued: false,
+        extra: "unexpected",
+      }).success,
+    ).toBe(false);
+  });
 });
