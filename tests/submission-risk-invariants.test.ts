@@ -655,6 +655,11 @@ describe("destructive rm detection", () => {
     "rm -Rf /",
     "rm -rf /etc",
     "sudo rm -rf / --no-preserve-root",
+    // Regression: the trailing-slash form of the home target must flag the
+    // same as the bare form, matching how `/` and `~` already accept one
+    // optional trailing slash.
+    "rm -rf $HOME/",
+    "rm -rf ${HOME}/",
   ])("flags %s", (command) => {
     expect(flagged(command)).toBe(true);
   });
@@ -667,6 +672,15 @@ describe("destructive rm detection", () => {
     "git rm -r --cached .",
     "npm run rm-rf-helper",
     "npm install acme",
+    // Regression: the target regex used to match any string starting with
+    // `/`, `~`, or `$HOME`, so ordinary subpaths under those roots were
+    // misflagged as critical alongside the real root/home targets.
+    "rm -rf /tmp/scratch",
+    "rm -rf /tmp/build-cache",
+    "rm -rf /var/tmp/build-workdir",
+    "rm -rf $HOME/tmp",
+    "rm -rf ${HOME}/tmp",
+    "rm -rf ~/cache",
   ])("does not flag %s", (command) => {
     expect(flagged(command)).toBe(false);
   });

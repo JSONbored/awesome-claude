@@ -1117,13 +1117,17 @@ function isMutableGithubSourceUrl(value) {
  * spelling: any option cluster carrying both recursive and force counts,
  * whether written `-rf`, `-fr`, `-r -f`, or `--recursive --force`.
  *
- * Targets stay deliberately narrow (root, `~`, `$HOME`). Relative paths like
- * `./build` are ordinary cleanup and must not flag.
+ * Targets stay deliberately narrow (`/`, `/etc`, `~`, `$HOME`, and
+ * `${HOME}`). Relative paths like `./build` are ordinary cleanup and must
+ * not flag. Each target alternative ends in a delimiter/end-of-command
+ * lookahead so `/tmp/scratch`, `~/cache`, and `$HOME/tmp` aren't swallowed
+ * as a matching prefix of `/`, `~`, or `$HOME` - only the bare target
+ * itself (optionally with one trailing `/`) is destructive.
  */
 function referencesDestructiveRootRemoval(value) {
   const text = String(value || "");
   const pattern =
-    /\brm\b((?:\s+-{1,2}[a-z][a-z-]*)+)\s+(?:\/[^\s;&|)'"`]*|~[^\s;&|)'"`]*|\$home\b|\$\{home\})/gi;
+    /\brm\b((?:\s+-{1,2}[a-z][a-z-]*)+)\s+(?:\/etc\/?(?=[\s;&|)'"`]|$)|\/\/?(?=[\s;&|)'"`]|$)|~\/?(?=[\s;&|)'"`]|$)|\$home\/?(?=[\s;&|)'"`]|$)|\$\{home\}\/?(?=[\s;&|)'"`]|$))/gi;
 
   for (const match of text.matchAll(pattern)) {
     const flags = match[1].toLowerCase().split(/\s+/).filter(Boolean);
