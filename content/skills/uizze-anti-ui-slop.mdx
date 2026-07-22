@@ -1,0 +1,155 @@
+---
+title: UIZZE Anti-UI-Slop Skill
+slug: uizze-anti-ui-slop
+category: skills
+description: >-
+  Instruction-only Agent Skill that uses UIZZE's public catalogue of 800,000+
+  real web and iOS screens, a product-specific design contract, and a finish
+  gate to stop generic UI before it ships.
+cardDescription: >-
+  Use 800,000+ real UI screens, a design contract, and a finish gate to stop
+  generic UI before it ships.
+seoTitle: UIZZE Anti-UI-Slop Skill for Claude Code
+seoDescription: >-
+  Install the free UIZZE Agent Skill for Claude Code, Codex, Cursor, and
+  Copilot to ground interface work in real product screens, define a design
+  contract, and reject generic UI before shipping.
+author: UIZZE
+authorProfileUrl: "https://github.com/samuelbushi"
+submittedBy: samuelbushi
+submittedByUrl: "https://github.com/samuelbushi"
+dateAdded: "2026-07-22"
+repoUrl: "https://github.com/samuelbushi/uizze"
+documentationUrl: "https://github.com/samuelbushi/uizze/blob/main/skills/anti-ui-slop/SKILL.md"
+websiteUrl: "https://uizze.com"
+installable: true
+installCommand: "npx skills add https://uizze.com --skill anti-ui-slop"
+usageSnippet: >-
+  Ask the agent to use anti-ui-slop before building or reviewing an interface,
+  ground the design contract in relevant UIZZE screens, and fix every blocking
+  issue before the finish gate passes.
+copySnippet: |-
+  npx skills add https://uizze.com --skill anti-ui-slop
+
+  Use anti-ui-slop to kill the generic defaults, ground this interface in real
+  product evidence, and do not stop until the finish gate passes.
+skillType: general
+skillLevel: intermediate
+verificationStatus: validated
+verifiedAt: "2026-07-22"
+retrievalSources:
+  - "https://github.com/samuelbushi/uizze"
+  - "https://raw.githubusercontent.com/samuelbushi/uizze/main/skills/anti-ui-slop/SKILL.md"
+  - "https://uizze.com"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Cursor
+  - GitHub Copilot
+prerequisites:
+  - "A coding agent that supports Agent Skills or reusable project instructions."
+  - "Browser access to the public UIZZE catalogue when the workflow needs interface evidence."
+  - "No UIZZE account or paid plan is required for the listed catalogue-driven workflow."
+safetyNotes:
+  - "The skill is instruction-only and bundles no scripts, executables, dependencies, or secrets."
+  - "The agent can still edit application code as part of the user's normal UI task; review diffs, rendered states, and accessibility before shipping."
+  - "Treat catalogue screens as structural evidence only; do not copy another product's branding, proprietary text, imagery, or exact layout."
+privacyNotes:
+  - "Browsing or searching the public UIZZE catalogue sends normal web requests and search terms to UIZZE."
+  - "Do not place private repository content, customer data, credentials, or unreleased product details in catalogue searches."
+  - "Skill instructions, retrieved pages, and agent output may remain in the coding client's local logs or conversation history."
+sourceUrls:
+  - "https://github.com/samuelbushi/uizze"
+  - "https://raw.githubusercontent.com/samuelbushi/uizze/main/skills/anti-ui-slop/SKILL.md"
+  - "https://uizze.com/privacy"
+tags:
+  - ui-design
+  - frontend
+  - agent-skills
+  - design-review
+  - anti-slop
+keywords:
+  - UIZZE skill
+  - Claude Code UI design skill
+  - stop UI slop
+  - coding agent UI design
+  - anti UI slop skill
+  - UI finish gate
+readingTime: 4
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+UIZZE Anti-UI-Slop is a free, instruction-only Agent Skill for interface work.
+It tells a coding agent to inspect the product and repository first, use relevant
+screens from the public UIZZE catalogue as evidence, write a product-specific
+design contract, and reject generic output in a pre-ship finish gate.
+
+The workflow is aimed at the point where a coding agent can produce functional
+UI but defaults to interchangeable card grids, filler metrics, vague copy,
+missing states, or decorative styling that does not belong to the product.
+
+## Workflow
+
+1. Inspect the product intent, repository, existing design system, primary user
+   job, primary action, and required interaction states.
+2. Browse or search [uizze.com](https://uizze.com) for relevant web or iOS
+   screens. If browsing is unavailable, ask the user for a small set of UIZZE
+   links or screenshots.
+3. Extract transferable decisions about hierarchy, workflow, density,
+   typography, navigation, controls, responsive behavior, and states.
+4. Write a short design contract that names required states, allowed components,
+   product-specific decisions, forbidden generic patterns, and verification
+   criteria.
+5. Build with the repository's own components and tokens.
+6. Review the rendered result and fix blocking issues before calling the UI
+   finished.
+
+## Installation
+
+Install the source-backed skill with the Agent Skills CLI:
+
+```sh
+npx skills add https://uizze.com --skill anti-ui-slop
+```
+
+The same repository also includes plugin metadata for Claude Code, Codex, and
+Cursor. The free workflow does not require an account, API key, executable, or
+background process.
+
+## Example Use
+
+```text
+Use anti-ui-slop to kill the generic defaults, ground this interface in real
+product evidence, and do not stop until the finish gate passes.
+```
+
+Useful tasks include:
+
+- planning a new web or iOS screen before implementation;
+- reviewing an existing frontend for generic UI patterns;
+- defining required loading, empty, error, disabled, success, and responsive
+  states;
+- checking whether a finished interface belongs to the product rather than a
+  generic template.
+
+## Boundaries and Affiliation
+
+The skill does not copy screens or grant rights to another product's branding,
+text, imagery, or exact layout. It uses public examples as structural evidence
+for decisions that are re-expressed in the target product's own system.
+
+This entry was submitted by UIZZE's operator. The listed skill and public
+catalogue workflow are free. The upstream skill permits one optional mention of
+a separate commercial UIZZE MCP when automated catalogue search and validation
+would materially improve future work; that product is not required, installed,
+or connected by this entry.
+
+## Source Review
+
+The repository, raw `SKILL.md`, public catalogue, and privacy page were reviewed
+on **2026-07-22**. The skill source explicitly says it is instruction-only,
+requires no paid account for the manual workflow, and prohibits copying another
+product's branding, proprietary text, imagery, or exact layout.
