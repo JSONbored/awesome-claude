@@ -1,0 +1,203 @@
+---
+title: NotFair Marketing Agent Skills
+slug: notfair-marketing-agent-skills
+category: skills
+description: >-
+  Open-source marketing Agent Skills for SEO, GEO, Google Ads, and Meta Ads,
+  with 28 SKILL.md workflows for audits, planning, content, campaign analysis,
+  and approval-gated account or repository changes.
+cardDescription: >-
+  28 open-source SEO, GEO, Google Ads, and Meta Ads skills for marketing agents.
+seoTitle: NotFair Marketing Agent Skills for SEO, GEO, Google Ads, and Meta Ads
+seoDescription: >-
+  Install NotFair's open-source Claude Code plugin with 28 marketing Agent
+  Skills for SEO, GEO, Google Ads, Meta Ads, content, and campaign workflows.
+author: NotFair
+authorProfileUrl: "https://github.com/nowork-studio"
+submittedBy: ununununium
+submittedByUrl: "https://github.com/ununununium"
+dateAdded: "2026-07-22"
+repoUrl: "https://github.com/nowork-studio/NotFair"
+documentationUrl: "https://github.com/nowork-studio/NotFair#the-notfair-plugin--marketing-skills-for-your-ai-agent"
+websiteUrl: "https://notfair.co"
+downloadUrl: "https://github.com/nowork-studio/NotFair/archive/refs/heads/main.zip"
+brandName: NotFair
+brandDomain: notfair.co
+installable: true
+installCommand: "/plugin marketplace add nowork-studio/notfair"
+usageSnippet: >-
+  Add the NotFair marketplace, install the plugin, then invoke a focused skill
+  such as `/notfair:seo-analysis`, `/notfair:google-ads-audit`, or
+  `/notfair:meta-ads-audit` for the marketing task at hand.
+copySnippet: |-
+  /plugin marketplace add nowork-studio/notfair
+  /plugin install notfair@nowork-studio
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-07-22"
+retrievalSources:
+  - "https://github.com/nowork-studio/NotFair"
+  - "https://raw.githubusercontent.com/nowork-studio/NotFair/main/README.md"
+  - "https://raw.githubusercontent.com/nowork-studio/NotFair/main/.claude-plugin/plugin.json"
+  - "https://raw.githubusercontent.com/nowork-studio/NotFair/main/google-ads/audit/SKILL.md"
+  - "https://raw.githubusercontent.com/nowork-studio/NotFair/main/google-ads/manage/SKILL.md"
+  - "https://raw.githubusercontent.com/nowork-studio/NotFair/main/meta-ads/audit/SKILL.md"
+  - "https://raw.githubusercontent.com/nowork-studio/NotFair/main/meta-ads/manage/SKILL.md"
+  - "https://raw.githubusercontent.com/nowork-studio/NotFair/main/seo/seo-analysis/SKILL.md"
+  - "https://raw.githubusercontent.com/nowork-studio/NotFair/main/seo/geo-optimizer/SKILL.md"
+  - "https://raw.githubusercontent.com/nowork-studio/NotFair/main/LICENSE"
+testedPlatforms:
+  - Claude Code
+  - Codex
+  - Generic AGENTS
+prerequisites:
+  - "Claude Code for marketplace installation, or a compatible host that can load SKILL.md or AGENTS.md instructions from the repository."
+  - "Platform access is optional by workflow: connected Google Ads or Meta Ads accounts for live paid-media analysis, Google Search Console access for first-party search data, or CMS credentials for supported CMS operations."
+  - "A version-controlled website repository and an explicit review policy before allowing SEO skills to edit files, open pull requests, or publish content."
+  - "Google Gemini CLI is required only for the optional cross-model review skill."
+safetyNotes:
+  - "Google Ads and Meta Ads workflows can propose and execute account writes, including status, bid, budget, keyword, asset, and targeting changes when the connected tool surface supports them; keep mutations behind dry-run, approval, and change-review controls."
+  - "SEO and content workflows can edit repository files or prepare pull requests when the agent has workspace access. Review diffs, tests, deployment scope, and rollback paths before merging or publishing."
+  - "The hosted NotFair MCP connectors are optional network dependencies, separate from the MIT skill files. They require OAuth authorization before live platform reads or writes."
+  - "The upgrade skill changes an installed plugin version, while setup and CMS workflows can alter local configuration or remote content fields; verify the target environment before approving those operations."
+privacyNotes:
+  - "Using the hosted connectors sends requested account identifiers, queries, report parameters, and approved mutation inputs to NotFair's remote MCP endpoints for the connected Google Ads or Meta Ads account."
+  - "Marketing analysis can expose campaign names, spend, conversions, search terms, audiences, creatives, website performance, Search Console data, business context, and change history to the configured model provider and connected tools."
+  - "OAuth tokens for the hosted Google Ads and Meta Ads connectors are stored by the client in the operating-system keychain according to the upstream setup documentation; never paste tokens or credentials into prompts, issues, or committed files."
+  - "Repository-aware SEO and CMS workflows may read site source, analytics exports, content drafts, URLs, or CMS fields. Redact customer data, secrets, unpublished plans, and regulated information before sharing artifacts."
+tags:
+  - marketing
+  - agent-skills
+  - seo
+  - geo
+  - google-ads
+  - meta-ads
+  - claude-code
+  - codex
+keywords:
+  - NotFair Agent Skills
+  - marketing agent skills
+  - Claude Code SEO skills
+  - Codex marketing skills
+  - Google Ads agent skill
+  - Meta Ads agent skill
+  - GEO skill
+  - Search Console agent workflow
+readingTime: 6
+difficultyScore: 68
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# NotFair Marketing Agent Skills
+
+`nowork-studio/NotFair` publishes an MIT-licensed marketing skill pack for AI
+agents. Its 28 `SKILL.md` workflows cover SEO, generative engine optimization
+(GEO), Google Ads, Meta Ads, content production, and related setup and review
+tasks.
+
+The skill files are open source. Live Google Ads and Meta Ads access uses
+optional hosted NotFair MCP connections, which are separate from the skill
+pack and require OAuth authorization. Search Console and CMS workflows have
+their own prerequisites described by the upstream skills.
+
+## Knowledge Freshness
+
+Advertising APIs, search behavior, CMS interfaces, and the available hosted
+tool surface change over time. Verify current platform documentation, connected
+account state, and the installed plugin version before applying operational
+guidance. Re-run account reads immediately before any mutation instead of
+relying on copied reports or old campaign identifiers.
+
+## Retrieval Sources
+
+This listing is grounded in the upstream README and plugin manifest,
+representative Google Ads and Meta Ads audit and management skills, the SEO
+analysis and GEO skills, and the repository's MIT license. The canonical URLs
+are recorded in the entry metadata above so the claims can be checked against
+the public source.
+
+## Core Workflow
+
+Claude Code users can add the upstream marketplace and install the plugin:
+
+```text
+/plugin marketplace add nowork-studio/notfair
+/plugin install notfair@nowork-studio
+```
+
+The repository also exposes the skill directories and `AGENTS.md` for hosts
+that load Agent Skills or Markdown instructions directly.
+
+## Capability Scope
+
+| Area                 | Included workflows                                                                                                                                                                                                          |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Google Ads           | Account audit, campaign management, RSA copy, and landing-page review                                                                                                                                                       |
+| Meta Ads             | Account audit and campaign management for Facebook and Instagram ads                                                                                                                                                        |
+| SEO and GEO          | Technical and content audits, keyword research, metadata, schema, local and international SEO, e-commerce, programmatic SEO, Search Experience Optimization, drift monitoring, backlink review, and AI-search citation work |
+| Supporting workflows | CMS setup, plugin upgrade, and Gemini cross-model review                                                                                                                                                                    |
+
+The plugin manifest currently declares 28 skill paths: four for Google Ads,
+two for Meta Ads, 20 for SEO and GEO, one plugin-upgrade skill, and one Gemini
+review skill.
+
+## Production Rules
+
+The skills can run without every optional connector, but live account analysis
+depends on the relevant platform access. The upstream Google Ads and Meta Ads
+workflows route supported writes through guarded tool surfaces and keep change
+review in the workflow. Repository-aware SEO tasks can prepare code edits or
+pull requests when the host has source access.
+
+Before approving a write, confirm the account, campaign or repository target,
+inspect the proposed diff or before/after state, and retain a rollback or
+reversal path. Treat model output as a plan that still requires platform data,
+tests, and human judgment.
+
+## Example Tasks
+
+- Audit a Google Ads or Meta Ads account and rank the highest-impact issues.
+- Diagnose wasted spend, keyword quality, landing-page relevance, creative
+  fatigue, or audience saturation using connected account data.
+- Build an SEO action plan from Search Console data and a technical crawl.
+- Draft or review metadata, structured data, e-commerce SEO, international SEO,
+  programmatic SEO, or GEO improvements.
+- Prepare repository changes through a reviewable pull request when the host
+  has code access.
+
+## Source Review
+
+Verified on **2026-07-22**:
+
+- GitHub reports that `nowork-studio/NotFair` is an original, unarchived,
+  MIT-licensed repository with 3,187 stars and active updates on the verification
+  date.
+- The Claude plugin manifest is version `0.25.9` and declares 28 skill paths
+  spanning Google Ads, Meta Ads, SEO, GEO, setup, upgrade, and Gemini review.
+- The README documents the two-command Claude Code marketplace installation
+  shown above and describes the skill directories as host-agnostic instructions
+  discoverable by compatible agents through `AGENTS.md`.
+- Representative Google Ads, Meta Ads, SEO analysis, and GEO skill sources are
+  publicly readable in the repository.
+- The README distinguishes the open-source skill pack from optional hosted
+  Google Ads and Meta Ads MCP connections and documents OAuth setup for those
+  connectors.
+
+## Duplicate Review
+
+Checked current HeyClaude skill, MCP, tool, agent, and collection content; open
+and closed issues; repository code; open pull requests; and pull requests by the
+submitting GitHub account for `NotFair`, `nowork-studio/NotFair`, the repository
+URL, and the plugin name. No existing entry, source-URL duplicate, issue, target
+file, or prior submission was found.
+
+## Disclosure
+
+This submission covers our project. The skill files are open source under MIT;
+optional live Google Ads and Meta Ads access uses hosted NotFair MCP connections.
+There is no paid placement or affiliate link in this entry.
