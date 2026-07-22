@@ -255,7 +255,9 @@ describe("registry artifacts", () => {
     // These budgets are growth guards, not fixed caps. The public registry
     // grows with curated content, so keep them per-entry to catch runaway
     // artifact bloat without failing every normal catalog expansion.
-    expect(artifactTreeSize(".")).toBeLessThan(2_000_000 + entryCount * 38_500);
+    // Per-entry allowance raised for the Raycast detail `copyText` field (the
+    // full, on-demand clipboard payload now generated for every entry).
+    expect(artifactTreeSize(".")).toBeLessThan(2_000_000 + entryCount * 43_000);
     expect(artifactSize("directory-index.json")).toBeLessThan(
       200_000 + entryCount * 2_150,
     );
@@ -263,9 +265,10 @@ describe("registry artifacts", () => {
       125_000 + entryCount * 1_600,
     );
     expect(artifactSize("raycast-index.json")).toBeLessThan(
-      // Sparse trustSignals note flags (~2 bools/entry when notes exist) need
-      // a slightly higher per-entry allowance than the pre-#5240 feed shape.
-      100_000 + entryCount * 1_150,
+      // Sparse trustSignals note flags (~2 bools/entry when notes exist) plus
+      // the preview-capped `copyText` payload (<= RAYCAST_COPY_PREVIEW_LIMIT per
+      // entry) need a higher per-entry allowance than the pre-copyText shape.
+      100_000 + entryCount * 2_000,
     );
     expect(artifactSize("relation-graph.json")).toBeLessThan(
       150_000 + entryCount * 1_500,
@@ -1392,14 +1395,29 @@ Use this hook after reviewing the notes.`,
         key,
         llmsUrl: `/api/registry/entries/${entry.category}/${entry.slug}/llms`,
       });
-      expect(raycastDetail).not.toHaveProperty("copyText");
+      // The detail payload now carries the full clipboard copy text; the feed
+      // row carries a preview capped at RAYCAST_COPY_PREVIEW_LIMIT plus a
+      // truncation flag, while the full text stays out of the (size-sensitive)
+      // feed. getCopyText always resolves to a non-empty payload, so these
+      // fields are present on every generated entry.
+      const detailCopyText = raycastDetail.copyText;
+      expect(typeof detailCopyText).toBe("string");
+      expect((detailCopyText ?? "").length).toBeGreaterThan(0);
+      expect(typeof raycastFeedEntry.copyText).toBe("string");
+      expect(raycastFeedEntry.copyText.length).toBeLessThanOrEqual(
+        RAYCAST_COPY_PREVIEW_LIMIT + 3,
+      );
+      expect(typeof raycastFeedEntry.copyTextTruncated).toBe("boolean");
+      if (raycastFeedEntry.copyTextTruncated) {
+        expect((detailCopyText ?? "").length).toBeGreaterThan(
+          raycastFeedEntry.copyText.length,
+        );
+      }
       expect(raycastFeedEntry.canonicalUrl).toBe(
         `https://heyclau.de/entry/${entry.category}/${entry.slug}`,
       );
       expect(raycastFeedEntry).not.toHaveProperty("llmsUrl");
-      expect(raycastFeedEntry).not.toHaveProperty("copyText");
       expect(raycastFeedEntry).not.toHaveProperty("copyTextLength");
-      expect(raycastFeedEntry).not.toHaveProperty("copyTextTruncated");
       expect(raycastFeedEntry).not.toHaveProperty("detailMarkdown");
     }
     expect(fs.existsSync(path.join(dataRoot, "llms"))).toBe(false);

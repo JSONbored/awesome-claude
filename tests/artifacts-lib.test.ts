@@ -41,6 +41,7 @@ import {
   buildCorpusLlmsArtifact,
   buildRegistryArtifactSet,
 } from "../packages/registry/src/artifacts-lib.js";
+import { getCopyText } from "../packages/registry/src/presentation.js";
 import {
   PLATFORM_IDS,
   PLATFORM_LABELS,
@@ -821,6 +822,46 @@ describe("buildRaycastEntries", () => {
     expect(withoutNotes?.trustSignals).toBeUndefined();
     expect(withNotes?.trustSignals).not.toHaveProperty("platforms");
     expect(withNotes?.trustSignals).not.toHaveProperty("supportLevels");
+  });
+});
+
+describe("Raycast copyText generation", () => {
+  it("emits the full copy payload on the detail and a capped preview on the feed", () => {
+    const detail = buildRaycastDetail(FIXTURE_MCP);
+    const [row] = buildRaycastEntries([FIXTURE_MCP]);
+    const expected = getCopyText(FIXTURE_MCP).trim();
+
+    expect(expected.length).toBeGreaterThan(0);
+    // Detail carries the whole payload; the feed row carries a preview capped
+    // at RAYCAST_COPY_PREVIEW_LIMIT (+3 for the truncation ellipsis).
+    expect(detail.copyText).toBe(expected);
+    expect(row?.copyText).toBe(
+      truncateText(expected, RAYCAST_COPY_PREVIEW_LIMIT),
+    );
+    expect(row!.copyText!.length).toBeLessThanOrEqual(
+      RAYCAST_COPY_PREVIEW_LIMIT + 3,
+    );
+    // FIXTURE_MCP's payload is short, so no truncation occurs.
+    expect(expected.length).toBeLessThanOrEqual(RAYCAST_COPY_PREVIEW_LIMIT);
+    expect(row?.copyTextTruncated).toBe(false);
+    expect(row?.copyText).toBe(detail.copyText);
+  });
+
+  it("flags copyTextTruncated and keeps the detail copyText longer when the payload exceeds the cap", () => {
+    const longEntry = syntheticEntry("guides", "very-long-guide", {
+      body: "A".repeat(RAYCAST_COPY_PREVIEW_LIMIT + 500),
+    });
+    const detail = buildRaycastDetail(longEntry);
+    const [row] = buildRaycastEntries([longEntry]);
+
+    expect(row?.copyTextTruncated).toBe(true);
+    expect(row!.copyText!.length).toBeLessThanOrEqual(
+      RAYCAST_COPY_PREVIEW_LIMIT + 3,
+    );
+    // The on-demand detail payload must stay longer than the truncated preview
+    // (the invariant validate-raycast-feed enforces).
+    expect(detail.copyText!.length).toBeGreaterThan(row!.copyText!.length);
+    expect(detail.copyText).toBe(getCopyText(longEntry).trim());
   });
 });
 

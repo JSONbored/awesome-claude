@@ -914,11 +914,26 @@ export function buildCursorSkillAdapter(entry) {
 
 export function buildRaycastEntries(entries) {
   return entries.map((entry) => {
+    // Feed rows carry a preview-capped copy payload; the full text lives in the
+    // detail payload (buildRaycastDetail) and is loaded on demand when the
+    // preview was truncated (the extension's copy action prefers
+    // detail.copyText and falls back to this feed preview). `copyTextTruncated`
+    // tells the extension whether it must fetch the full text. `getCopyText`
+    // is the same canonical clipboard payload the website exposes and always
+    // resolves to a non-empty string.
+    const fullCopyText = getCopyText(entry).trim();
+    const copyText = fullCopyText
+      ? truncateText(fullCopyText, RAYCAST_COPY_PREVIEW_LIMIT)
+      : undefined;
     return compactDefinedObject({
       category: entry.category,
       slug: entry.slug,
       title: entry.title,
       description: entry.cardDescription || entry.description,
+      copyText,
+      copyTextTruncated: copyText
+        ? fullCopyText.length > RAYCAST_COPY_PREVIEW_LIMIT
+        : undefined,
       tags: entry.tags,
       author: entry.author || "",
       ...buildEntryProvenanceFields(entry),
@@ -969,6 +984,10 @@ export function buildEntryDetail(entry, params = {}) {
 }
 
 export function buildRaycastDetail(entry) {
+  // Full, untruncated clipboard payload. The feed row only carries a preview
+  // capped at RAYCAST_COPY_PREVIEW_LIMIT, so the extension loads this on demand
+  // when the preview was truncated.
+  const copyText = getCopyText(entry).trim();
   return {
     schemaVersion: RAYCAST_SCHEMA_VERSION,
     key: `${entry.category}:${entry.slug}`,
@@ -979,6 +998,7 @@ export function buildRaycastDetail(entry) {
     ...buildEntryProvenanceFields(entry),
     ...buildEntryBrandFields(entry),
     detailMarkdown: buildRaycastDetailMarkdown(entry),
+    ...(copyText ? { copyText } : {}),
     webUrl: entryCanonicalUrl(entry),
     canonicalUrl: entryCanonicalUrl(entry),
     llmsUrl: `/api/registry/entries/${entry.category}/${entry.slug}/llms`,

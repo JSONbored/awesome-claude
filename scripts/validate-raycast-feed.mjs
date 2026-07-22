@@ -250,12 +250,15 @@ for (const entry of payload.entries) {
       fail(`${key}: detail without copyText must expose llmsUrl`);
     }
   }
-  if (
-    entry.copyText !== undefined &&
-    entry.copyTextTruncated &&
-    detail.copyText.length <= String(entry.copyText ?? "").length
-  ) {
-    fail(`${key}: truncated feed entry must have longer detail copyText`);
+  if (entry.copyText !== undefined && entry.copyTextTruncated) {
+    // A truncated feed preview must be backed by a longer full copyText in the
+    // detail payload. Guard the length access so a missing/non-string
+    // detail.copyText fails cleanly here instead of throwing a raw TypeError.
+    if (typeof detail.copyText !== "string") {
+      fail(`${key}: truncated feed entry requires a string detail copyText`);
+    } else if (detail.copyText.length <= String(entry.copyText ?? "").length) {
+      fail(`${key}: truncated feed entry must have longer detail copyText`);
+    }
   }
   for (const field of [
     "brandName",
