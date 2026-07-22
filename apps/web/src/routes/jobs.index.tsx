@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageContainer } from "@/components/page-container";
 import { absoluteUrl } from "@/lib/seo";
+import { breadcrumbScript, itemListScript } from "@/lib/seo-jsonld";
 import { createServerFn } from "@tanstack/react-start";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ArrowUpRight, Search, Sparkles, X } from "lucide-react";
@@ -44,7 +45,7 @@ export const Route = createFileRoute("/jobs/")({
       jobs: (await loadPublicJobs()).map(normalizeJobListing).filter((job) => job.slug),
     };
   },
-  head: () => ({
+  head: ({ loaderData }) => ({
     meta: [
       { title: "Claude & AI workflow jobs — HeyClaude" },
       {
@@ -59,6 +60,19 @@ export const Route = createFileRoute("/jobs/")({
       { property: "og:url", content: absoluteUrl("/jobs") },
     ],
     links: [{ rel: "canonical", href: absoluteUrl("/jobs") }],
+    scripts: [
+      breadcrumbScript([
+        { name: "Directory", path: "/browse" },
+        { name: "Jobs", path: "/jobs" },
+      ]),
+      itemListScript(
+        (loaderData?.jobs ?? []).map((job) => ({
+          name: `${job.title} at ${job.company}`,
+          path: `/jobs/${job.slug}`,
+        })),
+        { name: "Claude & AI workflow jobs" },
+      ),
+    ],
   }),
   errorComponent: ({ error, reset }: ErrorComponentProps) => (
     <div className="mx-auto max-w-xl px-4 py-16 text-center">

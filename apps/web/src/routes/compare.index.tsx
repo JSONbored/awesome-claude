@@ -1,6 +1,7 @@
 import * as React from "react";
 import { createFileRoute, Link, stripSearchParams } from "@tanstack/react-router";
 import { absoluteUrl } from "@/lib/seo";
+import { breadcrumbScript, itemListScript } from "@/lib/seo-jsonld";
 import { z } from "zod";
 import { X, ArrowRight, ExternalLink, Plus, Search as SearchIcon } from "lucide-react";
 import { ENTRIES } from "@/data/entries";
@@ -114,6 +115,19 @@ export const Route = createFileRoute("/compare/")({
       },
     ],
     links: [{ rel: "canonical", href: absoluteUrl("/compare") }],
+    scripts: [
+      breadcrumbScript([
+        { name: "Directory", path: "/browse" },
+        { name: "Compare", path: "/compare" },
+      ]),
+      itemListScript(
+        COMPARISONS.map((comparison) => ({
+          name: comparison.title,
+          path: `/compare/${comparison.slug}`,
+        })),
+        { name: "HeyClaude comparisons" },
+      ),
+    ],
   }),
   component: ComparePage,
 });
