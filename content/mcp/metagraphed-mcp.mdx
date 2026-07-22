@@ -1,0 +1,172 @@
+---
+title: Metagraphed MCP Server for Claude
+slug: metagraphed-mcp
+category: mcp
+description: >-
+  Public Streamable-HTTP MCP server for the Metagraphed Bittensor subnet
+  integration registry — discover subnets, check health and economics, read
+  metagraph data, and look up accounts or API surfaces without wallets or
+  signing.
+cardDescription: >-
+  Read-only Metagraphed MCP: discover Bittensor subnets, health, economics,
+  and metagraph data over streamable HTTP.
+seoTitle: Metagraphed MCP Server for Claude — Bittensor Subnet Registry
+seoDescription: >-
+  Connect Claude to Metagraphed's public Streamable-HTTP MCP at
+  api.metagraph.sh/mcp to discover Bittensor subnets, health, economics,
+  metagraph rows, and integration helpers — read-only, not a wallet tool.
+author: JSONbored
+authorProfileUrl: "https://github.com/JSONbored"
+submittedBy: wondercreatemaster
+submittedByUrl: "https://github.com/wondercreatemaster"
+dateAdded: "2026-07-22"
+submittedAt: "2026-07-22"
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/5237"
+documentationUrl: "https://api.metagraph.sh/agent-workflows.md"
+websiteUrl: "https://metagraph.sh"
+repoUrl: "https://github.com/JSONbored/metagraphed"
+retrievalSources:
+  - "https://github.com/JSONbored/metagraphed"
+  - "https://metagraph.sh"
+  - "https://api.metagraph.sh/agent.md"
+  - "https://api.metagraph.sh/agent-workflows.md"
+  - "https://registry.modelcontextprotocol.io"
+  - "https://www.npmjs.com/package/@jsonbored/metagraphed"
+  - "https://pypi.org/project/metagraphed/"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add --transport http metagraphed https://api.metagraph.sh/mcp"
+usageSnippet: >-
+  Ask Claude to find a subnet for a task, check whether a netuid is healthy,
+  summarize economics, or explain how to call a subnet API — grounded in the
+  live Metagraphed registry rather than training-data guesses.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "metagraphed": {
+        "url": "https://api.metagraph.sh/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "metagraphed": {
+        "url": "https://api.metagraph.sh/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "An MCP client with Streamable-HTTP / remote HTTP MCP support (Claude Code, Cursor, or similar)."
+  - "Optional: npm `@jsonbored/metagraphed` or PyPI `metagraphed` if you want the typed REST/GraphQL client instead of MCP."
+safetyNotes:
+  - "Not an official OpenTensor/Bittensor project, not a wallet/validator/credential tool, and not an alpha/price dashboard — matching Metagraphed's own README framing."
+  - "Registry MCP tools are read-only by design: no transaction building and no extrinsic submission, so there is no wallet-signing risk from the documented MCP surface."
+  - "Returned subnet/API metadata can still influence generated configs or integration code — review outputs before pointing production traffic at a third-party subnet API."
+  - "As of 2026-07-22, bare unauthenticated POSTs to https://api.metagraph.sh/mcp returned HTTP 401 with a Bearer WWW-Authenticate challenge (OAuth protected-resource metadata published)."
+  - "Documented install remains `claude mcp add --transport http metagraphed https://api.metagraph.sh/mcp`; MCP clients that support OAuth/DCR may complete auth. Use the public REST API for keyless HTTP probes."
+privacyNotes:
+  - "Tool arguments and responses (subnet queries, hotkeys, account lookups, search text) leave your machine and are processed by Metagraphed's hosted API at api.metagraph.sh."
+  - "Do not paste private keys, mnemonics, coldkey/hotkey secrets, or validator credentials into prompts or MCP tool arguments — this server is not a signing or wallet surface."
+  - "MCP client logs and chat transcripts may retain registry query results outside Metagraphed's own retention controls."
+tags:
+  - mcp
+  - bittensor
+  - metagraph
+  - registry
+  - subnet
+  - read-only
+  - streamable-http
+keywords:
+  - metagraphed mcp
+  - metagraph.sh mcp
+  - bittensor subnet registry mcp
+  - api.metagraph.sh mcp
+  - streamable http mcp bittensor
+  - subnet health mcp claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+**Metagraphed** ([metagraph.sh](https://metagraph.sh)) is a live operational and
+integration registry for Bittensor subnets. It exposes a public
+Streamable-HTTP MCP server at `https://api.metagraph.sh/mcp` so Claude can
+discover subnets, check health and economics, read metagraph rows, look up
+accounts/neurons, and pull API/schema/integration helpers.
+
+Listed in the official MCP Registry as
+**`io.github.JSONbored/metagraphed`** with a `streamable-http` remote. Typed
+clients are also published as npm `@jsonbored/metagraphed` and PyPI
+`metagraphed`. The backend is licensed **AGPL-3.0**.
+
+This is **not** an official OpenTensor/Bittensor project, **not** a
+wallet/validator/credential tool, and **not** an alpha/price dashboard.
+
+## Key capabilities
+
+Documented MCP tools from the upstream README tool list (26 named tools):
+
+- **`search_subnets`** / **`list_subnets`** / **`find_subnets_by_capability`** — discover subnets by text or capability.
+- **`get_subnet`** / **`get_subnet_health`** / **`get_subnet_economics`** / **`get_subnet_trajectory`** / **`get_subnet_metagraph`** — per-subnet detail, health, economics, trajectory, and metagraph.
+- **`list_subnet_validators`** / **`get_neuron`** — validator and neuron lookups.
+- **`get_account`** / **`get_account_events`** / **`get_account_subnets`** — account activity across the network.
+- **`list_subnet_apis`** / **`get_api_schema`** / **`get_fixture`** / **`get_agent_catalog`** / **`get_best_rpc_endpoint`** — API surface, schema, fixtures, catalog, and RPC hints.
+- **`registry_summary`** / **`list_enrichment_targets`** / **`find_subnet_opportunities`** — registry-wide summaries and opportunity boards.
+- **`semantic_search`** / **`ask`** / **`find_subnet_for_task`** / **`how_do_i_call`** / **`verify_integration`** — guided discovery and integration-verification helpers.
+
+Upstream README prose may describe a broader tool surface beyond this named list; treat the list above as the documented primary MCP tool set.
+
+## Installation
+
+Claude Code:
+
+```bash
+claude mcp add --transport http metagraphed https://api.metagraph.sh/mcp
+```
+
+Cursor / other Streamable-HTTP clients: add an MCP server with URL
+`https://api.metagraph.sh/mcp` and transport `streamable-http` (or the client's
+equivalent remote HTTP MCP setting).
+
+JSON config shape used by many HTTP MCP clients:
+
+```json
+{
+  "mcpServers": {
+    "metagraphed": {
+      "url": "https://api.metagraph.sh/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+## Source Verification Notes
+
+Verified on **2026-07-22**:
+
+- GitHub repo **https://github.com/JSONbored/metagraphed** returns HTTP 200; README documents the install command, Streamable-HTTP transport, AGPL-3.0 license, and the 26-tool list above.
+- Website **https://metagraph.sh** and API origin **https://api.metagraph.sh** return HTTP 200.
+- Public REST probe `GET https://api.metagraph.sh/api/v1/subnets?limit=1` returns HTTP 200 with a JSON `{ ok, data, … }` envelope.
+- Agent docs **https://api.metagraph.sh/agent.md** and **https://api.metagraph.sh/agent-workflows.md** return HTTP 200. **`https://api.metagraph.sh/llms.txt` returned HTTP 404** at verification time (README still links it) — prefer `agent.md` / `agent-workflows.md`.
+- Official MCP Registry search for `metagraphed` returns **`io.github.JSONbored/metagraphed`** with remote `{ type: "streamable-http", url: "https://api.metagraph.sh/mcp" }`.
+- npm **`@jsonbored/metagraphed`** resolves on registry.npmjs.org (latest observed: `0.12.8`).
+- PyPI **`metagraphed`** resolves (latest observed: `0.4.1`).
+- Bare `POST https://api.metagraph.sh/mcp` without an OAuth bearer token returned **HTTP 401** with `WWW-Authenticate: Bearer` and protected-resource metadata at `https://api.metagraph.sh/.well-known/oauth-protected-resource/mcp`. Documented client install remains `claude mcp add --transport http metagraphed https://api.metagraph.sh/mcp`; use REST for keyless HTTP probes.
+
+## Duplicate Check
+
+No existing `content/mcp/` entry documents Metagraphed, `metagraph.sh`, or
+`api.metagraph.sh/mcp` (repo search over `content/` found no prior match).
+
+## Editorial Disclosure
+
+Community listing by **wondercreatemaster** from Metagraphed's public README,
+agent docs, MCP Registry metadata, npm/PyPI package pages, and live HTTP
+checks performed on 2026-07-22. Not affiliated with OpenTensor.
