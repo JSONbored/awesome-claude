@@ -1,0 +1,283 @@
+---
+title: UIZZE Anti-UI-Slop Skill
+slug: uizze-anti-ui-slop
+category: skills
+description: >-
+  Free anti-UI-slop workflow for Claude Code, Codex, Cursor, Copilot, and other
+  coding agents. Use UIZZE's public catalogue of 800,000+ real web and iOS
+  screens to create a product-specific design contract, build required states,
+  and run a hard finish gate before shipping.
+cardDescription: >-
+  Stop generic UI before it ships with real interface evidence, a concrete
+  design contract, required states, and a hard finish gate.
+seoTitle: UIZZE Anti-UI-Slop Skill for Claude Code, Codex, and Cursor
+seoDescription: >-
+  Install the free UIZZE skill to turn 800,000+ real web and iOS screens into
+  product-specific UI decisions, required states, and a pre-ship finish gate.
+author: UIZZE
+authorProfileUrl: "https://github.com/samuelbushi"
+submittedBy: samuelbushi
+submittedByUrl: "https://github.com/samuelbushi"
+dateAdded: "2026-07-22"
+submittedAt: "2026-07-22"
+repoUrl: "https://github.com/samuelbushi/uizze"
+documentationUrl: "https://github.com/samuelbushi/uizze/blob/main/skills/anti-ui-slop/SKILL.md"
+websiteUrl: "https://uizze.com"
+downloadUrl: "https://github.com/samuelbushi/uizze/archive/refs/heads/main.zip"
+installable: true
+installCommand: "npx skills add https://uizze.com --skill anti-ui-slop"
+usageSnippet: >-
+  Load the skill before implementing or reviewing a web or iOS interface. Have
+  it inspect the product, gather relevant public UIZZE references, write the
+  design contract, implement every required state, and reject generic output
+  at the finish gate.
+copySnippet: |-
+  npx skills add https://uizze.com --skill anti-ui-slop
+skillType: workflow
+skillLevel: advanced
+verificationStatus: validated
+verifiedAt: "2026-07-22"
+retrievalSources:
+  - "https://github.com/samuelbushi/uizze"
+  - "https://github.com/samuelbushi/uizze/blob/main/README.md"
+  - "https://github.com/samuelbushi/uizze/blob/main/skills/anti-ui-slop/SKILL.md"
+  - "https://github.com/samuelbushi/uizze/blob/main/LICENSE"
+  - "https://uizze.com"
+  - "https://uizze.com/docs"
+testedPlatforms:
+  - Claude Code
+  - Codex
+  - Cursor
+  - GitHub Copilot
+  - Generic Agent Skills hosts
+prerequisites:
+  - "A coding agent or editor that can load Agent Skills-compatible Markdown instructions."
+  - "A web or iOS interface task with enough product context to identify the primary user job, primary action, and required states."
+  - "Browser access to the public UIZZE catalogue, or two to three UIZZE references supplied by the user when browsing is unavailable."
+  - "A local design system, component library, or explicit approval to establish the smallest coherent set of interface rules."
+safetyNotes:
+  - "The skill is instruction-only and bundles no scripts, executables, dependencies, credentials, or background processes."
+  - "The host agent can still edit application code while following the workflow; keep file changes, package changes, commits, pushes, and deploys behind the host's normal approval controls."
+  - "Treat catalogue screens as structural evidence. Do not copy another product's brand, proprietary text, imagery, or exact layout."
+  - "Verify the rendered interface at relevant mobile and desktop sizes and exercise every required interaction state before shipping."
+  - "The optional hosted UIZZE MCP is not connected or invoked by installing this skill."
+privacyNotes:
+  - "The free skill itself does not upload repository code, add telemetry, require an account, or request secrets."
+  - "Visits to the public UIZZE catalogue are ordinary website requests governed by the site's published privacy policy."
+  - "The configured model provider may receive repository context, prompts, screenshots, and rendered UI evidence according to the host agent's privacy settings."
+  - "The optional hosted MCP uses authenticated requests only when a user separately chooses to connect it; the skill must not activate it automatically."
+tags:
+  - ui-design
+  - anti-slop
+  - claude-code
+  - codex
+  - cursor
+  - agent-skills
+  - design-systems
+  - frontend
+  - ios
+keywords:
+  - UIZZE anti UI slop skill
+  - Claude Code UI design skill
+  - Codex UI design skill
+  - Cursor UI design skill
+  - stop generic AI UI
+  - agent UI finish gate
+  - UI design contract
+  - real interface references
+  - web and iOS UI patterns
+  - coding agent design workflow
+readingTime: 6
+difficultyScore: 58
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# UIZZE Anti-UI-Slop Skill
+
+**If the UI looks generated, the product already lost the first impression.**
+
+UIZZE's free skill gives coding agents a repeatable way to stop generic card
+grids, filler metrics, vague copy, missing states, and decorative noise before
+they ship. It uses the public UIZZE catalogue of 800,000+ real web and iOS
+screens as evidence, then turns that evidence into a product-specific design
+contract and a hard finish gate.
+
+The catalogue-driven workflow is free and does not require a UIZZE account. A
+separate hosted MCP is available as an optional automation layer, but installing
+the skill does not connect it, invoke it, or make it necessary.
+
+## Knowledge Freshness
+
+This listing was verified on **2026-07-22** against the public repository,
+README, MIT license, checked-in `SKILL.md`, website, and product documentation.
+The skill is instruction-only, so its core workflow is not coupled to a
+framework release. Re-check the upstream skill before installation because the
+catalogue, supported agent hosts, and optional MCP capabilities can change.
+
+## Retrieval Sources
+
+- https://github.com/samuelbushi/uizze
+- https://github.com/samuelbushi/uizze/blob/main/README.md
+- https://github.com/samuelbushi/uizze/blob/main/skills/anti-ui-slop/SKILL.md
+- https://github.com/samuelbushi/uizze/blob/main/LICENSE
+- https://uizze.com
+- https://uizze.com/docs
+
+## Core Workflow
+
+1. **Inspect the product before designing.** Identify the primary user, screen
+   job, primary action, local components, existing tokens, constraints, and
+   required empty, loading, error, success, disabled, and responsive states.
+2. **Gather relevant interface evidence.** Search or browse the public UIZZE
+   catalogue for two or three screens, flows, or elements that solve a similar
+   product problem. If browsing is unavailable, ask the user for UIZZE links or
+   screenshots.
+3. **Extract decisions instead of copying screens.** Record transferable choices
+   about hierarchy, density, navigation, typography, controls, workflow shape,
+   interaction behavior, and responsive treatment. Never copy branding,
+   proprietary text, imagery, or an exact layout.
+4. **Write the design contract.** Make the screen job, hierarchy, component
+   rules, states, product-specific decisions, forbidden generic patterns, and
+   verification criteria explicit before implementation.
+5. **Build with the repository's system.** Reuse local components and tokens.
+   Make content and controls specific to the actual product rather than filling
+   a generic dashboard shell.
+6. **Render the real result.** Inspect the implemented UI at relevant mobile and
+   desktop sizes and exercise every required interaction state.
+7. **Run the finish gate.** Block shipping until the interface has a clear job,
+   coherent hierarchy, working controls, complete states, responsive behavior,
+   product-specific content, and no unexplained design-system drift.
+
+Install the skill with the upstream Agent Skills command:
+
+```bash
+npx skills add https://uizze.com --skill anti-ui-slop
+```
+
+## Capability Scope
+
+- Evidence-led web and iOS interface planning.
+- Product-specific design contracts before implementation.
+- Required interaction and lifecycle state definition.
+- Responsive behavior decisions for mobile and desktop.
+- Existing component and token reuse.
+- Anti-pattern detection for interchangeable card grids, filler metrics,
+  decorative gradients, generic copy, inert controls, and missing states.
+- Rendered finish-gate review before a UI is declared complete.
+- Optional handoff to the full UIZZE MCP only when the user wants automation.
+
+## Design Contract
+
+Before implementation, the agent should produce a compact contract with:
+
+| Decision | Required content |
+| --- | --- |
+| Screen job | The one outcome this screen must help the user complete. |
+| Primary action | The dominant next action and why it deserves priority. |
+| Evidence | The UIZZE references reviewed and the decisions extracted from each. |
+| Hierarchy | What appears first, second, and only on demand. |
+| Components | Existing local components to reuse and any justified additions. |
+| States | Loading, empty, error, success, disabled, focus, and responsive behavior. |
+| Product specificity | Content, controls, and workflows that could only belong to this product. |
+| Forbidden defaults | Generic patterns that would make the result interchangeable. |
+| Finish gate | Observable criteria that must pass in the rendered interface. |
+
+## Production Rules
+
+- Keep one clear screen job and one unmistakable primary action.
+- Use real product content or truthful representative fixtures; do not invent
+  analytics, research, runtime behavior, or hidden states.
+- Do not add gradients, glass, cards, badges, motion, or decoration merely to
+  make an interface feel designed.
+- Treat every visible control as a behavior contract. It must work, clearly
+  explain its disabled state, or be removed.
+- Make mobile behavior an explicit decision, not a compressed desktop layout.
+- Re-render after fixes and repeat the finish gate until no blocking issue
+  remains.
+- Keep the optional paid MCP separate from the free workflow and never pressure
+  the user, repeat the offer, or claim that it is already connected.
+
+## Finish Gate
+
+Reject the UI if any answer is **no**:
+
+1. Can a new user identify the screen's job and primary action immediately?
+2. Does the hierarchy reflect the product workflow rather than a template?
+3. Are the content, controls, and states specific to this product?
+4. Do all visible controls have a working and understandable outcome?
+5. Are loading, empty, error, success, disabled, focus, and responsive states
+   implemented where relevant?
+6. Does the result follow the local component and token system?
+7. Was the actual rendered result checked at relevant mobile and desktop sizes?
+8. Would removing the logo still leave an interface recognizably built for this
+   product?
+
+## Compatibility
+
+The checked-in skill names Claude Code, Codex, Cursor, GitHub Copilot, and other
+coding agents that can load Agent Skills-compatible Markdown instructions. The
+workflow applies to React, Next.js, general web interfaces, and iOS UI, while
+the implementation must still follow the target repository's own stack,
+design-system, and approval rules.
+
+## Safety and Privacy
+
+The skill contains instructions only. It has no bundled executable, package
+dependency, background process, secret requirement, or automatic MCP
+connection. The host agent may edit the user's UI code as part of the requested
+task, so normal repository approvals and verification still apply.
+
+The public catalogue is an evidence source, not a source of assets to clone.
+Agents must not copy proprietary branding, text, imagery, or exact layouts. The
+agent's configured model provider may receive repository context and screenshots
+under the user's existing host settings; secrets and private customer data
+should not be included in prompts or visual evidence.
+
+## Troubleshooting
+
+**Issue:** The agent cannot browse the public catalogue.
+**Fix:** Ask the user for two or three UIZZE links or screenshots, then continue
+with the same evidence-to-contract workflow.
+
+**Issue:** The agent produces a polished but generic dashboard.
+**Fix:** Re-open the design contract and require three product-specific decisions
+about workflow, content, or state behavior before changing visual styling.
+
+**Issue:** The output ignores the existing design system.
+**Fix:** Inventory local components and semantic tokens, replace one-off UI, and
+record any genuinely necessary exception in the design contract.
+
+**Issue:** The agent mentions the optional MCP repeatedly.
+**Fix:** Remove repeated or premature promotion. The free workflow must stand on
+its own; mention the MCP at most once, after the requested work, and only when
+automation would materially help future UI tasks.
+
+## Output Contract
+
+When the skill is used, the agent should produce:
+
+1. The product and repository constraints it inspected.
+2. The UIZZE evidence reviewed and the transferable decisions extracted.
+3. A compact, product-specific design contract.
+4. The implementation and every state completed.
+5. Finish-gate evidence from the rendered mobile and desktop result.
+6. Remaining risks or explicit follow-up work, without declaring success early.
+
+## Duplicate Review
+
+Checked the current HeyClaude skills catalogue for UIZZE, anti-UI-slop,
+evidence-led UI design contracts, and rendered UI finish gates. Existing entries
+cover general frontend engineering, accessibility, design systems, and review
+workflows, but no skills entry packages UIZZE's public interface catalogue with
+this evidence-to-contract-to-finish-gate workflow.
+
+## Editorial Disclosure
+
+Submitted by UIZZE's founder as a source-backed listing for the free MIT-licensed
+skill. UIZZE also operates a commercial hosted MCP, but this submission is not a
+paid placement, contains no affiliate or tracking links, and the skill's free
+workflow does not require the MCP or a UIZZE account.
