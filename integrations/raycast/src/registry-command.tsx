@@ -26,6 +26,8 @@ import {
   buildContributeEntryUrl,
   buildSuggestChangeUrl,
   categoryLabel,
+  entryHasConfigSnippet,
+  entryHasInstallCommand,
   entryKey,
   filterEntriesBySearchText,
   parseFavoriteKeys,
@@ -35,13 +37,17 @@ import {
   type RaycastEntry,
 } from "./feed";
 import {
+  CreateConfigSnippetAction,
+  CreateInstallSnippetAction,
+} from "./create-snippet-actions";
+import {
   fetchFreshFeed,
   fetchRegistrySearch,
   loadCachedFeed as loadCachedFeedFromRuntime,
   loadEntryDetail,
 } from "./runtime";
 import { markdownLink, withRaycastUtm } from "./links";
-import { entryDetailMetadata, entrySnippetKeyword } from "./raycast-ui";
+import { entryDetailMetadata } from "./raycast-ui";
 import {
   MCP_INSTALL_TARGETS,
   buildMcpInstallPlan,
@@ -938,10 +944,8 @@ export function createRegistryCommand(options: RegistryCommandOptions = {}) {
           <List.Section key={section.title} title={section.title}>
             {section.entries.map((entry) => {
               const isFavorite = favorites.has(entryKey(entry));
-              const hasInstallCommand =
-                entry.hasInstallCommand || Boolean(entry.installCommand.trim());
-              const hasConfig =
-                entry.hasConfigSnippet || Boolean(entry.configSnippet.trim());
+              const hasInstallCommand = entryHasInstallCommand(entry);
+              const hasConfig = entryHasConfigSnippet(entry);
               const installTargets =
                 entry.category === "mcp"
                   ? MCP_INSTALL_TARGETS.filter((target) =>
@@ -1107,28 +1111,20 @@ export function createRegistryCommand(options: RegistryCommandOptions = {}) {
                             icon: categoryIcons[entry.category] ?? Icon.Link,
                           }}
                         />
-                        {entry.installCommand.trim() ? (
-                          <Action.CreateSnippet
-                            title="Create Install Snippet"
-                            snippet={{
-                              name: `${entry.title} install`,
-                              text: entry.installCommand,
-                              keyword: entrySnippetKeyword(entry),
-                            }}
+                        {hasInstallCommand ? (
+                          <CreateInstallSnippetAction
+                            entry={entry}
+                            cache={cache}
+                            feedUrl={configuredFeed.feedUrl}
+                            onVisit={() => visitItem(entry)}
                           />
                         ) : null}
-                        {entry.configSnippet.trim() ? (
-                          <Action.CreateSnippet
-                            title="Create Config Snippet"
-                            snippet={{
-                              name: `${entry.title} config`,
-                              text: entry.configSnippet,
-                              keyword:
-                                `${entrySnippetKeyword(entry)}-config`.slice(
-                                  0,
-                                  40,
-                                ),
-                            }}
+                        {hasConfig ? (
+                          <CreateConfigSnippetAction
+                            entry={entry}
+                            cache={cache}
+                            feedUrl={configuredFeed.feedUrl}
+                            onVisit={() => visitItem(entry)}
                           />
                         ) : null}
                       </ActionPanel.Section>

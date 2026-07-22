@@ -5,6 +5,8 @@ import { describe, expect, it } from "vitest";
 // it to the TypeScript source.
 import {
   categoryLabel,
+  entryHasConfigSnippet,
+  entryHasInstallCommand,
   isRaycastDetail,
   fallbackDetail,
   hasValidDiscoveryEntries,
@@ -91,5 +93,62 @@ describe("hasValidDiscoveryEntries", () => {
 
   it("throws on malformed JSON (callers pass trusted feed payloads)", () => {
     expect(() => hasValidDiscoveryEntries("not json")).toThrow();
+  });
+});
+
+describe("entryHasInstallCommand / entryHasConfigSnippet", () => {
+  it("gates on compact-feed boolean flags when raw text is empty", () => {
+    expect(
+      entryHasInstallCommand(
+        entry({ hasInstallCommand: true, installCommand: "" }),
+      ),
+    ).toBe(true);
+    expect(
+      entryHasConfigSnippet(
+        entry({ hasConfigSnippet: true, configSnippet: "" }),
+      ),
+    ).toBe(true);
+    expect(
+      entryHasInstallCommand(
+        entry({ hasInstallCommand: false, installCommand: "" }),
+      ),
+    ).toBe(false);
+    expect(
+      entryHasConfigSnippet(
+        entry({ hasConfigSnippet: false, configSnippet: "" }),
+      ),
+    ).toBe(false);
+  });
+
+  it("still gates on non-empty detail text when flags are false", () => {
+    expect(
+      entryHasInstallCommand(
+        entry({
+          hasInstallCommand: false,
+          installCommand: "npx heyclaude-skill",
+        }),
+      ),
+    ).toBe(true);
+    expect(
+      entryHasConfigSnippet(
+        entry({
+          hasConfigSnippet: false,
+          configSnippet: '{ "mcpServers": {} }',
+        }),
+      ),
+    ).toBe(true);
+  });
+
+  it("treats whitespace-only text as absent", () => {
+    expect(
+      entryHasInstallCommand(
+        entry({ hasInstallCommand: false, installCommand: "   " }),
+      ),
+    ).toBe(false);
+    expect(
+      entryHasConfigSnippet(
+        entry({ hasConfigSnippet: false, configSnippet: "\n\t" }),
+      ),
+    ).toBe(false);
   });
 });

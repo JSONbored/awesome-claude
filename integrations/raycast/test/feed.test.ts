@@ -1506,7 +1506,17 @@ describe("Raycast feed helpers", () => {
     assert.doesNotMatch(registrySource, /\{ text: "Full on demand" \}/);
     assert.match(registrySource, /metadata=\{entryDetailMetadata/);
     assert.match(registrySource, /Action\.CreateQuicklink/);
-    assert.match(registrySource, /Action\.CreateSnippet/);
+    assert.match(registrySource, /CreateInstallSnippetAction/);
+    assert.match(registrySource, /CreateConfigSnippetAction/);
+    assert.match(registrySource, /entryHasInstallCommand/);
+    assert.match(registrySource, /entryHasConfigSnippet/);
+
+    const createSnippetSource = fs.readFileSync(
+      path.join(process.cwd(), "src", "create-snippet-actions.tsx"),
+      "utf8",
+    );
+    assert.match(createSnippetSource, /Action\.CreateSnippet/);
+    assert.match(createSnippetSource, /loadEntryDetail/);
 
     assert.doesNotMatch(jobsSource, /\n\s+title=\{job\.company\}/);
     assert.match(jobsSource, /\n\s+title=\{job\.title\}/);

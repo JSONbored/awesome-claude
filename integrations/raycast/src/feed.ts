@@ -1087,6 +1087,30 @@ export function fallbackDetail(entry: RaycastEntry): RaycastDetail {
   };
 }
 
+/**
+ * Compact Raycast feeds omit raw install/config text and only ship boolean
+ * flags (`hasInstallCommand` / `hasConfigSnippet`). Detail payloads may still
+ * carry the text. Gate UI actions on either signal so list rows from the
+ * compact feed still expose install/config actions.
+ */
+export function entryHasInstallCommand(
+  entry: Pick<RaycastEntry, "hasInstallCommand" | "installCommand">,
+): boolean {
+  return (
+    Boolean(entry.hasInstallCommand) ||
+    Boolean(String(entry.installCommand ?? "").trim())
+  );
+}
+
+export function entryHasConfigSnippet(
+  entry: Pick<RaycastEntry, "hasConfigSnippet" | "configSnippet">,
+): boolean {
+  return (
+    Boolean(entry.hasConfigSnippet) ||
+    Boolean(String(entry.configSnippet ?? "").trim())
+  );
+}
+
 export function sortedCategoryOptions(
   entries: RaycastEntry[],
 ): CategoryOption[] {
