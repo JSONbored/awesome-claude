@@ -17,6 +17,7 @@ import {
   normalizeSupportLevel,
   type RegistryEntry,
 } from "../apps/web/src/lib/entry-normalize-lib";
+import { installRiskLevel } from "../apps/web/src/lib/trust-lib";
 
 function baseEntry(overrides: Partial<RegistryEntry> = {}): RegistryEntry {
   return {
@@ -195,18 +196,69 @@ describe("entry normalize lib helpers", () => {
 
       expect(inferTrust(baseEntry(), "unverified")).toBe("limited");
 
-      const review = baseEntry({
+      // Risk-bearing category with no safety/privacy notes → blocked.
+      // This is the only path that produces TrustLevel "blocked".
+      const blocked = baseEntry({
         category: "mcp",
         githubUrl: "https://github.com/example/repo",
       });
-      expect(inferTrust(review, inferSource(review))).toBe("review");
+      expect(inferTrust(blocked, inferSource(blocked))).toBe("blocked");
 
+      // Same risk category with mitigating notes stays at review.
       const reviewed = baseEntry({
         category: "mcp",
         githubUrl: "https://github.com/example/repo",
         safetyNotes: "Runs locally only.",
       });
       expect(inferTrust(reviewed, inferSource(reviewed))).toBe("review");
+
+      // Privacy notes alone also clear the blocked gate.
+      const privacyNoted = baseEntry({
+        category: "hooks",
+        githubUrl: "https://github.com/example/hooks",
+        privacyNotes: "Reads local git config only.",
+      });
+      expect(inferTrust(privacyNoted, inferSource(privacyNoted))).toBe(
+        "review",
+      );
+
+      // Non-risk categories without notes are review, not blocked.
+      const guide = baseEntry({
+        category: "guides",
+        githubUrl: "https://github.com/example/guide",
+      });
+      expect(inferTrust(guide, inferSource(guide))).toBe("review");
+    });
+
+    it("can produce blocked for every risk-bearing category without notes", () => {
+      for (const category of [
+        "mcp",
+        "hooks",
+        "skills",
+        "commands",
+        "statuslines",
+      ] as const) {
+        const entry = baseEntry({
+          category,
+          githubUrl: "https://github.com/example/risk",
+        });
+        expect(inferTrust(entry, inferSource(entry))).toBe("blocked");
+      }
+    });
+
+    it("unblocks installRiskLevel high via normalize → blocked cascade", () => {
+      const registry = baseEntry({
+        category: "mcp",
+        slug: "blocked-fixture",
+        title: "Blocked Fixture MCP",
+        githubUrl: "https://github.com/example/blocked-fixture",
+      });
+      const normalized = buildEntryFromRegistry(
+        registry,
+        attribution(registry),
+      );
+      expect(normalized.trust).toBe("blocked");
+      expect(installRiskLevel(normalized)).toBe("high");
     });
   });
 

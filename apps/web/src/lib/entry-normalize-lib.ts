@@ -282,13 +282,23 @@ export function inferSource(entry: RegistryEntry): SourceStatus {
   return "unverified";
 }
 
+/**
+ * Trust posture for a normalized registry entry.
+ *
+ * Risk-bearing categories (mcp / hooks / skills / commands / statuslines) can
+ * execute code, touch the filesystem, or call the network. When neither
+ * safetyNotes nor privacyNotes disclose that behavior, the listing is
+ * `blocked` — the highest caution tier — so install-risk surfaces can warn
+ * "High risk — do not install without human review." Notes present (or a
+ * non-risk category) stay at `review`.
+ */
 export function inferTrust(entry: RegistryEntry, source: SourceStatus): TrustLevel {
   const hasNotes = Boolean(entry.safetyNotes || entry.privacyNotes);
   if (entry.packageVerified && entry.downloadSha256) return "trusted";
   if (entry.trustSignals?.firstPartyEditorial) return "trusted";
   if (source === "unverified") return "limited";
   if (["mcp", "hooks", "skills", "commands", "statuslines"].includes(entry.category) && !hasNotes) {
-    return "review";
+    return "blocked";
   }
   return "review";
 }
