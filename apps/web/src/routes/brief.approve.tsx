@@ -10,6 +10,7 @@ import {
   briefApproveEgressAnalyticsEvent,
 } from "@/lib/brief-approve-cta-events";
 import { briefIssueHubDestination } from "@/lib/brief-entry-cta-events";
+import { SEND_SLOT_LABEL } from "@/lib/brief-schedule";
 
 const tokenInput = z.object({ token: z.string() });
 const confirmInput = z.object({
@@ -95,7 +96,7 @@ function ApprovePage() {
   return (
     <Shell heading={`Approve Weekly Brief #${result.number}`}>
       Approving the draft for the week of <strong>{result.periodThrough}</strong> schedules it to
-      send to the newsletter audience at the next Tuesday 15:00 UTC slot. Review the full draft in
+      send to the newsletter audience at the next {SEND_SLOT_LABEL} slot. Review the full draft in
       your preview email first.
       {state.phase === "error" && (
         <p style={{ color: "#b4541f", marginTop: 12 }}>

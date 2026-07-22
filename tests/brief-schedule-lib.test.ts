@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import { nextSendSlot } from "../apps/web/src/lib/brief-schedule-lib";
+import {
+  nextSendSlot,
+  SEND_SLOT_LABEL,
+} from "../apps/web/src/lib/brief-schedule-lib";
 
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -70,5 +73,11 @@ describe("nextSendSlot", () => {
     expect(nextSendSlot(new Date("2026-06-01T00:00:00Z"))).toMatch(
       /^\d{4}-\d{2}-\d{2}T16:00:00\.000Z$/,
     );
+  });
+});
+
+describe("SEND_SLOT_LABEL", () => {
+  it('is exactly "Sunday 16:00 UTC", matching the actual send slot', () => {
+    expect(SEND_SLOT_LABEL).toBe("Sunday 16:00 UTC");
   });
 });
