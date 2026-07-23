@@ -418,7 +418,13 @@ export async function getRelatedEntries(args = {}, options = {}) {
     toEntrySummary,
     limit,
   });
-  if (graphEntries) {
+  // `resolveGraphRelatedEntries` returns `null` only when there is no graph row
+  // for this entry (missing/corrupt graph data); an existing graph row yields an
+  // array — including an empty one when the graph legitimately found zero
+  // relations. Honour that empty-array verdict as a genuine "no related entries"
+  // result instead of falling through to the ad-hoc scorer, which would return
+  // bare same-category matches the graph deliberately excluded.
+  if (graphEntries !== null) {
     return buildRelatedEntriesGraphResponse({
       target,
       entries: graphEntries,

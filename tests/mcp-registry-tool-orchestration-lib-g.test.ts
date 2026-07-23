@@ -110,6 +110,118 @@ describe("registry-tool-orchestration getRelatedEntries", () => {
       ).error.code,
     ).toBe("not_found");
   });
+
+  // Three-scenario matrix for the graph vs ad-hoc-scorer fallback decision.
+  // Search index shared by all three: a target plus a same-category peer that
+  // the ad-hoc scorer WOULD relate (same category alone scores > 0). The peer
+  // is what makes the "zero relations" scenario meaningful — it proves the
+  // graph's empty verdict is honoured rather than silently overridden.
+  const relatedSearchIndex = {
+    entries: [
+      {
+        category: "skills",
+        slug: "target-skill",
+        title: "Target Skill",
+        description: "Shared lint automation.",
+        tags: ["lint"],
+        keywords: [],
+        platforms: ["Claude"],
+        updatedAt: "2026-01-01T00:00:00.000Z",
+      },
+      {
+        category: "skills",
+        slug: "same-category-peer",
+        title: "Same Category Peer",
+        description: "Shared lint automation.",
+        tags: ["lint"],
+        keywords: [],
+        platforms: ["Claude"],
+        updatedAt: "2026-01-02T00:00:00.000Z",
+      },
+    ],
+  };
+
+  it("returns real graph relations when the graph row has relations", async () => {
+    const readJsonArtifact = async (relativePath: string) => {
+      if (relativePath === "relation-graph.json") {
+        return {
+          entries: [
+            {
+              key: "skills:target-skill",
+              related: [
+                {
+                  key: "skills:same-category-peer",
+                  relation: "similar",
+                  score: 42,
+                  reasons: ["tag:lint"],
+                },
+              ],
+            },
+          ],
+        };
+      }
+      if (relativePath !== "search-index.json") return null;
+      return relatedSearchIndex;
+    };
+
+    const result = await getRelatedEntries(
+      { category: "skills", slug: "target-skill", limit: 8 },
+      { readJsonArtifact },
+    );
+
+    expect(result.ok).toBe(true);
+    expect(result.relationGraph).toBe(true);
+    expect(result.count).toBe(1);
+    expect(result.entries[0].slug).toBe("same-category-peer");
+    expect(result.entries[0].relatedScore).toBe(42);
+  });
+
+  it("returns a genuine no-related result (no ad-hoc fallback) when the graph row has zero relations", async () => {
+    const readJsonArtifact = async (relativePath: string) => {
+      if (relativePath === "relation-graph.json") {
+        return {
+          entries: [{ key: "skills:target-skill", related: [] }],
+        };
+      }
+      if (relativePath !== "search-index.json") return null;
+      return relatedSearchIndex;
+    };
+
+    const result = await getRelatedEntries(
+      { category: "skills", slug: "target-skill", limit: 8 },
+      { readJsonArtifact },
+    );
+
+    expect(result.ok).toBe(true);
+    // relationGraph:true + count:0 proves it honoured the graph's "zero
+    // relations" verdict rather than falling through to the ad-hoc scorer,
+    // which would have surfaced the same-category peer.
+    expect(result.relationGraph).toBe(true);
+    expect(result.count).toBe(0);
+    expect(result.entries).toEqual([]);
+  });
+
+  it("falls back to the ad-hoc scorer when there is no graph row at all", async () => {
+    const readJsonArtifact = async (relativePath: string) => {
+      // Graph data exists but has no row for this target (missing/corrupt data).
+      if (relativePath === "relation-graph.json") {
+        return { entries: [{ key: "skills:someone-else", related: [] }] };
+      }
+      if (relativePath !== "search-index.json") return null;
+      return relatedSearchIndex;
+    };
+
+    const result = await getRelatedEntries(
+      { category: "skills", slug: "target-skill", limit: 8 },
+      { readJsonArtifact },
+    );
+
+    expect(result.ok).toBe(true);
+    // No graph row → ad-hoc scorer runs, surfacing the same-category peer.
+    expect(result.relationGraph).toBe(false);
+    expect(result.count).toBe(1);
+    expect(result.entries[0].slug).toBe("same-category-peer");
+  });
 });
 
 describe("registry-tool-orchestration compareEntries", () => {

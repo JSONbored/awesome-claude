@@ -211,7 +211,17 @@ export function resolveGraphRelatedEntries({
   toEntrySummary,
   limit,
 }) {
-  if (!graphRow?.related?.length) return null;
+  // No graph row at all (missing/corrupt graph data) — signal the caller to
+  // fall back to the ad-hoc scorer by returning `null`.
+  if (!graphRow) return null;
+  // A graph row exists but deliberately relates to nothing. That empty
+  // `related` array is the relation graph's considered "zero relations"
+  // verdict (its builder requires a candidate score >= 18, which excludes bare
+  // same-category matches), not missing data. Return an empty array — NOT
+  // `null` — so the caller reports a genuine "no related entries" result
+  // instead of falling through to the weaker ad-hoc same-category scorer and
+  // silently overriding the graph's verdict.
+  if (!graphRow.related?.length) return [];
   const searchByKey = new Map(
     searchIndex.map((entry) => [`${entry.category}:${entry.slug}`, entry]),
   );

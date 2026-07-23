@@ -9427,7 +9427,7 @@ describe("registry-handlers-lib related, adapter, and compatibility responses", 
     });
   });
 
-  it("resolveGraphRelatedEntries returns null when the graph row has no relations", () => {
+  it("resolveGraphRelatedEntries returns null only when there is no graph row", () => {
     expect(
       resolveGraphRelatedEntries({
         graphRow: null,
@@ -9438,12 +9438,35 @@ describe("registry-handlers-lib related, adapter, and compatibility responses", 
     ).toBeNull();
     expect(
       resolveGraphRelatedEntries({
-        graphRow: { related: [] },
+        graphRow: undefined,
         searchIndex: [],
         toEntrySummary,
         limit: 5,
       }),
     ).toBeNull();
+  });
+
+  it("resolveGraphRelatedEntries returns an empty array for a graph row with zero relations", () => {
+    // A graph row that exists but has an empty (or absent) `related` list is the
+    // graph's considered "zero relations" verdict, not missing data. It must be
+    // distinguishable from the no-graph-row case (`null`) so the caller does not
+    // fall back to the weaker ad-hoc scorer.
+    expect(
+      resolveGraphRelatedEntries({
+        graphRow: { related: [] },
+        searchIndex: [],
+        toEntrySummary,
+        limit: 5,
+      }),
+    ).toEqual([]);
+    expect(
+      resolveGraphRelatedEntries({
+        graphRow: { key: "mcp:x" },
+        searchIndex: [],
+        toEntrySummary,
+        limit: 5,
+      }),
+    ).toEqual([]);
   });
 
   it("resolveGraphRelatedEntries resolves related keys and drops unknown ones", () => {
