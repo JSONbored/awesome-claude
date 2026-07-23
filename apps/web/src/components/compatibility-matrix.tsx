@@ -93,8 +93,9 @@ export function CompatibilityMatrix({
   }, [rows, query]);
 
   const downloadCsv = () => {
-    onCsvDownloadClick?.(rows.length, clients.length);
-    const csv = buildCompatibilityCsv(clients, rows, (support) => SUPPORT_META[support].label);
+    // Export the filtered table the user sees, not the full unfiltered matrix (#5505).
+    onCsvDownloadClick?.(filtered.length, clients.length);
+    const csv = buildCompatibilityCsv(clients, filtered, (support) => SUPPORT_META[support].label);
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
