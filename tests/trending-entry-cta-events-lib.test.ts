@@ -15,6 +15,8 @@ import {
   trendingRankingReasonOpenAnalyticsEvent,
   trendingShareAnalyticsData,
   trendingShareAnalyticsEvent,
+  trendingWindowFilterAnalyticsData,
+  trendingWindowFilterAnalyticsEvent,
 } from "@/lib/trending-entry-cta-events-lib";
 
 describe("trending entry cta events lib", () => {
@@ -73,6 +75,19 @@ describe("trending entry cta events lib", () => {
       matchCount: 4,
       totalCount: 20,
       window: "7d",
+      mode: "live",
+    });
+    expect(trendingWindowFilterAnalyticsEvent()).toBe(
+      "trending_window_filter_click",
+    );
+    expect(
+      trendingWindowFilterAnalyticsData("30d", 8, 20, "mcp", "live"),
+    ).toEqual({
+      surface: TRENDING_PAGE_SURFACE,
+      window: "30d",
+      matchCount: 8,
+      totalCount: 20,
+      categoryFilter: "mcp",
       mode: "live",
     });
     expect(trendingFilterResetAnalyticsEvent()).toBe(

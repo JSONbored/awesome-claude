@@ -45,13 +45,21 @@ import {
   trendingRankingReasonOpenAnalyticsEvent,
   trendingShareAnalyticsData,
   trendingShareAnalyticsEvent,
+  trendingWindowFilterAnalyticsData,
+  trendingWindowFilterAnalyticsEvent,
   type TrendingListWindow,
   type TrendingShareAction,
 } from "@/lib/trending-entry-cta-events";
+import {
+  filterTrendingRowsByWindow,
+  resolveTrendingWindowRows,
+  TRENDING_WINDOW_OPTIONS,
+  trendingSharePath,
+} from "@/lib/trending-window-lib";
 import { cn } from "@/lib/utils";
 
 const defaultSearch = {
-  window: "7d" as const,
+  window: "all" as const,
   category: "",
 };
 
@@ -131,6 +139,28 @@ function fallbackRows(): TrendingEntry[] {
       trendingScore: undefined,
       trendingReasons: ["source_backed_fallback"],
     }));
+}
+
+function recentRowsForWindow(window: TrendingListWindow): TrendingEntry[] {
+  if (window === "all") return [];
+  return filterTrendingRowsByWindow(
+    search({ sort: "newest" })
+      .filter((entry) => entry.source !== "unverified")
+      .slice(0, 200)
+      .map((entry) => ({
+        ...entry,
+        trendingScore: undefined,
+        trendingReasons: ["source_backed_fallback"],
+      })),
+    window,
+  ).slice(0, 100);
+}
+
+function rowsForTrendingWindow(
+  fetchedRows: readonly TrendingEntry[],
+  window: TrendingListWindow,
+): TrendingEntry[] {
+  return resolveTrendingWindowRows(fetchedRows, recentRowsForWindow(window), window);
 }
 
 function rowsFromPayload(payload: TrendingPayload): TrendingEntry[] {
@@ -247,18 +277,36 @@ function TrendingPage() {
   const sp = Route.useSearch();
   const navigate = Route.useNavigate();
   const latestBrief = BRIEF_ISSUES[0];
-  const { rows: allRows, mode, signals, loading } = useTrendingRows();
+  const { rows: fetchedRows, mode, signals, loading } = useTrendingRows();
 
-  const rows = sp.category ? allRows.filter((entry) => entry.category === sp.category) : allRows;
+  const windowRows = React.useMemo(
+    () => rowsForTrendingWindow(fetchedRows, sp.window),
+    [fetchedRows, sp.window],
+  );
+  const rows = sp.category
+    ? windowRows.filter((entry) => entry.category === sp.category)
+    : windowRows;
   const podium = rows.slice(0, 3);
   const list = rows.slice(3);
   const liveSignals = hasLiveSignals(signals);
 
   const countsByCategory = React.useMemo(() => {
     const counts: Record<string, number> = {};
-    for (const entry of allRows) counts[entry.category] = (counts[entry.category] ?? 0) + 1;
+    for (const entry of windowRows) counts[entry.category] = (counts[entry.category] ?? 0) + 1;
     return counts;
-  }, [allRows]);
+  }, [windowRows]);
+
+  const countsByWindow = React.useMemo(() => {
+    const counts: Record<TrendingListWindow, number> = {
+      "7d": 0,
+      "30d": 0,
+      all: 0,
+    };
+    for (const option of TRENDING_WINDOW_OPTIONS) {
+      counts[option.id] = rowsForTrendingWindow(fetchedRows, option.id).length;
+    }
+    return counts;
+  }, [fetchedRows]);
 
   const set = (patch: Partial<typeof sp>) =>
     navigate({ search: (prev: typeof sp) => ({ ...prev, ...patch }) });
@@ -281,7 +329,14 @@ function TrendingPage() {
     [list.length, mode, sp.category, sp.window],
   );
 
-  const shareUrl = `/trending${sp.category ? `?category=${sp.category}` : ""}`;
+  const shareUrl = trendingSharePath(sp.window, sp.category);
+
+  const trackWindowFilter = (window: TrendingListWindow, matchCount: number) => {
+    trackEvent(
+      trendingWindowFilterAnalyticsEvent(),
+      trendingWindowFilterAnalyticsData(window, matchCount, fetchedRows.length, sp.category, mode),
+    );
+  };
 
   const trackCategoryFilter = (categoryFilter: string, active: boolean, matchCount: number) => {
     trackEvent(
@@ -290,7 +345,7 @@ function TrendingPage() {
         categoryFilter,
         active,
         matchCount,
-        allRows.length,
+        windowRows.length,
         sp.window,
         mode,
       ),
@@ -401,12 +456,42 @@ function TrendingPage() {
           </div>
         </div>
 
+        <div
+          className="mt-3 flex flex-wrap items-center gap-1.5"
+          role="group"
+          aria-label="Trending time window"
+        >
+          {TRENDING_WINDOW_OPTIONS.map((option) => {
+            const active = sp.window === option.id;
+            const matchCount = countsByWindow[option.id];
+            return (
+              <button
+                key={option.id}
+                type="button"
+                onClick={() => {
+                  trackWindowFilter(option.id, matchCount);
+                  set({ window: option.id });
+                }}
+                aria-pressed={active}
+                className={cn(
+                  "shrink-0 rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors duration-200 ease-out motion-safe:active:scale-[0.97]",
+                  active
+                    ? "border-ink bg-ink text-background"
+                    : "border-border bg-surface text-ink-muted hover:text-ink",
+                )}
+              >
+                {option.label} <span className="text-ink-subtle">· {matchCount}</span>
+              </button>
+            );
+          })}
+        </div>
+
         <div className="relative mt-3 -mx-1">
           <div className="flex gap-1.5 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <button
               type="button"
               onClick={() => {
-                trackCategoryFilter("", true, allRows.length);
+                trackCategoryFilter("", true, windowRows.length);
                 set({ category: "" });
               }}
               aria-pressed={!sp.category}
@@ -417,7 +502,7 @@ function TrendingPage() {
                   : "border-border bg-surface text-ink-muted hover:text-ink",
               )}
             >
-              All · {allRows.length}
+              All · {windowRows.length}
             </button>
             {CATEGORIES.map((category) => {
               const count = countsByCategory[category.id] ?? 0;
@@ -457,13 +542,13 @@ function TrendingPage() {
             No resources in this slice
           </div>
           <p className="max-w-sm text-sm text-ink-muted">
-            Try another category or come back when live signals have new activity.
+            Try another time window or category, or come back when live signals have new activity.
           </p>
           <button
             type="button"
             onClick={() => {
               trackFilterReset();
-              set({ window: "7d", category: "" });
+              set({ window: "all", category: "" });
             }}
             className="mt-2 inline-flex h-8 items-center gap-1.5 rounded-md bg-ink px-3 text-xs font-medium text-background transition-transform hover:bg-ink/90 active:translate-y-px"
           >

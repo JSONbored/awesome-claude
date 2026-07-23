@@ -65,6 +65,27 @@ export function trendingCategoryFilterAnalyticsData(
   };
 }
 
+export function trendingWindowFilterAnalyticsEvent(): string {
+  return "trending_window_filter_click";
+}
+
+export function trendingWindowFilterAnalyticsData(
+  window: TrendingListWindow,
+  matchCount: number,
+  totalCount: number,
+  categoryFilter: string,
+  mode: TrendingListMode,
+) {
+  return {
+    surface: TRENDING_PAGE_SURFACE,
+    window,
+    matchCount,
+    totalCount,
+    categoryFilter,
+    mode,
+  };
+}
+
 export function trendingFilterResetAnalyticsEvent(): string {
   return "trending_filter_reset_click";
 }

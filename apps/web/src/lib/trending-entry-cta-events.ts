@@ -18,6 +18,8 @@ export {
   trendingRankingReasonOpenAnalyticsEvent,
   trendingShareAnalyticsData,
   trendingShareAnalyticsEvent,
+  trendingWindowFilterAnalyticsData,
+  trendingWindowFilterAnalyticsEvent,
   type TrendingChromeDestination,
   type TrendingChromePlacement,
   type TrendingChromeRouteDestination,
