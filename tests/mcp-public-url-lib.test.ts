@@ -289,12 +289,23 @@ describe("public URL helper integration", () => {
 });
 
 describe("isPublicGitHubProfileUrl reserved paths", () => {
+  // Regression for #5507: reserved product/marketing pages must not pass as
+  // profiles (parity with packages/registry/src/source-url-lib.js).
   it.each([
-    ["https://github.com/login", true],
-    ["https://github.com/explore", true],
-    ["https://github.com/marketplace", true],
-  ])("treats single-segment reserved path %s as profile-shaped URL", (url) => {
-    expect(isPublicGitHubProfileUrl(url)).toBe(true);
+    ["https://github.com/features", false],
+    ["https://github.com/sponsors", false],
+    ["https://github.com/about", false],
+    ["https://github.com/login", false],
+    ["https://github.com/explore", false],
+    ["https://github.com/marketplace", false],
+    ["https://github.com/apps", false],
+    ["https://www.github.com/Features", false],
+  ])("rejects reserved single-segment path %s", (url, expected) => {
+    expect(isPublicGitHubProfileUrl(url)).toBe(expected);
+  });
+
+  it("still accepts a real profile URL", () => {
+    expect(isPublicGitHubProfileUrl("https://github.com/torvalds")).toBe(true);
   });
 });
 
@@ -392,7 +403,8 @@ describe("isPublicGitHubProfileUrl path segmentation", () => {
     ["https://github.com/orgs/acme/people", false],
     ["https://github.com/sponsors/octocat", false],
     ["https://github.com/features/copilot", false],
-    ["https://github.com/enterprise", true],
+    // single-segment reserved owner (enterprise), not a profile
+    ["https://github.com/enterprise", false],
   ])("profile check for %s => %s", (url, expected) => {
     expect(isPublicGitHubProfileUrl(url)).toBe(expected);
   });
