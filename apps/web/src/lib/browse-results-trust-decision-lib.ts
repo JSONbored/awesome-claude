@@ -127,7 +127,13 @@ export function browseTrustPanelDecisionHint(
   const coverage = browseTrustCoverageChips(entries);
   const weakCoverage = coverage.filter((chip) => chip.emphasis === "low");
   if (weakCoverage.length >= 2 && compareCount < 2) {
-    return `Only ${weakCoverage[0]?.percent ?? 0}%–${weakCoverage[weakCoverage.length - 1]?.percent ?? 0}% of results have key trust signals — compare before you commit.`;
+    // Chips arrive in fixed signal order (safety, privacy, ...), not by value,
+    // so take min/max — indexing first/last could render a backwards range
+    // like "Only 20%–0%".
+    const weakPercents = weakCoverage.map((chip) => chip.percent);
+    const lowest = Math.min(...weakPercents);
+    const highest = Math.max(...weakPercents);
+    return `Only ${lowest}%–${highest}% of results have key trust signals — compare before you commit.`;
   }
 
   return null;

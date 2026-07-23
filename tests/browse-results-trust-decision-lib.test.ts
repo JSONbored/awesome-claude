@@ -158,6 +158,21 @@ describe("browse results trust decision lib", () => {
     );
   });
 
+  it("renders the weak-coverage range low-to-high regardless of chip order", () => {
+    // Safety lands at 20% (1 of 5) while every later chip is 0%. Chips are in
+    // fixed signal order, so first/last indexing rendered "Only 20%–0%".
+    const sparse = [
+      entry({ safetyNotes: "Careful" }),
+      entry({ slug: "two" }),
+      entry({ slug: "three" }),
+      entry({ slug: "four" }),
+      entry({ slug: "five" }),
+    ];
+    expect(browseTrustPanelDecisionHint(sparse, 0, [])).toContain(
+      "Only 0%–20%",
+    );
+  });
+
   it("prefers side-by-side compare copy when diverging labels exist and compare is ready", () => {
     expect(
       browseTrustPanelDecisionHint([entry(), entry({ slug: "two" })], 2, [
