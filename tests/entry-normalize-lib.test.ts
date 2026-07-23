@@ -389,6 +389,23 @@ describe("entry normalize lib helpers", () => {
         appliesTo: "none",
       });
     });
+
+    it("falls back url to githubUrl for GitHub-only entries, like stars/forks", () => {
+      expect(
+        normalizeRepoStats(
+          baseEntry({
+            githubUrl: "https://github.com/example/gh-only",
+            githubStars: 42,
+            githubForks: 7,
+          }),
+        ),
+      ).toMatchObject({
+        url: "https://github.com/example/gh-only",
+        stars: 42,
+        forks: 7,
+        appliesTo: "listing_source_repo",
+      });
+    });
   });
 
   describe("normalizeRelatedEntries", () => {

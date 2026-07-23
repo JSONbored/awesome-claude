@@ -348,7 +348,7 @@ export function normalizeRepoStats(entry: RegistryEntry): Entry["repoStats"] {
   const stars = stats?.stars ?? entry.githubStars ?? null;
   const forks = stats?.forks ?? entry.githubForks ?? null;
   const updatedAt = stats?.updatedAt ?? entry.repoUpdatedAt ?? null;
-  const url = stats?.url ?? entry.repoUrl ?? undefined;
+  const url = stats?.url ?? entry.repoUrl ?? entry.githubUrl ?? undefined;
   if (stars == null && forks == null && !updatedAt && !url) return undefined;
   return {
     repository: stats?.repository,
