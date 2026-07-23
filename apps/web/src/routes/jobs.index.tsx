@@ -201,8 +201,10 @@ function JobsPage() {
     if (sortMode === "salary") {
       const sval = (j: JobListing) => {
         if (!j.compensation) return -1;
-        const m = j.compensation.match(/\$?(\d[\d,]*)k?/i);
-        return m ? parseInt(m[1].replace(/,/g, ""), 10) : 0;
+        const m = j.compensation.match(/\$?(\d[\d,]*)(k)?/i);
+        if (!m) return 0;
+        const base = parseInt(m[1].replace(/,/g, ""), 10);
+        return m[2] ? base * 1000 : base;
       };
       return [...filtered].sort((a, b) => sval(b) - sval(a));
     }
