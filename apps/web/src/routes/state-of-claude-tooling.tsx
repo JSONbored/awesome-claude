@@ -15,6 +15,7 @@ import { ENTRIES, QUALITY_STATS, REGISTRY_GENERATED_AT } from "@/data/entries";
 import { installMethodDistribution, notesCoverage } from "@/lib/ecosystem-stats";
 import { pctOf } from "@/lib/pct-of-lib";
 import { absoluteUrl } from "@/lib/seo";
+import { reportExportUrl } from "@/lib/data-reports-lib";
 import { ogImageUrl, OG_WIDTH, OG_HEIGHT } from "@/lib/og-image";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { PageContainer } from "@/components/page-container";
@@ -187,6 +188,18 @@ export const Route = createFileRoute("/state-of-claude-tooling")({
         "Platform coverage",
         "Install-method distribution",
         "Safety and privacy notes coverage",
+      ],
+      distribution: [
+        {
+          "@type": "DataDownload",
+          encodingFormat: "application/json",
+          contentUrl: reportExportUrl("claude-tooling", "json"),
+        },
+        {
+          "@type": "DataDownload",
+          encodingFormat: "text/csv",
+          contentUrl: reportExportUrl("claude-tooling", "csv"),
+        },
       ],
     };
     const breadcrumbs = {
