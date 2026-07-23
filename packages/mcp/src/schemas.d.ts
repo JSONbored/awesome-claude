@@ -2,7 +2,8 @@ import type { z } from "zod";
 
 export const SearchRegistryInputSchema: z.ZodType;
 export const PlanWorkflowToolboxInputSchema: z.ZodType;
-export const ServerInfoInputSchema: z.ZodType;
+export const RecommendForTaskInputSchema: z.ZodType;
+export const GetServerInfoInputSchema: z.ZodType;
 export const ListCategoryEntriesInputSchema: z.ZodType;
 export const RecentUpdatesInputSchema: z.ZodType;
 export const RelatedEntriesInputSchema: z.ZodType;

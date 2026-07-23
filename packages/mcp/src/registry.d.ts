@@ -217,7 +217,8 @@ export function callRegistryTool(
 export {
   SearchRegistryInputSchema,
   PlanWorkflowToolboxInputSchema,
-  ServerInfoInputSchema,
+  RecommendForTaskInputSchema,
+  GetServerInfoInputSchema,
   ListCategoryEntriesInputSchema,
   RecentUpdatesInputSchema,
   RelatedEntriesInputSchema,
