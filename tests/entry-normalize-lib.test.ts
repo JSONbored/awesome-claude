@@ -540,6 +540,20 @@ describe("buildEntryFromRegistry", () => {
     ]);
   });
 
+  it("copies brandVerifiedAt/brandColors from the registry entry", () => {
+    const entry = buildEntryFromRegistry(
+      baseEntry({
+        brandName: "Example",
+        brandVerifiedAt: "2026-05-01T00:00:00.000Z",
+        brandColors: ["#101010", "#f0f0f0"],
+      }),
+      attribution(),
+    );
+
+    expect(entry.brandVerifiedAt).toBe("2026-05-01T00:00:00.000Z");
+    expect(entry.brandColors).toEqual(["#101010", "#f0f0f0"]);
+  });
+
   it("rejects invalid hook triggers and script languages", () => {
     const entry = buildEntryFromRegistry(
       baseEntry({
