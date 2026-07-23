@@ -8,6 +8,7 @@ import { buildSkillsReport } from "@/lib/skills-stats";
 import { buildAgentsReport } from "@/lib/agents-stats";
 import { buildClaudeToolingReport } from "@/lib/claude-tooling-stats";
 import { buildMcpServersReport } from "@/lib/mcp-servers-stats";
+import { buildMcpSecurityReport } from "@/lib/mcp-security-stats";
 import { reportToCsv, reportToJson, type ReportModel } from "@/lib/data-reports";
 
 const AS_OF = String(REGISTRY_GENERATED_AT).slice(0, 10);
@@ -19,6 +20,7 @@ const REPORT_BUILDERS: Record<string, () => ReportModel> = {
   "ai-agents": () => buildAgentsReport(ENTRIES, AS_OF),
   "claude-tooling": () => buildClaudeToolingReport(ENTRIES, AS_OF),
   "mcp-servers": () => buildMcpServersReport(ENTRIES, AS_OF),
+  "mcp-security": () => buildMcpSecurityReport(ENTRIES, AS_OF),
 };
 
 const CACHE_CONTROL = "public, max-age=3600, s-maxage=86400";

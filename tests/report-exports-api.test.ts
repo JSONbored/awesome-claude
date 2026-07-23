@@ -68,6 +68,28 @@ describe("/api/reports/{report}", () => {
     expect(text).toContain("transport");
   });
 
+  it("serves the MCP security report as JSON and CSV", async () => {
+    const jsonRes = await call("mcp-security.json");
+    expect(jsonRes.status).toBe(200);
+    const body = (await jsonRes.json()) as {
+      report: string;
+      total: number;
+      dimensions: Array<{ key: string }>;
+    };
+    expect(body.report).toBe("mcp-security");
+    expect(body.total).toBeGreaterThan(100);
+    expect(body.dimensions.map((dimension) => dimension.key)).toEqual(
+      expect.arrayContaining(["auth", "hosting", "supply-chain"]),
+    );
+
+    const csvRes = await call("mcp-security.csv");
+    expect(csvRes.status).toBe(200);
+    expect(csvRes.headers.get("content-type")).toContain("text/csv");
+    const text = await csvRes.text();
+    expect(text.split("\r\n")[0]).toBe("dimension,label,count,percent");
+    expect(text).toContain("auth");
+  });
+
   it("sets caching and a download filename", async () => {
     const res = await call("agent-skills.csv");
     expect(res.headers.get("cache-control")).toContain("max-age");

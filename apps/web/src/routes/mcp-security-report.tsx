@@ -4,12 +4,15 @@ import { Boxes, ShieldCheck, Eye, KeyRound, PackageCheck } from "lucide-react";
 import { ENTRIES, REGISTRY_GENERATED_AT } from "@/data/entries";
 import { notesCoverage } from "@/lib/ecosystem-stats";
 import { authDistribution, hostingDistribution, supplyChainCoverage } from "@/lib/mcp-stats";
+import { buildMcpSecurityReport } from "@/lib/mcp-security-stats";
+import { buildReportDataset } from "@/lib/data-reports";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl, OG_WIDTH, OG_HEIGHT } from "@/lib/og-image";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import { NewsletterInline } from "@/components/newsletter-inline";
+import { ReportDownloads } from "@/components/report-downloads";
 import { DataSection, DataStat, DistTable, pctOf, type DistRow } from "@/components/data-report";
 import {
   withCategoryBrowseDrilldown,
@@ -57,13 +60,12 @@ function trackStat(statKey: string, destination: "browse" | "quality" = "browse"
   );
 }
 
-const PATH = "/mcp-security-report";
-const TITLE = "MCP Server Security & Privacy Report";
-const PAGE_TITLE = `${TITLE} — HeyClaude`;
-const DESCRIPTION =
-  "A data report on the security and privacy posture of Model Context Protocol (MCP) servers for Claude: authentication methods, network exposure, supply-chain verification, and safety/privacy-note coverage across the HeyClaude registry.";
-
 const AS_OF = String(REGISTRY_GENERATED_AT).slice(0, 10);
+const MODEL = buildMcpSecurityReport(ENTRIES, AS_OF);
+const PATH = MODEL.slug;
+const TITLE = MODEL.title;
+const PAGE_TITLE = `${TITLE} — HeyClaude`;
+const DESCRIPTION = MODEL.description;
 
 const MCP = ENTRIES.filter((e) => e.category === "mcp");
 const TOTAL = MCP.length;
@@ -164,33 +166,7 @@ const OG_IMAGE = ogImageUrl({
 export const Route = createFileRoute("/mcp-security-report")({
   head: () => {
     const url = absoluteUrl(PATH);
-    const dataset = {
-      "@context": "https://schema.org",
-      "@type": "Dataset",
-      name: TITLE,
-      description: DESCRIPTION,
-      url,
-      keywords: [
-        "MCP security",
-        "MCP server authentication",
-        "Model Context Protocol",
-        "OAuth API key",
-        "supply chain",
-        "Claude",
-      ],
-      license: "https://creativecommons.org/licenses/by/4.0/",
-      isAccessibleForFree: true,
-      dateModified: AS_OF,
-      creator: { "@type": "Organization", name: "HeyClaude", url: absoluteUrl("/") },
-      variableMeasured: [
-        "Authentication-method distribution",
-        "Network exposure (local vs hosted)",
-        "Supply-chain verification coverage",
-        "Safety-note coverage",
-        "Privacy-note coverage",
-        "Documentation coverage",
-      ],
-    };
+    const dataset = buildReportDataset(MODEL);
     const breadcrumbs = {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
@@ -385,6 +361,8 @@ function McpSecurityReportPage() {
           </ul>
         </div>
       </div>
+
+      <ReportDownloads exportSlug={MODEL.exportSlug} />
 
       <section className="mt-12 rounded-xl border border-border bg-surface p-6">
         <h2 className="font-display text-xl font-semibold text-ink">Methodology &amp; citation</h2>
