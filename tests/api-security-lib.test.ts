@@ -9,6 +9,7 @@ import {
   isRateLimited,
   readRequestTextWithinLimit,
 } from "../apps/web/src/lib/api-security-lib";
+import { getApiRouteDefinition } from "../apps/web/src/lib/api/contracts-lib";
 
 const request = (
   init: RequestInit & { headers?: Record<string, string> } = {},
@@ -394,6 +395,65 @@ describe("isRateLimited fallback limiter", () => {
         ...params,
         scope: "other",
         request: fallbackRequest("10.0.0.1"),
+      }),
+    ).toBe(false);
+  });
+
+  it("gives adminJobs list/upsert/update independent rate-limit buckets", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(0);
+
+    const rateLimitFor = (id: "adminJobs.list" | "adminJobs.upsert") => {
+      const def = getApiRouteDefinition(id).rateLimit;
+      if (!def) throw new Error(`${id} is expected to declare a rateLimit`);
+      return def;
+    };
+    const list = rateLimitFor("adminJobs.list");
+    const upsert = rateLimitFor("adminJobs.upsert");
+    const update = getApiRouteDefinition("adminJobs.update").rateLimit;
+    if (!update) throw new Error("adminJobs.update should declare a rateLimit");
+
+    // Regression guard: the three operations must NOT share one scope string,
+    // or they share a single counter bucket despite three declared limits.
+    expect(new Set([list.scope, upsert.scope, update.scope]).size).toBe(3);
+
+    const ip = "203.0.113.77";
+    // Exhaust adminJobs.list's own budget for this client.
+    for (let i = 0; i < list.limit; i += 1) {
+      expect(
+        isRateLimited({
+          request: fallbackRequest(ip),
+          scope: list.scope,
+          limit: list.limit,
+          windowMs: list.windowMs,
+        }),
+      ).toBe(false);
+    }
+    expect(
+      isRateLimited({
+        request: fallbackRequest(ip),
+        scope: list.scope,
+        limit: list.limit,
+        windowMs: list.windowMs,
+      }),
+    ).toBe(true);
+
+    // A subsequent upsert/update from the same client is unaffected — the
+    // counters are now independent rather than sharing one "admin-jobs" bucket.
+    expect(
+      isRateLimited({
+        request: fallbackRequest(ip),
+        scope: upsert.scope,
+        limit: upsert.limit,
+        windowMs: upsert.windowMs,
+      }),
+    ).toBe(false);
+    expect(
+      isRateLimited({
+        request: fallbackRequest(ip),
+        scope: update.scope,
+        limit: update.limit,
+        windowMs: update.windowMs,
       }),
     ).toBe(false);
   });

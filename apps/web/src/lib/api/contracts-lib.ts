@@ -1337,7 +1337,7 @@ export const apiRouteDefinitions = {
     querySchema: adminJobsQuerySchema,
     auth: "admin-token",
     rateLimit: {
-      scope: "admin-jobs",
+      scope: "admin-jobs-list",
       limit: 60,
       windowMs: 60_000,
       binding: "API_STRICT_RATE_LIMIT",
@@ -1356,7 +1356,7 @@ export const apiRouteDefinitions = {
     bodyLimitBytes: 32 * 1024,
     auth: "admin-token",
     rateLimit: {
-      scope: "admin-jobs",
+      scope: "admin-jobs-upsert",
       limit: 45,
       windowMs: 60_000,
       binding: "API_STRICT_RATE_LIMIT",
@@ -1375,7 +1375,7 @@ export const apiRouteDefinitions = {
     bodyLimitBytes: 4 * 1024,
     auth: "admin-token",
     rateLimit: {
-      scope: "admin-jobs",
+      scope: "admin-jobs-update",
       limit: 45,
       windowMs: 60_000,
       binding: "API_STRICT_RATE_LIMIT",
