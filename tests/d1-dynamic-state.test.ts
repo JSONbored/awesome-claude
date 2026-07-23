@@ -942,6 +942,18 @@ describe("D1 dynamic state helpers", () => {
     ).resolves.toMatchObject({ slug: "reviewed-ai-engineer" });
     await expect(queryAdminJobBySlug(db, "missing-role")).resolves.toBeNull();
 
+    // Source-check automation only runs against active (and stale) rows; promote
+    // here so revalidate/stale stay on the legal lifecycle path without re-testing
+    // the activate quality gate (covered elsewhere).
+    db.jobRows[0] = {
+      ...db.jobRows[0],
+      status: "active",
+      description_md:
+        "Own Claude workflow systems with source verification, external apply links, and private D1-backed publication state for production teams.",
+      source_checked_at: "2026-04-28T00:00:00.000Z",
+      last_checked_at: "2026-04-28T00:00:00.000Z",
+    };
+
     await updateAdminJobState(db, {
       slug: "reviewed-ai-engineer",
       action: "revalidate",

@@ -4,10 +4,12 @@ import type { D1DatabaseLike, D1RunResult } from "../apps/web/src/lib/db";
 import {
   REQUIRED_JOB_COLUMNS,
   REQUIRED_JOBS_MIGRATION,
+  JobInvalidTransitionError,
   JobNotFoundError,
   JobPublicationQualityError,
   checkJobsSchema,
   getJobsHealth,
+  nextJobStatus,
   queryAdminJobBySlug,
   queryAdminJobs,
   updateAdminJobState,
@@ -821,47 +823,85 @@ describe("upsertAdminJob", () => {
   });
 });
 
-describe("updateAdminJobState", () => {
-  it.each([
-    ["review", "pending_review"],
-    ["activate", "active"],
-    ["close", "closed"],
-    ["archive", "archived"],
-    ["reactivate", "active"],
-    ["expire", "closed"],
-  ] as const)("maps action %s to status %s", async (action, expectedStatus) => {
-    const db = new FakeD1();
-    db.jobRows = [validActiveJobRow({ slug: `${action}-role` })];
-    await updateAdminJobState(db, { slug: `${action}-role`, action });
-    expect(db.runCalls.at(-1)?.query).toContain("status = ?");
-    expect(db.runCalls.at(-1)?.values).toContain(expectedStatus);
+describe("nextJobStatus", () => {
+  it("allows legal lifecycle transitions", () => {
+    expect(nextJobStatus("draft", "review")).toBe("pending_review");
+    expect(nextJobStatus("draft", "activate")).toBe("active");
+    expect(nextJobStatus("pending_review", "activate")).toBe("active");
+    expect(nextJobStatus("active", "stale")).toBe("stale_pending_review");
+    expect(nextJobStatus("active", "close")).toBe("closed");
+    expect(nextJobStatus("active", "expire")).toBe("closed");
+    expect(nextJobStatus("stale_pending_review", "reactivate")).toBe("active");
+    expect(nextJobStatus("closed", "reactivate")).toBe("active");
+    expect(nextJobStatus("active", "revalidate")).toBe("active");
   });
 
-  it.each(["close", "archive", "expire", "review"] as const)(
-    "persists checkedAt for action %s",
-    async (action) => {
-      // scripts/check-d1-job-sources.mjs sends checkedAt when it closes a job
-      // for a dead source; that timestamp justifies the closure and was
-      // previously dropped for these four actions.
+  it("blocks illegal action/status pairs that were previously unconstrained", () => {
+    expect(nextJobStatus("archived", "activate")).toBeNull();
+    expect(nextJobStatus("closed", "activate")).toBeNull();
+    expect(nextJobStatus("draft", "stale")).toBeNull();
+    expect(nextJobStatus("pending_review", "stale")).toBeNull();
+    expect(nextJobStatus("active", "reactivate")).toBeNull();
+    expect(nextJobStatus("draft", "reactivate")).toBeNull();
+    expect(nextJobStatus("archived", "stale")).toBeNull();
+    expect(nextJobStatus("archived", "reactivate")).toBeNull();
+    expect(nextJobStatus("pending_review", "expire")).toBeNull();
+    expect(nextJobStatus("pending_review", "review")).toBeNull();
+  });
+});
+
+describe("updateAdminJobState", () => {
+  it.each([
+    ["draft", "review", "pending_review"],
+    ["pending_review", "activate", "active"],
+    ["active", "close", "closed"],
+    ["active", "archive", "archived"],
+    ["stale_pending_review", "reactivate", "active"],
+    ["active", "expire", "closed"],
+  ] as const)(
+    "maps %s + %s to %s",
+    async (fromStatus, action, expectedStatus) => {
       const db = new FakeD1();
-      db.jobRows = [validActiveJobRow({ slug: `${action}-checked` })];
-      await updateAdminJobState(db, {
-        slug: `${action}-checked`,
-        action,
-        checkedAt: VALID_CHECKED_AT,
-      });
-      const call = db.runCalls.at(-1);
-      expect(call?.query).toContain("source_checked_at = ?");
-      expect(call?.query).toContain("last_checked_at = ?");
-      expect(call?.values).toContain(VALID_CHECKED_AT);
+      db.jobRows = [
+        validActiveJobRow({ slug: `${action}-role`, status: fromStatus }),
+      ];
+      await updateAdminJobState(db, { slug: `${action}-role`, action });
+      expect(db.runCalls.at(-1)?.query).toContain("status = ?");
+      expect(db.runCalls.at(-1)?.values).toContain(expectedStatus);
     },
   );
+
+  it.each([
+    ["active", "close"],
+    ["active", "archive"],
+    ["active", "expire"],
+    ["draft", "review"],
+  ] as const)("persists checkedAt for %s + %s", async (fromStatus, action) => {
+    // scripts/check-d1-job-sources.mjs sends checkedAt when it closes a job
+    // for a dead source; that timestamp justifies the closure and was
+    // previously dropped for these four actions.
+    const db = new FakeD1();
+    db.jobRows = [
+      validActiveJobRow({ slug: `${action}-checked`, status: fromStatus }),
+    ];
+    await updateAdminJobState(db, {
+      slug: `${action}-checked`,
+      action,
+      checkedAt: VALID_CHECKED_AT,
+    });
+    const call = db.runCalls.at(-1);
+    expect(call?.query).toContain("source_checked_at = ?");
+    expect(call?.query).toContain("last_checked_at = ?");
+    expect(call?.values).toContain(VALID_CHECKED_AT);
+  });
 
   it("keeps the stale_check_count reset scoped to activate/reactivate", async () => {
     // Only activate/reactivate mean the source is healthy again, so closing or
     // archiving must not wipe the accumulated stale history.
     const db = new FakeD1();
-    db.jobRows = [validActiveJobRow({ slug: "close-history" })];
+    db.jobRows = [
+      validActiveJobRow({ slug: "close-history", status: "active" }),
+    ];
     await updateAdminJobState(db, {
       slug: "close-history",
       action: "close",
@@ -875,7 +915,11 @@ describe("updateAdminJobState", () => {
   it("marks a job stale and increments stale_check_count", async () => {
     const db = new FakeD1();
     db.jobRows = [
-      validActiveJobRow({ slug: "stale-role", stale_check_count: 2 }),
+      validActiveJobRow({
+        slug: "stale-role",
+        status: "active",
+        stale_check_count: 2,
+      }),
     ];
     await updateAdminJobState(db, {
       slug: "stale-role",
@@ -890,7 +934,11 @@ describe("updateAdminJobState", () => {
   it("revalidates source timestamps and clears stale_check_count", async () => {
     const db = new FakeD1();
     db.jobRows = [
-      validActiveJobRow({ slug: "revalidate-role", stale_check_count: 4 }),
+      validActiveJobRow({
+        slug: "revalidate-role",
+        status: "active",
+        stale_check_count: 4,
+      }),
     ];
     await updateAdminJobState(db, {
       slug: "revalidate-role",
@@ -906,7 +954,9 @@ describe("updateAdminJobState", () => {
 
   it("revalidate can explicitly clear expires_at with null", async () => {
     const db = new FakeD1();
-    db.jobRows = [validActiveJobRow({ slug: "clear-expiry-role" })];
+    db.jobRows = [
+      validActiveJobRow({ slug: "clear-expiry-role", status: "active" }),
+    ];
     await updateAdminJobState(db, {
       slug: "clear-expiry-role",
       action: "revalidate",
@@ -917,7 +967,7 @@ describe("updateAdminJobState", () => {
 
   it("uses the current timestamp when checkedAt is omitted", async () => {
     const db = new FakeD1();
-    db.jobRows = [validActiveJobRow({ slug: "now-role" })];
+    db.jobRows = [validActiveJobRow({ slug: "now-role", status: "active" })];
     await updateAdminJobState(db, { slug: "now-role", action: "stale" });
     const checkedAt = String(db.runCalls.at(-1)?.values[0] ?? "");
     expect(checkedAt).toMatch(/^\d{4}-\d{2}-\d{2}T/);
@@ -968,6 +1018,24 @@ describe("updateAdminJobState", () => {
   });
 
   it.each([
+    ["archived", "activate"],
+    ["closed", "activate"],
+    ["draft", "stale"],
+    ["active", "reactivate"],
+  ] as const)(
+    "rejects illegal transition %s + %s",
+    async (fromStatus, action) => {
+      const db = new FakeD1();
+      db.jobRows = [
+        validActiveJobRow({ slug: "illegal-role", status: fromStatus }),
+      ];
+      await expect(
+        updateAdminJobState(db, { slug: "illegal-role", action }),
+      ).rejects.toBeInstanceOf(JobInvalidTransitionError);
+    },
+  );
+
+  it.each([
     ["revalidate"],
     ["stale"],
     ["close"],
@@ -993,7 +1061,9 @@ describe("updateAdminJobState", () => {
 
   it("passes expiresAt through status updates when provided", async () => {
     const db = new FakeD1();
-    db.jobRows = [validActiveJobRow({ slug: "expire-at-role" })];
+    db.jobRows = [
+      validActiveJobRow({ slug: "expire-at-role", status: "active" }),
+    ];
     await updateAdminJobState(db, {
       slug: "expire-at-role",
       action: "close",
@@ -1004,20 +1074,25 @@ describe("updateAdminJobState", () => {
   });
 
   it.each([
-    ["review"],
-    ["activate"],
-    ["close"],
-    ["archive"],
-    ["reactivate"],
-    ["expire"],
-  ])(
-    "includes reactivation reset fields for %s when applicable",
-    async (action) => {
+    ["draft", "review"],
+    ["pending_review", "activate"],
+    ["active", "close"],
+    ["active", "archive"],
+    ["closed", "reactivate"],
+    ["active", "expire"],
+  ] as const)(
+    "includes reactivation reset fields for %s + %s when applicable",
+    async (fromStatus, action) => {
       const db = new FakeD1();
-      db.jobRows = [validActiveJobRow({ slug: `${action}-reset-role` })];
+      db.jobRows = [
+        validActiveJobRow({
+          slug: `${action}-reset-role`,
+          status: fromStatus,
+        }),
+      ];
       await updateAdminJobState(db, {
         slug: `${action}-reset-role`,
-        action: action as "review",
+        action,
         checkedAt: VALID_CHECKED_AT,
       });
       const query = db.runCalls.at(-1)?.query ?? "";
@@ -1038,22 +1113,24 @@ describe("updateAdminJobState", () => {
   });
 
   it.each([
-    ["review", "pending_review"],
-    ["activate", "active"],
-    ["close", "closed"],
-    ["archive", "archived"],
-    ["reactivate", "active"],
-    ["expire", "closed"],
-    ["stale", "stale_pending_review"],
-    ["revalidate", "pending_review"],
+    ["draft", "review"],
+    ["pending_review", "activate"],
+    ["active", "close"],
+    ["active", "archive"],
+    ["stale_pending_review", "reactivate"],
+    ["active", "expire"],
+    ["active", "stale"],
+    ["active", "revalidate"],
   ] as const)(
-    "runs %s without expiresAt override",
-    async (action, _expectedStatus) => {
+    "runs %s + %s without expiresAt override",
+    async (fromStatus, action) => {
       const db = new FakeD1();
-      db.jobRows = [validActiveJobRow({ slug: `${action}-no-expiry` })];
+      db.jobRows = [
+        validActiveJobRow({ slug: `${action}-no-expiry`, status: fromStatus }),
+      ];
       await updateAdminJobState(db, {
         slug: `${action}-no-expiry`,
-        action: action === "stale" || action === "revalidate" ? action : action,
+        action,
         checkedAt: VALID_CHECKED_AT,
       });
       expect(db.runCalls.at(-1)?.values.at(-1)).toBe(`${action}-no-expiry`);

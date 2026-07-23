@@ -170,6 +170,84 @@ export class JobNotFoundError extends Error {
   }
 }
 
+export class JobInvalidTransitionError extends Error {
+  currentStatus: JobStatus;
+  action: JobAdminAction;
+
+  constructor(currentStatus: JobStatus, action: JobAdminAction) {
+    super(`Invalid job admin transition: ${action} from ${currentStatus}`);
+    this.name = "JobInvalidTransitionError";
+    this.currentStatus = currentStatus;
+    this.action = action;
+  }
+}
+
+const JOB_STATUSES: readonly JobStatus[] = [
+  "draft",
+  "pending_review",
+  "active",
+  "stale_pending_review",
+  "closed",
+  "archived",
+];
+
+function normalizeJobStatus(status: string | null | undefined): JobStatus {
+  const normalized = String(status || "")
+    .trim()
+    .toLowerCase();
+  return (JOB_STATUSES as readonly string[]).includes(normalized)
+    ? (normalized as JobStatus)
+    : "draft";
+}
+
+/**
+ * Legal next status for a jobs admin action, or `null` when the action is
+ * illegal from the current status. `revalidate` never changes status and is
+ * allowed from any known status (returns the current status).
+ *
+ * Mirror of `nextLeadStatus` for listing-leads — activate first-publishes from
+ * draft/pending_review; reactivate reopens stale/closed; stale only from active.
+ */
+export function nextJobStatus(
+  currentStatus: string | null | undefined,
+  action: JobAdminAction,
+): JobStatus | null {
+  const current = normalizeJobStatus(currentStatus);
+  if (action === "revalidate") return current;
+
+  const transitions: Record<JobStatus, Partial<Record<JobAdminAction, JobStatus>>> = {
+    draft: {
+      review: "pending_review",
+      activate: "active",
+      archive: "archived",
+    },
+    pending_review: {
+      activate: "active",
+      close: "closed",
+      archive: "archived",
+    },
+    active: {
+      stale: "stale_pending_review",
+      close: "closed",
+      expire: "closed",
+      archive: "archived",
+    },
+    stale_pending_review: {
+      reactivate: "active",
+      close: "closed",
+      expire: "closed",
+      archive: "archived",
+    },
+    closed: {
+      reactivate: "active",
+      archive: "archived",
+    },
+    archived: {},
+  };
+
+  return transitions[current]?.[action] ?? null;
+}
+
 function assertJobPublicationQuality(job: Record<string, unknown>) {
   const report = validateJobPublicExposure(job);
   if (!report.ok) {
@@ -436,9 +514,16 @@ export async function updateAdminJobState(
   const hasExpiresAt = Object.prototype.hasOwnProperty.call(input, "expiresAt");
   const expiresAt = input.expiresAt === null ? null : optionalText(input.expiresAt);
 
+  const existing = await queryAdminJobBySlug(db, input.slug);
+  if (!existing) throw new JobNotFoundError(input.slug);
+
+  const currentStatus = normalizeJobStatus(existing.status);
+  const nextStatus = nextJobStatus(currentStatus, input.action);
+  if (nextStatus === null) {
+    throw new JobInvalidTransitionError(currentStatus, input.action);
+  }
+
   if (input.action === "activate" || input.action === "reactivate") {
-    const existing = await queryAdminJobBySlug(db, input.slug);
-    if (!existing) throw new JobNotFoundError(input.slug);
     assertJobPublicationQuality({
       ...existing,
       status: "active",
@@ -484,16 +569,6 @@ export async function updateAdminJobState(
     }
     return;
   }
-
-  const nextStatusByAction: Record<Exclude<JobAdminAction, "revalidate" | "stale">, JobStatus> = {
-    review: "pending_review",
-    activate: "active",
-    close: "closed",
-    archive: "archived",
-    reactivate: "active",
-    expire: "closed",
-  };
-  const nextStatus = nextStatusByAction[input.action];
 
   const result = await db
     .prepare(
