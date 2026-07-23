@@ -48,7 +48,10 @@ export function trustGaps(entry) {
       detail: "no documented privacy behavior",
     });
   }
-  if (!entry.documentationUrl && !entry.repoUrl && !entry.githubUrl) {
+  // `githubUrl` is always set to this repo's own .mdx path by content-builder
+  // (`buildGitHubUrl`), so it is never a signal of real external source backing.
+  // Match quality-lib's external-source posture: only documentationUrl/repoUrl count.
+  if (!entry.documentationUrl && !entry.repoUrl) {
     gaps.push({
       field: "source",
       code: "missing",

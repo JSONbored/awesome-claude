@@ -22,12 +22,43 @@ describe("trustGaps", () => {
     expect(gaps).toEqual(["safetyNotes", "privacyNotes", "source"]);
   });
 
+  it("still flags source when only the self-referential directory githubUrl is set", () => {
+    const gaps = trustGaps(
+      entry({
+        safetyNotes: ["runs shell"],
+        privacyNotes: ["telemetry"],
+        githubUrl:
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/x.mdx",
+      }),
+    );
+    expect(gaps).toEqual([
+      {
+        field: "source",
+        code: "missing",
+        detail: "no documentation or repository URL",
+      },
+    ]);
+  });
+
   it("clears once the signals are present", () => {
     const gaps = trustGaps(
       entry({
         safetyNotes: ["runs shell"],
         privacyNotes: ["telemetry"],
         repoUrl: "https://github.com/x/y",
+      }),
+    );
+    expect(gaps).toEqual([]);
+  });
+
+  it("clears the source gap when documentationUrl is present", () => {
+    const gaps = trustGaps(
+      entry({
+        safetyNotes: ["runs shell"],
+        privacyNotes: ["telemetry"],
+        documentationUrl: "https://example.com/docs",
+        githubUrl:
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/x.mdx",
       }),
     );
     expect(gaps).toEqual([]);
