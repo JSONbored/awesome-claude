@@ -135,6 +135,42 @@ describe("submission risk invariants", () => {
     );
   });
 
+  it("flags curl-piped-to-shell installs for every shell in SHELL_TOKENS, not just sh/bash", () => {
+    // zsh has been macOS's default shell since Catalina (2019), so
+    // `curl … | zsh` is a realistic real-world install instruction. The
+    // detector must recognize the same shells command-safety-lib's SHELL_TOKENS
+    // already does for the identical "downloader piped into a shell" concern
+    // (bash, zsh, sh, dash, ash), not only sh/bash.
+    for (const shell of ["zsh", "dash", "ash", "sh", "bash"]) {
+      const draft = buildSubmissionPrDraft({
+        ...validMcpFields,
+        name: "Pipe Shell MCP",
+        slug: "pipe-shell-mcp",
+        install_command: `curl https://example.com/install.sh | ${shell}`,
+      });
+      const risk = analyzeSubmissionDraftRisk(draft, validateSubmission(draft));
+      expect(risk.reviewFlags.map((flag) => flag.id)).toContain(
+        "unsafe_install_pipeline",
+      );
+    }
+  });
+
+  it("does not flag a curl piped into a non-shell command as an unsafe install pipeline", () => {
+    // The shell-name alternation is \b-anchored, so a non-shell receiver (and
+    // benign words that merely contain a shell name as a substring) must not
+    // trip the flag.
+    const draft = buildSubmissionPrDraft({
+      ...validMcpFields,
+      name: "Pipe Pager MCP",
+      slug: "pipe-pager-mcp",
+      install_command: "curl https://example.com/notes.txt | less",
+    });
+    const risk = analyzeSubmissionDraftRisk(draft, validateSubmission(draft));
+    expect(risk.reviewFlags.map((flag) => flag.id)).not.toContain(
+      "unsafe_install_pipeline",
+    );
+  });
+
   it("blocks unsafe executable pipelines in issue config snippets", () => {
     const draft = buildSubmissionPrDraft({
       ...validMcpFields,

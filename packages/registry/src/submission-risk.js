@@ -4,6 +4,7 @@ import {
   TOOLS_CATEGORY,
   TOOLS_LISTING_FLOW_URL,
 } from "./submission-classification.js";
+import { SHELL_TOKENS } from "./command-safety-lib.js";
 import { parseSafeFrontmatter } from "./frontmatter.js";
 import {
   isPublicGitHubProfileUrl,
@@ -14,6 +15,20 @@ import {
 
 export const SUBMISSION_RISK_SCHEMA_VERSION = 1;
 export const SUBMISSION_RISK_COMMENT_MARKER = "<!-- submission-risk-report -->";
+
+// Shell-name alternation for the curl/wget-piped-to-shell detector, derived
+// from command-safety-lib's SHELL_TOKENS so the two "downloader piped into a
+// shell" checks recognize the same shells (bash, zsh, sh, dash, ash) and stay
+// in sync. Longer names first so a longer shell name wins over a shorter one
+// that shares a prefix. Both ends are still \b-anchored at the use site.
+const CURL_PIPE_SHELL_ALTERNATION = [...SHELL_TOKENS]
+  .sort((a, b) => b.length - a.length)
+  .map((token) => token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+  .join("|");
+const CURL_PIPE_TO_SHELL_PATTERN = new RegExp(
+  `\\b(curl|wget)\\b[\\s\\S]{0,120}\\|[\\s\\S]{0,40}\\b(sudo\\s+)?(${CURL_PIPE_SHELL_ALTERNATION})\\b`,
+  "i",
+);
 
 const SEVERITY_WEIGHT = {
   info: 0,
@@ -1252,9 +1267,7 @@ function addContentRiskSignals(report, fields, text) {
 
   if (
     referencesDestructiveRootRemoval(installText) ||
-    /\b(curl|wget)\b[\s\S]{0,120}\|[\s\S]{0,40}\b(sudo\s+)?(sh|bash)\b/i.test(
-      installText,
-    ) ||
+    CURL_PIPE_TO_SHELL_PATTERN.test(installText) ||
     /\b(invoke-expression|iex)\b/i.test(installText) ||
     /\bbase64\s+(-d|--decode)\b[\s\S]{0,80}\|[\s\S]{0,40}\b(sh|bash)\b/i.test(
       installText,
