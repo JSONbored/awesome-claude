@@ -1,0 +1,91 @@
+---
+title: Cosmik MCP Server for Claude
+slug: cosmik-mcp-server
+category: mcp
+description: >-
+  Give Claude live space data — upcoming rocket launches (SpaceX, NASA, Rocket Lab, ULA,
+  Arianespace, China) with liftoff times and pads, visible ISS pass predictions for 550+ cities
+  or any lat/lon computed live from CelesTrak orbital elements, and the latest launch news —
+  via a free remote MCP server with no API key.
+cardDescription: "Live space data: rocket launches, ISS passes for any city, launch news. Free, no auth."
+seoTitle: "Cosmik MCP Server for Claude — Live Rocket Launches, ISS Passes & Launch News via MCP"
+seoDescription: "Connect Claude to Cosmik's free remote MCP server: upcoming rocket launches with liftoff times and pads, visible ISS pass predictions for 550+ cities or any coordinates (live SGP4 from CelesTrak data), and launch news. Streamable HTTP, typed schemas, no API key."
+author: Cosmik
+authorProfileUrl: "https://github.com/crashedfox"
+dateAdded: "2026-07-23"
+documentationUrl: "https://gocosmik.com/api-access"
+websiteUrl: "https://gocosmik.com"
+repoUrl: "https://github.com/crashedfox/cosmik-mcp"
+retrievalSources:
+  - "https://raw.githubusercontent.com/crashedfox/cosmik-mcp/main/README.md"
+  - "https://gocosmik.com/.well-known/mcp/server-card.json"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add --transport http cosmik https://gocosmik.com/api/mcp"
+usageSnippet: >-
+  Ask Claude when the next SpaceX launch lifts off, when the ISS will next be visible over your
+  city (and how high it will climb), or what happened in the latest orbital launches — all
+  answered from live orbital and launch data, no key required.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "cosmik": {
+        "type": "http",
+        "url": "https://gocosmik.com/api/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "cosmik": {
+        "type": "http",
+        "url": "https://gocosmik.com/api/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 2 minutes
+difficulty: beginner
+prerequisites:
+  - "An MCP client such as Claude Code or Claude Desktop — nothing else; the server is remote, free and keyless."
+safetyNotes:
+  - "All three tools are read-only — the server cannot modify anything on your machine or any external system."
+privacyNotes:
+  - "City names or coordinates you pass to get_iss_passes are sent to gocosmik.com to compute pass predictions; no account or identifier is required."
+disclosure: "Cosmik (gocosmik.com) is a free, no-login live satellite tracker; the MCP server is officially maintained by Cosmik."
+tags:
+  - space
+  - satellites
+  - iss
+  - rocket-launches
+  - astronomy
+  - real-time-data
+  - open-data
+keywords:
+  - cosmik mcp server
+  - satellite tracking mcp claude
+  - iss pass predictions mcp
+  - rocket launch mcp server
+  - space data mcp claude code
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Cosmik MCP Server** is the official Model Context Protocol server from
+[Cosmik](https://gocosmik.com), a free, no-login live 3D satellite tracker. It gives Claude
+direct access to live space data through three read-only tools, served over remote streamable
+HTTP with typed output schemas and no API key:
+
+- **`get_next_launches`** — upcoming orbital rocket launches (SpaceX, NASA, Rocket Lab, ULA,
+  Arianespace, China…): liftoff time (UTC), pad, status, provider and a live-tracking link,
+  with an optional provider filter.
+- **`get_iss_passes`** — the next visible ISS passes over any of 550+ known cities or any
+  lat/lon, propagated live with SGP4 from CelesTrak orbital elements: start time, maximum
+  elevation, duration and a good-viewing-window flag.
+- **`get_launch_news`** — the latest launch preview and recap articles from Cosmik's
+  multilingual news desk, with an optional search term.
+
+Setup is one line — the server is remote, so there is nothing to install or configure beyond
+adding the endpoint.
