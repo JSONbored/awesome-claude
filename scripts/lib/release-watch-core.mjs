@@ -238,7 +238,7 @@ export function buildRaycastReleaseIssue(report, options = {}) {
     labels: ["release", "raycast"],
     checklist: [
       "Run the Raycast extension validation workflow.",
-      "Review Store metadata, screenshots, and CHANGELOG.md with {PR_MERGE_DATE}.",
+      "Review Store metadata, screenshots, and CHANGELOG.md against the latest merged release PR.",
       "Mirror integrations/raycast into raycast/extensions/extensions/heyclaude and submit the upstream PR.",
       "After the upstream PR merges, create the local raycast-v* upstream-sync marker tag.",
     ],
