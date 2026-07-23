@@ -692,7 +692,13 @@ describe("inferSectionBooleans", () => {
     ],
     [
       "## Troubleshooting\n\n## Prerequisites",
-      { hasPrerequisites: false, hasTroubleshooting: true },
+      { hasPrerequisites: true, hasTroubleshooting: true },
+    ],
+    // hasPrerequisites must detect the heading anywhere in the body, not only
+    // as the first line — matching hasTroubleshooting's multiline behavior.
+    [
+      "## Overview\n\nIntro text.\n\n## Prerequisites\n\nNeed tool",
+      { hasPrerequisites: true, hasTroubleshooting: false },
     ],
   ])("detects guide sections in %j", (body, expected) => {
     expect(inferSectionBooleans(body)).toEqual(expected);

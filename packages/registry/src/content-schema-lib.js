@@ -430,7 +430,7 @@ export function inferSectionBooleans(body = "") {
 
   return {
     hasPrerequisites:
-      /^##\s+Prerequisites\b|^##\s+Prerequisites\s+&|^##\s+Prerequisites\s+and\b/i.test(
+      /^##\s+Prerequisites\b|^##\s+Prerequisites\s+&|^##\s+Prerequisites\s+and\b/im.test(
         normalized,
       ),
     hasTroubleshooting:
