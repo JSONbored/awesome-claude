@@ -230,6 +230,7 @@ const flags = {
     /^content\/skills\/.*\.zip$/,
     /^content\/mcp\/.*\.mcpb$/,
     /^scripts\/(scan-download-packages|validate-download-packages)\.mjs$/,
+    /^\.github\/workflows\/package-artifact-scan\.yml$/,
     "package.json",
     "pnpm-lock.yaml",
   ),

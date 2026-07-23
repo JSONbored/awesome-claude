@@ -943,7 +943,7 @@ jobs:
     needs: classify-pr
     if: ${{ needs.classify-pr.outputs.packages == 'true' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 45
     concurrency:
       group: pr-validate-packages-${{ github.ref }}
       cancel-in-progress: true
@@ -972,13 +972,44 @@ jobs:
         if: ${{ needs.classify-pr.outputs.packages == 'true' }}
         run: pnpm install --frozen-lockfile
 
+      - name: Install external package scanners
+        if: ${{ needs.classify-pr.outputs.packages == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TRIVY_VERSION: 0.72.0
+          OSV_SCANNER_VERSION: 2.0.2
+        run: |
+          set -euo pipefail
+
+          sudo apt-get update
+          sudo apt-get install -y clamav
+          sudo systemctl stop clamav-freshclam.service || true
+          sudo freshclam || sudo freshclam --verbose
+
+          curl -sSfL "https://raw.githubusercontent.com/aquasecurity/trivy/v${TRIVY_VERSION}/contrib/install.sh" \
+            | sudo sh -s -- -b /usr/local/bin "v${TRIVY_VERSION}"
+
+          gh release download "v${OSV_SCANNER_VERSION}" \
+            --repo google/osv-scanner \
+            --pattern 'osv-scanner_*_linux_amd64' \
+            --clobber
+          sudo mv osv-scanner_*_linux_amd64 /usr/local/bin/osv-scanner
+          sudo chmod +x /usr/local/bin/osv-scanner
+
+          command -v clamscan
+          clamscan --version
+          command -v trivy
+          trivy --version
+          command -v osv-scanner
+          osv-scanner --version
+
       - name: Validate package metadata
         if: ${{ needs.classify-pr.outputs.packages == 'true' }}
         run: pnpm validate:packages
 
       - name: Scan package artifacts
         if: ${{ needs.classify-pr.outputs.packages == 'true' }}
-        run: pnpm scan:packages
+        run: pnpm scan:packages -- --require-scanners
 
   validate-submission-gate:
     name: validate-submission-gate

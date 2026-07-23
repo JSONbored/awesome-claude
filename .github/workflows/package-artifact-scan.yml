@@ -2,6 +2,15 @@ name: Package Artifact Scan
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - "content/skills/**/*.zip"
+      - "content/mcp/**/*.mcpb"
+      - "apps/web/public/downloads/**"
+      - "scripts/scan-download-packages.mjs"
+      - "scripts/validate-download-packages.mjs"
+      - "scripts/lib/download-package-scan.mjs"
+      - ".github/workflows/package-artifact-scan.yml"
 
 permissions:
   contents: read
@@ -9,7 +18,7 @@ permissions:
 jobs:
   scan-packages:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 45
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
@@ -26,8 +35,39 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Install external package scanners
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TRIVY_VERSION: 0.72.0
+          OSV_SCANNER_VERSION: 2.0.2
+        run: |
+          set -euo pipefail
+
+          sudo apt-get update
+          sudo apt-get install -y clamav
+          # freshclam may race with the systemd timer on ubuntu runners.
+          sudo systemctl stop clamav-freshclam.service || true
+          sudo freshclam || sudo freshclam --verbose
+
+          curl -sSfL "https://raw.githubusercontent.com/aquasecurity/trivy/v${TRIVY_VERSION}/contrib/install.sh" \
+            | sudo sh -s -- -b /usr/local/bin "v${TRIVY_VERSION}"
+
+          gh release download "v${OSV_SCANNER_VERSION}" \
+            --repo google/osv-scanner \
+            --pattern 'osv-scanner_*_linux_amd64' \
+            --clobber
+          sudo mv osv-scanner_*_linux_amd64 /usr/local/bin/osv-scanner
+          sudo chmod +x /usr/local/bin/osv-scanner
+
+          command -v clamscan
+          clamscan --version
+          command -v trivy
+          trivy --version
+          command -v osv-scanner
+          osv-scanner --version
+
       - name: Validate package metadata
         run: pnpm validate:packages
 
-      - name: Scan package artifacts
-        run: pnpm scan:packages
+      - name: Scan package artifacts with external scanners
+        run: pnpm scan:packages -- --require-scanners
