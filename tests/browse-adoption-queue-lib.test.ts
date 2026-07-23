@@ -218,4 +218,16 @@ describe("summary population", () => {
     expect(Number(denominator)).toBe(state.scannedCount);
     expect(Number(numerator)).toBeLessThanOrEqual(Number(denominator));
   });
+
+  it("counts tiers over the full scored population, not the display slice", () => {
+    const state = browseAdoptionQueueState(population(8, 12), "balanced");
+
+    // The 12 weak entries are hold-tier and sort below the top-8 display slice;
+    // the tier counts must still see them (previously reported 0).
+    expect(state.rows).toHaveLength(8);
+    expect(state.holdCount).toBe(12);
+    expect(state.readyCount + state.cautionCount + state.holdCount).toBe(
+      state.scannedCount,
+    );
+  });
 });

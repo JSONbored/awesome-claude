@@ -237,8 +237,8 @@ export function browseAdoptionQueueState(
     summary: summary(scored, scored.length),
     scannedCount: entries.length,
     rows,
-    readyCount: rows.filter((row) => row.tier === "ready").length,
-    cautionCount: rows.filter((row) => row.tier === "caution").length,
-    holdCount: rows.filter((row) => row.tier === "hold").length,
+    readyCount: scored.filter((row) => row.tier === "ready").length,
+    cautionCount: scored.filter((row) => row.tier === "caution").length,
+    holdCount: scored.filter((row) => row.tier === "hold").length,
   };
 }

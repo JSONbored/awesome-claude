@@ -250,4 +250,16 @@ describe("summary population", () => {
     expect(Number(denominator)).toBe(state.scannedCount);
     expect(Number(numerator)).toBeLessThanOrEqual(Number(denominator));
   });
+
+  it("counts bands over the full scored population, not the display slice", () => {
+    const state = browseDecisionConfidenceState(population(8, 12), "balanced");
+
+    // The 12 weak entries are low-confidence and sort below the top-8 display
+    // slice; the band counts must still see them (previously reported 0).
+    expect(state.entries).toHaveLength(8);
+    expect(state.lowCount).toBe(12);
+    expect(state.highCount + state.mediumCount + state.lowCount).toBe(
+      state.scannedCount,
+    );
+  });
 });

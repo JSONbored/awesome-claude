@@ -210,9 +210,9 @@ export function browseDecisionConfidenceState(
     heading: headingForPreset(preset),
     summary: summary(scored, scored.length),
     scannedCount: entries.length,
-    highCount: mapped.filter((row) => row.band === "high").length,
-    mediumCount: mapped.filter((row) => row.band === "medium").length,
-    lowCount: mapped.filter((row) => row.band === "low").length,
+    highCount: scored.filter((row) => row.band === "high").length,
+    mediumCount: scored.filter((row) => row.band === "medium").length,
+    lowCount: scored.filter((row) => row.band === "low").length,
     entries: mapped,
     lowRefs: mapped.filter((row) => row.band === "low").map((row) => row.entryRef),
   };
