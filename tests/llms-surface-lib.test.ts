@@ -49,6 +49,39 @@ describe("llms-surface-lib buildLlmsTxt", () => {
     );
   });
 
+  it("omits entries with robotsIndex:false from llms.txt", () => {
+    const output = buildLlmsTxt("https://heyclau.de", {
+      categories: FIXTURE_CATEGORIES,
+      entries: [
+        fixtureEntry("mcp", "visible"),
+        fixtureEntry("mcp", "hidden", { robotsIndex: false }),
+      ],
+    });
+    expect(output).toContain("/entry/mcp/visible");
+    expect(output).not.toContain("/entry/mcp/hidden");
+  });
+
+  it("omits entries with robotsIndex:false from llms-full.txt", () => {
+    const output = buildLlmsFullTxt("https://heyclau.de", {
+      categories: FIXTURE_CATEGORIES,
+      entries: [
+        fixtureEntry("mcp", "visible"),
+        fixtureEntry("mcp", "hidden", { robotsIndex: false }),
+      ],
+      registryEntries: [
+        { category: "mcp", slug: "visible", title: "visible" },
+        {
+          category: "mcp",
+          slug: "hidden",
+          title: "hidden",
+          robotsIndex: false,
+        },
+      ],
+    });
+    expect(output).toContain("/entry/mcp/visible");
+    expect(output).not.toContain("/entry/mcp/hidden");
+  });
+
   it("buildLlmsTxt lists agents/agents-llms-0", () => {
     const entries = [fixtureEntry("agents", "agents-llms-0")];
     const output = buildLlmsTxt("https://heyclau.de", {

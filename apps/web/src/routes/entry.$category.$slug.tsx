@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { getEntry, related, relatedGroups, relatedGuides } from "@/data/search";
 import { getEntryRedirectTarget } from "@/lib/entry-redirects";
-import { BEST_LISTS, ENTRIES } from "@/data/entries";
+import { BEST_LISTS, ENTRIES, REGISTRY_ENTRIES } from "@/data/entries";
 import { COMPARISONS } from "@/data/comparisons";
 import { EntryAuthorAttribution } from "@/components/contributor-attribution";
 import { findContributorForIdentity } from "@/data/contributors";
@@ -239,10 +239,17 @@ export const Route = createFileRoute("/entry/$category/$slug")({
     const ogUrl = absoluteUrl(`/og/${params.category}/${params.slug}`);
     const ogTitle = `${e.title} — HeyClaude`;
     const metaDescription = clampDescription(e.seoDescription ?? e.description);
+    // Normalized Entry drops robotsIndex; read it from the registry snapshot.
+    const registryEntry = REGISTRY_ENTRIES.find(
+      (item) => item.category === params.category && item.slug === params.slug,
+    );
+    const noindex = registryEntry?.robotsIndex === false;
     return {
       meta: [
         { title: e.seoTitle ? `${e.seoTitle} — HeyClaude` : ogTitle },
         { name: "description", content: metaDescription },
+        // Match thin-hub noindex posture so sitemap opt-out is enforceable.
+        ...(noindex ? [{ name: "robots", content: "noindex, follow" }] : []),
         { property: "og:title", content: ogTitle },
         { property: "og:description", content: metaDescription },
         { property: "og:url", content: url },

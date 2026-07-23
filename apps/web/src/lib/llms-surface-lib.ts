@@ -27,6 +27,8 @@ export interface LlmsEntry {
   installCommand?: string;
   configSnippet?: string;
   fullCopy?: string;
+  /** When false, omit from llms surfaces (matches sitemap robotsIndex opt-out). */
+  robotsIndex?: boolean;
 }
 
 export interface LlmsTxtContext {
@@ -39,6 +41,11 @@ export interface LlmsFullTxtContext extends LlmsTxtContext {
   buildCitationFacts?: (entry: Record<string, unknown>, options: { siteUrl: string }) => string;
 }
 
+/** Entries that opted out of indexing must not appear in llms feeds. */
+function indexableLlmsEntries(entries: LlmsEntry[]): LlmsEntry[] {
+  return entries.filter((entry) => entry.robotsIndex !== false);
+}
+
 export function buildLlmsTxt(origin: string, context: LlmsTxtContext): string {
   const lines: string[] = [];
   lines.push("# HeyClaude registry");
@@ -49,12 +56,13 @@ export function buildLlmsTxt(origin: string, context: LlmsTxtContext): string {
   lines.push(`Feeds: ${origin}/feeds`);
   lines.push("");
 
+  const entries = indexableLlmsEntries(context.entries);
   for (const c of context.categories) {
-    const entries = context.entries.filter((e) => e.category === c.id);
-    if (entries.length === 0) continue;
+    const categoryEntries = entries.filter((e) => e.category === c.id);
+    if (categoryEntries.length === 0) continue;
     lines.push(`## ${c.label}`);
     lines.push("");
-    for (const e of entries) {
+    for (const e of categoryEntries) {
       lines.push(
         `- [${e.title}](${origin}/entry/${e.category}/${e.slug}): ${e.cardDescription ?? e.description}`,
       );
@@ -96,12 +104,13 @@ export function buildLlmsFullTxt(origin: string, context: LlmsFullTxtContext): s
   out.push(`Generated for context windows. Source: ${origin}`);
   out.push("");
 
+  const entries = indexableLlmsEntries(context.entries);
   for (const c of context.categories) {
-    const entries = context.entries.filter((e) => e.category === c.id);
-    if (entries.length === 0) continue;
+    const categoryEntries = entries.filter((e) => e.category === c.id);
+    if (categoryEntries.length === 0) continue;
     out.push(`# ${c.label}`);
     out.push("");
-    for (const e of entries) {
+    for (const e of categoryEntries) {
       out.push(`## ${e.title}`);
       out.push("");
       out.push(`- URL: ${origin}/entry/${e.category}/${e.slug}`);

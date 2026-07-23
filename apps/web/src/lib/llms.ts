@@ -21,17 +21,30 @@ import {
 
 export { originOf };
 
+function llmsEntriesWithRobotsIndex() {
+  const robotsByRef = new Map(
+    REGISTRY_ENTRIES.map((entry) => [
+      `${entry.category}/${entry.slug}`,
+      entry.robotsIndex as boolean | undefined,
+    ]),
+  );
+  return ENTRIES.map((entry) => ({
+    ...entry,
+    robotsIndex: robotsByRef.get(`${entry.category}/${entry.slug}`),
+  }));
+}
+
 export function buildLlmsTxt(origin: string): string {
   return buildLlmsTxtFromContext(origin, {
     categories: CATEGORIES,
-    entries: ENTRIES,
+    entries: llmsEntriesWithRobotsIndex(),
   });
 }
 
 export function buildLlmsFullTxt(origin: string): string {
   return buildLlmsFullTxtFromContext(origin, {
     categories: CATEGORIES,
-    entries: ENTRIES,
+    entries: llmsEntriesWithRobotsIndex(),
     registryEntries: REGISTRY_ENTRIES,
     buildCitationFacts: buildEntryCitationFacts,
   });

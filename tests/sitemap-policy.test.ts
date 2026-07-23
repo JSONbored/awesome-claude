@@ -87,4 +87,13 @@ describe("sitemap policy", () => {
     expect(source).toContain("categoryLastmod");
     expect(source).toContain("entry.reviewedAt ?? entry.dateAdded");
   });
+
+  it("emits noindex on the entry detail route when robotsIndex is false", () => {
+    const source = fs.readFileSync(
+      path.join(repoRoot, "apps/web/src/routes/entry.$category.$slug.tsx"),
+      "utf8",
+    );
+    expect(source).toContain("robotsIndex === false");
+    expect(source).toContain('content: "noindex, follow"');
+  });
 });
