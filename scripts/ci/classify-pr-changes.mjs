@@ -162,7 +162,7 @@ const directSubmission =
 const contentValidationInfra = touches(
   /^examples\/content\//,
   /^\.github\/ISSUE_TEMPLATE\//,
-  /^scripts\/(audit-content|generate-issue-templates|validate-category-spec|validate-content)\.mjs$/,
+  /^scripts\/(audit-content|validate-category-spec|validate-content)\.mjs$/,
   /^packages\/registry\/src\/(category-spec|content-builder|submission|index\.d\.ts)/,
 );
 const generatedArtifactInfra = touches(
@@ -174,7 +174,7 @@ const generatedArtifactInfra = touches(
   "README.md",
 );
 const submissionAutomationInfra = touches(
-  /^scripts\/(analyze-submission-risk|import-submission-issue|validate-submission-issue)\.mjs$/,
+  /^scripts\/analyze-submission-risk\.mjs$/,
 );
 const scriptOrTestInfra = touches(/^scripts\//, /^tests\/.*\.test\.ts$/);
 const submissionGateInfra = touches(

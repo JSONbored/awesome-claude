@@ -321,4 +321,27 @@ describe("PR change classifier", () => {
       web: "false",
     });
   });
+
+  it("no longer classifies deleted submission-automation and issue-template script names as content or registry infra", () => {
+    const { cwd, baseSha } = createFixtureRepo();
+    const scriptDir = path.join(cwd, "scripts");
+    fs.mkdirSync(scriptDir, { recursive: true });
+    for (const name of [
+      "generate-issue-templates.mjs",
+      "import-submission-issue.mjs",
+      "validate-submission-issue.mjs",
+    ]) {
+      fs.writeFileSync(path.join(scriptDir, name), "console.log('changed');\n");
+      git(cwd, ["add", `scripts/${name}`]);
+    }
+    git(cwd, ["commit", "-m", "touch deleted script names"]);
+
+    const outputs = runClassifier(cwd, baseSha);
+    expect(outputs).toMatchObject({
+      ci: "true",
+      content: "false",
+      content_config: "false",
+      registry: "false",
+    });
+  });
 });
