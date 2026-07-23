@@ -5,12 +5,25 @@ import {
   TOOLS_LISTING_FLOW_URL,
 } from "./submission-classification.js";
 import { parseSafeFrontmatter } from "./frontmatter.js";
+import { SHELL_TOKENS } from "./command-safety-lib.js";
 import {
   isPublicGitHubProfileUrl,
   isPublicHttpUrl,
   isPublicHttpsUrl,
   publicUrlHostname,
 } from "./source-url-lib.js";
+
+// Keep curl|wget → shell detection in sync with command-safety-lib's SHELL_TOKENS
+// (bash/zsh/sh/dash/ash) so macOS-default zsh pipes are not silently missed (#5480).
+const CURL_WGET_PIPE_TO_SHELL_PATTERN = new RegExp(
+  String.raw`\b(curl|wget)\b[\s\S]{0,120}\|[\s\S]{0,40}\b(sudo\s+)?(${SHELL_TOKENS.join("|")})\b`,
+  "i",
+);
+
+// Anthropic (`sk-ant-…`) and OpenAI (`sk-proj-…`) insert a hyphenated segment after
+// `sk-`, which the old `sk-[a-z0-9]{20,}` alternative could never match (#5479).
+const EMBEDDED_SECRET_PATTERN =
+  /\b(ghp_[a-z0-9_]{20,}|github_pat_[a-z0-9_]{40,}|sk-(?:ant-|proj-)?[a-z0-9-]{20,}|akia[0-9a-z]{16}|xq_[a-f0-9]{40,})\b/i;
 
 export const SUBMISSION_RISK_SCHEMA_VERSION = 1;
 export const SUBMISSION_RISK_COMMENT_MARKER = "<!-- submission-risk-report -->";
@@ -1200,11 +1213,7 @@ function addContentRiskSignals(report, fields, text) {
     );
   }
 
-  if (
-    /\b(ghp_[a-z0-9_]{20,}|github_pat_[a-z0-9_]{40,}|sk-[a-z0-9]{20,}|akia[0-9a-z]{16}|xq_[a-f0-9]{40,})\b/i.test(
-      text,
-    )
-  ) {
+  if (EMBEDDED_SECRET_PATTERN.test(text)) {
     addFlag(
       report,
       "critical",
@@ -1252,9 +1261,7 @@ function addContentRiskSignals(report, fields, text) {
 
   if (
     referencesDestructiveRootRemoval(installText) ||
-    /\b(curl|wget)\b[\s\S]{0,120}\|[\s\S]{0,40}\b(sudo\s+)?(sh|bash)\b/i.test(
-      installText,
-    ) ||
+    CURL_WGET_PIPE_TO_SHELL_PATTERN.test(installText) ||
     /\b(invoke-expression|iex)\b/i.test(installText) ||
     /\bbase64\s+(-d|--decode)\b[\s\S]{0,80}\|[\s\S]{0,40}\b(sh|bash)\b/i.test(
       installText,

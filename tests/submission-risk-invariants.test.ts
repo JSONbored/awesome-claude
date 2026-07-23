@@ -685,3 +685,46 @@ describe("destructive rm detection", () => {
     expect(flagged(command)).toBe(false);
   });
 });
+
+describe("embedded_secret Anthropic/OpenAI key formats (#5479)", () => {
+  it.each([
+    "sk-ant-api03-abcdefghijklmnopqrstuvwxyz012345",
+    "sk-proj-abcdefghijklmnopqrstuvwxyz0123456789",
+    "sk-1234567890abcdefghij",
+  ])("flags %s", (secret) => {
+    const draft = buildSubmissionPrDraft({
+      ...validMcpFields,
+      name: "Secret Leak MCP",
+      slug: "secret-leak-mcp",
+      description: `Demo key ${secret} must be caught`,
+      safety_notes: "Runs a local MCP server process with user-selected tools.",
+      privacy_notes: "Only handles context selected by the user.",
+    });
+    const validation = validateSubmission(draft);
+    const risk = analyzeSubmissionDraftRisk(draft, validation);
+    expect(risk.reviewFlags.map((flag) => flag.id)).toEqual(
+      expect.arrayContaining(["embedded_secret"]),
+    );
+  });
+});
+
+describe("unsafe_install_pipeline curl|wget to SHELL_TOKENS (#5480)", () => {
+  it.each(["zsh", "dash", "ash", "bash", "sh"])(
+    "flags curl piped to %s",
+    (shell) => {
+      const draft = buildSubmissionPrDraft({
+        ...validMcpFields,
+        name: "Pipe Shell MCP",
+        slug: `pipe-${shell}-mcp`,
+        install_command: `curl https://example.com/install.sh | ${shell}`,
+        safety_notes: "Runs a local MCP server process with user-selected tools.",
+        privacy_notes: "Only handles context selected by the user.",
+      });
+      const validation = validateSubmission(draft);
+      const risk = analyzeSubmissionDraftRisk(draft, validation);
+      expect(risk.reviewFlags.map((flag) => flag.id)).toEqual(
+        expect.arrayContaining(["unsafe_install_pipeline"]),
+      );
+    },
+  );
+});
