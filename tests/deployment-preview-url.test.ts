@@ -406,4 +406,23 @@ describe("resolveFromPrComments — reads the Cloudflare Workers Builds PR comme
     ).toBeNull();
     expect(await resolveFromPrComments({}, env)).toBeNull();
   });
+
+  it("bounds the GitHub API fetch with an abort-timeout signal so a hung request can't outlast the poll deadline", async () => {
+    const fetchMock = vi.fn(
+      async () =>
+        new Response(JSON.stringify([]), {
+          status: 200,
+          headers: { "content-type": "application/json" },
+        }),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    await resolveFromPrComments({ pull_request: { number: 4045 } }, env);
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    const init = fetchMock.mock.calls[0][1] as RequestInit | undefined;
+    expect(init?.signal).toBeInstanceOf(AbortSignal);
+    // A real AbortSignal.timeout(...) is live and un-aborted at call time.
+    expect(init?.signal?.aborted).toBe(false);
+  });
 });

@@ -86,6 +86,14 @@ function sleep(ms) {
   });
 }
 
+// Per-request bound for GitHub API calls. The poll loop only checks its own
+// `deadline` *between* attempts, so an un-bounded `fetch` that hangs mid-request
+// (network stall, slow TLS, GitHub degraded) could outlast the whole wait budget.
+// 10s is comfortably shorter than the default 15s poll interval and any realistic
+// wait window, so a stalled request fails fast and the loop can retry or exit
+// cleanly instead of blocking indefinitely.
+const GITHUB_FETCH_TIMEOUT_MS = 10_000;
+
 async function githubJson(pathname, env = process.env) {
   const token = env.GITHUB_TOKEN;
   const repository = env.GITHUB_REPOSITORY;
@@ -99,6 +107,7 @@ async function githubJson(pathname, env = process.env) {
       authorization: `Bearer ${token}`,
       "x-github-api-version": "2022-11-28",
     },
+    signal: AbortSignal.timeout(GITHUB_FETCH_TIMEOUT_MS),
   });
   if (!response.ok) {
     throw new Error(`GitHub API ${pathname} returned ${response.status}`);
