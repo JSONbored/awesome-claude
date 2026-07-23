@@ -54,6 +54,19 @@ export function isFresh(iso: string, now = Date.now()): boolean {
   return daysSince(iso, now) <= 7;
 }
 
+/**
+ * Real-dollar sort value for a free-text compensation string, so mixed-format
+ * listings compare on one scale: "$210k" and "$210,000" both yield 210000.
+ * Missing compensation sorts last (-1); an unparseable string stays at 0.
+ */
+export function compensationSortValue(compensation?: string | null): number {
+  if (!compensation) return -1;
+  const m = compensation.match(/\$?(\d[\d,]*)(k)?/i);
+  if (!m) return 0;
+  const base = parseInt(m[1].replace(/,/g, ""), 10);
+  return m[2] ? base * 1000 : base;
+}
+
 export function sortJobs(jobs: JobListing[]): JobListing[] {
   const order: Record<JobListing["tier"], number> = {
     sponsored: 0,

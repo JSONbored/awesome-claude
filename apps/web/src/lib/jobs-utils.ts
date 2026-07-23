@@ -11,6 +11,7 @@ export {
   daysSince,
   relativePosted,
   isFresh,
+  compensationSortValue,
   sortJobs,
   pickDailySpotlight,
 } from "@/lib/jobs-utils-lib";

@@ -9,7 +9,13 @@ import type { JobListing, JobTier } from "@/types/registry";
 import { normalizeJobListing } from "@/lib/job-listing-lib";
 import { cn } from "@/lib/utils";
 import { JobCard } from "@/components/job-card";
-import { isFresh, pickDailySpotlight, relativePosted, sortJobs } from "@/lib/jobs-utils";
+import {
+  compensationSortValue,
+  isFresh,
+  pickDailySpotlight,
+  relativePosted,
+  sortJobs,
+} from "@/lib/jobs-utils";
 import { jobsEmptyStateSuggestions } from "@/lib/jobs-empty-state-lib";
 import { trackEvent } from "@/lib/analytics";
 import {
@@ -199,11 +205,7 @@ function JobsPage() {
       return [...filtered].sort((a, b) => b.postedAt.localeCompare(a.postedAt));
     }
     if (sortMode === "salary") {
-      const sval = (j: JobListing) => {
-        if (!j.compensation) return -1;
-        const m = j.compensation.match(/\$?(\d[\d,]*)k?/i);
-        return m ? parseInt(m[1].replace(/,/g, ""), 10) : 0;
-      };
+      const sval = (j: JobListing) => compensationSortValue(j.compensation);
       return [...filtered].sort((a, b) => sval(b) - sval(a));
     }
     return sortJobs(filtered);

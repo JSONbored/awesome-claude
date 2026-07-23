@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import type { JobListing } from "@/types/registry";
 import {
   companyTint,
+  compensationSortValue,
   daysSince,
   isFresh,
   monogram,
@@ -181,5 +182,35 @@ describe("pickDailySpotlight", () => {
     // "current" vs "next" depends on the day-index rotation.
     const { current, next } = pickDailySpotlight([weak, strong], NOW);
     expect([current?.slug, next?.slug].sort()).toEqual(["strong", "weak"]);
+  });
+});
+
+describe("compensationSortValue", () => {
+  it('scales "k" shorthand to real dollars so mixed formats share one scale', () => {
+    // Regression for #5475: "$210k" sorted as 210 (below "$120,000" at
+    // 120000) because the trailing "k" multiplier was discarded.
+    expect(compensationSortValue("$210k")).toBe(210_000);
+    expect(compensationSortValue("$120,000")).toBe(120_000);
+    expect(compensationSortValue("$210k")).toBeGreaterThan(
+      compensationSortValue("$120,000"),
+    );
+  });
+
+  it("handles uppercase K and unprefixed amounts", () => {
+    expect(compensationSortValue("$95K")).toBe(95_000);
+    expect(compensationSortValue("180k")).toBe(180_000);
+    expect(compensationSortValue("150000")).toBe(150_000);
+  });
+
+  it("uses the leading figure of a range", () => {
+    expect(compensationSortValue("$100k-$150k")).toBe(100_000);
+    expect(compensationSortValue("$90,000 - $120,000")).toBe(90_000);
+  });
+
+  it("keeps the fallback ordering: missing sorts below unparseable", () => {
+    expect(compensationSortValue(undefined)).toBe(-1);
+    expect(compensationSortValue(null)).toBe(-1);
+    expect(compensationSortValue("")).toBe(-1);
+    expect(compensationSortValue("Competitive")).toBe(0);
   });
 });
