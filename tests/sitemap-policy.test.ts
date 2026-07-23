@@ -83,7 +83,9 @@ describe("sitemap policy", () => {
     // Entry pages are filtered through the sitemap-indexable policy (advertises
     // every category, including `tools`, except robotsIndex:false entries).
     // REGISTRY_ENTRIES keeps contentUpdatedAt/repoUpdatedAt for lastmod.
-    expect(source).toContain("REGISTRY_ENTRIES.filter(isSitemapIndexableEntry)");
+    expect(source).toContain(
+      "REGISTRY_ENTRIES.filter(isSitemapIndexableEntry)",
+    );
     expect(source).toContain("sitemapEntryLastModified");
     // Category hub landing pages with per-category lastmod.
     expect(source).toContain("categoryLastmod");
