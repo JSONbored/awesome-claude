@@ -82,9 +82,10 @@ describe("sitemap policy", () => {
     expect(source).not.toContain("lastModified: new Date()");
     // Entry pages are filtered through the sitemap-indexable policy (advertises
     // every category, including `tools`, except robotsIndex:false entries).
-    expect(source).toContain("ENTRIES.filter(isSitemapIndexableEntry)");
-    // Category hub landing pages with per-category + per-entry lastmod.
+    // REGISTRY_ENTRIES keeps contentUpdatedAt/repoUpdatedAt for lastmod.
+    expect(source).toContain("REGISTRY_ENTRIES.filter(isSitemapIndexableEntry)");
+    expect(source).toContain("sitemapEntryLastModified");
+    // Category hub landing pages with per-category lastmod.
     expect(source).toContain("categoryLastmod");
-    expect(source).toContain("entry.reviewedAt ?? entry.dateAdded");
   });
 });

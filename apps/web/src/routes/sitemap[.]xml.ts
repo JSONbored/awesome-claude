@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { BEST_LISTS, ENTRIES } from "@/data/entries";
+import { BEST_LISTS, ENTRIES, REGISTRY_ENTRIES } from "@/data/entries";
 import { CONTRIBUTORS } from "@/data/contributors";
 import { INTEGRATIONS } from "@/data/integrations";
 import atlasRegistry from "@/generated/atlas-registry.json";
@@ -8,7 +8,7 @@ import { siteConfig } from "@/lib/site";
 import { applySecurityHeaders } from "@/lib/security-headers";
 import { CATEGORIES, PLATFORM_LABEL } from "@/types/registry";
 import { getIndexableTagGroups } from "@/lib/tags";
-import { isSitemapIndexableEntry } from "@/lib/sitemap-policy";
+import { isSitemapIndexableEntry, sitemapEntryLastModified } from "@/lib/sitemap-policy";
 import { COMPARISONS } from "@/data/comparisons";
 import { REPORT_PATHS } from "@/lib/data-reports";
 import { sitemapUrlItem } from "@/lib/sitemap-url-item-lib";
@@ -120,12 +120,15 @@ async function renderSitemap() {
     ...bestPaths.map((pathname) => urlItem(pathname, "0.75")),
     // Advertise every indexable entry page (all categories, including `tools`).
     // Entries opt out per-entry with `robotsIndex:false` (see isSitemapIndexableEntry).
-    ...ENTRIES.filter(isSitemapIndexableEntry).map((entry) =>
+    // Prefer REGISTRY_ENTRIES so contentUpdatedAt/repoUpdatedAt survive for lastmod.
+    ...REGISTRY_ENTRIES.filter(isSitemapIndexableEntry).map((entry) =>
       urlItem(
         `/entry/${entry.category}/${entry.slug}`,
         "0.8",
         "monthly",
-        entry.reviewedAt ?? entry.dateAdded,
+        sitemapEntryLastModified(
+          entry as Parameters<typeof sitemapEntryLastModified>[0],
+        )?.toISOString(),
       ),
     ),
     ...contributorPaths.map((pathname) => urlItem(pathname, "0.5", "monthly")),
