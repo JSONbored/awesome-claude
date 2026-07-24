@@ -51,5 +51,6 @@ export function normalizeOffset(value) {
 export function normalizePlatform(value) {
   const normalized = normalizeText(value).replace(/[^a-z0-9]+/g, "-");
   if (!normalized) return "";
-  return platformAliases.get(normalized) || String(value || "").trim();
+  // Unrecognized input -> "" (callers treat falsy as "no filter"), not raw leak.
+  return platformAliases.get(normalized) || "";
 }

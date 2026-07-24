@@ -340,7 +340,8 @@ export function tokenizeRegistrySearchQuery(query) {
 export function normalizeRegistryPlatform(value) {
   const normalized = text(value).replace(/[^a-z0-9]+/g, "-");
   if (!normalized) return "";
-  return PLATFORM_ALIASES.get(normalized) || String(value || "").trim();
+  // Unrecognized input -> "" (matchesRegistryPlatform treats falsy as no filter).
+  return PLATFORM_ALIASES.get(normalized) || "";
 }
 
 export function normalizedRegistrySearchText(entry) {

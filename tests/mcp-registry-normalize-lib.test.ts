@@ -35,7 +35,8 @@ describe("registry-normalize-lib platform aliases", () => {
     expect(normalizePlatform("   ")).toBe("");
   });
 
-  it("preserves unknown platform labels without alias mapping", () => {
-    expect(normalizePlatform("Antigravity")).toBe("Antigravity");
+  it("returns empty string for unrecognized platforms instead of leaking raw input", () => {
+    expect(normalizePlatform("Antigravity")).toBe("");
+    expect(normalizePlatform("Cluade Code")).toBe("");
   });
 });

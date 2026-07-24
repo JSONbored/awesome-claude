@@ -61,9 +61,8 @@ describe("search-ranking-lib platform and haystack helpers", () => {
   it("normalizes platform aliases", () => {
     expect(normalizeRegistryPlatform("claude")).toBe("claude-code");
     expect(normalizeRegistryPlatform("cursor-rules")).toBe("cursor");
-    expect(normalizeRegistryPlatform("unknown-platform")).toBe(
-      "unknown-platform",
-    );
+    expect(normalizeRegistryPlatform("unknown-platform")).toBe("");
+    expect(normalizeRegistryPlatform("Cluade Code")).toBe("");
   });
 
   it("builds normalized search text from entry metadata", () => {
@@ -82,6 +81,8 @@ describe("search-ranking-lib platform and haystack helpers", () => {
     expect(matchesRegistryPlatform(entry, "claude")).toBe(true);
     expect(matchesRegistryPlatform(entry, "codex")).toBe(false);
     expect(matchesRegistryPlatform(entry, "")).toBe(true);
+    // Unrecognized / misspelled platforms are treated as "no filter".
+    expect(matchesRegistryPlatform(entry, "Cluade Code")).toBe(true);
   });
 });
 
@@ -367,7 +368,7 @@ describe("search-ranking-lib ranking and helper fallbacks", () => {
     expect(matchesRegistryPlatform({}, "")).toBe(true);
   });
 
-  it("keeps a trimmed original value for an unknown platform alias", () => {
-    expect(normalizeRegistryPlatform("MyTool")).toBe("MyTool");
+  it("returns empty string for an unknown platform alias instead of leaking raw input", () => {
+    expect(normalizeRegistryPlatform("MyTool")).toBe("");
   });
 });
