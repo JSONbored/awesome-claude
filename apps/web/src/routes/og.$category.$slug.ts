@@ -1,4 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { getApiRouteDefinition } from "@/lib/api/contracts";
+import { apiError, enforceApiRateLimit, getApiRequestId } from "@/lib/api/router";
 import { getEntry } from "@/data/search";
 import { categoryAccent } from "@/lib/og-image";
 import { ogEntryCardFields } from "@/lib/og-entry-card-lib";
@@ -12,7 +14,12 @@ import { renderOgPng } from "@/lib/og-render.server";
 export const Route = createFileRoute("/og/$category/$slug")({
   server: {
     handlers: {
-      GET: async ({ params }) => {
+      GET: async ({ request, params }) => {
+        // Same expensive Satori path as /api/og — enforce the same ceiling (#5452).
+        const ogRoute = getApiRouteDefinition("og.render");
+        if (await enforceApiRateLimit(ogRoute, request)) {
+          return apiError("rate_limited", 429, { requestId: getApiRequestId(request) });
+        }
         const entry = getEntry(params.category, params.slug);
         const { title, description, author, category } = ogEntryCardFields(
           entry,
