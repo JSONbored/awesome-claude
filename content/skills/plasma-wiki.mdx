@@ -1,0 +1,240 @@
+---
+title: Plasma Wiki
+slug: plasma-wiki
+category: skills
+description: >-
+  Keep project knowledge in plain Markdown while a deterministic CLI maintains
+  folder indexes, cross-links, structure checks, and scoped map, search, and
+  read commands for agents.
+cardDescription: >-
+  Build indexed Markdown knowledge bases that agents map, search, and read
+  selectively.
+seoTitle: Plasma Wiki Skill for Indexed Markdown Knowledge Bases
+seoDescription: >-
+  Install Plasma Wiki for deterministic Markdown indexes, cross-links,
+  validation, generated-index merge handling, and scoped map, search, and read
+  commands for agents.
+author: Plasma AI
+authorProfileUrl: "https://github.com/plasma-ai"
+submittedBy: ryanpettry
+submittedByUrl: "https://github.com/ryanpettry"
+dateAdded: "2026-07-24"
+submittedAt: "2026-07-24"
+repoUrl: "https://github.com/plasma-ai/wiki"
+documentationUrl: "https://docs.plasma.ai/wiki/"
+websiteUrl: "https://docs.plasma.ai/wiki/"
+downloadUrl: "https://github.com/plasma-ai/wiki/archive/refs/heads/main.zip"
+installable: true
+installCommand: |-
+  pipx install plasma-wiki
+  wiki install
+usageSnippet: >-
+  Run `wiki map` to inspect the knowledge tree, `wiki search` to find relevant
+  pages, and `wiki read` to load only the entries the current task needs.
+copySnippet: |-
+  wiki init
+  wiki update
+  wiki lint
+  wiki map
+  wiki search "authentication"
+  wiki read auth
+skillType: general
+skillLevel: advanced
+verificationStatus: validated
+verifiedAt: "2026-07-24"
+retrievalSources:
+  - "https://github.com/plasma-ai/wiki"
+  - "https://github.com/plasma-ai/wiki/blob/main/README.md"
+  - "https://github.com/plasma-ai/wiki/blob/main/wiki/skills/wiki/SKILL.md"
+  - "https://docs.plasma.ai/wiki/"
+  - "https://pypi.org/project/plasma-wiki/"
+sourceUrls:
+  - "https://github.com/plasma-ai/wiki"
+  - "https://github.com/plasma-ai/wiki/blob/main/README.md"
+  - "https://github.com/plasma-ai/wiki/blob/main/wiki/skills/wiki/SKILL.md"
+  - "https://docs.plasma.ai/wiki/"
+  - "https://pypi.org/project/plasma-wiki/"
+testedPlatforms:
+  - Claude Code
+  - Codex
+prerequisites:
+  - "Python 3.11 through 3.14 and pip, pipx, or uv for the published `plasma-wiki` package."
+  - "A repository or folder where the user permits the CLI to create and update Markdown files, `.wiki/settings.json`, and generated indexes."
+  - "Claude Code, Codex, or another Agent Skills host for the bundled `/wiki` skill; the CLI also works directly from a terminal."
+safetyNotes:
+  - "`wiki init`, `wiki config`, and `wiki update` write local Markdown structure, settings, frontmatter, headings, `.gitattributes`, and clone-local Git merge-driver configuration. Review the diff before committing it."
+  - "`wiki trust` authorizes the selected wiki's `.wiki/wiki.py` hook to execute with the user's privileges. Read that file before trusting a cloned or third-party wiki."
+  - "`wiki init` and `wiki config` can download the pinned Front Matter Title Obsidian plugin from GitHub. Obsidian itself remains optional."
+  - "The `***` delimiter and `[[wikilinks]]` are load-bearing syntax. Use `mdformat-wiki` or exclude the wiki root from formatters that rewrite them."
+privacyNotes:
+  - "`wiki map`, `wiki search`, and `wiki read` inspect local project documentation. Pages supplied to an active agent can become part of that agent's model context and logs."
+  - "Wiki content, `.wiki/settings.json`, and generated indexes remain ordinary local files, but Git remotes, backups, and collaboration tools can copy them according to the user's repository policy."
+  - "Package installation contacts the selected Python package index, while optional Obsidian setup contacts GitHub to download the pinned plugin release."
+tags:
+  - plasma-wiki
+  - agent-skills
+  - markdown
+  - knowledge-base
+  - cli
+  - context-engineering
+  - claude-code
+  - codex
+keywords:
+  - Plasma Wiki
+  - indexed Markdown knowledge base
+  - agent knowledge base CLI
+  - Claude Code wiki skill
+  - Codex wiki skill
+  - deterministic Markdown indexes
+  - wiki map search read
+readingTime: 6
+difficultyScore: 64
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# Plasma Wiki
+
+Plasma Wiki turns a folder of Markdown files into an indexed knowledge base for
+people and agents. A deterministic CLI maintains `_index.md` pages,
+cross-links, frontmatter, structure checks, and the generated region of index
+merges. People and agents remain responsible for the content.
+
+The agent workflow is intentionally small: map the tree, search for the topic,
+then read only the pages the task needs. The knowledge base stays in plain files
+that users can edit and review through Git.
+
+## Knowledge freshness
+
+This listing was verified on **2026-07-24** against the public repository,
+canonical `SKILL.md`, documentation, and the published `plasma-wiki` 1.1.0
+package. The source is Apache-2.0 licensed.
+
+## Retrieval sources
+
+- https://github.com/plasma-ai/wiki
+- https://github.com/plasma-ai/wiki/blob/main/README.md
+- https://github.com/plasma-ai/wiki/blob/main/wiki/skills/wiki/SKILL.md
+- https://docs.plasma.ai/wiki/
+- https://pypi.org/project/plasma-wiki/
+
+## Installation
+
+Install the CLI in an isolated Python environment, then copy the bundled skill
+into the supported agent skill directories:
+
+```bash
+pipx install plasma-wiki
+wiki install
+```
+
+The documented plugin marketplace routes are also available:
+
+```text
+# Claude Code
+/plugin marketplace add plasma-ai/plugins
+/plugin install wiki@plasma
+
+# Codex
+codex plugin marketplace add plasma-ai/plugins
+codex plugin add wiki@plasma
+```
+
+Run `wiki install` again after upgrading a copied skill. Editable installs can
+use `wiki install --link`.
+
+## Core workflow
+
+Initialize a wiki and keep its generated structure current:
+
+```bash
+wiki init
+wiki update
+wiki lint
+```
+
+Agents retrieve context through three commands:
+
+```bash
+wiki map
+wiki search "authentication"
+wiki read auth
+```
+
+`wiki map` prints the indexed tree and word counts. `wiki search` performs text
+search using Python regular expressions. `wiki read` loads one named entry and
+can slice it by words, lines, or characters.
+
+## Capability scope
+
+- Creates folder-based Markdown knowledge bases with `_index.md` navigation.
+- Maintains generated links, frontmatter, headings, and structural lint rules.
+- Lets agents map the tree, search text, and read selected pages or subtrees.
+- Keeps authored content in ordinary files that people can edit in Obsidian or
+  any Markdown editor.
+- Configures a Git merge driver for the generated region of `_index.md` files
+  while leaving authored conflicts visible.
+- Supports project-specific naming, exclusions, timestamp, title, and map
+  settings through `.wiki/settings.json`.
+- Requires explicit `wiki trust` before a repository hook can execute.
+
+## Compatibility
+
+### Native
+
+- Claude Code through the Plasma plugin marketplace or `wiki install`.
+- Codex through the Plasma plugin marketplace or `wiki install`.
+- Direct terminal workflows through the published `wiki` CLI.
+
+### Manual adaptation
+
+Other Agent Skills hosts can load the canonical
+`wiki/skills/wiki/SKILL.md` file if they support the standard `SKILL.md`
+format.
+
+## Safety and privacy
+
+Wiki maintenance commands write files. Review `wiki update --check`, use Git
+diffs, and keep authored pages under the repository's normal review policy.
+After cloning a repository, run `wiki config` to restore the clone-local merge
+driver before relying on generated-index merge handling.
+
+A wiki may include `.wiki/wiki.py` to customize indexing or formatting.
+`wiki` refuses to load that hook until the user runs `wiki trust`. Inspect the
+hook first because trust allows it to execute with the user's privileges.
+
+The retrieval commands operate on local Markdown, but any page handed to an
+agent can enter that agent's model context, transcript, or provider logs. Keep
+secrets, customer data, credentials, and regulated information out of the wiki
+unless the selected agent environment is approved for them.
+
+## Troubleshooting
+
+**Issue:** A formatter changes `***` to `---` or escapes `[[wikilinks]]`<br />
+**Fix:** Install `mdformat-wiki`, remove a conflicting
+`mdformat-frontmatter` plugin, or exclude the wiki root from that formatter.
+
+**Issue:** Generated `_index.md` sections conflict after a fresh clone<br />
+**Fix:** Run `wiki config` in that clone to register the local Git merge
+driver.
+
+**Issue:** The installed agent skill does not reflect a package upgrade<br />
+**Fix:** Run `wiki install` again, or use `wiki install --link` from an
+editable install.
+
+## Duplicate review
+
+HeyClaude already lists Markdown Knowledge Base Composer, which consolidates
+Markdown folders and exports combined documents. Plasma Wiki instead maintains
+an indexed source tree for selective agent navigation and retrieval. The
+Obsidian Agent Skills entry covers Obsidian-specific authoring and development
+workflows; Plasma Wiki can use Obsidian as an optional editor but owns its
+indexing and CLI workflow independently.
+
+## Editorial disclosure
+
+Submitted by a contributor affiliated with Plasma AI. This is a source-backed
+community listing for the Apache-2.0 project.
