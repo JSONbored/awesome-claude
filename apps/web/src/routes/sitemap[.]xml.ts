@@ -8,7 +8,7 @@ import { siteConfig } from "@/lib/site";
 import { applySecurityHeaders } from "@/lib/security-headers";
 import { CATEGORIES, PLATFORM_LABEL } from "@/types/registry";
 import { getIndexableTagGroups } from "@/lib/tags";
-import { isSitemapIndexableEntry } from "@/lib/sitemap-policy";
+import { isSitemapIndexableEntry, sitemapEntryLastModified } from "@/lib/sitemap-policy";
 import { COMPARISONS } from "@/data/comparisons";
 import { REPORT_PATHS } from "@/lib/data-reports";
 import { sitemapUrlItem } from "@/lib/sitemap-url-item-lib";
@@ -125,7 +125,7 @@ async function renderSitemap() {
         `/entry/${entry.category}/${entry.slug}`,
         "0.8",
         "monthly",
-        entry.reviewedAt ?? entry.dateAdded,
+        sitemapEntryLastModified(entry)?.toISOString(),
       ),
     ),
     ...contributorPaths.map((pathname) => urlItem(pathname, "0.5", "monthly")),
