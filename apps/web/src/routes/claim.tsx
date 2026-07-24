@@ -353,6 +353,7 @@ function ClaimPage() {
                 <button
                   type="button"
                   key={t}
+                  aria-pressed={type === t}
                   onClick={() => {
                     if (type !== t) {
                       trackEvent(
