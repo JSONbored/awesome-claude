@@ -48,7 +48,7 @@
     },
     "./submission-risk": {
       "types": "./src/index.d.ts",
-      "default": "./src/submission-risk.js"
+      "default": "./src/draft-risk.js"
     },
     "./submission-spec": {
       "types": "./src/index.d.ts",
