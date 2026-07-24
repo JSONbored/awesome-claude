@@ -345,6 +345,58 @@ describe("submission risk invariants", () => {
     );
   });
 
+  it("flags Anthropic sk-ant- and OpenAI sk-proj- key formats as embedded secrets", () => {
+    const withKey = (secret: string) =>
+      analyzeDirectContentRisk({
+        pullRequest: {
+          number: 501,
+          title: "content(mcp): add leaky config mcp",
+          user: { login: "contributor" },
+          head: { repo: { full_name: "contributor/awesome-claude" } },
+          base: { repo: { full_name: "JSONbored/awesome-claude" } },
+        },
+        files: [
+          sourceFile(
+            `${validMcpMdx({ slug: "leaky-config-mcp" })}\n\nExample env: API_KEY=${secret}\n`,
+            "content/mcp/leaky-config-mcp.mdx",
+          ),
+        ],
+      });
+
+    // Both real provider formats use hyphenated prefixes/segments the old
+    // `sk-[a-z0-9]{20,}` alternative could not match.
+    expect(
+      withKey("sk-ant-api03-xY7k9mN2pQr4sT6uV8wX0zA1bC3dE5fG").reviewFlags.map(
+        (flag) => flag.id,
+      ),
+    ).toContain("embedded_secret");
+    expect(
+      withKey("sk-proj-aB3dEfGh1jKlMnOpQrStUvWxYz012345").reviewFlags.map(
+        (flag) => flag.id,
+      ),
+    ).toContain("embedded_secret");
+
+    // Benign content that merely mentions "sk-" in prose stays unflagged.
+    const benign = analyzeDirectContentRisk({
+      pullRequest: {
+        number: 502,
+        title: "content(mcp): add benign mcp",
+        user: { login: "contributor" },
+        head: { repo: { full_name: "contributor/awesome-claude" } },
+        base: { repo: { full_name: "JSONbored/awesome-claude" } },
+      },
+      files: [
+        sourceFile(
+          `${validMcpMdx({ slug: "benign-mcp" })}\n\nUse the sk-learning workflow to onboard.\n`,
+          "content/mcp/benign-mcp.mdx",
+        ),
+      ],
+    });
+    expect(benign.reviewFlags.map((flag) => flag.id)).not.toContain(
+      "embedded_secret",
+    );
+  });
+
   it("uses same-repo frontmatter contributors when maintainer content carries submitter metadata", () => {
     const report = analyzeDirectContentRisk({
       pullRequest: {

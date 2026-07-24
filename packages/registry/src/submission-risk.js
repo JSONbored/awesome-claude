@@ -1201,7 +1201,7 @@ function addContentRiskSignals(report, fields, text) {
   }
 
   if (
-    /\b(ghp_[a-z0-9_]{20,}|github_pat_[a-z0-9_]{40,}|sk-[a-z0-9]{20,}|akia[0-9a-z]{16}|xq_[a-f0-9]{40,})\b/i.test(
+    /\b(ghp_[a-z0-9_]{20,}|github_pat_[a-z0-9_]{40,}|sk-(?:ant-|proj-)?[a-z0-9-]{20,}|akia[0-9a-z]{16}|xq_[a-f0-9]{40,})\b/i.test(
       text,
     )
   ) {
