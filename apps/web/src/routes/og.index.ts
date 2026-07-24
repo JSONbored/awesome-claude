@@ -1,4 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { getApiRouteDefinition } from "@/lib/api/contracts";
+import { apiError, enforceRateLimit, getApiRequestId } from "@/lib/api/router";
 import { resolveOgQueryFields } from "@/lib/og-query-fields-lib";
 import { renderOgPng } from "@/lib/og-render.server";
 import { siteConfig } from "@/lib/site";
@@ -13,6 +15,11 @@ export const Route = createFileRoute("/og/")({
   server: {
     handlers: {
       GET: async ({ request }) => {
+        // Same expensive Satori path as /api/og — enforce the same ceiling (#5452).
+        const ogRoute = getApiRouteDefinition("og.render");
+        if (await enforceRateLimit(ogRoute, request)) {
+          return apiError("rate_limited", 429, { requestId: getApiRequestId(request) });
+        }
         const url = new URL(request.url);
         // Defaults live in resolveOgQueryFields: title/eyebrow -> "HeyClaude",
         // description -> subtitle -> the site tagline, all clamped; accent is
