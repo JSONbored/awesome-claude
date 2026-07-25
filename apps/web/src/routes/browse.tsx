@@ -999,11 +999,17 @@ function Browse() {
                   role="radiogroup"
                   aria-label="Result density"
                 >
+                  {/* role="radio" + aria-checked to match the radiogroup container,
+                      like this file's other radiogroups (FilterChip). Note: none of
+                      them implement arrow-key roving tabindex — each radio stays
+                      individually tab-focusable; that is a separate concern from the
+                      mislabeled attributes fixed here (#5454). */}
                   {(["compact", "row", "grid"] as const).map((v) => (
                     <button
                       key={v}
+                      role="radio"
                       onClick={() => onViewSelect(v)}
-                      aria-pressed={sp.view === v}
+                      aria-checked={sp.view === v}
                       className={cn(
                         "px-2 py-1 text-xs capitalize transition-colors duration-200 ease-out motion-safe:active:scale-[0.97]",
                         sp.view === v
