@@ -151,6 +151,7 @@ function PostJobPage() {
           <button
             key={t.id}
             type="button"
+            aria-pressed={tier === t.id}
             onClick={() => {
               setTier(t.id);
               trackEvent(

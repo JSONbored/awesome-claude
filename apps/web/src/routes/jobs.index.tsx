@@ -475,6 +475,7 @@ function JobsPage() {
           <button
             type="button"
             onClick={onFreshToggle}
+            aria-pressed={freshOnly}
             className={cn(
               "h-9 rounded-md border px-2.5 text-xs font-medium transition-colors duration-200 ease-out",
               freshOnly
@@ -487,6 +488,7 @@ function JobsPage() {
           <button
             type="button"
             onClick={onFeaturedToggle}
+            aria-pressed={featuredOnly}
             className={cn(
               "h-9 rounded-md border px-2.5 text-xs font-medium transition-colors duration-200 ease-out",
               featuredOnly
