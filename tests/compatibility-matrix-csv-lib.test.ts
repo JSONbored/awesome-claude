@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import fs from "node:fs";
+import path from "node:path";
 
 import type {
   MatrixClient,
@@ -6,6 +8,7 @@ import type {
   Support,
 } from "../apps/web/src/components/compatibility-matrix";
 import { buildCompatibilityCsv } from "../apps/web/src/lib/compatibility-matrix-csv-lib";
+import { repoRoot } from "./helpers/registry-fixtures";
 
 const clients: MatrixClient[] = [
   { id: "claude-code", label: "Claude Code" },
@@ -75,5 +78,32 @@ describe("buildCompatibilityCsv", () => {
     expect(buildCompatibilityCsv(clients, [], label)).toBe(
       "Capability,Detail,Claude Code,Desktop\n\n",
     );
+  });
+});
+
+describe("CompatibilityMatrix downloadCsv wiring", () => {
+  // The component itself is not covered by the node test suite, so pin the CSV export
+  // to the search-filtered row set at the source level: `downloadCsv` must build the
+  // CSV (and report its analytics count) from `filtered`, never the unfiltered `rows`
+  // prop, so the export always matches what the table currently renders (#5505).
+  it("builds the CSV and analytics count from the filtered rows", () => {
+    const source = fs.readFileSync(
+      path.join(repoRoot, "apps/web/src/components/compatibility-matrix.tsx"),
+      "utf8",
+    );
+    const downloadCsvBody = source.slice(
+      source.indexOf("const downloadCsv"),
+      source.indexOf("return ("),
+    );
+    expect(downloadCsvBody).toContain(
+      "buildCompatibilityCsv(clients, filtered,",
+    );
+    expect(downloadCsvBody).toContain(
+      "onCsvDownloadClick?.(filtered.length, clients.length)",
+    );
+    expect(downloadCsvBody).not.toContain(
+      "buildCompatibilityCsv(clients, rows,",
+    );
+    expect(downloadCsvBody).not.toContain("onCsvDownloadClick?.(rows.length");
   });
 });

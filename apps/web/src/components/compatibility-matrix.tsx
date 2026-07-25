@@ -93,8 +93,10 @@ export function CompatibilityMatrix({
   }, [rows, query]);
 
   const downloadCsv = () => {
-    onCsvDownloadClick?.(rows.length, clients.length);
-    const csv = buildCompatibilityCsv(clients, rows, (support) => SUPPORT_META[support].label);
+    // Export exactly what the table currently shows: `filtered` is the search-narrowed
+    // row set the table renders, and `filtered === rows` when no query is active.
+    onCsvDownloadClick?.(filtered.length, clients.length);
+    const csv = buildCompatibilityCsv(clients, filtered, (support) => SUPPORT_META[support].label);
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
