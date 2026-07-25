@@ -88,3 +88,22 @@ describe("sitemap policy", () => {
     expect(source).toContain("entry.reviewedAt ?? entry.dateAdded");
   });
 });
+
+describe("sitemap platform hub policy", () => {
+  // Platform hubs with fewer than 2 entries are noindexed by for.$platform.tsx (#5537),
+  // so the sitemap must not advertise them — the same pairing the tag pages get via
+  // getIndexableTagGroups(). Pin the source: hubs are filtered by per-platform entry
+  // counts instead of unconditionally listing every PLATFORM_LABEL key.
+  it("only advertises platform hubs with at least 2 entries", () => {
+    const source = fs.readFileSync(
+      path.join(repoRoot, "apps/web/src/routes/sitemap[.]xml.ts"),
+      "utf8",
+    );
+    expect(source).toContain(
+      ".filter((platform) => (platformCounts.get(platform) ?? 0) >= 2)",
+    );
+    expect(source).not.toContain(
+      'Object.keys(PLATFORM_LABEL).map((platform) => urlItem(`/for/${platform}`, "0.6"))',
+    );
+  });
+});

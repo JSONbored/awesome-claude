@@ -82,10 +82,15 @@ async function renderSitemap() {
   // One pass over ENTRIES building a `${category}/${platform}` -> count map (was platforms ×
   // categories × ENTRIES.filter ≈ 83K iterations per request).
   const intersectionCounts = new Map<string, number>();
+  // Total entries per platform, reusing the same pass — the platform hub route
+  // (for.$platform.tsx) noindexes hubs with fewer than 2 entries, so the sitemap
+  // must not advertise them, mirroring how getIndexableTagGroups() filters tags.
+  const platformCounts = new Map<string, number>();
   for (const entry of ENTRIES) {
     for (const platform of entry.platforms ?? []) {
       const key = `${entry.category}/${platform}`;
       intersectionCounts.set(key, (intersectionCounts.get(key) ?? 0) + 1);
+      platformCounts.set(platform, (platformCounts.get(platform) ?? 0) + 1);
     }
   }
   const intersectionPaths: string[] = [];
@@ -114,7 +119,10 @@ async function renderSitemap() {
       urlItem(`/${category.id}`, "0.8", "weekly", categoryLastmod.get(category.id)),
     ),
     ...getIndexableTagGroups().map((group) => urlItem(`/tags/${group.slug}`, "0.5")),
-    ...Object.keys(PLATFORM_LABEL).map((platform) => urlItem(`/for/${platform}`, "0.6")),
+    // Platform hubs with >=2 entries only — thinner ones are noindexed by the route.
+    ...Object.keys(PLATFORM_LABEL)
+      .filter((platform) => (platformCounts.get(platform) ?? 0) >= 2)
+      .map((platform) => urlItem(`/for/${platform}`, "0.6")),
     ...intersectionPaths.map((pathname) => urlItem(pathname, "0.55")),
     ...COMPARISONS.map((comparison) => urlItem(`/compare/${comparison.slug}`, "0.6")),
     ...bestPaths.map((pathname) => urlItem(pathname, "0.75")),

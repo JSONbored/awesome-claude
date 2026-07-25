@@ -57,6 +57,10 @@ export const Route = createFileRoute("/for/$platform")({
       meta: [
         { title },
         { name: "description", content: description },
+        // Thin platform hubs (fewer than 2 entries) are excluded from the sitemap and
+        // noindexed, matching the policy already applied by the sibling routes
+        // for.$platform.$category.tsx and tags.$tag.tsx.
+        ...(entries.length < 2 ? [{ name: "robots", content: "noindex, follow" }] : []),
         { property: "og:title", content: title },
         { property: "og:description", content: description },
         { property: "og:url", content: url },
