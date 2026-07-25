@@ -83,9 +83,39 @@ describe("sitemap policy", () => {
     // Entry pages are filtered through the sitemap-indexable policy (advertises
     // every category, including `tools`, except robotsIndex:false entries).
     expect(source).toContain("ENTRIES.filter(isSitemapIndexableEntry)");
-    // Category hub landing pages with per-category + per-entry lastmod.
+    // Category hub landing pages with per-category lastmod (that pass still
+    // derives from reviewedAt ?? dateAdded by design — see #5472's scope).
     expect(source).toContain("categoryLastmod");
     expect(source).toContain("entry.reviewedAt ?? entry.dateAdded");
+  });
+});
+
+describe("sitemap entry lastmod policy", () => {
+  // sitemapEntryLastModified was fully tested but dead code: the route
+  // reimplemented a weaker inline `reviewedAt ?? dateAdded` for entry URLs
+  // (#5472). Pin the wiring: entry <lastmod> now comes from the helper applied
+  // to the raw registry snapshot entry (the only shape that still carries the
+  // contentUpdatedAt/repoUpdatedAt signals — buildEntry() drops them), and the
+  // inline derivation survives only in the category-hub lastmod pass.
+  it("derives entry lastmod from sitemapEntryLastModified, not the inline fallback", () => {
+    const source = fs.readFileSync(
+      path.join(repoRoot, "apps/web/src/routes/sitemap[.]xml.ts"),
+      "utf8",
+    );
+    expect(source).toContain("sitemapEntryLastModified(");
+    expect(source).toContain("rawEntryByRef");
+    expect(
+      source.match(/entry\.reviewedAt \?\? entry\.dateAdded/g),
+    ).toHaveLength(1);
+  });
+
+  it("accepts raw registry snapshot entries without DirectoryEntry-only fields", () => {
+    expect(
+      sitemapEntryLastModified({
+        contentUpdatedAt: "2026-06-08T00:00:00.000Z",
+      })?.toISOString(),
+    ).toBe("2026-06-08T00:00:00.000Z");
+    expect(sitemapEntryLastModified({})).toBeUndefined();
   });
 });
 

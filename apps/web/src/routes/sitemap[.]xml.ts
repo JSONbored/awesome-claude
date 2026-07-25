@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { BEST_LISTS, ENTRIES } from "@/data/entries";
+import { BEST_LISTS, ENTRIES, REGISTRY_ENTRIES } from "@/data/entries";
 import { CONTRIBUTORS } from "@/data/contributors";
 import { INTEGRATIONS } from "@/data/integrations";
 import atlasRegistry from "@/generated/atlas-registry.json";
@@ -8,7 +8,7 @@ import { siteConfig } from "@/lib/site";
 import { applySecurityHeaders } from "@/lib/security-headers";
 import { CATEGORIES, PLATFORM_LABEL } from "@/types/registry";
 import { getIndexableTagGroups } from "@/lib/tags";
-import { isSitemapIndexableEntry } from "@/lib/sitemap-policy";
+import { isSitemapIndexableEntry, sitemapEntryLastModified } from "@/lib/sitemap-policy";
 import { COMPARISONS } from "@/data/comparisons";
 import { REPORT_PATHS } from "@/lib/data-reports";
 import { sitemapUrlItem } from "@/lib/sitemap-url-item-lib";
@@ -93,6 +93,14 @@ async function renderSitemap() {
       platformCounts.set(platform, (platformCounts.get(platform) ?? 0) + 1);
     }
   }
+  // Entry `lastmod` comes from sitemapEntryLastModified, whose
+  // contentUpdatedAt/repoUpdatedAt signals only exist on the raw registry
+  // snapshot — buildEntry() drops them from the client `Entry` shape — so look
+  // the raw sibling up by `category/slug` (the same keying data/entries.ts
+  // uses for ENTRY_BY_REF).
+  const rawEntryByRef = new Map(
+    REGISTRY_ENTRIES.map((entry) => [`${entry.category}/${entry.slug}`, entry] as const),
+  );
   const intersectionPaths: string[] = [];
   for (const platform of Object.keys(PLATFORM_LABEL)) {
     for (const category of CATEGORIES) {
@@ -128,12 +136,17 @@ async function renderSitemap() {
     ...bestPaths.map((pathname) => urlItem(pathname, "0.75")),
     // Advertise every indexable entry page (all categories, including `tools`).
     // Entries opt out per-entry with `robotsIndex:false` (see isSitemapIndexableEntry).
+    // `lastmod` uses the content-update-aware sitemapEntryLastModified helper
+    // (contentUpdatedAt || repoUpdatedAt || verifiedAt || dateAdded) on the raw
+    // registry entry instead of the weaker inline reviewedAt-based fallback.
     ...ENTRIES.filter(isSitemapIndexableEntry).map((entry) =>
       urlItem(
         `/entry/${entry.category}/${entry.slug}`,
         "0.8",
         "monthly",
-        entry.reviewedAt ?? entry.dateAdded,
+        sitemapEntryLastModified(
+          rawEntryByRef.get(`${entry.category}/${entry.slug}`) ?? entry,
+        )?.toISOString(),
       ),
     ),
     ...contributorPaths.map((pathname) => urlItem(pathname, "0.5", "monthly")),

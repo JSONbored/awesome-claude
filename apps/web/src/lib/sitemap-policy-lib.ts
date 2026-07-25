@@ -1,5 +1,3 @@
-import type { DirectoryEntry } from "@/lib/content.server";
-
 export function safeSitemapDate(value?: string | null) {
   if (!value) return undefined;
   const date = new Date(value);
@@ -21,7 +19,19 @@ export function isSitemapIndexableEntry(entry: { category: string; robotsIndex?:
   return entry.robotsIndex !== false;
 }
 
-export function sitemapEntryLastModified(entry: DirectoryEntry) {
+/**
+ * Content-update-aware `lastmod` for an entry's sitemap URL: prefer the real
+ * content/repo update signals over the acquisition dates. Accepts any
+ * entry-shaped object (same convention as `isSitemapIndexableEntry`) so the
+ * server `DirectoryEntry`, the raw registry snapshot entries, and the client
+ * `Entry` all satisfy it — the derivation itself is unchanged.
+ */
+export function sitemapEntryLastModified(entry: {
+  contentUpdatedAt?: string | null;
+  repoUpdatedAt?: string | null;
+  verifiedAt?: string | null;
+  dateAdded?: string | null;
+}) {
   return safeSitemapDate(
     entry.contentUpdatedAt || entry.repoUpdatedAt || entry.verifiedAt || entry.dateAdded,
   );
