@@ -234,7 +234,8 @@ describe("MCP config validator lib", () => {
       expect(packageRunnerName("npm", ["exec", "@scope/pkg"])).toBe("npm exec");
       expect(packageRunnerName("npx", ["-y", "@example/mcp"])).toBe("npx");
       expect(packageRunnerName("bunx", ["@example/mcp"])).toBe("bunx");
-      expect(packageRunnerName("docker", ["run", "image"])).toBe("");
+      expect(packageRunnerName("docker", ["run", "image"])).toBe("docker run");
+      expect(packageRunnerName("docker", ["pull", "image"])).toBe("");
       expect(packageFromRunner("yarn", ["dlx", "@example/mcp"])).toBe(
         "@example/mcp",
       );
@@ -439,12 +440,31 @@ describe("MCP config validator lib", () => {
     });
 
     it("warns on unpinned docker image operands", () => {
-      const report = validateServer("dock", {
+      const unpinned = validateServer("dock", {
         command: "docker",
         args: ["run", "ghcr.io/example/mcp:latest"],
       });
-      expect(report.packageName).toBe("ghcr.io/example/mcp:latest");
-      expect(report.warnings.join("\n")).not.toContain("runs unpinned package");
+      expect(unpinned.packageName).toBe("ghcr.io/example/mcp:latest");
+      expect(unpinned.warnings.join("\n")).toContain(
+        "docker run runs unpinned package ghcr.io/example/mcp:latest",
+      );
+
+      const untagged = validateServer("dock-untagged", {
+        command: "docker",
+        args: ["run", "some/image"],
+      });
+      expect(untagged.warnings.join("\n")).toContain(
+        "docker run runs unpinned package some/image",
+      );
+
+      // isPinnedPackageSpec is npm @semver-only (out of scope to change). A
+      // docker image that happens to use that pin form should not warn.
+      const pinned = validateServer("dock-pinned", {
+        command: "docker",
+        args: ["run", "mcp-image@1.2.3"],
+      });
+      expect(pinned.packageName).toBe("mcp-image@1.2.3");
+      expect(pinned.warnings.join("\n")).not.toContain("runs unpinned package");
     });
 
     it("uses stdio transport when only command is present", () => {

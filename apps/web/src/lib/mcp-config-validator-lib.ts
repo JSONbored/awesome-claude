@@ -291,6 +291,11 @@ export function packageRunnerName(command: string, args: string[]) {
   if (lower === "npm" && args.some((arg) => ["exec", "x"].includes(arg))) {
     return "npm exec";
   }
+  // Match packageFromRunner's docker detection so unpinned `docker run <image>`
+  // configs get the same pin-version warning as npx/uvx/bunx runners.
+  if (lower === "docker" && args.includes("run")) {
+    return "docker run";
+  }
   return "";
 }
 
