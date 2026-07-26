@@ -845,7 +845,15 @@ export const communitySignalsBatchQueryBodySchema = z.object({
 });
 
 export const ogQuerySchema = z.object({
-  title: z.string().trim().max(120).optional().default("HeyClaude"),
+  // `.default` only fills when the key is absent; empty/whitespace `title=`
+  // survives `.trim()` as "" and must still resolve to HeyClaude (#5555).
+  title: z
+    .string()
+    .trim()
+    .max(120)
+    .optional()
+    .default("HeyClaude")
+    .transform((value) => value || "HeyClaude"),
   description: z
     .string()
     .trim()

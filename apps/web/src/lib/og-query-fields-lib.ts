@@ -20,10 +20,13 @@ export function resolveOgQueryFields(
   params: URLSearchParams,
   siteDescription: string,
 ): OgQueryFields {
-  const title = clampOgText(params.get("title") ?? "HeyClaude", OG_TEXT_LIMITS.title);
+  // `URLSearchParams.get` returns "" (not null) for present-but-empty params
+  // like `?title=`; `??` would keep the blank. Trim so whitespace-only also
+  // falls back to the documented HeyClaude default (#5555).
+  const title = clampOgText(params.get("title")?.trim() || "HeyClaude", OG_TEXT_LIMITS.title);
   const rawDescription = params.get("description") ?? params.get("subtitle") ?? siteDescription;
   const description = clampOgText(rawDescription, OG_TEXT_LIMITS.description);
-  const eyebrow = clampOgText(params.get("eyebrow") ?? "HeyClaude", OG_TEXT_LIMITS.eyebrow);
+  const eyebrow = clampOgText(params.get("eyebrow")?.trim() || "HeyClaude", OG_TEXT_LIMITS.eyebrow);
   const accent = safeAccent(params.get("accent"));
   return { title, description, eyebrow, accent };
 }
