@@ -165,6 +165,35 @@ describe("submissions-lib spec validation", () => {
     );
   });
 
+  // Regression for #5562: bare reserved owners must match the URL-form reject.
+  it.each([
+    "settings",
+    "sponsors",
+    "marketplace",
+    "Settings",
+    "@settings",
+    "https://github.com/settings",
+  ])("rejects reserved-owner public contact %j", (contact_email) => {
+    const result = validateSubmissionDraftFromSpec(submissionSpec, {
+      fields: { ...validMcpFields, contact_email },
+    });
+    expect(result.valid).toBe(false);
+    expect(result.errors.join("\n")).toContain(
+      "Invalid public contact: use a GitHub handle, GitHub profile URL, or email.",
+    );
+  });
+
+  it.each(["octocat", "@octocat", "https://github.com/octocat"])(
+    "still accepts a real GitHub contact %j",
+    (contact_email) => {
+      const result = validateSubmissionDraftFromSpec(submissionSpec, {
+        fields: { ...validMcpFields, contact_email },
+      });
+      expect(result.valid).toBe(true);
+      expect(result.errors.join("\n")).not.toContain("Invalid public contact");
+    },
+  );
+
   it("requires collections items and guide content", () => {
     expect(
       validateSubmissionDraftFromSpec(submissionSpec, {

@@ -9,6 +9,7 @@
  * existing MCP imports stay unchanged.
  */
 import {
+  RESERVED_OWNERS,
   isPublicGitHubProfileUrl,
   isPublicHttpsUrl,
 } from "./public-url-lib.js";
@@ -144,6 +145,9 @@ function isGitHubHandle(value) {
     : normalizeText(value);
   if (!handle || handle.length > 39) return false;
   if (handle.startsWith("-") || handle.endsWith("-")) return false;
+  // Parity with isPublicGitHubProfileUrl: bare "settings"/"sponsors"/… are
+  // GitHub product surfaces, not accounts (see RESERVED_OWNERS / #5562).
+  if (RESERVED_OWNERS.has(handle.toLowerCase())) return false;
   return [...handle].every(
     (char) =>
       (char >= "a" && char <= "z") ||
