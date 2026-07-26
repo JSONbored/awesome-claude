@@ -708,6 +708,73 @@ describe("embedded_secret Anthropic/OpenAI key formats (#5479)", () => {
   });
 });
 
+describe("embedded_secret PEM / Slack / Stripe formats (#5557)", () => {
+  function riskFlagIds(description: string) {
+    const draft = buildSubmissionPrDraft({
+      ...validMcpFields,
+      name: "Secret Leak MCP",
+      slug: "secret-leak-mcp",
+      description,
+      safety_notes: "Runs a local MCP server process with user-selected tools.",
+      privacy_notes: "Only handles context selected by the user.",
+    });
+    const validation = validateSubmission(draft);
+    return analyzeSubmissionDraftRisk(draft, validation).reviewFlags.map(
+      (flag) => flag.id,
+    );
+  }
+
+  // Build fixtures at runtime so GitHub push protection does not treat the
+  // test source as containing live Slack/Stripe credentials.
+  const slackBotToken = ["xoxb", "fixture", "notarealsecret00"].join("-");
+  const stripeLiveKey = ["sk", "live", `fixture${"0".repeat(16)}`].join("_");
+  const stripeTestKey = ["sk", "test", `fixture${"0".repeat(16)}`].join("_");
+  const pemHeader = ["-----BEGIN", "RSA", "PRIVATE", "KEY-----"].join(" ");
+
+  it("flags a PEM RSA private-key header", () => {
+    expect(riskFlagIds(`Installer embeds ${pemHeader} MIIE...`)).toContain(
+      "embedded_secret",
+    );
+  });
+
+  it("flags a Slack bot token", () => {
+    expect(riskFlagIds(`Uses token ${slackBotToken}`)).toContain(
+      "embedded_secret",
+    );
+  });
+
+  it("flags a Stripe live secret key", () => {
+    expect(riskFlagIds(`Billing uses ${stripeLiveKey}`)).toContain(
+      "embedded_secret",
+    );
+  });
+
+  it.each([
+    ["ghp_", "Token ghp_abcdefghijklmnopqrstuvwxyz12 must be caught"],
+    [
+      "github_pat_",
+      "Token github_pat_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMN must be caught",
+    ],
+    [
+      "sk-ant-",
+      "Token sk-ant-api03-abcdefghijklmnopqrstuvwxyz012345 must be caught",
+    ],
+    ["AKIA", "Token AKIAIOSFODNN7EXAMPLE must be caught"],
+    ["xq_", `Token xq_${"a".repeat(40)} must be caught`],
+  ])("still flags existing %s format", (_label, description) => {
+    expect(riskFlagIds(description)).toContain("embedded_secret");
+  });
+
+  it("does not flag Stripe test keys or bare private-key prose", () => {
+    expect(riskFlagIds(`Uses ${stripeTestKey} in docs only`)).not.toContain(
+      "embedded_secret",
+    );
+    expect(
+      riskFlagIds("Mentions a private key concept without PEM material"),
+    ).not.toContain("embedded_secret");
+  });
+});
+
 describe("unsafe_install_pipeline curl|wget to SHELL_TOKENS (#5480)", () => {
   it.each(["zsh", "dash", "ash", "bash", "sh"])(
     "flags curl piped to %s",

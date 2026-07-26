@@ -18,8 +18,11 @@ import {
 
 // Anthropic (`sk-ant-…`) and OpenAI (`sk-proj-…`) insert a hyphenated segment after
 // `sk-`, which the old `sk-[a-z0-9]{20,}` alternative could never match (#5479).
+// Also cover PEM private-key headers, Slack `xox[baprs]-` tokens, and Stripe
+// `sk_live_` keys (#5557). PEM is outside the `\b…\b` group because `-----` is
+// non-word and would not satisfy a leading word boundary at line start.
 const EMBEDDED_SECRET_PATTERN =
-  /\b(ghp_[a-z0-9_]{20,}|github_pat_[a-z0-9_]{40,}|sk-(?:ant-|proj-)?[a-z0-9-]{20,}|akia[0-9a-z]{16}|xq_[a-f0-9]{40,})\b/i;
+  /(?:\b(?:ghp_[a-z0-9_]{20,}|github_pat_[a-z0-9_]{40,}|sk-(?:ant-|proj-)?[a-z0-9-]{20,}|akia[0-9a-z]{16}|xq_[a-f0-9]{40,}|xox[baprs]-[a-z0-9-]{10,}|sk_live_[a-z0-9]{16,})\b|-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----)/i;
 
 export const SUBMISSION_RISK_SCHEMA_VERSION = 1;
 export const SUBMISSION_RISK_COMMENT_MARKER = "<!-- submission-risk-report -->";
