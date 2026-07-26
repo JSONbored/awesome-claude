@@ -24,9 +24,11 @@ const AFFILIATE_PARAMS = [
   "coupon",
   "irclickid",
   "partner",
+  "partner_id",
   "ref",
   "referral",
   "referral_code",
+  "tag",
   "via",
 ];
 
@@ -631,6 +633,26 @@ describe("hasAffiliateParam partner and coupon campaigns", () => {
       );
     },
   );
+});
+
+describe("shared affiliate param union (#5558)", () => {
+  it.each(["tag", "partner_id"])(
+    "treats previously risk-only %s as affiliate for hasAffiliateParam and canonicalize",
+    (name) => {
+      const url = `https://example.com/p?${name}=mytag-20&keep=1`;
+      expect(isAffiliateParam(name)).toBe(true);
+      expect(hasAffiliateParam(url)).toBe(true);
+      expect(canonicalizeSourceUrl(url)).toBe("https://example.com/p?keep=1");
+      expect(stripTrackingParams(url)).toBe("https://example.com/p?keep=1");
+    },
+  );
+
+  it("still treats campaign and coupon as affiliate after the union", () => {
+    expect(hasAffiliateParam("https://example.com/p?campaign=spring")).toBe(
+      true,
+    );
+    expect(hasAffiliateParam("https://example.com/p?coupon=SAVE10")).toBe(true);
+  });
 });
 
 describe("canonicalizeSourceUrl registry comparison scenarios", () => {

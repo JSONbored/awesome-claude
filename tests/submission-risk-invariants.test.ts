@@ -11,6 +11,7 @@ import {
   formatSubmissionRiskMarkdown,
   tierFromFlags,
 } from "@heyclaude/registry/submission-risk";
+import { hasAffiliateParam } from "../packages/registry/src/source-url-lib.js";
 
 const dayMs = 86_400_000;
 
@@ -556,6 +557,20 @@ describe("checks ported from validate-content-policy", () => {
       expect(
         flags.find((flag) => flag.id === "affiliate_referral_url")?.severity,
       ).toBe("high");
+    }
+  });
+
+  it("agrees with hasAffiliateParam on tag and partner_id query params (#5558)", () => {
+    for (const url of [
+      "https://x.com/p?tag=mytag-20",
+      "https://x.com/p?partner_id=42",
+      "https://x.com/p?campaign=spring",
+      "https://x.com/p?coupon=SAVE10",
+    ]) {
+      expect(hasAffiliateParam(url), url).toBe(true);
+      expect(flagsFor({ github_url: url }).ids, url).toContain(
+        "affiliate_referral_url",
+      );
     }
   });
 

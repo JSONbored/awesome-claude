@@ -7,6 +7,7 @@ import {
 import { parseSafeFrontmatter } from "./frontmatter.js";
 import { hasPipeToShellInstall } from "./command-safety-lib.js";
 import {
+  AFFILIATE_PARAMS,
   isPublicGitHubProfileUrl,
   isPublicHttpUrl,
   isPublicHttpsUrl,
@@ -925,24 +926,11 @@ function isLikelyAffiliateUrl(value) {
 
   try {
     const url = new URL(raw);
-    const affiliateParams = new Set([
-      "aff",
-      "affiliate",
-      "affiliate_id",
-      "irclickid",
-      "partner",
-      "partner_id",
-      "ref",
-      "referral",
-      "referral_code",
-      "tag",
-      "via",
-    ]);
 
     for (const key of url.searchParams.keys()) {
       const normalizedKey = key.toLowerCase();
       if (
-        affiliateParams.has(normalizedKey) ||
+        AFFILIATE_PARAMS.has(normalizedKey) ||
         normalizedKey.startsWith("utm_aff")
       ) {
         return true;

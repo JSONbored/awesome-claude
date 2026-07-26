@@ -11,7 +11,7 @@
 
 import { RESERVED_OWNERS } from "./source-repo-lib.js";
 
-const AFFILIATE_PARAMS = new Set([
+export const AFFILIATE_PARAMS = new Set([
   "aff",
   "affiliate",
   "affiliate_id",
@@ -19,9 +19,11 @@ const AFFILIATE_PARAMS = new Set([
   "coupon",
   "irclickid",
   "partner",
+  "partner_id",
   "ref",
   "referral",
   "referral_code",
+  "tag",
   "via",
 ]);
 
