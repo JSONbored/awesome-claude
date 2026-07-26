@@ -11,6 +11,11 @@ import {
   sourceHost,
   sourceSummary,
 } from "../packages/mcp/src/registry-trust-lib.js";
+import {
+  ENTRY_SOURCE_URL_FIELDS,
+  entrySourceStatusValue,
+  entrySourceUrls,
+} from "../packages/mcp/src/search-ranking-lib.js";
 
 function makeEntry(overrides: Record<string, unknown> = {}) {
   return {
@@ -167,8 +172,11 @@ describe("registry-trust-lib entrySourceHosts", () => {
     expect(
       entrySourceHosts(
         makeEntry({
-          repoUrl: "",
           documentationUrl: "",
+          docsUrl: "",
+          repoUrl: "",
+          githubUrl: "",
+          sourceUrl: "",
           url: "",
           canonicalUrl: "",
           llmsUrl: "",
@@ -176,6 +184,63 @@ describe("registry-trust-lib entrySourceHosts", () => {
         }),
       ),
     ).toEqual([]);
+  });
+
+  it("keeps source.status and source.sourceHosts consistent for url-only entries", () => {
+    // Before: status used a narrower field list than hosts, so url-only entries
+    // reported status "missing" while sourceHosts was non-empty.
+    const entry = makeEntry({
+      documentationUrl: "",
+      docsUrl: "",
+      repoUrl: "",
+      githubUrl: "",
+      sourceUrl: "",
+      url: "https://heyclau.de/entry/mcp/browser-bridge",
+      canonicalUrl: "",
+      llmsUrl: "",
+      apiUrl: "",
+    });
+    const trust = entryTrustSummary(entry);
+    expect(entrySourceUrls(entry)).toEqual([
+      "https://heyclau.de/entry/mcp/browser-bridge",
+    ]);
+    expect(entrySourceStatusValue(entry)).toBe("available");
+    expect(trust.source.status).toBe("available");
+    expect(trust.source.sourceHosts).toEqual(["heyclau.de"]);
+    expect(entrySourceHosts(entry)).toEqual(["heyclau.de"]);
+  });
+
+  it("includes status-only fields (docsUrl/githubUrl/sourceUrl) in hosts", () => {
+    const entry = makeEntry({
+      documentationUrl: "",
+      docsUrl: "https://docs-only.example.com/guide",
+      repoUrl: "",
+      githubUrl: "https://github.com/org/from-github-url",
+      sourceUrl: "https://source-only.example.com",
+      url: "",
+      canonicalUrl: "",
+      llmsUrl: "",
+      apiUrl: "",
+    });
+    const trust = entryTrustSummary(entry);
+    expect(trust.source.status).toBe("available");
+    expect(trust.source.sourceHosts).toEqual(
+      expect.arrayContaining([
+        "docs-only.example.com",
+        "github.com",
+        "source-only.example.com",
+      ]),
+    );
+    // status and hosts always agree: both non-empty here
+    expect(Boolean(trust.source.sourceHosts.length)).toBe(
+      trust.source.status === "available",
+    );
+  });
+
+  it("derives hosts from the shared ENTRY_SOURCE_URL_FIELDS list", () => {
+    expect(ENTRY_SOURCE_URL_FIELDS).toContain("url");
+    expect(ENTRY_SOURCE_URL_FIELDS).toContain("docsUrl");
+    expect(ENTRY_SOURCE_URL_FIELDS).toContain("githubUrl");
   });
 
   it("extracts hosts for mcp variant 0", () => {

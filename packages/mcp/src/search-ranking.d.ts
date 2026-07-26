@@ -30,6 +30,10 @@ export type RegistrySearchDocumentLike = {
   repoUrl?: string;
   githubUrl?: string;
   sourceUrl?: string;
+  url?: string;
+  canonicalUrl?: string;
+  llmsUrl?: string;
+  apiUrl?: string;
   dateAdded?: string;
   trustSignals?: {
     hasSafetyNotes?: boolean;
@@ -38,6 +42,13 @@ export type RegistrySearchDocumentLike = {
     sourceStatus?: string;
   };
 };
+
+/** Canonical URL fields shared by `source.status` and `source.sourceHosts`. */
+export const ENTRY_SOURCE_URL_FIELDS: readonly string[];
+
+export function entrySourceUrls(
+  entry: RegistrySearchDocumentLike | null | undefined,
+): string[];
 
 export type RankedRegistrySearchEntry<T extends RegistrySearchDocumentLike> = {
   entry: T;

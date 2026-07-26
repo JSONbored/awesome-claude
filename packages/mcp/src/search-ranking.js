@@ -6,12 +6,14 @@
  * `@heyclaude/mcp/search-ranking` imports stay unchanged.
  */
 export {
+  ENTRY_SOURCE_URL_FIELDS,
   entryClaimStatusValue,
   entryHasPrivacyNotes,
   entryHasSafetyNotes,
   entryIsInstallable,
   entryPackageTrustValue,
   entrySourceStatusValue,
+  entrySourceUrls,
   matchesRegistryPlatform,
   matchesRegistryQuery,
   normalizeRegistryPlatform,

@@ -6,6 +6,7 @@ import {
   entryClaimStatusValue,
   entryPackageTrustValue,
   entrySourceStatusValue,
+  entrySourceUrls,
 } from "./search-ranking.js";
 
 // Deterministic, disclosure-only trust signals. Each signal reflects whether a
@@ -35,16 +36,10 @@ export function sourceHost(value) {
 }
 
 export function entrySourceHosts(entry) {
-  return [
-    entry.documentationUrl,
-    entry.repoUrl,
-    entry.url,
-    entry.canonicalUrl,
-    entry.llmsUrl,
-    entry.apiUrl,
-  ]
-    .map(sourceHost)
-    .filter(Boolean);
+  // Hosts must come from the same URL field list as `source.status`
+  // (`entrySourceUrls` / `ENTRY_SOURCE_URL_FIELDS`) so the two signals cannot
+  // disagree for a single entry.
+  return entrySourceUrls(entry).map(sourceHost).filter(Boolean);
 }
 
 export function sourceSummary(entry) {

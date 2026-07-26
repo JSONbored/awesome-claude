@@ -1,12 +1,14 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  ENTRY_SOURCE_URL_FIELDS,
   entryClaimStatusValue,
   entryHasPrivacyNotes,
   entryHasSafetyNotes,
   entryIsInstallable,
   entryPackageTrustValue,
   entrySourceStatusValue,
+  entrySourceUrls,
   matchesRegistryPlatform,
   matchesRegistryQuery,
   normalizeRegistryPlatform,
@@ -103,6 +105,48 @@ describe("search-ranking-lib trust and install signals", () => {
       entrySourceStatusValue(makeEntry({ repoUrl: "https://x.test" })),
     ).toBe("available");
     expect(entrySourceStatusValue(makeEntry({ repoUrl: "" }))).toBe("missing");
+  });
+
+  it("treats url-only entries as source-available via the shared field list", () => {
+    // Historical bug: hosts counted `url`, status did not — they disagreed.
+    expect(
+      entrySourceStatusValue(
+        makeEntry({
+          documentationUrl: "",
+          docsUrl: "",
+          repoUrl: "",
+          githubUrl: "",
+          sourceUrl: "",
+          url: "https://heyclau.de/entry/mcp/browser-bridge",
+        }),
+      ),
+    ).toBe("available");
+    expect(
+      entrySourceUrls(
+        makeEntry({
+          documentationUrl: "",
+          docsUrl: "",
+          repoUrl: "",
+          githubUrl: "",
+          sourceUrl: "",
+          url: "https://heyclau.de/entry/mcp/browser-bridge",
+        }),
+      ),
+    ).toEqual(["https://heyclau.de/entry/mcp/browser-bridge"]);
+  });
+
+  it("exports the canonical shared ENTRY_SOURCE_URL_FIELDS union", () => {
+    expect(ENTRY_SOURCE_URL_FIELDS).toEqual([
+      "documentationUrl",
+      "docsUrl",
+      "repoUrl",
+      "githubUrl",
+      "sourceUrl",
+      "url",
+      "canonicalUrl",
+      "llmsUrl",
+      "apiUrl",
+    ]);
   });
 
   it("reads package trust, claim status, and safety/privacy notes", () => {

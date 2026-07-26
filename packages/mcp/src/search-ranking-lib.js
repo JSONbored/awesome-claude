@@ -220,14 +220,31 @@ function matchingIntentProfiles(tokens) {
   );
 }
 
-function sourceUrls(entry) {
-  return [
-    entry.documentationUrl,
-    entry.docsUrl,
-    entry.repoUrl,
-    entry.githubUrl,
-    entry.sourceUrl,
-  ].filter((value) => String(value || "").trim());
+/**
+ * Canonical entry URL fields shared by `source.status` and `source.sourceHosts`.
+ *
+ * This is the union of the historical status list (`documentationUrl`, `docsUrl`,
+ * `repoUrl`, `githubUrl`, `sourceUrl`) and the historical hosts list
+ * (`documentationUrl`, `repoUrl`, `url`, `canonicalUrl`, `llmsUrl`, `apiUrl`).
+ * Keeping one list prevents contradictory trust summaries such as
+ * `status: "missing"` with a non-empty `sourceHosts` array.
+ */
+export const ENTRY_SOURCE_URL_FIELDS = Object.freeze([
+  "documentationUrl",
+  "docsUrl",
+  "repoUrl",
+  "githubUrl",
+  "sourceUrl",
+  "url",
+  "canonicalUrl",
+  "llmsUrl",
+  "apiUrl",
+]);
+
+export function entrySourceUrls(entry) {
+  return ENTRY_SOURCE_URL_FIELDS.map((field) => entry?.[field]).filter(
+    (value) => String(value || "").trim(),
+  );
 }
 
 function buildEntrySearchSignals(entry) {
@@ -430,7 +447,7 @@ export function entryPackageTrustValue(entry) {
 export function entrySourceStatusValue(entry) {
   return (
     entry?.trustSignals?.sourceStatus ||
-    (sourceUrls(entry ?? {}).length ? "available" : "missing")
+    (entrySourceUrls(entry ?? {}).length ? "available" : "missing")
   );
 }
 
