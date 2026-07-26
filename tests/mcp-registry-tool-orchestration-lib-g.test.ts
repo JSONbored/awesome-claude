@@ -139,6 +139,91 @@ describe("registry-tool-orchestration getRecentUpdates", () => {
     expect(result.count).toBe(2);
     expect(result.platform).toBe("");
   });
+
+  const mixedFilterOptions = {
+    readJsonArtifact: async () => ({
+      entries: [
+        {
+          category: "mcp",
+          slug: "tagged-safe",
+          title: "Tagged Safe Server",
+          description: "postgres connector with safety notes",
+          tags: ["database", "postgres"],
+          platforms: ["claude-code"],
+          safetyNotes: [{ text: "Runs shell commands" }],
+          dateAdded: "2026-05-03",
+        },
+        {
+          category: "mcp",
+          slug: "untagged-plain",
+          title: "Plain Server",
+          description: "generic helper without notes",
+          tags: ["utility"],
+          platforms: ["cursor"],
+          dateAdded: "2026-05-02",
+        },
+      ],
+    }),
+    readTextArtifact: async () => "",
+  };
+
+  it("filters recent updates by tag, like registry.search/list", async () => {
+    const result = await getRecentUpdates(
+      { tag: "postgres" },
+      mixedFilterOptions,
+    );
+    expect(result.ok).toBe(true);
+    expect(result.tag).toBe("postgres");
+    expect(result.entries.map((entry) => entry.slug)).toEqual(["tagged-safe"]);
+  });
+
+  it("filters recent updates by query, like registry.search/list", async () => {
+    const result = await getRecentUpdates(
+      { query: "postgres connector" },
+      mixedFilterOptions,
+    );
+    expect(result.ok).toBe(true);
+    expect(result.query).toBe("postgres connector");
+    expect(result.entries.map((entry) => entry.slug)).toEqual(["tagged-safe"]);
+  });
+
+  it("filters recent updates by hasSafetyNotes trust filter", async () => {
+    const result = await getRecentUpdates(
+      { hasSafetyNotes: "true" },
+      mixedFilterOptions,
+    );
+    expect(result.ok).toBe(true);
+    expect(result.filters.hasSafetyNotes).toBe("true");
+    expect(result.entries.map((entry) => entry.slug)).toEqual(["tagged-safe"]);
+  });
+
+  it("AND-combines tag with category/platform/since and preserves omit-all behavior", async () => {
+    const narrowed = await getRecentUpdates(
+      {
+        category: "mcp",
+        platform: "claude-code",
+        tag: "database",
+        since: "2026-05-01",
+      },
+      mixedFilterOptions,
+    );
+    expect(narrowed.ok).toBe(true);
+    expect(narrowed.entries.map((entry) => entry.slug)).toEqual([
+      "tagged-safe",
+    ]);
+
+    const omitted = await getRecentUpdates({}, mixedFilterOptions);
+    expect(omitted.count).toBe(2);
+    expect(omitted.tag).toBe("");
+    expect(omitted.query).toBe("");
+    expect(omitted.filters).toEqual({
+      hasSafetyNotes: "all",
+      hasPrivacyNotes: "all",
+      downloadTrust: "all",
+      claimStatus: "all",
+      sourceStatus: "all",
+    });
+  });
 });
 
 describe("registry-tool-orchestration getRelatedEntries", () => {

@@ -294,6 +294,44 @@ export const RecentUpdatesInputSchema = z
     platform: platform
       .optional()
       .describe("Filter to entries compatible with this platform."),
+    tag: z
+      .string()
+      .trim()
+      .min(1)
+      .max(80)
+      .optional()
+      .describe("Filter to entries carrying this exact tag."),
+    query: z
+      .string()
+      .trim()
+      .max(240)
+      .optional()
+      .describe("Keyword search to narrow the listing."),
+    hasSafetyNotes: trustBooleanFilter
+      .optional()
+      .describe(
+        "Filter by whether entries include safety notes ('true', 'false', or 'all').",
+      ),
+    hasPrivacyNotes: trustBooleanFilter
+      .optional()
+      .describe(
+        "Filter by whether entries include privacy notes ('true', 'false', or 'all').",
+      ),
+    downloadTrust: downloadTrustFilter
+      .optional()
+      .describe(
+        "Filter by package download trust level ('first-party', 'external', 'none', or 'all').",
+      ),
+    claimStatus: claimStatusFilter
+      .optional()
+      .describe(
+        "Filter by claim or verification status ('unclaimed', 'pending', 'verified', or 'all').",
+      ),
+    sourceStatus: sourceStatusFilter
+      .optional()
+      .describe(
+        "Filter by whether the entry's source URL is reachable ('available', 'missing', or 'all').",
+      ),
     since: z
       .string()
       .trim()

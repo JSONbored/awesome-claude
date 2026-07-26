@@ -508,10 +508,27 @@ describe("RecentUpdatesInputSchema", () => {
     });
   });
 
+  it("accepts tag, query, and trust filters like registry.search/list", () => {
+    expectParseSuccess(RecentUpdatesInputSchema, {
+      category: VALID_CATEGORY,
+      platform: "claude-code",
+      tag: "postgres",
+      query: "connector",
+      hasSafetyNotes: "true",
+      hasPrivacyNotes: "all",
+      downloadTrust: "first-party",
+      claimStatus: "verified",
+      sourceStatus: "available",
+      since: "2026-05-01",
+      limit: 10,
+    });
+  });
+
   it.each([
     ["since too short", { since: "202" }],
     ["since over 40 chars", { since: "s".repeat(41) }],
     ["limit below 1", { limit: 0 }],
+    ["unknown param", { category: VALID_CATEGORY, unexpected: true }],
   ])("rejects %s", (_label, value) => {
     expectParseFailure(RecentUpdatesInputSchema, value);
   });

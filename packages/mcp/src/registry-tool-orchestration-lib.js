@@ -375,6 +375,9 @@ export async function getRecentUpdates(args = {}, options = {}) {
   }
   const limit = normalizeLimit(args.limit, 10);
   const platform = normalizePlatform(args.platform);
+  const tag = normalizeText(args.tag);
+  const query = normalizeText(args.query);
+  const trustFilters = parsedTrustArgs(args);
   const searchIndex = unwrapEntries(
     await readJsonArtifact("search-index.json", options),
   );
@@ -382,6 +385,9 @@ export async function getRecentUpdates(args = {}, options = {}) {
     searchIndex
       .filter((entry) => !category || entry.category === category)
       .filter((entry) => entryMatchesPlatform(entry, platform))
+      .filter((entry) => entryMatchesTag(entry, tag))
+      .filter((entry) => entryMatchesQuery(entry, query))
+      .filter((entry) => entryMatchesTrustFilters(entry, trustFilters))
       .filter((entry) => !since || entryUpdatedAt(entry) >= since),
     entryUpdatedAt,
   );
@@ -391,7 +397,15 @@ export async function getRecentUpdates(args = {}, options = {}) {
     entryUpdatedAt,
   );
 
-  return buildRecentUpdatesResponse({ category, platform, since, entries });
+  return buildRecentUpdatesResponse({
+    category,
+    platform,
+    tag,
+    query: args.query,
+    trustFilters,
+    since,
+    entries,
+  });
 }
 
 export async function getRelatedEntries(args = {}, options = {}) {

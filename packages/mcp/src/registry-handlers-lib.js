@@ -134,6 +134,9 @@ export function sortEntriesByUpdatedAt(entries, entryUpdatedAt) {
 export function buildRecentUpdatesResponse({
   category,
   platform,
+  tag,
+  query,
+  trustFilters,
   since,
   entries,
 }) {
@@ -141,6 +144,15 @@ export function buildRecentUpdatesResponse({
     ok: true,
     category: category || "",
     platform: platform || "",
+    tag: tag || "",
+    query: query || "",
+    filters: trustFilters || {
+      hasSafetyNotes: "all",
+      hasPrivacyNotes: "all",
+      downloadTrust: "all",
+      claimStatus: "all",
+      sourceStatus: "all",
+    },
     since,
     count: entries.length,
     entries,
