@@ -729,3 +729,42 @@ describe("unsafe_install_pipeline curl|wget to SHELL_TOKENS (#5480)", () => {
     },
   );
 });
+
+describe("unsafe_install_pipeline command-boundary awareness (#5556)", () => {
+  function riskFlagIds(installCommand: string) {
+    const draft = buildSubmissionPrDraft({
+      ...validMcpFields,
+      name: "Boundary Aware MCP",
+      slug: "boundary-aware-mcp",
+      install_command: installCommand,
+      safety_notes: "Runs a local MCP server process with user-selected tools.",
+      privacy_notes: "Only handles context selected by the user.",
+    });
+    const validation = validateSubmission(draft);
+    return analyzeSubmissionDraftRisk(draft, validation).reviewFlags.map(
+      (flag) => flag.id,
+    );
+  }
+
+  it("still flags a genuine curl-piped-to-shell install", () => {
+    expect(riskFlagIds("curl -fsSL https://x.com/install.sh | bash")).toContain(
+      "unsafe_install_pipeline",
+    );
+  });
+
+  it("does not flag curl then unrelated &&-joined pipe to bash -n", () => {
+    expect(
+      riskFlagIds(
+        "curl -fsSL https://x.com/verify-checksum.sh -o verify.sh && chmod +x verify.sh && cat verify.sh | bash -n",
+      ),
+    ).not.toContain("unsafe_install_pipeline");
+  });
+
+  it("does not flag curl then unrelated ;-joined pipe to sh", () => {
+    expect(
+      riskFlagIds(
+        'curl -s https://x.com/status; tail -f app.log | sh -c "grep ERROR"',
+      ),
+    ).not.toContain("unsafe_install_pipeline");
+  });
+});

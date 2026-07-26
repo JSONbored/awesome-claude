@@ -5,7 +5,7 @@ import {
   TOOLS_LISTING_FLOW_URL,
 } from "./submission-classification.js";
 import { parseSafeFrontmatter } from "./frontmatter.js";
-import { SHELL_TOKENS } from "./command-safety-lib.js";
+import { hasPipeToShellInstall } from "./command-safety-lib.js";
 import {
   isPublicGitHubProfileUrl,
   isPublicHttpUrl,
@@ -13,12 +13,8 @@ import {
   publicUrlHostname,
 } from "./source-url-lib.js";
 
-// Keep curl|wget → shell detection in sync with command-safety-lib's SHELL_TOKENS
-// (bash/zsh/sh/dash/ash) so macOS-default zsh pipes are not silently missed (#5480).
-const CURL_WGET_PIPE_TO_SHELL_PATTERN = new RegExp(
-  String.raw`\b(curl|wget)\b[\s\S]{0,120}\|[\s\S]{0,40}\b(sudo\s+)?(${SHELL_TOKENS.join("|")})\b`,
-  "i",
-);
+// Curl/wget → shell detection is command-boundary-aware via hasPipeToShellInstall
+// (#5556). The previous bounded-window regex false-positived across `;`/`&&`.
 
 // Anthropic (`sk-ant-…`) and OpenAI (`sk-proj-…`) insert a hyphenated segment after
 // `sk-`, which the old `sk-[a-z0-9]{20,}` alternative could never match (#5479).
@@ -1158,6 +1154,25 @@ function referencesDestructiveRootRemoval(value) {
   return false;
 }
 
+// True when a curl/wget invocation's own output is piped to a shell in the same
+// command segment. Uses hasPipeToShellInstall (pipeChainSegments) so `;`/`&&`/
+// `||`/`&` barriers reset downloader state and stop the #5556 false positives.
+// Scans line-by-line like scanDangerousShellPatterns. Also scans double-quoted
+// interiors because config/JSON snippets embed pipelines inside quotes, where
+// pipeChainSegments does not treat `|` as a pipe. `installText` is already
+// lowercased by addContentRiskSignals.
+function hasUnsafeCurlWgetPipeToShell(installText) {
+  for (const line of String(installText ?? "").split(/\r?\n/)) {
+    if (!line) continue;
+    if (hasPipeToShellInstall(line, line)) return true;
+    for (const match of line.matchAll(/"([^"]*)"/g)) {
+      const inner = match[1];
+      if (inner && hasPipeToShellInstall(inner, inner)) return true;
+    }
+  }
+  return false;
+}
+
 function addContentRiskSignals(report, fields, text) {
   const installText = lower(
     [
@@ -1261,7 +1276,7 @@ function addContentRiskSignals(report, fields, text) {
 
   if (
     referencesDestructiveRootRemoval(installText) ||
-    CURL_WGET_PIPE_TO_SHELL_PATTERN.test(installText) ||
+    hasUnsafeCurlWgetPipeToShell(installText) ||
     /\b(invoke-expression|iex)\b/i.test(installText) ||
     /\bbase64\s+(-d|--decode)\b[\s\S]{0,80}\|[\s\S]{0,40}\b(sh|bash)\b/i.test(
       installText,
