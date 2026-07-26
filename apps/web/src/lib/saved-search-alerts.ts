@@ -18,5 +18,7 @@ export {
   activeInAppSavedSearches,
   savedSearchQueryMatchesEntry,
   savedSearchMatchesEntry,
+  removedEntryFromEvent,
+  removalEventSupportsSearchFilters,
   buildSavedSearchAlerts,
 } from "@/lib/saved-search-alerts-lib";

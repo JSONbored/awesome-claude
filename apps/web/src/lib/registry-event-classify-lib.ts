@@ -28,6 +28,11 @@ export type RegistryEventAction = RegistryEvent["action"];
  * 2. A `content/changelog…` path that did not match rule 1, or any path ending
  *    in `registry-changelog.json` → `changelog`.
  * 3. Any remaining path containing `validators` → `validator`.
+ *
+ * Entry events from this classifier are path-only: they do not carry
+ * trust/source/platforms. Saved-search removal matching therefore cannot
+ * satisfy filters on those dimensions unless a different producer enriches
+ * the event (see `removalEventSupportsSearchFilters`).
  */
 export function classifyRegistryPath(
   path: string,

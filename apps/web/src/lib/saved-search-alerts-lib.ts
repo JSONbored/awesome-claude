@@ -59,6 +59,16 @@ export interface SavedSearchAlertEvent {
   action?: string;
   date?: string;
   title?: string;
+  /**
+   * Optional match fields for removal fallbacks. The GitHub webhook path
+   * classifier (`classifyRegistryPath`) only emits category/slug/action/date
+   * today, so these are usually absent on real removal events. When a producer
+   * does supply them, trust/source/platform-filtered saved searches can match
+   * removals the same way category/query searches already do.
+   */
+  trust?: string;
+  source?: string;
+  platforms?: Array<Platform | string>;
 }
 
 export type SavedSearchAlertSeverity = "info" | "warning" | "blocker";
@@ -173,6 +183,44 @@ function eventAction(event: SavedSearchAlertEvent) {
   return event.action === "removed" ? "removed" : event.action === "added" ? "added" : "updated";
 }
 
+/**
+ * Build the synthetic entry used when a removed event has no live detail JSON.
+ * Carries category/slug/title (always present on entry events) plus any
+ * trust/source/platforms the event producer attached.
+ */
+export function removedEntryFromEvent(event: SavedSearchAlertEvent): SavedSearchAlertEntry {
+  const platforms = (event.platforms ?? [])
+    .map((platform) => String(platform || "").trim())
+    .filter(Boolean);
+  const trust = String(event.trust || "").trim();
+  const source = String(event.source || "").trim();
+  return {
+    category: event.category ?? "",
+    slug: event.slug ?? "",
+    title: event.title ?? "",
+    ...(trust ? { trust } : {}),
+    ...(source ? { source } : {}),
+    ...(platforms.length ? { platforms } : {}),
+  };
+}
+
+/**
+ * Whether a removal synthetic entry can satisfy a search's trust/source/platform
+ * filters. Category/query-only searches always can; filtered searches require
+ * the event to actually carry the matching field(s). Without this gate,
+ * `savedSearchMatchesEntry` would silently reject (entry field undefined ≠
+ * filter), contradicting the "match against carried fields" comment.
+ */
+export function removalEventSupportsSearchFilters(
+  search: SavedSearchAlertSearch,
+  entry: SavedSearchAlertEntry,
+): boolean {
+  if (search.trust && (entry.trust == null || entry.trust === "")) return false;
+  if (search.source && (entry.source == null || entry.source === "")) return false;
+  if (search.platform && !(entry.platforms ?? []).length) return false;
+  return true;
+}
+
 export function buildSavedSearchAlerts(
   searches: SavedSearchAlertSearch[],
   events: SavedSearchAlertEvent[],
@@ -189,22 +237,24 @@ export function buildSavedSearchAlerts(
     const action = eventAction(event);
     // A removed entry's detail JSON is gone, so `entriesByRef` never has it.
     // Match "removed" events against the event's own carried fields instead of
-    // requiring a live fetch, so a matching saved search can still surface the
-    // removal. Added/updated events keep needing the live entry (their payload
-    // doesn't carry the fields matching relies on).
+    // requiring a live fetch:
+    // - category / slug / title are always available from the path classifier
+    //   and power category- + query-only saved searches (unchanged).
+    // - trust / source / platforms are NOT emitted by `classifyRegistryPath` /
+    //   the GitHub webhook today (path-only push payload). Searches that filter
+    //   on those dimensions are explicitly skipped for synthetic removals unless
+    //   a producer enriched the event — see `removalEventSupportsSearchFilters`.
+    // Added/updated events keep needing the live entry.
     const liveEntry = entriesByRef.get(ref);
+    const usingRemovalFallback = action === "removed" && !liveEntry;
     const entry: SavedSearchAlertEntry | null =
-      liveEntry ??
-      (action === "removed"
-        ? {
-            category: event.category ?? "",
-            slug: event.slug ?? "",
-            title: event.title ?? "",
-          }
-        : null);
+      liveEntry ?? (action === "removed" ? removedEntryFromEvent(event) : null);
     if (!entry) continue;
 
     for (const search of activeSearches) {
+      if (usingRemovalFallback && !removalEventSupportsSearchFilters(search, entry)) {
+        continue;
+      }
       if (!savedSearchMatchesEntry(search, entry)) continue;
       const title = event.title || entry.title;
       alerts.push({

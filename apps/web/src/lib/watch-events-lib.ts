@@ -11,6 +11,10 @@ export interface RegistryEvent {
   date?: string;
   title?: string;
   commit?: string;
+  /** Optional; see saved-search removal matching. Not set by path classifier. */
+  trust?: string;
+  source?: string;
+  platforms?: string[];
 }
 
 /** Stable watch-target id for an entry event, or null for non-entry events. */
