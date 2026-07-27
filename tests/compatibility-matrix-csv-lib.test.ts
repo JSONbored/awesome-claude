@@ -56,6 +56,19 @@ describe("buildCompatibilityCsv", () => {
     expect(dataLine).toBe('"MCP, ""stdio""","one, two",Manual,Unsupported');
   });
 
+  it("escapes commas and quotes in client-label header cells (#5554)", () => {
+    // Before: Capability,Detail,Foo, Inc.,Desktop  (three columns mis-parsed as four)
+    // After:  Capability,Detail,"Foo, Inc.",Desktop
+    const awkwardClients: MatrixClient[] = [
+      { id: "x", label: "Foo, Inc." },
+      { id: "desktop", label: 'Desk"top' },
+    ];
+    const csv = buildCompatibilityCsv(awkwardClients, [], label);
+    expect(csv.split("\n")[0]).toBe(
+      'Capability,Detail,"Foo, Inc.","Desk""top"',
+    );
+  });
+
   it("emits one line per row and always ends with a trailing newline", () => {
     const rows: MatrixRow[] = [
       {
