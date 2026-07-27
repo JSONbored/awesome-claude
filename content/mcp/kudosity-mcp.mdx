@@ -1,0 +1,165 @@
+---
+title: Kudosity MCP Server for Claude
+slug: kudosity-mcp
+category: mcp
+description: >-
+  Send SMS, MMS and WhatsApp messages from Claude with the official Kudosity Model Context
+  Protocol server — plus delivery reports, inbound replies, contact and contact-list management,
+  webhook configuration, account balance, and runtime discovery of the live Kudosity API.
+cardDescription: "Official Kudosity MCP: send SMS, MMS & WhatsApp, manage contacts and webhooks from Claude."
+seoTitle: "Kudosity MCP Server for Claude — Send SMS, MMS & WhatsApp with Delivery Reports via MCP"
+seoDescription: "Connect Claude to Kudosity with the official MCP server: send SMS, MMS and WhatsApp messages, pull delivery reports and replies, manage contacts and contact lists, configure webhooks, and check account balance. 19 tools, MIT licensed, published to the official MCP registry."
+author: Kudosity
+authorProfileUrl: "https://github.com/kudosity"
+dateAdded: "2026-07-27"
+submittedBy: t--becker
+submittedByUrl: https://github.com/t--becker
+documentationUrl: "https://developers.kudosity.com/"
+websiteUrl: "https://kudosity.com"
+repoUrl: "https://github.com/kudosity/mcp"
+brandName: Kudosity
+brandDomain: kudosity.com
+retrievalSources:
+  - "https://raw.githubusercontent.com/kudosity/mcp/main/README.md"
+  - "https://developers.kudosity.com/"
+  - "https://registry.modelcontextprotocol.io/v0/servers?search=com.kudosity/mcp"
+installable: true
+installCommand: "claude mcp add kudosity --env KUDOSITY_API_KEY=YOUR_API_KEY -- npx -y kudosity-mcp"
+usageSnippet: >-
+  Ask Claude to text a customer that their order has shipped, check whether a message was
+  delivered, list replies received in the last day, add a number to a contact list, register a
+  webhook for delivery receipts, or check the account balance.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "kudosity": {
+        "command": "npx",
+        "args": ["-y", "kudosity-mcp"],
+        "env": {
+          "KUDOSITY_API_KEY": "YOUR_API_KEY"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "kudosity": {
+        "command": "npx",
+        "args": ["-y", "kudosity-mcp"],
+        "env": {
+          "KUDOSITY_API_KEY": "YOUR_API_KEY",
+          "KUDOSITY_API_SECRET": "YOUR_API_SECRET"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A Kudosity account with an API key (Settings → API Settings in the Kudosity platform)."
+  - "The API secret from the same page, if you want the contact-list and account-balance tools."
+  - "Node.js 18+ with `npx` available."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "`send_sms`, `send_mms` and `send_whatsapp` deliver real messages to real phone numbers and bill the connected Kudosity account — these are irreversible once sent."
+  - "`delete_list`, `delete_webhook` and `remove_contact_from_list` permanently modify account data."
+  - "Runs locally as a stdio process via npx. No filesystem, shell or child-process access and no background workers — the source imports no `fs`, `path`, `os` or `child_process` module."
+  - "Network access is outbound HTTPS only, to Kudosity's API hosts (`api.transmitsms.com`, `api.transmitmessage.com` — legacy domains from the Burst SMS era) and `developers.kudosity.com` for public API specifications."
+privacyNotes:
+  - "Reads `KUDOSITY_API_KEY` and optional `KUDOSITY_API_SECRET` from environment variables. Neither is written to disk or passed to a log call."
+  - "Message content, recipient phone numbers, and contact records (names, numbers, custom fields) pass through the tools to the Kudosity API — this is customer personal data."
+  - "No telemetry, no analytics, no local file access, and no third-party network calls beyond the Kudosity hosts above."
+  - "The server is a stateless passthrough and retains nothing itself; data retention is governed by your Kudosity account."
+disclosure: "Kudosity is a commercial Australian messaging provider (formerly Burst SMS). The MCP server is open source under MIT and officially maintained by Kudosity."
+tags:
+  - kudosity
+  - sms
+  - mms
+  - whatsapp
+  - messaging
+  - notifications
+  - ai-agents
+  - automation
+keywords:
+  - kudosity mcp server
+  - kudosity mcp claude
+  - send sms from claude
+  - sms mcp server claude code
+  - whatsapp mcp claude
+  - australian sms api mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Kudosity MCP Server** is the official Model Context Protocol server from
+[Kudosity](https://kudosity.com), an Australian messaging provider (formerly Burst SMS). It gives
+Claude native tools for sending SMS, MMS and WhatsApp messages, tracking what happened to them,
+and managing the contacts and webhooks around them — so an agent calls `send_sms` rather than
+hand-building an HTTP request.
+
+It is published to the [official MCP registry](https://registry.modelcontextprotocol.io/v0/servers?search=com.kudosity/mcp)
+as `com.kudosity/mcp` with DNS-verified domain ownership, and licensed under MIT.
+
+## Key capabilities
+
+- **Messaging** — send SMS, MMS and WhatsApp (free-form or approved template), then retrieve any
+  message and its status.
+- **Delivery reports and replies** — list messages filtered by status, direction, recipient or
+  date range, so the agent can answer "did that arrive?" and "did they reply?".
+- **Contacts and lists** — create and delete contact lists, add and remove contacts, and read
+  list membership.
+- **Webhooks** — register an HTTPS endpoint for delivery status, inbound messages, link hits or
+  opt-outs; list and delete existing ones.
+- **Account** — check the current balance before sending a batch.
+- **Live API discovery** — four tools read Kudosity's current OpenAPI specifications at runtime,
+  so the agent can research any endpoint the named tools don't cover and never drifts from the
+  published docs.
+
+## Tools (19)
+
+| Category | Tools |
+|---|---|
+| Messaging | `send_sms`, `send_mms`, `send_whatsapp`, `get_message`, `list_messages` |
+| Webhooks | `create_webhook`, `list_webhooks`, `delete_webhook` |
+| Contacts & lists | `create_list`, `get_lists`, `get_list`, `add_contact_to_list`, `remove_contact_from_list`, `delete_list` |
+| Account | `get_balance` |
+| API discovery | `list_specs`, `list_endpoints`, `search_endpoints`, `get_endpoint` |
+
+The contact-list and balance tools additionally require `KUDOSITY_API_SECRET`; messaging,
+webhook and discovery tools need only the API key.
+
+## Installation
+
+```bash
+claude mcp add kudosity --env KUDOSITY_API_KEY=YOUR_API_KEY -- npx -y kudosity-mcp
+```
+
+Or add it to your MCP client config directly:
+
+```json
+{
+  "mcpServers": {
+    "kudosity": {
+      "command": "npx",
+      "args": ["-y", "kudosity-mcp"],
+      "env": {
+        "KUDOSITY_API_KEY": "YOUR_API_KEY"
+      }
+    }
+  }
+}
+```
+
+Both credentials come from **Settings → API Settings** in the Kudosity platform.
+
+## Example prompts
+
+- "Text +61400000000 that their order has shipped."
+- "Did that message get delivered?"
+- "Show me any replies from the last 24 hours."
+- "Add +61400000000 to my VIP list."
+- "Send delivery receipts to https://example.com/hook."
+- "What's my Kudosity balance?"
