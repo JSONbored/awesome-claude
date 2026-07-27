@@ -291,6 +291,80 @@ describe("submission risk invariants", () => {
     );
   });
 
+  it("requires safetyNotes when malware_or_abuse_surface is raised (#5559)", () => {
+    const missingNotes = analyzeDirectContentRisk({
+      pullRequest: {
+        number: 5559,
+        title: "content(mcp): add ransomware sandbox mcp",
+        user: { login: "contributor" },
+        head: { repo: { full_name: "contributor/awesome-claude" } },
+        base: { repo: { full_name: "JSONbored/awesome-claude" } },
+      },
+      files: [
+        sourceFile(
+          validMcpMdx({
+            title: "Ransomware Sandbox MCP",
+            slug: "ransomware-sandbox-mcp",
+            description:
+              "Sandbox MCP for inspecting ransomware and trojan samples offline.",
+            safetyNotes: [],
+            privacyNotes: ["Only handles analyst-selected sample files."],
+          }),
+          "content/mcp/ransomware-sandbox-mcp.mdx",
+        ),
+      ],
+    });
+    const withNotes = analyzeDirectContentRisk({
+      pullRequest: {
+        number: 5560,
+        title: "content(mcp): add ransomware sandbox mcp with notes",
+        user: { login: "contributor" },
+        head: { repo: { full_name: "contributor/awesome-claude" } },
+        base: { repo: { full_name: "JSONbored/awesome-claude" } },
+      },
+      files: [
+        sourceFile(
+          validMcpMdx({
+            title: "Ransomware Sandbox MCP",
+            slug: "ransomware-sandbox-mcp",
+            description:
+              "Sandbox MCP for inspecting ransomware and trojan samples offline.",
+            safetyNotes: [
+              "Runs offline sample inspection only; no live detonation or network spread.",
+            ],
+            privacyNotes: ["Only handles analyst-selected sample files."],
+          }),
+          "content/mcp/ransomware-sandbox-mcp.mdx",
+        ),
+      ],
+    });
+
+    expect(missingNotes.reviewFlags.map((flag) => flag.id)).toContain(
+      "malware_or_abuse_surface",
+    );
+    expect(missingNotes.reviewFlags.map((flag) => flag.id)).not.toContain(
+      "malicious_data_theft_capability",
+    );
+    expect(
+      missingNotes.classificationWarnings.map((warning) => warning.id),
+    ).toContain("missing_safety_notes");
+    expect(
+      missingNotes.classificationWarnings.map((warning) => warning.id),
+    ).not.toContain("missing_privacy_notes");
+    expect(
+      missingNotes.classificationWarnings.find(
+        (warning) => warning.id === "missing_safety_notes",
+      )?.detail,
+    ).toContain("malware_or_abuse_surface");
+
+    expect(withNotes.reviewFlags.map((flag) => flag.id)).toContain(
+      "malware_or_abuse_surface",
+    );
+    expect(
+      withNotes.classificationWarnings.map((warning) => warning.id),
+    ).not.toContain("missing_safety_notes");
+  });
+
   it("keeps identity attestation risk matching narrow and synchronized with CI", () => {
     const sensitiveReport = analyzeDirectContentRisk({
       pullRequest: {

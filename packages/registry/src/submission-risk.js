@@ -52,6 +52,11 @@ const SAFETY_NOTE_REQUIRED_FLAGS = new Set([
   "community_archive_download",
   "community_local_download_request",
   "background_worker_or_daemon",
+  // High-severity malware/abuse tooling vocabulary (#5559). Safety notes fit
+  // better than privacy notes: this flag is about dangerous tooling surface /
+  // security review, not credential or personal-data access. Sibling
+  // `malicious_data_theft_capability` stays in PRIVACY_NOTE_REQUIRED_FLAGS.
+  "malware_or_abuse_surface",
 ]);
 
 const PRIVACY_NOTE_REQUIRED_FLAGS = new Set([
