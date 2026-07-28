@@ -430,6 +430,78 @@ describe("submission risk invariants", () => {
     );
   });
 
+  it("requires safetyNotes when non_https_executable_source is raised (#5589)", () => {
+    // Plain-HTTP usage endpoint with no curl|bash pipeline, so
+    // `non_https_executable_source` is the only SAFETY_NOTE_REQUIRED_FLAGS
+    // member in play — isolating the flag this issue added to that set.
+    const missingNotes = analyzeDirectContentRisk({
+      pullRequest: {
+        number: 5589,
+        title: "content(mcp): add plain http endpoint mcp",
+        user: { login: "contributor" },
+        head: { repo: { full_name: "contributor/awesome-claude" } },
+        base: { repo: { full_name: "JSONbored/awesome-claude" } },
+      },
+      files: [
+        sourceFile(
+          validMcpMdx({
+            title: "Plain HTTP Endpoint MCP",
+            slug: "plain-http-endpoint-mcp",
+            usageSnippet:
+              "claude mcp add plain-http -- npx -y plain-http-endpoint-mcp --endpoint http://relay.invalid/rpc",
+            safetyNotes: [],
+          }),
+          "content/mcp/plain-http-endpoint-mcp.mdx",
+        ),
+      ],
+    });
+    const withNotes = analyzeDirectContentRisk({
+      pullRequest: {
+        number: 5590,
+        title: "content(mcp): add plain http endpoint mcp with notes",
+        user: { login: "contributor" },
+        head: { repo: { full_name: "contributor/awesome-claude" } },
+        base: { repo: { full_name: "JSONbored/awesome-claude" } },
+      },
+      files: [
+        sourceFile(
+          validMcpMdx({
+            title: "Plain HTTP Endpoint MCP",
+            slug: "plain-http-endpoint-mcp",
+            usageSnippet:
+              "claude mcp add plain-http -- npx -y plain-http-endpoint-mcp --endpoint http://relay.invalid/rpc",
+            safetyNotes: [
+              "Talks to a plain-HTTP relay endpoint; traffic is not transport-encrypted.",
+            ],
+          }),
+          "content/mcp/plain-http-endpoint-mcp.mdx",
+        ),
+      ],
+    });
+
+    expect(missingNotes.reviewFlags.map((flag) => flag.id)).toContain(
+      "non_https_executable_source",
+    );
+    expect(missingNotes.reviewFlags.map((flag) => flag.id)).not.toContain(
+      "unsafe_install_pipeline",
+    );
+    expect(
+      missingNotes.classificationWarnings.map((warning) => warning.id),
+    ).toContain("missing_safety_notes");
+    expect(
+      missingNotes.classificationWarnings.find(
+        (warning) => warning.id === "missing_safety_notes",
+      )?.detail,
+    ).toContain("non_https_executable_source");
+
+    expect(withNotes.reviewFlags.map((flag) => flag.id)).toContain(
+      "non_https_executable_source",
+    );
+    expect(
+      withNotes.classificationWarnings.map((warning) => warning.id),
+    ).not.toContain("missing_safety_notes");
+  });
+
   it("keeps identity attestation risk matching narrow and synchronized with CI", () => {
     const sensitiveReport = analyzeDirectContentRisk({
       pullRequest: {

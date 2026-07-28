@@ -51,6 +51,12 @@ const HEYCLAUDE_HOSTNAME = "heyclau.de";
 const SAFETY_NOTE_REQUIRED_FLAGS = new Set([
   "unsafe_install_pipeline",
   "mutable_script_install_source",
+  // Critical-severity sibling of the two flags above in the
+  // `unsafe_install_or_secret` capability bucket (#5589). Executing or fetching
+  // install/usage content over plain HTTP is an execution-surface risk, so it
+  // belongs here rather than in PRIVACY_NOTE_REQUIRED_FLAGS with the bucket's
+  // credential-shaped member `embedded_secret`.
+  "non_https_executable_source",
   "financial_or_identity_sensitive",
   "external_write_capability",
   "destructive_actions",
