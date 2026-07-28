@@ -32,6 +32,7 @@ import {
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { breadcrumbListJsonLd } from "@/lib/breadcrumb-jsonld-lib";
 import { categoryItemListJsonLd } from "@/lib/category-itemlist-jsonld-lib";
+import { faqPageJsonLd } from "@/lib/faq-page-jsonld-lib";
 import { absoluteUrl } from "@/lib/seo";
 import { ogImageUrl, categoryAccent } from "@/lib/og-image";
 import { ogImageMetaTags } from "@/lib/og-meta-lib";
@@ -71,6 +72,9 @@ export const Route = createFileRoute("/$category")({
       { name: "Directory", item: absoluteUrl("/browse") },
       { name: label, item: url },
     ]);
+    // Same faqFor(id, label) data the component renders below, so the schema
+    // and the visible <dl> can never disagree.
+    const faqPage = faqPageJsonLd(faqFor(id, label));
 
     return {
       meta: [
@@ -93,6 +97,7 @@ export const Route = createFileRoute("/$category")({
       scripts: [
         { type: "application/ld+json", children: stringifyJsonLd(itemList) },
         { type: "application/ld+json", children: stringifyJsonLd(breadcrumbs) },
+        { type: "application/ld+json", children: stringifyJsonLd(faqPage) },
       ],
     };
   },
