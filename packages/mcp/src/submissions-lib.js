@@ -834,11 +834,20 @@ function normalizeSubmissionUrlForMatch(value) {
 // `llmsUrl`/`apiUrl` stay in the list because a submitter who pastes the
 // HeyClaude canonical URL of an existing entry is still describing the same
 // resource and should be flagged as a duplicate.
+//
+// `docsUrl` and `sourceUrl` are separate top-level fields, not aliases folded
+// into `documentationUrl`/`repoUrl` (`content-builder-lib.js` sets each one
+// straight from frontmatter), so they have to be read explicitly (#5590).
+// Without them `collectSubmissionCandidateUrls` accepted a submitter's
+// `docsUrl` that this side never compared against, and the sibling
+// trust/source-status list `ENTRY_SOURCE_URL_FIELDS` already reads both.
 function collectEntrySourceUrls(entry) {
   const candidates = [
     entry.documentationUrl,
+    entry.docsUrl,
     entry.repoUrl,
     entry.githubUrl,
+    entry.sourceUrl,
     entry.websiteUrl,
     entry.downloadUrl,
     entry.url,

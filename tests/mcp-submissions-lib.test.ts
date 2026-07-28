@@ -368,6 +368,62 @@ describe("submissions-lib duplicate review", () => {
     expect(duplicates.matches[0].reasons).toContain("source_url");
   });
 
+  // Regression (#5590): `collectSubmissionCandidateUrls` accepts a submitter's
+  // `docsUrl`/`sourceUrl`, but `collectEntrySourceUrls` never read either field
+  // off the indexed entry, so these matches were silently missed. Both fixtures
+  // clear `documentationUrl`/`repoUrl` and vary the slug/title so the only path
+  // to a match is the field under test.
+  it("flags a duplicate matching only the indexed entry's docsUrl (#5590)", () => {
+    const entry = indexedEntry({
+      slug: "airtable-connector",
+      title: "Airtable Connector",
+      documentationUrl: undefined,
+      repoUrl: undefined,
+      docsUrl: "https://airtable-mcp.example.com/docs",
+    });
+    const duplicates = searchDuplicateEntries([entry], {
+      docsUrl: "https://airtable-mcp.example.com/docs",
+    });
+    expect(duplicates.count).toBe(1);
+    expect(duplicates.matches[0].reasons).toContain("source_url");
+  });
+
+  it("flags a duplicate matching only the indexed entry's sourceUrl (#5590)", () => {
+    const entry = indexedEntry({
+      slug: "airtable-connector",
+      title: "Airtable Connector",
+      documentationUrl: undefined,
+      repoUrl: undefined,
+      sourceUrl: "https://airtable-mcp.example.com/source",
+    });
+    const duplicates = searchDuplicateEntries([entry], {
+      sourceUrl: "https://airtable-mcp.example.com/source",
+    });
+    expect(duplicates.count).toBe(1);
+    expect(duplicates.matches[0].reasons).toContain("source_url");
+  });
+
+  it("does not flag unrelated docsUrl or sourceUrl values (#5590)", () => {
+    const entry = indexedEntry({
+      slug: "airtable-connector",
+      title: "Airtable Connector",
+      documentationUrl: undefined,
+      repoUrl: undefined,
+      docsUrl: "https://airtable-mcp.example.com/docs",
+      sourceUrl: "https://airtable-mcp.example.com/source",
+    });
+    expect(
+      searchDuplicateEntries([entry], {
+        docsUrl: "https://unrelated.example.com/docs",
+      }).count,
+    ).toBe(0);
+    expect(
+      searchDuplicateEntries([entry], {
+        sourceUrl: "https://unrelated.example.com/source",
+      }).count,
+    ).toBe(0);
+  });
+
   it("matches slug and title duplicates within a category", () => {
     expect(
       searchDuplicateEntries([indexedEntry()], {
