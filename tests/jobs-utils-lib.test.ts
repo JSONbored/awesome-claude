@@ -196,6 +196,12 @@ describe("compensationSortValue", () => {
     );
   });
 
+  it('scales "M" and "million" shorthand, including decimal amounts', () => {
+    expect(compensationSortValue("$1M")).toBe(1_000_000);
+    expect(compensationSortValue("$1.2M")).toBe(1_200_000);
+    expect(compensationSortValue("1.2 million")).toBe(1_200_000);
+  });
+
   it("handles uppercase K, unprefixed amounts, and full-dollar figures", () => {
     expect(compensationSortValue("$95K")).toBe(95_000);
     expect(compensationSortValue("180k")).toBe(180_000);
