@@ -64,7 +64,7 @@ function hasPrivacyNotes(entry: Pick<Entry, "privacyNotes" | "privacyNotesList">
 }
 
 export function resolveDetailReadinessItems(
-  entry: Pick<Entry, "trust" | "source" | "safetyNotes" | "reviewed">,
+  entry: Pick<Entry, "trust" | "source" | "safetyNotes" | "safetyNotesList" | "reviewed">,
 ): DetailReadinessItem[] {
   return [
     {
@@ -82,8 +82,9 @@ export function resolveDetailReadinessItems(
     {
       id: "safety",
       label: "Safety notes",
-      value: entry.safetyNotes ? "Present" : "Missing",
-      ok: Boolean(entry.safetyNotes),
+      // Use hasSafetyNotes so safetyNotesList counts the same as scalar safetyNotes (#5596).
+      value: hasSafetyNotes(entry) ? "Present" : "Missing",
+      ok: hasSafetyNotes(entry),
     },
     {
       id: "reviewed",

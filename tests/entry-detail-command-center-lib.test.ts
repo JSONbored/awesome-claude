@@ -40,6 +40,20 @@ describe("entry detail command center lib", () => {
     ]);
   });
 
+  it("treats safetyNotesList-only as Present in readiness (#5596)", () => {
+    // Before: ok:false / Missing because resolveDetailReadinessItems ignored the list field.
+    // After: uses hasSafetyNotes — list-only counts as Present.
+    const items = resolveDetailReadinessItems(
+      entry({ trust: "trusted", reviewed: true, safetyNotesList: ["Runs shell commands."] }),
+    );
+    expect(items.find((item) => item.id === "safety")).toEqual({
+      id: "safety",
+      label: "Safety notes",
+      value: "Present",
+      ok: true,
+    });
+  });
+
   it("orders quick links with docs and source before registry helpers", () => {
     const links = resolveDetailQuickLinks(
       entry({
