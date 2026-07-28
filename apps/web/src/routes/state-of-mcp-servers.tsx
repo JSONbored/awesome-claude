@@ -123,9 +123,8 @@ const TRUST_DIST: DistRow[] = withTrustDrilldown(
 );
 
 const SOURCE_ORDER: SourceStatus[] = ["first-party", "source-backed", "external", "unverified"];
-const SOURCE_BACKED = MCP.filter(
-  (e) => e.source === "source-backed" || e.source === "first-party",
-).length;
+// Match index.tsx / QUALITY_STATS: "Source-backed" means anything not unverified (#5579).
+const SOURCE_BACKED = MCP.filter((e) => e.source !== "unverified").length;
 const SOURCE_DIST: DistRow[] = withSourceDrilldown(
   SOURCE_ORDER.map((status) => {
     const count = MCP.filter((e) => e.source === status).length;
