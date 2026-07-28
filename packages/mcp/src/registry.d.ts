@@ -41,6 +41,11 @@ export function planWorkflowToolbox(
   options?: RegistryArtifactLoaders,
 ): Promise<RegistryToolResult>;
 
+export function recommendForTask(
+  args?: Record<string, unknown>,
+  options?: RegistryArtifactLoaders,
+): Promise<RegistryToolResult>;
+
 export function getServerInfo(
   args?: Record<string, unknown>,
   options?: RegistryArtifactLoaders,
