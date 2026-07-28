@@ -22,7 +22,7 @@ export function scoreEntry(e: Entry): QualityRow {
     recs.push("Add a verifiable source URL.");
   }
   if (
-    !e.safetyNotes &&
+    !(e.safetyNotes || e.safetyNotesList?.length) &&
     (e.category === "mcp" ||
       e.category === "hooks" ||
       e.category === "skills" ||
@@ -31,7 +31,10 @@ export function scoreEntry(e: Entry): QualityRow {
     score -= 20;
     recs.push("Add safety notes for this risk-bearing category.");
   }
-  if (!e.privacyNotes && (e.category === "mcp" || e.category === "skills")) {
+  if (
+    !(e.privacyNotes || e.privacyNotesList?.length) &&
+    (e.category === "mcp" || e.category === "skills")
+  ) {
     score -= 10;
     recs.push("Add privacy notes covering data flow.");
   }

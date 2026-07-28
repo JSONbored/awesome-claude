@@ -48,6 +48,38 @@ describe("scoreEntry", () => {
     expect(scoreEntry(entry({ category: "rules" })).score).toBe(100);
   });
 
+  it("accepts list-only safety notes without a deduction or recommendation", () => {
+    const row = scoreEntry(
+      entry({
+        category: "mcp",
+        safetyNotesList: ["Runs local commands"],
+        privacyNotes: ["Stays local"],
+        installCommand: "npx x",
+      }),
+    );
+
+    expect(row.score).toBe(100);
+    expect(row.recommendations).not.toContain(
+      "Add safety notes for this risk-bearing category.",
+    );
+  });
+
+  it("accepts list-only privacy notes without a deduction or recommendation", () => {
+    const row = scoreEntry(
+      entry({
+        category: "mcp",
+        safetyNotes: ["Runs local commands"],
+        privacyNotesList: ["Stays local"],
+        installCommand: "npx x",
+      }),
+    );
+
+    expect(row.score).toBe(100);
+    expect(row.recommendations).not.toContain(
+      "Add privacy notes covering data flow.",
+    );
+  });
+
   it("covers hooks (safety only) and commands (safety + install) categories", () => {
     expect(scoreEntry(entry({ category: "hooks" })).score).toBe(80); // -20 safety
     expect(scoreEntry(entry({ category: "commands" })).score).toBe(70); // -20 safety -10 install
