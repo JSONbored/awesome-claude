@@ -108,8 +108,14 @@ describe("registry-tool-orchestration explainEntryTrust", () => {
 });
 
 describe("registry-tool-orchestration reviewEntrySafety", () => {
-  it("defaults to an empty entry list", async () => {
-    expect((await reviewEntrySafety({}, artifactOptions)).ok).toBe(true);
+  // #5583: an absent/empty entry list used to yield a degenerate
+  // `{ ok: true, count: 0 }`. It now fails the 1-5 bounds check that
+  // `entry.safety`'s own schema and docs have always specified.
+  it("rejects an absent entry list", async () => {
+    expect(await reviewEntrySafety({}, artifactOptions)).toMatchObject({
+      ok: false,
+      error: { code: "invalid_request" },
+    });
   });
 
   it("reports a missing review target as not found", async () => {

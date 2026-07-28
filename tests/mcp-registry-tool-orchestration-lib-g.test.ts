@@ -352,15 +352,28 @@ describe("registry-tool-orchestration getRelatedEntries", () => {
 });
 
 describe("registry-tool-orchestration compareEntries", () => {
-  it("defaults to an empty entry list", async () => {
-    expect((await compareEntries({}, artifactOptions)).ok).toBe(true);
+  // #5583: an absent/empty entry list used to yield a degenerate
+  // `{ ok: true, count: 0 }`. It now fails the 2-5 bounds check that
+  // `entry.compare`'s own schema and docs have always specified.
+  it("rejects an absent entry list", async () => {
+    expect(await compareEntries({}, artifactOptions)).toMatchObject({
+      ok: false,
+      error: { code: "invalid_request" },
+    });
   });
 
   it("reports a missing compare target as not found", async () => {
     expect(
       (
         await compareEntries(
-          { entries: [{ category: "mcp", slug: "nope" }] },
+          {
+            // Two entries so the in-bounds path is reached and the assertion
+            // still exercises not_found rather than the count guard.
+            entries: [
+              { category: "mcp", slug: "nope" },
+              { category: "mcp", slug: "nope-two" },
+            ],
+          },
           artifactOptions,
         )
       ).error.code,

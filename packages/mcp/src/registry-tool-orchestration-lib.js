@@ -536,9 +536,15 @@ export async function getCopyableAsset(args = {}, options = {}) {
 }
 
 export async function compareEntries(args = {}, options = {}) {
+  const requested = Array.isArray(args.entries) ? args.entries : [];
+  // Schema validation already enforces 2-5 entries for the public tool path;
+  // this guard keeps the function safe for direct callers too.
+  if (requested.length < 2 || requested.length > 5) {
+    return invalid("Provide between 2 and 5 entries to compare.");
+  }
   const platform = normalizePlatform(args.platform);
   const entries = [];
-  for (const target of args.entries || []) {
+  for (const target of requested) {
     const category = normalizeText(target.category);
     const slug = normalizeText(target.slug);
     const entry = await readEntry(category, slug, options);
@@ -992,9 +998,15 @@ export async function explainEntryTrust(args = {}, options = {}) {
 }
 
 export async function reviewEntrySafety(args = {}, options = {}) {
+  const requested = Array.isArray(args.entries) ? args.entries : [];
+  // Schema validation already enforces 1-5 entries for the public tool path;
+  // this guard keeps the function safe for direct callers too.
+  if (requested.length < 1 || requested.length > 5) {
+    return invalid("Provide between 1 and 5 entries to review.");
+  }
   const platform = normalizePlatform(args.platform);
   const entries = [];
-  for (const target of args.entries || []) {
+  for (const target of requested) {
     const category = normalizeText(target.category);
     const slug = normalizeText(target.slug);
     const entry = await readEntry(category, slug, options);
