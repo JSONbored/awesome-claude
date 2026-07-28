@@ -10,6 +10,7 @@ import {
   briefIssueHubDestination,
 } from "@/lib/brief-entry-cta-events";
 import { parseBriefNumber } from "@/lib/brief-number-parse-lib";
+import { breadcrumbScript } from "@/lib/seo-jsonld";
 import { absoluteUrl } from "@/lib/seo";
 
 const loadBriefIssue = createServerFn({ method: "GET" })
@@ -57,6 +58,12 @@ export const Route = createFileRoute("/brief/$number")({
         { property: "og:type", content: "article" },
       ],
       links: [{ rel: "canonical", href: url }],
+      scripts: [
+        breadcrumbScript([
+          { name: "Weekly Brief", path: "/brief" },
+          { name: `Issue #${loaderData.number}`, path: `/brief/${loaderData.number}` },
+        ]),
+      ],
     };
   },
   component: BriefIssuePage,
