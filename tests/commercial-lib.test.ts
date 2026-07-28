@@ -888,6 +888,26 @@ describe("summarizePlacementExpiry", () => {
     });
   });
 
+  it("treats a sub-day past expiry as expired instead of a renewal", () => {
+    const [summary] = summarizePlacementExpiry(
+      [
+        {
+          targetKind: "tool",
+          targetKey: "just-expired",
+          status: "active",
+          expiresAt: "2026-05-31T23:00:00.000Z",
+        },
+      ],
+      NOW,
+    );
+
+    expect(summary).toMatchObject({
+      expired: true,
+      needsRenewalReminder: false,
+    });
+    expect(Object.is(summary.daysUntilExpiry, -0)).toBe(true);
+  });
+
   it("accepts a string now and custom reminder window", () => {
     const [summary] = summarizePlacementExpiry(
       [

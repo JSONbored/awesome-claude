@@ -582,6 +582,10 @@ export function summarizePlacementExpiry(
           ? Math.ceil((expiryTime - nowTime) / 86_400_000)
           : null;
       const status = normalizeCommercialStatus(placement.status || "active");
+      const isExpired =
+        expiryTime !== null &&
+        Number.isFinite(expiryTime) &&
+        expiryTime <= nowTime;
 
       return {
         targetKind: placement.targetKind || placement.target_kind || "",
@@ -592,13 +596,11 @@ export function summarizePlacementExpiry(
         daysUntilExpiry,
         needsRenewalReminder:
           status === "active" &&
+          !isExpired &&
           daysUntilExpiry !== null &&
           daysUntilExpiry >= 0 &&
           daysUntilExpiry <= Math.ceil(windowMs / 86_400_000),
-        expired:
-          status === "active" &&
-          daysUntilExpiry !== null &&
-          daysUntilExpiry < 0,
+        expired: status === "active" && isExpired,
       };
     })
     .sort((left, right) => {
