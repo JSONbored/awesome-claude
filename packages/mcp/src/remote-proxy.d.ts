@@ -34,6 +34,8 @@ export function createRemoteMcpProxyServerFromClient(
   timeoutMs: number;
 }>;
 
+export function createTimeoutFetch(timeoutMs: number | string): typeof fetch;
+
 export function runRemoteStdioProxy(
   options?: RemoteProxyOptions,
 ): Promise<void>;
