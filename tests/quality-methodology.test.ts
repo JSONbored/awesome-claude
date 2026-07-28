@@ -49,6 +49,17 @@ describe("quality methodology page", () => {
     );
   });
 
+  it("associates each method disclosure toggle with its revealed detail", () => {
+    const methodSource = qualitySource.slice(
+      qualitySource.indexOf("function Method({"),
+      qualitySource.indexOf("function Stat({"),
+    );
+
+    expect(methodSource).toContain("const detailId = useId();");
+    expect(methodSource).toContain("aria-controls={detailId}");
+    expect(methodSource).toContain("<p id={detailId}");
+  });
+
   it("links entry trust and citation surfaces to the methodology anchors", () => {
     const trustDrilldownSource = readRepoFile(
       "apps/web/src/components/trust-drilldown.tsx",

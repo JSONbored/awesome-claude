@@ -10,7 +10,7 @@ import {
   ChevronDown,
   MessageSquareWarning,
 } from "lucide-react";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { CATEGORIES } from "@/types/registry";
 import { ENTRIES, QUALITY_STATS } from "@/data/entries";
 import { scoreEntry, type QualityRow } from "@/lib/quality-score-lib";
@@ -455,6 +455,7 @@ function Method({
   detail: string;
 }) {
   const [open, setOpen] = useState(false);
+  const detailId = useId();
   return (
     <button
       type="button"
@@ -468,6 +469,7 @@ function Method({
       }}
       className="w-full rounded-lg border border-border bg-surface p-3 text-left transition-colors duration-200 ease-out hover:bg-surface-2"
       aria-expanded={open}
+      aria-controls={detailId}
     >
       <div className="flex items-center justify-between gap-2">
         <span className="text-sm font-medium text-ink">{label}</span>
@@ -475,7 +477,11 @@ function Method({
           className={cn("h-4 w-4 text-ink-subtle transition-transform", open && "rotate-180")}
         />
       </div>
-      {open && <p className="mt-2 text-xs text-ink-muted">{detail}</p>}
+      {open && (
+        <p id={detailId} className="mt-2 text-xs text-ink-muted">
+          {detail}
+        </p>
+      )}
     </button>
   );
 }
