@@ -58,6 +58,25 @@ describe("resolveOgQueryFields", () => {
     ).toBe("Sub");
   });
 
+  // Regression for #5672: present-but-empty (and whitespace-only) description
+  // must fall through to subtitle / siteDescription the way title/eyebrow
+  // already fall through to HeyClaude (#5555).
+  it.each([
+    [{ description: "" }, "site", "site"],
+    [{ description: "   " }, "site", "site"],
+    [{ description: "", subtitle: "Sub" }, "site", "Sub"],
+    [{ description: "\t  ", subtitle: "Sub" }, "site", "Sub"],
+    [{ description: "", subtitle: "" }, "site", "site"],
+    [{ description: "", subtitle: "   " }, "site", "site"],
+  ] as const)(
+    "falls back empty/whitespace description %j through chain to %s",
+    (init, site, expected) => {
+      expect(resolveOgQueryFields(params(init), site).description).toBe(
+        expected,
+      );
+    },
+  );
+
   it("clamps whitespace and falls back to a safe accent for bad hex", () => {
     expect(
       resolveOgQueryFields(params({ title: "  a   b  " }), "s").title,

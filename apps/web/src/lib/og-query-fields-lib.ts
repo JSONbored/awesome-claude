@@ -22,9 +22,13 @@ export function resolveOgQueryFields(
 ): OgQueryFields {
   // `URLSearchParams.get` returns "" (not null) for present-but-empty params
   // like `?title=`; `??` would keep the blank. Trim so whitespace-only also
-  // falls back to the documented HeyClaude default (#5555).
+  // falls back to the documented HeyClaude default (#5555). Same empty-string
+  // bypass existed for description until #5672 — treat blank description /
+  // subtitle as absent so the chain description -> subtitle -> siteDescription
+  // still works.
   const title = clampOgText(params.get("title")?.trim() || "HeyClaude", OG_TEXT_LIMITS.title);
-  const rawDescription = params.get("description") ?? params.get("subtitle") ?? siteDescription;
+  const rawDescription =
+    params.get("description")?.trim() || params.get("subtitle")?.trim() || siteDescription;
   const description = clampOgText(rawDescription, OG_TEXT_LIMITS.description);
   const eyebrow = clampOgText(params.get("eyebrow")?.trim() || "HeyClaude", OG_TEXT_LIMITS.eyebrow);
   const accent = safeAccent(params.get("accent"));
