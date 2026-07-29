@@ -21,6 +21,7 @@ import {
   buildRss,
   categoryItems,
   changelogStreamItems,
+  EMPTY_FEED_LAST_BUILT,
   type FeedItem,
   latestPubDate,
   SITE_NAME,
@@ -130,7 +131,7 @@ async function healthFor(
     url,
     itemCount: items.length,
     latestItemAt: latest,
-    lastBuilt: latest ?? new Date(0).toISOString(),
+    lastBuilt: latest ?? EMPTY_FEED_LAST_BUILT,
     etag: await etagFor(body),
     isCurrent: isFeedCurrent(latest, Date.now()),
   };

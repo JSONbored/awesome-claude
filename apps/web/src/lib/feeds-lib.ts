@@ -53,11 +53,18 @@ export function rfc822(iso: string): string {
 }
 
 /**
+ * Shared fallback `lastBuildDate`/`lastBuilt` for an empty feed. One constant so
+ * the RSS/Atom body, `feedLastBuilt`, and the reported `FeedHealth.lastBuilt`
+ * all agree for a feed with no items (instead of independently hardcoded epochs).
+ */
+export const EMPTY_FEED_LAST_BUILT = "2025-01-01T00:00:00.000Z";
+
+/**
  * The newest `pubDate` across items, used as a deterministic build timestamp.
  * Falls back to a fixed epoch-ish date when the feed has no items so the body
  * (and therefore its ETag) stays stable.
  */
-export function latestPubDate(items: FeedItem[], fallback = "2025-01-01T00:00:00.000Z"): string {
+export function latestPubDate(items: FeedItem[], fallback = EMPTY_FEED_LAST_BUILT): string {
   if (items.length === 0) return fallback;
   return items.reduce((acc, i) => (i.pubDate > acc ? i.pubDate : acc), items[0].pubDate);
 }
