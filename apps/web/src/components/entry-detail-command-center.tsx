@@ -1,3 +1,4 @@
+import type { KeyboardEvent } from "react";
 import {
   ArrowUpRight,
   BookOpen,
@@ -154,6 +155,27 @@ export function EntryDetailCommandCenter({
     absoluteUrl(`/entry/${entry.category}/${entry.slug}`),
     siteConfig.githubUrl,
   );
+  const availableTabs = (["install", "config", "full"] as const).filter((id) =>
+    liveVariants.some((variant) => variant.id === id && variant.value),
+  );
+  const onTabKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (!availableTabs.length) return;
+    const index = availableTabs.indexOf(tab);
+    if (index === -1) return;
+    if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+      event.preventDefault();
+      onTabChange(availableTabs[(index + 1) % availableTabs.length]!);
+    } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+      event.preventDefault();
+      onTabChange(availableTabs[(index - 1 + availableTabs.length) % availableTabs.length]!);
+    } else if (event.key === "Home") {
+      event.preventDefault();
+      onTabChange(availableTabs[0]!);
+    } else if (event.key === "End") {
+      event.preventDefault();
+      onTabChange(availableTabs[availableTabs.length - 1]!);
+    }
+  };
 
   return (
     <aside
@@ -274,19 +296,27 @@ export function EntryDetailCommandCenter({
               />
             </div>
           )}
-          <div className="flex gap-1">
+          <div
+            role="radiogroup"
+            aria-label="Choose payload view"
+            onKeyDown={onTabKeyDown}
+            className="flex gap-1"
+          >
             {(["install", "config", "full"] as const).map((t) => {
               const payload = liveVariants.find((v) => v.id === t)?.value;
               if (!payload) return null;
+              const isActive = tab === t;
               return (
                 <button
                   key={t}
                   type="button"
+                  role="radio"
+                  aria-checked={isActive}
+                  tabIndex={isActive ? 0 : -1}
                   onClick={() => onTabChange(t)}
-                  aria-pressed={tab === t}
                   className={cn(
                     "rounded-t-md px-2.5 py-1.5 text-xs font-medium capitalize focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60",
-                    tab === t ? "bg-background text-ink" : "text-ink-muted hover:text-ink",
+                    isActive ? "bg-background text-ink" : "text-ink-muted hover:text-ink",
                   )}
                 >
                   {t}
