@@ -63,6 +63,7 @@ describe("search-ranking-lib platform and haystack helpers", () => {
   it("normalizes platform aliases", () => {
     expect(normalizeRegistryPlatform("claude")).toBe("claude-code");
     expect(normalizeRegistryPlatform("cursor-rules")).toBe("cursor");
+    expect(normalizeRegistryPlatform("antigravity")).toBe("antigravity");
     expect(normalizeRegistryPlatform("unknown-platform")).toBe("");
     expect(normalizeRegistryPlatform("Cluade Code")).toBe("");
   });

@@ -35,8 +35,8 @@ describe("registry-normalize-lib platform aliases", () => {
     expect(normalizePlatform("   ")).toBe("");
   });
 
-  it("returns empty string for unrecognized platforms instead of leaking raw input", () => {
-    expect(normalizePlatform("Antigravity")).toBe("");
+  it("resolves antigravity and rejects unrecognized platforms (#5685)", () => {
+    expect(normalizePlatform("Antigravity")).toBe("antigravity");
     expect(normalizePlatform("Cluade Code")).toBe("");
   });
 });

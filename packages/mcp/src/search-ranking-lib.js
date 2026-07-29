@@ -53,6 +53,7 @@ const PLATFORM_ALIASES = new Map([
   ["agents", "cli"],
   ["agents-context", "cli"],
   ["agents-md", "cli"],
+  ["antigravity", "antigravity"],
 ]);
 
 const QUERY_INTENT_PROFILES = [
