@@ -16,6 +16,7 @@ import {
 } from "@/components/badges";
 import { TrendingPodium } from "@/components/trending-podium";
 import { ShareMenu } from "@/components/share-menu";
+import { FilterChip, FilterChipGroup } from "@/components/filter-chip";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { CATEGORIES } from "@/types/registry";
 import { formatCompact } from "@/lib/format";
@@ -402,48 +403,39 @@ function TrendingPage() {
         </div>
 
         <div className="relative mt-3 -mx-1">
-          <div className="flex gap-1.5 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            <button
-              type="button"
-              onClick={() => {
-                trackCategoryFilter("", true, allRows.length);
-                set({ category: "" });
-              }}
-              aria-pressed={!sp.category}
-              className={cn(
-                "shrink-0 rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors duration-200 ease-out motion-safe:active:scale-[0.97]",
-                !sp.category
-                  ? "border-ink bg-ink text-background"
-                  : "border-border bg-surface text-ink-muted hover:text-ink",
-              )}
-            >
-              All · {allRows.length}
-            </button>
-            {CATEGORIES.map((category) => {
-              const count = countsByCategory[category.id] ?? 0;
-              const active = sp.category === category.id;
-              return (
-                <button
-                  key={category.id}
-                  type="button"
-                  disabled={count === 0 && !active}
-                  onClick={() => {
-                    trackCategoryFilter(category.id, !active, count);
-                    set({ category: active ? "" : category.id });
-                  }}
-                  aria-pressed={active}
-                  className={cn(
-                    "shrink-0 rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors duration-200 ease-out motion-safe:active:scale-[0.97]",
-                    active
-                      ? "border-ink bg-ink text-background"
-                      : "border-border bg-surface text-ink-muted hover:text-ink",
-                    count === 0 && !active && "opacity-40",
-                  )}
-                >
-                  {category.label} <span className="text-ink-subtle">· {count}</span>
-                </button>
-              );
-            })}
+          <div className="overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [&_[role=radiogroup]]:w-max [&_[role=radiogroup]]:flex-nowrap [&_[role=radiogroup]]:gap-1.5">
+            <FilterChipGroup label="Filter by category" multi={false}>
+              <FilterChip
+                role="radio"
+                active={!sp.category}
+                onClick={() => {
+                  trackCategoryFilter("", true, allRows.length);
+                  set({ category: "" });
+                }}
+                count={allRows.length}
+              >
+                All
+              </FilterChip>
+              {CATEGORIES.map((category) => {
+                const count = countsByCategory[category.id] ?? 0;
+                const active = sp.category === category.id;
+                return (
+                  <FilterChip
+                    key={category.id}
+                    role="radio"
+                    active={active}
+                    disabled={count === 0 && !active}
+                    count={count}
+                    onClick={() => {
+                      trackCategoryFilter(category.id, !active, count);
+                      set({ category: active ? "" : category.id });
+                    }}
+                  >
+                    {category.label}
+                  </FilterChip>
+                );
+              })}
+            </FilterChipGroup>
           </div>
           <div className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-background to-transparent" />
         </div>

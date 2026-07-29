@@ -34,10 +34,9 @@ describe("two-state toggle aria-pressed exposure (#5476)", () => {
     expect(source).toContain("aria-pressed={type === t}");
   });
 
-  it("matches the reference toggle pattern used by trending and advertise", () => {
-    // Reference implementations named by the issue — guard against the pattern
-    // drifting away while the three fixed controls still depend on it.
-    expect(routeSource("trending.tsx")).toContain("aria-pressed={active}");
+  it("advertise tier tiles expose aria-pressed for the selected plan", () => {
+    // Trending category filters moved to FilterChip radiogroup (#5636); advertise
+    // still uses the two-state aria-pressed toggle pattern from #5476.
     expect(routeSource("advertise.tsx")).toContain(
       "aria-pressed={planId === p.id}",
     );
