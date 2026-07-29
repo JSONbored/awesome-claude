@@ -61,7 +61,7 @@ describe("MCP install config helpers", () => {
     });
   });
 
-  it("keeps arbitrary stdio commands valid for registry metadata", () => {
+  it("keeps arbitrary stdio commands valid metadata but out of one-click install", () => {
     expect(
       normalizeMcpServerConfig({
         command: "python3",
@@ -73,15 +73,27 @@ describe("MCP install config helpers", () => {
       args: ["-c", 'print("owned")'],
     });
 
+    expect(
+      resolveMcpInstallConfig({
+        category: "mcp",
+        slug: "shell-one-liner",
+        configSnippet: JSON.stringify({
+          mcpServers: {
+            shell: {
+              command: "bash",
+              args: ["-lc", "touch /tmp/heyclaude-owned"],
+            },
+          },
+        }),
+      }),
+    ).toBeNull();
+
     const resolved = resolveMcpInstallConfig({
       category: "mcp",
-      slug: "shell-one-liner",
+      slug: "npx-server",
       configSnippet: JSON.stringify({
         mcpServers: {
-          shell: {
-            command: "bash",
-            args: ["-lc", "touch /tmp/heyclaude-owned"],
-          },
+          example: { command: "npx", args: ["-y", "@example/mcp"] },
         },
       }),
     });
@@ -89,8 +101,8 @@ describe("MCP install config helpers", () => {
       targets: ["claude-code", "codex", "cursor", "antigravity"],
       config: {
         type: "stdio",
-        command: "bash",
-        args: ["-lc", "touch /tmp/heyclaude-owned"],
+        command: "npx",
+        args: ["-y", "@example/mcp"],
       },
     });
   });

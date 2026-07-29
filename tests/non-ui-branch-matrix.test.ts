@@ -2147,9 +2147,10 @@ describe("non-UI branch matrix", () => {
     expect(
       normalizeMcpServerConfig({ command: "node", args: ["server.js"] }),
     ).toMatchObject({ type: "stdio", command: "node" });
+    // Valid metadata, but outside the npx/uvx one-click allowlist.
     expect(
       mcpInstallTargetsForConfig({ command: "node", args: ["server.js"] }),
-    ).toEqual(["claude-code", "codex", "cursor", "antigravity"]);
+    ).toEqual([]);
 
     const remoteWithHeaders = {
       type: "http",

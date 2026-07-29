@@ -21,6 +21,14 @@ export const MCP_INSTALL_TARGET_IDS = [
 
 const SERVER_CONFIG_TYPES = new Set(["stdio", "http", "sse"]);
 
+// A one-click install writes the stdio server entry straight into the user's
+// client config, so whatever `command` names gets executed locally on their
+// machine. Only the two managed package runners are safe to advertise that way.
+// Both real consumers already enforce this same allowlist on top of us -
+// `artifacts-lib.js`'s RAYCAST_ONE_CLICK_STDIO_COMMANDS and the Raycast
+// extension's ONE_CLICK_STDIO_COMMANDS - so keep the sets identical.
+const ONE_CLICK_STDIO_COMMANDS = new Set(["npx", "uvx"]);
+
 function isRecord(value) {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
@@ -175,10 +183,31 @@ function hasStaticOrEnvHttpHeaders(config) {
   );
 }
 
-export function mcpConfigSupportsTarget(config, target) {
+// Mirrors the consumers' helper: a bare command name only, so a path-qualified
+// lookalike like /usr/local/bin/npx cannot slip past the allowlist.
+function oneClickStdioCommandName(value) {
+  const command = String(value || "").trim();
+  if (!command || command.includes("/") || command.includes("\\")) return "";
+  return command.toLowerCase();
+}
+
+export function mcpConfigSupportsTarget(config, target, options = {}) {
   const normalized = normalizeMcpServerConfig(config);
   if (!normalized) return false;
   const type = normalizeType(normalized.type);
+
+  // Arbitrary stdio commands stay valid registry metadata (the entry still
+  // renders its own configSnippet) - they are just manual-install only.
+  // `oneClick: false` asks the narrower "can this client run the config at all"
+  // question, so platform-compatibility facets still count a server that works
+  // fine once configured by hand.
+  if (
+    options.oneClick !== false &&
+    type === "stdio" &&
+    !ONE_CLICK_STDIO_COMMANDS.has(oneClickStdioCommandName(normalized.command))
+  ) {
+    return false;
+  }
 
   if (target === "codex") {
     if (type === "sse") return false;
@@ -190,9 +219,9 @@ export function mcpConfigSupportsTarget(config, target) {
   return MCP_INSTALL_TARGET_IDS.includes(target);
 }
 
-export function mcpInstallTargetsForConfig(config) {
+export function mcpInstallTargetsForConfig(config, options = {}) {
   return MCP_INSTALL_TARGET_IDS.filter((target) =>
-    mcpConfigSupportsTarget(config, target),
+    mcpConfigSupportsTarget(config, target, options),
   );
 }
 
@@ -205,7 +234,7 @@ export function formatMcpConfigSnippet(name, config) {
   )}\n`;
 }
 
-export function resolveMcpInstallConfig(entry) {
+export function resolveMcpInstallConfig(entry, options = {}) {
   if (!entry || entry.category !== "mcp") return null;
   const snippet = String(entry.configSnippet || "").trim();
   if (!snippet) return null;
@@ -213,7 +242,7 @@ export function resolveMcpInstallConfig(entry) {
     const extracted = extractMcpServerConfig(snippet);
     if (!extracted) return null;
     const name = extracted.name || entry.slug || "heyclaude-mcp";
-    const targets = mcpInstallTargetsForConfig(extracted.config);
+    const targets = mcpInstallTargetsForConfig(extracted.config, options);
     if (!targets.length) return null;
     return {
       name,
