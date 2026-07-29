@@ -1,6 +1,30 @@
 import { describe, expect, it } from "vitest";
 
-import { scanDangerousShellPatterns } from "@heyclaude/registry/command-safety";
+import {
+  hasRecursiveForceRemove,
+  hasWorldWritableChmod,
+  resolveSegmentCommand,
+  segmentArgTokens,
+  scanDangerousShellPatterns,
+} from "@heyclaude/registry/command-safety";
+
+describe("command-safety public barrel (#5641)", () => {
+  it("re-exports the previously omitted detectors and segment helpers", () => {
+    const line = "rm -rf /tmp";
+    const lowerLine = line.toLowerCase();
+    expect(hasRecursiveForceRemove(line, lowerLine)).toBe(true);
+    expect(hasWorldWritableChmod("chmod 777 /app", "chmod 777 /app")).toBe(
+      true,
+    );
+
+    const resolved = resolveSegmentCommand(line, lowerLine, 0, line.length);
+    expect(resolved.command).toBe("rm");
+    expect(segmentArgTokens(line, lowerLine, 0, line.length)).toEqual([
+      "-rf",
+      "/tmp",
+    ]);
+  });
+});
 
 describe("scanDangerousShellPatterns", () => {
   it("flags each high-risk shell pattern", () => {
