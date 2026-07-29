@@ -41,6 +41,27 @@ describe("hashSearch", () => {
       ),
     );
   });
+
+  it("distinguishes two searches that differ only by signal", () => {
+    const base = { q: "mcp", category: "mcp", trust: "trusted" };
+    expect(hashSearch(search({ ...base, signal: "reviewed" }))).not.toBe(
+      hashSearch(search({ ...base, signal: "checksums" })),
+    );
+  });
+
+  it("differs when a signal filter is added to a signal-less search", () => {
+    expect(hashSearch(search({ q: "x" }))).not.toBe(
+      hashSearch(search({ q: "x", signal: "checksums" })),
+    );
+  });
+
+  it("leaves the hash unchanged for searches with no signal set", () => {
+    // Appending signal is conditional, so an absent signal keeps the existing
+    // alert-segment key (matches the "7l9kg2" fixture below).
+    expect(hashSearch(search({ q: "x", trust: "trusted" }))).toBe(
+      hashSearch(search({ q: "x", trust: "trusted", signal: undefined })),
+    );
+  });
 });
 
 describe("hashSearch delimiter escaping", () => {
