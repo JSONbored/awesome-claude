@@ -43,7 +43,7 @@ describe("platformCategoryItemListJsonLd", () => {
     expect(ld.itemListElement[1].position).toBe(2);
   });
 
-  it("reports the full count but caps list items at 30", () => {
+  it("lists every entry (no 30-item cap) while numberOfItems matches (#5632)", () => {
     const ld = platformCategoryItemListJsonLd(
       "Cursor",
       "MCP",
@@ -52,6 +52,11 @@ describe("platformCategoryItemListJsonLd", () => {
       abs,
     );
     expect(ld.numberOfItems).toBe(31);
-    expect(ld.itemListElement).toHaveLength(30);
+    expect(ld.itemListElement).toHaveLength(31);
+    expect(ld.itemListElement[30]).toMatchObject({
+      position: 31,
+      name: "Entry 31",
+      url: "https://heyclau.de/entry/mcp/e31",
+    });
   });
 });
