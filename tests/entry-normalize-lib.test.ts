@@ -684,4 +684,26 @@ describe("buildEntryFromRegistry", () => {
     );
     expect(withDocs.sourceUrl).toBe("https://docs.example.com/guide");
   });
+
+  it("does not set sourceUrl from a self-referential directory githubUrl (#5671)", () => {
+    const entry = buildEntryFromRegistry(
+      baseEntry({
+        githubUrl:
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/fixture-skill.mdx",
+      }),
+      attribution(),
+    );
+    expect(entry.sourceUrl).toBeUndefined();
+    expect(entry.source).toBe("unverified");
+  });
+
+  it("still uses a real external githubUrl for sourceUrl (#5671)", () => {
+    const entry = buildEntryFromRegistry(
+      baseEntry({
+        githubUrl: "https://github.com/example/real-repo",
+      }),
+      attribution(),
+    );
+    expect(entry.sourceUrl).toBe("https://github.com/example/real-repo");
+  });
 });

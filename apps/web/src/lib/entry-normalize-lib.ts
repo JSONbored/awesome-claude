@@ -455,7 +455,15 @@ export function buildEntryFromRegistry(entry: RegistryEntry, attribution: EntryA
     fullCopy: copyPayload,
     usageSnippet: entry.usageSnippet,
     copySnippet: entry.copySnippet,
-    sourceUrl: entry.repoUrl ?? entry.githubUrl ?? entry.documentationUrl ?? entry.websiteUrl,
+    // Match inferSource: the always-present directory githubUrl is not real
+    // external provenance and must not satisfy Boolean(entry.sourceUrl) gates.
+    sourceUrl:
+      entry.repoUrl ??
+      (entry.githubUrl && !String(entry.githubUrl).includes("github.com/JSONbored/awesome-claude")
+        ? entry.githubUrl
+        : undefined) ??
+      entry.documentationUrl ??
+      entry.websiteUrl,
     docsUrl: entry.documentationUrl,
     repoUrl: entry.repoUrl ?? undefined,
     websiteUrl: entry.websiteUrl,
