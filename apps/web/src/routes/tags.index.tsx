@@ -4,8 +4,6 @@ import { Search } from "lucide-react";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
 import { CategoryPill } from "@/components/badges";
-import { stringifyJsonLd } from "@/lib/json-ld";
-import { absoluteUrl } from "@/lib/seo";
 import { getIndexableTagGroups } from "@/lib/tags";
 import { toTagView, type TagView } from "@/lib/tag-view-lib";
 import { trackEvent } from "@/lib/analytics";
@@ -20,6 +18,8 @@ import {
   tagsIndexTagSelectDestination,
   type TagsIndexTagVariant,
 } from "@/lib/tags-index-cta-events";
+import { breadcrumbScript, itemListScript } from "@/lib/seo-jsonld";
+import { absoluteUrl } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/tags/")({
@@ -28,6 +28,8 @@ export const Route = createFileRoute("/tags/")({
     const title = "Browse Claude resources by tag — HeyClaude";
     const description =
       "Topic index for the HeyClaude directory: browse Claude Code MCP servers, agents, skills, hooks, commands, and rules by tag.";
+    // Same indexable tags the page renders (featured strip + All topics grid).
+    const tags = getIndexableTagGroups().map(toTagView);
     return {
       meta: [
         { title },
@@ -38,18 +40,19 @@ export const Route = createFileRoute("/tags/")({
         { name: "twitter:card", content: "summary_large_image" },
       ],
       links: [{ rel: "canonical", href: url }],
+      // BreadcrumbList + ItemList for every /tags/$tag link rendered below (#5631).
       scripts: [
-        {
-          type: "application/ld+json",
-          children: stringifyJsonLd({
-            "@context": "https://schema.org",
-            "@type": "BreadcrumbList",
-            itemListElement: [
-              { "@type": "ListItem", position: 1, name: "Directory", item: absoluteUrl("/browse") },
-              { "@type": "ListItem", position: 2, name: "Tags", item: url },
-            ],
-          }),
-        },
+        breadcrumbScript([
+          { name: "Directory", path: "/browse" },
+          { name: "Tags", path: "/tags" },
+        ]),
+        itemListScript(
+          tags.map((tag) => ({
+            name: tag.name,
+            path: `/tags/${tag.slug}`,
+          })),
+          { name: "Claude resource tags" },
+        ),
       ],
     };
   },
