@@ -357,6 +357,9 @@ export function CommandBar({
               <button
                 key={c.id || "all"}
                 type="button"
+                // Combobox keeps focus on the input; these are mouse/pointer
+                // affordances activated via aria-activedescendant + Enter (#5677).
+                tabIndex={-1}
                 onMouseDown={(e) => {
                   e.preventDefault();
                   if (quickCat !== c.id) {
@@ -481,6 +484,7 @@ export function CommandBar({
                 >
                   <button
                     type="button"
+                    tabIndex={-1}
                     onMouseEnter={() => setActive(i)}
                     onMouseDown={(e) => {
                       e.preventDefault();
@@ -506,6 +510,7 @@ export function CommandBar({
           {q.trim() && (
             <button
               type="button"
+              tabIndex={-1}
               onMouseDown={(e) => {
                 e.preventDefault();
                 submit();
