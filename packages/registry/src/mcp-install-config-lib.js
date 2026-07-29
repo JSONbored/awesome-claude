@@ -19,6 +19,11 @@ export const MCP_INSTALL_TARGET_IDS = [
   "antigravity",
 ];
 
+// One-click install targets only support package runners that fetch a remote
+// package — not arbitrary local binaries/shells. Matches artifacts-lib and
+// Raycast installer allowlists (#5682).
+export const ONE_CLICK_STDIO_COMMANDS = new Set(["npx", "uvx"]);
+
 const SERVER_CONFIG_TYPES = new Set(["stdio", "http", "sse"]);
 
 function isRecord(value) {
@@ -175,9 +180,22 @@ function hasStaticOrEnvHttpHeaders(config) {
   );
 }
 
+function oneClickStdioCommandName(value) {
+  const command = String(value || "").trim();
+  if (!command || command.includes("/") || command.includes("\\")) return "";
+  return command.toLowerCase();
+}
+
+function isOneClickStdioCommand(config) {
+  const type = normalizeType(config?.type);
+  if (type !== "stdio") return true;
+  return ONE_CLICK_STDIO_COMMANDS.has(oneClickStdioCommandName(config.command));
+}
+
 export function mcpConfigSupportsTarget(config, target) {
   const normalized = normalizeMcpServerConfig(config);
   if (!normalized) return false;
+  if (!isOneClickStdioCommand(normalized)) return false;
   const type = normalizeType(normalized.type);
 
   if (target === "codex") {

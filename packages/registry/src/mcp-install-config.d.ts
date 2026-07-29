@@ -15,6 +15,8 @@ export type ResolvedMcpInstallConfig = {
 
 export declare const MCP_INSTALL_TARGET_IDS: readonly McpInstallTargetId[];
 
+export declare const ONE_CLICK_STDIO_COMMANDS: ReadonlySet<string>;
+
 export declare function normalizeMcpServerConfig(
   value: unknown,
 ): McpServerConfig | null;

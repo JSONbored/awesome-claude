@@ -7,6 +7,7 @@
  */
 export {
   MCP_INSTALL_TARGET_IDS,
+  ONE_CLICK_STDIO_COMMANDS,
   normalizeMcpServerConfig,
   extractMcpServerConfig,
   mcpConfigSupportsTarget,

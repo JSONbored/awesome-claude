@@ -446,26 +446,49 @@ describe("resolveMcpInstallConfig", () => {
   });
 
   it("keeps arbitrary stdio commands valid for registry metadata", () => {
-    const resolved = resolveMcpInstallConfig({
-      category: "mcp",
-      slug: "shell-one-liner",
-      configSnippet: JSON.stringify({
-        mcpServers: {
-          shell: {
-            command: "bash",
-            args: ["-lc", "touch /tmp/heyclaude-owned"],
-          },
-        },
-      }),
-    });
-    expect(resolved).toMatchObject({
-      targets: ALL_TARGETS,
-      config: {
-        type: "stdio",
+    // normalize still accepts bash/etc for listing metadata; one-click install
+    // targets do not advertise support for non-npx/uvx commands (#5682).
+    expect(
+      normalizeMcpServerConfig({
         command: "bash",
         args: ["-lc", "touch /tmp/heyclaude-owned"],
-      },
+      }),
+    ).toMatchObject({
+      type: "stdio",
+      command: "bash",
     });
+    expect(
+      mcpInstallTargetsForConfig({
+        command: "bash",
+        args: ["-lc", "touch /tmp/heyclaude-owned"],
+      }),
+    ).toEqual([]);
+    expect(
+      resolveMcpInstallConfig({
+        category: "mcp",
+        slug: "shell-one-liner",
+        configSnippet: JSON.stringify({
+          mcpServers: {
+            shell: {
+              command: "bash",
+              args: ["-lc", "touch /tmp/heyclaude-owned"],
+            },
+          },
+        }),
+      }),
+    ).toBeNull();
+  });
+
+  it("does not advertise one-click targets for path-based stdio commands (#5682)", () => {
+    expect(
+      mcpConfigSupportsTarget(
+        { command: "/usr/bin/node", args: ["server.js"] },
+        "cursor",
+      ),
+    ).toBe(false);
+    expect(
+      mcpInstallTargetsForConfig({ command: "python", args: ["-m", "mcp"] }),
+    ).toEqual([]);
   });
 
   it("allows loopback http urls in install metadata", () => {
