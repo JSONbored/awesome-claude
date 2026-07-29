@@ -593,6 +593,7 @@ describe("registry-handlers-lib response builders", () => {
       limit: 10,
       offset: 0,
       count: 10,
+      nextOffset: 10,
     });
     expect(firstPage.entries).toHaveLength(10);
 
@@ -603,7 +604,12 @@ describe("registry-handlers-lib response builders", () => {
       { offset: 25, limit: 10 },
     );
     // Only 5 rows remain past offset 25, but the full total is still reported.
-    expect(tailPage).toMatchObject({ total: 30, offset: 25, count: 5 });
+    expect(tailPage).toMatchObject({
+      total: 30,
+      offset: 25,
+      count: 5,
+      nextOffset: null,
+    });
 
     // With no options the page is capped at DISCOVERY_RESOURCE_LIMIT (bounded).
     const defaulted = buildCategoryResourcePayload(
@@ -614,6 +620,7 @@ describe("registry-handlers-lib response builders", () => {
     expect(defaulted.limit).toBe(DISCOVERY_RESOURCE_LIMIT);
     expect(defaulted.count).toBe(DISCOVERY_RESOURCE_LIMIT);
     expect(defaulted.total).toBe(30);
+    expect(defaulted.nextOffset).toBe(DISCOVERY_RESOURCE_LIMIT);
   });
   it("buildListRegistryResourcesResponse matrix 0", () => {
     const response = buildListRegistryResourcesResponse({

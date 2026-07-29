@@ -354,6 +354,7 @@ export function buildCategoryResourcePayload(
     limit,
     offset: start,
     count: page.length,
+    nextOffset: computeNextOffset(matched.length, start, limit),
     entries: page,
   };
 }
