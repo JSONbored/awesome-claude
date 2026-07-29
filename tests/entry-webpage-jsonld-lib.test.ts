@@ -26,10 +26,34 @@ describe("entryWebPageJsonLd", () => {
   });
 
   it("falls back dateModified to dateAdded, or uses reviewedAt when present", () => {
-    expect(entryWebPageJsonLd(entry(), URL).dateModified).toBe("2026-01-01");
+    expect(entryWebPageJsonLd(entry(), URL).dateModified).toBe(
+      new Date("2026-01-01").toISOString(),
+    );
     expect(
       entryWebPageJsonLd(entry({ reviewedAt: "2026-02-02" }), URL).dateModified,
-    ).toBe("2026-02-02");
+    ).toBe(new Date("2026-02-02").toISOString());
+  });
+
+  it("prefers contentUpdatedAt/repoUpdatedAt over reviewedAt like the sitemap (#5675)", () => {
+    expect(
+      entryWebPageJsonLd(
+        entry({
+          reviewedAt: "2026-02-02",
+          repoUpdatedAt: "2026-03-15T12:00:00.000Z",
+        }),
+        URL,
+      ).dateModified,
+    ).toBe(new Date("2026-03-15T12:00:00.000Z").toISOString());
+    expect(
+      entryWebPageJsonLd(
+        entry({
+          reviewedAt: "2026-02-02",
+          contentUpdatedAt: "2026-04-01T00:00:00.000Z",
+          repoUpdatedAt: "2026-03-15T12:00:00.000Z",
+        }),
+        URL,
+      ).dateModified,
+    ).toBe(new Date("2026-04-01T00:00:00.000Z").toISOString());
   });
 
   it("includes isBasedOn only when sourceUrl is present", () => {
