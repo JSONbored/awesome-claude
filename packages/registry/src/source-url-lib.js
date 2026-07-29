@@ -227,6 +227,39 @@ export function hasAffiliateParam(value) {
 }
 
 /**
+ * True when a URL's path contains an explicit affiliate/referral segment
+ * (`/referral/`, `/affiliate/`, `/partners/`, bare `/ref` or `/refer` terminal
+ * segment). Query-param checks live in `isAffiliateParam`/`hasAffiliateParam`.
+ *
+ * @param {unknown} value
+ * @returns {boolean}
+ */
+export function hasAffiliatePath(value) {
+  const text = String(value ?? "").trim();
+  if (!text) return false;
+  try {
+    const pathname = new URL(text).pathname;
+    if (/\/(referral|affiliate|partners?)(?:\/|$)/i.test(pathname)) return true;
+    return /^\/(ref|refer)\/?$/i.test(pathname);
+  } catch {
+    return /\b(affiliate|referral|ref=|via=)\b/i.test(text);
+  }
+}
+
+/**
+ * True when a URL carries any affiliate signal — either a tracked query param
+ * (via `isAffiliateParam`) or an affiliate path segment (via `hasAffiliatePath`).
+ * This combines the query-param-only `hasAffiliateParam` with path-based checks
+ * so both field validators and snippet scanners agree on the same detection.
+ *
+ * @param {unknown} value
+ * @returns {boolean}
+ */
+export function isLikelyAffiliateUrl(value) {
+  return hasAffiliateParam(value) || hasAffiliatePath(value);
+}
+
+/**
  * Strip known tracking query params while preserving meaningful params.
  *
  * @param {unknown} value

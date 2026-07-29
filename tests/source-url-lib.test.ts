@@ -3,8 +3,10 @@ import { describe, expect, it } from "vitest";
 import {
   canonicalizeSourceUrl,
   hasAffiliateParam,
+  hasAffiliatePath,
   hasEmbeddedUrlUserinfo,
   isAffiliateParam,
+  isLikelyAffiliateUrl,
   isPublicGitHubHostUrl,
   isPublicGitHubProfileUrl,
   isPublicHttpUrl,
@@ -782,5 +784,45 @@ describe("URL helpers handle nullish, empty, and unparseable input", () => {
     expect(publicHttpUrlHref(null)).toBe("");
     expect(publicHttpUrlHref("")).toBe("");
     expect(publicHttpUrlHref("   ")).toBe("");
+  });
+});
+
+describe("hasAffiliatePath (#5637)", () => {
+  it.each([
+    ["https://example.com/partners/xyz", true],
+    ["https://example.com/referral/abc", true],
+    ["https://example.com/affiliate/link", true],
+    ["https://example.com/ref", true],
+    ["https://example.com/refer", true],
+    ["https://example.com/ref/", true],
+    ["https://example.com/ref/spec", false],
+    ["https://example.com/reference/guide", false],
+    ["https://go.dev/ref/mod", false],
+    ["https://example.com/docs", false],
+    ["https://example.com", false],
+    ["", false],
+  ])("hasAffiliatePath(%j) -> %j", (input, expected) => {
+    expect(hasAffiliatePath(input)).toBe(expected);
+  });
+});
+
+describe("isLikelyAffiliateUrl (#5637)", () => {
+  it.each([
+    ["https://example.com?ref=xyz", true],
+    ["https://example.com/partners/xyz", true],
+    ["https://example.com/referral/abc", true],
+    ["https://example.com/affiliate", true],
+    ["https://example.com/ref", true],
+    ["https://example.com/ref/spec", false],
+    ["https://example.com/docs", false],
+    ["https://example.com", false],
+    ["", false],
+  ])("isLikelyAffiliateUrl(%j) -> %j", (input, expected) => {
+    expect(isLikelyAffiliateUrl(input)).toBe(expected);
+  });
+
+  it("submission-lib and submission-risk now agree on /partners/ path URLs (#5637)", () => {
+    const partnerUrl = "https://example.com/partners/promo";
+    expect(isLikelyAffiliateUrl(partnerUrl)).toBe(true);
   });
 });

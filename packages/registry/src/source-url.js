@@ -7,8 +7,10 @@
 export {
   canonicalizeSourceUrl,
   hasAffiliateParam,
+  hasAffiliatePath,
   hasEmbeddedUrlUserinfo,
   isAffiliateParam,
+  isLikelyAffiliateUrl,
   isPublicGitHubHostUrl,
   isPublicGitHubProfileUrl,
   isPublicHttpUrl,

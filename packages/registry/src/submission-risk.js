@@ -13,6 +13,7 @@ import {
 } from "./command-safety-lib.js";
 import {
   AFFILIATE_PARAMS,
+  isLikelyAffiliateUrl,
   isPublicGitHubProfileUrl,
   isPublicHttpUrl,
   isPublicHttpsUrl,
@@ -951,37 +952,9 @@ const FULL_COMMIT_SHA_PATTERN = /^[0-9a-f]{40}$/i;
 const LOCAL_SCRIPT_REFERENCE_PATTERN =
   /(?:^|[\s`;&|])(?:(?:bash|sh|zsh|pwsh|powershell)\s+)?(?:\.{1,2}\/|[\w.-]+\/)?[\w./-]*(?:install|setup|start|bootstrap|init)[\w.-]*\.(?:sh|bash|zsh|ps1)\b/im;
 
-function isLikelyAffiliateUrl(value) {
-  const raw = normalizeText(value);
-  if (!raw) return false;
-
-  try {
-    const url = new URL(raw);
-
-    for (const key of url.searchParams.keys()) {
-      const normalizedKey = key.toLowerCase();
-      if (
-        AFFILIATE_PARAMS.has(normalizedKey) ||
-        normalizedKey.startsWith("utm_aff")
-      ) {
-        return true;
-      }
-    }
-
-    // Explicit affiliate path segments anywhere in the path.
-    if (/\/(referral|affiliate|partners?)(?:\/|$)/i.test(url.pathname)) {
-      return true;
-    }
-    // Bare `/ref` or `/refer` ONLY as the terminal path segment (affiliate
-    // shortlinks like example.com/ref). A `ref` segment with more after it is
-    // almost always a docs "reference" section (e.g. go.dev/ref/mod), not an
-    // affiliate link, so it is not flagged here - genuine affiliate links use a
-    // `ref=` query param (handled above) instead.
-    return /^\/(ref|refer)\/?$/i.test(url.pathname);
-  } catch {
-    return /\b(affiliate|referral|ref=|via=)\b/i.test(raw);
-  }
-}
+// isLikelyAffiliateUrl is imported from source-url-lib.js (#5637) — combines
+// query-param and path-based affiliate checks used by both field validation
+// (submission-lib.js) and this snippet scanner so both gates agree.
 
 // True when install text contains recursive-force rm or world-writable chmod,
 // using the same hardened detectors as scanDangerousShellPatterns (#5640).

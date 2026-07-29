@@ -12,10 +12,12 @@ import categorySpec from "./category-spec.json" with { type: "json" };
 import { normalizeBrandDomain } from "./brand-assets.js";
 import {
   hasAffiliateParam,
+  isLikelyAffiliateUrl,
   isPublicGitHubProfileUrl,
   isPublicHttpsUrl,
   publicUrlHostname,
 } from "./source-url.js";
+export { isLikelyAffiliateUrl } from "./source-url.js";
 import {
   looksLikeToolAppListing,
   missingToolListingReviewFields,
@@ -620,9 +622,8 @@ export function looksLikeSubmissionPrDraft(draft = {}) {
   return hasSubmissionShape;
 }
 
-export function isLikelyAffiliateUrl(value) {
-  return hasAffiliateParam(normalizeValue(value));
-}
+// isLikelyAffiliateUrl is re-exported from source-url.js above (#5637) — combines
+// query-param and path-based checks so field validation matches snippet scanning.
 
 function isHttpsUrl(value) {
   return isPublicHttpsUrl(normalizeValue(value));
