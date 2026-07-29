@@ -9,7 +9,7 @@ import {
   platformIndexSelectAnalyticsEvent,
   platformIndexSelectDestination,
 } from "@/lib/directory-hub-cta-events";
-import { stringifyJsonLd } from "@/lib/json-ld";
+import { breadcrumbScript, itemListScript } from "@/lib/seo-jsonld";
 import { absoluteUrl } from "@/lib/seo";
 
 const PLATFORMS = Object.keys(PLATFORM_LABEL) as Platform[];
@@ -42,18 +42,20 @@ export const Route = createFileRoute("/for/")({
         { name: "twitter:card", content: "summary_large_image" },
       ],
       links: [{ rel: "canonical", href: url }],
+      // BreadcrumbList + ItemList for every /for/$platform link rendered below —
+      // same platform set /platforms already emits (#5630).
       scripts: [
-        {
-          type: "application/ld+json",
-          children: stringifyJsonLd({
-            "@context": "https://schema.org",
-            "@type": "BreadcrumbList",
-            itemListElement: [
-              { "@type": "ListItem", position: 1, name: "Directory", item: absoluteUrl("/browse") },
-              { "@type": "ListItem", position: 2, name: "Platforms", item: url },
-            ],
-          }),
-        },
+        breadcrumbScript([
+          { name: "Directory", path: "/browse" },
+          { name: "Platforms", path: "/for" },
+        ]),
+        itemListScript(
+          PLATFORMS.map((id) => ({
+            name: PLATFORM_LABEL[id],
+            path: `/for/${id}`,
+          })),
+          { name: "Claude platforms" },
+        ),
       ],
     };
   },
