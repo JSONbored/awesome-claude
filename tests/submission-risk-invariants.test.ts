@@ -985,6 +985,52 @@ describe("embedded_secret PEM / Slack / Stripe formats (#5557)", () => {
   });
 });
 
+describe("embedded_secret GitHub gho_/ghu_/ghs_/ghr_ prefixes (#5639)", () => {
+  it.each([
+    ["gho_", "gho_abcdefghijklmnopqrstuvwxyz012345"],
+    ["ghu_", "ghu_abcdefghijklmnopqrstuvwxyz012345"],
+    ["ghs_", "ghs_abcdefghijklmnopqrstuvwxyz012345"],
+    ["ghr_", "ghr_abcdefghijklmnopqrstuvwxyz012345"],
+  ])("flags %s tokens like ghp_", (_prefix, secret) => {
+    const draft = buildSubmissionPrDraft({
+      ...validMcpFields,
+      name: "Secret Leak MCP",
+      slug: "secret-leak-mcp",
+      description: `Demo key ${secret} must be caught`,
+      safety_notes: "Runs a local MCP server process with user-selected tools.",
+      privacy_notes: "Only handles context selected by the user.",
+    });
+    const validation = validateSubmission(draft);
+    const risk = analyzeSubmissionDraftRisk(draft, validation);
+    expect(risk.reviewFlags.map((flag) => flag.id)).toEqual(
+      expect.arrayContaining(["embedded_secret"]),
+    );
+  });
+
+  it("still flags ghp_ and github_pat_", () => {
+    for (const secret of [
+      "ghp_abcdefghijklmnopqrstuvwxyz012345",
+      "github_pat_abcdefghijklmnopqrstuvwxyz0123456789ABCDEF",
+    ]) {
+      const draft = buildSubmissionPrDraft({
+        ...validMcpFields,
+        name: "Secret Leak MCP",
+        slug: "secret-leak-mcp",
+        description: `Demo key ${secret} must be caught`,
+        safety_notes:
+          "Runs a local MCP server process with user-selected tools.",
+        privacy_notes: "Only handles context selected by the user.",
+      });
+      const validation = validateSubmission(draft);
+      expect(
+        analyzeSubmissionDraftRisk(draft, validation).reviewFlags.map(
+          (flag) => flag.id,
+        ),
+      ).toEqual(expect.arrayContaining(["embedded_secret"]));
+    }
+  });
+});
+
 describe("unsafe_install_pipeline curl|wget to SHELL_TOKENS (#5480)", () => {
   it.each(["zsh", "dash", "ash", "bash", "sh"])(
     "flags curl piped to %s",

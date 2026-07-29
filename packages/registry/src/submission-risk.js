@@ -29,7 +29,7 @@ import {
 // (#5557). PEM sits outside the `\b…\b` group because a leading `-----` is
 // non-word and would not satisfy a leading word boundary at line start.
 const EMBEDDED_SECRET_PATTERN =
-  /(?:\b(?:ghp_[a-z0-9_]{20,}|github_pat_[a-z0-9_]{40,}|sk-(?:ant-|proj-)?[a-z0-9-]{20,}|akia[0-9a-z]{16}|xq_[a-f0-9]{40,}|xox[baprs]-[a-z0-9-]{10,}|sk_live_[a-z0-9]{16,})\b|-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----)/i;
+  /(?:\b(?:(?:ghp|gho|ghu|ghs|ghr)_[a-z0-9_]{20,}|github_pat_[a-z0-9_]{40,}|sk-(?:ant-|proj-)?[a-z0-9-]{20,}|akia[0-9a-z]{16}|xq_[a-f0-9]{40,}|xox[baprs]-[a-z0-9-]{10,}|sk_live_[a-z0-9]{16,})\b|-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----)/i;
 
 export const SUBMISSION_RISK_SCHEMA_VERSION = 1;
 export const SUBMISSION_RISK_COMMENT_MARKER = "<!-- submission-risk-report -->";
