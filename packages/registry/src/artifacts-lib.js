@@ -452,7 +452,12 @@ function buildEntryPlatformNames(entry) {
   );
 
   if (entry.category === "mcp") {
-    const mcpInstallConfig = resolveMcpInstallConfig(entry);
+    // Platform names describe which clients can run the server, so ask the
+    // compatibility question here: a stdio server behind `uv`/`docker`/`python`
+    // still works once configured by hand, it just is not one-click installable.
+    const mcpInstallConfig = resolveMcpInstallConfig(entry, {
+      oneClick: false,
+    });
     for (const target of mcpInstallConfig?.targets ?? []) {
       platforms.add(target);
     }

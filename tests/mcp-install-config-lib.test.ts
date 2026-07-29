@@ -445,27 +445,97 @@ describe("resolveMcpInstallConfig", () => {
     ).toBeNull();
   });
 
-  it("keeps arbitrary stdio commands valid for registry metadata", () => {
-    const resolved = resolveMcpInstallConfig({
-      category: "mcp",
-      slug: "shell-one-liner",
-      configSnippet: JSON.stringify({
-        mcpServers: {
-          shell: {
-            command: "bash",
-            args: ["-lc", "touch /tmp/heyclaude-owned"],
-          },
-        },
+  it("keeps arbitrary stdio commands valid metadata but out of one-click install", () => {
+    const shellConfig = {
+      command: "bash",
+      args: ["-lc", "touch /tmp/heyclaude-owned"],
+    };
+
+    // Still valid registry metadata - the entry renders its own configSnippet.
+    expect(normalizeMcpServerConfig(shellConfig)).toMatchObject({
+      type: "stdio",
+      command: "bash",
+      args: ["-lc", "touch /tmp/heyclaude-owned"],
+    });
+
+    // But it is never advertised as one-click installable.
+    expect(mcpInstallTargetsForConfig(shellConfig)).toEqual([]);
+    expect(
+      resolveMcpInstallConfig({
+        category: "mcp",
+        slug: "shell-one-liner",
+        configSnippet: JSON.stringify({ mcpServers: { shell: shellConfig } }),
       }),
-    });
-    expect(resolved).toMatchObject({
-      targets: ALL_TARGETS,
-      config: {
-        type: "stdio",
-        command: "bash",
-        args: ["-lc", "touch /tmp/heyclaude-owned"],
-      },
-    });
+    ).toBeNull();
+  });
+
+  it("allows only bare npx/uvx stdio commands for one-click install", () => {
+    for (const command of ["npx", "uvx", "NPX", " uvx "]) {
+      expect(mcpInstallTargetsForConfig({ command })).toEqual(ALL_TARGETS);
+    }
+
+    for (const command of [
+      "node",
+      "docker",
+      "python3",
+      "sh",
+      "npx-evil",
+      // Path-qualified lookalikes must not slip past the allowlist.
+      "/usr/local/bin/npx",
+      "./npx",
+      "C:\\tools\\uvx.exe",
+    ]) {
+      expect(mcpInstallTargetsForConfig({ command })).toEqual([]);
+      for (const target of ALL_TARGETS) {
+        expect(mcpConfigSupportsTarget({ command }, target)).toBe(false);
+      }
+    }
+  });
+
+  it("leaves remote install targets unaffected by the stdio allowlist", () => {
+    expect(
+      mcpInstallTargetsForConfig({
+        type: "http",
+        url: "https://example.com/mcp",
+      }),
+    ).toEqual(ALL_TARGETS);
+  });
+
+  it("keeps compatibility answers available via oneClick: false", () => {
+    const shellConfig = { command: "docker", args: ["run", "example/mcp"] };
+
+    expect(mcpInstallTargetsForConfig(shellConfig)).toEqual([]);
+    expect(
+      mcpInstallTargetsForConfig(shellConfig, { oneClick: false }),
+    ).toEqual(ALL_TARGETS);
+    expect(
+      mcpConfigSupportsTarget(shellConfig, "cursor", { oneClick: false }),
+    ).toBe(true);
+
+    // The opt-out only relaxes the stdio allowlist - it never revives a config
+    // that fails normalization, nor codex's transport limits.
+    expect(
+      mcpInstallTargetsForConfig(
+        { type: "sse", url: "https://example.com/sse" },
+        { oneClick: false },
+      ),
+    ).not.toContain("codex");
+    expect(
+      mcpConfigSupportsTarget({ command: "" }, "cursor", { oneClick: false }),
+    ).toBe(false);
+
+    expect(
+      resolveMcpInstallConfig(
+        {
+          category: "mcp",
+          slug: "docker-server",
+          configSnippet: JSON.stringify({
+            mcpServers: { example: shellConfig },
+          }),
+        },
+        { oneClick: false },
+      ),
+    ).toMatchObject({ targets: ALL_TARGETS, config: { command: "docker" } });
   });
 
   it("allows loopback http urls in install metadata", () => {
