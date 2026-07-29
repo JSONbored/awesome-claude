@@ -63,6 +63,21 @@ describe("browseThemeDistributionState", () => {
     expect(memory?.count).toBe(2);
   });
 
+  it("de-duplicates raw tags that slug to the same theme (#5634)", () => {
+    const state = browseThemeDistributionState([
+      entry("a", ["Model Context Protocol", "model-context-protocol"]),
+      entry("b", ["memory"]),
+      entry("c", ["rag"]),
+    ]);
+    const mcp = state.topThemes.find(
+      (t) => t.slug === "model-context-protocol",
+    );
+    expect(mcp?.count).toBe(1);
+    expect(
+      state.topThemes.find((t) => t.tag === "Model Context Protocol")?.count,
+    ).toBe(1);
+  });
+
   it("classifies a dominant theme as focused", () => {
     const state = browseThemeDistributionState([
       entry("a", ["memory", "rag"]),

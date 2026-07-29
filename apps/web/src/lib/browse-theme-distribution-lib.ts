@@ -41,11 +41,11 @@ function normalizeTags(entry: Entry): string[] {
     if (tag.length === 0) {
       continue;
     }
-    const key = tag.toLowerCase();
-    if (seen.has(key)) {
+    const slug = tagSlug(tag);
+    if (seen.has(slug)) {
       continue;
     }
-    seen.add(key);
+    seen.add(slug);
     tags.push(tag);
   }
   return tags;
