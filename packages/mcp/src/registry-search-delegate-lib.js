@@ -31,3 +31,19 @@ export function rankSearchEntries(entries, query) {
 export function entryMatchesPlatform(entry, platform) {
   return matchesRegistryPlatform(entry, platform);
 }
+
+/**
+ * AND-match query filter with the same token-OR fallback plan/recommend use:
+ * when strict AND-match returns nothing, match entries where any query token
+ * appears in the normalized search haystack.
+ */
+export function filterEntriesByQuery(entries, query) {
+  let matched = entries.filter((entry) => entryMatchesQuery(entry, query));
+  const queryTokens = searchTokens(query);
+  if (!matched.length && queryTokens.length) {
+    matched = entries.filter((entry) =>
+      queryTokens.some((token) => entrySearchText(entry).includes(token)),
+    );
+  }
+  return matched;
+}

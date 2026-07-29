@@ -27,6 +27,7 @@ import {
   entryMatchesPlatform,
   entryMatchesQuery,
   entrySearchText,
+  filterEntriesByQuery,
   rankSearchEntries,
   searchTokens,
 } from "./registry-search-delegate-lib.js";
@@ -169,12 +170,14 @@ export async function searchRegistry(args = {}, options = {}) {
     await readJsonArtifact("search-index.json", options),
   );
 
-  const matched = searchIndex
-    .filter((entry) => !category || entry.category === category)
-    .filter((entry) => entryMatchesPlatform(entry, platform))
-    .filter((entry) => entryMatchesTag(entry, tag))
-    .filter((entry) => entryMatchesQuery(entry, query))
-    .filter((entry) => entryMatchesTrustFilters(entry, trustFilters));
+  const matched = filterEntriesByQuery(
+    searchIndex
+      .filter((entry) => !category || entry.category === category)
+      .filter((entry) => entryMatchesPlatform(entry, platform))
+      .filter((entry) => entryMatchesTag(entry, tag))
+      .filter((entry) => entryMatchesTrustFilters(entry, trustFilters)),
+    query,
+  );
   const entries = rankSearchEntries(matched, query)
     .slice(0, limit)
     .map((item) => toSearchResult(item.entry, item));
@@ -347,12 +350,14 @@ export async function listCategoryEntries(args = {}, options = {}) {
     await readJsonArtifact("search-index.json", options),
   );
 
-  const entries = searchIndex
-    .filter((entry) => !category || entry.category === category)
-    .filter((entry) => entryMatchesPlatform(entry, platform))
-    .filter((entry) => entryMatchesTag(entry, tag))
-    .filter((entry) => entryMatchesQuery(entry, query))
-    .filter((entry) => entryMatchesTrustFilters(entry, trustFilters));
+  const entries = filterEntriesByQuery(
+    searchIndex
+      .filter((entry) => !category || entry.category === category)
+      .filter((entry) => entryMatchesPlatform(entry, platform))
+      .filter((entry) => entryMatchesTag(entry, tag))
+      .filter((entry) => entryMatchesTrustFilters(entry, trustFilters)),
+    query,
+  );
   const page = paginateEntries(entries, offset, limit).map(toEntrySummary);
 
   return buildCategoryEntriesPageResponse({
@@ -382,13 +387,15 @@ export async function getRecentUpdates(args = {}, options = {}) {
     await readJsonArtifact("search-index.json", options),
   );
   const sorted = sortEntriesByUpdatedAt(
-    searchIndex
-      .filter((entry) => !category || entry.category === category)
-      .filter((entry) => entryMatchesPlatform(entry, platform))
-      .filter((entry) => entryMatchesTag(entry, tag))
-      .filter((entry) => entryMatchesQuery(entry, query))
-      .filter((entry) => entryMatchesTrustFilters(entry, trustFilters))
-      .filter((entry) => !since || entryUpdatedAt(entry) >= since),
+    filterEntriesByQuery(
+      searchIndex
+        .filter((entry) => !category || entry.category === category)
+        .filter((entry) => entryMatchesPlatform(entry, platform))
+        .filter((entry) => entryMatchesTag(entry, tag))
+        .filter((entry) => entryMatchesTrustFilters(entry, trustFilters))
+        .filter((entry) => !since || entryUpdatedAt(entry) >= since),
+      query,
+    ),
     entryUpdatedAt,
   );
   const entries = mapRecentUpdateEntries(
