@@ -234,6 +234,35 @@ describe("submissions-lib spec validation", () => {
     },
   );
 
+  it.each([
+    ["partners", "https://example.com/partners/xyz"],
+    ["referral", "https://example.com/referral/abc"],
+    ["affiliate", "https://example.com/affiliate/link"],
+    ["bare /ref", "https://example.com/ref"],
+    ["bare /refer", "https://example.com/refer"],
+  ])(
+    "flags docs_url with affiliate path segment %s (#5687)",
+    (_label, docs_url) => {
+      const result = validateSubmissionDraftFromSpec(submissionSpec, {
+        fields: { ...validMcpFields, docs_url },
+      });
+      expect(result.valid).toBe(false);
+      expect(result.errors.join("\n")).toContain(
+        "Contributor submissions cannot include affiliate/referral URLs",
+      );
+    },
+  );
+
+  it("does not flag docs reference paths as affiliate (#5687)", () => {
+    const result = validateSubmissionDraftFromSpec(submissionSpec, {
+      fields: {
+        ...validMcpFields,
+        docs_url: "https://go.dev/ref/mod",
+      },
+    });
+    expect(result.valid).toBe(true);
+  });
+
   it("rejects affiliate URLs and invalid capability-pack metadata", () => {
     const affiliateResult = validateSubmissionDraftFromSpec(submissionSpec, {
       fields: {

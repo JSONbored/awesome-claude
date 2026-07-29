@@ -115,10 +115,17 @@ function isLikelyAffiliateUrl(value) {
     for (const key of url.searchParams.keys()) {
       if (isTrackingQueryKey(key)) return true;
     }
+    // Path-based checks mirror packages/registry/src/source-url-lib.js's
+    // hasAffiliatePath (#5637 / #5687). Keep in sync with that canonical
+    // detector so MCP submission.validate agrees with the private gate.
+    const pathname = url.pathname;
+    if (/\/(referral|affiliate|partners?)(?:\/|$)/i.test(pathname)) {
+      return true;
+    }
+    return /^\/(ref|refer)\/?$/i.test(pathname);
   } catch {
-    return false;
+    return /\b(affiliate|referral|ref=|via=)\b/i.test(trimmed);
   }
-  return false;
 }
 
 function isPublicContact(value) {
