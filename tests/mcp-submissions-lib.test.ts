@@ -217,6 +217,23 @@ describe("submissions-lib spec validation", () => {
     ).toContain("Guide submissions require guide_content.");
   });
 
+  it.each([
+    ["ref", "https://example.com/tool?ref=xyz123"],
+    ["tag", "https://example.com/tool?tag=partner"],
+    ["partner_id", "https://example.com/tool?partner_id=42"],
+  ])(
+    "flags docs_url with registry-canonical affiliate param %s (#5645)",
+    (_param, docs_url) => {
+      const result = validateSubmissionDraftFromSpec(submissionSpec, {
+        fields: { ...validMcpFields, docs_url },
+      });
+      expect(result.valid).toBe(false);
+      expect(result.errors.join("\n")).toContain(
+        "Contributor submissions cannot include affiliate/referral URLs",
+      );
+    },
+  );
+
   it("rejects affiliate URLs and invalid capability-pack metadata", () => {
     const affiliateResult = validateSubmissionDraftFromSpec(submissionSpec, {
       fields: {

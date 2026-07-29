@@ -84,6 +84,8 @@ function isHttpsUrl(value) {
   return isPublicHttpsUrl(normalizeText(value));
 }
 
+// Keep in sync with packages/registry/src/source-url-lib.js AFFILIATE_PARAMS so
+// submission.validate/review/prepare match the private submission gate.
 const TRACKING_QUERY_KEYS = new Set([
   "aff",
   "affiliate",
@@ -92,8 +94,11 @@ const TRACKING_QUERY_KEYS = new Set([
   "coupon",
   "irclickid",
   "partner",
+  "partner_id",
+  "ref",
   "referral",
   "referral_code",
+  "tag",
   "via",
 ]);
 
