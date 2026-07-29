@@ -5,6 +5,7 @@ import {
   hasAffiliateParam,
   hasEmbeddedUrlUserinfo,
   isAffiliateParam,
+  isLikelyAffiliateUrl,
   isPublicGitHubHostUrl,
   isPublicGitHubProfileUrl,
   isPublicHttpUrl,
@@ -782,5 +783,24 @@ describe("URL helpers handle nullish, empty, and unparseable input", () => {
     expect(publicHttpUrlHref(null)).toBe("");
     expect(publicHttpUrlHref("")).toBe("");
     expect(publicHttpUrlHref("   ")).toBe("");
+  });
+});
+
+describe("isLikelyAffiliateUrl shared helper (#5637)", () => {
+  it("flags query params via isAffiliateParam", () => {
+    expect(isLikelyAffiliateUrl("https://example.com/?ref=creator")).toBe(true);
+    expect(isLikelyAffiliateUrl("https://example.com/?utm_source=x")).toBe(
+      true,
+    );
+  });
+
+  it("flags affiliate path segments used by install-snippet risk review", () => {
+    expect(isLikelyAffiliateUrl("https://example.com/partners/xyz")).toBe(true);
+    expect(isLikelyAffiliateUrl("https://example.com/ref")).toBe(true);
+  });
+
+  it("does not flag docs reference paths", () => {
+    expect(isLikelyAffiliateUrl("https://go.dev/ref/mod")).toBe(false);
+    expect(isLikelyAffiliateUrl("https://example.com/docs")).toBe(false);
   });
 });

@@ -9,6 +9,7 @@ export {
   hasAffiliateParam,
   hasEmbeddedUrlUserinfo,
   isAffiliateParam,
+  isLikelyAffiliateUrl,
   isPublicGitHubHostUrl,
   isPublicGitHubProfileUrl,
   isPublicHttpUrl,

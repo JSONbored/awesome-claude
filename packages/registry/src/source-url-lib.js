@@ -251,6 +251,44 @@ export function stripTrackingParams(value) {
 }
 
 /**
+ * Detect whether a URL is likely affiliate/referral tracked.
+ *
+ * Combines the registry-canonical query-param check (`isAffiliateParam` /
+ * `AFFILIATE_PARAMS` plus every `utm_*`) with the path-based checks that
+ * submission-risk previously kept locally (`/referral/`, `/affiliate/`,
+ * `/partner(s)/`, bare terminal `/ref`/`/refer`). One implementation gates
+ * both field validation and install-snippet risk review (#5637).
+ *
+ * @param {unknown} value
+ * @returns {boolean}
+ */
+export function isLikelyAffiliateUrl(value) {
+  const text = String(value ?? "").trim();
+  if (!text) return false;
+
+  try {
+    const url = new URL(text);
+
+    if ([...url.searchParams.keys()].some(isAffiliateParam)) {
+      return true;
+    }
+
+    // Explicit affiliate path segments anywhere in the path.
+    if (/\/(referral|affiliate|partners?)(?:\/|$)/i.test(url.pathname)) {
+      return true;
+    }
+    // Bare `/ref` or `/refer` ONLY as the terminal path segment (affiliate
+    // shortlinks like example.com/ref). A `ref` segment with more after it is
+    // almost always a docs "reference" section (e.g. go.dev/ref/mod), not an
+    // affiliate link, so it is not flagged here — genuine affiliate links use a
+    // `ref=` query param (handled above) instead.
+    return /^\/(ref|refer)\/?$/i.test(url.pathname);
+  } catch {
+    return /\b(affiliate|referral|ref=|via=)\b/i.test(text);
+  }
+}
+
+/**
  * Canonical form for comparing submitted source URLs against registry entries.
  *
  * @param {unknown} value

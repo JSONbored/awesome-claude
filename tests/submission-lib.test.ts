@@ -346,6 +346,13 @@ describe("isLikelyAffiliateUrl", () => {
     ["https://example.com?page=2", false],
     ["  https://example.com?utm_campaign=x  ", true],
     ["http://example.com?ref=x", true],
+    // Path-based checks previously only in submission-risk (#5637)
+    ["https://example.com/partners/xyz", true],
+    ["https://example.com/affiliate/go", true],
+    ["https://example.com/referral/x", true],
+    ["https://example.com/ref", true],
+    ["https://example.com/refer/", true],
+    ["https://go.dev/ref/mod", false],
   ])("isLikelyAffiliateUrl(%j) -> %j", (input, expected) => {
     expect(isLikelyAffiliateUrl(input)).toBe(expected);
   });
@@ -787,6 +794,19 @@ describe("validateSubmission mcp", () => {
     });
     expect(result.errors).toContain(
       "Contributor submissions cannot include affiliate/referral URLs: docs_url",
+    );
+  });
+
+  it("rejects website_url with /partners/ path (#5637)", () => {
+    const result = validateSubmission({
+      title: "Add MCP Server: Demo",
+      body: buildValidBody({
+        ...validMcpFields,
+        website_url: "https://example.com/partners/xyz",
+      }),
+    });
+    expect(result.errors).toContain(
+      "Contributor submissions cannot include affiliate/referral URLs: website_url",
     );
   });
 
