@@ -1,5 +1,6 @@
 import * as React from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, stripSearchParams, useNavigate } from "@tanstack/react-router";
+import { z } from "zod";
 import { Search } from "lucide-react";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
@@ -7,6 +8,7 @@ import { CategoryPill } from "@/components/badges";
 import { getIndexableTagGroups } from "@/lib/tags";
 import { toTagView, type TagView } from "@/lib/tag-view-lib";
 import { trackEvent } from "@/lib/analytics";
+import { normalizeSearchQuery } from "@/data/search";
 import {
   tagsIndexBrowseEgressAnalyticsData,
   tagsIndexBrowseEgressAnalyticsEvent,
@@ -22,7 +24,19 @@ import { breadcrumbScript, itemListScript } from "@/lib/seo-jsonld";
 import { absoluteUrl } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
+const defaultSearch = {
+  q: "",
+};
+
+const searchSchema = z.object({
+  q: z.string().transform(normalizeSearchQuery).catch(defaultSearch.q).default(defaultSearch.q),
+});
+
 export const Route = createFileRoute("/tags/")({
+  validateSearch: searchSchema,
+  search: {
+    middlewares: [stripSearchParams(defaultSearch)],
+  },
   head: () => {
     const url = absoluteUrl("/tags");
     const title = "Browse Claude resources by tag — HeyClaude";
@@ -117,9 +131,25 @@ function TagPill({
 }
 
 function TagsIndex() {
+  const navigate = useNavigate({ from: Route.fullPath });
+  const sp = Route.useSearch();
   const all = React.useMemo(() => getIndexableTagGroups().map(toTagView), []);
-  const [query, setQuery] = React.useState("");
-  const q = query.trim().toLowerCase();
+  // Debounce free-text query: local state drives the input; URL updates 250ms
+  // after idle — same pattern as /browse (#5712).
+  const [qInput, setQInput] = React.useState(sp.q);
+  React.useEffect(() => {
+    setQInput(sp.q);
+  }, [sp.q]);
+  React.useEffect(() => {
+    if (qInput === sp.q) return;
+    const t = window.setTimeout(() => {
+      navigate({ search: (prev) => ({ ...prev, q: qInput }), replace: true });
+    }, 250);
+    return () => window.clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [qInput]);
+
+  const q = sp.q;
 
   const filtered = React.useMemo(
     () => (q ? all.filter((t) => t.name.toLowerCase().includes(q) || t.slug.includes(q)) : all),
@@ -153,10 +183,10 @@ function TagsIndex() {
         />
         <input
           type="search"
-          value={query}
+          value={qInput}
           onChange={(e) => {
             const next = e.target.value;
-            setQuery(next);
+            setQInput(next);
             const trimmed = next.trim();
             if (trimmed.length >= 2) {
               const needle = trimmed.toLowerCase();
@@ -205,7 +235,7 @@ function TagsIndex() {
           </div>
         ) : (
           <p className="mt-4 text-sm text-ink-muted">
-            No topics match “{query}”. Try a broader term, or{" "}
+            No topics match “{qInput}”. Try a broader term, or{" "}
             {(() => {
               const destination = tagsIndexBrowseEgressDestination("browse");
               if (!destination) return "browse the full directory";
