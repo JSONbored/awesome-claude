@@ -68,6 +68,12 @@ title: Example Tool
 category: tools
 description: Example policy validation fixture.
 sourceUrl: https://github.com/example/example-tool
+websiteUrl: https://example.com
+documentationUrl: https://example.com/docs
+pricingModel: free
+disclosure: independent
+applicationCategory: DeveloperApplication
+operatingSystem: Any
 submittedBy: tester
 submittedByUrl: https://github.com/tester
 ---
@@ -345,6 +351,12 @@ title: Example Tool
 category: tools
 description: Example maintainer-owned package fixture.
 downloadUrl: /downloads/skills/example-skill.zip
+websiteUrl: https://example.com
+documentationUrl: https://example.com/docs
+pricingModel: free
+disclosure: independent
+applicationCategory: DeveloperApplication
+operatingSystem: Any
 submittedBy: JSONbored
 submittedByUrl: https://github.com/JSONbored
 safetyNotes:
@@ -467,6 +479,12 @@ Example body.
 title: Example Tool
 category: tools
 description: Example tool entry.
+websiteUrl: https://example.com
+documentationUrl: https://example.com/docs
+pricingModel: free
+disclosure: independent
+applicationCategory: DeveloperApplication
+operatingSystem: Any
 safetyNotes:
   - Original safety note.
 privacyNotes:
@@ -479,6 +497,12 @@ Example body.
 title: Example Tool
 category: tools
 description: Example tool entry.
+websiteUrl: https://example.com
+documentationUrl: https://example.com/docs
+pricingModel: free
+disclosure: independent
+applicationCategory: DeveloperApplication
+operatingSystem: Any
 safetyNotes:
   - Updated safety note.
 privacyNotes:
@@ -1546,6 +1570,70 @@ Body.
       expect.arrayContaining([
         expect.objectContaining({ id: "affiliate_referral_url" }),
       ]),
+    );
+  });
+
+  it("fails misrouted hosted SaaS submitted under a non-tools category (#5681)", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: Acme Hosted SaaS
+category: agents
+description: A hosted SaaS web app product with subscription pricing and a features page.
+websiteUrl: https://acme.example.com
+submittedBy: contributor
+submittedByUrl: https://github.com/contributor
+---
+
+This commercial SaaS product is a hosted app with a subscription plan.
+`;
+    const result = runContentPolicy(tmpDir, content, "same_repo_direct", [
+      {
+        filename: "content/agents/acme-hosted-saas.mdx",
+        status: "added",
+        content,
+      },
+    ]);
+    expect(result.status).not.toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.ok).toBe(false);
+    expect(
+      output.classificationWarnings.map((w: { id: string }) => w.id),
+    ).toContain("tools_category_routing");
+    expect(output.failures.join("\n")).toContain("tools_category_routing");
+  });
+
+  it("fails incomplete tools listings missing review metadata (#5681)", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: Incomplete Tool
+category: tools
+description: Tools entry missing required listing metadata.
+sourceUrl: https://github.com/example/incomplete-tool
+submittedBy: contributor
+submittedByUrl: https://github.com/contributor
+---
+
+Body.
+`;
+    const result = runContentPolicy(tmpDir, content, "same_repo_direct", [
+      {
+        filename: "content/tools/incomplete-tool.mdx",
+        status: "added",
+        content,
+      },
+    ]);
+    expect(result.status).not.toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.ok).toBe(false);
+    expect(
+      output.classificationWarnings.map((w: { id: string }) => w.id),
+    ).toContain("tools_listing_metadata_missing");
+    expect(output.failures.join("\n")).toContain(
+      "tools_listing_metadata_missing",
     );
   });
 });
