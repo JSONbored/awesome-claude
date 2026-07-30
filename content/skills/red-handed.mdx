@@ -1,0 +1,223 @@
+---
+title: red-handed
+slug: red-handed
+category: skills
+description: >-
+  Check whether a Claude Code session's claims are backed by its own record. A
+  deterministic CLI reads the transcript under ~/.claude/projects, lines it up
+  against the repository's git state, and quotes the timestamp and the line for
+  every gap it finds.
+cardDescription: >-
+  Audit whether your coding agent actually ran the tests it said passed. Local,
+  deterministic, no network.
+seoTitle: red-handed Skill for Auditing Claude Code Test Claims
+seoDescription: >-
+  Install red-handed to check Claude Code session transcripts against git and
+  report claims with no test run behind them, rewritten expected values,
+  switched-off tests, and commits made past a rejecting hook.
+author: JinHyuk Sung
+authorProfileUrl: "https://github.com/sjh9714"
+submittedBy: sjh9714
+submittedByUrl: "https://github.com/sjh9714"
+dateAdded: "2026-07-30"
+submittedAt: "2026-07-30"
+repoUrl: "https://github.com/sjh9714/red-handed"
+documentationUrl: "https://github.com/sjh9714/red-handed#readme"
+websiteUrl: "https://github.com/sjh9714/red-handed"
+downloadUrl: "https://github.com/sjh9714/red-handed/archive/refs/heads/main.zip"
+installable: true
+installCommand: |-
+  claude plugin marketplace add sjh9714/red-handed
+  claude plugin install red-handed@red-handed
+usageSnippet: >-
+  Run `npx @jinhyuk9714/red-handed@latest demo` to see the output shape on a
+  made-up session, then point it at your own work with
+  `npx @jinhyuk9714/red-handed@latest` for the current project or `stats` for
+  every session on the machine.
+copySnippet: |-
+  npx --yes @jinhyuk9714/red-handed@latest demo
+  npx --yes @jinhyuk9714/red-handed@latest
+  npx --yes @jinhyuk9714/red-handed@latest stats
+  npx --yes @jinhyuk9714/red-handed@latest --all --lang ko
+skillType: general
+skillLevel: foundational
+verificationStatus: validated
+verifiedAt: "2026-07-30"
+retrievalSources:
+  - "https://github.com/sjh9714/red-handed"
+  - "https://github.com/sjh9714/red-handed/blob/main/README.md"
+  - "https://github.com/sjh9714/red-handed/blob/main/skills/audit/SKILL.md"
+  - "https://github.com/sjh9714/red-handed/blob/main/skills/history/SKILL.md"
+  - "https://github.com/sjh9714/red-handed/blob/main/.claude-plugin/marketplace.json"
+  - "https://registry.npmjs.org/@jinhyuk9714/red-handed"
+sourceUrls:
+  - "https://github.com/sjh9714/red-handed"
+  - "https://github.com/sjh9714/red-handed/blob/main/README.md"
+  - "https://github.com/sjh9714/red-handed/blob/main/skills/audit/SKILL.md"
+  - "https://registry.npmjs.org/@jinhyuk9714/red-handed"
+testedPlatforms:
+  - Claude Code
+prerequisites:
+  - "Node.js 20 or newer, and npx to fetch the published `@jinhyuk9714/red-handed` package on demand."
+  - "A project with Claude Code session transcripts under `~/.claude/projects`, or a git repository for the degraded `--git-only` mode."
+  - "Claude Code, for the bundled `/audit` and `/history` skills. The CLI also works on its own from a terminal."
+safetyNotes:
+  - "Runs a local CLI over local files via npx. It only reads by default and never modifies the repository, its tests, or its git history."
+  - "Two writes exist and both are opt-in. `stats` caches results at `~/.red-handed/cache.json` with mode 0600, relocatable with `RED_HANDED_HOME`."
+  - "The separate `install-hook` command edits `~/.claude/settings.json`. It backs the file up first, writes through a temp file and rename, and aborts rather than guessing if the file does not parse or is not writable."
+  - "The plugin registers no hooks and runs nothing on install. Its two skills invoke the CLI only when the user asks for an audit."
+privacyNotes:
+  - "Nothing leaves the machine. There are no network calls, no telemetry and no model calls, and no fetch, HTTP client or socket use in the source or in the published package."
+  - "It does read sensitive local data: Claude Code session transcripts under `~/.claude/projects`, including subagent transcripts, plus the repository's git state."
+  - "Short excerpts are quoted in terminal output so each finding can be checked. Every excerpt passes a masking step that redacts token, secret, key and password assignments, GitHub, OpenAI, Slack and AWS key formats, bearer headers, URL credentials and PEM private keys."
+  - "Output goes to the terminal only and is never uploaded. Because no model is involved, the same session always produces the same answer."
+tags:
+  - red-handed
+  - agent-skills
+  - audit
+  - verification
+  - testing
+  - observability
+  - session-transcript
+  - claude-code
+keywords:
+  - red-handed
+  - Claude Code session audit
+  - agent test claim verification
+  - session transcript analysis
+  - deterministic agent audit
+  - tests pass verification
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+---
+
+# red-handed
+
+red-handed answers one question about a coding session: was what the agent said
+backed by what it did. It reads the transcript Claude Code already writes under
+`~/.claude/projects`, lines it up against the repository's git state, and
+reports the places where the record does not support the claim. Every finding
+quotes the timestamp and the line it came from, so the report is evidence to
+check rather than a verdict to trust.
+
+It calls no model and makes no network request. The same session always
+produces the same answer, which is what makes the output worth arguing with.
+
+## Knowledge freshness
+
+This listing was verified on **2026-07-30** against the public repository, the
+canonical `SKILL.md` files, the plugin manifest, and the published
+`@jinhyuk9714/red-handed` 0.1.2 package. The source is MIT licensed and has one
+runtime dependency.
+
+## Retrieval sources
+
+- https://github.com/sjh9714/red-handed
+- https://github.com/sjh9714/red-handed/blob/main/README.md
+- https://github.com/sjh9714/red-handed/blob/main/skills/audit/SKILL.md
+- https://github.com/sjh9714/red-handed/blob/main/skills/history/SKILL.md
+- https://registry.npmjs.org/@jinhyuk9714/red-handed
+
+## Installation
+
+Nothing needs to be installed to try it. This runs a made-up session where every
+check fires, so the output shape is visible before it is pointed at real work:
+
+```bash
+npx --yes @jinhyuk9714/red-handed@latest demo
+```
+
+Then point it at your own project:
+
+```bash
+npx --yes @jinhyuk9714/red-handed@latest
+npx --yes @jinhyuk9714/red-handed@latest stats
+```
+
+As a Claude Code plugin, which adds `/audit` for the current session and
+`/history` for every session on the machine:
+
+```bash
+claude plugin marketplace add sjh9714/red-handed
+claude plugin install red-handed@red-handed
+```
+
+The plugin deliberately registers no hooks. Reading every session on the machine
+because something was installed is not a default worth having, so the skills run
+the CLI only when asked. A `install-hook` command exists for people who do want
+it on every session end.
+
+## The eight checks
+
+- A "tests pass" claim with no test run behind it in that session.
+- A claim made when the last run before it had failed.
+- An expected value rewritten to the value a failure produced, with no change to
+  the implementation in between.
+- A test switched off with `.only`, silencing every other test in the file.
+- A commit made after a hook rejected it, with the hooks switched off.
+- A suite that quietly got smaller, caught by comparing runner counts, because a
+  deleted test leaves no anchor in the working tree.
+- A check disabled in configuration after a related failure.
+- An error swallowed by an empty catch right after a related failure.
+
+## CAUGHT and SUSPICIOUS
+
+`CAUGHT` requires two things to be true at once: the session shows the agent
+doing it, and the code still shows it now. If the change was undone later, there
+is nothing to accuse anyone of and the finding disappears.
+
+`SUSPICIOUS` means the pattern is there but the motive is not established. An
+empty catch block is sometimes exactly right, and a skipped test is sometimes
+deliberate.
+
+The tool is tuned to miss things rather than to accuse wrongly. An adversarial
+review of the finished code found five separate ways it could print `CAUGHT` at
+honest work — a timed-out run read as a failure, an unrecognized runner read as
+no run at all, a re-run under a launcher it could not see, a requested behaviour
+change read as rewriting the answer, and a backgrounded command counted as a
+pass. All five are fixed and each has a permanent regression test.
+
+## What it cannot see
+
+Worth stating, so a clean result is not mistaken for a guarantee:
+
+- Verification it cannot read counts as verification it did not see. A project's
+  own test script, a browser check, anything without machine-readable output.
+  Those land at `SUSPICIOUS`, never at `CAUGHT`.
+- Test output parsing covers Jest, Vitest, Mocha and pytest. Other runners are
+  recognized as test commands, but their results are reported as unreadable.
+- Claim sentences are matched in English and Korean.
+- It says nothing about whether the code is correct. It only reports where the
+  record does not support the claim.
+
+## Compatibility
+
+### Native
+
+- Claude Code, through the plugin marketplace or by running the CLI directly.
+
+### Manual adaptation
+
+Other hosts that support the standard `SKILL.md` format can load
+`skills/audit/SKILL.md` and `skills/history/SKILL.md` from the repository. For
+sessions with no transcript at all, `--git-only` audits the working tree diff
+instead, at reduced confidence.
+
+## Troubleshooting
+
+**`npx @jinhyuk9714/red-handed` reports a missing command.** npx cannot resolve
+the binary of a scoped package without an explicit version tag. Use
+`npx @jinhyuk9714/red-handed@latest`, which is why every command here is pinned
+that way.
+
+**It found nothing and the session clearly had problems.** Check whether the
+verification was something it can read. A browser check or a project's own
+wrapper script produces no machine-readable result, and unreadable verification
+is treated as verification it did not see rather than as an absent one.
+
+**A finding looks wrong.** Each one carries the quoted evidence and the
+timestamp, so it can be checked against the transcript directly. False
+accusations are the failure mode this tool cares most about; the five that an
+adversarial review already found are documented in the README with their
+regression tests.
