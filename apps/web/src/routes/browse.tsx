@@ -1148,6 +1148,7 @@ function Browse() {
                     role="radio"
                     active={(sp.category || "") === c.id}
                     onClick={() => onCategoryFilter(c.id)}
+                    count={c.id ? axisCount("category", c.id) : undefined}
                   >
                     {c.label}
                   </FilterChip>
