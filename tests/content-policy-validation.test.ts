@@ -711,6 +711,109 @@ Example body.
     );
   });
 
+  it("fails misrouted tool/app listings outside content/tools (#5681)", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: Acme SaaS Product
+category: guides
+description: A hosted SaaS product with a subscription pricing plan.
+sourceUrl: https://github.com/example/acme-saas
+submittedBy: contributor
+submittedByUrl: https://github.com/contributor
+---
+
+This commercial software product is a hosted SaaS web application.
+`;
+
+    const result = runContentPolicy(tmpDir, content, "external_direct", [
+      {
+        filename: "content/guides/acme-saas.mdx",
+        status: "added",
+        content,
+      },
+    ]);
+
+    expect(result.status).not.toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.failures).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("tools_category_routing"),
+      ]),
+    );
+  });
+
+  it("fails tools listings missing required review metadata (#5681)", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: Sparse Tools Listing
+category: tools
+description: A tools-category entry without review metadata.
+sourceUrl: https://github.com/example/sparse-tool
+submittedBy: contributor
+submittedByUrl: https://github.com/contributor
+---
+
+Sparse tools listing body.
+`;
+
+    const result = runContentPolicy(tmpDir, content, "external_direct", [
+      {
+        filename: "content/tools/sparse-tool.mdx",
+        status: "added",
+        content,
+      },
+    ]);
+
+    expect(result.status).not.toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.failures).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("tools_listing_metadata_missing"),
+      ]),
+    );
+  });
+
+  it("does not route MCP server submissions as tools listings (#5681)", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: Example MCP Server
+category: mcp
+description: An MCP server endpoint for local tools.
+sourceUrl: https://github.com/example/example-mcp
+submittedBy: contributor
+submittedByUrl: https://github.com/contributor
+installCommand: claude mcp add example
+safetyNotes:
+  - Runs locally with user-selected tools.
+privacyNotes:
+  - Only handles context selected by the user.
+---
+
+Configure this MCP server with claude mcp add.
+`;
+
+    const result = runContentPolicy(tmpDir, content, "external_direct", [
+      {
+        filename: "content/mcp/example-mcp.mdx",
+        status: "added",
+        content,
+      },
+    ]);
+
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.failures ?? []).not.toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("tools_category_routing"),
+      ]),
+    );
+  });
+
   it("fails external content PRs that set maintainer review provenance", () => {
     const tmpDir = fs.mkdtempSync(
       path.join(os.tmpdir(), "heyclaude-content-policy-"),

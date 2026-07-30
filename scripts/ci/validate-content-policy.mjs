@@ -262,6 +262,173 @@ function looksLikeCommercialApiRelay(fields, text) {
   return relaySignal && commercialSignal;
 }
 
+// Ported from packages/registry/src/submission-classification-lib.js so the
+// standalone CI content-policy gate can enforce tools-listing routing without
+// importing the registry package (#5681).
+const TOOLS_CATEGORY = "tools";
+const TOOLS_LISTING_FLOW_URL = "https://heyclau.de/tools/submit";
+const TOOL_LISTING_REVIEW_FIELDS = [
+  ["websiteUrl", ["website_url", "websiteUrl"]],
+  ["documentationUrl", ["docs_url", "documentationUrl"]],
+  ["pricingModel", ["pricing_model", "pricingModel"]],
+  ["disclosure", ["disclosure"]],
+  ["applicationCategory", ["application_category", "applicationCategory"]],
+  ["operatingSystem", ["operating_system", "operatingSystem"]],
+];
+
+function fieldValue(fields = {}, aliases = []) {
+  for (const alias of aliases) {
+    const value = normalizeText(fields[alias]);
+    if (value) return value;
+  }
+  return "";
+}
+
+function unique(values) {
+  return [...new Set(values.filter(Boolean))];
+}
+
+function toolListingSignals(fields = {}, text = "") {
+  const body = lower(
+    [
+      text,
+      fields.name,
+      fields.title,
+      fields.description,
+      fields.card_description,
+      fields.cardDescription,
+      fields.tags,
+      fields.pricing_model,
+      fields.pricingModel,
+      fields.disclosure,
+      fields.website_url,
+      fields.websiteUrl,
+      fields.docs_url,
+      fields.documentationUrl,
+    ].join("\n"),
+  );
+  const signals = [];
+
+  if (fieldValue(fields, ["website_url", "websiteUrl"])) {
+    signals.push("website_url");
+  }
+  if (fieldValue(fields, ["pricing_model", "pricingModel"])) {
+    signals.push("pricing_model");
+  }
+  if (fieldValue(fields, ["disclosure"])) {
+    signals.push("disclosure");
+  }
+
+  const patterns = [
+    ["hosted_app", /\bhosted\s+(app|application|product|service|platform)\b/i],
+    ["desktop_app", /\b(desktop app|desktop application|native app)\b/i],
+    ["web_app", /\b(web app|web application)\b/i],
+    ["mobile_app", /\b(mobile app|mobile application)\b/i],
+    [
+      "runtime_app",
+      /\b(local ai agent runtime|agentic ai runtime|ai runtime|runs on your machine)\b/i,
+    ],
+    ["product", /\b(product|commercial product|software product)\b/i],
+    ["software", /\b(software|application)\b/i],
+    ["saas", /\b(saas|software as a service)\b/i],
+    ["service", /\b(service|platform|workspace|dashboard|interface)\b/i],
+    [
+      "subscription",
+      /\b(subscription|pricing|paid plan|pro plan|free trial|free to try|no credit card)\b/i,
+    ],
+    ["features_page", /\b(features page|demo url|product url|website url)\b/i],
+    ["placement", /\b(featured|sponsored|affiliate|preferred placement)\b/i],
+  ];
+
+  for (const [signal, pattern] of patterns) {
+    if (pattern.test(body)) signals.push(signal);
+  }
+
+  return unique(signals);
+}
+
+function looksLikeMcpServerSubmission(fields = {}, text = "") {
+  const body = lower(
+    [
+      text,
+      fields.name,
+      fields.title,
+      fields.description,
+      fields.card_description,
+      fields.cardDescription,
+      fields.install_command,
+      fields.installCommand,
+      fields.usage_snippet,
+      fields.usageSnippet,
+    ].join("\n"),
+  );
+
+  return (
+    /\bmcp\s+(server|endpoint|tool|transport|config|configuration)\b/i.test(
+      body,
+    ) || /\bclaude\s+mcp\s+add\b/i.test(body)
+  );
+}
+
+function looksLikeToolAppListing(fields = {}, text = "") {
+  const category = lower(fields.category);
+  if (category === "mcp" && looksLikeMcpServerSubmission(fields, text)) {
+    return false;
+  }
+  const signals = toolListingSignals(fields, text);
+  const hardSignals = new Set([
+    "hosted_app",
+    "desktop_app",
+    "web_app",
+    "mobile_app",
+    "runtime_app",
+    "product",
+    "software",
+    "saas",
+    "subscription",
+    "features_page",
+    "placement",
+  ]);
+  return (
+    signals.length >= 2 || signals.some((signal) => hardSignals.has(signal))
+  );
+}
+
+function missingToolListingReviewFields(fields = {}) {
+  const missing = [];
+  for (const [label, aliases] of TOOL_LISTING_REVIEW_FIELDS) {
+    if (!fieldValue(fields, aliases)) missing.push(label);
+  }
+  return missing;
+}
+
+function addToolListingClassificationSignals(report, fields, text) {
+  const category = normalizeText(fields.category);
+  if (category && category !== TOOLS_CATEGORY) {
+    if (looksLikeToolAppListing(fields, text)) {
+      addClassificationWarning(
+        report,
+        "tools_category_routing",
+        "This looks like a hosted tool/app/service/product and should route to tools listing review",
+        `Use content/tools or ${TOOLS_LISTING_FLOW_URL}`,
+      );
+    }
+    return;
+  }
+
+  if (category === TOOLS_CATEGORY) {
+    const missing = missingToolListingReviewFields(fields);
+    if (missing.length) {
+      addClassificationWarning(
+        report,
+        "tools_listing_metadata_missing",
+        "Tools listings should include website, docs/demo, pricing, disclosure, application category, and operating system fields",
+        missing.join(", "),
+      );
+    }
+  }
+}
+
 function annotationText(value) {
   return normalizeText(value)
     .replace(/%/g, "%25")
@@ -704,6 +871,9 @@ function frontmatterFields(data = {}, category = "") {
   return {
     category: normalizeText(data.category || category),
     slug: normalizeText(data.slug),
+    name: normalizeText(data.title || data.name),
+    description: normalizeText(data.description),
+    card_description: normalizeText(data.cardDescription),
     github_url: normalizeText(data.repoUrl),
     source_url: normalizeText(data.sourceUrl),
     source_urls: stringList(data.sourceUrls).join("\n"),
@@ -711,6 +881,10 @@ function frontmatterFields(data = {}, category = "") {
     docs_url: normalizeText(data.documentationUrl || data.projectUrl),
     download_url: normalizeText(data.downloadUrl),
     affiliate_url: normalizeText(data.affiliateUrl),
+    pricing_model: normalizeText(data.pricingModel),
+    disclosure: normalizeText(data.disclosure),
+    application_category: normalizeText(data.applicationCategory),
+    operating_system: normalizeText(data.operatingSystem),
     install_command: normalizeText(data.installCommand),
     usage_snippet: normalizeText(data.usageSnippet),
     full_copyable_content: normalizeText(data.copySnippet),
@@ -1329,6 +1503,10 @@ function directContentRequestChangesReasons(report = {}) {
       "Sensitive execution, install, package, background, or write behavior needs safetyNotes disclosure.",
     missing_privacy_notes:
       "Credential, local data, telemetry, or third-party data behavior needs privacyNotes disclosure.",
+    tools_category_routing:
+      "Hosted tools/apps/services/products must use the tools listing path or /tools/submit flow.",
+    tools_listing_metadata_missing:
+      "Tools listings need website, docs/demo, pricing, disclosure, application category, and operating system fields.",
   };
   for (const [id, reason] of Object.entries(warningReasons)) {
     if (!isExternalDirect && externalOnlyWarnings.has(id)) continue;
@@ -1440,6 +1618,7 @@ function buildReport({ args, files, headRepo, baseRepo, headRef, sourceType }) {
       baseContentBody: baseParsed.content || "",
     });
     addContentRiskSignals(report, fields, content);
+    addToolListingClassificationSignals(report, fields, content);
     addDisclosureNoteSignals(report, fields);
   }
 
