@@ -27,6 +27,7 @@ import {
   buildRegistryRelationGraph,
   relationLookupFromGraph,
 } from "./relationships.js";
+import { isPublicHttpsUrl } from "./source-url-lib.js";
 
 export const ENTRY_SCHEMA_VERSION = 1;
 export const RAYCAST_SCHEMA_VERSION = 2;
@@ -507,6 +508,25 @@ function sourceUrlsForEntry(entry) {
     .filter((value, index, list) => list.indexOf(value) === index);
 }
 
+// Trust "source available" must reflect reviewable provenance, not marketing
+// sites or mutable package downloads, and never cleartext http:// URLs.
+function reviewableSourceUrlsForEntry(entry) {
+  return [
+    entry.documentationUrl,
+    entry.docsUrl,
+    entry.repoUrl,
+    externalGithubUrl(entry),
+    entry.repositoryUrl,
+    entry.sourceUrl,
+    ...(Array.isArray(entry.sourceUrls) ? entry.sourceUrls : []),
+    ...(Array.isArray(entry.retrievalSources) ? entry.retrievalSources : []),
+  ]
+    .map((value) => String(value || "").trim())
+    .filter(Boolean)
+    .filter((value, index, list) => list.indexOf(value) === index)
+    .filter((value) => isPublicHttpsUrl(value));
+}
+
 function lastVerifiedForEntry(entry) {
   return (
     entry.verifiedAt ||
@@ -531,6 +551,7 @@ export function buildEntryTrustSignals(entry) {
   const packageChecksum =
     entry.downloadSha256 || entry.skillPackage?.sha256 || "";
   const sourceUrls = sourceUrlsForEntry(entry);
+  const reviewableSourceUrls = reviewableSourceUrlsForEntry(entry);
   const hasSafetyNotes = noteList(entry.safetyNotes).length > 0;
   const hasPrivacyNotes = noteList(entry.privacyNotes).length > 0;
 
@@ -542,7 +563,7 @@ export function buildEntryTrustSignals(entry) {
     checksumPresent: Boolean(packageChecksum),
     sourceUrlCount: sourceUrls.length,
     sourceUrls,
-    sourceStatus: sourceUrls.length ? "available" : "missing",
+    sourceStatus: reviewableSourceUrls.length ? "available" : "missing",
     lastVerifiedAt: lastVerifiedForEntry(entry),
     adapterGenerated,
     hasSafetyNotes,
