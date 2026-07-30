@@ -886,14 +886,22 @@ describe("destructive rm detection", () => {
     // optional trailing slash.
     "rm -rf $HOME/",
     "rm -rf ${HOME}/",
+    // #5709: glob-suffixed root/home targets are destructive one-liners.
+    "rm -rf /*",
+    "rm -rf ~/*",
+    "rm -rf $HOME/*",
+    "rm -rf ${HOME}/*",
+    "rm -rf /etc/*",
   ])("flags %s", (command) => {
     expect(flagged(command)).toBe(true);
   });
 
-  // #5640 ORs hasRecursiveForceRemove into unsafe_install_pipeline, so any
-  // recursive+force rm flags — not only root/home targets.
+  // #5709: unscoped recursive-force rm must not raise critical on ordinary
+  // relative/tmp cleanup (hasDestructiveInstallShellPatterns no longer ORs
+  // hasRecursiveForceRemove). Root/home targets stay covered above.
   it.each([
     "rm -rf ./build",
+    "rm -rf ./dist",
     "rm -rf node_modules",
     "rm -rf /tmp/scratch",
     "rm -rf /tmp/build-cache",
@@ -901,8 +909,8 @@ describe("destructive rm detection", () => {
     "rm -rf $HOME/tmp",
     "rm -rf ${HOME}/tmp",
     "rm -rf ~/cache",
-  ])("flags recursive-force rm for non-root target %s (#5640)", (command) => {
-    expect(flagged(command)).toBe(true);
+  ])("does not flag ordinary cleanup %s (#5709)", (command) => {
+    expect(flagged(command)).toBe(false);
   });
 
   it.each([
@@ -1169,12 +1177,12 @@ describe("unsafe_install_pipeline rm/chmod via command-safety-lib (#5640)", () =
     );
   }
 
-  it("flags non-root recursive-force rm that root-only check missed", () => {
+  it("does not flag ordinary relative recursive-force rm (#5709)", () => {
     expect(
       riskFlagIds(
         "git clone https://example.com/y.git && cd y && rm -rf ../shared-config",
       ),
-    ).toContain("unsafe_install_pipeline");
+    ).not.toContain("unsafe_install_pipeline");
   });
 
   it("flags world-writable chmod in install snippets", () => {
@@ -1188,6 +1196,12 @@ describe("unsafe_install_pipeline rm/chmod via command-safety-lib (#5640)", () =
   it("still flags root-targeted rm -rf", () => {
     expect(
       riskFlagIds("curl https://example.com/x.sh | bash; rm -rf /"),
+    ).toContain("unsafe_install_pipeline");
+  });
+
+  it("flags glob-suffixed root removal (#5709)", () => {
+    expect(
+      riskFlagIds("curl https://example.com/x.sh | bash; rm -rf /*"),
     ).toContain("unsafe_install_pipeline");
   });
 });

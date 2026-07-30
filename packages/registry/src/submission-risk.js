@@ -8,7 +8,6 @@ import { parseSafeFrontmatter } from "./frontmatter.js";
 import {
   hasBase64DecodedShell,
   hasPipeToShellInstall,
-  hasRecursiveForceRemove,
   hasWorldWritableChmod,
 } from "./command-safety-lib.js";
 import {
@@ -956,13 +955,16 @@ const LOCAL_SCRIPT_REFERENCE_PATTERN =
 // query-param and path-based affiliate checks used by both field validation
 // (submission-lib.js) and this snippet scanner so both gates agree.
 
-// True when install text contains recursive-force rm or world-writable chmod,
-// using the same hardened detectors as scanDangerousShellPatterns (#5640).
+// True when install text contains world-writable chmod, using the same
+// hardened detector as scanDangerousShellPatterns (#5640). Recursive-force
+// `rm` is intentionally *not* OR'd here (#5709): unscoped `rm -rf ./dist`
+// cleanup is ordinary install hygiene and must not raise critical
+// `unsafe_install_pipeline`. Root/home targets stay covered by
+// `referencesDestructiveRootRemoval` in the same OR-chain.
 // Line-by-line like the curl/base64 helpers; installText is already lowercased.
 function hasDestructiveInstallShellPatterns(installText) {
   for (const line of String(installText ?? "").split(/\r?\n/)) {
     if (!line) continue;
-    if (hasRecursiveForceRemove(line, line)) return true;
     if (hasWorldWritableChmod(line, line)) return true;
   }
   return false;
@@ -1131,16 +1133,17 @@ function isMutableGithubSourceUrl(value) {
  * whether written `-rf`, `-fr`, `-r -f`, or `--recursive --force`.
  *
  * Targets stay deliberately narrow (`/`, `/etc`, `~`, `$HOME`, and
- * `${HOME}`). Relative paths like `./build` are ordinary cleanup and must
- * not flag. Each target alternative ends in a delimiter/end-of-command
- * lookahead so `/tmp/scratch`, `~/cache`, and `$HOME/tmp` aren't swallowed
- * as a matching prefix of `/`, `~`, or `$HOME` - only the bare target
- * itself (optionally with one trailing `/`) is destructive.
+ * `${HOME}`, plus glob-suffixed forms like `/*` / `~/*` — #5709). Relative
+ * paths like `./build` are ordinary cleanup and must not flag. Each target
+ * alternative ends in a delimiter/end-of-command lookahead so
+ * `/tmp/scratch`, `~/cache`, and `$HOME/tmp` aren't swallowed as a matching
+ * prefix of `/`, `~`, or `$HOME` - only the bare target itself (optionally
+ * with one trailing `/` or a trailing `/*` glob) is destructive.
  */
 function referencesDestructiveRootRemoval(value) {
   const text = String(value || "");
   const pattern =
-    /\brm\b((?:\s+-{1,2}[a-z][a-z-]*)+)\s+(?:\/etc\/?(?=[\s;&|)'"`]|$)|\/\/?(?=[\s;&|)'"`]|$)|~\/?(?=[\s;&|)'"`]|$)|\$home\/?(?=[\s;&|)'"`]|$)|\$\{home\}\/?(?=[\s;&|)'"`]|$))/gi;
+    /\brm\b((?:\s+-{1,2}[a-z][a-z-]*)+)\s+(?:\/etc(?:\/\*|\/?(?=[\s;&|)'"`]|$))|\/(?:\*|\/?(?=[\s;&|)'"`]|$))|~(?:\/\*|\/?(?=[\s;&|)'"`]|$))|\$home(?:\/\*|\/?(?=[\s;&|)'"`]|$))|\$\{home\}(?:\/\*|\/?(?=[\s;&|)'"`]|$)))/gi;
 
   for (const match of text.matchAll(pattern)) {
     const flags = match[1].toLowerCase().split(/\s+/).filter(Boolean);
