@@ -1111,7 +1111,7 @@ export async function callRegistryTool(name, args = {}, options = {}) {
   return withPublicPolicy(result);
 }
 
-async function dispatchReadOnlyTool(name, parsedArgs, options) {
+export async function dispatchReadOnlyTool(name, parsedArgs, options) {
   let result;
   switch (name) {
     case "registry.search":
@@ -1197,6 +1197,12 @@ async function dispatchReadOnlyTool(name, parsedArgs, options) {
       break;
     case "entry.coverage":
       result = await compareEntryTrust(parsedArgs, options);
+      break;
+    default:
+      // Allowlisted in READ_ONLY_TOOL_NAMES but missing a switch case — fail
+      // closed with the same domain error as truly unknown tools instead of
+      // returning undefined and crashing the CallTool handler on result.ok.
+      result = invalid(`Unknown read-only HeyClaude MCP tool: ${name}`);
       break;
   }
 
