@@ -38,12 +38,16 @@ export function normalizeText(value) {
 }
 
 export function normalizeLimit(value, fallback = 10) {
+  // Present-but-empty query params (e.g. `?limit=`) coerce to Number("") === 0
+  // and would otherwise clamp to 1. Treat blank strings as "absent".
+  if (typeof value === "string" && value.trim() === "") return fallback;
   const numeric = Number(value);
   if (!Number.isFinite(numeric)) return fallback;
   return Math.max(1, Math.min(25, Math.trunc(numeric)));
 }
 
 export function normalizeOffset(value) {
+  if (typeof value === "string" && value.trim() === "") return 0;
   const numeric = Number(value);
   if (!Number.isFinite(numeric)) return 0;
   return Math.max(0, Math.min(5000, Math.trunc(numeric)));

@@ -17,9 +17,14 @@ describe("registry-normalize-lib text and pagination", () => {
     expect(normalizeLimit(3)).toBe(3);
     expect(normalizeLimit(100)).toBe(25);
     expect(normalizeLimit("not-a-number")).toBe(10);
+    expect(normalizeLimit("", 25)).toBe(25);
+    expect(normalizeLimit("  ", 25)).toBe(25);
+    expect(normalizeLimit("5", 25)).toBe(5);
     expect(normalizeOffset(10)).toBe(10);
     expect(normalizeOffset(9000)).toBe(5000);
     expect(normalizeOffset(-5)).toBe(0);
+    expect(normalizeOffset("")).toBe(0);
+    expect(normalizeOffset("  ")).toBe(0);
   });
 });
 
