@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { getEntry, related, relatedGroups, relatedGuides } from "@/data/search";
 import { getEntryRedirectTarget } from "@/lib/entry-redirects";
-import { BEST_LISTS, ENTRIES } from "@/data/entries";
+import { BEST_LISTS, ENTRIES, REGISTRY_ENTRIES } from "@/data/entries";
 import { COMPARISONS } from "@/data/comparisons";
 import { EntryAuthorAttribution } from "@/components/contributor-attribution";
 import { findContributorForIdentity } from "@/data/contributors";
@@ -39,7 +39,7 @@ import { compareEntryInteractiveUiState } from "@/lib/compare-entry-interactive-
 import { buildEntryJsonLd } from "@heyclaude/registry";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { entryBreadcrumbJsonLd } from "@/lib/entry-breadcrumb-jsonld-lib";
-import { entryWebPageJsonLd } from "@/lib/entry-webpage-jsonld-lib";
+import { entryWebPageDateModified, entryWebPageJsonLd } from "@/lib/entry-webpage-jsonld-lib";
 import { hasSchemaDetails } from "@/lib/entry-schema-details-lib";
 import { booleanLabel } from "@/lib/boolean-label-lib";
 import { absoluteUrl, clampDescription } from "@/lib/seo";
@@ -234,7 +234,20 @@ export const Route = createFileRoute("/entry/$category/$slug")({
     const e = loaderData.entry;
     const path = `/entry/${params.category}/${params.slug}`;
     const url = absoluteUrl(path);
-    const ld = entryWebPageJsonLd(e, url);
+    // contentUpdatedAt/repoUpdatedAt live on the raw registry snapshot only
+    // (buildEntry drops them); look up the sibling the way sitemap.xml does
+    // so WebPage dateModified matches sitemap lastmod (#5675).
+    const raw = REGISTRY_ENTRIES.find(
+      (entry) => entry.category === e.category && entry.slug === e.slug,
+    );
+    const freshEntry = {
+      ...e,
+      contentUpdatedAt: raw?.contentUpdatedAt,
+      repoUpdatedAt: raw?.repoUpdatedAt,
+      verifiedAt: raw?.verifiedAt,
+    };
+    const ld = entryWebPageJsonLd(freshEntry, url);
+    const modifiedTime = entryWebPageDateModified(freshEntry);
     const breadcrumbs = entryBreadcrumbJsonLd(e, url, absoluteUrl);
     const ogUrl = absoluteUrl(`/og/${params.category}/${params.slug}`);
     const ogTitle = `${e.title} — HeyClaude`;
@@ -258,7 +271,7 @@ export const Route = createFileRoute("/entry/$category/$slug")({
         { property: "og:image:width", content: "1200" },
         { property: "og:image:height", content: "630" },
         { property: "article:published_time", content: e.dateAdded },
-        { property: "article:modified_time", content: e.reviewedAt ?? e.dateAdded },
+        { property: "article:modified_time", content: modifiedTime },
         ...(e.author ? [{ property: "article:author", content: e.author }] : []),
         { property: "article:section", content: e.category },
         ...(e.tags ?? []).map((tag) => ({ property: "article:tag", content: tag })),

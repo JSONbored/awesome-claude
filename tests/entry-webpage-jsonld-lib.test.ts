@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
 
 import type { Entry } from "../apps/web/src/types/registry";
-import { entryWebPageJsonLd } from "../apps/web/src/lib/entry-webpage-jsonld-lib";
+import {
+  entryWebPageDateModified,
+  entryWebPageJsonLd,
+} from "../apps/web/src/lib/entry-webpage-jsonld-lib";
 
 const entry = (over: Record<string, unknown> = {}): Entry =>
   ({
@@ -37,5 +40,74 @@ describe("entryWebPageJsonLd", () => {
     expect(
       entryWebPageJsonLd(entry({ sourceUrl: "https://github.com/o/r" }), URL),
     ).toMatchObject({ isBasedOn: "https://github.com/o/r" });
+  });
+});
+
+describe("entryWebPageDateModified (#5675)", () => {
+  it("prefers contentUpdatedAt over repoUpdatedAt/verifiedAt/reviewedAt", () => {
+    expect(
+      entryWebPageDateModified(
+        entry({
+          reviewedAt: "2026-02-02",
+          verifiedAt: "2026-02-10",
+          repoUpdatedAt: "2026-03-15T12:00:00.000Z",
+          contentUpdatedAt: "2026-04-01T00:00:00.000Z",
+        }),
+      ),
+    ).toBe("2026-04-01T00:00:00.000Z");
+  });
+
+  it("prefers repoUpdatedAt over verifiedAt/reviewedAt when contentUpdatedAt is absent", () => {
+    expect(
+      entryWebPageDateModified(
+        entry({
+          reviewedAt: "2026-02-02",
+          verifiedAt: "2026-02-10",
+          repoUpdatedAt: "2026-03-15T12:00:00.000Z",
+        }),
+      ),
+    ).toBe("2026-03-15T12:00:00.000Z");
+  });
+
+  it("prefers verifiedAt over reviewedAt when content/repo signals are absent", () => {
+    expect(
+      entryWebPageDateModified(
+        entry({
+          reviewedAt: "2026-02-02",
+          verifiedAt: "2026-02-10T08:00:00.000Z",
+        }),
+      ),
+    ).toBe("2026-02-10T08:00:00.000Z");
+  });
+
+  it("ignores invalid freshness strings and keeps the reviewedAt/dateAdded fallback", () => {
+    expect(
+      entryWebPageDateModified(
+        entry({
+          reviewedAt: "2026-02-02",
+          repoUpdatedAt: "not-a-date",
+        }),
+      ),
+    ).toBe("2026-02-02");
+    expect(
+      entryWebPageDateModified(
+        entry({
+          contentUpdatedAt: "also-invalid",
+        }),
+      ),
+    ).toBe("2026-01-01");
+  });
+
+  it("treats empty/null freshness fields as absent", () => {
+    expect(
+      entryWebPageDateModified(
+        entry({
+          reviewedAt: "2026-02-02",
+          contentUpdatedAt: null,
+          repoUpdatedAt: "",
+          verifiedAt: null,
+        }),
+      ),
+    ).toBe("2026-02-02");
   });
 });
