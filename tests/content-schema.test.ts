@@ -244,7 +244,7 @@ describe("inferStructuredFields", () => {
         "brandLogoUrl must be HTTPS and served by Brandfetch, HeyClaude, or a local asset path",
         "brandVerifiedAt must be ISO date format YYYY-MM-DD",
         "brandColors must be hex colors such as #796eff",
-        "repoUrl must use http or https",
+        "repoUrl must use https",
         "submittedByUrl must use https",
         "submittedAt must be an ISO date or datetime",
         "sourceSubmissionNumber must be a positive integer",
@@ -357,8 +357,8 @@ describe("inferStructuredFields", () => {
 
     expect(result.semanticErrors).toEqual(
       expect.arrayContaining([
-        "authorProfileUrl must use http or https",
-        "repoUrl must use http or https",
+        "authorProfileUrl must use https",
+        "repoUrl must use https",
       ]),
     );
   });

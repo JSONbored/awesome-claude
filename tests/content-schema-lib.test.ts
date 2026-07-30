@@ -1171,7 +1171,7 @@ describe("validateEntry brand color and source URL checks", () => {
         ...base,
         sourceUrls: ["https://ok.dev", "not-a-url"],
       }).semanticErrors,
-    ).toContain("sourceUrls must use http or https");
+    ).toContain("sourceUrls must use https");
   });
 });
 
@@ -1233,19 +1233,14 @@ describe("validateEntry category-specific recommended/semantic rules", () => {
     expect(result.semanticErrors).toContain("documentationUrl must use https");
   });
 
-  it("still allows http documentationUrl on non-skills categories", () => {
+  it("rejects http documentationUrl on non-skills categories", () => {
     const result = validateEntry("agents", {
       slug: "a",
       title: "A",
       description: "D",
       documentationUrl: "http://docs.example/agent",
     });
-    expect(result.semanticErrors).not.toContain(
-      "documentationUrl must use https",
-    );
-    expect(result.semanticErrors).not.toContain(
-      "documentationUrl must use http or https",
-    );
+    expect(result.semanticErrors).toContain("documentationUrl must use https");
   });
 
   it("requires verifiedAt on a capability-pack skill", () => {

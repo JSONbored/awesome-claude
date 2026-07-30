@@ -9,7 +9,7 @@
  * re-exports everything below so existing imports stay unchanged.
  */
 import categorySpec from "./category-spec.json" with { type: "json" };
-import { isPublicHttpUrl, isPublicHttpsUrl } from "./source-url-lib.js";
+import { isPublicHttpsUrl } from "./source-url-lib.js";
 import {
   BRAND_ASSET_SOURCES,
   isAllowedBrandAssetUrl,
@@ -816,27 +816,22 @@ export function validateEntry(category, data, inferred = {}) {
   for (const field of [
     "authorProfileUrl",
     "repoUrl",
-    // skills: https-only below — matches retrievalSources auto-derived from it
-    ...(category === "skills" ? [] : ["documentationUrl"]),
+    "documentationUrl",
     "sourceUrl",
     "docsUrl",
     "packageUrl",
     "repositoryUrl",
     "websiteUrl",
   ]) {
-    if (!isPublicHttpUrl(merged[field])) {
-      semanticErrors.push(`${field} must use http or https`);
+    if (!isPublicHttpsUrl(merged[field])) {
+      semanticErrors.push(`${field} must use https`);
     }
-  }
-
-  if (category === "skills" && !isPublicHttpsUrl(merged.documentationUrl)) {
-    semanticErrors.push("documentationUrl must use https");
   }
 
   if (Array.isArray(merged.sourceUrls)) {
     for (const sourceUrl of merged.sourceUrls) {
-      if (!isPublicHttpUrl(sourceUrl)) {
-        semanticErrors.push("sourceUrls must use http or https");
+      if (!isPublicHttpsUrl(sourceUrl)) {
+        semanticErrors.push("sourceUrls must use https");
         break;
       }
     }

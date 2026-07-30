@@ -76,13 +76,13 @@ describe("content validation", () => {
     expect(result.semanticErrors).toEqual(
       expect.arrayContaining([
         "slug must contain only lowercase letters, numbers, and single hyphens",
-        "documentationUrl must use http or https",
-        "sourceUrls must use http or https",
+        "documentationUrl must use https",
+        "sourceUrls must use https",
       ]),
     );
   });
 
-  it("allows normal content slugs and http or https contributor URLs", () => {
+  it("allows normal content slugs and https contributor URLs", () => {
     const result = validateEntry("agents", {
       title: "Safe Agent",
       slug: "safe-agent",
@@ -90,7 +90,7 @@ describe("content validation", () => {
       description: "Fixture for content validation security checks.",
       author: "tester",
       dateAdded: "2026-06-11",
-      documentationUrl: "http://example.com/docs",
+      documentationUrl: "https://example.com/docs",
       repoUrl: "https://github.com/example/safe-agent",
       sourceUrls: ["https://example.com/source"],
     });
@@ -98,8 +98,8 @@ describe("content validation", () => {
     expect(result.semanticErrors).not.toEqual(
       expect.arrayContaining([
         "slug must use lowercase letters, numbers, and hyphens only",
-        "documentationUrl must use http or https",
-        "sourceUrls must use http or https",
+        "documentationUrl must use https",
+        "sourceUrls must use https",
       ]),
     );
   });

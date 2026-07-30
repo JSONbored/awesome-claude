@@ -722,7 +722,7 @@ describe("non-UI branch matrix", () => {
         "brandLogoUrl must be HTTPS and served by Brandfetch, HeyClaude, or a local asset path",
         "brandVerifiedAt must be ISO date format YYYY-MM-DD",
         "brandColors must be hex colors such as #796eff",
-        "repoUrl must use http or https",
+        "repoUrl must use https",
         "submittedByUrl must use https",
         "submittedAt must be an ISO date or datetime",
         "sourceSubmissionNumber must be a positive integer",
