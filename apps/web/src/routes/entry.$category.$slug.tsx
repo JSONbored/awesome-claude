@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { getEntry, related, relatedGroups, relatedGuides } from "@/data/search";
 import { getEntryRedirectTarget } from "@/lib/entry-redirects";
-import { BEST_LISTS, ENTRIES } from "@/data/entries";
+import { BEST_LISTS, ENTRIES, REGISTRY_ENTRIES } from "@/data/entries";
 import { COMPARISONS } from "@/data/comparisons";
 import { EntryAuthorAttribution } from "@/components/contributor-attribution";
 import { findContributorForIdentity } from "@/data/contributors";
@@ -234,7 +234,21 @@ export const Route = createFileRoute("/entry/$category/$slug")({
     const e = loaderData.entry;
     const path = `/entry/${params.category}/${params.slug}`;
     const url = absoluteUrl(path);
-    const ld = entryWebPageJsonLd(e, url);
+    // contentUpdatedAt/repoUpdatedAt live on the raw registry snapshot only
+    // (buildEntry drops them); look up the sibling the way sitemap.xml does
+    // so WebPage dateModified matches sitemap lastmod (#5675).
+    const raw = REGISTRY_ENTRIES.find(
+      (entry) => entry.category === e.category && entry.slug === e.slug,
+    );
+    const ld = entryWebPageJsonLd(
+      {
+        ...e,
+        contentUpdatedAt: raw?.contentUpdatedAt,
+        repoUpdatedAt: raw?.repoUpdatedAt,
+        verifiedAt: raw?.verifiedAt,
+      },
+      url,
+    );
     const breadcrumbs = entryBreadcrumbJsonLd(e, url, absoluteUrl);
     const ogUrl = absoluteUrl(`/og/${params.category}/${params.slug}`);
     const ogTitle = `${e.title} — HeyClaude`;
