@@ -24,6 +24,7 @@ const entry: SavedSearchAlertEntry = {
   platforms: ["claude-code", "claude-desktop"],
   trust: "trusted",
   source: "source-backed",
+  signal: "reviewed",
 };
 
 function search(
@@ -196,7 +197,7 @@ describe("savedSearchQueryMatchesEntry", () => {
 });
 
 describe("savedSearchMatchesEntry", () => {
-  it("honors category, platform, trust, and source filters", () => {
+  it("honors category, platform, trust, source, and signal filters", () => {
     expect(
       savedSearchMatchesEntry(
         search({ category: "mcp", platform: "claude-code" }),
@@ -215,6 +216,12 @@ describe("savedSearchMatchesEntry", () => {
     expect(savedSearchMatchesEntry(search({ source: "external" }), entry)).toBe(
       false,
     );
+    expect(savedSearchMatchesEntry(search({ signal: "reviewed" }), entry)).toBe(
+      true,
+    );
+    expect(
+      savedSearchMatchesEntry(search({ signal: "safety-notes" }), entry),
+    ).toBe(false);
   });
 
   it("passes when optional filters are unset", () => {
@@ -225,6 +232,7 @@ describe("savedSearchMatchesEntry", () => {
           platform: undefined,
           trust: undefined,
           source: undefined,
+          signal: undefined,
           q: "postgres",
         }),
         entry,
@@ -273,6 +281,7 @@ describe("removedEntryFromEvent / removalEventSupportsSearchFilters", () => {
         title: "X",
         trust: "trusted",
         source: "source-backed",
+        signal: "reviewed",
         platforms: ["claude-code", ""],
       }),
     ).toEqual({
@@ -281,6 +290,7 @@ describe("removedEntryFromEvent / removalEventSupportsSearchFilters", () => {
       title: "X",
       trust: "trusted",
       source: "source-backed",
+      signal: "reviewed",
       platforms: ["claude-code"],
     });
   });
@@ -310,6 +320,7 @@ describe("removedEntryFromEvent / removalEventSupportsSearchFilters", () => {
       title: "X",
       trust: "trusted",
       source: "source-backed",
+      signal: "reviewed",
       platforms: ["claude-code"],
     });
     expect(removalEventSupportsSearchFilters(search(), bare)).toBe(true);
@@ -318,6 +329,15 @@ describe("removedEntryFromEvent / removalEventSupportsSearchFilters", () => {
     ).toBe(false);
     expect(
       removalEventSupportsSearchFilters(search({ trust: "trusted" }), enriched),
+    ).toBe(true);
+    expect(
+      removalEventSupportsSearchFilters(search({ signal: "reviewed" }), bare),
+    ).toBe(false);
+    expect(
+      removalEventSupportsSearchFilters(
+        search({ signal: "reviewed" }),
+        enriched,
+      ),
     ).toBe(true);
     expect(
       removalEventSupportsSearchFilters(

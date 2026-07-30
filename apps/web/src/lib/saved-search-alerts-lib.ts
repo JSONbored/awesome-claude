@@ -33,6 +33,7 @@ export interface SavedSearchAlertSearch {
   trust?: string;
   source?: string;
   platform?: string;
+  signal?: string;
   alerts?: SavedSearchAlertSchedule;
 }
 
@@ -49,6 +50,7 @@ export interface SavedSearchAlertEntry {
   platforms?: Array<Platform | string>;
   trust?: TrustLevel | string;
   source?: SourceStatus | string;
+  signal?: string;
 }
 
 export interface SavedSearchAlertEvent {
@@ -69,6 +71,7 @@ export interface SavedSearchAlertEvent {
   trust?: string;
   source?: string;
   platforms?: Array<Platform | string>;
+  signal?: string;
 }
 
 export type SavedSearchAlertSeverity = "info" | "warning" | "blocker";
@@ -165,6 +168,7 @@ export function savedSearchMatchesEntry(
   if (search.category && entry.category !== search.category) return false;
   if (search.trust && entry.trust !== search.trust) return false;
   if (search.source && entry.source !== search.source) return false;
+  if (search.signal && entry.signal !== search.signal) return false;
   if (
     search.platform &&
     !(entry.platforms ?? []).some((platform) => platform === search.platform)
@@ -194,12 +198,14 @@ export function removedEntryFromEvent(event: SavedSearchAlertEvent): SavedSearch
     .filter(Boolean);
   const trust = String(event.trust || "").trim();
   const source = String(event.source || "").trim();
+  const signal = String(event.signal || "").trim();
   return {
     category: event.category ?? "",
     slug: event.slug ?? "",
     title: event.title ?? "",
     ...(trust ? { trust } : {}),
     ...(source ? { source } : {}),
+    ...(signal ? { signal } : {}),
     ...(platforms.length ? { platforms } : {}),
   };
 }
@@ -217,6 +223,7 @@ export function removalEventSupportsSearchFilters(
 ): boolean {
   if (search.trust && (entry.trust == null || entry.trust === "")) return false;
   if (search.source && (entry.source == null || entry.source === "")) return false;
+  if (search.signal && (entry.signal == null || entry.signal === "")) return false;
   if (search.platform && !(entry.platforms ?? []).length) return false;
   return true;
 }

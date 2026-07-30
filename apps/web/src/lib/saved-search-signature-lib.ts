@@ -32,6 +32,7 @@ export function savedSearchSignature(searches: SavedSearchAlertSearch[]): string
         search.trust,
         search.source,
         search.platform,
+        search.signal,
         search.alerts?.enabled ? "1" : "0",
         search.alerts?.channels?.join(",") ?? "",
       ]

@@ -67,6 +67,12 @@ describe("savedSearchSignature delimiter escaping", () => {
       savedSearchSignature([
         search({ id: "1", label: "L", q: "Q", category: "mcp" }),
       ]),
-    ).toBe("1\tL\tQ\tmcp\t\t\t\t0\t");
+    ).toBe("1\tL\tQ\tmcp\t\t\t\t\t0\t");
+  });
+
+  it("changes when the saved search signal filter changes", () => {
+    expect(savedSearchSignature([search({ signal: "reviewed" })])).not.toBe(
+      savedSearchSignature([search({ signal: "safety-notes" })]),
+    );
   });
 });
