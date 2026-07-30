@@ -1,0 +1,305 @@
+---
+title: Fact-Check-X
+slug: fact-check-x
+category: skills
+description: >-
+  Preserve complete answers and citations from one or more AI platforms,
+  compare atomic claims, verify them against authoritative evidence, and
+  produce four independently reviewable HTML reports.
+cardDescription: >-
+  Compare AI answers and citations, verify atomic claims, and keep the complete
+  evidence trail.
+seoTitle: Fact-Check-X Skill for Multi-Platform Answer and Citation Verification
+seoDescription: >-
+  Install Fact-Check-X to capture complete AI answers and citations, compare
+  atomic claims, verify them with authoritative sources, and generate
+  standalone evidence reports.
+author: ASI2030
+authorProfileUrl: "https://github.com/ASI2030"
+submittedBy: ASI2030
+submittedByUrl: "https://github.com/ASI2030"
+dateAdded: "2026-07-31"
+submittedAt: "2026-07-31"
+repoUrl: "https://github.com/ASI2030/Fact-Check-X"
+documentationUrl: "https://github.com/ASI2030/Fact-Check-X/blob/main/README.en.md"
+websiteUrl: "https://www.skills.sh/asi2030/fact-check-x/fact-check-x-complete"
+downloadUrl: "https://github.com/ASI2030/Fact-Check-X/releases/download/v1.1.0/fact-check-x-complete.zip"
+installable: true
+installCommand: "npx skills add ASI2030/Fact-Check-X --skill fact-check-x-complete"
+usageSnippet: >-
+  Give Fact-Check-X a question and the AI platforms to inspect. It preserves
+  every selected answer and citation before comparing claims and running
+  authoritative verification.
+copySnippet: |-
+  npx skills add ASI2030/Fact-Check-X --skill fact-check-x-complete
+  cd .agents/skills/fact-check-x-complete
+  python3 scripts/fact_check_x.py locate
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: production
+verifiedAt: "2026-07-31"
+retrievalSources:
+  - "https://github.com/ASI2030/Fact-Check-X"
+  - "https://github.com/ASI2030/Fact-Check-X/blob/4dd7eef0452a4c31e4b3b3b0d643c9daeea7fdbe/README.en.md"
+  - "https://github.com/ASI2030/Fact-Check-X/blob/4dd7eef0452a4c31e4b3b3b0d643c9daeea7fdbe/skills/fact-check-x-complete/SKILL.md"
+  - "https://github.com/ASI2030/Fact-Check-X/blob/4dd7eef0452a4c31e4b3b3b0d643c9daeea7fdbe/skills/fact-check-x-complete/SECURITY.md"
+  - "https://github.com/ASI2030/Fact-Check-X/blob/4dd7eef0452a4c31e4b3b3b0d643c9daeea7fdbe/skills/fact-check-x-complete/PRIVACY.md"
+  - "https://github.com/ASI2030/Fact-Check-X/releases/tag/v1.1.0"
+  - "https://www.skills.sh/asi2030/fact-check-x/fact-check-x-complete"
+  - "https://skillhub.cn/skills/user_186e37d0/fact-check-x"
+sourceUrls:
+  - "https://github.com/ASI2030/Fact-Check-X"
+  - "https://github.com/ASI2030/Fact-Check-X/tree/main/skills/fact-check-x-complete"
+  - "https://github.com/ASI2030/Fact-Check-X/releases/tag/v1.1.0"
+testedPlatforms:
+  - WorkBuddy
+  - Codex
+  - Claude Code
+  - Gemini CLI (cold install and module discovery)
+  - Agent Skills CLI
+prerequisites:
+  - "Python 3.10 or newer and Node.js 20 or newer."
+  - "Google Chrome, Microsoft Edge, Brave, or Chromium for live website capture."
+  - "Authorized accounts for every selected AI website and permission to automate the chosen browser session."
+  - "Optional authorized DKnow MaaS access when Trusted Search is used during authoritative verification."
+  - "Permission to write local answer, citation, screenshot, HTML, JSON, and report-package artifacts."
+safetyNotes:
+  - "Live capture drives real third-party AI websites through Playwright. Confirm the selected platforms, question, account scope, and each provider's applicable terms before running it."
+  - "Login, verification challenges, and other human-only steps stay with the user. Automatic capture failures stop the pipeline before any optional Computer Use recovery."
+  - "The authoritative stage can call DKnow Trusted Search. Use a dedicated local key, never paste credentials into prompts or reports, and review current quota and service terms."
+  - "Selected-platform capture is fail-closed: one failed platform prevents comparison and later stages from silently using a partial result set."
+  - "Reports support investigation and review; they do not replace qualified legal, medical, financial, government, or other professional judgment."
+privacyNotes:
+  - "Capture artifacts can contain the user's question, complete AI answers, citations, source URLs, timestamps, screenshots, rendered HTML, and account-visible page details."
+  - "Persistent browser profiles can contain authenticated cookies and local session state. Keep profiles on the authorized machine and never bundle them with reports or releases."
+  - "When Trusted Search is enabled, the relevant question or atomic claim is sent to the configured DKnow MaaS service. The current host performs semantic assessment."
+  - "The active host and configured model provider can receive the question, captured answers, and evidence needed for comparison and assessment."
+  - "Review report packages before sharing because source pages, screenshots, and raw answers can expose personal, customer, policy, or internal business information."
+tags:
+  - fact-checking
+  - agent-skills
+  - evidence
+  - citations
+  - research
+  - browser-automation
+  - source-verification
+  - ai-comparison
+keywords:
+  - Fact-Check-X
+  - AI answer comparison
+  - citation verification skill
+  - authoritative evidence verification
+  - multi-platform fact checking
+  - Claude Code fact checking
+  - Codex fact checking skill
+  - WorkBuddy fact checking
+readingTime: 8
+difficultyScore: 78
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# Fact-Check-X
+
+Fact-Check-X is an evidence-gated Agent Skill for comparing complete answers and
+citations from AI services. It preserves what each selected platform actually
+said, separates claims into atomic knowledge points, checks whether attached
+sources support those claims, and verifies the claims against authoritative
+evidence before producing a final assessment.
+
+The skill is designed for policy, public-service, industry-rule, product
+research, and other questions where answer provenance matters. It is not
+another answer generator: its output is a traceable chain from raw platform
+responses to evidence-backed findings.
+
+## Knowledge Freshness
+
+This listing was verified on **2026-07-31** against public commit
+`4dd7eef0452a4c31e4b3b3b0d643c9daeea7fdbe`, the v1.1.0 release, the complete
+94-file skill tree, the English and Chinese documentation, and the published
+security and privacy policies.
+
+AI website interfaces, platform terms, policy sources, Trusted Search behavior,
+and public rules can change. Recheck the selected services and authoritative
+sources at run time.
+
+## Retrieval Sources
+
+- https://github.com/ASI2030/Fact-Check-X
+- https://github.com/ASI2030/Fact-Check-X/blob/4dd7eef0452a4c31e4b3b3b0d643c9daeea7fdbe/README.en.md
+- https://github.com/ASI2030/Fact-Check-X/blob/4dd7eef0452a4c31e4b3b3b0d643c9daeea7fdbe/skills/fact-check-x-complete/SKILL.md
+- https://github.com/ASI2030/Fact-Check-X/releases/tag/v1.1.0
+- https://www.skills.sh/asi2030/fact-check-x/fact-check-x-complete
+
+## Installation
+
+Install the complete skill from the public source repository:
+
+```bash
+npx skills add ASI2030/Fact-Check-X --skill fact-check-x-complete
+```
+
+Claude Code can also install the versioned repository marketplace:
+
+```bash
+claude plugin marketplace add ASI2030/Fact-Check-X
+claude plugin install fact-check-x@fact-check-x-marketplace
+```
+
+WorkBuddy and other ZIP-based hosts can download
+`fact-check-x-complete.zip` from the v1.1.0 release. Verify the archive against
+the release `SHA256SUMS`; the published package digest is:
+
+```text
+7eb4b713be58d3948ca6c44db8dbe9e352a718531eb58dcdf017bff6e104ea59
+```
+
+Install runtime dependencies inside the extracted skill:
+
+```bash
+cd modules/llm-answer-reference-compare/assets/tool
+npm ci --omit=dev
+cd ../../../..
+python3 scripts/fact_check_x.py locate
+```
+
+## Core Workflow
+
+Fact-Check-X produces four independent, reviewable stages:
+
+1. **Original answers and citations** preserve complete answer text, reference
+   relationships, source URLs, screenshots, and HTML page evidence.
+2. **Knowledge comparison** decomposes the answers into atomic claims and shows
+   agreements, conflicts, completeness, and source faithfulness. This stage is
+   explicitly marked as not yet authoritatively verified.
+3. **Authoritative verification** evaluates every knowledge point against
+   authoritative evidence and preserves conflicts or insufficient evidence as
+   review items instead of forcing certainty.
+4. **Platform performance and complete evidence** reports accuracy,
+   completeness, citation quality, important differences, and a portable
+   report package.
+
+Each stage has its own HTML report and machine-readable gate. The next stage
+cannot start until the selected inputs satisfy the preceding gate.
+
+## Capability Scope
+
+### Supported platforms
+
+| Platform ID | Service | Capture scope |
+| --- | --- | --- |
+| `dknowc-chat` | DKnow Chat | Standard answer, citations, and official sources |
+| `dknowc-deep-research` | DKnow Deep Research | Separate deep-research answer and provenance report |
+| `doubao` | Doubao | Complete answer, citations, screenshot, and HTML evidence |
+| `yuanbao` | Tencent Yuanbao | Complete answer, citations, screenshot, and HTML evidence |
+| `deepseek` | DeepSeek | Complete answer, citations, screenshot, and HTML evidence |
+| `qianwen` | Qwen | Complete answer, citations, screenshot, and HTML evidence |
+
+The platform set follows the user's input. `N=1` runs a complete single-platform
+verification. `N>=2` adds cross-platform agreement, conflict, completeness, and
+citation comparison. Unsupported websites require a separately tested adapter.
+
+DKnow Deep Research is a separate platform result. The collector waits for the
+normal answer, opens the Deep Research provenance report, waits for that report
+to finish, and stores its answer and sources independently.
+
+## Production Rules
+
+### Evidence rules
+
+- Raw platform answers are retained without summarizing or rewriting them.
+- A platform cannot borrow another platform's citation.
+- A URL counts as evidence only when the opened page, publisher, date, region,
+  and text actually support the linked claim.
+- Trusted Search returns candidate materials; the current host performs
+  semantic interpretation and writes the assessment.
+- Missing evidence, conflicting evidence, service errors, and incomplete
+  assessment structures remain visible as `needs_review`.
+- One failed selected platform stops capture and prevents later stages from
+  treating a partial set as complete.
+
+## Compatibility
+
+The complete tree has been installed and exercised in WorkBuddy, Codex, and
+Claude Code workflows. Agent Skills CLI cold installation is verified. A
+Gemini CLI-targeted cold install produced all 94 source files and passed module
+discovery; that evidence covers installation compatibility rather than a full
+live website run.
+
+The skill uses the intelligence of the current host for semantic comparison. It
+does not bundle or require a separate external model API.
+
+## Safety and privacy
+
+Live capture controls a browser and interacts with real third-party services.
+Use only accounts and pages the user is authorized to access. Login and
+verification challenges remain human-controlled. Persistent browser profiles
+must stay local because they can contain authenticated cookies and account
+state.
+
+Raw reports may contain sensitive questions, complete AI answers, citations,
+screenshots, source pages, timestamps, and account-visible details. Review the
+portable report package before sharing it.
+
+Trusted Search is optional and is checked only at the authoritative stage.
+Store its dedicated key locally, exclude it from prompts and reports, and
+review the current service scope and quota before use.
+
+## Troubleshooting
+
+**Issue:** A selected platform asks for login or verification.<br />
+**Fix:** Let the user complete that step in the opened browser, then resume the
+same persistent session. Do not copy cookies or credentials into the task.
+
+**Issue:** Automatic collection does not detect a complete answer.<br />
+**Fix:** Keep the capture gate closed. After the bounded automatic retry, use
+the documented human-visible recovery path and preserve the failure evidence.
+
+**Issue:** One selected platform fails while others succeed.<br />
+**Fix:** Do not start comparison. Recover or remove that platform only after
+the user explicitly changes the selected set.
+
+**Issue:** Trusted Search is unavailable or has no configured key.<br />
+**Fix:** Original capture and knowledge comparison still work. Configure the
+optional key only before authoritative verification, or keep that stage
+blocked rather than inventing authority evidence.
+
+**Issue:** A citation URL exists but does not support the claim.<br />
+**Fix:** Mark the citation as unfaithful, preserve the opened-page evidence,
+and let authoritative verification resolve or retain the conflict.
+
+## Source review
+
+Verified on **2026-07-31**:
+
+- The public repository exposes five installable skills and a complete
+  `fact-check-x-complete` directory.
+- The formal complete skill contains 94 files, including its orchestrator,
+  collector, knowledge comparison, authoritative verification, tests,
+  documentation, privacy policy, security policy, license, and notices.
+- The v1.1.0 release publishes the complete archive, `SHA256SUMS`, SPDX and
+  CycloneDX SBOMs, and a release manifest.
+- The official documentation lists six supported platform IDs and dynamic
+  `N>=1` selection.
+- The documented gates prevent partial capture from entering comparison and
+  prevent incomplete authoritative evidence from becoming a final report.
+- Public cold installs have matched the complete source tree.
+
+## Duplicate review
+
+Checked current `content/skills/`, other content categories, open pull requests,
+and repository-wide source for `Fact-Check-X`, `ASI2030/Fact-Check-X`, the
+complete skill directory URL, and the release URL. HeyClaude has adjacent
+entries for browser automation, research, validation, and Agent Skills
+collections, but no existing entry for this multi-platform answer-and-citation
+verification workflow.
+
+## Editorial disclosure
+
+Submitted by ASI2030, the project maintainer. This is a source-backed listing
+for an Apache-2.0 open-source project. No paid placement or affiliate link is
+used. DKnow MaaS is an optional external service for Trusted Search; original
+answer capture and knowledge comparison do not require its API key.
