@@ -851,6 +851,23 @@ export function validateEntry(category, data, inferred = {}) {
     }
   }
 
+  // downloadUrl is rendered as a clickable href on entry pages. Only first-party
+  // /downloads/... paths and public HTTPS URLs are safe; reject javascript:,
+  // data:, and cleartext http: schemes before they reach the UI.
+  const downloadUrl = String(merged.downloadUrl || "").trim();
+  if (downloadUrl) {
+    const isHostedDownload =
+      downloadUrl.startsWith("/downloads/") &&
+      !downloadUrl.includes("\\") &&
+      !downloadUrl.includes("..") &&
+      /^\/downloads\/[A-Za-z0-9._/-]+$/.test(downloadUrl);
+    if (!isHostedDownload && !isPublicHttpsUrl(downloadUrl)) {
+      semanticErrors.push(
+        "downloadUrl must be an HTTPS URL or a /downloads/... path",
+      );
+    }
+  }
+
   for (const field of [
     "submittedByUrl",
     "sourceSubmissionUrl",
