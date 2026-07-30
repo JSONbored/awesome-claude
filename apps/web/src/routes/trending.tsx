@@ -49,10 +49,11 @@ import {
   type TrendingListWindow,
   type TrendingShareAction,
 } from "@/lib/trending-entry-cta-events";
+import { entryMatchesTrendingWindow, TRENDING_WINDOW_OPTIONS } from "@/lib/trending-window-lib";
 import { cn } from "@/lib/utils";
 
 const defaultSearch = {
-  window: "7d" as const,
+  window: "all" as const,
   category: "",
 };
 
@@ -250,16 +251,23 @@ function TrendingPage() {
   const latestBrief = BRIEF_ISSUES[0];
   const { rows: allRows, mode, signals, loading } = useTrendingRows();
 
-  const rows = sp.category ? allRows.filter((entry) => entry.category === sp.category) : allRows;
+  const rows = React.useMemo(() => {
+    return allRows.filter((entry) => {
+      if (!entryMatchesTrendingWindow(entry, sp.window)) return false;
+      if (sp.category && entry.category !== sp.category) return false;
+      return true;
+    });
+  }, [allRows, sp.category, sp.window]);
   const podium = rows.slice(0, 3);
   const list = rows.slice(3);
   const liveSignals = hasLiveSignals(signals);
 
   const countsByCategory = React.useMemo(() => {
     const counts: Record<string, number> = {};
-    for (const entry of allRows) counts[entry.category] = (counts[entry.category] ?? 0) + 1;
+    const windowed = allRows.filter((entry) => entryMatchesTrendingWindow(entry, sp.window));
+    for (const entry of windowed) counts[entry.category] = (counts[entry.category] ?? 0) + 1;
     return counts;
-  }, [allRows]);
+  }, [allRows, sp.window]);
 
   const set = (patch: Partial<typeof sp>) =>
     navigate({ search: (prev: typeof sp) => ({ ...prev, ...patch }) });
@@ -282,7 +290,11 @@ function TrendingPage() {
     [list.length, mode, sp.category, sp.window],
   );
 
-  const shareUrl = `/trending${sp.category ? `?category=${sp.category}` : ""}`;
+  const shareParams = new URLSearchParams();
+  if (sp.window !== defaultSearch.window) shareParams.set("window", sp.window);
+  if (sp.category) shareParams.set("category", sp.category);
+  const shareQuery = shareParams.toString();
+  const shareUrl = `/trending${shareQuery ? `?${shareQuery}` : ""}`;
 
   const trackCategoryFilter = (categoryFilter: string, active: boolean, matchCount: number) => {
     trackEvent(
@@ -402,17 +414,46 @@ function TrendingPage() {
           </div>
         </div>
 
-        <div className="relative mt-3 -mx-1">
+        <div className="relative mt-3 -mx-1 space-y-2">
+          <div className="overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [&_[role=radiogroup]]:w-max [&_[role=radiogroup]]:flex-nowrap [&_[role=radiogroup]]:gap-1.5">
+            <FilterChipGroup label="Filter by time window" multi={false}>
+              {TRENDING_WINDOW_OPTIONS.map((option) => {
+                const active = sp.window === option.id;
+                const count = allRows.filter((entry) =>
+                  entryMatchesTrendingWindow(entry, option.id),
+                ).length;
+                return (
+                  <FilterChip
+                    key={option.id}
+                    role="radio"
+                    active={active}
+                    count={count}
+                    onClick={() => {
+                      if (active) return;
+                      set({ window: option.id });
+                    }}
+                  >
+                    {option.label}
+                  </FilterChip>
+                );
+              })}
+            </FilterChipGroup>
+          </div>
           <div className="overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [&_[role=radiogroup]]:w-max [&_[role=radiogroup]]:flex-nowrap [&_[role=radiogroup]]:gap-1.5">
             <FilterChipGroup label="Filter by category" multi={false}>
               <FilterChip
                 role="radio"
                 active={!sp.category}
                 onClick={() => {
-                  trackCategoryFilter("", true, allRows.length);
+                  const windowedCount = allRows.filter((entry) =>
+                    entryMatchesTrendingWindow(entry, sp.window),
+                  ).length;
+                  trackCategoryFilter("", true, windowedCount);
                   set({ category: "" });
                 }}
-                count={allRows.length}
+                count={
+                  allRows.filter((entry) => entryMatchesTrendingWindow(entry, sp.window)).length
+                }
               >
                 All
               </FilterChip>
@@ -455,7 +496,7 @@ function TrendingPage() {
             type="button"
             onClick={() => {
               trackFilterReset();
-              set({ window: "7d", category: "" });
+              set({ window: "all", category: "" });
             }}
             className="mt-2 inline-flex h-8 items-center gap-1.5 rounded-md bg-ink px-3 text-xs font-medium text-background transition-transform hover:bg-ink/90 active:translate-y-px"
           >
