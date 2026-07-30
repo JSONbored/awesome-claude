@@ -1,5 +1,6 @@
 import * as React from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, stripSearchParams } from "@tanstack/react-router";
+import { z } from "zod";
 import { Search } from "lucide-react";
 import { PageContainer } from "@/components/page-container";
 import { PageHeader } from "@/components/page-header";
@@ -22,7 +23,17 @@ import { breadcrumbScript, itemListScript } from "@/lib/seo-jsonld";
 import { absoluteUrl } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
+const defaultSearch = { q: "" };
+
+const tagsSearchSchema = z.object({
+  q: z.string().catch(defaultSearch.q).default(defaultSearch.q),
+});
+
 export const Route = createFileRoute("/tags/")({
+  validateSearch: tagsSearchSchema,
+  search: {
+    middlewares: [stripSearchParams(defaultSearch)],
+  },
   head: () => {
     const url = absoluteUrl("/tags");
     const title = "Browse Claude resources by tag — HeyClaude";
@@ -117,8 +128,22 @@ function TagPill({
 }
 
 function TagsIndex() {
+  const sp = Route.useSearch();
+  const navigate = Route.useNavigate();
   const all = React.useMemo(() => getIndexableTagGroups().map(toTagView), []);
-  const [query, setQuery] = React.useState("");
+  // Debounce free-text query: local state drives the input; URL updates 250ms after idle (#5712).
+  const [query, setQuery] = React.useState(sp.q);
+  React.useEffect(() => {
+    setQuery(sp.q);
+  }, [sp.q]);
+  React.useEffect(() => {
+    if (query === sp.q) return;
+    const t = window.setTimeout(() => {
+      navigate({ search: (prev: typeof sp) => ({ ...prev, q: query }), replace: true });
+    }, 250);
+    return () => window.clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query]);
   const q = query.trim().toLowerCase();
 
   const filtered = React.useMemo(
