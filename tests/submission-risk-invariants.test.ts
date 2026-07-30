@@ -890,10 +890,12 @@ describe("destructive rm detection", () => {
     expect(flagged(command)).toBe(true);
   });
 
-  // #5640 ORs hasRecursiveForceRemove into unsafe_install_pipeline, so any
-  // recursive+force rm flags — not only root/home targets.
+  // #5640 ORs hasRecursiveForceRemove into unsafe_install_pipeline; #5709
+  // scopes that detector (and referencesDestructiveRootRemoval) to destructive
+  // roots only, so ordinary relative/nested cleanup no longer flags critical.
   it.each([
     "rm -rf ./build",
+    "rm -rf ./dist",
     "rm -rf node_modules",
     "rm -rf /tmp/scratch",
     "rm -rf /tmp/build-cache",
@@ -901,10 +903,16 @@ describe("destructive rm detection", () => {
     "rm -rf $HOME/tmp",
     "rm -rf ${HOME}/tmp",
     "rm -rf ~/cache",
-  ])("flags recursive-force rm for non-root target %s (#5640)", (command) => {
-    expect(flagged(command)).toBe(true);
+  ])("does not flag ordinary cleanup rm %s (#5709)", (command) => {
+    expect(flagged(command)).toBe(false);
   });
 
+  it.each(["rm -rf /*", "rm -rf ~/*", "rm -rf /etc/*", "rm -rf $HOME/*"])(
+    "flags glob-suffixed destructive root %s (#5709)",
+    (command) => {
+      expect(flagged(command)).toBe(true);
+    },
+  );
   it.each([
     "rm -f /tmp/scratch",
     "rm -r /tmp/scratch",
@@ -1169,12 +1177,15 @@ describe("unsafe_install_pipeline rm/chmod via command-safety-lib (#5640)", () =
     );
   }
 
-  it("flags non-root recursive-force rm that root-only check missed", () => {
+  it("does not flag ordinary relative recursive-force rm cleanup (#5709)", () => {
     expect(
       riskFlagIds(
         "git clone https://example.com/y.git && cd y && rm -rf ../shared-config",
       ),
-    ).toContain("unsafe_install_pipeline");
+    ).not.toContain("unsafe_install_pipeline");
+    expect(riskFlagIds("rm -rf ./dist && npm install")).not.toContain(
+      "unsafe_install_pipeline",
+    );
   });
 
   it("flags world-writable chmod in install snippets", () => {
@@ -1189,5 +1200,10 @@ describe("unsafe_install_pipeline rm/chmod via command-safety-lib (#5640)", () =
     expect(
       riskFlagIds("curl https://example.com/x.sh | bash; rm -rf /"),
     ).toContain("unsafe_install_pipeline");
+  });
+
+  it("flags glob-suffixed destructive root rm (#5709)", () => {
+    expect(riskFlagIds("rm -rf /*")).toContain("unsafe_install_pipeline");
+    expect(riskFlagIds("rm -rf ~/*")).toContain("unsafe_install_pipeline");
   });
 });

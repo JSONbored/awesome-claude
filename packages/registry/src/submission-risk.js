@@ -1131,16 +1131,19 @@ function isMutableGithubSourceUrl(value) {
  * whether written `-rf`, `-fr`, `-r -f`, or `--recursive --force`.
  *
  * Targets stay deliberately narrow (`/`, `/etc`, `~`, `$HOME`, and
- * `${HOME}`). Relative paths like `./build` are ordinary cleanup and must
+ * `${HOME}`), including the same roots with a `/*` glob (`/*`, `~/*`, …)
+ * (#5709). Relative paths like `./build` are ordinary cleanup and must
  * not flag. Each target alternative ends in a delimiter/end-of-command
  * lookahead so `/tmp/scratch`, `~/cache`, and `$HOME/tmp` aren't swallowed
  * as a matching prefix of `/`, `~`, or `$HOME` - only the bare target
- * itself (optionally with one trailing `/`) is destructive.
+ * itself (optionally with one trailing `/` or a `/*` glob) is destructive.
  */
 function referencesDestructiveRootRemoval(value) {
   const text = String(value || "");
+  // Glob roots (`/*`, `~/*`, …) are listed before bare `/` so the leading
+  // slash of `/*` is not swallowed by the `/?` alternative (#5709).
   const pattern =
-    /\brm\b((?:\s+-{1,2}[a-z][a-z-]*)+)\s+(?:\/etc\/?(?=[\s;&|)'"`]|$)|\/\/?(?=[\s;&|)'"`]|$)|~\/?(?=[\s;&|)'"`]|$)|\$home\/?(?=[\s;&|)'"`]|$)|\$\{home\}\/?(?=[\s;&|)'"`]|$))/gi;
+    /\brm\b((?:\s+-{1,2}[a-z][a-z-]*)+)\s+(?:\/etc(?:\/\*)?\/?(?=[\s;&|)'"`]|$)|\/\*(?=[\s;&|)'"`]|$)|\/\/?(?=[\s;&|)'"`]|$)|~(?:\/\*)?\/?(?=[\s;&|)'"`]|$)|\$home(?:\/\*)?\/?(?=[\s;&|)'"`]|$)|\$\{home\}(?:\/\*)?\/?(?=[\s;&|)'"`]|$))/gi;
 
   for (const match of text.matchAll(pattern)) {
     const flags = match[1].toLowerCase().split(/\s+/).filter(Boolean);

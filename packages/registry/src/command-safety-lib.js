@@ -302,11 +302,33 @@ function isShortFlagGroup(token) {
   return /^-[a-z]+$/i.test(token);
 }
 
+// Destructive-root `rm` targets only (`/`, `/etc`, `~`, `$HOME`, `${HOME}`),
+// optionally with one trailing `/` or a `/*` glob (`/*`, `~/*`, …). Relative
+// paths like `./dist` and nested paths like `/tmp/build-cache` are ordinary
+// cleanup and must not flag (#5709) — same narrow scoping as
+// `referencesDestructiveRootRemoval` in submission-risk.js.
+export function isDestructiveRootRmTarget(lowerToken) {
+  const raw = String(lowerToken || "");
+  if (matchesDestructiveRootRmTarget(raw)) return true;
+  // Subshell/group wraps leave the closer stuck to the final path token
+  // (`(rm -rf /)` → `/)`, `{rm -rf /*}` → `/*}`) — strip those and retry,
+  // but only after the unstripped form fails so `${home}` keeps its `}`.
+  const stripped = raw.replace(/[)}]+$/, "");
+  return stripped !== raw && matchesDestructiveRootRmTarget(stripped);
+}
+
+function matchesDestructiveRootRmTarget(token) {
+  // Bare `/` and `/*` are listed explicitly so the `/` alternative cannot
+  // consume the leading slash of `/*` before the glob suffix is checked.
+  if (token === "/" || token === "/*") return true;
+  return /^(?:\/etc|~|\$home|\$\{home\})(?:\/\*)?\/?$/.test(token);
+}
+
 // Token-aware `rm -rf` detection: flags a `rm` invocation that carries BOTH a
 // recursive flag (`-r`/`-R`/`--recursive`, split or bundled) and a force flag
-// (`-f`/`--force`), in any order. Catches split (`rm -r -f`), long-form
-// (`rm --recursive --force`), and bundled-with-extras (`rm -rfv`) spellings that
-// the single-token REMOVE_PATTERN misses.
+// (`-f`/`--force`), in any order, AND a destructive-root target. Catches split
+// (`rm -r -f`), long-form (`rm --recursive --force`), and bundled-with-extras
+// (`rm -rfv`) spellings that the single-token REMOVE_PATTERN misses.
 export function hasRecursiveForceRemove(line, lowerLine) {
   for (const segment of pipeChainSegments(line)) {
     if (segment.barrier) continue;
@@ -320,6 +342,7 @@ export function hasRecursiveForceRemove(line, lowerLine) {
 
     let recursive = false;
     let force = false;
+    let destructiveTarget = false;
     let index = argStart;
     for (;;) {
       const token = shellToken(line, lowerLine, index, segment.end);
@@ -331,8 +354,10 @@ export function hasRecursiveForceRemove(line, lowerLine) {
       else if (isShortFlagGroup(flag)) {
         if (flag.includes("r")) recursive = true;
         if (flag.includes("f")) force = true;
+      } else if (isDestructiveRootRmTarget(flag)) {
+        destructiveTarget = true;
       }
-      if (recursive && force) return true;
+      if (recursive && force && destructiveTarget) return true;
     }
   }
   return false;

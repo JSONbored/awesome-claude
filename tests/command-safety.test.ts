@@ -10,7 +10,7 @@ import {
 
 describe("command-safety public barrel (#5641)", () => {
   it("re-exports the previously omitted detectors and segment helpers", () => {
-    const line = "rm -rf /tmp";
+    const line = "rm -rf /";
     const lowerLine = line.toLowerCase();
     expect(hasRecursiveForceRemove(line, lowerLine)).toBe(true);
     expect(hasWorldWritableChmod("chmod 777 /app", "chmod 777 /app")).toBe(
@@ -21,7 +21,7 @@ describe("command-safety public barrel (#5641)", () => {
     expect(resolved.command).toBe("rm");
     expect(segmentArgTokens(line, lowerLine, 0, line.length)).toEqual([
       "-rf",
-      "/tmp",
+      "/",
     ]);
   });
 });
