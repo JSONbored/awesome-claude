@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import { Check } from "lucide-react";
 import { absoluteUrl } from "@/lib/seo";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CommercialDisclosure, CommercialLeadSuccess } from "@/components/commercial-disclosure";
 import { submitListingLead } from "@/lib/listing-lead-client";
 import { trackEvent } from "@/lib/analytics";
@@ -238,7 +239,11 @@ function AdvertisePage() {
             >
               {submitting ? "Sending…" : "Join waitlist"}
             </button>
-            {error && <p className="text-sm text-trust-blocked">{error}</p>}
+            {error && (
+              <Alert variant="destructive">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
           </div>
         </form>
 

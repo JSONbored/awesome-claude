@@ -3,6 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import { ArrowRight } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CommercialDisclosure } from "@/components/commercial-disclosure";
 import { trackEvent } from "@/lib/analytics";
 import { absoluteUrl } from "@/lib/seo";
@@ -220,7 +221,11 @@ function CommercialToolListingForm() {
           >
             {submitting ? "Sending…" : "Submit listing interest"}
           </button>
-          {error && <p className="text-sm text-trust-blocked">{error}</p>}
+          {error && (
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
         </form>
       )}
     </section>
@@ -314,7 +319,11 @@ function PaidReviewInterestForm() {
           >
             {submitting ? "Sending…" : "Submit review interest"}
           </button>
-          {error && <p className="text-sm text-trust-blocked">{error}</p>}
+          {error && (
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
         </form>
       )}
     </section>
