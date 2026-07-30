@@ -688,7 +688,7 @@ function Browse() {
     value: string,
   ) => facetCounts[axis]?.[value] ?? 0;
 
-  // Focus search on "/" key.
+  // Focus search on "/" key; cycle view density on "[" / "]".
   const searchRef = React.useRef<HTMLInputElement>(null);
   useKeyboardShortcuts({
     "/": () => searchRef.current?.focus(),
@@ -696,6 +696,23 @@ function Browse() {
       set({ view: sp.view === "compact" ? "row" : sp.view === "row" ? "grid" : "compact" }),
     "[": () => set({ view: sp.view === "grid" ? "row" : sp.view === "row" ? "compact" : "grid" }),
   });
+  // Escape clears search while the input has focus (#5716). Needs whenTyping so
+  // the shared hook does not skip bindings inside INPUT; keep it on a separate
+  // registration so "/" / "[" / "]" stay suppressed while typing.
+  useKeyboardShortcuts(
+    {
+      Escape: () => {
+        if (document.activeElement !== searchRef.current) return;
+        if (!qInput) return;
+        trackEvent(
+          browseSearchClearAnalyticsEvent(),
+          browseSearchClearAnalyticsData(Boolean(qInput.trim()), results.length),
+        );
+        setQInput("");
+      },
+    },
+    { whenTyping: true },
+  );
 
   const recentEntries = recents.entries
     .map((r) => entryByRef(r.category, r.slug))
