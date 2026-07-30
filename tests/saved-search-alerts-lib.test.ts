@@ -217,6 +217,132 @@ describe("savedSearchMatchesEntry", () => {
     );
   });
 
+  it("honors the signal (trust-signal) filter the same way browse does", () => {
+    // Baseline fixture: source-backed + trusted, but not reviewed / no notes /
+    // no package checksums — so only the source-backed signal should match.
+    expect(
+      savedSearchMatchesEntry(
+        search({ signal: "source-backed", q: "postgres" }),
+        entry,
+      ),
+    ).toBe(true);
+    expect(
+      savedSearchMatchesEntry(
+        search({ signal: "reviewed", q: "postgres" }),
+        entry,
+      ),
+    ).toBe(false);
+    expect(
+      savedSearchMatchesEntry(
+        search({ signal: "safety-notes", q: "postgres" }),
+        entry,
+      ),
+    ).toBe(false);
+    expect(
+      savedSearchMatchesEntry(
+        search({ signal: "privacy-notes", q: "postgres" }),
+        entry,
+      ),
+    ).toBe(false);
+    expect(
+      savedSearchMatchesEntry(
+        search({ signal: "checksums", q: "postgres" }),
+        entry,
+      ),
+    ).toBe(false);
+    expect(
+      savedSearchMatchesEntry(
+        search({ signal: "trusted-package", q: "postgres" }),
+        entry,
+      ),
+    ).toBe(false);
+
+    // Synthetic entry that satisfies category/trust/source/platform but NOT
+    // the saved search's `signal=reviewed` filter — the bug this issue fixes.
+    const unreviewed: SavedSearchAlertEntry = {
+      ...entry,
+      reviewed: false,
+      claimed: false,
+    };
+    expect(
+      savedSearchMatchesEntry(
+        search({
+          category: "mcp",
+          trust: "trusted",
+          source: "source-backed",
+          platform: "claude-code",
+          signal: "reviewed",
+          q: "postgres",
+        }),
+        unreviewed,
+      ),
+    ).toBe(false);
+
+    const reviewed: SavedSearchAlertEntry = {
+      ...entry,
+      reviewed: true,
+      reviewedBy: "maintainer",
+    };
+    expect(
+      savedSearchMatchesEntry(
+        search({
+          category: "mcp",
+          trust: "trusted",
+          source: "source-backed",
+          platform: "claude-code",
+          signal: "reviewed",
+          q: "postgres",
+        }),
+        reviewed,
+      ),
+    ).toBe(true);
+
+    // Other signal axes via the same browse-compatible evidence fields.
+    expect(
+      savedSearchMatchesEntry(
+        search({ signal: "safety-notes", q: "postgres" }),
+        { ...entry, safetyNotes: "Runs shell commands." },
+      ),
+    ).toBe(true);
+    expect(
+      savedSearchMatchesEntry(
+        search({ signal: "privacy-notes", q: "postgres" }),
+        { ...entry, trustSignals: { hasPrivacyNotes: true } },
+      ),
+    ).toBe(true);
+    expect(
+      savedSearchMatchesEntry(search({ signal: "checksums", q: "postgres" }), {
+        ...entry,
+        downloadSha256: "abc123",
+      }),
+    ).toBe(true);
+    expect(
+      savedSearchMatchesEntry(
+        search({ signal: "trusted-package", q: "postgres" }),
+        { ...entry, packageVerified: true },
+      ),
+    ).toBe(true);
+    expect(
+      savedSearchMatchesEntry(
+        search({ signal: "source-backed", q: "postgres" }),
+        {
+          ...entry,
+          source: "external",
+          trustSignals: { sourceStatus: "available" },
+        },
+      ),
+    ).toBe(true);
+
+    // Unknown / empty signal values: empty is a no-op; unknown never matches.
+    expect(savedSearchMatchesEntry(search({ signal: undefined }), entry)).toBe(
+      true,
+    );
+    expect(savedSearchMatchesEntry(search({ signal: "" }), entry)).toBe(true);
+    expect(
+      savedSearchMatchesEntry(search({ signal: "not-a-signal" }), entry),
+    ).toBe(false);
+  });
+
   it("passes when optional filters are unset", () => {
     expect(
       savedSearchMatchesEntry(
@@ -225,6 +351,7 @@ describe("savedSearchMatchesEntry", () => {
           platform: undefined,
           trust: undefined,
           source: undefined,
+          signal: undefined,
           q: "postgres",
         }),
         entry,
@@ -261,6 +388,12 @@ describe("savedSearchMatchesEntry", () => {
       false,
     );
     expect(savedSearchMatchesEntry(search({ q: undefined }), entry)).toBe(true);
+    expect(
+      savedSearchMatchesEntry(
+        search({ signal: "source-backed", q: "missing-term" }),
+        entry,
+      ),
+    ).toBe(false);
   });
 });
 
@@ -330,6 +463,30 @@ describe("removedEntryFromEvent / removalEventSupportsSearchFilters", () => {
         search({ platform: "claude-code" }),
         enriched,
       ),
+    ).toBe(true);
+    // Path-only removals cannot evaluate a trust-signal filter.
+    expect(
+      removalEventSupportsSearchFilters(search({ signal: "reviewed" }), bare),
+    ).toBe(false);
+    // Enriched with source still supports source-backed signal evidence.
+    expect(
+      removalEventSupportsSearchFilters(
+        search({ signal: "source-backed" }),
+        enriched,
+      ),
+    ).toBe(true);
+    // reviewed evidence is not carried by removedEntryFromEvent today.
+    expect(
+      removalEventSupportsSearchFilters(
+        search({ signal: "reviewed" }),
+        enriched,
+      ),
+    ).toBe(false);
+    expect(
+      removalEventSupportsSearchFilters(search({ signal: "reviewed" }), {
+        ...enriched,
+        reviewed: true,
+      }),
     ).toBe(true);
   });
 });
@@ -412,10 +569,11 @@ describe("buildSavedSearchAlerts", () => {
     });
   });
 
-  it("does not alert trust/source/platform-filtered searches on path-only removals", () => {
+  it("does not alert trust/source/platform/signal-filtered searches on path-only removals", () => {
     // Webhook/path-classifier removal events only carry category/slug/title.
-    // Searches that filter on trust/source/platform are explicitly skipped for
-    // that synthetic fallback rather than silently failing inside the matcher.
+    // Searches that filter on trust/source/platform/signal are explicitly
+    // skipped for that synthetic fallback rather than silently failing inside
+    // the matcher.
     const removedEvent = {
       id: "evt-removed-filters",
       kind: "entry",
@@ -442,6 +600,13 @@ describe("buildSavedSearchAlerts", () => {
     expect(
       buildSavedSearchAlerts(
         [search({ platform: "claude-code", q: "postgres" })],
+        [removedEvent],
+        new Map(),
+      ),
+    ).toEqual([]);
+    expect(
+      buildSavedSearchAlerts(
+        [search({ signal: "reviewed", q: "postgres" })],
         [removedEvent],
         new Map(),
       ),
@@ -490,12 +655,59 @@ describe("buildSavedSearchAlerts", () => {
         new Map(),
       ),
     ).toHaveLength(1);
+    // source on the event also supplies source-backed signal evidence.
+    expect(
+      buildSavedSearchAlerts(
+        [search({ signal: "source-backed", q: "postgres" })],
+        [enrichedRemoval],
+        new Map(),
+      ),
+    ).toHaveLength(1);
     // Wrong filter value still rejects.
     expect(
       buildSavedSearchAlerts(
         [search({ trust: "blocked", q: "postgres" })],
         [enrichedRemoval],
         new Map(),
+      ),
+    ).toEqual([]);
+  });
+
+  it("alerts on live entries that satisfy a signal filter and skips those that do not", () => {
+    const reviewedEntry: SavedSearchAlertEntry = {
+      ...entry,
+      reviewed: true,
+      reviewedBy: "maintainer",
+    };
+    const entries = new Map([["mcp/postgres-memory", reviewedEntry]]);
+    expect(
+      buildSavedSearchAlerts(
+        [search({ signal: "reviewed", q: "postgres" })],
+        [
+          {
+            kind: "entry",
+            category: "mcp",
+            slug: "postgres-memory",
+            action: "updated",
+            date: "2026-06-18T10:00:00.000Z",
+          },
+        ],
+        entries,
+      ),
+    ).toHaveLength(1);
+    expect(
+      buildSavedSearchAlerts(
+        [search({ signal: "reviewed", q: "postgres" })],
+        [
+          {
+            kind: "entry",
+            category: "mcp",
+            slug: "postgres-memory",
+            action: "updated",
+            date: "2026-06-18T10:00:00.000Z",
+          },
+        ],
+        new Map([["mcp/postgres-memory", entry]]),
       ),
     ).toEqual([]);
   });

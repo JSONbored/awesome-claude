@@ -12,11 +12,14 @@ export type {
   SavedSearchAlertEvent,
   SavedSearchAlertSeverity,
   SavedSearchAlert,
+  SavedSearchAlertTrustSignal,
 } from "@/lib/saved-search-alerts-lib";
 export {
+  SAVED_SEARCH_ALERT_TRUST_SIGNALS,
   savedSearchAlertTargetId,
   activeInAppSavedSearches,
   savedSearchQueryMatchesEntry,
+  alertEntryMatchesTrustSignal,
   savedSearchMatchesEntry,
   removedEntryFromEvent,
   removalEventSupportsSearchFilters,

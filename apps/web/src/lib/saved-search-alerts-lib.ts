@@ -25,6 +25,22 @@ export interface SavedSearchAlertSchedule {
   lastNotifiedAt?: string;
 }
 
+/**
+ * Trust-signal filter values shared with browse (`TRUST_SIGNAL_FILTERS` in
+ * `@/data/search`). Kept local so this pure alerts module does not import the
+ * catalog-backed search module.
+ */
+export const SAVED_SEARCH_ALERT_TRUST_SIGNALS = [
+  "safety-notes",
+  "privacy-notes",
+  "source-backed",
+  "trusted-package",
+  "reviewed",
+  "checksums",
+] as const;
+
+export type SavedSearchAlertTrustSignal = (typeof SAVED_SEARCH_ALERT_TRUST_SIGNALS)[number];
+
 export interface SavedSearchAlertSearch {
   id: string;
   label: string;
@@ -32,6 +48,8 @@ export interface SavedSearchAlertSearch {
   category?: string;
   trust?: string;
   source?: string;
+  /** Browse trust-signal chip (`safety-notes` / `reviewed` / …). */
+  signal?: string;
   platform?: string;
   alerts?: SavedSearchAlertSchedule;
 }
@@ -49,6 +67,28 @@ export interface SavedSearchAlertEntry {
   platforms?: Array<Platform | string>;
   trust?: TrustLevel | string;
   source?: SourceStatus | string;
+  /**
+   * Optional fields used by browse's trust-signal filters. Live detail JSON
+   * loaded by `watch.tsx` carries them via the full `Entry` shape; synthetic
+   * removal fallbacks usually omit them.
+   */
+  safetyNotes?: string;
+  privacyNotes?: string;
+  reviewed?: boolean;
+  reviewedBy?: string;
+  claimed?: boolean;
+  claimStatus?: string;
+  packageVerified?: boolean;
+  downloadTrust?: string | null;
+  downloadSha256?: string;
+  trustSignals?: {
+    hasSafetyNotes?: boolean;
+    hasPrivacyNotes?: boolean;
+    sourceStatus?: string;
+    packageVerified?: boolean;
+    packageTrust?: string | null;
+    checksumPresent?: boolean;
+  };
 }
 
 export interface SavedSearchAlertEvent {
@@ -158,6 +198,47 @@ export function savedSearchQueryMatchesEntry(
   );
 }
 
+function isSavedSearchAlertTrustSignal(value: string): value is SavedSearchAlertTrustSignal {
+  return (SAVED_SEARCH_ALERT_TRUST_SIGNALS as readonly string[]).includes(value);
+}
+
+/**
+ * Mirror of browse `entryMatchesTrustSignal` for the slim alert entry shape.
+ * Unknown signal values never match (same as browse's final `return false`).
+ */
+export function alertEntryMatchesTrustSignal(
+  entry: SavedSearchAlertEntry,
+  signal: string,
+): boolean {
+  if (!isSavedSearchAlertTrustSignal(signal)) return false;
+  if (signal === "safety-notes") {
+    return Boolean(entry.safetyNotes || entry.trustSignals?.hasSafetyNotes);
+  }
+  if (signal === "privacy-notes") {
+    return Boolean(entry.privacyNotes || entry.trustSignals?.hasPrivacyNotes);
+  }
+  if (signal === "source-backed") {
+    return entry.source === "source-backed" || entry.trustSignals?.sourceStatus === "available";
+  }
+  if (signal === "trusted-package") {
+    return Boolean(
+      entry.packageVerified ||
+      entry.downloadTrust === "first-party" ||
+      entry.trustSignals?.packageVerified ||
+      entry.trustSignals?.packageTrust === "first-party",
+    );
+  }
+  if (signal === "reviewed") {
+    return Boolean(
+      entry.reviewed || entry.reviewedBy || entry.claimed || entry.claimStatus === "verified",
+    );
+  }
+  if (signal === "checksums") {
+    return Boolean(entry.downloadSha256 || entry.trustSignals?.checksumPresent);
+  }
+  return false;
+}
+
 export function savedSearchMatchesEntry(
   search: SavedSearchAlertSearch,
   entry: SavedSearchAlertEntry,
@@ -171,6 +252,7 @@ export function savedSearchMatchesEntry(
   ) {
     return false;
   }
+  if (search.signal && !alertEntryMatchesTrustSignal(entry, search.signal)) return false;
   return savedSearchQueryMatchesEntry(entry, search.q);
 }
 
@@ -205,9 +287,50 @@ export function removedEntryFromEvent(event: SavedSearchAlertEvent): SavedSearch
 }
 
 /**
- * Whether a removal synthetic entry can satisfy a search's trust/source/platform
- * filters. Category/query-only searches always can; filtered searches require
- * the event to actually carry the matching field(s). Without this gate,
+ * Whether a synthetic removal entry carries enough evidence to evaluate a
+ * trust-signal filter. Distinct from `alertEntryMatchesTrustSignal` (which
+ * answers "does it pass?"): this only asks whether the fields that browse
+ * would inspect are present at all.
+ */
+function removalEntryHasTrustSignalEvidence(entry: SavedSearchAlertEntry, signal: string): boolean {
+  if (!isSavedSearchAlertTrustSignal(signal)) return false;
+  if (signal === "safety-notes") {
+    return entry.safetyNotes != null || entry.trustSignals?.hasSafetyNotes != null;
+  }
+  if (signal === "privacy-notes") {
+    return entry.privacyNotes != null || entry.trustSignals?.hasPrivacyNotes != null;
+  }
+  if (signal === "source-backed") {
+    return (
+      (entry.source != null && entry.source !== "") || entry.trustSignals?.sourceStatus != null
+    );
+  }
+  if (signal === "trusted-package") {
+    return (
+      entry.packageVerified != null ||
+      entry.downloadTrust != null ||
+      entry.trustSignals?.packageVerified != null ||
+      entry.trustSignals?.packageTrust != null
+    );
+  }
+  if (signal === "reviewed") {
+    return (
+      entry.reviewed != null ||
+      entry.reviewedBy != null ||
+      entry.claimed != null ||
+      entry.claimStatus != null
+    );
+  }
+  if (signal === "checksums") {
+    return entry.downloadSha256 != null || entry.trustSignals?.checksumPresent != null;
+  }
+  return false;
+}
+
+/**
+ * Whether a removal synthetic entry can satisfy a search's trust/source/platform/
+ * signal filters. Category/query-only searches always can; filtered searches
+ * require the event to actually carry the matching field(s). Without this gate,
  * `savedSearchMatchesEntry` would silently reject (entry field undefined ≠
  * filter), contradicting the "match against carried fields" comment.
  */
@@ -218,6 +341,7 @@ export function removalEventSupportsSearchFilters(
   if (search.trust && (entry.trust == null || entry.trust === "")) return false;
   if (search.source && (entry.source == null || entry.source === "")) return false;
   if (search.platform && !(entry.platforms ?? []).length) return false;
+  if (search.signal && !removalEntryHasTrustSignalEvidence(entry, search.signal)) return false;
   return true;
 }
 
@@ -240,10 +364,11 @@ export function buildSavedSearchAlerts(
     // requiring a live fetch:
     // - category / slug / title are always available from the path classifier
     //   and power category- + query-only saved searches (unchanged).
-    // - trust / source / platforms are NOT emitted by `classifyRegistryPath` /
-    //   the GitHub webhook today (path-only push payload). Searches that filter
-    //   on those dimensions are explicitly skipped for synthetic removals unless
-    //   a producer enriched the event — see `removalEventSupportsSearchFilters`.
+    // - trust / source / platforms / signal evidence are NOT emitted by
+    //   `classifyRegistryPath` / the GitHub webhook today (path-only push
+    //   payload). Searches that filter on those dimensions are explicitly
+    //   skipped for synthetic removals unless a producer enriched the event —
+    //   see `removalEventSupportsSearchFilters`.
     // Added/updated events keep needing the live entry.
     const liveEntry = entriesByRef.get(ref);
     const usingRemovalFallback = action === "removed" && !liveEntry;
