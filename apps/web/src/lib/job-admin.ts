@@ -5,12 +5,14 @@
  * surface so existing `@/lib/job-admin` imports stay unchanged.
  */
 export {
+  JobInvalidTransitionError,
   JobNotFoundError,
   JobPublicationQualityError,
   REQUIRED_JOB_COLUMNS,
   REQUIRED_JOBS_MIGRATION,
   checkJobsSchema,
   getJobsHealth,
+  nextJobStatus,
   queryAdminJobBySlug,
   queryAdminJobs,
   updateAdminJobState,
