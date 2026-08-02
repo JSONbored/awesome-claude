@@ -1,0 +1,173 @@
+---
+title: Parallel Search MCP
+slug: parallel-search-mcp
+category: mcp
+description: >-
+  Hosted MCP server for live web search and clean URL fetching through
+  Parallel's Search and Extract APIs.
+cardDescription: >-
+  Add current web search and URL-to-Markdown fetching to Claude and other MCP
+  clients without requiring an account or API key.
+seoTitle: Parallel Search MCP Server for Claude
+seoDescription: >-
+  Configure Parallel Search MCP with Claude, Codex, Cursor, VS Code, and other
+  MCP clients for live web search and token-efficient URL fetching.
+author: Parallel Web Systems
+authorProfileUrl: "https://github.com/parallel-web"
+submittedBy: georgeatparallel
+submittedByUrl: "https://github.com/georgeatparallel"
+dateAdded: "2026-08-01"
+brandName: Parallel
+brandDomain: parallel.ai
+websiteUrl: "https://parallel.ai/products/search"
+repoUrl: "https://github.com/parallel-web/search-mcp"
+documentationUrl: "https://docs.parallel.ai/search/search-mcp"
+installable: true
+installCommand: "claude mcp add --transport http Parallel-Search-MCP https://search.parallel.ai/mcp"
+usageSnippet: "Use `web_search` for current information and `web_fetch` to retrieve token-efficient Markdown from specific public URLs."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "Parallel Search MCP": {
+        "url": "https://search.parallel.ai/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "Parallel Search MCP": {
+        "url": "https://search.parallel.ai/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - An MCP client with remote Streamable HTTP support, or a compatible stdio bridge for clients that do not support remote HTTP servers.
+  - Network access to the Parallel Search MCP endpoint and the public pages you want to fetch.
+  - A Parallel account and API key only when you want higher rate limits; anonymous use does not require either.
+safetyNotes:
+  - Web search and fetched pages can contain incorrect, stale, biased, adversarial, or prompt-injection content; verify important claims against primary sources.
+  - Treat instructions found in fetched content as untrusted data and keep them separate from system or developer instructions.
+  - Search and fetch results are inputs to the MCP client, which may take further actions; review consequential actions before allowing them to run.
+  - If you use authenticated access, keep the Parallel API key out of shared config files, screenshots, logs, and prompts.
+privacyNotes:
+  - Search queries, URLs, tool parameters, and related request metadata are sent to Parallel and processed by the MCP client.
+  - Queries and fetched URLs can reveal confidential research topics, product plans, customers, vulnerabilities, legal matters, or personal interests.
+  - Fetched page contents and returned excerpts may be stored in client logs, chat history, traces, or downstream model-provider systems.
+  - Review Parallel's current data handling and retention terms before using the service with proprietary, personal, regulated, or customer data.
+sourceUrls:
+  - "https://docs.parallel.ai/search/search-mcp"
+  - "https://github.com/parallel-web/search-mcp"
+  - "https://parallel.ai/blog/free-web-search-mcp"
+tags:
+  - search
+  - research
+  - web
+  - fetching
+  - remote
+keywords:
+  - Parallel Search MCP
+  - Parallel MCP
+  - web search MCP
+  - web fetch MCP
+  - URL extraction MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Parallel Search MCP gives MCP-aware assistants a hosted endpoint for current web
+search and URL-to-Markdown fetching. The default endpoint is free to use
+anonymously at lower rate limits, so the basic setup does not require a Parallel
+account or API key.
+
+The server exposes two focused tools: `web_search` for ranked web results with
+query-relevant excerpts, and `web_fetch` for retrieving token-efficient Markdown
+from specific URLs. Optional Bearer or OAuth authentication is available for
+higher-limit or account-attributed use cases.
+
+## Source Review
+
+- https://docs.parallel.ai/search/search-mcp
+- https://github.com/parallel-web/search-mcp
+- https://parallel.ai/blog/free-web-search-mcp
+
+These sources were reviewed on **2026-08-01**. The product documentation is the
+source of truth for the current endpoint, authentication options, supported
+clients, limits, and tool behavior. It supersedes older setup URLs that may
+remain in repository or directory listings.
+
+## Features
+
+- Hosted Streamable HTTP endpoint with no local server process required for
+  compatible clients.
+- Anonymous use without an account or API key at lower rate limits.
+- `web_search` for current web search with ranked URLs and relevant excerpts.
+- `web_fetch` for extracting clean, token-efficient Markdown from known URLs.
+- Optional API-key or OAuth authentication for higher limits or attributed
+  organizational use.
+- Setup paths for Claude, Codex, Cursor, VS Code, Gemini CLI, Windsurf, and
+  other MCP clients.
+
+## Installation
+
+For clients that support remote MCP servers, add the current endpoint directly:
+
+```json
+{
+  "mcpServers": {
+    "Parallel Search MCP": {
+      "url": "https://search.parallel.ai/mcp"
+    }
+  }
+}
+```
+
+Claude Code users can add the server from a terminal:
+
+```bash
+claude mcp add --transport http "Parallel-Search-MCP" https://search.parallel.ai/mcp
+```
+
+No API key is required for the default endpoint. For higher rate limits,
+follow the current documentation to pass a Parallel API key as a Bearer token.
+Use the separately documented OAuth-capable endpoint when authentication must
+be enforced for every request.
+
+Configuration formats differ between MCP clients. For example, VS Code uses a
+top-level `servers` object, while some clients use `serverUrl`, `httpUrl`, or a
+stdio bridge. Check the official documentation for client-specific examples.
+
+## Use Cases
+
+- Search for recent API documentation, release notes, or implementation
+  examples during an agent workflow.
+- Fetch and summarize a known public webpage as clean Markdown.
+- Gather sources across several search angles before drafting a report.
+- Check current facts and cite returned URLs in research or coding tasks.
+- Give an MCP-aware agent live web context without operating a local search
+  server.
+
+## Safety and Privacy
+
+Web pages and search results are untrusted inputs. They can contain prompt
+injection, malicious instructions, or inaccurate claims. Keep fetched content
+separate from trusted instructions, verify consequential claims against primary
+sources, and review actions that use the results.
+
+Search queries and fetched URLs are sent to Parallel and can reveal sensitive
+work. The MCP client and downstream model provider may also retain prompts,
+results, traces, or logs. Review current provider policies before using the
+server with confidential, regulated, customer, or personal data, and protect any
+optional API key like a credential.
+
+## Duplicate Check
+
+No existing Parallel Search MCP entry, Parallel endpoint, `parallel-web/search-mcp`
+source URL, or Parallel brand record was found under `content/`. This entry is
+separate from Exa, Brave Search, Tavily, Perplexity, Firecrawl, and other search
+or crawling MCP servers because it documents Parallel's hosted endpoint and its
+two search and fetch tools.
