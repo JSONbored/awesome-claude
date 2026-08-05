@@ -1,3 +1,5 @@
+[![MCP Toplist](https://mcptoplist.com/badge/io.github.JSONbored%2Fheyclaude.svg)](https://mcptoplist.com/server/io.github.JSONbored%2Fheyclaude)
+
 <table>
   <tr>
     <td width="58%" valign="top">
