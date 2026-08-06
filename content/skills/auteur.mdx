@@ -1,0 +1,189 @@
+---
+title: Auteur
+slug: auteur
+category: skills
+description: >-
+  Skill for building complete websites from a written art-direction
+  commitment, with an executable anti-slop linter and a throttled Playwright
+  performance and contrast gate that fail the build.
+cardDescription: >-
+  Commit the art direction in writing, build the site, then let two executable
+  gates decide whether it ships.
+seoTitle: Auteur Skill for Claude Code Web Design and Motion QA
+seoDescription: >-
+  Install auteur for Claude Code to design and build landing pages,
+  scroll-driven sites, and multi-screen product UI, gated by a zero-dependency
+  slop linter and a Playwright FPS and contrast check.
+author: agiwhitelist
+authorProfileUrl: "https://github.com/agiwhitelist"
+dateAdded: "2026-08-06"
+repoUrl: "https://github.com/agiwhitelist/auteur"
+documentationUrl: "https://github.com/agiwhitelist/auteur#readme"
+websiteUrl: "https://agiwhitelist.github.io/auteur/"
+installable: true
+installCommand: "npx skills add agiwhitelist/auteur"
+usageSnippet: >-
+  Ask for a site in plain language, for example "build a landing page for a
+  ceramics studio". The skill runs recon, writes a commit sheet for approval,
+  builds, and refuses to finish until both gates pass.
+copySnippet: |-
+  # Install
+  npx skills add agiwhitelist/auteur
+
+  # Or as a Claude Code plugin
+  /plugin marketplace add agiwhitelist/auteur
+
+  # Then, in a session
+  "Build a scroll-driven landing page for a coffee roaster."
+
+  # Gates, runnable on their own
+  node scripts/slopscan.mjs <dir>
+  node scripts/motionqa.mjs <url> --throttle 4 --min-fps 50
+skillType: capability-pack
+skillLevel: expert
+retrievalSources:
+  - "https://github.com/agiwhitelist/auteur"
+  - "https://raw.githubusercontent.com/agiwhitelist/auteur/main/SKILL.md"
+  - "https://raw.githubusercontent.com/agiwhitelist/auteur/main/README.md"
+  - "https://raw.githubusercontent.com/agiwhitelist/auteur/main/PRODUCT.md"
+  - "https://raw.githubusercontent.com/agiwhitelist/auteur/main/LICENSE"
+  - "https://agiwhitelist.github.io/auteur/"
+testedPlatforms:
+  - Claude Code
+prerequisites:
+  - "Node.js for the bundled scripts; Playwright is the only dependency, and only the QA and screenshot scripts need it."
+  - "A local CLI for asset generation when the build calls for imagery, video frames, or 3D geometry. The skill routes to whatever is installed and degrades to a build without generated assets when none is."
+  - "Network access for the recon phase, which profiles live reference sites and pulls moodboard imagery."
+tags:
+  - web-design
+  - frontend
+  - landing-pages
+  - scroll-animation
+  - design-system
+  - accessibility
+  - claude-code
+  - skills
+keywords:
+  - AI web design skill
+  - anti-slop linter
+  - scroll-driven storytelling site
+  - landing page generator for Claude Code
+  - design system consistency check
+  - Playwright motion QA
+safetyNotes:
+  - "The scripts launch a headless Chromium and fetch third-party sites during recon and QA. Point them at URLs you are willing to load in a real browser."
+  - "Asset generation shells out to whichever local CLIs are installed, which consumes their quota or credits and writes generated files into the project."
+  - "The build writes site files into the working directory. Run it in a fresh directory or a clean branch when the target already contains work you care about."
+privacyNotes:
+  - "Recon and moodboard phases send your brief text to search and image sources to find references."
+  - "Asset generation forwards prompts derived from the brief to whichever local model CLI handles it, under that tool's own retention terms."
+  - "Nothing is uploaded to the skill's author; there is no telemetry and no hosted service in the loop."
+hasPrerequisites: true
+hasTroubleshooting: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+Sources verified on **2026-08-06** against the upstream repository at v1.3.1.
+The skill encodes a design process rather than framework APIs, so it does not
+carry a version-sensitive surface. The two gate scripts are the part that
+changes; their thresholds live in the repository, not in this listing.
+
+## Retrieval Sources
+
+- https://github.com/agiwhitelist/auteur
+- https://raw.githubusercontent.com/agiwhitelist/auteur/main/SKILL.md
+- https://raw.githubusercontent.com/agiwhitelist/auteur/main/README.md
+- https://raw.githubusercontent.com/agiwhitelist/auteur/main/PRODUCT.md
+- https://agiwhitelist.github.io/auteur/
+
+## Overview
+
+Most AI-built pages fail the same way: the model reaches for the safest
+version of every decision, and the result is competent and anonymous. Auteur
+attacks that by moving the commitment earlier and making the standard
+executable.
+
+Art direction is written down before any markup exists — one brand hue, a type
+system, a motion budget, named anti-references — and the build is held to that
+sheet. Then two scripts, not a paragraph of encouragement, decide whether the
+result ships.
+
+## Core Workflow
+
+1. **Recon.** Profile live reference sites for the libraries they actually
+   load, how many scenes they pin, their scroll budget, and their painted type
+   and palette. Pull a numbered moodboard from image sources.
+2. **Commit sheet.** One art direction, written and approved, before markup.
+3. **Assets.** Generate imagery, video frames, depth maps, and geometry from
+   local CLIs, routed by what each tool is good at.
+4. **Build.** One WebGL context, scroll motion on transform and opacity only,
+   from proven recipes.
+5. **Gate.** Nothing ships until `slopscan` and `motionqa` both pass.
+
+## Capability Scope
+
+- Landing pages, marketing sites, and portfolios
+- Scroll-directed storytelling sites, including video-scrub and WebGL scenes
+- Multi-screen product UI — dashboards, admin, onboarding — under one design
+  system, with drift audited across routes
+- Reference recon and moodboards as a standalone phase
+- Design-system audits of an existing build
+
+## The Gates
+
+`slopscan` is a zero-dependency linter that fails the build on concrete
+generic-design tells rather than on taste. Suppression is possible but must
+carry a written reason, which the linter itself checks.
+
+`motionqa` drives Playwright under 4x CPU throttle and reports FPS, long
+tasks, console errors, and contrast. The published showcase holds a floor of
+50 FPS under that throttle with zero console errors.
+
+Both are runnable by anyone against any URL, which is the point: the quality
+claim is reproducible instead of asserted.
+
+## Compatibility
+
+### Native
+
+- **Claude Code**: native skill via `SKILL.md`, installable through
+  `npx skills add`, the plugin marketplace, or OpenClaw.
+
+### Manual Adaptation
+
+- **Other agent hosts**: the skill is plain Markdown plus Node scripts, so the
+  process content transfers as a workflow file. The scripts run standalone
+  from any shell regardless of host.
+
+## Production Rules
+
+- The commit sheet is approved before markup, not after.
+- A suppressed lint rule needs a stated reason or the linter fails anyway.
+- Performance is measured under throttle, because unthrottled numbers on a
+  developer machine describe nobody's phone.
+- Generated assets are checked for licence provenance before they land.
+
+## Troubleshooting
+
+**Issue:** `slopscan` fails on a rule you disagree with
+**Fix:** suppress it inline with a reason of at least ten characters; the
+linter accepts the override and records it in the summary.
+
+**Issue:** `motionqa` reports low FPS on a WebGL hero
+**Fix:** the throttle is the point. Reduce the draw call count or resolution
+scale rather than the threshold.
+
+**Issue:** No asset-generation CLI is installed
+**Fix:** the build proceeds without generated imagery; supply your own assets
+or install one of the supported local tools.
+
+## Output Contract
+
+1. A written commit sheet, approved before the build starts.
+2. The site itself, with its design system documented.
+3. A gate report: linter result, throttled FPS, contrast floor, console errors.
+4. Screenshots at the enforced breakpoints.
