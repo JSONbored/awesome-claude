@@ -20,7 +20,7 @@ repoUrl: "https://github.com/hjqcan/GoodMemory"
 documentationUrl: "https://github.com/hjqcan/GoodMemory/blob/main/docs/GoodMemory-Standalone-MCP-Setup-Guide.md"
 packageUrl: "https://www.npmjs.com/package/goodmemory"
 installable: true
-installCommand: "npm install -g goodmemory@0.5.1"
+installCommand: "npm install -g goodmemory@0.7.2"
 usageSnippet: >-
   Ask Claude to recall relevant project decisions before a task, inspect the
   returned trace, and enable governed writes only after reviewing the memory
@@ -51,7 +51,7 @@ retrievalSources:
   - "https://github.com/hjqcan/GoodMemory/blob/main/.well-known/goodmemory.json"
   - "https://registry.modelcontextprotocol.io/v0.1/servers/io.github.hjqcan%2Fgoodmemory/versions/latest"
 prerequisites:
-  - Bun 1.3 or newer on PATH for the packaged MCP command.
+  - Bun 1.3.14 or newer on PATH for the packaged MCP command.
   - Node.js 20 or newer and npm for the global package install.
   - A stable user id to scope recalled and stored memory.
   - A writable local GoodMemory directory, or an explicitly configured PostgreSQL store.
@@ -110,7 +110,7 @@ remember pipeline used by the library API.
 Install the published package globally:
 
 ```sh
-npm install -g goodmemory@0.5.1
+npm install -g goodmemory@0.7.2
 ```
 
 Add the standalone server to an MCP client:
@@ -165,6 +165,6 @@ context: it will be visible to the model provider used by the host.
 - https://www.npmjs.com/package/goodmemory
 - https://registry.modelcontextprotocol.io/v0.1/servers/io.github.hjqcan%2Fgoodmemory/versions/latest
 
-These sources were reviewed on **2026-07-13**. Prefer the live repository,
+These sources were reviewed on **2026-08-08**. Prefer the live repository,
 published package metadata, capability descriptor, and official MCP registry
 entry for current versions, commands, storage behavior, and tool exposure.
