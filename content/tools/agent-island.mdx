@@ -3,16 +3,15 @@ title: Agent Island
 slug: agent-island
 category: tools
 description: >-
-  Open-source status companion for Claude Code and Codex with live local
-  session state, your-turn alerts, usage views, and native macOS and Windows
-  applications.
+  Free, MIT-licensed native companion for Claude, Codex, Gemini, Grok, and
+  Cursor with local session status, your-turn alerts, and provider usage views.
 cardDescription: >-
-  Monitor local Claude Code and Codex sessions from a native desktop companion
-  and get notified when an agent needs your attention.
-seoTitle: Agent Island - Claude Code and Codex Status Companion
+  Follow Claude, Codex, Gemini, Grok, and Cursor from one native companion with
+  local status, attention alerts, and provider usage views.
+seoTitle: Agent Island - AI Coding Session Status Companion
 seoDescription: >-
-  Agent Island is a free, MIT-licensed status companion for Claude Code and
-  Codex on macOS and Windows with live session state and your-turn alerts.
+  Agent Island supports Claude, Codex, Gemini, Grok, and Cursor with local
+  session status, your-turn alerts, and provider usage views.
 author: Tristan Tang
 dateAdded: "2026-07-15"
 submittedBy: tristan666666
@@ -28,12 +27,12 @@ operatingSystem: macOS 13+, Windows 10+
 sourceUrls:
   - "https://github.com/tristan666666/agent-island"
   - "https://raw.githubusercontent.com/tristan666666/agent-island/main/README.md"
-  - "https://github.com/tristan666666/agent-island/releases/tag/v1.6.1"
+  - "https://github.com/tristan666666/agent-island/releases/tag/v2.1.1"
 installable: true
 installCommand: "brew install tristan666666/tap/agentisland"
 usageSnippet: >-
-  Install Agent Island, launch the native app, and let it read supported local
-  Claude Code and Codex session files to show status and attention alerts.
+  Install Agent Island and launch the native app to see supported local session
+  status, attention alerts, and provider usage from one companion.
 copySnippet: |-
   brew install tristan666666/tap/agentisland
 estimatedSetupTime: 5 minutes
@@ -52,6 +51,9 @@ privacyNotes:
 tags:
   - claude-code
   - codex
+  - gemini
+  - grok
+  - cursor
   - session-monitoring
   - developer-tools
   - desktop-app
@@ -62,6 +64,9 @@ keywords:
   - Agent Island
   - Claude Code status monitor
   - Codex status monitor
+  - Gemini CLI status monitor
+  - Grok coding status monitor
+  - Cursor usage monitor
   - Claude Code notifications
   - Codex your turn alerts
   - AI coding agent desktop companion
@@ -69,11 +74,11 @@ keywords:
 
 ## Overview
 
-Agent Island is a native desktop companion for developers who run Claude Code
-or Codex in background terminals and need a quick signal when a session is
-working, waiting, or needs attention. It presents current session state in a
-macOS top bar or Windows top bar and floating widget, then surfaces a system
-notification, sound, and alarm window when it is the user's turn.
+Agent Island is a native companion for developers who use Claude, Codex,
+Gemini, Grok, and Cursor and want session status, attention signals, and
+provider usage in one place. On macOS, v2.1.1 presents current supported
+session state in the top bar and surfaces a system notification, sound, and
+alarm window when it is the user's turn.
 
 The project is MIT licensed and ships separate native implementations for
 macOS and Windows. It is a monitoring companion rather than a coding agent: it
@@ -94,14 +99,16 @@ On Windows, install through winget:
 winget install TristanTang.AgentIsland
 ```
 
-The latest GitHub release also provides a macOS DMG and a Windows x64 ZIP.
+GitHub Releases provides the current macOS DMG, while the project also
+maintains Windows distribution through GitHub Releases, Scoop, and winget.
 
 ## Core Capabilities
 
-- Live local session state for Claude Code and Codex.
+- Support for Claude, Codex, Gemini, Grok, and Cursor.
+- Live local session state across supported coding-agent sessions.
 - Your-turn notifications when a background session needs attention.
 - Native macOS and Windows interfaces without an Electron runtime.
-- Usage, cost, reset, and weekly report views where provider data is available.
+- Provider usage, cost, reset, and weekly report views.
 - English and Simplified Chinese interfaces.
 - Local-first monitoring with no Agent Island account or product telemetry.
 
