@@ -1,0 +1,153 @@
+---
+title: Causeway
+slug: causeway-mcp
+category: mcp
+description: >-
+  Source-backed Rust MCP server that gives an AI structured control of a real Chromium browser through the Chrome DevTools Protocol.
+cardDescription: Local Rust bridge between MCP clients and Chromium through CDP.
+seoTitle: Causeway MCP Server for Chromium Browser Control
+seoDescription: >-
+  Build and configure Causeway as a local Rust MCP server for navigation, interaction, inspection, screenshots, downloads, and other Chromium browser work through CDP.
+author: Wilderness Interactive
+authorProfileUrl: "https://github.com/wilderness-interactive"
+submittedBy: EmergenceDeveloper
+submittedByUrl: "https://github.com/EmergenceDeveloper"
+dateAdded: "2026-08-09"
+brandName: Wilderness Interactive
+brandDomain: wildernessinteractive.com
+websiteUrl: "https://wildernessinteractive.com/causeway"
+repoUrl: "https://github.com/wilderness-interactive/causeway"
+documentationUrl: "https://github.com/wilderness-interactive/causeway#readme"
+installable: true
+installCommand: "git clone https://github.com/wilderness-interactive/causeway && cd causeway && cargo build"
+usageSnippet: |-
+  claude mcp add causeway -- cmd /c "C:\path\to\causeway\target\debug\causeway.exe"
+configSnippet: |-
+  {
+    "mcpServers": {
+      "causeway": {
+        "type": "stdio",
+        "command": "cmd",
+        "args": ["/c", "C:\\path\\to\\causeway\\target\\debug\\causeway.exe"]
+      }
+    }
+  }
+prerequisites:
+  - A Rust toolchain for building the source repository.
+  - A Chromium browser that Causeway can connect to through a remote-debugging port.
+  - An MCP client that can start a local stdio server.
+safetyNotes:
+  - Causeway can navigate, click, type, fill forms, execute page JavaScript, manage cookies, download files, and perform other browser actions exposed by its MCP tools.
+  - The configured browser profile may carry authenticated sessions, so tool calls can change external accounts or Websites with the same authority as that profile.
+  - Review the target tab, destination, and requested mutation before allowing an AI to perform consequential browser actions.
+privacyNotes:
+  - Causeway can inspect page content, accessibility data, cookies, screenshots, downloads, and other information available through the configured Chromium browser.
+  - Access depends on the browser profile and actions made available to Causeway; a shared profile can expose existing sessions and browser data.
+  - Causeway connects locally over stdio and CDP and does not provide a hosted browser endpoint.
+sourceUrls:
+  - "https://github.com/wilderness-interactive/causeway"
+  - "https://github.com/wilderness-interactive/causeway/blob/master/README.md"
+  - "https://wildernessinteractive.com/causeway"
+tags:
+  - mcp
+  - rust
+  - chromium
+  - browser-automation
+  - cdp
+  - developer-tools
+keywords:
+  - Causeway MCP server
+  - Chromium MCP server
+  - browser control for Claude
+  - Chrome DevTools Protocol MCP
+  - Rust browser automation
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Causeway is a local Rust binary that connects an MCP client to a Chromium
+browser. It speaks MCP over stdio and sends Chrome DevTools Protocol commands
+over WebSocket, giving the client structured browser tools without a browser
+extension or hosted browser service.
+
+Its current tool surface covers navigation, tab management, clicking, typing,
+form filling, screenshots, page reading, accessibility snapshots, JavaScript
+evaluation, cookie control, network monitoring, downloads, PDF saving, and
+device emulation.
+
+## Installation
+
+Clone the source and build it with Cargo:
+
+```sh
+git clone https://github.com/wilderness-interactive/causeway
+cd causeway
+cargo build
+```
+
+Create `causeway.toml` in the project root and point it at the Chromium
+executable and remote-debugging port that Causeway should use. The repository
+README documents shared and dedicated browser profiles and the complete
+configuration fields.
+
+Then add the built binary to the MCP client's configuration. This Windows
+example follows the repository's current Claude Code setup:
+
+```json
+{
+  "mcpServers": {
+    "causeway": {
+      "type": "stdio",
+      "command": "cmd",
+      "args": ["/c", "C:\\path\\to\\causeway\\target\\debug\\causeway.exe"]
+    }
+  }
+}
+```
+
+## Use Cases
+
+- Navigate a real Chromium tab and inspect the rendered page or accessibility
+  tree.
+- Fill ordinary browser forms and interact with authenticated Websites through
+  the selected browser profile.
+- Capture screenshots, save PDFs, monitor browser requests, and download files.
+- Execute page JavaScript or emulate another device when the task requires the
+  browser's own rendering and runtime state.
+- Keep tab creation, selection, and closure explicit during multi-step browser
+  work.
+
+## Safety and Privacy
+
+Causeway exposes consequential browser capabilities. A configured profile can
+contain authenticated sessions, and its tools can type, click, submit forms,
+execute JavaScript, manage cookies, or download files. Review the exact target
+and requested action before allowing account, payment, publication, deletion,
+or other external mutations.
+
+The MCP client can receive page content and other data available through the
+configured browser, including accessibility output, cookies, screenshots, and
+network information. A shared profile can expose existing sessions. Causeway
+itself connects locally over stdio and CDP and does not provide a hosted
+browser endpoint.
+
+## Source Review
+
+The following primary sources were reviewed on **2026-08-09**:
+
+- https://github.com/wilderness-interactive/causeway
+- https://github.com/wilderness-interactive/causeway/blob/master/README.md
+- https://wildernessinteractive.com/causeway
+
+These sources document the Rust implementation, MCP-over-stdio and CDP-over-
+WebSocket architecture, build and configuration steps, supported browser
+operations, profile behavior, and official Wilderness Interactive product
+identity.
+
+## Duplicate Check
+
+No existing Causeway, `wilderness-interactive/causeway`, or dedicated
+Wilderness Interactive browser-bridge entry was found in the HeyClaude MCP
+registry before this submission.
