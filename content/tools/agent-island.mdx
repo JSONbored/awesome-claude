@@ -27,7 +27,7 @@ operatingSystem: macOS 13+, Windows 10+
 sourceUrls:
   - "https://github.com/tristan666666/agent-island"
   - "https://raw.githubusercontent.com/tristan666666/agent-island/main/README.md"
-  - "https://github.com/tristan666666/agent-island/releases/tag/v2.1.1"
+  - "https://github.com/tristan666666/agent-island/releases/tag/v2.1.2"
 installable: true
 installCommand: "brew install tristan666666/tap/agentisland"
 usageSnippet: >-
@@ -39,9 +39,9 @@ estimatedSetupTime: 5 minutes
 difficulty: beginner
 prerequisites:
   - "macOS 13 or later, or Windows 10 or later."
-  - "A local Claude Code or Codex installation with session data available to the current user."
+  - "A local install of at least one supported agent - Claude Code, Codex, Antigravity, Grok, or Cursor - with session data available to the current user."
 safetyNotes:
-  - "Agent Island reads local Claude Code and Codex session files to determine session state; review the requested filesystem access before use."
+  - "Agent Island reads local session files for the supported agents (Claude Code, Codex, Antigravity, Grok, and Cursor) to determine session state; review the requested filesystem access before use."
   - "The macOS release is ad-hoc signed rather than Apple-notarized, so first launch requires right-clicking the app and choosing Open."
   - "Windows packages are distributed through GitHub Releases, Scoop, and winget; verify the release source before installation."
 privacyNotes:
@@ -76,13 +76,13 @@ keywords:
 
 Agent Island is a native companion for developers who use Claude, Codex,
 Antigravity, Grok, and Cursor and want session status, attention signals, and
-provider usage in one place. On macOS, v2.1.1 presents current supported
+provider usage in one place. Version 2.1.2 ships macOS and Windows from one tag and presents current supported
 session state in the top bar and surfaces a system notification, sound, and
 alarm window when it is the user's turn.
 
 The project is MIT licensed and ships separate native implementations for
 macOS and Windows. It is a monitoring companion rather than a coding agent: it
-does not replace Claude Code or Codex and does not submit prompts on the user's
+does not replace the agents it monitors and does not submit prompts on the user's
 behalf.
 
 ## Install
