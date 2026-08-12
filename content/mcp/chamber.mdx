@@ -1,0 +1,72 @@
+### Name
+
+Chamber
+
+### Slug
+
+chamber
+
+### Category
+
+mcp
+
+### GitHub URL
+
+https://github.com/abm9111/chamber
+
+### Author
+
+abm9111
+
+### Public contact
+
+@abm9111
+
+### Tags
+
+notes, citations, local-first, sqlite, rag, obsidian, provenance, drift-detection
+
+### Description
+
+Cited Q&A and drift detection over your own markdown notes. Answers cite exact passages; cited passages are hashed at citation time, and a scheduled `chamber verify` exits non-zero when a source changed under a conclusion already drawn from it. The model is only ever shown citation numbers, so it cannot fabricate a source, and it says "I don't know" when the corpus can't answer. Local-first: node:sqlite and files on disk, zero runtime dependencies, works with any OpenAI-compatible endpoint including localhost — the drift half needs no model at all. MCP tools: chamber_ask, chamber_verify, chamber_corpus. Try it on a throwaway folder: npx -y @bu7umaid/chamber try
+
+### Card description
+
+Cited answers from your own notes, and an alarm when a cited source changes underneath a conclusion.
+
+### Install command
+
+npx -y @bu7umaid/chamber try
+
+### Usage snippet
+
+chamber ingest              # index your notes folders
+chamber ask "..."           # answers with per-sentence citation verdicts
+chamber verify              # re-hash cited passages; non-zero exit on drift
+
+The verify half needs no model. For Q&A, point config at any OpenAI-compatible endpoint (localhost works).
+
+### Config snippet
+
+{
+  "mcpServers": {
+    "chamber": {
+      "command": "/absolute/path/to/node",
+      "args": ["--experimental-strip-types", "/absolute/path/to/chamber/src/mcp_server.ts"],
+      "env": { "CHAMBER_PYTHON": "/path/to/python-with-onnxruntime" }
+    }
+  }
+}
+// absolute paths are deliberate — a spawned MCP server does not inherit your shell PATH (see README)
+
+### Safety notes
+
+Reads the notes folders you configure; writes only to its own SQLite database. chamber_ask records verified claims as beliefs by design (documented). The optional skill sandbox confines only on Linux and refuses to run elsewhere. docs/KNOWN_LIMITATIONS.md lists 17 known limitations, including the unflattering ones.
+
+### Privacy notes
+
+Local by default: node:sqlite on disk, no account, no telemetry, no network unless you configure a model endpoint (localhost works). A non-loopback endpoint receives retrieved passages as prompt context. CHAMBER_API_KEY is read from env, never stored in the config file.
+
+### submitted via
+
+website-preflight
