@@ -1,0 +1,86 @@
+---
+title: PushEngage MCP
+slug: pushengage-mcp
+category: mcp
+description: "Official MCP server for PushEngage. Connects Claude or any MCP client to your PushEngage account with 27 tools for sending web push campaigns, building segments, running A/B tests, and reading campaign analytics."
+cardDescription: Connect Claude to PushEngage to send, segment, and measure push campaigns.
+seoTitle: PushEngage MCP Server for Claude
+seoDescription: >-
+  Configure the official PushEngage MCP server with Claude to send web push
+  notifications, build audience segments, run A/B tests, and pull campaign
+  analytics using 27 tools across 10 domains.
+author: awesomemotive
+authorProfileUrl: "https://github.com/awesomemotive"
+submittedBy: NirvanaGuha
+submittedByUrl: "https://github.com/NirvanaGuha"
+dateAdded: "2026-08-13"
+tags:
+  - push-notifications
+  - marketing
+  - retention
+  - analytics
+  - official
+brandName: PushEngage
+brandDomain: pushengage.com
+websiteUrl: "https://www.pushengage.com"
+repoUrl: "https://github.com/awesomemotive/pushengage-mcp"
+documentationUrl: "https://github.com/awesomemotive/pushengage-mcp#readme"
+installable: true
+installCommand: "npx -y @pushengage/mcp"
+usageSnippet: "Add the server to your MCP client config, complete the one-time browser sign-in, then ask Claude to send a push campaign or pull last month's campaign analytics."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "pushengage": {
+        "command": "npx",
+        "args": ["-y", "@pushengage/mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "pushengage": {
+        "command": "npx",
+        "args": ["-y", "@pushengage/mcp"],
+        "env": {
+          "PE_MCP_CONFIG_PATH": "~/.pushengage/mcp.json",
+          "PE_MCP_CLIENT_NAME": "Claude Desktop"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - A PushEngage account (works with every plan, including the free tier).
+  - Node.js 18 or newer with npx available.
+  - A browser for the one-time sign-in that links your PushEngage account.
+safetyNotes:
+  - Send tools deliver real web push notifications to live subscriber audiences — one-off sends, A/B tests, recurring campaigns, and per-subscriber-timezone delivery. Review audience and copy before approving a send.
+  - Audience tools can create and modify segments, subscriber attributes, and audience groups on the connected account.
+  - Settings tools can update site details and service worker settings for the connected site.
+privacyNotes:
+  - Authentication uses a browser sign-in; the token is delivered to a local loopback server (never passed in a URL) and stored in a local config file (~/.pushengage/mcp.json) readable only by your user.
+  - The server calls the PushEngage dashboard API over HTTPS and reads account data such as campaigns, segments, and analytics.
+---
+
+## Overview
+
+PushEngage MCP is the official Model Context Protocol server for PushEngage, a web push notification and retention platform. It connects Claude, Cursor, or any MCP-compatible client directly to your PushEngage account, so campaign work happens in plain language instead of a dashboard tab.
+
+The 27 tools span 10 domains: sending web push notifications (one-off, A/B tests, recurring, and subscriber-timezone delivery), managing segments, attributes, and audience groups, reading campaign analytics as summaries or day-by-day time series, listing automations (drip, RSS auto-push, triggered campaigns, workflows), and managing site settings and chat widgets.
+
+## Setup
+
+1. Add the server to your MCP client config (see the config snippet) or run `npx -y @pushengage/mcp` directly.
+2. On first run, a browser window opens for a secure sign-in to your PushEngage account — the token is stored locally at `~/.pushengage/mcp.json`.
+3. Ask your assistant to list your sites, then start sending and measuring campaigns.
+
+Set `PE_MCP_CONFIG_PATH` to run multiple PushEngage accounts side by side, and `PE_MCP_CLIENT_NAME` to control the app label shown on the authorize screen.
+
+## Example prompts
+
+- "Send a web push to my cart-abandoners segment with the headline '20% off — today only' and deliver it in each subscriber's local timezone."
+- "A/B test two headlines for tomorrow's flash-sale notification and show me how last week's test performed."
+- "How did push perform last month? Give me total clicks and views, then break it down week by week."
