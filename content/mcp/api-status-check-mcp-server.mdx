@@ -1,0 +1,140 @@
+---
+title: API Status Check MCP Server
+slug: api-status-check-mcp-server
+category: mcp
+description: >-
+  Live and historical availability for 285 public APIs and developer platforms,
+  so Claude can tell a third-party outage apart from a bug in your own code.
+cardDescription: >-
+  Ask Claude whether Stripe, OpenAI, or AWS is actually down before you debug
+  your own code. Remote HTTP MCP, read-only, no auth.
+seoTitle: API Status Check MCP Server for Claude
+seoDescription: >-
+  Connect Claude to live and historical status for 285 APIs over streamable
+  HTTP. Read-only, no API key, eight tools including cross-vendor reliability
+  ranking.
+author: Bity LLC
+authorProfileUrl: "https://apistatuscheck.com"
+brandName: API Status Check
+brandDomain: apistatuscheck.com
+submittedBy: shibley
+submittedByUrl: "https://github.com/shibley"
+dateAdded: "2026-08-15"
+submittedAt: "2026-08-15"
+documentationUrl: "https://apistatuscheck.com/mcp"
+websiteUrl: "https://apistatuscheck.com"
+retrievalSources:
+  - "https://apistatuscheck.com/mcp"
+  - "https://apistatuscheck.com/api/mcp"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add --transport http apistatuscheck https://apistatuscheck.com/api/mcp"
+usageSnippet: >-
+  "I'm getting 503s from Stripe — is Stripe down, or is it me?" Claude calls
+  get_api_status, which probes the endpoint at call time and returns that
+  alongside the hourly monitor's value with its timestamp.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "apistatuscheck": {
+        "url": "https://apistatuscheck.com/api/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "apistatuscheck": {
+        "url": "https://apistatuscheck.com/api/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 2 minutes
+difficulty: beginner
+prerequisites:
+  - "MCP client with streamable HTTP transport support."
+  - "No account, API key, or Authorization header — the endpoint is open and read-only."
+safetyNotes:
+  - "All eight tools are read-only queries; the server exposes no write, install, or destructive action."
+  - "The server calls third-party status endpoints on your behalf; it never receives or forwards your own API credentials."
+privacyNotes:
+  - "Only the service name or category you ask about leaves your client; no request bodies, keys, or logs from your own integration are sent."
+  - "Queries are served by Bity LLC infrastructure and enter its request logs like any HTTP request."
+tags:
+  - mcp
+  - monitoring
+  - observability
+  - debugging
+keywords:
+  - API Status Check MCP server
+  - is Stripe down MCP
+  - API outage detection for Claude
+  - third-party API status MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## What it does
+
+When a third-party API starts returning errors, the expensive part is not the
+fix — it is the twenty minutes spent bisecting your own code before someone
+thinks to open a status page. This server puts that check inside the
+conversation: Claude answers "is it them or is it me?" before you start
+debugging.
+
+It covers **285 services across 29 categories** (payments, AI providers, cloud,
+CI, auth, comms and more), with both the current state and the history behind
+it.
+
+## Tools
+
+| Tool | Answers |
+| --- | --- |
+| `get_api_status` | Is this one service up *right now*? |
+| `list_down_apis` | What is broken at this moment, across everything tracked? |
+| `list_apis` / `search_apis` / `list_categories` | What is covered? |
+| `get_uptime_history` | How has this service behaved recently? |
+| `get_incident_history` | What did the vendor itself publish about past incidents? |
+| `rank_reliability` | Compare incidents, downtime minutes and MTTR across several vendors at once. |
+
+`rank_reliability` is the one no single vendor's own status page can answer,
+because it is a cross-vendor scorecard rather than a self-report.
+
+## Two things worth knowing before you rely on it
+
+**Freshness is explicit, not implied.** `list_apis` and `list_down_apis` return
+statuses from an hourly monitor and carry the timestamp they were taken at.
+`get_api_status` additionally probes the endpoint at call time and returns both
+values, so a single-region blip shows up as a *disagreement between the two*
+rather than being reported as a confirmed outage.
+
+**Missing history is reported as unknown, not as zero.** `get_incident_history`
+and `rank_reliability` return `covered: false` for services with no archive
+behind them. A service with no incidents on file is not a service with a
+perfect record, and the response says so rather than letting a clean-looking
+number stand in for absent data.
+
+## Verify before you trust the entry
+
+Everything above is checkable from a shell — no account needed:
+
+```bash
+# handshake + the server's own instructions
+curl -s -X POST https://apistatuscheck.com/api/mcp \
+  -H 'Content-Type: application/json' \
+  -H 'Accept: application/json, text/event-stream' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"x","version":"1"}}}'
+
+# the eight tool names
+curl -s -X POST https://apistatuscheck.com/api/mcp \
+  -H 'Content-Type: application/json' \
+  -H 'Accept: application/json, text/event-stream' \
+  -d '{"jsonrpc":"2.0","id":2,"method":"tools/list"}'
+
+# the coverage numbers quoted in this entry
+curl -s https://apistatuscheck.com/api/status | jq '{count, categories: (.categories | length)}'
+```
+
+The last command returned `{"count": 285, "categories": 29}` on 2026-08-15.
