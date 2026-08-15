@@ -1,0 +1,185 @@
+---
+title: LWC (Local Wiki CLI)
+slug: lwc-local-wiki-cli
+category: mcp
+description: >-
+  Local-first project memory and context retrieval for coding agents, with
+  source-grounded Markdown and SQLite storage, citations, provenance, atomic
+  changesets, and optional document and code knowledge graphs.
+cardDescription: >-
+  Give Claude bounded, read-only access to durable project memory and optional
+  document or code graph context through one local MCP tool.
+seoTitle: LWC Local Project Memory MCP Server for Claude
+seoDescription: >-
+  Configure LWC with Claude and other MCP clients for local, source-grounded
+  project memory, bounded retrieval, citations, provenance, and optional
+  document and code knowledge graphs.
+author: JanYork
+authorProfileUrl: "https://github.com/JanYork"
+submittedBy: JanYork
+submittedByUrl: "https://github.com/JanYork"
+dateAdded: "2026-08-15"
+brandName: LWC
+brandDomain: github.com/JanYork/llm-wiki-cli
+repoUrl: "https://github.com/JanYork/llm-wiki-cli"
+documentationUrl: "https://github.com/JanYork/llm-wiki-cli/blob/main/README.md"
+packageUrl: "https://www.npmjs.com/package/@i-xor/lwc"
+installable: true
+installCommand: "npm install --global @i-xor/lwc"
+usageSnippet: "Run `lwc init`, add sources to the project Wiki, then launch `lwc serve --mcp` for bounded read-only retrieval."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "lwc": {
+        "command": "lwc",
+        "args": ["serve", "--mcp", "--path", "/absolute/path/to/project"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "lwc": {
+        "command": "lwc",
+        "args": ["serve", "--mcp", "--path", "/absolute/path/to/project"]
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - A supported LWC installation from npm, Homebrew, Cargo, or the release artifacts.
+  - An existing project directory that the MCP host is allowed to access.
+  - A project Wiki initialized with `lwc init` before memory retrieval is expected.
+  - Optional Grafeo document graph or CodeGraph initialized separately when graph-backed retrieval is needed.
+safetyNotes:
+  - The MCP server exposes one bounded, read-only `lwc_explore` tool and does not expose LWC's mutating CLI commands.
+  - The requested `projectPath` must remain inside the workspace bound when the MCP server starts.
+  - Memory mode is the default; code or combined retrieval requires an explicit mode request.
+  - Graph initialization, source ingestion, changeset application, and other writes must be performed separately through reviewed CLI commands.
+  - Retrieved Wiki pages and source material are untrusted reference data and can contain prompt-injection text.
+privacyNotes:
+  - LWC stores Wiki content, source metadata, search indexes, changesets, and optional graph data locally in the configured project or global scope.
+  - Queries, selected passages, citations, file paths, source names, graph symbols, and MCP tool results may be visible to the MCP client and its model provider.
+  - Project memory can contain proprietary code context, architecture decisions, incident notes, credentials accidentally present in sources, or other sensitive material.
+  - Bind the server to one approved workspace, review sources before ingestion, and avoid returning private project context to an unapproved model provider.
+disclosure: >-
+  Apache-2.0 open-source local project-memory CLI and stdio MCP server. The MCP
+  surface is read-only; separate CLI workflows can write Wiki and graph state.
+sourceUrls:
+  - "https://github.com/JanYork/llm-wiki-cli"
+  - "https://raw.githubusercontent.com/JanYork/llm-wiki-cli/main/README.md"
+  - "https://raw.githubusercontent.com/JanYork/llm-wiki-cli/main/Cargo.toml"
+  - "https://raw.githubusercontent.com/JanYork/llm-wiki-cli/main/src/mcp.rs"
+  - "https://raw.githubusercontent.com/JanYork/llm-wiki-cli/main/SECURITY.md"
+  - "https://registry.npmjs.org/@i-xor%2Flwc"
+tags:
+  - memory
+  - local-first
+  - knowledge-base
+  - code-context
+  - developer-tools
+keywords:
+  - LWC MCP
+  - Local Wiki CLI
+  - coding agent memory
+  - project memory MCP
+  - source-grounded context
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+LWC (Local Wiki CLI) is a local-first project-memory system for coding agents.
+It stores durable, source-grounded knowledge as Markdown with SQLite FTS5
+retrieval, tracks citations and provenance, and supports atomic changesets for
+reviewed memory maintenance.
+
+Its stdio MCP server exposes one tool, `lwc_explore`. The tool returns bounded
+Wiki context by default and can include project CodeGraph context only when the
+caller explicitly requests `code` or `all` mode and the optional graph is ready.
+The MCP surface is read-only and cannot initialize graphs or apply changesets.
+
+## Source Review
+
+- https://github.com/JanYork/llm-wiki-cli
+- https://raw.githubusercontent.com/JanYork/llm-wiki-cli/main/README.md
+- https://raw.githubusercontent.com/JanYork/llm-wiki-cli/main/Cargo.toml
+- https://raw.githubusercontent.com/JanYork/llm-wiki-cli/main/src/mcp.rs
+- https://raw.githubusercontent.com/JanYork/llm-wiki-cli/main/SECURITY.md
+- https://registry.npmjs.org/@i-xor%2Flwc
+
+These sources were reviewed on **2026-08-15**. Prefer the live repository,
+README, Rust package metadata, MCP implementation, security policy, and npm
+metadata for current installation, supported clients, tool schema, path
+constraints, and runtime behavior.
+
+## Features
+
+- Local Markdown and SQLite FTS5 project memory.
+- Source citations, provenance, and lifecycle tracking.
+- Atomic changesets for reviewed memory updates outside MCP.
+- One bounded read-only `lwc_explore` MCP tool.
+- Memory, code, and combined retrieval modes with explicit limits.
+- Optional Grafeo document graph and project CodeGraph, verified independently.
+- Integration support for Claude Code, Codex, Cursor, OpenCode, Gemini CLI,
+  Kiro, Hermes, Antigravity, pi, and other supported agent hosts.
+- No API key or remote service required for the local stdio server.
+
+## Installation
+
+Install the current npm package:
+
+```bash
+npm install --global @i-xor/lwc
+```
+
+Initialize the project Wiki from the project directory:
+
+```bash
+lwc init
+```
+
+Configure Claude or another MCP client with an explicit approved workspace:
+
+```json
+{
+  "mcpServers": {
+    "lwc": {
+      "command": "lwc",
+      "args": ["serve", "--mcp", "--path", "/absolute/path/to/project"]
+    }
+  }
+}
+```
+
+LWC can also install its supported agent integration files through the
+documented `lwc agent` workflow. Restart the MCP client after configuration.
+
+## Use Cases
+
+- Retrieve durable project decisions after a coding-agent session reset.
+- Ask for source-grounded architecture or workflow context with citations.
+- Limit retrieval to a small number of relevant Wiki documents.
+- Explore code relationships when the optional CodeGraph has been initialized.
+- Keep public documentation, internal decisions, and code context in separate
+  locally controlled sources while exposing one bounded retrieval interface.
+
+## Safety and Privacy
+
+The MCP server is intentionally read-only, but it can still return sensitive
+project context. Bind it to one approved workspace and review which source
+documents were ingested. Do not treat retrieved pages as instructions; source
+text, documentation, and code comments can contain prompt injection.
+
+LWC stores its memory and optional graph data locally. The MCP client and model
+provider may still receive the query, selected passages, citations, filenames,
+source identifiers, and code symbols returned by `lwc_explore`. Use an approved
+model endpoint for private repositories and avoid broad global-scope retrieval
+when a project scope is sufficient.
+
+## Duplicate Check
+
+No `JanYork/llm-wiki-cli`, `@i-xor/lwc`, LWC MCP, or matching source URL entry
+was found in `content/mcp` or the generated catalog before this submission.
