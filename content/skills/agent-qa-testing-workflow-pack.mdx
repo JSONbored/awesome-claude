@@ -1,0 +1,182 @@
+---
+title: agent-qa Testing Workflow Pack
+slug: agent-qa-testing-workflow-pack
+category: skills
+description: >-
+  Source-backed agent skills for authoring natural-language web and mobile
+  tests, triaging failed runs from artifacts, and applying evidence-based fixes
+  with agent-qa MCP tools.
+cardDescription: >-
+  Author, triage, and debug self-improving web and mobile tests with agent-qa
+  skills and MCP evidence.
+seoTitle: agent-qa Skills for Web and Mobile Test Automation
+seoDescription: >-
+  Use the agent-qa skill pack with Claude and coding agents to author
+  natural-language web and mobile tests, inspect run evidence, classify
+  failures, and verify focused fixes through MCP tools.
+author: Vostride
+authorProfileUrl: "https://github.com/vostride"
+submittedBy: pranshuchittora
+submittedByUrl: "https://github.com/pranshuchittora"
+dateAdded: "2026-08-16"
+submittedAt: "2026-08-16"
+repoUrl: "https://github.com/vostride/agent-qa"
+documentationUrl: "https://vostride.com/docs/agent-qa"
+downloadUrl: "https://github.com/vostride/agent-qa/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Load the focused authoring, result-triage, or debug-fix skill after installing
+  agent-qa and starting its local MCP surface, then follow the skill's validation
+  and evidence rules for the current QA task.
+copySnippet: |-
+  Use agent-qa-authoring to create and validate an agent-qa test with canonical IDs.
+  Use agent-qa-result-triage to classify a failed run from its steps, logs, and artifacts.
+  Use agent-qa-debug-fix to patch the evidenced root cause and rerun the narrowest affected test.
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-08-16"
+retrievalSources:
+  - "https://github.com/vostride/agent-qa"
+  - "https://github.com/vostride/agent-qa/tree/main/skills"
+  - "https://raw.githubusercontent.com/vostride/agent-qa/main/skills/agent-qa-authoring/SKILL.md"
+  - "https://raw.githubusercontent.com/vostride/agent-qa/main/skills/agent-qa-result-triage/SKILL.md"
+  - "https://raw.githubusercontent.com/vostride/agent-qa/main/skills/agent-qa-debug-fix/SKILL.md"
+  - "https://vostride.com/docs/agent-qa"
+  - "https://vostride.com/docs/agent-qa/quickstart"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Generic AGENTS
+prerequisites:
+  - "Node.js and npm available in the project where agent-qa will run."
+  - "agent-qa installed and initialized with a configured model provider or supported Codex or Claude Code account authentication."
+  - "The local agent-qa MCP endpoint available when using MCP-backed authoring, run, artifact, and triage tools."
+  - "Docker installed before using agent-qa hooks, which run in sandboxed Node, Bun, Python, or Bash containers."
+safetyNotes:
+  - "The authoring skill can create, update, and delete test, suite, and hook definitions inside configured workspace patterns."
+  - "The debug-fix skill can modify local code or YAML and rerun browser, mobile, hook, or unit tests; review the focused patch before keeping it."
+  - "Test execution can control browsers or mobile devices and hooks can execute code in Docker containers; use disposable test environments and least-privilege accounts."
+  - "Validate definitions before running them and require human review before destructive actions or production-facing tests."
+privacyNotes:
+  - "Run evidence can include screenshots, videos, logs, test data, local file paths, observed UI content, and failure artifacts."
+  - "Configured model providers may receive test instructions, observed UI content, and relevant run context during planning and healing."
+  - "Keep credentials and customer data in supported secret mechanisms rather than test YAML, prompts, screenshots, logs, or public issue reports."
+  - "Local .agent-qa state and dashboard artifacts may retain run history and observations until the workspace owner removes them."
+tags:
+  - agent-qa
+  - testing
+  - qa
+  - web-testing
+  - mobile-testing
+  - mcp
+  - skills
+keywords:
+  - agent-qa skills
+  - Claude web testing skill
+  - mobile QA agent skill
+  - natural language test automation
+  - self-healing QA tests
+  - MCP test authoring
+readingTime: 6
+difficultyScore: 72
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# agent-qa Testing Workflow Pack
+
+agent-qa is a source-available, self-improving QA agent for engineering teams.
+It runs natural-language tests against websites and mobile targets, re-observes
+the UI when an action fails, and carries validated execution memory into later
+runs.
+
+The repository ships three focused Agent Skills:
+
+- `agent-qa-authoring` creates, edits, validates, and runs tests, suites, and
+  hooks using the project's canonical schema and generated ID contracts.
+- `agent-qa-result-triage` inspects steps, logs, and artifacts before classifying
+  a failed run and recommending the next action.
+- `agent-qa-debug-fix` applies the smallest code or YAML fix supported by the
+  evidence, then reruns the narrowest affected check.
+
+## Knowledge Freshness
+
+The skills and MCP contracts can change with agent-qa releases. This entry was
+verified on **2026-08-16**; prefer the live skill manifests, bundled contract
+reference, current CLI help, and project documentation over cached field names
+or tool assumptions.
+
+## Retrieval Sources
+
+The skill manifests, their bundled references, and OpenAI agent metadata were
+reviewed from the public `vostride/agent-qa` repository on **2026-08-16**. The
+repository's own skill validator passes for all three skills. Each manifest uses
+the `agent_qa_` MCP tool prefix and includes explicit rules against invented
+schemas, IDs, screenshots, logs, selectors, and fixes.
+
+Use the live source and documentation when behavior differs from this entry:
+
+- https://github.com/vostride/agent-qa/tree/main/skills
+- https://vostride.com/docs/agent-qa
+- https://vostride.com/docs/agent-qa/quickstart
+
+## Core Workflow
+
+1. Install and initialize agent-qa in the target project.
+2. Start the local agent-qa surface and confirm MCP discovery and configuration.
+3. Load `agent-qa-authoring` before creating or changing test definitions.
+4. Generate canonical IDs and validate tests, suites, or hooks before saving or
+   running them.
+5. Run the narrowest test or suite needed for the change.
+6. On failure, load `agent-qa-result-triage` and gather steps, logs, execution
+   logs, and available artifacts before choosing a category.
+7. Load `agent-qa-debug-fix` only when the evidence supports a code or YAML
+   change, then rerun the narrowest affected check.
+
+## Capability Scope
+
+- Natural-language web and mobile test authoring.
+- Canonical test, suite, hook, run, and observation IDs.
+- Schema-backed validation through MCP or CLI fallbacks.
+- Evidence-backed failure classification from run artifacts and logs.
+- Focused debugging across test definitions, hooks, project code, runtime
+  infrastructure, and agent behavior.
+- Self-healing execution and persistent memory supplied by agent-qa itself.
+
+## Compatibility
+
+### Native
+
+- **Claude and Codex:** load the standard `SKILL.md` manifests and connect the
+  declared local `agent-qa` MCP endpoint at `http://127.0.0.1:3471/mcp`.
+- **Generic AGENTS workflows:** adapt the manifests as project skills while
+  preserving their MCP-first evidence and validation rules.
+
+### Runtime Providers
+
+agent-qa supports OpenAI- and Anthropic-compatible endpoints, Gemini, local or
+open-source models, and account authentication for Codex and Claude Code.
+Provider support for test execution is distinct from the client that loads the
+three workflow skills.
+
+## Production Rules
+
+- Treat browser and mobile sessions as real automation with access to the
+  configured test environment.
+- Review file mutations proposed by authoring or debug workflows, especially
+  delete operations and changes outside test definitions.
+- Use non-production accounts and sanitized fixtures whenever screenshots,
+  videos, logs, or observed UI content may contain sensitive data.
+- Do not treat the classifier as a verdict; its category remains a hypothesis
+  until concrete evidence supports it.
+- Keep secrets out of prompts, YAML, captured artifacts, and public reports.
+
+## License and Disclosure
+
+agent-qa is published under FSL-1.1-ALv2, with an Apache-2.0 future license on
+the schedule defined in its `LICENSE.md`. This is an editorial, source-backed
+skill listing submitted without compensated promotion or referral tracking.
