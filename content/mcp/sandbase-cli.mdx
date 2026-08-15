@@ -1,0 +1,199 @@
+---
+title: SandBase CLI
+slug: sandbase-cli
+category: mcp
+description: >-
+  Open-source CLI and local stdio MCP bridge that connects Claude and other AI
+  agents to a searchable catalog of 2,000+ AI models through one SandBase
+  account, with ownership-aware client configuration and exact rollback.
+cardDescription: Connect Claude to 2,000+ AI models through one local MCP bridge.
+seoTitle: SandBase CLI MCP Bridge for Claude
+seoDescription: >-
+  Configure SandBase CLI with Claude and other MCP clients for model discovery,
+  schema inspection, structured execution, multimodal generation, data tools,
+  and cloud sandboxes through one account.
+author: SandBase
+authorProfileUrl: "https://github.com/sandbaseai"
+submittedBy: denial123789
+submittedByUrl: "https://github.com/denial123789"
+dateAdded: "2026-08-15"
+brandName: SandBase
+brandDomain: sandbase.ai
+repoUrl: "https://github.com/sandbaseai/cli"
+documentationUrl: "https://github.com/sandbaseai/cli#readme"
+websiteUrl: "https://www.sandbase.ai"
+packageUrl: "https://www.npmjs.com/package/@sandbaseai/cli"
+pricingModel: freemium
+disclosure: submitted-by-owner
+installable: true
+installCommand: "npx -y @sandbaseai/cli connect --client claude-code"
+usageSnippet: "Run the connect command, complete SandBase authorization, restart Claude Code, then use the bridge's discovery and inspection tools before executing a selected model."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "sandbase": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@sandbaseai/cli",
+          "mcp-bridge",
+          "--client",
+          "claude-desktop"
+        ]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "sandbase": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@sandbaseai/cli",
+          "mcp-bridge",
+          "--client",
+          "claude-desktop"
+        ]
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - Node.js 20 or newer and npm/npx.
+  - A SandBase account and browser access for the authorization flow.
+  - Claude Code, Claude Desktop, or another supported MCP client.
+  - Network access to SandBase and any selected model or tool provider.
+safetyNotes:
+  - The connect command updates MCP client configuration, records the entries it owns, verifies the result, and keeps rollback data; preview or back up important configuration before changing shared environments.
+  - The bridge can execute models, data APIs, media generation, and cloud sandbox workflows, which may incur usage costs or create external artifacts depending on the selected capability.
+  - Inspect each model or tool schema and price before execution, and require human approval for purchases, messages, account writes, destructive actions, or production changes.
+  - Unregister removes only SandBase-owned configuration entries, but users should still verify important client settings after automated configuration changes.
+privacyNotes:
+  - Model prompts, tool arguments, generated media requests, execution results, and selected workflow data are sent to SandBase and may be processed by the chosen model or API provider.
+  - The CLI stores a SandBase credential locally with restricted file permissions and writes MCP launch configuration to the selected client; keep credentials, config files, logs, screenshots, and transcripts private.
+  - Local files or repository content are not uploaded merely by installing the bridge, but a connected agent can send content that a user or workflow passes into a model or tool call.
+  - Review SandBase billing, retention, provider, and account settings before using customer, regulated, confidential, or production data.
+sourceUrls:
+  - "https://github.com/sandbaseai/cli"
+  - "https://github.com/sandbaseai/cli/blob/main/README.md"
+  - "https://github.com/sandbaseai/cli/blob/main/SECURITY.md"
+  - "https://github.com/sandbaseai/cli/blob/main/package.json"
+  - "https://github.com/sandbaseai/cli/blob/main/server.json"
+  - "https://www.sandbase.ai/docs/getting-started/quickstart"
+  - "https://www.sandbase.ai/docs/admin/billing"
+tags:
+  - mcp
+  - model-gateway
+  - ai-agents
+  - multimodal
+  - developer-tools
+keywords:
+  - SandBase MCP
+  - SandBase CLI
+  - AI model gateway
+  - Claude MCP bridge
+  - multimodal MCP server
+  - model discovery MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+SandBase CLI configures a local stdio MCP bridge for Claude Code, Claude
+Desktop, Codex, Cursor, Gemini CLI, OpenCode, and other supported AI clients.
+The bridge exposes a small discovery-and-execution tool surface over a SandBase
+catalog of 2,000+ AI models rather than installing a separate integration for
+each provider.
+
+The CLI manages setup, browser authorization, client detection, diagnostics,
+ownership-aware configuration updates, verified readback, and unregister
+rollback. The bridge runs on demand as a local process; it does not require a
+separate daemon.
+
+## Source Review
+
+- https://github.com/sandbaseai/cli
+- https://github.com/sandbaseai/cli/blob/main/README.md
+- https://github.com/sandbaseai/cli/blob/main/SECURITY.md
+- https://github.com/sandbaseai/cli/blob/main/package.json
+- https://github.com/sandbaseai/cli/blob/main/server.json
+- https://www.sandbase.ai/docs/getting-started/quickstart
+- https://www.sandbase.ai/docs/admin/billing
+
+These sources were reviewed on **2026-08-15**. Prefer the live repository,
+package metadata, security policy, MCP Registry metadata, and SandBase docs for
+current client support, authentication, model availability, pricing, and data
+handling behavior.
+
+## Features
+
+- Local stdio MCP bridge with six model discovery, inspection, execution, and
+  asynchronous-run tools.
+- Searchable catalog of 2,000+ AI models covering language and multimodal
+  workflows.
+- Automatic configuration for Claude Code and other supported agent clients.
+- Ownership-aware JSON, JSONC, TOML, and YAML configuration updates with
+  verified readback and exact rollback.
+- Structured JSON output, diagnostics, client-specific setup, and catalog
+  preview commands.
+- Apache-2.0 licensed CLI and bridge source.
+
+## Installation
+
+Connect Claude Code:
+
+```sh
+npx -y @sandbaseai/cli connect --client claude-code
+```
+
+Complete the browser authorization flow, restart Claude Code, and verify the
+connection with:
+
+```sh
+npx -y @sandbaseai/cli doctor --client claude-code
+```
+
+The equivalent manual Claude Desktop configuration launches the packaged
+bridge with `mcp-bridge --client claude-desktop`.
+
+## Use Cases
+
+- Discover a model by capability or provider before choosing it for a Claude
+  workflow.
+- Inspect the selected model's input schema and price before execution.
+- Run language, image, video, audio, embedding, search, data, and sandbox
+  capabilities through one MCP connection.
+- Poll asynchronous media or long-running model jobs from an agent workflow.
+- Configure the same bridge consistently across several coding-agent clients.
+- Remove SandBase-owned client configuration without overwriting unrelated MCP
+  entries.
+
+## Safety and Privacy
+
+Connecting SandBase changes the selected client's MCP configuration and stores
+a local credential. The CLI uses ownership markers, restricted credential-file
+permissions, verified readback, and rollback records, but important shared
+configuration should still be reviewed before and after automated changes.
+
+Model prompts, arguments, and results travel through SandBase and the selected
+provider. Some tools can create media, start sandboxes, access external data, or
+perform write-capable actions. Inspect the schema and price before each new
+capability, keep credentials out of logs and repositories, and retain human
+approval for costly, destructive, public, or account-changing actions.
+
+## Duplicate Check
+
+No SandBase CLI, `sandbaseai/cli`, or dedicated SandBase MCP bridge entry was
+found in `content/mcp`. This entry covers the open-source local bridge and its
+client-configuration workflow rather than a general-purpose Claude prompt,
+agent, skill, or commercial tool listing.
+
+## Disclosure
+
+Submitted by a contributor affiliated with SandBase. The CLI and local bridge
+are Apache-2.0 open source; model and tool execution depends on a SandBase
+account and pay-as-you-go hosted services. This submission was prepared with AI
+assistance and reviewed against the cited sources.
