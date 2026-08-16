@@ -10,13 +10,22 @@
 
 import type { Platform, SourceStatus, TrustLevel } from "@/types/registry";
 
+// Deliberately a total Record rather than Partial: adding a Platform to the
+// union should fail type-check here until it is given a real label, instead of
+// silently falling through to the humanized slug.
 const PLATFORM_LABELS: Record<Platform, string> = {
   "claude-code": "Claude Code",
   "claude-desktop": "Claude Desktop",
   cursor: "Cursor",
   vscode: "VS Code",
-  cli: "CLI",
+  windsurf: "Windsurf",
+  codex: "Codex",
+  gemini: "Gemini",
   raycast: "Raycast",
+  cli: "CLI",
+  aider: "Aider",
+  zed: "Zed",
+  continue: "Continue",
 };
 
 const TRUST_LABELS: Record<TrustLevel, string> = {
@@ -30,6 +39,7 @@ const SOURCE_LABELS: Record<SourceStatus, string> = {
   "first-party": "First-party",
   "source-backed": "Source-backed",
   external: "External",
+  unverified: "Unverified",
 };
 
 /** Fallback for an id not in a map: de-slug and sentence-case it. */
