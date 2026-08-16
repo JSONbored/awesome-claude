@@ -537,3 +537,55 @@ describe("public wrapper re-exports", () => {
     expect(wrapper.absoluteSiteUrl).toBe(absoluteSiteUrl);
   });
 });
+
+describe("entry JSON-LD entity association", () => {
+  const baseEntry = {
+    category: "mcp",
+    slug: "example-mcp",
+    title: "Example MCP Server",
+    description: "An example.",
+    author: "ExampleAuthor",
+    dateAdded: "2026-01-01",
+  };
+
+  it("puts the official website first in sameAs", () => {
+    const doc = buildEntryJsonLd(
+      {
+        ...baseEntry,
+        websiteUrl: "https://example.com",
+        documentationUrl: "https://docs.example.com",
+        repoUrl: "https://github.com/example/example",
+      },
+      { siteUrl: SITE },
+    );
+
+    // schema.org sameAs is the identity signal. The official site must be in
+    // it, not only in isBasedOn, or nothing ties the page to the vendor's
+    // domain as the same entity.
+    expect(doc.sameAs).toEqual([
+      "https://example.com",
+      "https://docs.example.com",
+      "https://github.com/example/example",
+    ]);
+  });
+
+  it("omits absent URLs rather than emitting holes", () => {
+    const doc = buildEntryJsonLd(
+      { ...baseEntry, repoUrl: "https://github.com/example/example" },
+      { siteUrl: SITE },
+    );
+    expect(doc.sameAs).toEqual(["https://github.com/example/example"]);
+  });
+
+  it("does not duplicate a URL repeated across fields", () => {
+    const doc = buildEntryJsonLd(
+      {
+        ...baseEntry,
+        websiteUrl: "https://example.com",
+        documentationUrl: "https://example.com",
+      },
+      { siteUrl: SITE },
+    );
+    expect(doc.sameAs).toEqual(["https://example.com"]);
+  });
+});
