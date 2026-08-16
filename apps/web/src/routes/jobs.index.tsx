@@ -8,6 +8,7 @@ import { z } from "zod";
 import { ArrowUpRight, Search, Sparkles, X } from "lucide-react";
 import type { JobListing, JobTier } from "@/types/registry";
 import { normalizeJobListing } from "@/lib/job-listing-lib";
+import { safeErrorMessage } from "@/lib/safe-error-message-lib";
 import { cn } from "@/lib/utils";
 import { JobCard } from "@/components/job-card";
 import {
@@ -126,7 +127,9 @@ export const Route = createFileRoute("/jobs/")({
   errorComponent: ({ error, reset }: ErrorComponentProps) => (
     <div className="mx-auto max-w-xl px-4 py-16 text-center">
       <h1 className="font-display text-2xl text-ink">Couldn't load jobs</h1>
-      <p className="mt-2 text-sm text-ink-muted">{error.message}</p>
+      <p className="mt-2 text-sm text-ink-muted">
+        {safeErrorMessage(error.message, "We couldn't load the job board right now. Please try again.")}
+      </p>
       <button
         onClick={() => {
           trackEvent(jobsErrorRetryAnalyticsEvent(), jobsErrorRetryAnalyticsData("jobs-index"));

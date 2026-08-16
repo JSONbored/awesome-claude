@@ -148,6 +148,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "The decision layer for Claude Code and AI agent workflows. Search, compare, and inspect trust on MCP servers, skills, hooks, commands, agents, rules, and tools.",
       },
       { name: "theme-color", content: "#f7f5ef" },
+      // Domain-ownership verification token (TalentApp). Public by design — it only
+      // proves we control heyclau.de. Emitted site-wide so the homepage always carries it.
+      {
+        name: "talentapp:project_verification",
+        content:
+          "0f6d1d7b5f35d4b765b2c69292a4c093d9863f98fee4f1037146a764bc5c2411594e641056c97a399869769026667361d5bd18b9f035fc609d1be0cf90138d8f",
+      },
       { property: "og:title", content: "HeyClaude — directory for Claude workflows" },
       {
         property: "og:description",

@@ -11,6 +11,7 @@ import { useMemo, useCallback } from "react";
 import { toast } from "sonner";
 import { ResourceCard } from "@/components/resource-card";
 import { FilterChip, FilterChipGroup } from "@/components/filter-chip";
+import { platformLabel, sourceLabel, trustLabel } from "@/lib/facet-label-lib";
 import {
   countSearchResults,
   normalizeSearchQuery,
@@ -829,8 +830,9 @@ function Browse() {
                     active={sp.trust === t}
                     onClick={() => onToggleAxisFilter("trust", t)}
                     count={axisCount("trust", t)}
+                    preserveCase
                   >
-                    {t}
+                    {trustLabel(t)}
                   </FilterChip>
                 ))}
               </FilterChipGroup>
@@ -844,8 +846,9 @@ function Browse() {
                     active={sp.source === s}
                     onClick={() => onToggleAxisFilter("source", s)}
                     count={axisCount("source", s)}
+                    preserveCase
                   >
-                    {s}
+                    {sourceLabel(s)}
                   </FilterChip>
                 ))}
               </FilterChipGroup>
@@ -859,8 +862,9 @@ function Browse() {
                     active={sp.platform === p}
                     onClick={() => onToggleAxisFilter("platform", p)}
                     count={axisCount("platform", p)}
+                    preserveCase
                   >
-                    {p}
+                    {platformLabel(p)}
                   </FilterChip>
                 ))}
               </FilterChipGroup>

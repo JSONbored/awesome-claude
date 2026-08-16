@@ -29,6 +29,7 @@ import type { ReactNode } from "react";
 import type { ErrorComponentProps } from "@tanstack/react-router";
 import type { JobListing } from "@/types/registry";
 import { normalizeJobListing } from "@/lib/job-listing-lib";
+import { safeErrorMessage } from "@/lib/safe-error-message-lib";
 
 const loadJobDetailData = createServerFn({ method: "GET" })
   .inputValidator(z.object({ slug: z.string().min(1) }))
@@ -104,7 +105,9 @@ export const Route = createFileRoute("/jobs/$slug")({
   errorComponent: ({ error, reset }: ErrorComponentProps) => (
     <div className="mx-auto max-w-xl px-4 py-16 text-center">
       <h1 className="font-display text-2xl text-ink">Couldn't load this role</h1>
-      <p className="mt-2 text-sm text-ink-muted">{error.message}</p>
+      <p className="mt-2 text-sm text-ink-muted">
+        {safeErrorMessage(error.message, "We couldn't load this role right now. Please try again.")}
+      </p>
       <button
         onClick={() => {
           trackEvent(jobsErrorRetryAnalyticsEvent(), jobsErrorRetryAnalyticsData("jobs-detail"));

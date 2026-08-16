@@ -323,7 +323,9 @@ export function CommandBar({
           }}
           placeholder={`Search Claude workflows — try "${EXAMPLES[placeholderIdx]}"`}
           className={cn(
-            "flex-1 bg-transparent text-ink placeholder:text-ink-subtle focus:outline-none",
+            // min-w-0: an <input> carries a default intrinsic width (~200px), so
+            // without this the header row cannot shrink below it and overflows.
+            "min-w-0 flex-1 bg-transparent text-ink placeholder:text-ink-subtle focus:outline-none",
             size === "lg" ? "text-base" : "text-sm",
           )}
         />
@@ -342,7 +344,11 @@ export function CommandBar({
       </span>
 
       {showPanel && (
-        <div className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-xl border border-border bg-surface shadow-lg">
+        // Anchored to the input's right edge and sized independently of it:
+        // `min-w-full` keeps the panel flush with a wide input (home hero),
+        // while the fixed width lets it grow leftward out of a narrow one
+        // (header) instead of inheriting a ~200px column.
+        <div className="absolute right-0 top-full z-50 mt-2 w-[min(34rem,calc(100vw-2rem))] min-w-full overflow-hidden rounded-xl border border-border bg-surface shadow-lg">
           <div className="flex flex-wrap items-center gap-1.5 border-b border-border bg-surface-2 px-3 py-2">
             <span className="eyebrow mr-1">Scope</span>
             {[
@@ -382,11 +388,16 @@ export function CommandBar({
             ))}
           </div>
 
+          {/*
+            overflow-x-hidden is load-bearing: with only `overflow-y-auto`, CSS
+            computes the x axis to `auto` too, so any over-wide row silently
+            turns the list into a horizontal scroller.
+          */}
           <ul
             id={listboxId}
             role="listbox"
             aria-label="Search results and actions"
-            className="max-h-96 overflow-y-auto py-1"
+            className="max-h-96 overflow-y-auto overflow-x-hidden py-1"
           >
             {results.length > 0 && (
               <li
@@ -420,21 +431,21 @@ export function CommandBar({
                       active === i && "bg-surface-2",
                     )}
                   >
-                    <div className="flex items-center gap-3">
-                      <CategoryPill>{r.category}</CategoryPill>
-                      <span className="truncate font-medium text-ink">{r.title}</span>
-                      <TrustBadge level={r.trust} />
+                    <div className="flex min-w-0 items-center gap-2">
+                      <CategoryPill className="shrink-0">{r.category}</CategoryPill>
+                      <span className="min-w-0 flex-1 truncate font-medium text-ink">{r.title}</span>
+                      <TrustBadge level={r.trust} className="shrink-0" />
                     </div>
-                    <div className="flex items-center gap-3 pl-1 text-[11px] text-ink-muted">
-                      <span className="line-clamp-1 flex-1">{r.description}</span>
+                    <div className="flex min-w-0 items-center gap-2 pl-1 text-[11px] text-ink-muted">
+                      <span className="line-clamp-1 min-w-0 flex-1">{r.description}</span>
                       {installable && (
-                        <span className="inline-flex items-center gap-1" title="Installable">
+                        <span className="inline-flex shrink-0 items-center gap-1" title="Installable">
                           <TerminalSquare className="h-3 w-3" aria-hidden /> install
                         </span>
                       )}
                       <span
                         className={cn(
-                          "inline-flex items-center gap-1",
+                          "inline-flex shrink-0 items-center gap-1",
                           hasSafety ? "text-ink-muted" : "text-ink-subtle",
                         )}
                         title={hasSafety ? "Safety notes present" : "No safety notes"}
@@ -443,7 +454,7 @@ export function CommandBar({
                       </span>
                       <span
                         className={cn(
-                          "inline-flex items-center gap-1",
+                          "inline-flex shrink-0 items-center gap-1",
                           hasPrivacy ? "text-ink-muted" : "text-ink-subtle",
                         )}
                         title={hasPrivacy ? "Privacy notes present" : "No privacy notes"}
@@ -452,7 +463,7 @@ export function CommandBar({
                       </span>
                       {stars !== null && (
                         <span
-                          className="inline-flex items-center gap-1 tabular-nums"
+                          className="inline-flex shrink-0 items-center gap-1 tabular-nums"
                           title={`${stars.toLocaleString()} source repository stars`}
                         >
                           <Star className="h-3 w-3" aria-hidden />
