@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>1386+ file-backed entries</strong> stay useful as both an
+        <strong>1388+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>1386</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>1388</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>AI-reviewed</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -79,7 +79,7 @@ Refreshed weekly by [`.github/workflows/gittensor-impact.yml`](.github/workflows
         </td>
 <td align="center" width="20%">
           <a href="#mcp-servers"><strong>🔌 MCP Servers</strong></a><br>
-          <code>482</code><br>
+          <code>483</code><br>
           <sub>Model Context Protocol servers and integrations.</sub>
         </td>
 <td align="center" width="20%">
@@ -89,7 +89,7 @@ Refreshed weekly by [`.github/workflows/gittensor-impact.yml`](.github/workflows
         </td>
 <td align="center" width="20%">
           <a href="#skills"><strong>🧠 Skills</strong></a><br>
-          <code>178</code><br>
+          <code>179</code><br>
           <sub>Source-backed skill packs and reusable capabilities.</sub>
         </td>
 <td align="center" width="20%">
@@ -307,7 +307,7 @@ packages use checksums and package trust metadata after review.
 - **[Web Async Agent Coordinator - Agents](https://heyclau.de/entry/agents/web-async-agent-coordinator)** - System-prompt agent that helps you drive Claude Code on the web: submitting long-running coding tasks to Anthropic's cloud, running independent sessions in parallel, linking GitHub repositories, tracking progress, and turning finished work into pull requests from the browser.
 - **[Zero Data Retention Compliance Agent](https://heyclau.de/entry/agents/zero-data-retention-compliance-agent)** - Community reusable agent prompt for mapping Claude Code deployments to zero data retention requirements using official ZDR docs: logging boundaries, MCP data flows, session storage, and compliance evidence checklists for security review.
 
-## 🔌 MCP Servers (482)
+## 🔌 MCP Servers (483)
 
 - **[Ableton MCP Extended](https://heyclau.de/entry/mcp/ableton-mcp-extended)** - Source-install MCP server for controlling Ableton Live from Claude, including session inspection, track and clip creation, MIDI note editing, tempo and transport control, browser item loading, arrangement workflows, device parameters, automation, external plugins, audio imports, and optional ElevenLabs.
 - **[ABMeter MCP Server](https://heyclau.de/entry/mcp/abmeter-mcp-server)** - ABMeter MCP exposes experimentation and analytics tooling over streamable HTTP for MCP clients.
@@ -320,6 +320,7 @@ packages use checksums and package trust metadata after review.
 - **[After Effects MCP Server](https://heyclau.de/entry/mcp/after-effects-mcp-server)** - MCP server for controlling Adobe After Effects through a local Node bridge and ScriptUI panel for compositions, layers, keyframes, expressions, masks, and effects.
 - **[agency.lona/trading MCP Server](https://heyclau.de/entry/mcp/agency-lona-trading-mcp-server)** - Lona trading MCP provides AI-assisted strategy development, backtesting, market data, and portfolio analysis.
 - **[Agent Device MCP Server](https://heyclau.de/entry/mcp/agent-device-mcp-server)** - Official MCP server for agent-device, Callstack's device automation CLI for inspecting, controlling, debugging, recording, and collecting evidence from iOS, Android, TV, macOS, Linux, React Native, Expo, Flutter, and native apps.
+- **[Agent Only](https://heyclau.de/entry/mcp/agent-only-mcp)** - Open-source local stdio MCP bridge that connects approved coding agents to the hosted Agent Only service so they can reuse troubleshooting knowledge and communicate through a shared forum.
 - **[Agent Skills Search Server MCP Server](https://heyclau.de/entry/mcp/agent-skills-search-server-mcp-server)** - Hosted streamable-HTTP MCP server registered as ai.com.mcp/skills-search that exposes Agent Skills Search API tools for discovering skills from the skills.sh registry using the open Agent Skills format.
 - **[Agentage Memory MCP Server for Claude](https://heyclau.de/entry/mcp/agentage-memory-mcp-server)** - Remote Agentage Memory MCP server giving Claude one shared, portable memory across every AI you use - search, read, write, edit, list, and delete plain Markdown notes you own, over Streamable HTTP with OAuth 2.1.
 - **[AgentDM MCP Server](https://heyclau.de/entry/mcp/agentdm-mcp-server)** - AgentDM provides a hosted MCP grid for agent-to-agent messaging with OAuth or API key auth at the documented grid endpoint.
@@ -622,7 +623,7 @@ packages use checksums and package trust metadata after review.
 - **[Memory Bank MCP Server](https://heyclau.de/entry/mcp/memory-bank-mcp-server)** - MCP server for remote project memory-bank management, with multi-project directories, file listing, read/write/update tools, and path isolation.
 - **[Memory MCP Server for Claude](https://heyclau.de/entry/mcp/memory-mcp-server)** - Official reference MCP server that gives Claude persistent memory through a local knowledge graph of entities, relations, and observations, stored in a file on your own machine.
 - **[Metabase MCP Server for Claude](https://heyclau.de/entry/mcp/metabase-mcp-server)** - Query and explore your Metabase instance from Claude — list dashboards and cards, retrieve and execute saved questions, run SQL queries, export large result sets, and search across all Metabase resources — with the Metabase MCP server optimized for 90% token reduction.
-- **[Metagraphed MCP Server for Claude](https://heyclau.de/entry/mcp/metagraphed-mcp)** - Public Streamable-HTTP MCP server for the Metagraphed Bittensor subnet integration registry — discover subnets, check health and economics, read metagraph data, and look up accounts or API surfaces without wallets or signing.
+- **[Metagraphed MCP Server for Claude](https://heyclau.de/entry/mcp/metagraphed-mcp)** - Public Streamable-HTTP MCP server for Metagraphed, the open registry and block explorer for Bittensor — discover subnets, check probe-derived health, economics and metagraph data, and call catalogued subnet APIs. Anonymous access is read-only; no wallet or signing.
 - **[MetaMCP Gateway](https://heyclau.de/entry/mcp/metamcp-gateway)** - Docker-deployed MCP gateway that aggregates downstream MCP servers into namespaces, endpoints, SSE, Streamable HTTP, OpenAPI, auth, and rate limits.
 - **[Microsandbox MCP Server for Claude](https://heyclau.de/entry/mcp/microsandbox-mcp-server)** - Connect Claude to Microsandbox microVMs for sandbox lifecycle, command execution, filesystem, volume, and metrics workflows.
 - **[Microsoft Learn MCP Server](https://heyclau.de/entry/mcp/microsoft-learn-mcp-server)** - Official Microsoft Learn remote MCP server that gives AI agents real-time access to Microsoft documentation search, page fetch, and code sample search.
@@ -1002,10 +1003,11 @@ Get a free API key on https://app.zyntra.app/
 - **[Zapier AI](https://heyclau.de/entry/tools/zapier-ai)** - Automation platform with AI-assisted workflows, app integrations, agents, actions, and business process automation.
 - **[Zed](https://heyclau.de/entry/tools/zed)** - Collaborative code editor with AI assistance, fast native performance, and developer-focused collaboration workflows.
 
-## 🧠 Skills (178)
+## 🧠 Skills (179)
 
 - **[Addy Osmani Agent Skills](https://heyclau.de/entry/skills/addy-osmani-agent-skills)** - Addy Osmani's production-grade Agent Skills pack for AI coding agents, with lifecycle slash commands, engineering workflow skills, review personas, quality gates, and cross-agent setup guidance for Claude Code, Cursor, Gemini CLI, Antigravity CLI, OpenCode, GitHub Copilot, and other agents.
 - **[Agent Evals Regression Gate Skill](https://heyclau.de/entry/skills/agent-evals-regression-gate)** - Build repeatable eval suites that catch quality regressions in AI agent behavior before merge or release.
+- **[agent-qa Testing Workflow Pack](https://heyclau.de/entry/skills/agent-qa-testing-workflow-pack)** - Source-backed agent skills for authoring natural-language web and mobile tests, triaging failed runs from artifacts, and applying evidence-based fixes with agent-qa MCP tools.
 - **[Agent Skills Cross-Platform Adapter Capability Pack Skill](https://heyclau.de/entry/skills/agent-skills-cross-platform-adapter-capability-pack)** - Expert agent skills cross-platform adapter capability pack for porting Claude Code SKILL.md workflows to Codex, Cursor, Windsurf, and Generic AGENTS runbooks while preserving scope, safety notes, and source-backed contracts.
 - **[Agent Skills Enterprise Provisioning Capability Pack Skill](https://heyclau.de/entry/skills/agent-skills-enterprise-provisioning-capability-pack)** - Expert agent skills enterprise provisioning capability pack for rolling out Claude Code skills across Claude for Enterprise with scope controls, admin policy alignment, user-only versus model-invoked skills, and audit-ready docs.
 - **[Agent Skills Retrieval Source Verification Capability Pack Skill](https://heyclau.de/entry/skills/agent-skills-retrieval-source-verification-capability-pack)** - Expert agent skills retrieval source verification capability pack for validating canonical URLs, documentation reachability, repo provenance, and duplicate source claims before publishing or submitting Claude Code skills.
