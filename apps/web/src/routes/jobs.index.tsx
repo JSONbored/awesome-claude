@@ -128,7 +128,10 @@ export const Route = createFileRoute("/jobs/")({
     <div className="mx-auto max-w-xl px-4 py-16 text-center">
       <h1 className="font-display text-2xl text-ink">Couldn't load jobs</h1>
       <p className="mt-2 text-sm text-ink-muted">
-        {safeErrorMessage(error.message, "We couldn't load the job board right now. Please try again.")}
+        {safeErrorMessage(
+          error.message,
+          "We couldn't load the job board right now. Please try again.",
+        )}
       </p>
       <button
         onClick={() => {

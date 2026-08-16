@@ -433,13 +433,18 @@ export function CommandBar({
                   >
                     <div className="flex min-w-0 items-center gap-2">
                       <CategoryPill className="shrink-0">{r.category}</CategoryPill>
-                      <span className="min-w-0 flex-1 truncate font-medium text-ink">{r.title}</span>
+                      <span className="min-w-0 flex-1 truncate font-medium text-ink">
+                        {r.title}
+                      </span>
                       <TrustBadge level={r.trust} className="shrink-0" />
                     </div>
                     <div className="flex min-w-0 items-center gap-2 pl-1 text-[11px] text-ink-muted">
                       <span className="line-clamp-1 min-w-0 flex-1">{r.description}</span>
                       {installable && (
-                        <span className="inline-flex shrink-0 items-center gap-1" title="Installable">
+                        <span
+                          className="inline-flex shrink-0 items-center gap-1"
+                          title="Installable"
+                        >
                           <TerminalSquare className="h-3 w-3" aria-hidden /> install
                         </span>
                       )}

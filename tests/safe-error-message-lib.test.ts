@@ -1,16 +1,23 @@
 import { describe, expect, it } from "vitest";
 
-import { GENERIC_ERROR_MESSAGE, safeErrorMessage } from "@/lib/safe-error-message-lib";
+import {
+  GENERIC_ERROR_MESSAGE,
+  safeErrorMessage,
+} from "@/lib/safe-error-message-lib";
 
 const FALLBACK = "custom fallback";
 
 describe("safeErrorMessage", () => {
   it("passes through a short human-readable message", () => {
-    expect(safeErrorMessage("jobs API returned 503")).toBe("jobs API returned 503");
+    expect(safeErrorMessage("jobs API returned 503")).toBe(
+      "jobs API returned 503",
+    );
   });
 
   it("collapses internal whitespace", () => {
-    expect(safeErrorMessage("  jobs API\n  returned   503  ")).toBe("jobs API returned 503");
+    expect(safeErrorMessage("  jobs API\n  returned   503  ")).toBe(
+      "jobs API returned 503",
+    );
   });
 
   it("falls back on a non-string", () => {
@@ -47,9 +54,13 @@ describe("safeErrorMessage", () => {
   });
 
   it("falls back on markup even when it is short enough to pass the length cap", () => {
-    expect(safeErrorMessage("<html><body>nope</body></html>", FALLBACK)).toBe(FALLBACK);
+    expect(safeErrorMessage("<html><body>nope</body></html>", FALLBACK)).toBe(
+      FALLBACK,
+    );
     expect(safeErrorMessage("<!doctype html>", FALLBACK)).toBe(FALLBACK);
-    expect(safeErrorMessage("<script>alert(1)</script>", FALLBACK)).toBe(FALLBACK);
+    expect(safeErrorMessage("<script>alert(1)</script>", FALLBACK)).toBe(
+      FALLBACK,
+    );
     expect(safeErrorMessage("</div>", FALLBACK)).toBe(FALLBACK);
   });
 
