@@ -1,0 +1,494 @@
+---
+title: vibestretch - Hooks
+slug: vibestretch
+category: hooks
+description: >-
+  Prints one stretch, micro-workout, or eye exercise into the session when an
+  agent turn has kept you waiting. Three hooks do the accounting: a turn opens
+  on prompt submit, PostToolUse adds the wait and fires the nudge when it is
+  due, and Stop closes the turn. It counts agent-wait time rather than desk
+  time, so short turns stay silent.
+cardDescription: >-
+  Stretch nudges in your session while a coding agent works, counted from real
+  waiting time.
+seoTitle: vibestretch - Hooks
+seoDescription: >-
+  A hooks-based Claude Code plugin that nudges you to stretch while the agent
+  works. Counts only agent-wait time, clears the debt after a break, and runs on
+  POSIX shell with no dependencies, telemetry, or network calls.
+author: Junit
+authorProfileUrl: "https://github.com/Eliasjunit"
+submittedBy: Eliasjunit
+submittedByUrl: "https://github.com/Eliasjunit"
+repoUrl: "https://github.com/Eliasjunit/vibestretch"
+documentationUrl: "https://github.com/Eliasjunit/vibestretch#readme"
+retrievalSources:
+  - "https://github.com/Eliasjunit/vibestretch"
+  - "https://code.claude.com/docs/en/hooks"
+dateAdded: "2026-08-13"
+tags:
+  - hooks
+  - health
+  - ergonomics
+  - breaks
+  - shell
+  - posix
+trigger: PostToolUse
+scriptLanguage: sh
+scriptBody: |-
+  #!/bin/sh
+  # vibestretch — stretch nudges while your coding agent works.
+  # Subcommands (wired via hooks.json):
+  #   start  (UserPromptSubmit) — mark turn start, reset stale sitting debt
+  #   check  (PostToolUse)      — accumulate agent-active time, nudge when due
+  #   stop   (Stop)             — close out the turn's accounting
+  #
+  # Nudge fires only when ALL of:
+  #   - the current turn has been running >= VIBESTRETCH_MIN_TURN seconds
+  #     (you are actually waiting on the agent right now)
+  #   - accumulated agent-active time since your last nudge >= VIBESTRETCH_MIN_ACTIVE
+  #     (you have genuinely been sitting through agent work — one big turn
+  #      or several medium ones both count)
+  #   - at least VIBESTRETCH_COOLDOWN seconds passed since the last nudge
+  # A break away from the keyboard longer than 45 min resets the debt — measured
+  # from the OS input clock, so it burns on your return even if you never send a
+  # prompt (coming back to a window where the agent kept working still counts).
+  # Time when nobody touches the machine is never counted at all (macOS: the
+  # system's keyboard/mouse idle clock; elsewhere this guard degrades to the
+  # 45-minute reset above) — an overnight agent run is the agent's time, not
+  # your sitting.
+  #
+  # Config (env, all in seconds):
+  #   VIBESTRETCH_MIN_TURN    current turn must be at least this long (default 120)
+  #   VIBESTRETCH_MIN_ACTIVE  agent-active time since last nudge (default 300)
+  #   VIBESTRETCH_COOLDOWN    min gap between nudges (default 900)
+  #   VIBESTRETCH_AWAY        no keyboard/mouse input for this long = you are
+  #                           away: no debt, no nudges (default 300, 0 = off;
+  #                           detection is macOS-only)
+  #   VIBESTRETCH_DISABLE     set to anything to turn nudges off
+  #   VIBESTRETCH_NOTIFY      0 = no desktop notification, terminal text only
+  #   VIBESTRETCH_SOUND       0 = no sound with the nudge
+
+  STATE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/vibestretch"
+  mkdir -p "$STATE_DIR" 2>/dev/null
+
+  MIN_TURN="${VIBESTRETCH_MIN_TURN:-120}"
+  MIN_ACTIVE="${VIBESTRETCH_MIN_ACTIVE:-300}"
+  COOLDOWN="${VIBESTRETCH_COOLDOWN:-900}"
+  IDLE_RESET=2700 # away >45 min => sitting debt is stale
+
+  # session_id sits near the top of the hook payload; don't slurp huge tool outputs.
+  # No session_id — no accounting: a shared fallback id would pool unrelated
+  # runs into one eternal "turn" (and collide with the seen-global file).
+  SID=$(head -c 4096 | sed -n 's/.*"session_id"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p')
+  [ -z "$SID" ] && exit 0
+  TURN_FILE="$STATE_DIR/turn-$SID"
+  SEEN_FILE="$STATE_DIR/seen-$SID"
+  ACTIVE_FILE="$STATE_DIR/active"
+  AWAY_FILE="$STATE_DIR/away-touch" # when you last touched the machine before leaving
+
+  readnum() { # readnum <file> <default>
+    VAL=$(cat "$1" 2>/dev/null)
+    case "$VAL" in ''|*[!0-9]*) VAL="$2" ;; esac
+    echo "$VAL"
+  }
+
+  # Seconds since the last keyboard/mouse input, from the OS. Empty when the
+  # machine can't tell us (non-macOS) — then we assume the human is present.
+  HID_IDLE=$(ioreg -c IOHIDSystem 2>/dev/null | awk '/HIDIdleTime/ {print int($NF/1000000000); exit}')
+  AWAY_AFTER="${VIBESTRETCH_AWAY:-300}"
+
+  away() { # true when the human has not touched the machine for AWAY_AFTER+
+    [ "$AWAY_AFTER" = "0" ] && return 1
+    case "$HID_IDLE" in ''|*[!0-9]*) return 1 ;; esac
+    [ "$HID_IDLE" -ge "$AWAY_AFTER" ]
+  }
+
+  # Add in-turn time elapsed since we last counted into the global active total.
+  # The debt is per-HUMAN wall-clock ("at least one agent was working"), not the
+  # sum over sessions: with several windows running in parallel, each check only
+  # counts time nobody has counted yet (seen-global), or three busy agents would
+  # turn 5 real minutes into 15.
+  accumulate() {
+    [ -f "$TURN_FILE" ] || return 0
+    TURN_START=$(readnum "$TURN_FILE" "$NOW")
+    if away; then
+      # The human is not at the machine: an unattended agent run is not sitting.
+      # Advance the seen marks so this stretch is never counted later, but leave
+      # last-activity alone — the 45-minute burn must see the real absence.
+      # Also remember when they last touched the machine, so the break can be
+      # measured on their return (see below).
+      echo $((NOW - HID_IDLE)) > "$AWAY_FILE"
+      echo "$NOW" > "$SEEN_FILE"
+      echo "$NOW" > "$STATE_DIR/seen-global"
+      return 1
+    fi
+
+    # Back at the machine. A long absence has to burn the debt HERE, not only in
+    # `start`: you can return to a window where the agent kept working on its own,
+    # and then the only hook that runs is PostToolUse. Waiting for your next
+    # prompt is worse than useless — the first check after your return refreshes
+    # last-activity, so `start` would no longer see any gap at all, and a debt you
+    # had already walked off would greet you the moment you sat down.
+    # The gap is measured from the OS input clock (last touch before leaving vs
+    # first touch after), which is the real break, not our own bookkeeping.
+    LEFT=$(readnum "$AWAY_FILE" 0)
+    if [ "$LEFT" -gt 0 ]; then
+      case "$HID_IDLE" in
+        ''|*[!0-9]*) BACK=$NOW ;;
+        *)           BACK=$((NOW - HID_IDLE)) ;;
+      esac
+      [ $((BACK - LEFT)) -ge "$IDLE_RESET" ] && echo 0 > "$ACTIVE_FILE"
+      rm -f "$AWAY_FILE"
+    fi
+    SEEN=$(readnum "$SEEN_FILE" "$TURN_START")
+    GSEEN=$(readnum "$STATE_DIR/seen-global" 0)
+    [ "$GSEEN" -gt "$SEEN" ] && SEEN=$GSEEN
+    DELTA=$((NOW - SEEN))
+    [ "$DELTA" -lt 0 ] && DELTA=0
+    ACTIVE=$(( $(readnum "$ACTIVE_FILE" 0) + DELTA ))
+    echo "$ACTIVE" > "$ACTIVE_FILE"
+    echo "$NOW" > "$SEEN_FILE"
+    echo "$NOW" > "$STATE_DIR/seen-global"
+    echo "$NOW" > "$STATE_DIR/last-activity"
+  }
+
+  # Your own list, one exercise per line; blank lines and #comments are skipped.
+  # A file that exists but holds nothing usable falls back to the built-ins rather
+  # than nudging you with an empty line.
+  EX_FILE="${VIBESTRETCH_EXERCISES:-${XDG_CONFIG_HOME:-$HOME/.config}/vibestretch/exercises.txt}"
+  custom_exercises() { awk 'NF && $0 !~ /^[[:space:]]*#/' "$EX_FILE" 2>/dev/null; }
+
+  exercise() {
+    # EX_CUSTOM, not the file's mere existence: a file holding only comments is
+    # non-empty to the shell but has nothing to say, and printing that blank line
+    # as your nudge is worse than any built-in.
+    if [ "$EX_CUSTOM" = 1 ]; then
+      custom_exercises | sed -n "$(( $1 + 1 ))p"
+      return 0
+    fi
+    builtin_exercise "$1"
+  }
+
+  builtin_exercise() {
+    case $1 in
+      0)  echo "20-20-20: look at something 20 feet away for 20 seconds." ;;
+      1)  echo "Stand up, reach for the ceiling, hold 15s. Then fold to your toes, 15s." ;;
+      2)  echo "10 squats. Your agent won't judge." ;;
+      3)  echo "Slow neck rolls — 5 each direction." ;;
+      4)  echo "Wrist circles, 10 each way. Your tendons will thank you." ;;
+      5)  echo "Blink 20 times, slowly. Screens murder your blink rate." ;;
+      6)  echo "Shoulder blade squeezes x10 — pinch, hold 3s, release." ;;
+      7)  echo "Posture check: ears over shoulders, shoulders over hips. Hold it." ;;
+      8)  echo "Stand up and walk to a window. Bonus points: open it." ;;
+      9)  echo "Rub your palms warm, cup them over closed eyes for 20s." ;;
+      10) echo "Hip circles, 8 each way. Nobody is watching." ;;
+      11) echo "One 4-7-8 breath: in for 4, hold 7, out for 8." ;;
+    esac
+  }
+  EX_COUNT=12
+  EX_CUSTOM=0
+  if [ -s "$EX_FILE" ]; then
+    CUSTOM_COUNT=$(custom_exercises | wc -l | tr -d ' ')
+    if [ "$CUSTOM_COUNT" -gt 0 ]; then
+      EX_COUNT=$CUSTOM_COUNT
+      EX_CUSTOM=1
+    fi
+  fi
+
+  # Your exercises are your words, and they end up inside our JSON: a quote or a
+  # backslash would otherwise produce output the host can't parse, i.e. no nudge
+  # at all. Control characters are dropped for the same reason.
+  json_escape() {
+    printf '%s' "$1" | tr -d '\000-\010\013\014\016-\037' | sed 's/\\/\\\\/g; s/"/\\"/g'
+  }
+
+  # A line of text loses to a desktop notification when you have looked away.
+  #
+  # What this buys you is terminal-dependent and always transient: some terminals
+  # post a real OS notification, others (Warp) draw their own banner inside the
+  # window — which you never see if you are in another app, and which is gone by
+  # the time you come back. So it is a bonus, never the plan: the chime catches
+  # you while you are away and the status line is still there when you return.
+  #
+  # The tab title is NOT a channel here, though it looks like free real estate:
+  # Claude Code rewrites the title itself on every turn, so a nudge badge parked
+  # there is gone within seconds (tried it in 0.4.2, reverted here — the tab was
+  # showing a fragment of the conversation, not the badge). Two writers, one
+  # resource, and the host wins.
+  #
+  # Opt out with VIBESTRETCH_NOTIFY=0.
+  notify() { # notify <exercise> <minutes>  -> JSON fragment, possibly empty
+    [ "${VIBESTRETCH_NOTIFY:-1}" = "0" ] && return 0
+    # Only Claude Code carries a terminal sequence for us. Codex parses hook output
+    # with deny_unknown_fields — one field it doesn't know and the WHOLE object is
+    # dropped, nudge and all, so there the banner is not "unsupported" but actively
+    # harmful. Gemini ignores unknown fields harmlessly, but reserves stdout for
+    # JSON only ("silence is mandatory"), so there is no channel to print an escape
+    # sequence into either. Both get the line and the chime.
+    [ "$HOST" = "claude" ] || return 0
+    BODY=$(json_escape "$(printf '%s' "$1" | tr ';' ',')") # ; separates OSC fields
+    case "${TERM_PROGRAM:-}:${TERM:-}" in
+      # VS Code (and its forks) drop unknown OSC silently rather than printing it,
+      # so this costs nothing where nothing listens — and the notifier extensions
+      # people install for exactly this gap read the 777 form below.
+      *Warp*|*ghostty*|*Ghostty*|*vscode*)
+        printf ',"terminalSequence":"\\u001b]777;notify;🧘 time to move — %s min of agent time;%s\\u0007"' "$2" "$BODY" ;;
+      *iTerm*|*WezTerm*)
+        printf ',"terminalSequence":"\\u001b]9;🧘 %s\\u0007"' "$BODY" ;;
+      *kitty*)
+        printf ',"terminalSequence":"\\u001b]99;;🧘 %s\\u0007"' "$BODY" ;;
+    esac
+  }
+
+  # Sound is the channel that works when you are not looking at any screen —
+  # the pattern every Claude Code notification recipe converges on. The chime is
+  # our own (bundled wav, nothing system-sounding), played by the OS player —
+  # still zero deps. Backgrounded so the hook never waits.
+  sound() {
+    [ "${VIBESTRETCH_SOUND:-1}" = "0" ] && return 0
+    SND="${CLAUDE_PLUGIN_ROOT:-$(dirname -- "$0")/..}/sounds/nudge.wav"
+    [ -f "$SND" ] || return 0
+    if [ -x /usr/bin/afplay ]; then
+      /usr/bin/afplay "$SND" >/dev/null 2>&1 &
+    elif command -v paplay >/dev/null 2>&1; then
+      paplay "$SND" >/dev/null 2>&1 &
+    fi
+  }
+
+  NOW=$(date +%s)
+
+  # Which agent CLI is calling us, passed as the second argument by that host's
+  # hook config (see hooks/hooks.json and hooks/codex-hooks.json). Only the JSON
+  # we are allowed to emit differs; the accounting is identical, and the debt is
+  # shared — an hour of waiting is an hour of waiting whichever CLI kept you.
+  HOST="${2:-claude}"
+
+  # A disabled session must not touch the accounting at all. Guarding only the
+  # nudge (check) is not enough: start/stop from disabled headless runs would
+  # still pump the sitting debt and keep refreshing last-activity, so the
+  # 45-minute idle reset could never fire.
+  [ -n "$VIBESTRETCH_DISABLE" ] && exit 0
+
+  case "$1" in
+    start)
+      LAST_ACT=$(readnum "$STATE_DIR/last-activity" 0)
+      if [ $((NOW - LAST_ACT)) -gt "$IDLE_RESET" ]; then
+        echo 0 > "$ACTIVE_FILE"
+      fi
+      # You are demonstrably here — typing this prompt. Whatever absence the
+      # away-mark recorded is over and already accounted for above.
+      rm -f "$AWAY_FILE"
+      echo "$NOW" > "$TURN_FILE"
+      echo "$NOW" > "$SEEN_FILE"
+      echo "$NOW" > "$STATE_DIR/last-activity"
+      ;;
+
+    check)
+      [ -f "$TURN_FILE" ] || exit 0
+      # away: no debt grows and no nudge fires into an empty chair (a 3 a.m.
+      # chime for an overnight agent run is the opposite of the point)
+      accumulate || exit 0
+
+      TURN_ELAPSED=$((NOW - TURN_START))
+      [ "$TURN_ELAPSED" -lt "$MIN_TURN" ] && exit 0
+
+      LAST_NUDGE=$(readnum "$STATE_DIR/last-nudge" 0)
+      [ $((NOW - LAST_NUDGE)) -lt "$COOLDOWN" ] && exit 0
+
+      [ "$ACTIVE" -lt "$MIN_ACTIVE" ] && exit 0
+
+      # The stored index can outrun the list — you shorten your own exercises file
+      # between nudges and it would point past the end, printing nothing.
+      IDX=$(( $(readnum "$STATE_DIR/idx" 0) % EX_COUNT ))
+      EX=$(exercise "$IDX")
+      echo $(( (IDX + 1) % EX_COUNT )) > "$STATE_DIR/idx"
+      echo "$NOW" > "$STATE_DIR/last-nudge"
+      echo 0 > "$ACTIVE_FILE"
+
+      # systemMessage renders as one transcript line pinned to the tool the hook
+      # fired after (older builds showed a fading toast), so it must be one clean
+      # line, exercise first. The durable copy is the state below, which any status
+      # line can render (the plugin can't draw there itself — the bottom bar is the
+      # user's, and it is the one place a nudge survives being looked away from).
+      MIN=$((ACTIVE / 60))
+      printf '%s\n' "$EX" > "$STATE_DIR/current"
+      sound
+      printf '{"suppressOutput":true,"systemMessage":"🧘 %s · vibestretch · %s min of agent time"%s}\n' \
+        "$(json_escape "$EX")" "$MIN" "$(notify "$EX" "$MIN")"
+      ;;
+
+    stop)
+      accumulate || :
+      rm -f "$TURN_FILE" "$SEEN_FILE"
+      ;;
+  esac
+  exit 0
+installable: true
+installCommand: >-
+  /plugin marketplace add Eliasjunit/vibestretch
+usageSnippet: |-
+  /plugin marketplace add Eliasjunit/vibestretch
+  /plugin install vibestretch@vibestretch
+copySnippet: |-
+  {
+    "hooks": {
+      "UserPromptSubmit": [
+        {
+          "hooks": [
+            {
+              "type": "command",
+              "command": "\"${CLAUDE_PLUGIN_ROOT}/scripts/vibestretch.sh\" start"
+            }
+          ]
+        }
+      ],
+      "PostToolUse": [
+        {
+          "matcher": "*",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "\"${CLAUDE_PLUGIN_ROOT}/scripts/vibestretch.sh\" check"
+            }
+          ]
+        }
+      ],
+      "Stop": [
+        {
+          "hooks": [
+            {
+              "type": "command",
+              "command": "\"${CLAUDE_PLUGIN_ROOT}/scripts/vibestretch.sh\" stop"
+            }
+          ]
+        }
+      ]
+    }
+  }
+configSnippet: |-
+  # optional, thresholds in seconds
+  export VIBESTRETCH_MIN_TURN=120     # current turn must run at least this long
+  export VIBESTRETCH_MIN_ACTIVE=300   # accumulated agent time since your last break
+  export VIBESTRETCH_COOLDOWN=900     # minimum gap between nudges
+  export VIBESTRETCH_AWAY=300         # no keyboard/mouse for this long counts as away (macOS)
+  export VIBESTRETCH_DISABLE=1        # mute entirely; set this in headless pipelines
+prerequisites:
+  - "Claude Code hooks enabled, or OpenAI Codex CLI / Gemini CLI with hooks support."
+  - "A POSIX shell. No package manager, runtime, or dependency is required."
+  - "macOS or Linux. The away-detection guard is macOS-only and degrades gracefully on Linux."
+safetyNotes:
+  - >-
+    Runs local POSIX shell scripts on every tool call, prompt submit, and turn
+    end; read them before installing.
+  - >-
+    Shells out to ioreg for the system idle clock and afplay for the chime on
+    macOS, and to paplay on Linux.
+  - >-
+    The hook writes only to its own state directory. The optional
+    /vibestretch:statusline skill, when you run it explicitly, edits your
+    ~/.claude configuration and backs it up first.
+privacyNotes:
+  - >-
+    No telemetry, no analytics, no accounts, and no network calls of any kind.
+    Nothing leaves the machine.
+  - >-
+    Reads the first 4 KB of the hook payload to extract session_id. Nothing from
+    prompts or tool output is retained or transmitted; only timestamps and
+    elapsed seconds are stored.
+  - >-
+    State is a handful of plain files under ~/.cache/vibestretch, and the nudge
+    is never added to the model context.
+---
+
+## Overview
+
+Agent turns leave you sitting still. vibestretch uses that window: when a turn
+has genuinely kept you waiting, it prints a single line into the session — a
+stretch, a micro-workout, or a 20-20-20 eye break — and then gets out of the
+way.
+
+The distinction that makes it usable day to day is what it counts. It measures
+**agent-wait time**, not desk time: the minutes an agent turn was in flight while
+you were actually at the machine. A day of quick back-and-forth adds almost
+nothing, so fast models and short tasks stay silent with no configuration.
+
+## Requirements
+
+- Claude Code hooks enabled (the plugin wires them for you), or Codex CLI /
+  Gemini CLI, which map onto the same three moments.
+- A POSIX shell. Nothing else — no daemon, no runtime, no package manager.
+- macOS or Linux.
+
+## Installation
+
+```
+/plugin marketplace add Eliasjunit/vibestretch
+/plugin install vibestretch@vibestretch
+```
+
+Nothing to configure afterwards. The plugin registers its own hooks; the
+`copySnippet` above is what it installs, shown for review rather than for manual
+setup.
+
+## When it fires
+
+A nudge requires all three conditions at once:
+
+1. The current turn has been running at least `VIBESTRETCH_MIN_TURN` (default
+   120 s) — you are waiting *right now*.
+2. Accumulated agent time since your last nudge is at least
+   `VIBESTRETCH_MIN_ACTIVE` (default 300 s).
+3. The last nudge was more than `VIBESTRETCH_COOLDOWN` ago (default 900 s).
+
+Step away for 45 minutes and the debt resets — you already took your break. On
+macOS the hooks read the system keyboard/mouse idle clock, so an agent grinding
+overnight adds no time and never chimes at an empty chair. On Linux there is no
+portable idle clock, so that guard degrades to the 45-minute reset.
+
+## Delivery
+
+The nudge is a `systemMessage`, shown to you and never added to the model's
+context, plus an optional `terminalSequence` carrying a desktop notification for
+terminals known to support it. A bundled chime covers the case where you are not
+looking at the screen at all, and `/vibestretch:statusline` adds a status line
+segment that is still there when you come back from another app.
+
+## About the script below
+
+The `scriptBody` in this entry is the plugin's own `scripts/vibestretch.sh`,
+included so the hook can be reviewed without cloning. Installed through the
+marketplace it ships alongside a bundled chime and the built-in exercise list;
+pasted standalone it still nudges, but the chime path resolves to nothing unless
+you also provide `sounds/nudge.wav` next to it.
+
+## Troubleshooting
+
+### The nudge never appears
+
+Check the thresholds: by default a single turn must run two minutes *and* five
+minutes of waiting must have accumulated. Short turns are supposed to be silent.
+Lower `VIBESTRETCH_MIN_TURN` and `VIBESTRETCH_MIN_ACTIVE` to see one immediately.
+
+### Headless runs are inflating the counter
+
+Set `VIBESTRETCH_DISABLE=1` in the environment of any scripted, cron, or bot
+session (`claude -p`, `codex exec`, `gemini -p`). Unattended sessions otherwise
+count as waiting you never actually did, and spend the nudge you should have
+received at your desk.
+
+### The desktop banner never shows
+
+What a terminal does with the notification sequence varies: some post a real OS
+notification, others draw an in-window banner you cannot see from another app,
+and unknown terminals get nothing rather than stray bytes. VS Code's integrated
+terminal has no desktop notification of its own and discards the sequence
+silently, so there the banner appears only if you add an extension that turns
+OSC notifications into native ones. The chime and the status line are the
+channels that do not depend on any of this.
+
+### The banner disappears too fast
+
+On macOS, set your terminal's notifications to **Alerts** in System Settings so
+the banner waits instead of fading. `VIBESTRETCH_NOTIFY=0` drops it entirely and
+`VIBESTRETCH_SOUND=0` mutes the chime.
