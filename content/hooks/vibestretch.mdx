@@ -34,7 +34,7 @@ tags:
   - shell
   - posix
 trigger: PostToolUse
-scriptLanguage: bash
+scriptLanguage: sh
 scriptBody: |-
   #!/bin/sh
   # vibestretch — stretch nudges while your coding agent works.
@@ -382,15 +382,17 @@ safetyNotes:
     Shells out to ioreg for the system idle clock and afplay for the chime on
     macOS, and to paplay on Linux.
   - >-
-    Writes nothing outside its own state directory and never modifies your
-    project or your settings.
+    The hook writes only to its own state directory. The optional
+    /vibestretch:statusline skill, when you run it explicitly, edits your
+    ~/.claude configuration and backs it up first.
 privacyNotes:
   - >-
     No telemetry, no analytics, no accounts, and no network calls of any kind.
     Nothing leaves the machine.
   - >-
-    Prompt and tool content is never read. Only timestamps and elapsed seconds
-    are recorded.
+    Reads the first 4 KB of the hook payload to extract session_id. Nothing
+    from prompts or tool output is retained or transmitted; only timestamps
+    and elapsed seconds are stored.
   - >-
     State is a handful of plain files under ~/.cache/vibestretch, and the nudge
     is never added to the model context.
