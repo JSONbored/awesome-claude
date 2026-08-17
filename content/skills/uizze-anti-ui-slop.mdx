@@ -4,29 +4,31 @@ slug: uizze-anti-ui-slop
 category: skills
 description: >-
   Portable anti-ui-slop Skill for Claude Code, Codex, Cursor, GitHub Copilot, and
-  other Agent Skills-compatible coding agents. It rejects generic dashboard
+  other Agent Skills-compatible coding agents. It rejects generic admin
   shells, decorative gradients, missing states, and inert controls, then
-  requires a product-specific design contract and hard finish gate.
+  requires a surface-specific design contract and hard finish gate.
 cardDescription: >-
   A practical UI quality gate for coding agents: reject generic AI UI, cover
-  required states, and finish with product-specific evidence.
+  required states, and finish with surface-specific evidence.
 seoTitle: UIZZE anti-ui-slop Skill for Claude Code, Codex, Cursor, and Copilot
 seoDescription: >-
-  Install the free UIZZE anti-ui-slop Skill to ground web and iOS interface
+  Install the free UIZZE anti-ui-slop Skill to ground web and iOS screen
   work in real screens, a written design contract, required states, and a hard
   finish gate.
 author: UIZZE
 authorProfileUrl: "https://github.com/uizze"
+submittedBy: samuelbushi
+submittedByUrl: "https://github.com/samuelbushi"
+submittedAt: "2026-08-17"
 dateAdded: "2026-08-17"
 repoUrl: "https://github.com/uizze/uizze"
 documentationUrl: "https://uizze.com/ai-ui-slop"
-websiteUrl: "https://uizze.com/ai-ui-slop"
 installable: true
 installCommand: "npx skills add https://uizze.com --skill anti-ui-slop"
 downloadUrl: "https://uizze.com/.well-known/agent-skills/anti-ui-slop/416f7d178891016ee9b41270fe5b7ee6c80a502278d2e3aac4bd06fdc4207fb5/anti-ui-slop.zip"
 usageSnippet: >-
   Use the anti-ui-slop Skill when building, redesigning, implementing,
-  critiquing, or pre-ship reviewing a web or iOS interface. It is free, local,
+  critiquing, or pre-ship reviewing a web or iOS surface. It is free, local,
   and does not require a UIZZE account.
 copySnippet: |-
   npx skills add https://uizze.com --skill anti-ui-slop
@@ -51,8 +53,8 @@ testedPlatforms:
   - Generic AGENTS
 prerequisites:
   - "An Agent Skills-compatible host, or an agent/editor that can load Markdown instruction files."
-  - "A web or iOS screen, component, or interface to build, redesign, or review."
-  - "The project's existing components, design tokens, and visual language so the work extends the product instead of inventing a disconnected system."
+  - "A web or iOS screen, component, or surface to build, redesign, or review."
+  - "The project's existing components, design tokens, and visual language so the work extends the design system instead of inventing a disconnected one."
 safetyNotes:
   - "The Skill is instruction-only, but it can guide an agent through code edits and bounded verification; keep the host's normal approval controls for writes, commands, commits, pushes, and deploys."
   - "The Skill may direct an agent to inspect project files and fetch public URLs; review requested network access and file changes before accepting them."
@@ -93,14 +95,14 @@ other hosts that can load Agent Skills-style Markdown instructions.
 
 ## What it does
 
-Coding agents often converge on the same dashboard shell: a card grid,
+Coding agents often converge on the same admin shell: a card grid,
 decorative gradients, filler metrics, and controls that do not work. This Skill
 forces a different workflow:
 
-- describe the product-specific visual point of view before choosing layout;
+- describe the surface-specific visual point of view before choosing layout;
 - ground decisions in UIZZE's corpus of 800,000+ real web and iOS screens;
 - cover loading, empty, error, success, responsive, and interaction states;
-- preserve the product's existing tokens, components, and visual language;
+- preserve the existing tokens, components, and visual language;
 - finish with a bounded hard gate instead of stopping at a plausible first pass.
 
 ## Install
@@ -115,18 +117,18 @@ retrieve the exact `SKILL.md` without relying on a hosted archive.
 
 ## When to use it
 
-Use it when building a new interface, redesigning an existing screen,
+Use it when building a new screen, redesigning an existing surface,
 implementing a component, critiquing a rendered result, or running a pre-ship
 review for a web or iOS surface. It is especially useful when a first pass
 looks interchangeable with generic AI-generated UI or when important states
 and interactions have not been specified.
 
-## Product context
+## Full UIZZE context
 
 The free Skill is the portable workflow layer. Full UIZZE adds live research,
 validation, audits, and rendered critique across 800,000+ real web and iOS
 screens. Keeping those two layers distinct makes the free install useful on its
-own while giving teams a clear path to deeper product research.
+own while giving teams a clear path to deeper catalogue research.
 
 ## Source review
 
@@ -151,6 +153,6 @@ access is unavailable.
 
 ### The result still looks generic
 
-Return to the design contract, name the product-specific visual evidence that
+Return to the design contract, name the surface-specific visual evidence that
 is missing, and run the finish gate against interaction states and responsive
 behavior rather than polishing the same generic shell.
