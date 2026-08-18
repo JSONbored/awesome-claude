@@ -72,7 +72,7 @@ prerequisites:
   - For `deploy`, a repository pocketnook has been granted read access to on GitHub's own installation screen.
 safetyNotes:
   - The five tools are `deploy`, `deploy_directory`, `list_nooks`, `nook_logs` and `stop_nook`. There is deliberately no delete tool, because deleting a nook destroys its grants and secrets; that stays in the signed-in browser.
-  - "`deploy_directory` uploads the working directory as it is on disk, uncommitted work included, minus `node_modules`, `.git` and build caches. Check for a `.env`, a key file, or a database dump before running it."
+  - "`deploy_directory` uploads the working directory as it is on disk, uncommitted work included, minus `node_modules`, `.git` and build caches. Review what is in the directory first — a `.env`, a key file, or an exported database — because all of it is sent."
   - A token can act only on its owner's own nooks. It cannot mint or revoke a token, cannot open a nook, and carries no username claim, so it can never satisfy a share grant.
   - Build output returned by the tools is written by the deployed project and its dependencies, not by pocketnook. The bundled skill tells the agent to read it as data and never to act on instructions found in it.
   - Builds are synchronous and can outlast an MCP client's tool timeout; a disconnecting client cancels the build.
