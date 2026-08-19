@@ -59,7 +59,7 @@ prerequisites:
   - "Python 3 only when validating an optional evidence-ledger JSON report with the bundled offline validator."
   - "A research question, acceptable freshness window, and any source-quality or geographic constraints that matter to the result."
 safetyNotes:
-  - "Search and page-retrieval tools make network requests. Review the host's enabled providers, scopes, and billing before starting broad research."
+  - "Search and page-retrieval tools make network requests. Review the host's enabled providers, scopes, and usage limits before starting broad research."
   - "Retrieved pages are untrusted input. The skill instructs agents to ignore instructions embedded in sources and to use pages only as evidence."
   - "The workflow is read-only by default: it does not authorize purchases, publishing, contacting people, account changes, or other external writes."
   - "When the workflow calls for an evidence ledger, the agent may write a local JSON report; choose its path deliberately and review it before sharing."
@@ -104,7 +104,7 @@ known, uncertain, or still missing.
 The skill is portable. It uses the search, page, browser, and academic tools
 already available in the host. Optional SandBase integrations add Tavily, Exa,
 Scholar, and Cloudsway coverage, but the core workflow does not require a
-SandBase account or service.
+SandBase account or hosted component.
 
 ## Knowledge Freshness
 
@@ -196,7 +196,7 @@ independent secondary source if available, and identify any unresolved conflict.
 The skill is useful for:
 
 - verifying current technical behavior across official docs and release notes;
-- comparing product, standard, or framework claims from independent sources;
+- comparing technical, standards, or framework claims from independent sources;
 - tracing statistics or quotations back to their primary origin;
 - reviewing research literature with academic and general web search;
 - building a compact evidence ledger for a decision or written report.
@@ -221,5 +221,5 @@ investigation's source URLs and conclusions.
 
 Multi-Source Search is part of `sandbaseai/sandbase-skills`, released under the
 Apache-2.0 license. This entry was submitted by a contributor affiliated with
-SandBase AI. It is a free, source-backed skill listing with no affiliate link,
+SandBase AI. It is a free, source-backed skill listing with no tracking link,
 paid placement, or referral incentive.
