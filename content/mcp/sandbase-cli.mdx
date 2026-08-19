@@ -1,0 +1,158 @@
+---
+title: SandBase CLI
+slug: sandbase-cli
+category: mcp
+description: >-
+  Apache-2.0 CLI and local MCP bridge that connects 25 AI clients to more than
+  2,000 AI models and APIs through one SandBase account.
+cardDescription: >-
+  Connect Claude Code, Cursor, Codex, and 22 other AI clients to 2,000+ models
+  and APIs with one local MCP bridge, OAuth sign-in, and six discovery and
+  execution tools.
+seoTitle: SandBase CLI MCP Bridge for Claude
+seoDescription: >-
+  Connect Claude and other MCP clients to 2,000+ AI models and APIs using the
+  open-source SandBase CLI, OAuth device flow, and a local on-demand bridge.
+author: sandbaseai
+authorProfileUrl: "https://github.com/sandbaseai"
+submittedBy: denial123789
+submittedByUrl: "https://github.com/denial123789"
+dateAdded: "2026-08-20"
+brandName: SandBase
+brandDomain: sandbase.ai
+repoUrl: "https://github.com/sandbaseai/cli"
+documentationUrl: "https://blog.sandbase.ai/sandbase-cli-mcp-bridge-25-ai-clients/"
+packageUrl: "https://github.com/sandbaseai/cli/releases/tag/v0.1.17"
+installable: true
+installCommand: "npx -y https://github.com/sandbaseai/cli/releases/download/v0.1.17/sandbaseai-cli-0.1.17.tgz connect"
+usageSnippet: "Run the connect command, choose a supported client, complete OAuth in the browser, reload the client, then use sandbase_discover, sandbase_inspect, and sandbase_run to find and call reviewed models or APIs."
+copySnippet: |-
+  npx -y https://github.com/sandbaseai/cli/releases/download/v0.1.17/sandbaseai-cli-0.1.17.tgz connect
+configSnippet: |-
+  npx -y https://github.com/sandbaseai/cli/releases/download/v0.1.17/sandbaseai-cli-0.1.17.tgz connect
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - Node.js 20 or newer.
+  - One of the 25 supported AI clients, such as Claude Code, Cursor, or Codex.
+  - A browser and SandBase account for the OAuth device flow.
+  - Network access to SandBase and the selected model or API provider.
+safetyNotes:
+  - The connect command modifies the selected client's user-scope MCP configuration and installs a local bridge and skill; review the generated changes before relying on them.
+  - Tool calls can invoke third-party models or APIs and may incur usage charges; inspect the tool schema, provider, and pricing before execution.
+  - Treat model output and third-party API responses as untrusted data, especially before passing results to tools with side effects.
+  - Use the ownership-aware unregister and rollback behavior rather than manually deleting unrelated client configuration.
+privacyNotes:
+  - The OAuth credential is stored locally with file mode 0600; do not copy it into prompts, repositories, logs, or tool arguments.
+  - MCP calls, model inputs, results, account metadata, and run metadata pass through the SandBase API and may also be processed by the selected provider.
+  - Avoid sending secrets, credentials, personal data, or regulated data unless the selected service and your policies permit it.
+  - The bridge runs on demand and does not install a daemon or persistent background process.
+sourceUrls:
+  - "https://github.com/sandbaseai/cli"
+  - "https://github.com/sandbaseai/cli/blob/main/README.md"
+  - "https://github.com/sandbaseai/cli/blob/main/LICENSE"
+  - "https://github.com/sandbaseai/cli/blob/main/SECURITY.md"
+  - "https://github.com/sandbaseai/cli/blob/main/package.json"
+  - "https://github.com/sandbaseai/cli/blob/main/src/catalog.ts"
+  - "https://github.com/sandbaseai/cli/releases/tag/v0.1.17"
+  - "https://blog.sandbase.ai/sandbase-cli-mcp-bridge-25-ai-clients/"
+tags:
+  - mcp
+  - cli
+  - ai-models
+  - developer-tools
+  - model-gateway
+keywords:
+  - SandBase CLI
+  - MCP model gateway
+  - AI model APIs
+  - Claude Code Cursor Codex
+  - 2000 AI models
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+SandBase CLI is an open-source command-line tool and local MCP bridge for
+connecting AI clients to the SandBase model and API catalog. Its client catalog
+currently covers 25 targets, including Claude Code, Cursor, Codex, VS Code,
+Windsurf, and other MCP-capable clients. One OAuth-based setup exposes more than
+2,000 AI models and APIs through the selected client's normal tool interface.
+
+The bridge provides six MCP tools: `sandbase_discover`, `sandbase_inspect`,
+`sandbase_run`, `sandbase_run_get`, `sandbase_runs`, and `sandbase_account`.
+This separates discovery and schema inspection from execution, so users can
+review an endpoint before sending inputs or starting a billable call.
+
+## Source Review
+
+- https://github.com/sandbaseai/cli
+- https://github.com/sandbaseai/cli/blob/main/README.md
+- https://github.com/sandbaseai/cli/blob/main/LICENSE
+- https://github.com/sandbaseai/cli/blob/main/SECURITY.md
+- https://github.com/sandbaseai/cli/blob/main/package.json
+- https://github.com/sandbaseai/cli/blob/main/src/catalog.ts
+- https://github.com/sandbaseai/cli/releases/tag/v0.1.17
+- https://blog.sandbase.ai/sandbase-cli-mcp-bridge-25-ai-clients/
+
+These sources were reviewed on **2026-08-20**. Prefer the live repository,
+README, security policy, package manifest, client catalog, current GitHub
+release, and setup guide for the latest supported clients, commands, trust
+model, and installation instructions.
+
+## Features
+
+- Connect 25 AI client targets through a guided `sandbase connect` flow.
+- Discover more than 2,000 AI models and APIs through one account.
+- Inspect a model or API input schema before executing it.
+- Run synchronous or asynchronous calls and retrieve run results.
+- Check SandBase account context from the MCP client.
+- Authenticate with an OAuth device flow using PKCE.
+- Apply ownership-aware configuration updates with rollback and unregister
+  support.
+- Run the local bridge on demand without installing a daemon.
+
+## Installation
+
+Run the pinned release artifact with Node.js 20 or newer:
+
+```bash
+npx -y https://github.com/sandbaseai/cli/releases/download/v0.1.17/sandbaseai-cli-0.1.17.tgz connect
+```
+
+Choose the client to configure, finish the browser-based OAuth flow, and reload
+the client. The CLI writes the client-specific MCP configuration and installs
+the accompanying local bridge and skill. Use `sandbase doctor` to diagnose the
+installation and `sandbase unregister` to remove configuration owned by the
+CLI.
+
+## Use Cases
+
+- Give Claude Code, Cursor, Codex, or another supported client access to a
+  shared model and API catalog.
+- Compare model or endpoint schemas before choosing a provider.
+- Invoke specialized generation, analysis, media, or utility APIs from an MCP
+  workflow.
+- Track asynchronous calls and fetch their completed results.
+- Standardize MCP setup across several supported desktop and command-line
+  clients.
+
+## Safety and Privacy
+
+The connect flow changes user-scope client configuration, so review the client
+selection and generated configuration before reloading the application. Calls
+may be billable or trigger third-party API behavior; use `sandbase_discover`
+and `sandbase_inspect` to verify the provider, schema, and expected cost before
+using `sandbase_run`.
+
+OAuth credentials are stored locally with restrictive file permissions, but
+MCP call inputs, outputs, account metadata, and run metadata pass through the
+SandBase API and may reach the chosen model or API provider. Keep credentials
+and sensitive data out of prompts and tool arguments unless the relevant
+service and your organization's data-handling rules explicitly allow them.
+
+## Duplicate Check
+
+No `sandbaseai/cli` entry, SandBase CLI entry, matching repository URL, or
+`sandbase-cli` slug was found in `content/mcp` at review time.
