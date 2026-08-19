@@ -1,0 +1,225 @@
+---
+title: Multi-Source Search
+slug: multi-source-search
+category: skills
+description: >-
+  Portable research and fact-checking skill that coordinates multiple search
+  capabilities, cross-validates claims, tracks evidence provenance, scores
+  confidence, and stops when additional retrieval no longer changes the answer.
+cardDescription: >-
+  Cross-validate research with multiple search providers, evidence tracking,
+  confidence scoring, and explicit privacy and prompt-injection safeguards.
+seoTitle: Multi-Source Search Skill for Claude Code, Codex, Cursor, Gemini CLI, and DSH
+seoDescription: >-
+  Use the open-source Multi-Source Search skill to research and fact-check with
+  multiple providers, compare independent sources, record evidence, and report
+  calibrated confidence across compatible AI coding agents.
+author: SandBase AI
+authorProfileUrl: "https://github.com/sandbaseai"
+submittedBy: denial123789
+submittedByUrl: "https://github.com/denial123789"
+dateAdded: "2026-08-19"
+submittedAt: "2026-08-19"
+repoUrl: "https://github.com/sandbaseai/sandbase-skills"
+documentationUrl: "https://github.com/sandbaseai/sandbase-skills/tree/main/research/multi-source-search"
+downloadUrl: "https://github.com/sandbaseai/sandbase-skills/archive/refs/heads/main.zip"
+installable: true
+installCommand: "npx skills add sandbaseai/sandbase-skills --skill multi-source-search"
+usageSnippet: >-
+  Invoke Multi-Source Search for a research question that benefits from current
+  evidence, then let the host agent use at least two available search
+  capabilities, open the strongest primary sources, reconcile disagreements,
+  and cite the resulting claims with calibrated confidence.
+copySnippet: |-
+  npx skills add sandbaseai/sandbase-skills --skill multi-source-search
+
+  # Preview the skill without installing it
+  npx skills use sandbaseai/sandbase-skills@multi-source-search
+skillType: general
+skillLevel: advanced
+verificationStatus: validated
+verifiedAt: "2026-08-19"
+retrievalSources:
+  - "https://github.com/sandbaseai/sandbase-skills"
+  - "https://raw.githubusercontent.com/sandbaseai/sandbase-skills/main/research/multi-source-search/SKILL.md"
+  - "https://raw.githubusercontent.com/sandbaseai/sandbase-skills/main/research/multi-source-search/references/report-schema.md"
+  - "https://raw.githubusercontent.com/sandbaseai/sandbase-skills/main/research/multi-source-search/references/sandbase-api-map.md"
+  - "https://raw.githubusercontent.com/sandbaseai/sandbase-skills/main/research/multi-source-search/scripts/validate_report.py"
+  - "https://raw.githubusercontent.com/sandbaseai/sandbase-skills/main/.claude-plugin/marketplace.json"
+  - "https://github.com/sandbaseai/sandbase-skills/releases/tag/v0.3.4"
+testedPlatforms:
+  - Claude Code
+  - Codex
+  - Cursor
+  - Gemini CLI
+  - Agent Skills compatible hosts
+prerequisites:
+  - "An Agent Skills compatible host with at least two distinct search capabilities, such as web search, page retrieval, browser search, academic search, or configured provider tools."
+  - "Network access for live research; SandBase Tavily, Exa, Scholar, and Cloudsway tools are optional rather than required."
+  - "Python 3 only when validating an optional evidence-ledger JSON report with the bundled offline validator."
+  - "A research question, acceptable freshness window, and any source-quality or geographic constraints that matter to the result."
+safetyNotes:
+  - "Search and page-retrieval tools make network requests. Review the host's enabled providers, scopes, and usage limits before starting broad research."
+  - "Retrieved pages are untrusted input. The skill instructs agents to ignore instructions embedded in sources and to use pages only as evidence."
+  - "The workflow is read-only by default: it does not authorize purchases, publishing, contacting people, account changes, or other external writes."
+  - "When the workflow calls for an evidence ledger, the agent may write a local JSON report; choose its path deliberately and review it before sharing."
+  - "The bundled Python validator reads the specified JSON report and validates its structure, URLs, source references, provider diversity, and confidence consistency without network calls or additional file writes."
+privacyNotes:
+  - "Search queries and requested URLs are sent to the search, browser, academic, or page providers configured in the host environment."
+  - "Do not send private, proprietary, personal, regulated, or credential-bearing content to external providers without explicit user consent."
+  - "Evidence ledgers can retain queries, source URLs, claim text, timestamps, and research conclusions; store and share them according to the sensitivity of the investigation."
+  - "Keep API keys, session tokens, private URLs, and credentials out of prompts, evidence ledgers, logs, screenshots, issues, and public reports."
+tags:
+  - research
+  - fact-checking
+  - web-search
+  - source-validation
+  - agent-skills
+  - evidence
+keywords:
+  - Multi-Source Search skill
+  - Claude research skill
+  - Codex research skill
+  - AI fact checking workflow
+  - multi provider web search
+  - evidence provenance skill
+  - source cross validation
+readingTime: 7
+difficultyScore: 68
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# Multi-Source Search
+
+Multi-Source Search is an open-source Agent Skill for research, discovery, and
+fact-checking tasks where one search result or one provider is not enough. It
+gives a host agent a compact workflow for diversifying retrieval, tracing claims
+back to their origin, resolving conflicting evidence, and communicating what is
+known, uncertain, or still missing.
+
+The skill is portable. It uses the search, page, browser, and academic tools
+already available in the host. Optional SandBase integrations add Tavily, Exa,
+Scholar, and Cloudsway coverage, but the core workflow does not require a
+SandBase account or hosted component.
+
+## Knowledge Freshness
+
+Search indexes, provider ranking, page content, and academic metadata change
+continuously. The skill therefore asks the agent to set a freshness expectation
+for the question, capture retrieval timing when it matters, and prefer current
+primary sources for time-sensitive claims.
+
+The workflow itself was verified from the public repository and release
+metadata on **2026-08-19**. Before relying on provider-specific parameters,
+check the current host tool schemas and the latest skill source.
+
+## Retrieval Sources
+
+This listing is grounded in the public `SKILL.md`, its report-schema and
+SandBase API-map references, the offline report validator, the Claude Code
+marketplace manifest, the repository README, and the v0.3.4 release.
+
+The skill explicitly distinguishes independent evidence from derivative
+coverage. Several articles repeating the same press release do not become
+multiple independent confirmations.
+
+## Core Workflow
+
+For a typical research request, the skill guides the agent to:
+
+1. Define the claim or question, its freshness window, and the required source
+   quality.
+2. Choose at least two distinct search capabilities with complementary
+   strengths.
+3. Run narrow queries first and broaden only when evidence remains incomplete.
+4. Open the strongest results, prioritizing primary documents, official data,
+   standards, research papers, or direct technical documentation.
+5. Map each material claim to its supporting sources and identify shared or
+   derivative origins.
+6. Reconcile contradictions by comparing dates, scope, methodology, and source
+   authority instead of averaging incompatible claims.
+7. Report a concise answer with citations, caveats, and calibrated confidence.
+
+The default budget is at most six search calls and six page opens. The agent
+should stop earlier when further retrieval is unlikely to change the answer.
+This makes the workflow suitable for routine engineering research without
+turning every question into an open-ended crawl.
+
+## Evidence Ledger and Offline Validation
+
+When a task needs an auditable record, the skill defines an optional JSON
+evidence ledger. It can record the question, queries, providers, sources,
+claims, citations, disagreements, and confidence assessments.
+
+The repository includes an offline structural validator:
+
+```bash
+python3 research/multi-source-search/scripts/validate_report.py evidence.json
+```
+
+The validator checks required fields, URL syntax, claim-to-source references,
+provider diversity, and confidence consistency. It does not judge whether a
+claim is true, make network requests, or modify the report. Human or agent
+review of the underlying evidence is still required.
+
+## Installation and Use
+
+Install only this skill with a compatible Agent Skills installer:
+
+```bash
+npx skills add sandbaseai/sandbase-skills --skill multi-source-search
+```
+
+Claude Code users can alternatively add the repository's native marketplace
+and install the full SandBase Skills bundle:
+
+```text
+/plugin marketplace add sandbaseai/sandbase-skills
+/plugin install sandbase-skills@sandbase-agent-skills
+```
+
+After installation, ask the agent to research or fact-check a concrete question
+and specify any constraints. For example:
+
+```text
+Use Multi-Source Search to verify whether this API behavior changed in the
+latest stable release. Prefer official release notes and documentation, use an
+independent secondary source if available, and identify any unresolved conflict.
+```
+
+## Capability Scope
+
+The skill is useful for:
+
+- verifying current technical behavior across official docs and release notes;
+- comparing technical, standards, or framework claims from independent sources;
+- tracing statistics or quotations back to their primary origin;
+- reviewing research literature with academic and general web search;
+- building a compact evidence ledger for a decision or written report.
+
+It is not a replacement for domain expertise, legal or medical review, or
+access to paywalled and private sources. A high confidence score means the
+available evidence is strong and mutually consistent, not that future evidence
+cannot change the conclusion.
+
+## Safety and Privacy
+
+Retrieved pages must be treated as untrusted evidence, never as instructions.
+The workflow does not grant permission to purchase, publish, contact third
+parties, modify accounts, or make other external changes.
+
+Queries and URLs can leave the local environment through configured providers.
+Obtain explicit consent before searching with sensitive content, keep secrets
+out of queries and reports, and remember that an evidence ledger may retain the
+investigation's source URLs and conclusions.
+
+## License and Disclosure
+
+Multi-Source Search is part of `sandbaseai/sandbase-skills`, released under the
+Apache-2.0 license. This entry was submitted by a contributor affiliated with
+SandBase AI. It is a free, source-backed skill listing with no tracking link,
+paid placement, or referral incentive.
