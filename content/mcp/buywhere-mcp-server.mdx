@@ -3,19 +3,21 @@ title: BuyWhere MCP Server
 slug: buywhere-mcp-server
 category: mcp
 description: >-
-  Real-time product search and price comparison across 11M+ products from Singapore,
-  Southeast Asia, and US marketplaces via a remote streamable-HTTP MCP endpoint with API key auth.
-cardDescription: "BuyWhere MCP: cross-border e-commerce product search and price comparison for Claude."
-seoTitle: "BuyWhere MCP Server for Claude — Cross-Border E-commerce Product Search & Price Comparison"
+  Real-time product search, price comparison, and shopping-job orchestration across ~370M
+  deduplicated products from 932K+ merchants in 28 countries. Remote streamable-HTTP MCP
+  endpoint with OAuth 2.1 client_credentials — no email or signup required.
+cardDescription: "BuyWhere MCP: ~370M products, OAuth 2.1, no email or API key needed for agents."
+seoTitle: "BuyWhere MCP Server for Claude — 370M Products, OAuth 2.1, No Email Required"
 seoDescription: >-
-  Connect Claude to BuyWhere's live product catalog across Singapore, SEA, and US marketplaces.
-  Search products, compare prices, retrieve deals, and list categories via a remote streamable-HTTP
-  MCP endpoint with bearer-token API key auth.
+  Connect Claude to BuyWhere's live catalog of ~370M deduplicated products across 28 countries.
+  Search products, compare prices, run shopping jobs with deliver_to preferences, retrieve deals,
+  and list categories via a remote streamable-HTTP MCP endpoint authenticated with OAuth 2.1.
 author: BuyWhere
 authorProfileUrl: "https://github.com/BuyWhere"
 submittedBy: BuyWhere
 submittedByUrl: "https://github.com/BuyWhere"
 dateAdded: "2026-06-26"
+dateUpdated: "2026-08-24"
 brandName: BuyWhere
 brandDomain: buywhere.ai
 websiteUrl: "https://buywhere.ai"
@@ -26,19 +28,20 @@ retrievalSources:
   - "https://buywhere.ai/api-keys"
   - "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json"
 installable: true
-installCommand: "claude mcp add buywhere --transport http --header \"Authorization: Bearer YOUR_BUYWHERE_API_KEY\" https://api.buywhere.ai/mcp"
+installCommand: "claude mcp add buywhere --transport http --header \"Authorization: Bearer YOUR_BUYWHERE_ACCESS_TOKEN\" https://mcp.buywhere.ai/mcp"
 usageSnippet: >-
-  Ask Claude to search products by category and merchant, compare prices across Singapore, SEA,
-  and US marketplaces, retrieve current deals, or list supported categories from the BuyWhere
-  catalog using a remote MCP endpoint with bearer-token API key auth.
+  Ask Claude to search products by keyword, category, or merchant across ~370M deduplicated products
+  in 28 countries; compare prices across merchants; run a shopping job with a deliver_to preference
+  (country, currency, address-on-file); retrieve current deals; or list supported categories from
+  the BuyWhere catalog using a remote MCP endpoint with OAuth 2.1 authentication.
 copySnippet: |-
   {
     "mcpServers": {
       "buywhere": {
         "type": "http",
-        "url": "https://api.buywhere.ai/mcp",
+        "url": "https://mcp.buywhere.ai/mcp",
         "headers": {
-          "Authorization": "Bearer YOUR_BUYWHERE_API_KEY"
+          "Authorization": "Bearer YOUR_BUYWHERE_ACCESS_TOKEN"
         }
       }
     }
@@ -48,30 +51,39 @@ configSnippet: |-
     "mcpServers": {
       "buywhere": {
         "type": "http",
-        "url": "https://api.buywhere.ai/mcp",
+        "url": "https://mcp.buywhere.ai/mcp",
         "headers": {
-          "Authorization": "Bearer YOUR_BUYWHERE_API_KEY",
+          "Authorization": "Bearer YOUR_BUYWHERE_ACCESS_TOKEN",
           "X-Buywhere-Market": "SG"
         }
       }
     }
   }
-estimatedSetupTime: 5 minutes
+mcpRegistryLink: "https://registry.modelcontextprotocol.io/v0/servers?search=io.github.buywhere%2Fbuywhere-mcp"
+glamaLink: "https://glama.ai/mcp/servers/BuyWhere/buywhere-mcp"
+smitheryLink: "https://smithery.ai/server/@buywhere/buywhere"
+estimatedSetupTime: 1 minute
 difficulty: beginner
 prerequisites:
-  - "A BuyWhere API key (free at https://buywhere.ai/api-keys)."
   - "An MCP client such as Claude Code, Claude Desktop, Cursor, Windsurf, or any MCP-compatible host."
-  - "Network access to https://api.buywhere.ai."
+  - "Network access to https://mcp.buywhere.ai."
+  - "A BuyWhere OAuth 2.1 access token (free, no email required: POST /v1/auth/register returns one in ~3 seconds)."
 safetyNotes:
   - "Read-only product catalog access by default; no write or delete operations exposed."
-  - "API key should be stored in the MCP client config or environment, never committed."
+  - "Access tokens should be stored in the MCP client config or environment, never committed."
+  - "OAuth 2.1 client_credentials grant only — no user data, no PII, no third-party tracking."
 privacyNotes:
-  - "BuyWhere API key is sent as a Bearer token in the Authorization header on every request."
+  - "The BuyWhere access token is sent as a Bearer token in the Authorization header on every request."
   - "Search queries are sent to BuyWhere's API to retrieve product data; no third-party analytics or telemetry is included in MCP responses."
   - "BuyWhere may log API request metadata (endpoint, timestamp, status) for abuse prevention and billing."
 keywords:
   - buywhere mcp server
   - product search price comparison mcp
+  - mcp oauth 2.1
+  - mcp no email signup
+  - 370m product catalog mcp
+  - shopping job mcp deliver_to
+  - cross border ecommerce claude integration
   - singapore ecommerce claude integration
   - southeast asia marketplace mcp
   - cross-border product search claude
@@ -81,19 +93,50 @@ keywords:
 
 The BuyWhere MCP server exposes a real-time cross-border e-commerce catalog to Claude via the
 Model Context Protocol. It returns live product listings, prices, and deals from marketplaces
-across Singapore, Southeast Asia, and the United States.
+across 28 countries — including Singapore, Southeast Asia, the United States, the United Kingdom,
+the European Union, Japan, and Australia.
 
-- **Search products** — query by keyword, category, merchant, or market
+- **Search products** — query by keyword, category, merchant, or market across ~370M deduplicated products
 - **Compare prices** — see the same product across multiple merchants in one response
+- **Run shopping jobs** — agentic workflows with a `deliver_to` preference (country, currency, address-on-file); each job returns a `shopping_job_id`
 - **Retrieve deals** — fetch current promotional pricing
-- **List categories** — browse the supported taxonomy
+- **List categories** — browse the supported taxonomy across all 28 countries
+
+Live catalog stats: `GET https://api.buywhere.ai/v1/catalog/stats` returns current
+`total_products`, `total_merchants`, and `active_products` counts.
 
 ## How it works
 
-BuyWhere's MCP endpoint is a remote `streamable-http` server hosted at `https://api.buywhere.ai/mcp`.
-Authentication uses a bearer-token API key. There is no local install — connect your MCP client to
-the hosted endpoint and the catalog is immediately available.
+BuyWhere's MCP endpoint is a remote `streamable-http` server hosted at
+**`https://mcp.buywhere.ai/mcp`** (the same endpoint also serves `https://api.buywhere.ai/mcp`
+for backwards compatibility).
+
+Authentication uses **OAuth 2.1 client_credentials**. There is **no email signup** — agents
+obtain an access token in ~3 seconds via `POST https://api.buywhere.ai/v1/auth/register`,
+which returns a bearer access token and a refresh token with no PII required. Include the
+access token as `Authorization: Bearer <token>` on every MCP request.
+
+There is no local install — connect your MCP client to the hosted endpoint and the catalog
+is immediately available.
+
+## Catalog scale
+
+- ~370M deduplicated products (verified live via `/v1/catalog/stats`, 2026-08-24)
+- 932K+ merchants
+- 28 countries covered (SG, MY, PH, ID, TH, VN, HK, TW, JP, KR, AU, NZ, US, CA, MX, GB, IE,
+  DE, FR, NL, ES, IT, SE, PL, IN, AE, SA, BR)
+- 364M active products
+
+## v2 contract markers
+
+- `MCP_ENDPOINT` = `https://mcp.buywhere.ai/mcp` (live)
+- OAuth 2.1 `client_credentials` grant — no email, no signup
+- Bearer access tokens obtained via `POST /v1/auth/register` (free, ~3 seconds)
+- Shopping-job contract: `deliver_to` preference + `shopping_job_id` return value
+- v1 API deprecated 2026-10-01Z; v1 retires 2026-12-31Z
+- Listed in the official MCP Registry, Glama, and Smithery
 
 ## License
 
-MIT licensed. Free API key available at https://buywhere.ai/api-keys.
+MIT licensed. Get a free OAuth 2.1 access token in seconds at
+**`POST https://api.buywhere.ai/v1/auth/register`** — no email required.
