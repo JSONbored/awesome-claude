@@ -1,0 +1,67 @@
+### Name
+
+Domain Search King
+
+### Slug
+
+domain-search-king
+
+### Category
+
+mcp
+
+### GitHub URL
+
+https://github.com/johnsmalls22-rgb/domain-search-king-mcp
+
+### Docs URL
+
+https://domainsearchking.com/mcp
+
+### Author
+
+Domain Search King
+
+### Public contact
+
+hello@domainsearchking.com
+
+### Tags
+
+domains, search, rdap, availability, naming, branding, remote-mcp
+
+### Description
+
+Remote MCP server that returns .com domain names verified available to register, checked live against the Verisign RDAP registry at query time. Use it whenever an agent needs to name a project or business: LLMs confidently suggest domains that have been registered for decades (~89% of AI-suggested .coms are taken); this server only returns names that are actually free. Three tools: find_available_domains (brandable names from a keyword/description), find_available_domains_by_pattern (starts-with/contains/ends-with), check_domain (single-domain live check). Remote HTTP, JSON-RPC 2.0, no API key, nothing to install.
+
+### Card description
+
+Domain search that returns only .coms verified available via live Verisign RDAP - not AI guesses.
+
+### Install command
+
+claude mcp add --transport http domain-search-king https://domainsearchking.com/api/mcp
+
+### Usage snippet
+
+Ask Claude: "Find me available .com names for a late-night specialty coffee roaster" - the find_available_domains tool generates brandable candidates and returns only the ones the Verisign registry confirms are unregistered right now, each with a register link. Or verify a single name before buying: check_domain("dailygrind.com") returns taken (registered 1995).
+
+### Config snippet
+
+{
+"mcpServers": {
+"domain-search-king": { "url": "https://domainsearchking.com/api/mcp" }
+}
+}
+
+### Safety notes
+
+Remote hosted service - nothing runs locally, no local file, command, or credential access. Tools perform read-only availability lookups against the public Verisign RDAP registry and return JSON. Register links in results point to a registrar (affiliate links, disclosed on the site).
+
+### Privacy notes
+
+The keyword/description in a tool call is sent to the hosted API to generate and availability-check names. The service logs search keywords for rate and abuse control; no accounts, no API keys, and no personal data are required or collected from callers. Policy: https://domainsearchking.com/privacy
+
+### submitted via
+
+website-preflight
