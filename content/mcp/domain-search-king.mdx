@@ -1,67 +1,95 @@
-### Name
+---
+title: Domain Search King
+slug: domain-search-king
+category: mcp
+description: >-
+  Remote MCP server that returns .com domain names verified available to register, checked live against the Verisign RDAP registry at query time - not AI guess lists.
+cardDescription: >-
+  Domain search that returns only .coms verified available via live Verisign RDAP - not AI guesses.
+seoTitle: Domain Search King MCP Server for Claude
+seoDescription: >-
+  Configure the Domain Search King remote MCP server (streamable HTTP, no API key) to get .com domains verified available live via Verisign RDAP.
+author: Domain Search King
+authorProfileUrl: "https://domainsearchking.com"
+submittedBy: johnsmalls22-rgb
+submittedByUrl: "https://github.com/johnsmalls22-rgb"
+dateAdded: "2026-08-26"
+submittedAt: "2026-08-26"
+documentationUrl: "https://domainsearchking.com/mcp"
+websiteUrl: "https://domainsearchking.com"
+retrievalSources:
+  - "https://domainsearchking.com/mcp"
+  - "https://registry.modelcontextprotocol.io/v0/servers?search=domain-search-king"
+  - "https://github.com/johnsmalls22-rgb/domain-search-king-mcp"
+installable: true
+installCommand: "claude mcp add --transport http domain-search-king https://domainsearchking.com/api/mcp"
+usageSnippet: >-
+  Ask Claude for available .com names for a business idea - find_available_domains generates brandable candidates and returns only names the Verisign registry confirms are unregistered right now; check_domain verifies a single name before you buy.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "domain-search-king": {
+        "url": "https://domainsearchking.com/api/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "domain-search-king": {
+        "url": "https://domainsearchking.com/api/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "MCP client with streamable HTTP transport support (Claude Code, Claude Desktop, Cursor, VS Code)."
+  - "No account and no API key required."
+safetyNotes:
+  - "Remote hosted service - nothing runs locally; no local file, command, or credential access."
+  - "Tools perform read-only availability lookups against the public Verisign RDAP registry and return JSON."
+  - "Register links in results point to a registrar (affiliate links, disclosed on the site)."
+privacyNotes:
+  - "The keyword/description in a tool call is sent to the hosted API to generate and availability-check names."
+  - "The service logs search keywords for rate and abuse control; no accounts and no personal data are required or collected from callers."
+  - "Privacy policy: https://domainsearchking.com/privacy"
+tags:
+  - mcp
+  - registry
+keywords:
+  - Domain Search King MCP server
+  - available domain name search
+  - RDAP domain availability
+robotsIndex: true
+robotsFollow: true
+---
 
-Domain Search King
+## Overview
 
-### Slug
+**Domain Search King** is listed in the MCP Registry as **`io.github.johnsmalls22-rgb/domain-search-king-mcp`**.
+It returns .com domain names verified available to register, checked live against the Verisign RDAP registry at query time. Built because LLMs hallucinate availability: ~89% of AI-suggested .coms are already taken. Three tools: `find_available_domains` (brandable names from a keyword/description), `find_available_domains_by_pattern` (starts-with/contains/ends-with), `check_domain` (single-domain live check). Remote streamable HTTP, JSON-RPC 2.0, no API key.
 
-domain-search-king
+## Installation
 
-### Category
-
-mcp
-
-### GitHub URL
-
-https://github.com/johnsmalls22-rgb/domain-search-king-mcp
-
-### Docs URL
-
-https://domainsearchking.com/mcp
-
-### Author
-
-Domain Search King
-
-### Public contact
-
-hello@domainsearchking.com
-
-### Tags
-
-domains, search, rdap, availability, naming, branding, remote-mcp
-
-### Description
-
-Remote MCP server that returns .com domain names verified available to register, checked live against the Verisign RDAP registry at query time. Use it whenever an agent needs to name a project or business: LLMs confidently suggest domains that have been registered for decades (~89% of AI-suggested .coms are taken); this server only returns names that are actually free. Three tools: find_available_domains (brandable names from a keyword/description), find_available_domains_by_pattern (starts-with/contains/ends-with), check_domain (single-domain live check). Remote HTTP, JSON-RPC 2.0, no API key, nothing to install.
-
-### Card description
-
-Domain search that returns only .coms verified available via live Verisign RDAP - not AI guesses.
-
-### Install command
-
+```bash
 claude mcp add --transport http domain-search-king https://domainsearchking.com/api/mcp
+```
 
-### Usage snippet
+## Source Verification Notes
 
-Ask Claude: "Find me available .com names for a late-night specialty coffee roaster" - the find_available_domains tool generates brandable candidates and returns only the ones the Verisign registry confirms are unregistered right now, each with a register link. Or verify a single name before buying: check_domain("dailygrind.com") returns taken (registered 1995).
+Verified on **2026-08-26**:
 
-### Config snippet
+- MCP Registry search returns **`io.github.johnsmalls22-rgb/domain-search-king-mcp`** (v1.0.0, status active) with the remote streamable HTTP endpoint.
+- Primary documentation URL **https://domainsearchking.com/mcp** is publicly reachable, with per-client install tabs and a live inspector.
+- Live `tools/list` on `https://domainsearchking.com/api/mcp` returns the three documented tools.
 
-{
-"mcpServers": {
-"domain-search-king": { "url": "https://domainsearchking.com/api/mcp" }
-}
-}
+## Duplicate Check
 
-### Safety notes
+No existing `content/mcp/` entry documents registry package `io.github.johnsmalls22-rgb/domain-search-king-mcp`.
 
-Remote hosted service - nothing runs locally, no local file, command, or credential access. Tools perform read-only availability lookups against the public Verisign RDAP registry and return JSON. Register links in results point to a registrar (affiliate links, disclosed on the site).
+## Editorial Disclosure
 
-### Privacy notes
-
-The keyword/description in a tool call is sent to the hosted API to generate and availability-check names. The service logs search keywords for rate and abuse control; no accounts, no API keys, and no personal data are required or collected from callers. Policy: https://domainsearchking.com/privacy
-
-### submitted via
-
-website-preflight
+First-party listing by **johnsmalls22-rgb** (maintainer) via the heyclau.de submit preflight; the site's private gate was unconfigured, so this is the manual single-entry PR it instructed.
