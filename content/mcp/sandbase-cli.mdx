@@ -1,0 +1,60 @@
+---
+title: SandBase CLI
+slug: sandbase-cli
+category: mcp
+description: "Open-source CLI and local MCP bridge connecting Claude and other clients to 2,000+ AI models and APIs."
+cardDescription: "Discover and run SandBase models and APIs from Claude through MCP."
+seoTitle: SandBase CLI MCP Bridge for Claude
+seoDescription: "Use SandBase CLI with Claude to discover and run requests across 2,000+ AI models and APIs."
+author: sandbaseai
+authorProfileUrl: "https://github.com/sandbaseai"
+submittedBy: denial123789
+submittedByUrl: "https://github.com/denial123789"
+dateAdded: "2026-08-28"
+brandName: SandBase
+brandDomain: sandbase.ai
+websiteUrl: "https://sandbase.ai"
+repoUrl: "https://github.com/sandbaseai/cli"
+documentationUrl: "https://github.com/sandbaseai/cli#readme"
+installable: true
+installCommand: "npx -y @sandbaseai/cli@0.1.14 connect --client claude-desktop"
+usageSnippet: "Run connect, complete browser authorization, then use Claude with the configured SandBase MCP tools."
+copySnippet: |-
+  npx -y @sandbaseai/cli@0.1.14 connect --client claude-desktop
+prerequisites:
+  - Node.js with npx and Claude Desktop.
+  - SandBase browser sign-in and authorization.
+safetyNotes:
+  - Review the target Claude configuration before the CLI writes its managed MCP entry.
+  - Keep OAuth credentials private and review tool calls before consequential use.
+privacyNotes:
+  - Prompts, arguments, and results may be processed by SandBase and the selected model/API provider.
+sourceUrls:
+  - "https://github.com/sandbaseai/cli"
+  - "https://github.com/sandbaseai/cli/blob/main/server.json"
+  - "https://github.com/sandbaseai/cli/releases/tag/v0.1.17"
+  - "https://www.npmjs.com/package/@sandbaseai/cli/v/0.1.14"
+tags:
+  - claude
+  - mcp
+  - cli
+  - ai-models
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+SandBase CLI is an open-source command-line installer and local Model Context
+Protocol bridge. After browser authorization, Claude Desktop can discover and
+run SandBase's catalog of more than 2,000 AI models and APIs through MCP.
+
+## Setup
+
+```sh
+npx -y @sandbaseai/cli@0.1.14 connect --client claude-desktop
+```
+
+Complete browser authorization, restart Claude Desktop, and review the
+available SandBase tools before sending a request. Sources were reviewed on
+**2026-08-28**.
