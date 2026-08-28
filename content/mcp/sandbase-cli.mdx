@@ -17,10 +17,10 @@ websiteUrl: "https://sandbase.ai"
 repoUrl: "https://github.com/sandbaseai/cli"
 documentationUrl: "https://github.com/sandbaseai/cli#readme"
 installable: true
-installCommand: "npx -y https://github.com/sandbaseai/cli/releases/download/v0.1.17/sandbaseai-cli-0.1.17.tgz connect --client claude-desktop"
+installCommand: "npx -y @sandbaseai/cli@0.1.14 connect --client claude-desktop"
 usageSnippet: "Run connect, complete browser authorization, then use Claude with the configured SandBase MCP tools."
 copySnippet: |-
-  npx -y https://github.com/sandbaseai/cli/releases/download/v0.1.17/sandbaseai-cli-0.1.17.tgz connect --client claude-desktop
+  npx -y @sandbaseai/cli@0.1.14 connect --client claude-desktop
 prerequisites:
   - Node.js with npx and Claude Desktop.
   - SandBase browser sign-in and authorization.
@@ -33,6 +33,7 @@ sourceUrls:
   - "https://github.com/sandbaseai/cli"
   - "https://github.com/sandbaseai/cli/blob/main/server.json"
   - "https://github.com/sandbaseai/cli/releases/tag/v0.1.17"
+  - "https://www.npmjs.com/package/@sandbaseai/cli/v/0.1.14"
 tags:
   - claude
   - mcp
@@ -51,7 +52,7 @@ run SandBase's catalog of more than 2,000 AI models and APIs through MCP.
 ## Setup
 
 ```sh
-npx -y https://github.com/sandbaseai/cli/releases/download/v0.1.17/sandbaseai-cli-0.1.17.tgz connect --client claude-desktop
+npx -y @sandbaseai/cli@0.1.14 connect --client claude-desktop
 ```
 
 Complete browser authorization, restart Claude Desktop, and review the
