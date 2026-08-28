@@ -1,0 +1,73 @@
+### Name
+gh-review-loop
+### Slug
+gh-review-loop
+### Category
+skills
+### GitHub URL
+https://github.com/OrenAshkenazy/gh-review-loop
+### Public contact
+oren.as@gmail.com
+### Description
+Clears AI reviewer feedback on a GitHub PR without leaving your coding agent. Waits for the configured reviewer (Codex, CodeRabbit, Copilot, or any compatible bot), reads real review-thread state via GraphQL so resolved, outdated, and already-answered threads are skipped, then fixes what is actionable in severity order. Findings are clustered by kind, so a pattern flagged at two sites gets swept across the PR's changed files in one cycle instead of dripping back over three reviews. Every fix is checked against your repository's own tests and linters before the push, and re-review requests are hard-capped at the write itself, so the loop cannot spam the PR. Optional per-finding triage flags false positives before you spend a cycle on them, and each run leaves an audit trail plus local stats. The sweep is reproducible without installing anything: running evals/replay/replay.py from a fresh clone replays real captured reviewer findings and prints exactly what the loop would.
+### Card description
+Fixes AI reviewer findings on your PR, including the sibling instances the bot missed. Verifies against your tests, hard capped at 3 rounds.
+### Full copyable content
+# gh-review-loop
+
+Fixes the AI reviewer findings on your PR — including the sibling instances the bot missed. Runs your tests before it pushes. Hard capped at 3 rounds.
+
+## The problem
+
+Bot reviewers expand. They flag 2 of 6 instances of the same bug; you fix those, push, and the next review flags 3 more in files the bot hadn't reached. You end up spending more time on the rounds than on the bugs.
+
+## What it does
+
+- **Sweeps the class, not the instance.** When a pattern is flagged at 2+ sites, it tokenizes those lines, intersects them, and reports every other line in your changed files matching the shared shape — before touching anything. It never reads outside your diff.
+- **Won't push red.** A verification profile is auto-detected from your `pyproject.toml` / `package.json` / `Cargo.toml` / `go.mod`; a failing required check stops the cycle before the push.
+- **A brake, not a timeout.** The cap is a hard count of 3 re-review requests, enforced at the write itself. Only the agent's own pings count — a human asking the bot to look again doesn't burn a round.
+
+Works with Codex, Gemini Code Assist (enterprise), or any reviewer bot you configure (CodeRabbit, Copilot, Qodo, Sourcery). There is no assumed default: on an unconfigured PR the loop asks which bot to use.
+
+## Install
+
+Claude Code:
+
+```
+/plugin marketplace add OrenAshkenazy/gh-review-loop
+/plugin install gh-review-loop@gh-review-loop
+```
+
+Codex:
+
+```bash
+codex plugin marketplace add OrenAshkenazy/gh-review-loop
+codex plugin add gh-review-loop@gh-review-loop
+```
+
+Then, from a repo with an open PR:
+
+> Run the AI reviewer loop
+
+## Verify it yourself
+
+The sweep is reproducible without installing anything:
+
+```bash
+git clone https://github.com/OrenAshkenazy/gh-review-loop && cd gh-review-loop
+python3 evals/replay/replay.py
+```
+
+This replays two real captured bot reviews. One produces a sweep; the other correctly produces none — the same reviewer gave different output on identical code, which is why clustering keys off code shape rather than finding text.
+
+## Honest scope
+
+You probably don't need this if you pay for CodeRabbit Pro or Copilot — both ship a batch-fix for their own comments. This is for when you don't control which bot reviews your repo and want a bound on how many rounds it takes.
+
+Stdlib Python + `gh` CLI. No server, no account. MIT.
+
+- Repo: https://github.com/OrenAshkenazy/gh-review-loop
+### privacy notes
+https://github.com/OrenAshkenazy/gh-review-loop/blob/main/PRIVACY.md
+### submitted via
+website-preflight
