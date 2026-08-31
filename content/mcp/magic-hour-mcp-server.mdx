@@ -1,0 +1,167 @@
+---
+title: Magic Hour MCP Server
+slug: magic-hour-mcp-server
+category: mcp
+description: >-
+  Official hosted Magic Hour MCP server for generating and editing video,
+  images, and audio from Claude, Claude Code, Codex, and other compatible MCP
+  clients.
+cardDescription: >-
+  Connect Claude to Magic Hour for supervised video, image, and audio
+  generation and editing workflows.
+seoTitle: Magic Hour MCP Server for Claude and Codex
+seoDescription: >-
+  Connect Claude, Claude Code, Codex, or another MCP client to Magic Hour's
+  hosted server for API-key-authenticated video, image, and audio creation.
+author: Magic Hour
+authorProfileUrl: "https://github.com/magichourhq"
+submittedBy: runshouse
+submittedByUrl: "https://github.com/runshouse"
+dateAdded: "2026-08-30"
+brandName: Magic Hour
+brandDomain: magichour.ai
+repoUrl: "https://github.com/magichourhq/magic-hour-mcp"
+documentationUrl: "https://magichour.ai/mcp"
+installable: true
+installCommand: 'claude mcp add --scope user --transport http magic-hour https://mcp.magichour.ai/ --header "Authorization: Bearer YOUR_MAGIC_HOUR_API_KEY"'
+usageSnippet: >-
+  Add the hosted Streamable HTTP endpoint with a Magic Hour API key, call
+  `ping`, then ask the client to generate or edit an approved video, image, or
+  audio asset.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "magic-hour": {
+        "url": "https://mcp.magichour.ai/",
+        "headers": {
+          "Authorization": "Bearer YOUR_MAGIC_HOUR_API_KEY"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  claude mcp add --scope user --transport http magic-hour https://mcp.magichour.ai/ --header "Authorization: Bearer YOUR_MAGIC_HOUR_API_KEY"
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - A Magic Hour API key stored outside version control.
+  - Claude, Claude Code, Codex, or another client that supports remote Streamable HTTP MCP servers and bearer authentication.
+  - Review of Magic Hour pricing, account credits, acceptable-use terms, and model-specific generation rules before enabling paid creation tools.
+  - Rights or permission to upload, transform, or publish every source image, video, audio clip, face, and voice used in a workflow.
+safetyNotes:
+  - Generation and editing tools call the Magic Hour API and can consume account credits; test with small jobs and do not retry paid generation calls blindly.
+  - Media tools can produce realistic face, voice, and video transformations, so keep human approval in front of impersonation-sensitive work, customer communications, and public publishing.
+  - Creation calls are asynchronous and return project IDs before results are ready; use the matching wait tool instead of starting duplicate paid jobs.
+  - Upload and generation tools send network requests and can create durable projects and media assets in the connected Magic Hour account.
+privacyNotes:
+  - Prompts, uploaded source media, project metadata, and generated outputs are processed by Magic Hour and may also appear in the MCP client's conversation history or logs.
+  - Treat the Magic Hour API key as a paid-service credential; do not paste it into shared repositories, screenshots, or workspace-level configuration files.
+  - Returned download links are signed URLs that may temporarily grant access to generated media; preserve the complete URL and avoid sharing it unnecessarily.
+  - Uploaded faces, voices, personal photos, and customer media may contain biometric, confidential, copyrighted, or otherwise sensitive data.
+disclosure: >-
+  Official first-party MCP server maintained by Magic Hour. The hosted service
+  requires a Magic Hour account and API key, and generation may consume paid
+  credits. The public server repository currently declares no open-source
+  license.
+sourceUrls:
+  - "https://github.com/magichourhq/magic-hour-mcp"
+  - "https://raw.githubusercontent.com/magichourhq/magic-hour-mcp/main/README.md"
+  - "https://raw.githubusercontent.com/magichourhq/magic-hour-mcp/main/user.md"
+  - "https://mcp.magichour.ai/.well-known/mcp/server-card.json"
+  - "https://magichour.ai/mcp"
+  - "https://magichour.ai/pricing"
+tags:
+  - magic-hour
+  - video-generation
+  - image-generation
+  - audio-generation
+  - media-editing
+keywords:
+  - Magic Hour MCP
+  - Magic Hour MCP Server
+  - video generation MCP
+  - image generation MCP
+  - audio generation MCP
+  - media editing MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Magic Hour MCP Server is the official hosted integration for using Magic Hour's
+video, image, and audio generation APIs from Claude and other MCP-compatible
+clients. It exposes a remote Streamable HTTP endpoint, so users do not need to
+install or run the server repository locally.
+
+Use it when an assistant needs supervised access to create or edit media while
+keeping API-key authentication, credit usage, source-file rights, and final
+publication decisions visible to the operator.
+
+## Features
+
+- Generate images and videos from text prompts or supplied media.
+- Edit images and faces, remove backgrounds, and create face or head swaps.
+- Create image-to-video and talking-photo outputs.
+- Generate speech and other audio results supported by the Magic Hour API.
+- Upload image, video, and audio inputs through presigned upload URLs.
+- Poll asynchronous projects with dedicated wait tools and retrieve completed
+  media from signed download URLs.
+- Connect through Claude's custom-connector flow, Claude Code headers, or a
+  bearer-token environment variable in Codex.
+
+## Installation
+
+Create a Magic Hour API key, then add the hosted server to Claude Code:
+
+```bash
+claude mcp add --scope user --transport http magic-hour https://mcp.magichour.ai/ --header "Authorization: Bearer YOUR_MAGIC_HOUR_API_KEY"
+```
+
+For Claude's connector UI, add `https://mcp.magichour.ai/` as a custom
+connector, set the OAuth Client ID to `magic-hour-mcp`, and enter the Magic Hour
+API key on the authorization page.
+
+Codex users can keep the key in an environment variable:
+
+```bash
+export MAGIC_HOUR_API_KEY="YOUR_MAGIC_HOUR_API_KEY"
+codex mcp add magic-hour --url https://mcp.magichour.ai/ --bearer-token-env-var MAGIC_HOUR_API_KEY
+```
+
+Start a fresh client session and ask it to call the Magic Hour `ping` tool. The
+expected response is `pong`.
+
+## Use Cases
+
+- Turn an approved product image into a short marketing video.
+- Generate concept images or video storyboards from a creative brief.
+- Remove a background or make a supervised edit to an uploaded image.
+- Create a talking-photo video from an approved portrait and audio clip.
+- Generate narration or speech for an internal prototype.
+- Build an agent workflow that starts a media project, waits for completion,
+  and returns the exact signed download URL.
+
+## Safety and Privacy
+
+Magic Hour generation can consume account credits and can create realistic
+media. Keep human approval in front of face or voice transformations, external
+communications, customer-media processing, and publication. Confirm that the
+operator has the necessary rights and consent for every uploaded or generated
+asset.
+
+Store the API key outside version control. Prompts, source media, project data,
+and outputs can flow through Magic Hour and the MCP client's logs or chat
+history. Treat signed result URLs as temporary access credentials and share
+them only with intended recipients.
+
+## Source Review
+
+- Magic Hour MCP repository - https://github.com/magichourhq/magic-hour-mcp
+- Hosted-server guide - https://raw.githubusercontent.com/magichourhq/magic-hour-mcp/main/user.md
+- MCP documentation - https://magichour.ai/mcp
+- Hosted endpoint - https://mcp.magichour.ai/
+- Pricing - https://magichour.ai/pricing
+
+These first-party sources were reviewed on **2026-08-30**. Check the live
+documentation, pricing, and repository metadata again before production use.
