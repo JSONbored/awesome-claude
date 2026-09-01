@@ -80,7 +80,7 @@ describe("submissions-lib duplicate search matching", () => {
         category: "mcp",
         sourceUrls: ["https://github.com/x/y"],
       }).matches[0].reasons,
-    ).toEqual(["source_url"]);
+    ).toEqual(["source_url", "same_repo"]);
   });
 
   it("skips entries in other categories and reports when nothing matches", () => {

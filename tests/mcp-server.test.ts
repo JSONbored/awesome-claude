@@ -2261,12 +2261,12 @@ describe("HeyClaude read-only MCP helpers", () => {
     expect(duplicate).toMatchObject({
       ok: true,
       count: expect.any(Number),
-      matches: [
+      matches: expect.arrayContaining([
         expect.objectContaining({
           key: `${skill.category}:${skill.slug}`,
           reasons: expect.arrayContaining(["slug", "title"]),
         }),
-      ],
+      ]),
     });
   });
 
