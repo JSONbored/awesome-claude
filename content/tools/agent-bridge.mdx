@@ -1,0 +1,114 @@
+---
+title: AgentBridge
+slug: agent-bridge
+category: tools
+description: >-
+  Local bidirectional bridge that keeps Claude Code and Codex live as peers
+  in one working session, with mid-turn injection, task splits, and optional
+  quota-window handoff.
+cardDescription: >-
+  Local bridge keeping Claude Code and Codex live as peers in one session.
+seoTitle: AgentBridge - Claude Code and Codex live peer bridge
+seoDescription: >-
+  AgentBridge is a free, MIT-licensed local bridge for Claude Code and Codex
+  so both agents stay live as peers, inject mid-turn, split work, and hand
+  off at quota limits.
+author: Rayson Meng
+dateAdded: "2026-09-02"
+submittedBy: raysonmeng
+submittedByUrl: "https://github.com/raysonmeng"
+submittedAt: "2026-09-02"
+websiteUrl: "https://raysonmeng.github.io/agent-bridge/"
+documentationUrl: "https://github.com/raysonmeng/agent-bridge#readme"
+repoUrl: "https://github.com/raysonmeng/agent-bridge"
+pricingModel: open-source
+disclosure: claimed
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Linux
+sourceUrls:
+  - "https://github.com/raysonmeng/agent-bridge"
+  - "https://raysonmeng.github.io/agent-bridge/"
+  - "https://www.npmjs.com/package/@raysonmeng/agentbridge"
+installable: true
+installCommand: "npm install -g @raysonmeng/agentbridge"
+usageSnippet: >-
+  Install Bun, then the CLI. Run abg init once per project, start Claude
+  Code with abg claude, and start Codex in another terminal with abg
+  codex. Both sessions stay live as peers on a local daemon.
+copySnippet: |-
+  npm install -g @raysonmeng/agentbridge
+  abg init
+  abg claude
+  abg codex
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "Bun runtime (Node.js alone is not enough)."
+  - "Existing Claude Code and Codex CLIs with the user's own logins."
+  - "macOS or Linux. Windows is not officially supported."
+safetyNotes:
+  - "By default abg claude launches with --dangerously-skip-permissions and abg codex with --yolo, so both agents can run commands and edit files without prompting. Use --safe or AGENTBRIDGE_SAFE=1 for normal permission prompts."
+  - "The local daemon allocates ports per project pair (from 4500 in +10 strides) and reconnects if restarted."
+  - "Only use this in a workspace you trust. AgentBridge is a local dev tool, not a hardened sandbox."
+privacyNotes:
+  - "AgentBridge has no hosted service and no AgentBridge account. It relays messages between Claude Code and Codex on the local machine."
+  - "The bridge forwards agent conclusions, not the other agent's full transcript or tool-call noise."
+  - "Quota relay, if enabled via the companion agent-quota-guard, polls local account-level 5h and weekly windows and writes .agent/checkpoint.md on disk."
+tags:
+  - claude-code
+  - codex
+  - cli
+  - orchestration
+  - local
+  - open-source
+  - macos
+  - linux
+keywords:
+  - AgentBridge
+  - Claude Code Codex bridge
+  - bidirectional agent session
+  - mid-turn injection
+  - quota relay
+  - local Claude Codex collaboration
+---
+
+## Overview
+
+AgentBridge is a local CLI bridge for developers who already run Claude Code
+and Codex side by side. Both agents stay live as peers in one working
+session. Either side can inject a message while the other is still working.
+They can propose a task split themselves. With the optional companion
+agent-quota-guard, a subscription window that hits its limit hands the task
+off at a turn boundary instead of dying mid-run.
+
+This is not a one-shot delegation plugin such as openai/codex-plugin-cc.
+That pattern is host-calls-Codex-gets-one-answer. AgentBridge keeps both
+native CLIs resident and bidirectional. MIT licensed. macOS and Linux.
+Windows is not officially supported.
+
+## Install
+
+Requires Bun. Node.js alone will not run the daemon.
+
+    npm install -g @raysonmeng/agentbridge
+    abg init
+    abg claude
+    abg codex
+
+abg is an alias for agentbridge. Run abg init once per project.
+
+## Core Capabilities
+
+- Mid-turn injection: a review comment can land while the other agent is still in its turn.
+- Task split: either side can propose who does what before writing code.
+- Quota relay (opt-in via agent-quota-guard): checkpoint at a turn boundary, then resume when the paused side's window refreshes.
+- Multi-pair: one Claude+Codex pair per project directory, ports allocated per pair.
+- Local only: no AgentBridge account, no hosted runtime; existing Claude Code and Codex logins stay on the machine.
+
+## Safety and Privacy
+
+Default launches skip permission prompts so an unattended pair does not stop on every tool call. Pass --safe when you want the normal prompts. The project states that only agentMessage conclusions cross the bridge, not full transcripts or tool-call noise.
+
+## Disclosure
+
+Submitted by the AgentBridge maintainer. No paid placement or affiliate link.
