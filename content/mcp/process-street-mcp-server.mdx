@@ -1,0 +1,154 @@
+---
+title: Process Street MCP Server
+slug: process-street-mcp-server
+category: mcp
+description: >-
+  Official hosted MCP server for connecting Claude to Process Street workflows,
+  tasks, workflow runs, data sets, users, and operational records.
+cardDescription: >-
+  Connect Claude to Process Street workflows, tasks, runs, data sets, and
+  operational records through a hosted remote MCP server.
+seoTitle: Process Street MCP Server for Claude
+seoDescription: >-
+  Configure the official Process Street MCP Server with Claude to work with
+  workflows, tasks, workflow runs, data sets, users, and operational records.
+author: Process Street
+authorProfileUrl: "https://www.process.st/"
+submittedBy: vpatankar
+submittedByUrl: "https://github.com/vpatankar"
+dateAdded: "2026-08-31"
+brandName: Process Street
+brandDomain: process.st
+websiteUrl: "https://www.process.st/"
+repoUrl: "https://github.com/process-street/process-street-mcp"
+documentationUrl: "https://www.process.st/help/docs/mcp-server/"
+installable: true
+installCommand: "claude mcp add --transport http process-street https://mcp.process.st/"
+usageSnippet: "Ask Claude to list an approved Process Street workflow or task, then review any proposed change before allowing a write action."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "process-street": {
+        "transport": "http",
+        "url": "https://mcp.process.st/"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "process-street": {
+        "url": "https://mcp.process.st/",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - A Process Street account with access to the intended organization and records.
+  - An MCP client that supports remote Streamable HTTP servers and interactive authorization.
+  - Browser access to complete the Process Street authorization flow.
+  - Approval for the workflows, tasks, runs, data sets, and records the assistant may access or change.
+safetyNotes:
+  - Available tools can read or change Process Street content according to the connected user's permissions and the tools exposed by the server.
+  - Review proposed workflow, task, run, and data changes before approving actions that affect live operational work.
+  - Start with the narrowest organization and record access that supports the intended workflow.
+  - Verify important outputs in Process Street before relying on them for customer, compliance, financial, HR, or production decisions.
+privacyNotes:
+  - Tool calls can expose authorized Process Street workflow content, task details, run data, user information, data sets, and operational records to the MCP client and model provider.
+  - Prompts, tool arguments, returned records, client logs, screenshots, and model transcripts may persist outside Process Street according to the connected client's policies.
+  - Do not place API keys, access tokens, passwords, or other credentials in public configuration, prompts, issue comments, or pull requests.
+  - Connect only organizations and records approved for the selected MCP client and model workflow.
+sourceUrls:
+  - "https://github.com/process-street/process-street-mcp"
+  - "https://github.com/process-street/process-street-mcp/blob/main/README.md"
+  - "https://github.com/process-street/process-street-mcp/blob/main/server.json"
+  - "https://www.process.st/help/docs/mcp-server/"
+tags:
+  - process-street
+  - workflows
+  - tasks
+  - workflow-automation
+  - remote-mcp
+keywords:
+  - Process Street MCP Server
+  - Process Street Claude MCP
+  - workflow automation MCP
+  - task management MCP
+  - process-street-mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Process Street MCP Server is the official hosted Model Context Protocol server
+for connecting Claude and other compatible clients to Process Street. It lets
+authorized users work with workflows, tasks, workflow runs, users, data sets,
+and operational records through a remote Streamable HTTP connection.
+
+The server is published in the Official MCP Registry as
+`io.github.process-street/process-street-mcp`, version `1.0.0`. The public
+GitHub repository provides connection metadata and documentation links. The
+hosted implementation remains operated by Process Street at
+`https://mcp.process.st/`.
+
+## Installation
+
+Add the hosted server to Claude Code:
+
+```bash
+claude mcp add --transport http process-street https://mcp.process.st/
+```
+
+For clients that accept MCP JSON configuration:
+
+```json
+{
+  "mcpServers": {
+    "process-street": {
+      "transport": "http",
+      "url": "https://mcp.process.st/"
+    }
+  }
+}
+```
+
+Connect the server, complete interactive authorization in the browser, and
+grant access only to the intended Process Street organization and records.
+
+## Use Cases
+
+- Find workflows, tasks, runs, users, data sets, and operational records.
+- Review current task or workflow status from an MCP client.
+- Draft or carry out approved workflow and task updates.
+- Use Process Street records as context for operational planning and reporting.
+- Coordinate repeatable work while preserving Process Street permissions.
+
+## Safety and Privacy
+
+Process Street access follows the connected user's permissions. Treat any tool
+that changes workflows, tasks, runs, or data as a live operational action.
+Review the target organization, record, and proposed mutation before approval,
+then verify important changes in Process Street.
+
+Authorized Process Street data can appear in MCP requests, responses, client
+logs, screenshots, and model transcripts. Use only approved records and an
+approved MCP client. Never publish credentials or put them in shared config,
+prompts, issues, or pull requests.
+
+## Source Review and Duplicate Check
+
+The official Process Street documentation, public repository README,
+`server.json`, hosted endpoint metadata, and Official MCP Registry record were
+reviewed on **2026-08-31**. No matching Process Street entry, source URL, or slug
+was found in `content/mcp`, and no open or closed Process Street submission was
+found in the repository's GitHub issues and pull requests.
+
+## Sources
+
+- https://github.com/process-street/process-street-mcp
+- https://github.com/process-street/process-street-mcp/blob/main/README.md
+- https://github.com/process-street/process-street-mcp/blob/main/server.json
+- https://www.process.st/help/docs/mcp-server/
