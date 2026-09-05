@@ -1,0 +1,290 @@
+---
+title: "swissco: Swiss Company Data from the Shell"
+slug: swissco-swiss-company-data
+category: skills
+description: "Query Swiss company data from the shell: look up a company by UID, search 790,000 companies by name or statutory purpose, list SHAB gazette publications, trace registry events, watch companies for change, browse simap procurement, check FINMA-authorised banks, resolve a UID to an LEI and group parent at GLEIF, or find federally funded research a company took part in."
+cardDescription: "Ten commands over six Swiss open-data sources: Zefix, SHAB, simap, FINMA, GLEIF and ARAMIS. No API key, no signup."
+seoTitle: "swissco Skill: Swiss Company Data CLI for Claude Code"
+seoDescription: "Teach Claude Code to query Swiss commercial-register, gazette, procurement, banking, LEI and research data with the swissco CLI."
+author: prospex-ch
+authorProfileUrl: "https://github.com/prospex-ch"
+dateAdded: "2026-09-05"
+documentationUrl: "https://swissco.readthedocs.io"
+repoUrl: "https://github.com/prospex-ch/swissco-cli"
+installable: true
+installCommand: "npx skills add prospex-ch/swissco-cli"
+usageSnippet: "swissco search \"blockchain\" --canton ZG --format json"
+copySnippet: |
+  # swissco
+
+  Query Swiss company data from the shell with `swissco`: look up a company by
+  UID, search 790,000 companies by name or statutory purpose, list commercial
+  register publications from the SHAB gazette, trace registry events, watch
+  companies for change, browse simap procurement, check FINMA's authorised
+  banks, resolve a UID to an LEI and its group parent at GLEIF, or find
+  federally funded research a company took part in.
+
+  ## Install
+
+  ```bash
+  uvx swissco --help          # run without installing
+  pip install swissco         # or install it
+  npx skills add prospex-ch/swissco-cli   # install the agent skill
+  ```
+
+  ## The ten commands
+
+  | Command | Answers |
+  |---|---|
+  | `swissco lookup <uid>` | Everything the register publishes about one company |
+  | `swissco search <term>` | Which companies match a name or a statutory purpose |
+  | `swissco publications` | What the gazette published in a date range |
+  | `swissco events <uid>` | One company's registry history |
+  | `swissco watch <file>` | What changed since the last run |
+  | `swissco tenders` | Which public tenders and awards were published |
+  | `swissco vendor <uid>` | Whether a company is in simap's vendor directory |
+  | `swissco finma` | Whether a company is a FINMA-authorised bank or securities firm |
+  | `swissco lei <uid>` | A company's LEI, and the group that consolidates it |
+  | `swissco research <uid\|text>` | Federally funded research a company took part in |
+
+  All ten take `--format table|json|csv`, `--limit`, `--quiet`.
+  Always pass `--format json` when you intend to parse the output.
+skillType: general
+skillLevel: advanced
+verificationStatus: draft
+verifiedAt: "2026-09-05"
+retrievalSources:
+  - "https://swissco.readthedocs.io"
+  - "https://github.com/prospex-ch/swissco-cli"
+  - "https://ld.admin.ch/"
+  - "https://amtsblattportal.ch"
+  - "https://www.simap.ch"
+  - "https://www.finma.ch"
+  - "https://www.gleif.org"
+  - "https://www.aramis.admin.ch"
+testedPlatforms:
+  - Claude
+  - Codex
+  - OpenClaw
+  - Cursor
+  - Windsurf
+  - Gemini
+prerequisites:
+  - "Python 3.14+ (or uvx to run without installing)"
+  - "Outbound network access to lindas.admin.ch, amtsblattportal.ch, simap.ch, finma.ch, api.gleif.org, aramis.admin.ch"
+safetyNotes:
+  - "This skill runs the swissco CLI which makes outbound HTTPS requests to six Swiss federal open-data services (Zefix/LINDAS, SHAB/Amtsblattportal, simap, FINMA, GLEIF, ARAMIS). It reads data only and does not write to any remote service."
+  - "The watch command writes a local state file to track changes between runs. The finma command caches downloaded files locally for one week."
+  - "Rate-limited to one request per 0.5 seconds (1 second for FINMA). Wide date ranges on publications or events can issue hundreds of requests over several minutes."
+privacyNotes:
+  - "All queries hit public government APIs; no user credentials are sent unless you explicitly pass Zefix PublicREST credentials via --user/--password or ZEFIX_USER/ZEFIX_PASSWORD environment variables."
+  - "No telemetry. The CLI sends a User-Agent header identifying the swissco project but nothing about the user."
+  - "Queried UIDs and search terms are sent to the respective government APIs as query parameters."
+tags:
+  - swiss
+  - commercial-register
+  - zefix
+  - shab
+  - cli
+  - open-data
+  - procurement
+  - finma
+  - lei
+  - gleif
+  - aramis
+  - research
+keywords:
+  - swiss company search
+  - zefix cli
+  - shab gazette
+  - swiss commercial register
+  - handelsregister
+  - simap procurement
+  - finma bank check
+  - lei lookup
+  - gleif parent company
+  - aramis research
+  - swissco
+readingTime: 8
+difficultyScore: 75
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## What This Skill Enables
+
+Claude can query Swiss company data across six federal open-data sources using the `swissco` CLI. With ten commands, the agent can look up any company by UID, search the full commercial register by name or statutory purpose, list gazette publications, trace a company's registry history, watch a list of companies for change, browse public tenders, check FINMA bank licences, resolve a company to its LEI and corporate group via GLEIF, or find federally funded research projects.
+
+No API key, no signup, no config file. Every command works anonymously through public APIs.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: native skill usage via `SKILL.md` in `.claude/skills/swissco/` or `.agents/skills/swissco/`.
+- **Codex/OpenAI workflows**: compatible with Agent Skills-style `SKILL.md` content as reusable workflow instructions.
+
+### Manual Adaptation
+
+- **Gemini CLI**: native skill usage via `.gemini/skills/swissco/SKILL.md` or `.agents/skills/swissco/SKILL.md` where supported.
+- **Cursor**: use the generated `.cursor/rules/*.mdc` adapter for project rules.
+- **OpenClaw and similar agents**: use the same skill content as a reusable prompt/workflow file when native skill import is unavailable.
+
+## Prerequisites
+
+**Required:**
+
+- Python 3.14+ or `uvx` available on PATH
+- Outbound HTTPS access to Swiss federal APIs
+
+**Optional:**
+
+- Zefix PublicREST credentials (from `zefix@bj.admin.ch`) to extend `lookup` with capital, status, and corporate relations, and to enable name-prefix search via `search --via rest`
+
+**What Claude handles:**
+
+- Running the right `swissco` command for the question
+- Choosing the narrowest date range and filters to avoid slow queries
+- Parsing JSON output and presenting results clearly
+- Understanding the caveats that prevent wrong answers (e.g. GLEIF parents are accounting consolidation, not ownership)
+
+## How to Use This Skill
+
+### Company Lookup
+
+**Prompt:** "What does the Swiss register say about CHE-444.420.929?"
+
+Claude will run `swissco lookup CHE-444.420.929 --format json` and report the company's legal name, form, address, canton, and statutory purpose.
+
+### Purpose-Based Search
+
+**Prompt:** "Which companies in Zug mention blockchain in their purpose?"
+
+Claude will run `swissco search "blockchain" --canton ZG --format json` and list matching companies with their UIDs and purposes.
+
+### Gazette Publications
+
+**Prompt:** "Show me new incorporations in Zurich last week."
+
+Claude will run `swissco publications --canton ZH --since <date> --until <date> --sub-rubric HR01 --format json` to list recent registrations.
+
+### Company History
+
+**Prompt:** "Has anything changed at CHE-105.943.826 since June?"
+
+Claude will run `swissco events CHE-105.943.826 --since 2026-06-01 --format json` to trace the company's recent registry events.
+
+### Watch for Changes
+
+**Prompt:** "Watch these five companies and tell me if anything changes."
+
+Claude will create a UID file, run `swissco watch uids.txt --state ~/.swissco/ --format json`, and report any changes in identity, address, or purpose fields.
+
+### Public Tenders
+
+**Prompt:** "What public tenders were published in Vaud and Geneva this month?"
+
+Claude will run `swissco tenders --canton VD --canton GE --since 2026-09-01 --format json` to list procurement projects.
+
+### Bank Licence Check
+
+**Prompt:** "Is Raiffeisen a FINMA-authorised bank?"
+
+Claude will run `swissco finma "Raiffeisen" --format json` and report the licence type and supervisory category.
+
+### Corporate Group via LEI
+
+**Prompt:** "Who is the parent company of UBS Switzerland AG?"
+
+Claude will run `swissco lei CHE-412.669.376 --format json` and report the direct and ultimate parent from GLEIF, noting that this reflects accounting consolidation, not necessarily ownership.
+
+### Research Funding
+
+**Prompt:** "Has this company received any federal research funding?"
+
+Claude will run `swissco research <uid> --format json` and report matching ARAMIS projects, noting the coverage limitations of the ARAMIS index.
+
+## Tips for Best Results
+
+1. **Use UIDs when you have them**: A UID gives an exact match; free-text search returns candidates that need filtering.
+2. **Narrow date ranges**: Wide ranges on `publications` or `events` can issue hundreds of requests. Start with the narrowest range that answers the question.
+3. **Always use `--format json`**: The table format truncates long cells at 60 characters. JSON preserves the full data.
+4. **Understand the caveats**: The skill teaches eight important caveats about data interpretation (vanished UIDs, GLEIF parents, FINMA scope, ARAMIS coverage, simap award matching). Let Claude explain them rather than presenting raw data as definitive.
+5. **Optional credentials extend two commands**: Zefix PublicREST credentials add capital, status, and deletion date to `lookup` and enable name-prefix search. Everything else works anonymously.
+
+## Common Workflows
+
+### Due Diligence Profile
+
+```
+"Build a profile of CHE-412.669.376:
+1. Look up the company details
+2. Check its registry history for the past year
+3. Find its LEI and corporate group
+4. Check if it's FINMA-authorised
+5. Look for any federal research projects"
+```
+
+### Market Scan by Purpose
+
+```
+"Find all GmbH companies in Zurich whose purpose mentions 'artificial intelligence':
+swissco search 'artificial intelligence' --canton ZH --legal-form 0107 --format json"
+```
+
+### Monitoring Setup
+
+```
+"Set up a daily watch on these companies:
+CHE-105.943.826
+CHE-412.669.376
+CHE-444.420.929
+Report any changes to identity, address, or purpose."
+```
+
+## Troubleshooting
+
+**Issue:** Command is slow
+**Solution:** Narrow the date range and add `--canton` filters. `publications` without `--type` is fast (list pages only); adding `--type` fetches each publication's body at 0.5 seconds each.
+
+**Issue:** "no company with UID CHE-... in the LINDAS dataset"
+**Solution:** The company may have left the active dataset (re-registration, correction, or lag). Run `swissco events <uid>` to check its history, or use `lookup` with PublicREST credentials for the `status` and `deletion_date` fields.
+
+**Issue:** `swissco` not found
+**Solution:** Run `uvx swissco --help` to use it without installing, or `pip install swissco` to install globally.
+
+**Issue:** Empty research results
+**Solution:** ARAMIS searches project titles, abstracts, and the free-text contractor field. Companies named only as structured participants (common for Innosuisse implementation partners) are not indexed. An empty result means "no project mentions this company by name", not "no federal research money".
+
+## Learn More
+
+- [swissco Documentation](https://swissco.readthedocs.io) - Full CLI reference
+- [swissco Repository](https://github.com/prospex-ch/swissco-cli) - Source code and agent skill
+- [zefix-parser](https://zefix-parser.readthedocs.io) - Underlying Zefix/LINDAS library
+- [shab-parser](https://shab-parser.readthedocs.io) - Underlying SHAB gazette library
+- [Agent Skills Specification](https://agentskills.io/specification) - Cross-agent skill format
+
+## Features
+
+- Ten commands covering six Swiss open-data sources (Zefix, SHAB, simap, FINMA, GLEIF, ARAMIS)
+- Zero-config: no API key, no signup, no config file for basic usage
+- Cross-agent skill with `.agents/skills/` format supporting Claude Code, Codex, Cursor, Gemini and more
+- Structured output in table, JSON, or CSV format
+- UID validation with local check-digit verification
+- Automatic date-range splitting and pagination for large gazette queries
+- Cron-friendly watch command with exit codes for change detection
+- Built-in rate limiting respecting federal service capacity
+
+## Use Cases
+
+- Swiss company due diligence and background checks
+- Commercial-register monitoring and change detection
+- Market research by statutory purpose across cantons
+- Public procurement monitoring (tenders and awards)
+- Bank and securities firm licence verification
+- Corporate group structure analysis via LEI/GLEIF
+- Federal research funding discovery
+- Regulatory compliance checks
