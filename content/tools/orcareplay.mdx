@@ -1,0 +1,48 @@
+---
+title: OrcaReplay
+slug: orcareplay
+category: tools
+description: Records a coding-agent session at the boundary between the agent and its model provider, then replays that recording so the same run happens again with no provider call and no API key.
+cardDescription: Record a coding-agent session and replay it offline.
+seoTitle: OrcaReplay coding-agent session record and replay CLI
+seoDescription: OrcaReplay records Claude Code and other coding-agent sessions at the model-provider boundary and replays them offline, with no provider call and no API key.
+author: Continuum AI
+authorProfileUrl: "https://github.com/Continuum-AI-Corp"
+dateAdded: "2026-09-13"
+websiteUrl: "https://github.com/Continuum-AI-Corp/OrcaReplay"
+documentationUrl: "https://github.com/Continuum-AI-Corp/OrcaReplay/blob/main/docs/integrations.md"
+repoUrl: "https://github.com/Continuum-AI-Corp/OrcaReplay"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+installCommand: "npm i -g orcareplay"
+tags:
+  - record-replay
+  - claude-code
+  - cli
+  - debugging
+keywords:
+  - record claude code session
+  - replay agent run offline
+  - coding agent debugging
+  - agent regression testing
+privacyNotes:
+  - Traces are written to `.orca/` inside the project and are not uploaded; a trace contains the verbatim prompts, responses, tool arguments and file changes of the recorded session, so it is exactly as sensitive as the conversation it captured.
+  - `orca scrub` is best-effort — it matches known key shapes and high-entropy strings, and cannot know that a particular internal hostname or customer name is confidential. Review a trace before sharing or exporting it.
+safetyNotes:
+  - Replay blocks model-provider egress, not the network. The recorded tool calls still execute for real, so a step that ran `curl` or a package install runs it again. It is not a sandbox.
+  - Replay restores the recorded filesystem over the working tree unless a scratch worktree is requested, so uncommitted work is absent while a replay is running.
+---
+
+## Editorial notes
+
+OrcaReplay is for the question a coding agent cannot answer well from memory: what did the last run actually do, and can that failure be made to happen again. It launches the agent as a child process with the provider origin redirected for that process only — nothing is installed into the agent — and stores the verbatim request and response bytes along with tool calls, shell exit codes and file changes. `orca replay` then serves the recording back, so the agent re-executes its own control flow and tool dispatch while the model's answers come from the trace.
+
+The practical fit for Claude Code users is twofold. A session that went wrong becomes something a colleague or a maintainer can reproduce without your API key and without spending tokens, which turns a bug report into a runnable artifact. And the same recording runs in CI as a regression test at no cost, which is otherwise impractical for anything involving a model. It ships an MCP server and an agent skill so Claude Code can read its own past runs instead of reconstructing them.
+
+Adapters are verified hands-on for Claude Code, Codex, Cursor, goose, opencode, Kilo, Qwen Code and OpenClaw, plus framework agents through a generic OpenAI-compatible mode. Two limits are worth knowing before relying on it: a matching replay shows the recorded run reproduces, not that a fresh run would fail the same way (the model is not re-asked), and it is not an evaluation or observability platform — there are no metrics, judges or dashboards.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Submitted by a maintainer of the project; it is Apache-2.0, runs locally, and has no hosted service or paid tier.
