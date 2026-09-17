@@ -27,7 +27,7 @@ installable: true
 installCommand: >-
   claude mcp add mnemoverse -s user -e MNEMOVERSE_API_KEY=mk_live_YOUR_KEY -e
   MNEMOVERSE_API_URL=https://core.mnemoverse.com/api/v1 -- npx -y
-  @mnemoverse/mcp-memory-server@latest
+  @mnemoverse/mcp-memory-server@0.10.1
 usageSnippet: >-
   Start a new Claude session after adding the server and ask about something
   stored earlier; when a recalled memory helped or misled, say so and later
@@ -36,7 +36,7 @@ copySnippet: |-
   {
     "mnemoverse": {
       "command": "npx",
-      "args": ["-y", "@mnemoverse/mcp-memory-server@latest"],
+      "args": ["-y", "@mnemoverse/mcp-memory-server@0.10.1"],
       "env": {
         "MNEMOVERSE_API_KEY": "mk_live_YOUR_KEY",
         "MNEMOVERSE_API_URL": "https://core.mnemoverse.com/api/v1"
@@ -48,7 +48,7 @@ configSnippet: |-
     "mcpServers": {
       "mnemoverse": {
         "command": "npx",
-        "args": ["-y", "@mnemoverse/mcp-memory-server@latest"],
+        "args": ["-y", "@mnemoverse/mcp-memory-server@0.10.1"],
         "env": {
           "MNEMOVERSE_API_KEY": "mk_live_YOUR_KEY",
           "MNEMOVERSE_API_URL": "https://core.mnemoverse.com/api/v1"
@@ -71,7 +71,7 @@ prerequisites:
 safetyNotes:
   - Write tools store memories in your hosted Mnemoverse account, so review what an agent is allowed to save.
   - Feedback calls change how the same account ranks later recall.
-  - The install command runs npx with @latest, which fetches the published package at each session start.
+  - The install command runs npx with @0.10.1, which fetches the published package at each session start.
 privacyNotes:
   - Memory text and the queries used to recall it are sent to the hosted Mnemoverse API and stored there.
   - The API key is a bearer credential; keep it in user-scope config rather than a committed project file.
@@ -119,7 +119,7 @@ them is a hosted service with Free, Pro, Team, and Enterprise tiers.
 ### Claude Code
 
 1. Get an API key at https://console.mnemoverse.com
-2. Run: claude mcp add mnemoverse -s user -e MNEMOVERSE_API_KEY=mk_live_YOUR_KEY -e MNEMOVERSE_API_URL=https://core.mnemoverse.com/api/v1 -- npx -y @mnemoverse/mcp-memory-server@latest
+2. Run: claude mcp add mnemoverse -s user -e MNEMOVERSE_API_KEY=mk_live_YOUR_KEY -e MNEMOVERSE_API_URL=https://core.mnemoverse.com/api/v1 -- npx -y @mnemoverse/mcp-memory-server@0.10.1
 3. Verify installation: claude mcp list
 4. Open a new session and ask about something stored earlier
 
@@ -136,7 +136,7 @@ them is a hosted service with Free, Pro, Team, and Enterprise tiers.
   "mcpServers": {
     "mnemoverse": {
       "command": "npx",
-      "args": ["-y", "@mnemoverse/mcp-memory-server@latest"],
+      "args": ["-y", "@mnemoverse/mcp-memory-server@0.10.1"],
       "env": {
         "MNEMOVERSE_API_KEY": "mk_live_YOUR_KEY",
         "MNEMOVERSE_API_URL": "https://core.mnemoverse.com/api/v1"
