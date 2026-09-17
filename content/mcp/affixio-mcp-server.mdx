@@ -1,0 +1,103 @@
+---
+title: AffixIO Action Attestation MCP
+slug: affixio-mcp-server
+category: mcp
+description: >-
+  Local stdio MCP wrapping the affixio SDK for host-side ACTION attestation.
+  Exposes attest_action, verify_action, and gate_tool_call so agents can prove
+  and gate privileged tool use without sending PII off the host.
+cardDescription: >-
+  Local ACTION attestation MCP for Claude: attest, verify, and gate tool calls
+  on the host. PII stays local; not KYC.
+seoTitle: AffixIO MCP Server for Claude Action Attestation
+seoDescription: >-
+  Install AffixIO MCP with npx for Claude Desktop or Claude Code. Local stdio
+  tools attest_action, verify_action, and gate_tool_call keep PII on the host.
+author: AffixIO
+authorProfileUrl: "https://github.com/AffixIO"
+submittedBy: AffixIO
+submittedByUrl: "https://github.com/AffixIO"
+dateAdded: "2026-09-17"
+brandName: AffixIO
+brandDomain: affix-io.com
+repoUrl: "https://github.com/AffixIO/affixio-mcp"
+documentationUrl: "https://github.com/AffixIO/affixio-mcp#readme"
+packageUrl: "https://www.npmjs.com/package/@affixio/mcp"
+installable: true
+installCommand: "npx -y @affixio/mcp"
+usageSnippet: "Ask Claude to attest_action before a privileged tool call, then verify_action on the returned receipt, or call gate_tool_call to allow or deny with a signed decision."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "affixio": {
+        "command": "npx",
+        "args": ["-y", "@affixio/mcp"],
+        "env": {
+          "AFFIX_API_KEY": "local_operator",
+          "AFFIX_MCP_HOME": "${HOME}/.affix-mcp"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "affixio": {
+        "command": "npx",
+        "args": ["-y", "@affixio/mcp"],
+        "type": "stdio",
+        "env": {
+          "AFFIX_API_KEY": "local_operator",
+          "AFFIX_MCP_HOME": "${HOME}/.affix-mcp"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 3 minutes
+difficulty: beginner
+prerequisites:
+  - "Node.js 20+ and npx available (verify with: npx --version)"
+  - Claude Desktop or Claude Code with MCP support
+  - Optional AFFIX_API_KEY; local_operator enables offline HMAC mode
+tags:
+  - security
+  - attestation
+  - agent-trust
+  - local
+  - gating
+keywords:
+  - affixio mcp
+  - action attestation mcp
+  - tool gating mcp
+  - local stdio mcp
+  - agent trust mcp
+safetyNotes:
+  - Runs locally over stdio; it can attest and gate tool calls according to configured policy.
+  - Default offline mode uses a local licence key string; treat AFFIX_API_KEY like any other secret if you replace local_operator.
+privacyNotes:
+  - Designed so PII stays on the host; tool arguments are hashed rather than stored raw.
+  - Not a KYC or identity-document product; ACTION attestation only.
+sourceUrls:
+  - "https://github.com/AffixIO/affixio-mcp"
+  - "https://www.npmjs.com/package/@affixio/mcp"
+  - "https://github.com/AffixIO/affixio-mcp/blob/main/README.md"
+---
+
+## Content
+
+AffixIO MCP is a local stdio Model Context Protocol server that wraps the
+`affixio` SDK. It gives Claude three tools for host-side ACTION attestation:
+
+- `attest_action` — create a signed yes/no record that an action happened on the host
+- `verify_action` — verify an attestation or receipt
+- `gate_tool_call` — allow or deny a privileged tool call with a signed decision
+
+Install with `npx -y @affixio/mcp`. No remote MCP endpoint is required. PII is
+intended to stay on the host; this is not a KYC flow.
+
+## Verification
+
+1. Run `npx -y @affixio/mcp probe` and confirm the process starts.
+2. Add the `copySnippet` config to Claude Desktop or Claude Code.
+3. Ask Claude to call `attest_action` with a sample action string, then
+   `verify_action` on the returned attestation.
