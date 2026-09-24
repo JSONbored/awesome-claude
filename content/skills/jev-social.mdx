@@ -22,7 +22,6 @@ dateAdded: "2026-09-24"
 submittedAt: "2026-09-24"
 repoUrl: "https://github.com/socai-io/jev-social"
 documentationUrl: "https://github.com/socai-io/jev-social/tree/v0.1.5/skills/jev-social"
-websiteUrl: "https://socai-io.github.io/jev-social/"
 downloadUrl: "https://github.com/socai-io/jev-social/archive/refs/tags/v0.1.5.zip"
 installable: true
 installCommand: "npx skills add socai-io/jev-social --skill jev-social"
@@ -62,7 +61,7 @@ safetyNotes:
   - "It controls the Chrome session selected by the local socai CLI. Use a dedicated or least-privilege browser profile when account or workspace boundaries matter."
   - "It does not bypass login walls, CAPTCHAs, platform challenges, or rate limits; blocked runs return partial evidence instead of attempting circumvention."
   - "TikTok media download is offered only when the research request explicitly asks for media, but it still writes a local artifact and may be subject to platform or content-owner restrictions."
-  - "Onboarding can download and install the socai CLI, but the skill tells the agent not to install software or start onboarding without user authorization."
+  - "Onboarding can download and install the socai CLI, but the skill tells the agent not to start installation or onboarding without user authorization."
 privacyNotes:
   - "The research goal, bounded action context, and summaries of captured platform evidence are sent to the configured OpenRouter Jev model during routing and action selection."
   - "The local socai CLI operates a signed-in browser session and can observe posts, profiles, comments, visible account connections, and other content available to that session."
@@ -238,7 +237,7 @@ individual artifacts when cleanup is required.
 ## License and Disclosure
 
 Jev Social is MIT-licensed. This source-backed listing was submitted by a
-project maintainer without paid placement, affiliate links, or referral
-tracking. OpenRouter model use may incur provider charges; social-platform
+project maintainer without compensation or referral parameters. OpenRouter
+model use may incur provider charges; social-platform
 access and downloaded content remain subject to the user's account access and
 applicable platform terms.
