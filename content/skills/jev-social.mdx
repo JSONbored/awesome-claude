@@ -21,8 +21,8 @@ submittedByUrl: "https://github.com/IRONICBo"
 dateAdded: "2026-09-24"
 submittedAt: "2026-09-24"
 repoUrl: "https://github.com/socai-io/jev-social"
-documentationUrl: "https://github.com/socai-io/jev-social/tree/v0.1.5/skills/jev-social"
-downloadUrl: "https://github.com/socai-io/jev-social/archive/refs/tags/v0.1.5.zip"
+documentationUrl: "https://github.com/socai-io/jev-social/tree/v0.1.10/skills/jev-social"
+downloadUrl: "https://github.com/socai-io/jev-social/archive/refs/tags/v0.1.10.zip"
 installable: true
 installCommand: "npx skills add socai-io/jev-social --skill jev-social"
 usageSnippet: >-
@@ -38,22 +38,22 @@ copySnippet: |-
 skillType: general
 skillLevel: advanced
 verificationStatus: validated
-verifiedAt: "2026-09-24"
+verifiedAt: "2026-09-28"
 retrievalSources:
   - "https://github.com/socai-io/jev-social"
-  - "https://raw.githubusercontent.com/socai-io/jev-social/51830b34906673e796754b70f8e878d166822a9b/README.md"
-  - "https://raw.githubusercontent.com/socai-io/jev-social/51830b34906673e796754b70f8e878d166822a9b/skills/jev-social/SKILL.md"
-  - "https://raw.githubusercontent.com/socai-io/jev-social/51830b34906673e796754b70f8e878d166822a9b/package.json"
-  - "https://raw.githubusercontent.com/socai-io/jev-social/51830b34906673e796754b70f8e878d166822a9b/docs/troubleshooting.md"
-  - "https://raw.githubusercontent.com/socai-io/jev-social/51830b34906673e796754b70f8e878d166822a9b/docs/example-report.md"
-  - "https://raw.githubusercontent.com/socai-io/jev-social/51830b34906673e796754b70f8e878d166822a9b/docs/tiktok-evidence.md"
-  - "https://github.com/socai-io/jev-social/releases/tag/v0.1.5"
+  - "https://raw.githubusercontent.com/socai-io/jev-social/0ea7be9d2ad4e19d1ae629d9b01bb670a90546b8/README.md"
+  - "https://raw.githubusercontent.com/socai-io/jev-social/0ea7be9d2ad4e19d1ae629d9b01bb670a90546b8/skills/jev-social/SKILL.md"
+  - "https://raw.githubusercontent.com/socai-io/jev-social/0ea7be9d2ad4e19d1ae629d9b01bb670a90546b8/package.json"
+  - "https://raw.githubusercontent.com/socai-io/jev-social/0ea7be9d2ad4e19d1ae629d9b01bb670a90546b8/docs/troubleshooting.md"
+  - "https://raw.githubusercontent.com/socai-io/jev-social/0ea7be9d2ad4e19d1ae629d9b01bb670a90546b8/docs/example-report.md"
+  - "https://raw.githubusercontent.com/socai-io/jev-social/0ea7be9d2ad4e19d1ae629d9b01bb670a90546b8/docs/tiktok-evidence.md"
+  - "https://github.com/socai-io/jev-social/releases/tag/v0.1.10"
 testedPlatforms:
   - Claude Code
   - Codex
 prerequisites:
   - "Node.js 20 or newer."
-  - "A user-provided OpenRouter API key with access to a Jev model; model calls may incur provider charges."
+  - "A configured decision provider: either a user-provided OpenRouter API key with Jev access or a user-started TypeSafe-compatible loopback endpoint; provider calls may incur charges."
   - "A locally installed socai CLI that reports support for the requested platform."
   - "A signed-in local Chrome session when Instagram, TikTok, or LinkedIn requires authentication."
 safetyNotes:
@@ -63,7 +63,8 @@ safetyNotes:
   - "TikTok media download is offered only when the research request explicitly asks for media, but it still writes a local artifact and may be subject to platform or content-owner restrictions."
   - "Onboarding can download and install the socai CLI, but the skill tells the agent not to start installation or onboarding without user authorization."
 privacyNotes:
-  - "The research goal, bounded action context, and summaries of captured platform evidence are sent to the configured OpenRouter Jev model during routing and action selection."
+  - "The research goal, bounded action context, and summaries of captured platform evidence are sent to the configured decision provider during routing and action selection; by default this is OpenRouter, while an explicitly configured loopback provider keeps decision traffic local."
+  - "By default, a separate bounded evidence payload is sent to an OpenRouter report model after collection; set OPENROUTER_REPORT_MODEL=off to keep report generation deterministic."
   - "The local socai CLI operates a signed-in browser session and can observe posts, profiles, comments, visible account connections, and other content available to that session."
   - "Jev Social persists sanitized run checkpoints under its configured local home; socai separately stores command outputs and downloaded media in its configured runs directory."
   - "Reports and artifacts can retain author names, post text, comments, profile details, and direct URLs; review and redact them before sharing."
@@ -110,8 +111,8 @@ from concrete profiles or posts captured earlier in the run.
 
 ## Knowledge Freshness
 
-This entry was verified against Jev Social **v0.1.5** at commit
-`51830b34906673e796754b70f8e878d166822a9b` on **2026-09-24**. Platform pages,
+This entry was verified against Jev Social **v0.1.10** at commit
+`0ea7be9d2ad4e19d1ae629d9b01bb670a90546b8` on **2026-09-28**. Platform pages,
 login gates, socai commands, Jev model availability, and third-party CLI
 installers can change. Re-run the skill's readiness check and prefer current
 upstream documentation when live behavior differs from this entry.
@@ -120,7 +121,7 @@ upstream documentation when live behavior differs from this entry.
 
 The review covered the pinned README, `SKILL.md`, package manifest,
 troubleshooting and retention guidance, the recorded Instagram example report,
-the TikTok evidence record, and release `v0.1.5`. The pinned source declares an
+the TikTok evidence record, and release `v0.1.10`. The pinned source declares an
 MIT license and Node.js 20 minimum.
 
 The cross-agent install command was verified to copy the public `jev-social`
@@ -136,7 +137,8 @@ npx skills add socai-io/jev-social --skill jev-social
 ```
 
 Before starting research, the skill runs the pinned CLI readiness check. It
-requires a configured Jev key, a local socai executable, and platform support
+requires a configured decision provider, a local socai executable, and platform
+support
 for the requested source. It does not ask users to paste keys into chat or
 automatically approve package downloads.
 
@@ -148,7 +150,8 @@ silently trigger setup.
 
 1. State a natural-language research goal and optionally name Instagram,
    TikTok, or LinkedIn.
-2. Check the local Jev key, socai CLI availability, and platform support.
+2. Check decision-provider readiness, socai CLI availability, and platform
+   support.
 3. Let Jev choose one bounded action such as search, read a selected post,
    inspect a profile, read comments, inspect page state, or finish.
 4. Execute only the selected operation through the local socai CLI.
@@ -177,7 +180,7 @@ posts or establish a statistically representative trend.
 ## Compatibility
 
 - **Claude Code:** install with the cross-agent Skills CLI command above. The
-  installer was verified against the public v0.1.5 source on 2026-09-24.
+  installer was verified against the public v0.1.10 source on 2026-09-28.
 - **Codex:** the upstream README documents `gh skill install` for the same
   released skill, and the included metadata provides a focused default prompt.
 - **Runtime boundary:** both hosts call the same pinned Jev Social CLI, which in
@@ -204,8 +207,9 @@ rather than fabricated completion.
   instructions for the agent.
 - Use read-only research goals. Publishing and engagement actions are outside
   the skill's declared scope.
-- Remember that the configured OpenRouter model receives research context and
-  evidence summaries as part of Jev's decisions.
+- Remember that the configured decision provider receives routing context; the
+  default OpenRouter report model separately receives bounded evidence unless
+  `OPENROUTER_REPORT_MODEL=off`.
 - Review local run checkpoints, socai artifacts, downloaded media, and exported
   reports before sharing because they can contain access-restricted content or
   personal data visible in the active browser session.
@@ -237,7 +241,7 @@ individual artifacts when cleanup is required.
 ## License and Disclosure
 
 Jev Social is MIT-licensed. This source-backed listing was submitted by a
-project maintainer without compensation or referral parameters. OpenRouter
-model use may incur provider charges; social-platform
+project maintainer without compensation or referral parameters. Configured
+provider and optional report-model use may incur charges; social-platform
 access and downloaded content remain subject to the user's account access and
 applicable platform terms.
