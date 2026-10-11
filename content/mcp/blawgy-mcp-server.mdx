@@ -1,0 +1,214 @@
+---
+title: Blawgy MCP Server for Claude
+slug: blawgy-mcp-server
+category: mcp
+description: >-
+  Run your SEO blog from Claude with the hosted Blawgy MCP server. Research keywords, read
+  Search Console traffic, manage the content plan, and write, update and publish SEO blog posts
+  to WordPress, Shopify, Webflow, Wix, Framer, Ghost and Duda over Streamable HTTP with OAuth
+  or an API key.
+cardDescription: "Hosted Blawgy MCP: keyword research, Search Console, content plan, write and publish SEO posts."
+seoTitle: "Blawgy MCP Server for Claude: Keyword Research, Content Plan and SEO Publishing via Claude Code"
+seoDescription: "Connect Claude to Blawgy with its hosted MCP server. Research keywords, read Google Search Console traffic, manage the content plan, and write, update and publish SEO blog posts to WordPress, Shopify, Webflow, Wix, Framer, Ghost and Duda with OAuth 2.1 or an API key."
+author: Blawgy
+authorProfileUrl: "https://github.com/adamgusky"
+submittedBy: adamgusky
+submittedByUrl: "https://github.com/adamgusky"
+dateAdded: "2026-10-10"
+brandName: Blawgy
+brandDomain: blawgy.com
+documentationUrl: "https://blawgy.com/help/connecting-ai-agents"
+websiteUrl: "https://blawgy.com/mcp"
+repoUrl: "https://github.com/adamgusky/blawgy-mcp"
+retrievalSources:
+  - "https://raw.githubusercontent.com/adamgusky/blawgy-mcp/main/README.md"
+  - "https://raw.githubusercontent.com/adamgusky/blawgy-mcp/main/server.json"
+  - "https://blawgy.com/mcp"
+  - "https://blawgy.com/help/connecting-ai-agents"
+  - "https://app.blawgy.com/.well-known/oauth-authorization-server"
+  - "https://code.claude.com/docs/en/mcp"
+pricingModel: subscription
+disclosure: >-
+  Blawgy is a commercial SEO blog service with paid plans and a free trial. MCP access is
+  included on every paid plan. The listing repository (README, server.json, logo) is MIT
+  licensed; the server itself runs inside Blawgy and is not open source. Submitted by the
+  maker of Blawgy.
+installable: true
+installCommand: "claude mcp add --transport http blawgy https://app.blawgy.com/mcp"
+usageSnippet: >-
+  Ask Claude to find low-difficulty keywords and add the best ones to the plan, write an article
+  and send it to WordPress as a draft, report which published posts are losing clicks and draft
+  an update for the worst one, or check whether yesterday's post is indexed yet.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "blawgy": {
+        "type": "http",
+        "url": "https://app.blawgy.com/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "blawgy": {
+        "type": "http",
+        "url": "https://app.blawgy.com/mcp",
+        "headers": { "Authorization": "Bearer ${BLAWGY_API_KEY}" }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A Blawgy account on a paid plan or free trial, with at least one connected site (WordPress, Shopify, Webflow, Wix, Framer, Ghost, Duda or a custom API)."
+  - "An MCP client that supports remote Streamable HTTP servers, such as Claude Code, Claude Desktop, Claude.ai connectors, Cursor, Gemini CLI or Codex CLI."
+  - "Either OAuth sign-in on first use (default) or an API key created under Settings, AI agents in the Blawgy dashboard and sent as `Authorization: Bearer <key>`."
+safetyNotes:
+  - "Write tools change your live content plan, articles, images, products, location pages, settings, webhooks and team. Read-only credentials never see write tools."
+  - "Destructive or publishing tools (delete, publish, revert, disconnect, cancel) require the agent to confirm with a one-line description of exactly what will happen before the call runs."
+  - "Publishing tools send articles to your connected CMS and can make content publicly visible immediately. Use draft mode or ask for a preview before publishing."
+  - "Long-running work (research, writing, scans, syncs) returns a job id and runs in the background inside Blawgy; a status tool reports progress."
+  - "Agents never get admin access. Checkout, card entry, plan changes and account deletion stay in the browser; the tools return a link for a human to open."
+  - "The same posts-per-week, credit and rate limits as the dashboard apply (120 calls a minute and 3000 a day per credential)."
+privacyNotes:
+  - "Tool arguments and results (keywords, article text, Search Console traffic and ranking data, site settings) are sent to and processed by Blawgy's hosted service at app.blawgy.com."
+  - "Credentials are scoped per site (one site, all your sites, or every approved client site for partners) and per access level (read only or read and write)."
+  - "API keys and OAuth tokens are stored as hashes; a key is shown once at creation and can be revoked at any time from Settings, AI agents, taking effect on the next call."
+  - "Every call is logged with the tool, the site, the result and the time. Argument values are not stored."
+  - "OAuth uses authorization code with PKCE S256, dynamic client registration, 1 hour access tokens and rotating refresh tokens with reuse detection. Privacy policy: https://blawgy.com/privacy."
+tags:
+  - blawgy
+  - seo
+  - blogging
+  - content-marketing
+  - keyword-research
+  - search-console
+  - wordpress
+  - shopify
+  - webflow
+  - publishing
+keywords:
+  - blawgy mcp server
+  - blawgy mcp claude
+  - seo blog mcp claude code
+  - keyword research mcp
+  - google search console mcp
+  - wordpress publishing mcp claude
+  - shopify blog mcp
+  - ai seo content mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Blawgy MCP Server** is the hosted Model Context Protocol server for [Blawgy](https://blawgy.com),
+an SEO blog service that researches keywords, writes articles with images and internal links, and
+publishes them to WordPress, Shopify, Webflow, Wix, Framer, Ghost and Duda on a schedule. The MCP
+server gives Claude everything the dashboard can do: read Google Search Console traffic, rankings
+and indexing status, run keyword research, build and reorder the content plan, write and edit
+articles, draft and approve refreshes of live posts, and manage images, products, location pages,
+guardrails, settings, webhooks and your team.
+
+The server runs at `https://app.blawgy.com/mcp` over Streamable HTTP. Authenticate with OAuth 2.1
+(PKCE and dynamic client registration) or an API key sent as a bearer token. The listing
+repository on GitHub holds the README, `server.json` and logo under MIT; the server itself is part
+of the Blawgy service and is not open source. MCP access is included on every paid plan.
+
+## Key capabilities
+
+- **Keyword research**: find keywords by difficulty and intent and add the best ones to the plan.
+- **Search Console**: read traffic, rankings and indexing status for published posts.
+- **Content plan**: add keywords, move dates, pause or resume autopilot, set posts per week, reschedule overdue entries.
+- **Articles**: write now, edit, reschedule, preview, publish CMS drafts, republish, delete.
+- **Article builder**: titles, outline, section-by-section writing, remix from URLs.
+- **Smart updates**: draft and approve refreshes of live posts that are losing clicks.
+- **Images, products and location pages**: manage the photo bank, product catalog and local pages.
+- **Settings and integrations**: guardrails, webhooks, CMS connections and team invitations.
+
+Slow work such as research, writing, scans and syncs returns a job id immediately and a status
+tool reports progress. Every site tool takes a `site` argument (the domain).
+
+## Installation
+
+### Claude Code (remote, OAuth)
+
+```bash
+claude mcp add --transport http blawgy https://app.blawgy.com/mcp
+claude mcp login blawgy
+```
+
+You can also run `/mcp` inside a session to sign in. On first use Claude Code opens a browser
+window for Blawgy OAuth, where you pick the sites and whether the connection can write.
+
+### Claude Code (remote, API key)
+
+```bash
+claude mcp add --transport http blawgy https://app.blawgy.com/mcp \
+  --header "Authorization: Bearer blk_live_..."
+```
+
+### Project `.mcp.json` (shared with your repo)
+
+```json
+{
+  "mcpServers": {
+    "blawgy": {
+      "type": "http",
+      "url": "https://app.blawgy.com/mcp",
+      "headers": { "Authorization": "Bearer ${BLAWGY_API_KEY}" }
+    }
+  }
+}
+```
+
+### Claude.ai and Claude Desktop (connector)
+
+Open Customize, then Connectors, then Add custom connector. Name it Blawgy, paste
+`https://app.blawgy.com/mcp`, press Connect and sign in with your Blawgy account. To use an API
+key instead, add `Authorization` with `Bearer <key>` under Request headers.
+
+### Other clients
+
+Gemini CLI: `gemini mcp add --transport http blawgy https://app.blawgy.com/mcp`. Clients that only
+support stdio can bridge with `npx -y mcp-remote https://app.blawgy.com/mcp`. Cursor, VS Code,
+Windsurf, Codex CLI and Cline instructions are in the listing repository README.
+
+## Example prompts
+
+- "Find low-difficulty keywords about soy candle care and add the best five to the plan."
+- "Write an article on fixing candle tunnelling and send it to WordPress as a draft."
+- "Which published posts are losing clicks? Draft an update for the worst one."
+- "Is yesterday's post indexed by Google and Bing yet? Recheck it."
+
+## Requirements
+
+- A Blawgy account on a paid plan or free trial with at least one connected site.
+- An MCP client with remote Streamable HTTP support (Claude Code, Claude Desktop, Claude.ai connectors, Cursor, Gemini CLI, Codex CLI).
+- OAuth sign-in, or an API key created under Settings, AI agents.
+
+## Security
+
+- Credentials are scoped to one site, all your sites, or (for partners) every approved client site, and are read only or read and write. Read-only credentials never see write tools.
+- Delete, publish, revert, disconnect and cancel require the agent to confirm with a one-line description of exactly what will happen.
+- Keys and tokens are stored as hashes, shown once at creation, and can be revoked at any time with effect on the next call.
+- Every call is logged with the tool, the site, the result and the time. Argument values are not stored.
+- Agents never get admin access. Billing and account deletion stay in the browser.
+- OAuth metadata is published at `https://app.blawgy.com/.well-known/oauth-authorization-server` and `https://app.blawgy.com/.well-known/oauth-protected-resource`.
+
+## Source Verification Notes
+
+Verified on **2026-10-10**:
+
+- Listing repository `adamgusky/blawgy-mcp` (MIT for the listing files) documents the hosted
+  endpoint `https://app.blawgy.com/mcp`, the OAuth and API key auth options, the Claude Code,
+  Claude.ai, ChatGPT, Cursor, VS Code, Windsurf, Gemini CLI, Codex CLI and Cline setup steps, the
+  full tool list with read, write and confirm access levels, and the security model above. It also
+  ships `server.json` for the MCP registry (`com.blawgy/blawgy`).
+- The product page `blawgy.com/mcp` and the help article `blawgy.com/help/connecting-ai-agents`
+  describe the same endpoint, plans and connection flow.
+- OAuth authorization server metadata is served live at
+  `app.blawgy.com/.well-known/oauth-authorization-server`.
+- Claude Code MCP documentation at `code.claude.com/docs/en/mcp` describes the
+  `--transport http` connection pattern used above.
