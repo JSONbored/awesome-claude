@@ -1,0 +1,168 @@
+---
+title: RestoSignals MCP Server for Claude
+slug: restosignals-mcp-server
+category: mcp
+description: >-
+  Hosted MCP server that finds US restaurants and bars before they open by
+  fusing public liquor-license, food-permit and business-filing records into
+  one scored venue.
+cardDescription: >-
+  Pull scored pre-opening restaurant and bar leads from public liquor-license,
+  permit and business-filing records over a remote MCP server.
+seoTitle: RestoSignals MCP Server for Claude
+seoDescription: >-
+  Connect Claude to the RestoSignals remote MCP server to find US restaurants
+  and bars before they open, scored from public liquor, permit and filing data.
+author: Paper and Beyond
+authorProfileUrl: "https://github.com/paperandbeyond23-gif"
+submittedBy: paperandbeyond23-gif
+submittedByUrl: "https://github.com/paperandbeyond23-gif"
+dateAdded: "2026-10-26"
+submittedAt: "2026-10-26"
+repoUrl: "https://github.com/paperandbeyond23-gif/restosignals-mcp"
+documentationUrl: "https://restosignals.com/docs/"
+websiteUrl: "https://restosignals.com"
+retrievalSources:
+  - "https://github.com/paperandbeyond23-gif/restosignals-mcp"
+  - "https://restosignals.com/docs/"
+  - "https://restosignals.com/restoapi/"
+installable: true
+installCommand: >-
+  claude mcp add --transport http restosignals https://api.restosignals.com/mcp
+  --header "x-api-key: YOUR_RESTOSIGNALS_KEY"
+usageSnippet: >-
+  Add the remote endpoint with your API key, call the free coverage tool to see
+  live states, then call new_openings with a state and min_score.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "restosignals": {
+        "type": "http",
+        "url": "https://api.restosignals.com/mcp",
+        "headers": { "x-api-key": "YOUR_RESTOSIGNALS_KEY" }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "restosignals": {
+        "type": "http",
+        "url": "https://api.restosignals.com/mcp",
+        "headers": { "x-api-key": "YOUR_RESTOSIGNALS_KEY" }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "An MCP client with streamable HTTP transport, such as Claude Code or Claude Desktop."
+  - "A RestoSignals API key; a free key with 100 lead credits is available at https://restosignals.com/signup."
+safetyNotes:
+  - "Every tools/call sends the x-api-key header to api.restosignals.com; initialize and tools/list work without a key."
+  - "new_openings and venue_signals spend lead credits on the key's account, one per returned lead; coverage and watch_area are free."
+  - "watch_area registers a webhook that POSTs matching venue data to the URL you supply; only register endpoints you control."
+  - "The tools read lead data and register webhooks; they do not touch local files or run local code."
+privacyNotes:
+  - "Queries (state, score filters, webhook URLs) are sent to RestoSignals and metered against your key."
+  - "Results contain business names and, for subscribers, owner names and contact details taken from public government filings; handle them under your own outreach rules."
+  - "Keep the API key out of committed config files and shared chat logs."
+tags:
+  - restaurants
+  - leads
+  - public-records
+  - sales
+  - remote-mcp
+keywords:
+  - restosignals mcp
+  - restaurant opening leads
+  - liquor license mcp
+  - new restaurant leads api
+readingTime: 3
+difficultyScore: 20
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+RestoSignals is a hosted MCP server (streamable HTTP at `https://api.restosignals.com/mcp`) that finds US restaurants and bars before they open. It fuses public liquor-license applications, food-service permits and new-business filings into one deduped venue with an `opening_score` (0-100). More independent signals give a higher score.
+
+It is listed in the official MCP Registry as `com.restosignals/restosignals`. Client config, an agent skill and plugin manifests are in [github.com/paperandbeyond23-gif/restosignals-mcp](https://github.com/paperandbeyond23-gif/restosignals-mcp); the server itself is hosted.
+
+## Features
+
+- `coverage` (free): live states with venue and hot-lead counts.
+- `new_openings`: scored upcoming venues for a state, filtered by `min_score` and `limit`.
+- `venue_signals`: the raw liquor, permit and filing rows fused into one venue.
+- `watch_area`: a webhook that fires when a new matching venue appears.
+- Coverage: New York, Texas, Illinois and California deepest; Oregon, Colorado and Washington lighter.
+
+## Use Cases
+
+- List restaurants about to open in a state, strongest leads first.
+- Prospect new venues for POS, beverage distribution, insurance or equipment sales before they open.
+- Get alerted when a new bar files for a liquor license in a city.
+- Explain a lead's score by showing the underlying public filings.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add --transport http restosignals https://api.restosignals.com/mcp --header "x-api-key: YOUR_RESTOSIGNALS_KEY"
+claude mcp list
+```
+
+### Other MCP clients
+
+Add a remote HTTP server pointing at `https://api.restosignals.com/mcp` and send your key in the `x-api-key` header.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "restosignals": {
+      "type": "http",
+      "url": "https://api.restosignals.com/mcp",
+      "headers": { "x-api-key": "YOUR_RESTOSIGNALS_KEY" }
+    }
+  }
+}
+```
+
+## Examples
+
+```text
+Which restaurants are about to open in New York? Strongest leads first.
+```
+
+```text
+Show only Illinois venues with an opening score of 80 or more.
+```
+
+```text
+Why does this venue score 100? Show me the filings behind it.
+```
+
+## Troubleshooting
+
+### Tool calls fail with an auth error
+
+`initialize` and `tools/list` work without a key, but every `tools/call` needs the `x-api-key` header. Add it to the client config and reconnect.
+
+### A state returns no leads
+
+Call `coverage` first. Only the states it returns have data.
+
+### Contact fields are locked
+
+Free keys see whether an owner contact exists on a lead, not the contact itself.
+
+## Editorial Disclosure
+
+Submitted by the maker (Mukul Dutt, Paper and Beyond).
