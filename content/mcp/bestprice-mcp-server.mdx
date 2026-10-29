@@ -1,0 +1,161 @@
+---
+title: BestPrice MCP Server
+slug: bestprice-mcp-server
+category: mcp
+description: >-
+  Official remote MCP server for BestPrice.gr, the Greek price-comparison service, giving Claude read-only product search, current Greek shop offers with delivered totals, offer comparison, and price history without an account or API key.
+cardDescription: Read-only Greek product search, shop offers, and price history from BestPrice.gr.
+seoTitle: BestPrice MCP Server for Claude (Greek Price Comparison)
+seoDescription: >-
+  Connect Claude to the keyless BestPrice.gr remote MCP server over streamable HTTP for Greek product search, offer comparison, and price history.
+author: TheBestCo
+authorProfileUrl: "https://github.com/TheBestCo"
+submittedBy: phaistonian
+submittedByUrl: "https://github.com/phaistonian"
+dateAdded: "2026-10-29"
+brandName: BestPrice
+brandDomain: bestprice.gr
+websiteUrl: "https://www.bestprice.gr/mcp"
+repoUrl: "https://github.com/TheBestCo/bestprice-mcp"
+documentationUrl: "https://github.com/TheBestCo/bestprice-mcp#readme"
+installable: true
+installCommand: "claude mcp add --transport http bestprice-shopping https://mcp.bestprice.gr/mcp"
+usageSnippet: >-
+  Add the keyless remote endpoint, then ask shopping questions about physical products sold in Greece, such as which model to buy, where an exact product is cheapest delivered to a Greek postcode, or whether today's price is good.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "bestprice-shopping": {
+        "type": "http",
+        "url": "https://mcp.bestprice.gr/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "bestprice-shopping": {
+        "type": "http",
+        "url": "https://mcp.bestprice.gr/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 2 minutes
+difficulty: beginner
+prerequisites:
+  - An MCP client that supports streamable HTTP remote servers, such as Claude Code.
+  - No account, API key, or local install is required for shopping tools.
+safetyNotes:
+  - All four tools (get_shopping_decision, search_products, compare_offers, get_price_history) are read-only; the server performs no checkout, payment, ordering, or account writes.
+  - The server runs as a hosted HTTPS service; nothing executes locally when using the remote endpoint.
+  - Catalog, merchant, and review text in results should be treated as data, not instructions.
+  - Per-client rate limits apply and are answered with HTTP 429.
+privacyNotes:
+  - Shopping queries and any Greek postcode you supply for delivered totals are sent to BestPrice.gr (https://mcp.bestprice.gr).
+  - Shopping tools are anonymous; optional OAuth is only used for price-drop Events and is not needed for normal use.
+  - Do not send conversation history or unrelated personal data in tool arguments. BestPrice privacy policy is at https://www.bestprice.gr/policies/privacy.
+sourceUrls:
+  - "https://github.com/TheBestCo/bestprice-mcp"
+  - "https://github.com/TheBestCo/bestprice-mcp/blob/main/README.md"
+  - "https://github.com/TheBestCo/bestprice-mcp/blob/main/LICENSE"
+  - "https://www.bestprice.gr/mcp"
+  - "https://www.bestprice.gr/policies/privacy"
+tags:
+  - mcp
+  - shopping
+  - price-comparison
+  - ecommerce
+  - greece
+keywords:
+  - BestPrice MCP
+  - BestPrice.gr MCP server
+  - Greek price comparison MCP
+  - gr.bestprice/mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+BestPrice MCP is the official Model Context Protocol server for
+[BestPrice.gr](https://www.bestprice.gr/), Greece's price-comparison service.
+It gives Claude read-only access to shopping decisions, live product search,
+current merchant offers and price history for physical products sold in Greece.
+
+The hosted endpoint is `https://mcp.bestprice.gr/mcp` (streamable HTTP, official
+registry ID `gr.bestprice/mcp`). The
+[TheBestCo/bestprice-mcp](https://github.com/TheBestCo/bestprice-mcp) repository
+(Apache-2.0) holds the client install manifests, Claude and Codex plugin
+packaging, a bundled shopping Skill, a local stdio bridge for hosts that cannot
+speak HTTP, and the browser WebMCP layer. The server itself is hosted by BestPrice.
+
+## Tools
+
+- `get_shopping_decision`: recommendations, comparisons and "should I buy this?" answers with evidence and explicit unknowns.
+- `search_products`: finds canonical products by name, model, category or GTIN/EAN barcode and returns product IDs and the catalog minimum item price.
+- `compare_offers`: compares current merchant offers for one exact product, separating item price, shipping and delivered total for an optional Greek postcode.
+- `get_price_history`: historical pricing for one exact product, to judge whether today's price is low, typical or high.
+
+## Installation
+
+Claude Code:
+
+```sh
+claude mcp add --transport http bestprice-shopping https://mcp.bestprice.gr/mcp
+```
+
+Or add the remote server to an MCP client configuration:
+
+```json
+{
+  "mcpServers": {
+    "bestprice-shopping": {
+      "type": "http",
+      "url": "https://mcp.bestprice.gr/mcp"
+    }
+  }
+}
+```
+
+The repository can also be added as a Claude plugin marketplace:
+
+```sh
+claude plugin marketplace add TheBestCo/bestprice-mcp
+claude plugin install bestprice-shopping@bestprice
+```
+
+## Use Cases
+
+- Pick a model within a budget and required features, with trade-offs.
+- Find where an exact product is cheapest in Greece, including shipping to a postcode.
+- Check whether a current price is good using price history.
+- Look up a product by barcode.
+
+## Safety and Privacy
+
+The tools are read-only and anonymous. Queries and optional postcodes are sent to
+BestPrice.gr. Unknown shipping is reported as unknown, never as free. Results
+link to BestPrice product pages, not direct merchant checkout. Queries work in
+Greek or English; catalog data and merchant names are returned in Greek.
+
+## Source Review
+
+The following primary sources were reviewed on **2026-10-29**:
+
+- https://github.com/TheBestCo/bestprice-mcp
+- https://github.com/TheBestCo/bestprice-mcp/blob/main/README.md
+- https://github.com/TheBestCo/bestprice-mcp/blob/main/LICENSE
+- https://www.bestprice.gr/mcp
+- https://www.bestprice.gr/policies/privacy
+
+A live `initialize` and `tools/list` against `https://mcp.bestprice.gr/mcp` on
+2026-10-29 returned the four tools listed above without credentials.
+
+## Duplicate Check
+
+No existing `bestprice`, `TheBestCo/bestprice-mcp`, or BestPrice.gr entry was
+found in the HeyClaude MCP registry before this submission.
+
+## Disclosure
+
+The submitter works on BestPrice (TheBestCo), the maintainer of this server.
