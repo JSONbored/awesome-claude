@@ -1,0 +1,71 @@
+---
+title: Zambo MCP Server
+slug: zambo-mcp-server
+category: mcp
+description: >-
+  The verifiable work layer for AI: 153 tools (code audit, lead generation,
+  price tracking, payments, prompt defense, cross-AI handover) behind one
+  endpoint, with a verifiable receipt for every job. Free: 20 calls + 1
+  wrap-up free every day; picking up in another AI is always free.
+cardDescription: Give any AI 153 tools through one MCP URL, with a verifiable receipt for every job. Free, no account.
+seoTitle: Zambo MCP Server for Claude
+seoDescription: >-
+  Connect Claude to Zambo's 153 MCP tools via one endpoint. 20 calls + 1
+  wrap-up free every day; picking up in another AI is always free. No account.
+author: zambodotdev
+authorProfileUrl: "https://github.com/zambodotdev"
+submittedBy: zambodotdev
+submittedByUrl: "https://github.com/zambodotdev"
+dateAdded: "2026-09-12"
+repoUrl: "https://github.com/zambodotdev/zambo-mcp"
+documentationUrl: "https://zambo.dev/for-agents/"
+packageUrl: "https://www.npmjs.com/package/zambo"
+installable: true
+installCommand: "npx zambo install"
+usageSnippet: >-
+  Add https://zambo.dev/mcp to any MCP client, run a job, get a verifiable receipt.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "zambo": {
+        "url": "https://zambo.dev/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "zambo": {
+        "url": "https://zambo.dev/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 2 minutes
+difficulty: beginner
+retrievalSources:
+  - "https://github.com/zambodotdev/zambo-mcp"
+  - "https://zambo.dev/for-agents/"
+  - "https://zambo.dev/.well-known/llms.txt"
+prerequisites:
+  - An MCP client (Claude Code, Cursor, Windsurf, Cline, or any MCP-compatible host).
+privacyNotes:
+  - "Zambo is a hosted remote MCP endpoint: tool calls and their inputs are sent to zambo.dev, and Zambo stores a receipt record of each job (inputs, outputs, and content hashes) that can later be verified or shared by link."
+  - "No account or API key is required for free use. The memory and handover tools store user-supplied content on zambo.dev so it can be recalled later or picked up in another AI session."
+  - "Paid use is optional: humans pay by card through PayPal and agents pay in USDC on Base. Zambo does not collect or store card numbers."
+safetyNotes:
+  - "Zambo is a hosted remote MCP server: connecting a client sends tool calls to zambo.dev, and the server runs no code on the user's machine. The optional npx install command only writes Zambo into the client's MCP configuration."
+  - "Some tools write or act externally: the memory and handover tools store content on zambo.dev, audit and research tools fetch public web sources, and workflow tools record job state that later sessions rely on."
+  - "Payments are opt-in: a Day Pass costs $0.99, paid by card through PayPal for humans or in USDC on Base for agents. Review audits, prices, and lead data before acting on them in high-stakes decisions."
+---
+
+## Content
+
+Zambo is the verifiable work layer for AI: 153 tools behind one MCP endpoint at https://zambo.dev/mcp, covering code audit, lead generation, price tracking, payments, prompt defense, memory, and cross-AI handover. Add the endpoint to any MCP client and the tools are available with no account and no API key.
+
+Every job run through Zambo issues a verifiable receipt (an AER-1 record, IETF Internet-Draft draft-zambo-aer1-26) that lets anyone check the saved result has not changed since it was saved. The handover tools wrap up a session in one AI, files, open loops, and next steps included, and let another AI pick it up and continue. Free use is 20 calls plus 1 wrap-up every day, and picking up in another AI is always free; the Day Pass is $0.99 for unlimited use for 24 hours.
+
+## Source Review
+
+- https://github.com/zambodotdev/zambo-mcp
+- https://zambo.dev/for-agents/
+- https://zambo.dev/.well-known/llms.txt
