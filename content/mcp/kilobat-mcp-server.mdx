@@ -1,0 +1,163 @@
+---
+title: Kilobat MCP Server
+slug: kilobat-mcp-server
+category: mcp
+description: Local stdio MCP server for measuring a Mac’s network and diagnosing failed connections, Wi-Fi, DNS and metered links.
+cardDescription: Give an agent measurements from the Mac where its connection or download is failing.
+seoTitle: Kilobat MCP Server for Mac Network Diagnostics
+seoDescription: Diagnose failed API connections, Wi-Fi, DNS and metered links on a Mac using Kilobat’s local stdio MCP server, with setup and permission limits.
+author: seifip
+authorProfileUrl: https://github.com/seifip
+submittedBy: seifip
+submittedByUrl: https://github.com/seifip
+dateAdded: "2026-11-01"
+repoUrl: https://github.com/seifip/kilobat-cli
+documentationUrl: https://github.com/seifip/kilobat-cli/blob/v0.20.0/README.md
+installable: true
+installCommand: brew install seifip/kilobat/kilobat
+usageSnippet: "Start with diagnose_connection for one failing URL or diagnose_network for a general connection problem. Report skipped or missing measurements as unavailable."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "kilobat": {
+        "command": "kilobat",
+        "args": ["mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "kilobat": {
+        "command": "kilobat",
+        "args": ["mcp"]
+      }
+    }
+  }
+prerequisites:
+  - A Mac running macOS 14 or newer; this server measures that Mac, not an arbitrary remote machine.
+  - Homebrew and Xcode 16 or newer for the source build, or Swift 6 for a manual build.
+  - A client that supports local stdio MCP servers and can find the installed kilobat executable.
+  - Wi-Fi network names need the running companion app with Location permission; recorded history and network filtering depend on the companion app.
+safetyNotes:
+  - The server includes settings-changing tools as well as diagnostics. Review the tools and the client’s permissions before connecting it.
+  - Tool instructions ask the agent to obtain confirmation before settings changes; the released dispatcher has no common enforced approval boundary. Individual handlers and macOS authorization can impose additional controls.
+  - DNS changes can show a macOS administrator prompt. Saved blocking rules require the separately installed app and its enabled network filter to take effect.
+  - Diagnostics contact network targets. Speed tests transfer data; ask before using a metered link and choose a small data budget when appropriate.
+privacyNotes:
+  - Tool results can expose app identities, network names, addresses, connection details and locally recorded history to the connected agent and its transcript or model provider.
+  - >-
+    Local stdio transport does not mean offline operation: probes contact targets and the optional public-IP lookup contacts Cloudflare.
+  - Review and redact diagnostic output before sharing it. Do not treat a missing measurement or a passing probe as proof that a network or destination is safe.
+disclosure: This entry covers the GPL-3.0-only public CLI and MCP source. The native desktop app is separately proprietary; some companion capabilities require Pro. Submitted by the maker’s account.
+sourceUrls:
+  - https://github.com/seifip/kilobat-cli/tree/v0.20.0
+  - https://github.com/seifip/kilobat-cli/blob/v0.20.0/README.md
+  - https://github.com/seifip/kilobat-cli/blob/v0.20.0/LICENSE
+  - https://github.com/seifip/kilobat-cli/blob/v0.20.0/Sources/KilobatCLI/MCPCLI.swift
+  - https://github.com/seifip/kilobat-cli/blob/v0.20.0/Sources/KilobatCore/Services/MCPServer.swift
+  - https://github.com/seifip/homebrew-kilobat/blob/main/Formula/kilobat.rb
+tags:
+  - macos
+  - networking
+  - diagnostics
+  - dns
+  - mcp
+keywords:
+  - Mac network diagnostics
+  - Kilobat MCP
+  - failed API connection
+  - Wi-Fi troubleshooting
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Kilobat exposes measurements from the local Mac through `kilobat mcp`, a stdio
+MCP server included in its open-source CLI. Use it when a coding agent needs
+evidence about the machine where a request is failing: Wi-Fi quality, the router,
+DNS, a host’s connection path or whether the connection is metered.
+
+A hosted server on another machine cannot measure this Mac’s local Wi-Fi link.
+Kilobat’s local process is the useful part of this integration. It also exposes
+settings-changing tools; this is not a monitoring-only server or a security
+sandbox.
+
+## Install and Configure
+
+Install the CLI from its canonical Homebrew tap:
+
+```bash
+brew install seifip/kilobat/kilobat
+kilobat --version
+```
+
+The tap builds from source and requires macOS 14+ and Xcode 16+. For a manual
+build, follow the public repository’s Swift 6 instructions. The source and tap
+reviewed for this entry point to v0.20.0.
+
+Register the server with Claude Code:
+
+```bash
+claude mcp add kilobat -- kilobat mcp
+```
+
+For a client configured through JSON, use the `mcpServers` block above. This is a
+local command, not a hosted HTTP endpoint. If a GUI client cannot find `kilobat`,
+use the absolute executable path from `command -v kilobat` in that client’s
+configuration. Restart or reload the client as its documentation requires, then
+check that the server connects and exposes its tools.
+
+## Use Cases
+
+- For one API or website that will not connect, call `diagnose_connection` with
+  the failing URL as `target`. Read its measured layers and skipped checks before
+  attributing a cause. A successful fresh probe does not prove a separate app’s
+  existing connection is healthy.
+- For a generally slow connection, start with `diagnose_network`, then use
+  `get_status` to identify other apps using bandwidth. Missing Wi-Fi names can
+  reflect Location permission, rather than absence of a wireless network.
+- Before a large download, use `get_conditions` to inspect metered-link and
+  machine conditions. A speed test itself uses data, so it is not a free check
+  on a capped hotspot.
+
+## Permissions and Limits
+
+The CLI and public MCP implementation are GPL-3.0-only. The desktop app is a
+separate proprietary product. Network names require the running app with
+Location permission; persisted history comes from app recording, and filtering
+requires the app’s enabled network filter. Saving a rule is not evidence that
+traffic was blocked.
+
+The MCP instructions ask the model to obtain approval before changes. In the
+reviewed v0.20.0 dispatcher, a validated tool call proceeds to its handler
+without a common human-approval check. A client policy, individual handler or
+macOS prompt may add controls, but the instructions alone do not enforce them.
+Do not enable unattended writes on the assumption that this server prevents
+them.
+
+Tool output can enter the agent’s conversation and provider logs. Keep private
+network identifiers out of shared reports. Local transport does not prevent the
+diagnostic targets, package registries or public-IP service from receiving the
+requests made to them.
+
+## Verification
+
+Source and installation metadata were reviewed on 1 November 2026. The released
+v0.20.0 source was built on a Mac. Direct stdio initialization, tool discovery
+and a `diagnose_connection` call against `example.com` succeeded in the local
+check. A separate `kilobat diagnose --json` check returned valid JSON with exit
+status 0. No settings-changing tools were exercised.
+
+These checks do not establish a complete workflow inside Claude Code, support
+for every MCP client, all diagnostic features, or a security audit. No client
+certification or adoption count is claimed.
+
+## Sources
+
+- [Released CLI source and license](https://github.com/seifip/kilobat-cli/tree/v0.20.0)
+- [Installation and client examples](https://github.com/seifip/kilobat-cli/blob/v0.20.0/README.md)
+- [Tool implementation and instructions](https://github.com/seifip/kilobat-cli/blob/v0.20.0/Sources/KilobatCLI/MCPCLI.swift)
+- [MCP dispatcher](https://github.com/seifip/kilobat-cli/blob/v0.20.0/Sources/KilobatCore/Services/MCPServer.swift)
+- [Homebrew formula](https://github.com/seifip/homebrew-kilobat/blob/main/Formula/kilobat.rb)
