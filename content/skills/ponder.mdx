@@ -1,0 +1,145 @@
+---
+title: Ponder Deliberation Loop Skill
+slug: ponder
+category: skills
+description: Coverage-gated multi-pass code review loop that prevents AI coding agents from stopping early or rubber-stamping changes.
+cardDescription: Multi-pass deliberation loop enforcing 100% unit coverage and pass-to-pass convergence across four adversarial review perspectives.
+seoTitle: Ponder Deliberation Loop Skill for Claude Code, Codex, and OpenClaw
+seoDescription: Install Ponder for Claude Code, Codex, Cursor, and OpenClaw. Enforces epistemic stopping and multi-pass code reviews with append-only ledger gates.
+author: Quinn O'Donnell
+authorProfileUrl: "https://github.com/Quinnod345"
+submittedBy: Quinnod345
+submittedByUrl: "https://github.com/Quinnod345"
+dateAdded: "2026-11-02"
+repoUrl: "https://github.com/Quinnod345/ponder"
+documentationUrl: "https://github.com/Quinnod345/ponder#readme"
+downloadUrl: "https://github.com/Quinnod345/ponder/archive/refs/heads/main.zip"
+installable: true
+installCommand: "npx @quinnod345/ponder install claude-code"
+usageSnippet: "Run ponder review to begin a multi-pass review ledger, or invoke the /ponder skill inside Claude Code."
+copySnippet: |-
+  # Run via npx with zero install
+  npx @quinnod345/ponder review
+
+  # Or install global CLI
+  npm install -g @quinnod345/ponder
+
+  # Install into Claude Code
+  ponder install claude-code
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-11-02"
+safetyNotes:
+  - "Ponder operates strictly as a read-only review gate: it inspects code and git diffs but never mutates source files directly."
+privacyNotes:
+  - "All review states and ledger entries are stored locally under .ponder/ in your workspace; no code or diffs are transmitted to external servers."
+retrievalSources:
+  - "https://github.com/Quinnod345/ponder"
+  - "https://raw.githubusercontent.com/Quinnod345/ponder/main/README.md"
+  - "https://raw.githubusercontent.com/Quinnod345/ponder/main/skills/ponder/SKILL.md"
+testedPlatforms:
+  - Claude
+  - Codex
+  - OpenClaw
+  - Cursor
+  - Gemini
+prerequisites:
+  - "Node.js 18 or higher"
+  - "Git repository initialized in workspace"
+tags:
+  - code-review
+  - quality-gates
+  - deliberation
+  - claude-code
+  - agent-skills
+keywords:
+  - code-review
+  - multi-pass-review
+  - coverage-gate
+  - claude-code-skill
+  - deliberation-loop
+hasPrerequisites: true
+hasTroubleshooting: true
+---
+
+# Ponder Deliberation Loop Skill
+
+Ponder is an open source, zero-dependency deliberation loop and coverage gate CLI and skill for AI coding agents. It wraps automated code reviews in an append-only ledger (`.ponder/<slug>/ledger.jsonl`) and blocks early completion until 100% of enumerated units in scope are graded and two consecutive quiet passes produce zero ledger deltas.
+
+Coding agents often suffer from "forced speech" and early abandonment: they grade 11 of 12 files, declare victory, or spiral into low-precision nitpicks on later passes. Ponder enforces strict epistemic stopping: it evaluates code across four distinct personas (skeptic, builder, dreamer, empath) and prevents the agent from claiming a task is done until all units are accounted for.
+
+## Knowledge Freshness
+
+Ponder is actively maintained on Node.js 18+ with zero runtime npm dependencies. Ledger files and session states are strictly local to the repository workspace under `.ponder/`. For multi-agent environments, verify that the local Node runtime is version 18 or higher and that git diffs are available.
+
+## Retrieval Sources
+
+This entry is grounded in:
+
+- The upstream `Quinnod345/ponder` repository README and specification.
+- The `skills/ponder/SKILL.md` skill definition.
+- The npm package `@quinnod345/ponder` and `ponder-cli` releases.
+- The MIT license file and current test suite results.
+
+## Core Workflow
+
+Install Ponder CLI or skill into your coding agent workspace:
+
+```bash
+# Run instantly with zero install
+npx @quinnod345/ponder review
+
+# Or install globally via npm
+npm install -g @quinnod345/ponder
+
+# Install into Claude Code
+ponder install claude-code
+```
+
+Inside Claude Code or Codex, you can invoke the review command directly:
+
+```text
+/ponder review
+Audit all staged changes across skeptic, builder, dreamer, and empath perspectives.
+Block completion until all units are graded and consecutive passes converge.
+```
+
+## Capability Scope
+
+Ponder provides five core capabilities:
+
+1. **Unit Enumeration**: enumerates all modified or specified source files as discrete review units.
+2. **Coverage Gate**: blocks early completion unless every unit has received an evaluation score.
+3. **Four Perspectives**: evaluates code across skeptic, builder, dreamer, and empath personas.
+4. **Append-Only Ledger**: records all review judgments into an immutable `.ponder/<slug>/ledger.jsonl` history.
+5. **Pass Convergence**: detects pass-to-pass deltas and stops only when two consecutive passes reach consensus.
+
+## Production Rules
+
+- Never declare a code review complete without checking `ponder decide stop`.
+- Grade 100% of units before attempting to finalize the review session.
+- Run consecutive passes until ledger churn drops to zero.
+- Re-run review passes if code changes are made in response to review findings.
+- Keep review findings grounded in concrete source line references.
+
+## Use Cases
+
+- **Pre-PR Review**: catch edge cases and architecture defects before opening a pull request.
+- **CI Quality Gate**: integrate `action.yml` into GitHub Actions to block merge on ungraded code.
+- **Agent Self-Audit**: prevent coding agents like Claude Code or Codex from stopping before all files are reviewed.
+- **Adversarial Analysis**: evaluate security, performance, user empathy, and maintainability in parallel.
+
+## Troubleshooting
+
+### Decision exit code 2 (Ungraded units remaining)
+
+Run `npx @quinnod345/ponder status` to inspect which units lack evaluation scores. Grade all remaining units before running `decide stop`.
+
+### Decision exit code 3 (Pass-to-pass churn detected)
+
+Run `npx @quinnod345/ponder delta` to inspect recent deltas. Run an additional quiet pass until two consecutive passes produce zero churn.
+
+### Target environment selection
+
+Pass the target environment explicitly: `ponder install claude-code`, `ponder install codex`, or `ponder install openclaw`.
