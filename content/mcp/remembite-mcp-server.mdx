@@ -1,0 +1,99 @@
+---
+title: Remembite MCP Server
+slug: remembite-mcp-server
+category: mcp
+description: >-
+  Remembite is a free, hosted food log that Claude writes to over streamable HTTP MCP with OAuth sign-in. Claude works out grams, calories and macros, and Remembite saves the meal.
+cardDescription: >-
+  A free food log your AI writes to: Claude works out the macros, Remembite saves the meal and asks you first when an item's numbers do not add up.
+seoTitle: Remembite MCP Server for Claude
+seoDescription: >-
+  Add Remembite to Claude as a remote MCP connector: streamable HTTP, OAuth sign-in, a free food log with no ads and nothing to run locally.
+author: Remembite
+authorProfileUrl: "https://remembite.com"
+submittedBy: jacobduong3007
+submittedByUrl: "https://github.com/jacobduong3007"
+dateAdded: "2026-11-02"
+submittedAt: "2026-11-02"
+documentationUrl: "https://remembite.com/connect"
+websiteUrl: "https://remembite.com"
+retrievalSources:
+  - "https://remembite.com/connect"
+  - "https://remembite.com/.well-known/mcp/server-card.json"
+  - "https://github.com/jacobduong3007/remembite-mcp"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add --transport http remembite https://remembite.com/mcp"
+usageSnippet: >-
+  Add the remote endpoint, then sign in with OAuth when your client opens the browser. In Claude on the web or desktop, use Customize, Connectors, Add custom connector and paste the URL.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "remembite": {
+        "url": "https://remembite.com/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "remembite": {
+        "url": "https://remembite.com/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "An MCP client with streamable HTTP and OAuth support, such as Claude."
+  - "A free Remembite account, created when you sign in."
+safetyNotes:
+  - "Tools can create, update and delete meals, water and weight entries in your Remembite log."
+  - "If an item's macros add up to more calories than the item, or its calories are far from the USDA-based reference food, nothing is saved and the assistant asks you first."
+privacyNotes:
+  - "Your meals, water, weight and goals are stored by Remembite under your account, and tool inputs and results enter the assistant's context."
+  - "Read the privacy policy at https://remembite.com/privacy before connecting."
+tags:
+  - nutrition
+  - food-log
+  - health
+  - mcp
+keywords:
+  - Remembite MCP server
+  - food log MCP server for Claude
+  - nutrition tracking MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+**Remembite** is a food log your AI writes to. You tell Claude what you ate. Claude works out the grams, calories, protein, carbs and fat, and Remembite saves the meal with the values Claude sends. It is free and has no ads.
+
+The server is hosted, so there is nothing to run on your own computer. The endpoint is `https://remembite.com/mcp` (streamable HTTP). A request without a token returns `401`, and the response points to the OAuth metadata. This is expected.
+
+## Installation
+
+```bash
+claude mcp add --transport http remembite https://remembite.com/mcp
+```
+
+Then sign in when the client opens the browser. Setup steps for other clients are at https://remembite.com/connect.
+
+## Source Verification Notes
+
+Checked on **2026-11-02**:
+
+- The server card at **https://remembite.com/.well-known/mcp/server-card.json** lists the tools and OAuth 2 authentication.
+- The public listing repository **https://github.com/jacobduong3007/remembite-mcp** holds the README and `server.json`. The server code is not published there, because the service is hosted.
+- Claude Code MCP docs describe the HTTP connector setup used above.
+
+## Duplicate Check
+
+No existing `content/mcp/` entry covers Remembite.
+
+## Editorial Disclosure
+
+Submitted by an AI assistant on behalf of the maintainer, Jacob Duong. Remembite is the submitter's own free product. No payment, referral or affiliate link is involved.
