@@ -1,0 +1,103 @@
+---
+title: BulkPublish MCP Server
+slug: bulkpublish-mcp-server
+category: mcp
+description: >-
+  BulkPublish provides a hosted MCP server for drafting, scheduling, and publishing social
+  media posts, uploading media, and reading post analytics across 15 social networks.
+cardDescription: >-
+  Connect Claude to BulkPublish to schedule and publish social posts and read analytics over HTTP MCP.
+seoTitle: BulkPublish MCP Server for Claude
+seoDescription: >-
+  Configure BulkPublish MCP Server: streamable HTTP endpoint with OAuth sign-in, plus documented
+  tools for posts, media, channels, and analytics.
+author: BulkPublish
+authorProfileUrl: "https://www.bulkpublish.com"
+submittedBy: azeemkafridi
+submittedByUrl: "https://github.com/azeemkafridi"
+dateAdded: "2026-10-29"
+submittedAt: "2026-10-29"
+documentationUrl: "https://www.bulkpublish.com/integrations/mcp-server/"
+websiteUrl: "https://www.bulkpublish.com"
+repoUrl: "https://github.com/azeemkafridi/bulkpublish-ai-toolkit"
+retrievalSources:
+  - "https://www.bulkpublish.com/integrations/mcp-server/"
+  - "https://github.com/azeemkafridi/bulkpublish-ai-toolkit"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add --transport http bulkpublish https://mcp.bulkpublish.com"
+usageSnippet: >-
+  Add the BulkPublish MCP URL as an HTTP MCP server and complete the OAuth sign-in in the
+  browser; the docs also describe Bearer API keys created under Settings > Developer.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "bulkpublish": {
+        "type": "http",
+        "url": "https://mcp.bulkpublish.com"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "bulkpublish": {
+        "type": "http",
+        "url": "https://mcp.bulkpublish.com"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: beginner
+prerequisites:
+  - "BulkPublish account with the social channels you want to publish to connected."
+  - "MCP client that supports streamable HTTP servers and OAuth, or a Bearer API key."
+safetyNotes:
+  - "create_post, publish_post, update_post, retry_post, and delete_post write to connected social accounts and can publish publicly."
+  - "upload_media and related tools upload files to BulkPublish storage."
+privacyNotes:
+  - "Post content, media, channel metadata, and analytics enter MCP client context and BulkPublish logs."
+  - "Store any API keys in a secret manager, not repository files; OAuth access can be revoked from BulkPublish."
+tags:
+  - bulkpublish
+  - social-media
+  - scheduling
+  - mcp
+keywords:
+  - BulkPublish MCP server
+  - social media scheduling MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+BulkPublish exposes a **hosted MCP endpoint** at `https://mcp.bulkpublish.com` for social media
+publishing. The official docs list 20 operations, including **list_channels**, **create_post**,
+**update_post**, **publish_post**, **list_posts**, **get_post_metrics**, **get_queue_slot**,
+**upload_media**, **list_media**, and **get_analytics**. Posts can target Facebook, Instagram,
+X, TikTok, YouTube, Threads, Bluesky, Pinterest, Google Business, LinkedIn, Mastodon, Discord,
+Telegram, Tumblr, and Snapchat.
+
+## Installation
+
+```bash
+claude mcp add --transport http bulkpublish https://mcp.bulkpublish.com
+```
+
+Complete the OAuth sign-in when prompted. An npm package (`@bulkpublish/mcp-server`) is also documented.
+
+## Source Verification Notes
+
+Verified on **2026-10-29**:
+
+- The MCP server docs page lists the operations, the 15 supported networks, and authentication details.
+- MCP Registry names: **`io.github.azeemkafridi/bulkpublish`** and **`com.bulkpublish.mcp`**.
+
+## Duplicate Check
+
+No existing HeyClaude MCP entry covers BulkPublish.
+
+## Editorial Disclosure
+
+Submitted by **azeemkafridi**, who is affiliated with BulkPublish (maintainer of the BulkPublish AI toolkit).
