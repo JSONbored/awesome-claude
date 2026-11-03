@@ -1,0 +1,161 @@
+---
+title: Transica MCP Server for Claude
+slug: transica-mcp-server
+category: mcp
+description: >-
+  Public streamable HTTP MCP server with two read-only tools: an AI readiness
+  scan for any public web page, and a ChatGPT and Claude directory-rules check
+  for any public remote MCP server.
+cardDescription: >-
+  Ask Claude to scan a web page for AI agent readiness or check whether an MCP
+  server meets the ChatGPT and Claude directory requirements.
+seoTitle: Transica MCP Server for Claude
+seoDescription: >-
+  Use the dev.transica/transica remote MCP server with Claude to score a web
+  page's AI agent readiness and check a remote MCP server against ChatGPT and
+  Claude directory rules via https://transica-mcp.transica.dev/mcp.
+author: Transica
+authorProfileUrl: "https://github.com/TransicaDev"
+submittedBy: transica-bot
+submittedByUrl: "https://github.com/transica-bot"
+dateAdded: "2026-11-03"
+submittedAt: "2026-11-03"
+repoUrl: "https://github.com/TransicaDev/transica-mcp"
+documentationUrl: "https://transica.dev/docs/mcp"
+websiteUrl: "https://transica.dev"
+installable: true
+installCommand: >-
+  claude mcp add --transport http transica https://transica-mcp.transica.dev/mcp
+usageSnippet: >-
+  Add https://transica-mcp.transica.dev/mcp as a remote HTTP connector; no auth
+  is required. Ask Claude to scan a page for AI readiness or check an MCP
+  server's directory compliance.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "transica": {
+        "url": "https://transica-mcp.transica.dev/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "transica": {
+        "url": "https://transica-mcp.transica.dev/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 2 minutes
+difficulty: beginner
+prerequisites:
+  - "Claude with custom connectors (Free plan allows one), or Claude Code with HTTP MCP transport."
+  - "No account or API key required."
+safetyNotes:
+  - "Both tools are read-only: they fetch one public page or connect to one public MCP server and change nothing."
+  - "The directory check reads a server's tool list and never calls its tools."
+  - "Private networks, localhost and pages behind a sign-in are refused."
+privacyNotes:
+  - "The URLs you pass are sent to Transica's service to be scanned or checked."
+  - "Scans and checks run through the connector aren't stored."
+tags:
+  - ai-readiness
+  - mcp-directory
+  - developer-tools
+  - remote-mcp
+  - no-auth
+keywords:
+  - transica mcp
+  - dev.transica/transica
+  - ai readiness scan
+  - mcp directory requirements
+  - chatgpt app directory check
+readingTime: 3
+difficultyScore: 10
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Transica MCP (`dev.transica/transica`) is a public remote Model Context Protocol server from [Transica](https://transica.dev), which builds, hosts and lists MCP apps for ChatGPT and Claude. The server exposes Transica's two free tools so an assistant can run them in a chat.
+
+Repository and setup notes: [TransicaDev/transica-mcp](https://github.com/TransicaDev/transica-mcp). Full reference: [transica.dev/docs/mcp](https://transica.dev/docs/mcp).
+
+## Features
+
+- `scan_webpage_ai_readiness`: scores one public web page out of 100 for AI agent readiness, with passed and failed checks, top fixes and a report link.
+- `check_mcp_server_directory_rules`: connects to a public remote MCP server, reads its tool list and checks connection, sign-in, domain and tool rules against the ChatGPT and Claude directory requirements.
+
+## Use Cases
+
+- Check whether a site's pages are readable and usable by AI agents before launch.
+- Pre-check an MCP server before submitting it to the ChatGPT or Claude directory.
+- Compare a competitor's page or server against the same checks.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Go to **Customize → Connectors**, select **+ Add**, then **Add custom connector**.
+2. Enter the name `Transica` and the URL `https://transica-mcp.transica.dev/mcp`.
+3. Under **Authentication**, choose **No sign in**, then **Add**.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http transica https://transica-mcp.transica.dev/mcp
+```
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "transica": {
+      "url": "https://transica-mcp.transica.dev/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+No authentication headers are needed.
+
+## Examples
+
+### Page scan
+
+```text
+Scan https://example.com for AI agent readiness and list the top three fixes.
+```
+
+### Directory check
+
+```text
+Check whether https://mcp.example.com/mcp meets the Claude directory requirements.
+```
+
+## Security
+
+- Read-only tools; nothing is changed on the scanned page or checked server.
+- Only public addresses are accepted.
+
+## Troubleshooting
+
+### Scan returns `running`
+
+Scans longer than about 12 seconds return `running` with a report link; open it after a minute.
+
+### Daily limit reached
+
+The connector allows 5,000 scans and 5,000 checks a day across all users; the count resets at midnight UTC.
+
+## Duplicate Check
+
+No existing Transica or `dev.transica/transica` entry was found in `content/mcp/`.
