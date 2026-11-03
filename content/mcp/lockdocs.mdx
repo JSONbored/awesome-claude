@@ -1,0 +1,180 @@
+---
+title: lockdocs MCP Server for Claude
+slug: lockdocs
+category: mcp
+description: >-
+  lockdocs is a local MCP server and CLI that answers library questions from the
+  docs and type declarations of the exact package versions pinned in your
+  lockfile, for npm, PyPI, crates.io and Go projects.
+cardDescription: >-
+  Exact-version library docs from your lockfile, read from installed packages,
+  offline, with every section cited to package, version, file and line.
+seoTitle: lockdocs MCP Server for Claude
+seoDescription: >-
+  Give Claude library docs for the exact versions in your lockfile. lockdocs
+  reads installed packages for npm, PyPI, crates.io and Go, works offline and
+  needs no API key.
+author: Sylphx
+submittedBy: shtse8
+submittedByUrl: "https://github.com/shtse8"
+dateAdded: "2026-09-25"
+documentationUrl: "https://sylphxai.github.io/lockdocs/"
+repoUrl: "https://github.com/SylphxAI/lockdocs"
+websiteUrl: "https://sylphxai.github.io/lockdocs/"
+installable: true
+installCommand: "claude mcp add lockdocs -- npx -y @sylphx/lockdocs mcp"
+usageSnippet: "claude mcp add lockdocs -- npx -y @sylphx/lockdocs mcp"
+copySnippet: |-
+  {
+    "lockdocs": {
+      "command": "npx",
+      "args": ["-y", "@sylphx/lockdocs", "mcp"]
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "lockdocs": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@sylphx/lockdocs",
+          "mcp"
+        ],
+        "type": "stdio"
+      }
+    }
+  }
+estimatedSetupTime: 2 minutes
+difficulty: beginner
+prerequisites:
+  - "Node.js 18+ and npx available (verify with: npx --version)"
+  - Claude Code or Claude Desktop with MCP support
+  - >-
+    A project with a lockfile and installed dependencies (node_modules, a
+    virtualenv, the Cargo registry or the Go module cache)
+tags:
+  - documentation
+  - developer-tools
+  - lockfile
+  - offline
+  - rust
+keywords:
+  - lockdocs mcp
+  - exact version library docs
+  - lockfile documentation
+  - offline context7 alternative
+  - type declarations mcp
+safetyNotes:
+  - >-
+    Reads lockfiles and installed package files in the workspace root, the
+    Cargo registry, the Go module cache and Python site-packages. It does not
+    write to your project.
+  - >-
+    Runs the system python3 once to list its site-packages (disable with
+    LOCKDOCS_NO_SYSTEM_PYTHON=1).
+  - >-
+    Downloads a small embedding model once from huggingface.co at a pinned
+    revision, checked against a pinned SHA-256. LOCKDOCS_EMBED=0 or --offline
+    skips it.
+  - >-
+    Only when you run lockdocs fetch or enable fetching, it downloads the exact
+    public package versions requested from the npm, PyPI, crates.io and Go
+    registries and docs files from GitHub. Archives are unpacked with path
+    checks and a 64 MB cap.
+privacyNotes:
+  - >-
+    Nothing about your project is sent anywhere; network requests name only
+    public packages and versions.
+  - >-
+    Extracted docs and symbols of your dependencies are cached in your OS cache
+    directory (LOCKDOCS_CACHE overrides it).
+  - >-
+    With fetching enabled, a GITHUB_TOKEN in the environment is sent to
+    api.github.com only.
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Coding agents write code against the library version they remember, not the one you installed. lockdocs removes that guess. It reads your lockfile, finds the exact installed version of each package, and answers from the docs that ship with that version: READMEs, changelogs, docs folders, and the API reference in the package itself (TypeScript declarations with JSDoc, Python docstrings and stubs, rustdoc comments, Go doc comments). Every answer section is cited as `package@version path:line` and packed into a token budget. It is a single Rust binary, MIT licensed, with no account and no rate limit.
+
+## Features
+
+- Reads `package-lock.json`, `pnpm-lock.yaml`, `yarn.lock`, `bun.lock`, `Cargo.lock`, `uv.lock`, `poetry.lock`, `Pipfile.lock`, `requirements*.txt` and `go.mod`.
+- Three MCP tools: `resolve` (pinned versions and where their docs are), `docs` (relevant doc sections within a token budget) and `api` (exact signature and doc comment of a symbol).
+- Covers private and internal packages, because it reads what is installed.
+- Hybrid retrieval: BM25 fused with a small local embedding model, plus redirects from deprecation notes.
+- Optional `lockdocs fetch` adds upstream docs from GitHub at the git tag of your pinned version, once, then stays offline.
+- `npx -y @sylphx/lockdocs setup` configures Claude Code, Claude Desktop, Codex, Cursor, VS Code, Windsurf and Gemini CLI.
+
+## Use Cases
+
+- Ask how to use a library and get the API of the version you actually installed, not the newest one.
+- Check an exact function signature before calling it.
+- Work offline or behind a firewall.
+- Get docs for your own internal packages.
+
+## Installation
+
+### Claude Code
+
+1. Make sure Node.js 18+ is installed (verify with `npx --version`).
+2. Run: `claude mcp add lockdocs -- npx -y @sylphx/lockdocs mcp`
+3. Verify the server is registered: `claude mcp list`
+
+### Claude Desktop
+
+1. Open your Claude Desktop configuration file.
+2. Add the lockdocs server to the `mcpServers` section using the configuration below.
+3. Restart Claude Desktop.
+
+## Configuration
+
+```json
+{
+  "lockdocs": {
+    "command": "npx",
+    "args": ["-y", "@sylphx/lockdocs", "mcp"]
+  }
+}
+```
+
+The server answers for the client's workspace root, its working directory, or `LOCKDOCS_ROOT`. Every tool also takes a `root` argument.
+
+## Examples
+
+### Version-correct usage
+
+```text
+"Use lockdocs: how do I reject unknown keys with the zod we use?"
+```
+
+In a zod 3 project the answer cites `.strict()`; in a zod 4 project it cites `z.strictObject()`.
+
+### Exact signature
+
+```text
+"Use lockdocs to show the signature of BaseModel.model_dump."
+```
+
+## Security
+
+- The MCP server speaks stdio only and reads files on your machine.
+- Network use is limited to the one-time model download and, only when you enable it, public registries and GitHub for the exact versions requested.
+- Report vulnerabilities through GitHub Security Advisories on SylphxAI/lockdocs.
+
+## Troubleshooting
+
+### A package says it is not installed
+
+Install your dependencies first, or pass `--fetch` (or set `LOCKDOCS_FETCH=1`) to download that exact version from its registry.
+
+### No network at all
+
+Set `LOCKDOCS_EMBED=0` or pass `--offline` to use keyword-only search with no downloads.
+
+### Wrong project root
+
+Set `LOCKDOCS_ROOT` in the server config, or pass `root` to the tool.
