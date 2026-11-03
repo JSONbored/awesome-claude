@@ -1,0 +1,178 @@
+---
+title: Keenable MCP Server
+slug: keenable-mcp-server
+category: mcp
+description: >-
+  Hosted web search and page fetch MCP server backed by Keenable's own crawler
+  and index, usable from Claude without an API key on a rate-limited public tier.
+cardDescription: >-
+  Give Claude Code, Claude Desktop, and other MCP clients keyless web search and
+  clean-Markdown page fetch from Keenable.
+seoTitle: Keenable MCP Server for Claude
+seoDescription: >-
+  Connect Claude Code, claude.ai, Claude Desktop, Cursor, Codex, and other MCP
+  clients to Keenable's hosted MCP server for web search and page fetch as clean
+  Markdown, with no API key needed on the public tier.
+author: Keenable
+authorProfileUrl: "https://github.com/keenableai"
+submittedBy: KGKallasmaa
+submittedByUrl: "https://github.com/KGKallasmaa"
+dateAdded: "2026-11-03"
+brandName: Keenable
+brandDomain: keenable.ai
+repoUrl: "https://github.com/keenableai/keenable-mcp"
+documentationUrl: "https://docs.keenable.ai/mcp-server"
+websiteUrl: "https://keenable.ai"
+packageUrl: "https://www.npmjs.com/package/@keenable/mcp"
+installable: true
+installCommand: "claude mcp add --transport http --scope user keenable https://api.keenable.ai/mcp"
+usageSnippet: "Add the hosted `https://api.keenable.ai/mcp` endpoint with no key for the public tier, or pass an `X-API-Key` header for higher limits. Clients that need stdio can run `npx -y @keenable/mcp`."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "keenable": {
+        "type": "http",
+        "url": "https://api.keenable.ai/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "keenable": {
+        "type": "http",
+        "url": "https://api.keenable.ai/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 2 minutes
+difficulty: beginner
+prerequisites:
+  - MCP client with remote Streamable HTTP support, or Node.js for the `@keenable/mcp` stdio bridge.
+  - Optional Keenable API key for higher limits than the unauthenticated public tier.
+  - Network access to the Keenable hosted MCP endpoint and target webpages.
+safetyNotes:
+  - Web search and fetch results may be incomplete, stale, biased, or adversarial; verify important claims against primary sources.
+  - Fetching pages can retrieve untrusted web content that may contain prompt injection or malicious instructions.
+  - The server is read-only (search and fetch); it does not write to accounts or local files.
+  - Protect Keenable API keys and avoid placing real keys in shared config files, screenshots, logs, or prompts.
+privacyNotes:
+  - Search queries, fetched URLs, tool parameters, and returned page contents are sent to Keenable and the MCP client.
+  - The unauthenticated public tier is rate-limited per IP address, so the calling IP is visible to Keenable.
+  - Review Keenable's current data handling and rate-limit policies before using it with proprietary or regulated workflows.
+sourceUrls:
+  - "https://github.com/keenableai/keenable-mcp"
+  - "https://docs.keenable.ai/mcp-server"
+  - "https://docs.keenable.ai/integrations/claude"
+  - "https://docs.keenable.ai/rate-limits"
+  - "https://www.npmjs.com/package/@keenable/mcp"
+tags:
+  - search
+  - research
+  - web
+  - fetch
+  - remote
+keywords:
+  - Keenable MCP
+  - Keenable MCP Server
+  - web search MCP
+  - web fetch MCP
+  - keyless web search
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Keenable MCP Server connects MCP clients to Keenable's web search, which runs on
+Keenable's own crawler, index, and ranking, and to a page fetcher that returns
+clean Markdown. It is a hosted Streamable HTTP server, with an npm stdio bridge
+for clients that only speak stdio.
+
+The hosted endpoint answers without an API key on a shared public tier that is
+rate-limited per IP (1,000 requests per hour, up to 10 per second). Passing an
+`X-API-Key` header removes the hourly cap. Claude users can also add it from
+Claude's Connectors Directory as **Keenable Web Search**.
+
+## Source Review
+
+- https://github.com/keenableai/keenable-mcp
+- https://docs.keenable.ai/mcp-server
+- https://docs.keenable.ai/integrations/claude
+- https://docs.keenable.ai/rate-limits
+- https://www.npmjs.com/package/@keenable/mcp
+
+These sources were reviewed on **2026-11-03**. A live `tools/list` and
+`search_web_pages` call against the hosted endpoint succeeded without a key on
+that date. Prefer the live docs for current rate limits, tools, and client setup.
+
+## Features
+
+- Hosted remote MCP endpoint (Streamable HTTP) at `https://api.keenable.ai/mcp`.
+- `search_web_pages` for web search with titles, URLs, and snippets.
+- `fetch_page_content` for fetching a known URL as clean Markdown.
+- Keyless public tier; optional `X-API-Key` header for higher limits.
+- Stdio bridge through `npx -y @keenable/mcp` (`KEENABLE_API_KEY` optional).
+- Listed in the Official MCP Registry as `ai.keenable/web-search`.
+
+## Installation
+
+For Claude Code, add the hosted server for all projects:
+
+```bash
+claude mcp add --transport http --scope user keenable https://api.keenable.ai/mcp
+```
+
+To use your own key, append `--header "X-API-Key: keen_<your_key>"`.
+
+For clients that support remote MCP servers:
+
+```json
+{
+  "mcpServers": {
+    "keenable": {
+      "type": "http",
+      "url": "https://api.keenable.ai/mcp"
+    }
+  }
+}
+```
+
+For clients that need stdio:
+
+```json
+{
+  "mcpServers": {
+    "keenable": {
+      "command": "npx",
+      "args": ["-y", "@keenable/mcp"]
+    }
+  }
+}
+```
+
+On claude.ai, Claude Desktop, and mobile, open **Customize → Connectors**, search
+for **Keenable Web Search**, and click **Connect**.
+
+## Use Cases
+
+- Look up current documentation, release notes, or changelogs while coding.
+- Fetch a known page as Markdown and summarize or quote it.
+- Ground research answers in fresh web sources with citations.
+- Give agents web search without managing an API key during evaluation.
+
+## Safety and Privacy
+
+Web content can contain prompt injection, incorrect claims, or malicious
+instructions. Keep model instructions separate from fetched content and verify
+important answers against primary sources.
+
+Search queries and fetched URLs can reveal sensitive research topics. Protect API
+keys and review Keenable's current privacy posture before using this server with
+proprietary, regulated, or customer-specific work.
+
+## Duplicate Check
+
+No `keenableai/keenable-mcp` entry, `keenable.ai` source URL, or Keenable title
+was found in `content/`. This entry is separate from Exa, Tavily, Brave Search,
+and Firecrawl because it covers Keenable's own hosted endpoint and npm bridge.
