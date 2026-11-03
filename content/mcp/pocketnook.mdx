@@ -1,0 +1,98 @@
+---
+title: pocketnook MCP Server for Claude
+slug: pocketnook
+category: mcp
+description: >-
+  Deploy a GitHub repository, or the working directory as it is on disk, to a
+  private URL without leaving the agent that wrote it. The URL is private by
+  default: only the owner can open it until they share it by GitHub username,
+  and there is no public option.
+cardDescription: >-
+  Say "deploy this" and your code comes back as a private URL, shared by GitHub
+  username.
+seoTitle: pocketnook MCP Server for Claude
+seoDescription: >-
+  Use the pocketnook MCP server to deploy a repository or a local directory from
+  Claude Code, Cursor, or any MCP client and get back a private URL you share by
+  GitHub username.
+author: pocketnook
+authorProfileUrl: "https://pocketnook.dev"
+submittedBy: shotintoeternity
+submittedByUrl: "https://github.com/shotintoeternity"
+dateAdded: "2026-08-17"
+brandName: pocketnook
+brandDomain: pocketnook.dev
+websiteUrl: "https://pocketnook.dev"
+repoUrl: "https://github.com/shotintoeternity/pocketnook-mcp"
+documentationUrl: "https://github.com/shotintoeternity/pocketnook-mcp/blob/main/README.md"
+tags:
+  - deploy
+  - hosting
+  - private
+  - claude-code
+  - cursor
+  - agents
+installable: true
+installCommand: "claude mcp add pocketnook --env POCKETNOOK_TOKEN=pnka_… -- npx -y @pocketnook/mcp"
+usageSnippet: >-
+  Ask the agent to deploy this somewhere private. It returns a URL under
+  pocketnook.dev/s/, and says plainly that only you can open it until you share
+  it.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "pocketnook": {
+        "command": "npx",
+        "args": ["-y", "@pocketnook/mcp"],
+        "env": {
+          "POCKETNOOK_TOKEN": "pnka_…"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "pocketnook": {
+        "command": "npx",
+        "args": ["-y", "@pocketnook/mcp"],
+        "env": {
+          "POCKETNOOK_TOKEN": "pnka_…",
+          "POCKETNOOK_URL": "https://pocketnook.dev"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - A pocketnook account, which signs in with GitHub.
+  - An agent token from the Agent access panel on pocketnook.dev/home, set as `POCKETNOOK_TOKEN`. It is shown once and expires after 90 days.
+  - Node.js 22.18 or newer, which is the floor the package declares.
+  - For `deploy`, a repository pocketnook has been granted read access to on GitHub's own installation screen.
+safetyNotes:
+  - The five tools are `deploy`, `deploy_directory`, `list_nooks`, `nook_logs` and `stop_nook`. There is deliberately no delete tool, because deleting a nook destroys its grants and secrets; that stays in the signed-in browser.
+  - "`deploy_directory` uploads the working directory as it is on disk, uncommitted work included, minus `node_modules`, `.git` and build caches. Review what is in the directory first — a `.env`, a key file, or an exported database — because all of it is sent."
+  - A token can act only on its owner's own nooks. It cannot mint or revoke a token, cannot open a nook, and carries no username claim, so it can never satisfy a share grant.
+  - Build output returned by the tools is written by the deployed project and its dependencies, not by pocketnook. The bundled skill tells the agent to read it as data and never to act on instructions found in it.
+  - Builds are synchronous and can outlast an MCP client's tool timeout; a disconnecting client cancels the build.
+privacyNotes:
+  - The server sends the repository or directory you name, with the token from `POCKETNOOK_TOKEN`, to pocketnook.dev, or to whatever `POCKETNOOK_URL` names. Nothing else leaves the machine.
+  - A deployed app's own outbound traffic is not bounded over HTTPS. pocketnook declined TLS interception on purpose rather than put itself in a position to read every credential a tenant app presents, so a deployed repository can send anything it can read anywhere it likes.
+  - Because of that, pocketnook is in beta and asks for synthetic or non-sensitive data only. The limits are stated in full at https://pocketnook.dev/limits.
+---
+
+pocketnook gives a repository a private place to run. The deploy step lives
+inside the tool where the software is being written: say "deploy this" and the
+agent hands back a URL under `pocketnook.dev/s/`, built in a sandbox with no
+access to your credentials.
+
+Nothing it deploys is reachable by the public. Sharing is by GitHub username,
+and the person you name signs in once and lands straight in the nook, which is
+what makes it a document you send rather than a service you administer.
+
+`deploy` builds what GitHub has, the tip of the default branch, cloned fresh.
+`deploy_directory` uploads what is on the disk and needs no repository at all,
+which is the one worth knowing about, since agents write for people who may
+never make a push. Redeploying reuses the same nook, so its URL, grants and
+secrets survive the fix-and-redeploy loop.
