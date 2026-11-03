@@ -1,186 +1,157 @@
 ---
-title: PDF Reader MCP
+title: anymd
 slug: pdf-reader-mcp
 category: mcp
 description: >-
-  PDF-focused MCP server that lets Claude read one or more local or remote PDFs,
-  extract full text, page ranges, metadata, page counts, embedded images, and
-  table-like structures.
-cardDescription: Give Claude a fast dedicated PDF reader with page, image, and table extraction.
-seoTitle: PDF Reader MCP Server for Claude
+  Local MCP server and CLI, formerly PDF Reader MCP, that converts PDF, DOCX,
+  PPTX, XLSX/CSV, EPUB, HTML and web URLs, images, and audio/video files into
+  clean Markdown for Claude, with read, search, and inspect tools.
+cardDescription: Turn any local file or URL into clean, page-cited Markdown for Claude. No API key.
+seoTitle: anymd (formerly PDF Reader MCP) MCP Server for Claude
 seoDescription: >-
-  Configure PDF Reader MCP with Claude and other MCP clients to read local or
-  remote PDFs, extract text, selected pages, metadata, embedded images, page
-  counts, and table-like structures with configurable file and URL safeguards.
+  Configure anymd, formerly PDF Reader MCP, with Claude and other MCP clients
+  to convert PDFs, Office documents, spreadsheets, EPUB, HTML, images, and
+  audio/video files to Markdown, search across them, and inspect PDF pages
+  locally without an API key.
 author: Sylphx
 authorProfileUrl: "https://github.com/SylphxAI"
 submittedBy: oktofeesh1
 submittedByUrl: "https://github.com/oktofeesh1"
 dateAdded: "2026-06-06"
-brandName: PDF Reader MCP
+brandName: anymd
 brandDomain: github.com
-repoUrl: "https://github.com/SylphxAI/pdf-reader-mcp"
-documentationUrl: "https://github.com/SylphxAI/pdf-reader-mcp/blob/main/README.md"
-packageUrl: "https://registry.npmjs.org/%40sylphx%2Fpdf-reader-mcp"
+repoUrl: "https://github.com/SylphxAI/anymd"
+documentationUrl: "https://sylphxai.github.io/anymd/"
+packageUrl: "https://registry.npmjs.org/%40sylphx%2Fanymd"
 installable: true
-installCommand: "npx -y @sylphx/pdf-reader-mcp"
-usageSnippet: "Ask Claude to use PDF Reader MCP on an approved PDF path or URL, then summarize only the extracted pages and metadata you requested."
+installCommand: "npx -y @sylphx/anymd"
+usageSnippet: "Ask Claude to use anymd to read an approved file, folder, or URL as Markdown, or to search a folder of documents for a phrase and cite the pages it found."
 copySnippet: |-
   {
     "mcpServers": {
-      "pdf-reader": {
+      "anymd": {
         "command": "npx",
-        "args": ["-y", "@sylphx/pdf-reader-mcp"]
+        "args": ["-y", "@sylphx/anymd"]
       }
     }
   }
 configSnippet: |-
   {
     "mcpServers": {
-      "pdf-reader": {
+      "anymd": {
         "command": "npx",
-        "args": ["-y", "@sylphx/pdf-reader-mcp"],
-        "env": {
-          "MCP_TRANSPORT": "stdio",
-          "MCP_PDF_ALLOWED_DIRS": "/Users/you/Documents/approved-pdfs",
-          "MCP_PDF_ALLOWED_HOSTS": "trusted.example.com",
-          "MCP_PDF_ALLOW_HTTP": "false"
-        }
+        "args": ["-y", "@sylphx/anymd", "--allow-dir=/Users/you/Documents/approved"]
       }
     }
   }
-estimatedSetupTime: 10 minutes
+estimatedSetupTime: 5 minutes
 difficulty: beginner
 prerequisites:
-  - Node.js 22.13 or newer and npx available to the MCP client runtime.
-  - Approved local PDF directories or approved remote PDF hosts when processing sensitive material.
-  - Review of copyright, document handling, and data retention policy before extracting PDF contents.
+  - Node.js 18 or newer and npx available to the MCP client runtime; npm installs the native binary for macOS, Linux, or Windows.
+  - Optional local tools for extra capabilities, used only when installed - tesseract for OCR, ffprobe/ffmpeg for audio and video, whisper.cpp for transcripts.
+  - Approved local directories when processing sensitive material.
 safetyNotes:
-  - PDF Reader MCP can read local PDF paths and fetch remote PDF URLs unless runtime security settings restrict those sources.
-  - The source supports directory allowlists, host allowlists, disabling URL sources, and SSRF checks for private IPs.
-  - Large or malformed PDFs can still be slow, memory-intensive, partially parsed, or return extraction errors despite size and timeout controls.
-  - Extracted text, tables, images, and metadata may be incomplete or out of order for complex scanned, encrypted, or layout-heavy PDFs.
-  - If HTTP transport is enabled, bind and authenticate it carefully before exposing it beyond trusted local clients.
+  - anymd reads local files and folders, and fetches web URLs that are passed to it. Use --allow-dir (or MCP_PDF_ALLOWED_DIRS) to confine it to approved directories.
+  - URL fetches block private and loopback addresses, and every redirect hop is checked again.
+  - Optional external tools (tesseract, ffprobe, whisper.cpp) are run without a shell, with a timeout and an output cap.
+  - Conversion quality can vary on scanned, encrypted, or unusually laid-out documents; verify important tables and figures.
 privacyNotes:
-  - PDFs can contain confidential text, embedded images, hidden metadata, author fields, comments, form data, signatures, and document history.
-  - Local file paths, remote URLs, page selections, extracted text, base64 image data, table content, and metadata may be visible to the MCP client and model provider.
-  - Remote PDF fetching reveals requested URLs and request metadata to upstream hosts.
-  - Configure allowed directories and hosts before using the server with private documents, customer files, contracts, invoices, medical records, or regulated material.
+  - Documents are processed locally and are not uploaded; a URL is fetched only when you pass one.
+  - File paths, URLs, extracted text, tables, and metadata (including EXIF GPS data from images) become visible to the MCP client and model provider.
+  - Remote URL fetching reveals the requested URL and request metadata to the upstream host.
 sourceUrls:
-  - "https://github.com/SylphxAI/pdf-reader-mcp/blob/main/README.md"
-  - "https://github.com/SylphxAI/pdf-reader-mcp/blob/main/package.json"
-  - "https://github.com/SylphxAI/pdf-reader-mcp/blob/main/src/index.ts"
-  - "https://github.com/SylphxAI/pdf-reader-mcp/blob/main/src/handlers/readPdf.ts"
-  - "https://github.com/SylphxAI/pdf-reader-mcp/blob/main/src/pdf/loader.ts"
-  - "https://github.com/SylphxAI/pdf-reader-mcp/blob/main/src/utils/config.ts"
-  - "https://github.com/SylphxAI/pdf-reader-mcp/blob/main/LICENSE"
+  - "https://github.com/SylphxAI/anymd/blob/main/README.md"
+  - "https://github.com/SylphxAI/anymd/blob/main/package.json"
+  - "https://github.com/SylphxAI/anymd/blob/main/SECURITY.md"
+  - "https://github.com/SylphxAI/anymd/blob/main/LICENSE"
+  - "https://sylphxai.github.io/anymd/"
 tags:
   - pdf
+  - markdown
   - document-processing
   - extraction
   - tables
-  - metadata
+  - ocr
 keywords:
+  - anymd
   - PDF Reader MCP
-  - PDF MCP server
-  - PDF extraction MCP
-  - PDF metadata MCP
-  - PDF table extraction MCP
-  - PDF image extraction MCP
+  - file to Markdown MCP
+  - PDF to Markdown MCP
+  - DOCX to Markdown MCP
+  - document search MCP
 robotsIndex: true
 robotsFollow: true
 ---
 
 ## Content
 
-PDF Reader MCP is a dedicated Model Context Protocol server for extracting
-content from PDFs. It exposes a `read_pdf` tool that can process multiple local
-files or remote URLs, select page ranges, return metadata and page counts,
-extract full text, include embedded images, and detect table-like structures.
+anymd, formerly PDF Reader MCP, is a local Model Context Protocol server and
+CLI that turns files into clean Markdown for agents. It reads PDF, Word
+(`.docx`), PowerPoint (`.pptx`), Excel/ODS/CSV/TSV, EPUB, HTML and web URLs,
+Markdown/text/JSON, images (dimensions, EXIF, optional OCR), and audio/video
+metadata and subtitles. The engine is native Rust, and it needs no API key or
+cloud service.
 
-The project is focused on PDF reading rather than broad document conversion. It
-is useful when Claude needs page-aware PDF evidence while keeping the extraction
-surface limited to PDF files.
+For PDFs, anymd rebuilds words from glyph positions, keeps two-column papers in
+reading order, and recovers tables, including borderless ones. Every page carries a
+`<!-- page N -->` anchor that Claude can cite.
 
 ## Source Review
 
-- https://github.com/SylphxAI/pdf-reader-mcp
-- https://github.com/SylphxAI/pdf-reader-mcp/blob/main/README.md
-- https://registry.npmjs.org/%40sylphx%2Fpdf-reader-mcp
-- https://github.com/SylphxAI/pdf-reader-mcp/blob/main/package.json
-- https://github.com/SylphxAI/pdf-reader-mcp/blob/main/src/index.ts
-- https://github.com/SylphxAI/pdf-reader-mcp/blob/main/src/handlers/readPdf.ts
-- https://github.com/SylphxAI/pdf-reader-mcp/blob/main/src/pdf/loader.ts
-- https://github.com/SylphxAI/pdf-reader-mcp/blob/main/src/utils/config.ts
-- https://github.com/SylphxAI/pdf-reader-mcp/blob/main/LICENSE
+- https://github.com/SylphxAI/anymd
+- https://github.com/SylphxAI/anymd/blob/main/README.md
+- https://registry.npmjs.org/%40sylphx%2Fanymd
+- https://github.com/SylphxAI/anymd/blob/main/SECURITY.md
+- https://github.com/SylphxAI/anymd/blob/main/LICENSE
 
-These sources were reviewed on **2026-06-06**. Prefer the live repository,
-README, npm registry metadata, package metadata, server entrypoint, `read_pdf`
-handler, PDF loader, security configuration source, and license file for current
-install commands, source restrictions, extraction behavior, and licensing.
+The repository was renamed from `SylphxAI/pdf-reader-mcp` to `SylphxAI/anymd`.
+`@sylphx/pdf-reader-mcp` still installs and runs anymd, and the old tool names
+(`read_pdf`, `search_pdf`) still work for the current major version.
 
 ## Features
 
-- npm package `@sylphx/pdf-reader-mcp`.
-- Stdio MCP server launched with `npx -y @sylphx/pdf-reader-mcp`.
-- Single `read_pdf` tool for one or more sources.
-- Local path and remote URL sources.
-- Page-range extraction with numbers or range strings.
-- Optional full text, metadata, page count, image, and table extraction.
-- Batched source and page processing to limit memory pressure.
-- Directory allowlists, host allowlists, URL disable flag, and private-IP SSRF guard.
+- npm package `@sylphx/anymd`. It runs as a stdio MCP server with `npx -y @sylphx/anymd`.
+- `read` turns a file, URL, or folder into Markdown, with page ranges, a token budget, and a cursor for large documents.
+- `search` finds text across files, folders, and URLs, and falls back to BM25-ranked passages.
+- `inspect` renders PDF pages, extracts regions, runs OCR on pages, returns structure with geometry, and compares documents.
+- The same binary works as a CLI: `anymd report.pdf > report.md`.
+- `--allow-dir` directory confinement, and SSRF-safe URL fetching.
+- Binaries for macOS, Linux, and Windows.
 - MIT license.
 
 ## Installation
 
-Configure the stdio server in your MCP client:
-
 ```json
 {
   "mcpServers": {
-    "pdf-reader": {
+    "anymd": {
       "command": "npx",
-      "args": ["-y", "@sylphx/pdf-reader-mcp"]
+      "args": ["-y", "@sylphx/anymd"]
     }
   }
 }
 ```
 
-Replace the example directory and host with locations you trust before use.
-Keep `MCP_PDF_ALLOW_HTTP` set to `false` unless you have a specific, trusted
-plaintext HTTP source and understand the tampering risk. After restarting the
-MCP client, ask Claude to read only approved PDF paths or URLs and specify
-whether you need full text, metadata, page counts, images, tables, or particular
-page ranges.
+With Claude Code: `claude mcp add anymd -- npx -y @sylphx/anymd`. Add
+`--allow-dir=/path/to/docs` to keep the server inside one folder.
 
 ## Use Cases
 
-- Extract text from a specific page range in a PDF.
-- Read metadata and page count before deciding whether to process a document.
-- Pull embedded images from selected PDF pages.
-- Extract table-like content for review.
-- Batch several approved PDFs in one tool call.
-- Summarize a report, contract, manual, or invoice from extracted text.
-- Restrict the server to approved directories or remote hosts for document workflows.
+- Convert a PDF, deck, or spreadsheet to Markdown before summarizing it.
+- Search a folder of contracts or papers for a phrase and cite the pages.
+- Read a web article without navigation, banners, or sidebars.
+- Extract tables from reports and invoices as Markdown tables.
+- Read image EXIF data or video chapters and subtitles.
 
 ## Safety and Privacy
 
-PDF Reader MCP can expose everything a PDF contains, including hidden metadata,
-embedded images, form fields, author information, comments, and text that was
-not obvious from a quick visual scan. Use directory and host allowlists for
-private workflows, and verify extraction quality before relying on important
-tables, page ranges, or scanned-document text.
-
-Remote URL fetching is enabled by default in the reviewed source, with
-configuration available to disable it or restrict hosts. Treat remote PDF URLs,
-local paths, extracted text, image data, tables, and metadata as sensitive
-unless the document is approved for the model session.
+anymd can expose everything a document contains, including hidden metadata,
+comments, and image GPS data. Use `--allow-dir` for private workflows, and
+verify extraction quality before relying on important tables or scanned-document
+text.
 
 ## Duplicate Check
 
-Existing content includes MarkItDown, Kreuzberg, Markdownify, and research
-servers that can process PDFs among many other formats. This entry is distinct
-because it covers `SylphxAI/pdf-reader-mcp`, a dedicated PDF-only MCP server
-with page ranges, images, tables, metadata, local/URL sources, and configurable
-file/URL restrictions. No matching source URL or dedicated PDF Reader MCP entry
-was found in `content/mcp`.
+Existing content includes MarkItDown, Kreuzberg, and Markdownify. This entry
+already covered `SylphxAI/pdf-reader-mcp`. It is updated in place because that
+project was renamed to anymd and now handles every format listed above.
