@@ -234,7 +234,10 @@ function prepareSearchFilters(filters: SearchFilters = {}): PreparedSearchFilter
 export function matchesSearchFilters(entry: Entry, filters: SearchFilters = {}) {
   const prepared = filters as PreparedSearchFilters;
   if (filters.categories?.length && !filters.categories.includes(entry.category)) return false;
-  if (filters.platforms?.length && !entry.platforms.some((p) => filters.platforms!.includes(p)))
+  if (
+    filters.platforms?.length &&
+    !filters.platforms.some((p) => entry.platforms.includes(p) || entry.harness?.includes(p))
+  )
     return false;
   if (filters.trust?.length && !filters.trust.includes(entry.trust)) return false;
   if (filters.source?.length && !filters.source.includes(entry.source)) return false;

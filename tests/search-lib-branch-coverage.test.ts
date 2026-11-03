@@ -117,6 +117,11 @@ describe("search lib branch coverage", () => {
         platforms: ["cursor"],
       }),
     ).toBe(false);
+    expect(
+      matchesSearchFilters(entry({ harness: ["windsurf"], platforms: [] }), {
+        platforms: ["windsurf"],
+      }),
+    ).toBe(true);
   });
 
   it("scores query relevance through title, slug, and sort paths", () => {
