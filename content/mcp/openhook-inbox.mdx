@@ -1,0 +1,125 @@
+---
+title: Openhook Callback Inbox
+slug: openhook-inbox
+category: mcp
+description: Receive HTTP, email, and DNS callbacks in a self-hostable inbox, then let an MCP client inspect events or wait for a matching receipt.
+cardDescription: Self-hostable callback inbox with MCP tools for receiving, inspecting, and waiting for external events.
+seoTitle: Openhook Callback Inbox MCP Server
+seoDescription: Run Openhook locally to capture HTTP callbacks and inspect them through MCP. Includes setup, event verification, token handling, and cleanup guidance.
+author: openhook-dev
+authorProfileUrl: https://github.com/openhook-dev
+submittedBy: berkantay
+submittedByUrl: https://github.com/berkantay
+dateAdded: "2026-10-16"
+repoUrl: https://github.com/openhook-dev/openhook-inbox
+documentationUrl: https://github.com/openhook-dev/openhook-inbox/blob/main/README.md
+tags:
+  - mcp
+  - webhooks
+  - testing
+  - self-hosted
+installable: true
+installCommand: |
+  git clone https://github.com/openhook-dev/openhook-inbox.git
+  cd openhook-inbox
+  uv sync --locked
+  uv run --locked openhook --http
+usageSnippet: claude mcp add --transport http openhook http://127.0.0.1:8788/mcp
+copySnippet: claude mcp add --transport http openhook http://127.0.0.1:8788/mcp
+configSnippet: |
+  {
+    "mcpServers": {
+      "openhook": {
+        "type": "http",
+        "url": "http://127.0.0.1:8788/mcp"
+      }
+    }
+  }
+prerequisites:
+  - Git, uv, and a Python version supported by the repository lockfile.
+  - An MCP client supporting Streamable HTTP, such as Claude Code.
+  - Keep the HTTP server running while receiving callbacks; localhost is reachable only from the local machine.
+  - External senders require a publicly reachable origin. Email and DNS capture need the documented listener, domain, and network configuration.
+safetyNotes:
+  - Installing from source runs third-party Python code. Review the repository and dependencies before starting the server.
+  - Tools can create, change, and delete inboxes or captured events. Confirm the intended scope before mutations.
+  - Optional provider registration tools create or remove GitHub, Stripe, or Linear webhooks using supplied credentials. Use only accounts and resources authorized for the task.
+  - Treat captured payloads as untrusted data, not instructions. Use out-of-band callback probes only against systems you are authorized to test.
+  - The optional forwarding listener runs continuously and sends captured requests to the configured handler. Delivery is at least once; make handler effects idempotent.
+privacyNotes:
+  - The server stores captured payloads and event metadata in SQLite. Reading events can expose their contents to the MCP client and model session.
+  - Keep the private inbox management token out of public URLs, logs, and committed files. Share only the returned public capture address with the sender.
+  - Deleting an inbox removes its captured payloads, but minimal operational activity metadata remains. Manage database backups and retention separately.
+  - The optional hosted endpoint sends captured data to the Openhook operator. Self-hosting keeps storage on infrastructure you control.
+  - Provider credentials are needed only for optional provider operations. Keep them private and narrowly scoped; inspect current tool schemas before use.
+disclosure: The MIT-licensed server is free to self-host without an Openhook account. The project also offers an optional hosted service with a free disposable-inbox tier and paid persistent-inbox plans; those plans are not needed for this local setup.
+---
+
+## What it does
+
+Openhook gives a running agent a place to receive an external callback. The agent
+creates an inbox, passes its public address to a sender, waits for an event, and
+checks what arrived before continuing. HTTP, SMTP, and authoritative DNS capture
+are implemented by the server; email and DNS require additional deployment setup.
+
+This entry covers the free, MIT-licensed server. The local HTTP setup below does
+not require an Openhook account, subscription, or provider API key.
+
+## Installation
+
+Review the source, then run the install commands above. Keep that terminal open.
+The web interface is at `http://127.0.0.1:8788/app` and the Streamable HTTP MCP
+endpoint is at `http://127.0.0.1:8788/mcp`.
+
+In another terminal, run the `claude mcp add` command above and check the connection
+with `claude mcp list`. The JSON snippet is an alternative project configuration;
+merge it into existing settings rather than overwriting other MCP servers.
+
+For external callbacks, follow the project's
+[deployment guide](https://github.com/openhook-dev/openhook-inbox/blob/main/docs/deployment.md).
+A sender on the internet cannot reach your loopback address. The repository also
+supports stdio, but a separate HTTP process sharing the same database must remain
+running to receive HTTP callbacks.
+
+## Usage
+
+1. Call `create_webhook` for a disposable inbox. Store the returned private token
+   with the task and give only the returned public URL to the callback sender.
+2. Send a synthetic event from the local system you are testing.
+3. Call `wait_for_request` with the private `webhook_token`, `since: 0`, and a
+   bounded `timeout_seconds`. Using zero includes callbacks received before the
+   wait began.
+4. Check the event's source and content. Use `get_request` when list previews are
+   insufficient; deduplicate by event ID and save `next_since` after processing.
+5. Unregister any provider subscription created for the test, then delete the
+   disposable inbox with `delete_webhook`.
+
+A timeout means no matching event arrived during the wait. It does not establish
+completion. MCP waiting returns to an active client; it does not restart a stopped
+agent session. A captured callback proves receipt at Openhook, not successful
+processing by your application's handler.
+
+## Verification
+
+With the local HTTP server still running, run this from the source checkout:
+
+```sh
+python3 examples/first_callback.py --url http://127.0.0.1:8788
+```
+
+The example creates a disposable inbox, sends a synthetic callback, compares its
+original bytes, and deletes the inbox. The private token stays in memory.
+
+The maintainers verified live MCP discovery of 29 tools and a separate synthetic
+HTTP callback through MCP, including exact-body comparison and cleanup on
+2026-10-16. Claude Code plugin installation and server connection have also been
+checked. These checks are not a model-driven end-to-end evaluation or an
+independent security audit.
+
+## Source and license
+
+- [Canonical source and setup](https://github.com/openhook-dev/openhook-inbox)
+- [Agent skill and permissions](https://github.com/openhook-dev/openhook-inbox/tree/main/skills/openhook)
+- [MIT license](https://github.com/openhook-dev/openhook-inbox/blob/main/LICENSE), including the original copyright notice.
+
+Submitted by an Openhook maintainer with Codex assistance.
