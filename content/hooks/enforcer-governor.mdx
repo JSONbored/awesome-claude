@@ -1,0 +1,112 @@
+---
+title: Enforcer Governor - Claude Code Hooks
+slug: enforcer-governor
+category: hooks
+description: >-
+  A PreToolUse hook that returns allow, deny or escalate before a Claude Code
+  tool call runs. It enforces rather than reports: dollar-per-minute caps per
+  agent and across a fleet, new agents per minute, and errors per minute.
+  Destructive commands are judged on capability rather than cost, so they are
+  refused on a full budget. Every decision is hash-chained into a record that
+  breaks visibly if edited.
+cardDescription: >-
+  Allow, deny or escalate every agent action before it runs, with rate limits
+  and tamper-evident receipts.
+seoTitle: Enforcer Governor - Claude Code Hooks
+seoDescription: >-
+  A PreToolUse hook that decides allow, deny or escalate before a Claude Code
+  tool call runs, with dollar-per-minute rate limits and hash-chained receipts.
+author: Instruxi
+authorProfileUrl: "https://github.com/instruxi-io"
+repoUrl: "https://github.com/instruxi-io/enforcer-governor"
+dateAdded: "2026-09-21"
+documentationUrl: "https://gvnr.io/quickstart"
+retrievalSources:
+  - "https://gvnr.io/quickstart"
+  - "https://gvnr.io/configure"
+  - "https://github.com/instruxi-io/enforcer-governor"
+installable: true
+installCommand: "npx --yes enforcer-governor install-hook"
+usageSnippet: |-
+  # in the project you want watched
+  npx --yes enforcer-governor install-hook
+
+  # then start a NEW Claude Code session in that project.
+  # add --global to watch every project; remove with:
+  npx enforcer-governor uninstall-hook
+copySnippet: |-
+  {
+    "hooks": {
+      "PreToolUse": [
+        {
+          "matcher": "*",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "node \"/absolute/path/to/enforcer-governor/src/hook.mjs\""
+            }
+          ]
+        }
+      ]
+    }
+  }
+configSnippet: |-
+  {
+    "dollars": 20,
+    "model": "claude-opus-5",
+    "soft": 0.75,
+    "burnLimit": 2,
+    "fleetBurnLimit": 10,
+    "fanoutLimit": 8,
+    "retryLimit": 6,
+    "port": 4000
+  }
+scriptLanguage: javascript
+scriptBody: "#!/usr/bin/env node\n// A zero-install Claude Code PreToolUse hook.\n//\n// src/hook.mjs is the real one and does more: it reads the session transcript\n// and prices cost-weighted effective tokens before asking. This is the version\n// you can paste into a project without installing the package, for people who\n// would rather read 40 lines than trust an npx. It needs the governor already\n// running (npx --yes enforcer-governor start) and asks it over HTTP.\n//\n// Contract learned the hard way: exit 0 and print JSON. Exiting 2 WITH JSON is\n// ignored by Claude Code.\nimport { readFileSync } from 'node:fs';\n\nconst PORT = process.env.GOVERNOR_PORT || 4000;\n\nfunction emit(decision, reason) {\n  process.stdout.write(JSON.stringify({\n    hookSpecificOutput: {\n      hookEventName: 'PreToolUse',\n      permissionDecision: decision,          // allow | deny | ask\n      permissionDecisionReason: reason,\n    },\n  }));\n  process.exit(0);\n}\n\nlet event = {};\ntry { event = JSON.parse(readFileSync(0, 'utf8') || '{}'); } catch { /* fall through */ }\n\n// Shape matters: the capability rules regex-match against `action`, which is\n// the tool name and its serialised input in one string. `tool` is matched\n// separately, and an empty rule tool means any tool.\nconst body = JSON.stringify({\n  agent: event.session_id || 'claude-code',\n  tool: event.tool_name,\n  action: `${event.tool_name || 'tool'}:${JSON.stringify(event.tool_input ?? '').slice(0, 200)}`,\n  tokens: 0,                                  // this shim does not meter; the governor still rate-limits\n  cwd: event.cwd,\n});\n\ntry {\n  const res = await fetch(`http://localhost:${PORT}/decide`, {\n    method: 'POST',\n    headers: { 'Content-Type': 'application/json' },\n    body,\n    signal: AbortSignal.timeout(2000),\n  });\n  const r = await res.json();\n  if (r.verdict === 'deny') emit('deny', `Enforcer refused this: ${r.reason}.`);\n  if (r.verdict === 'escalate') emit('ask', `Enforcer wants you to confirm: ${r.reason}. Allow it this once?`);\n  emit('allow', 'Enforcer: allowed');\n} catch {\n  // Fail OPEN, deliberately. A guard that breaks the agent when the guard\n  // itself is down is a worse outcome than a missed check, and a hook that\n  // hangs blocks every tool call. Run the real hook if you want fail-closed.\n  emit('allow', 'Enforcer: not running, allowed without a check');\n}\n"
+trigger: PreToolUse
+prerequisites:
+  - "Node.js. The hook is installed with npx and runs locally."
+tags:
+  - cost-control
+  - guardrails
+  - spend-limits
+  - rate-limiting
+  - audit-log
+  - agent-security
+  - human-in-the-loop
+safetyNotes:
+  - "Blocks Claude Code tool calls by design; install writes a PreToolUse entry to .claude/settings.json, or ~/.claude with --global, and uninstall-hook removes it."
+  - "Running the governor starts a local HTTP server on port 4000 by default."
+  - "Capability rules are pattern-based, so treat it as a guard rather than a sandbox: shell obfuscation can defeat denylists of this shape. It does not claim to detect hallucination."
+privacyNotes:
+  - "Runs entirely on the user's machine and sends nothing to Instruxi; config, receipts and spend records are written locally."
+  - "The optional proxy route is different: pointing OPENAI_BASE_URL or ANTHROPIC_BASE_URL at it puts it in the path of LLM calls, so it sees full request and response bodies and the API key it forwards to the provider. The hook route proxies nothing."
+keywords:
+  - enforcer governor hook
+  - claude code spend limit hook
+  - claude code guardrail hook
+  - ai agent cost control claude code
+readingTime: 2
+hasTroubleshooting: false
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Features
+
+- Three outcomes on every tool call, checked before it runs: allow when the action is in budget and on task, deny when it is over or looping, and escalate to the human when it needs a decision.
+- Rate limits rather than only totals: dollars per minute per agent and across a fleet, new agents per minute to catch an orchestrator spawning orchestrators, and errors per minute to catch a retry storm behind a provider rate limit.
+- Capability checks that fire on a full budget, because the expensive mistakes are cheap commands. Piping the internet into a shell is refused outright; deleting a tree, rewriting git history, reading credentials, publishing or deploying stop and ask.
+- Hash-chained receipts naming the human the agent acted for, the tool it tried, the model that answered and the rule that decided. Editing or deleting one record breaks the chain visibly.
+- Model-fit advice that reads the task the agent was actually given and says when a top-tier model is doing mechanical work, or a light one is doing work that needs reasoning. It stays quiet when the signal is unclear.
+- Spend caps priced as cost-weighted effective tokens, so a cached session that re-reads its context every turn is measured by what it costs rather than by raw token counts.
+
+## Two routes
+
+The hook is the stronger of the two, because a refused action never executes at all and it catches actions that cost nothing. For clients without hook support, the same governor runs as a local proxy: point `OPENAI_BASE_URL` or `ANTHROPIC_BASE_URL` at `http://localhost:4000` and requests are metered and refused with HTTP 429 once an agent is over budget.
+
+## Limits worth knowing
+
+Capability rules are pattern-based and are a guard rather than a sandbox. Only Claude Code has the hook wired today; everything else goes through the proxy. The public ChatGPT website cannot be governed, though anything on the OpenAI API can. It does not detect hallucination and makes no such claim.
