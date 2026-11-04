@@ -1,0 +1,195 @@
+---
+title: JGS SE Knowledge Packs
+slug: jgs-se-knowledge-packs
+category: skills
+description: >-
+  Catalogue of 74 licence-vetted systems-engineering reference packs for coding
+  agents, each written as a standard SKILL.md Agent Skill. Covers requirements,
+  architecture, testing, safety assurance, data engineering, and operations,
+  built from open sources with recorded provenance.
+cardDescription: >-
+  74 licence-vetted SE reference packs for coding agents: requirements,
+  architecture, testing, safety, data, ops.
+seoTitle: JGS SE Knowledge Packs for Claude Code - 74 Systems Engineering Reference Skills
+seoDescription: >-
+  Browse JGS SE Knowledge Packs for Claude Code: 74 licence-vetted
+  systems-engineering reference packs installable as Agent Skills via the
+  skills.sh CLI, covering requirements, architecture, testing, safety, data,
+  and operations.
+author: jgsystemsconsulting
+authorProfileUrl: "https://github.com/jgsystemsconsulting"
+dateAdded: "2026-10-29"
+repoUrl: "https://github.com/jgsystemsconsulting/jgs-se-knowledge-packs"
+documentationUrl: "https://github.com/jgsystemsconsulting/jgs-se-knowledge-packs#readme"
+websiteUrl: "https://skills.sh/jgsystemsconsulting/jgs-se-knowledge-packs"
+downloadUrl: "https://github.com/jgsystemsconsulting/jgs-se-knowledge-packs/archive/refs/heads/main.zip"
+installable: true
+installCommand: "npx skills add jgsystemsconsulting/jgs-se-knowledge-packs --all"
+usageSnippet: >-
+  List the 74 packs, install one pack by slug, or install the whole catalogue
+  with the skills.sh CLI, then invoke a pack by slug in Claude Code (for
+  example /sebok systems of systems) or route a question with the /se
+  orchestrator.
+copySnippet: |-
+  npx skills add jgsystemsconsulting/jgs-se-knowledge-packs -l
+
+  # Install one pack
+  npx skills add jgsystemsconsulting/jgs-se-knowledge-packs --skill sebok
+
+  # Install the catalogue
+  npx skills add jgsystemsconsulting/jgs-se-knowledge-packs --all
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-10-29"
+retrievalSources:
+  - "https://github.com/jgsystemsconsulting/jgs-se-knowledge-packs"
+  - "https://github.com/jgsystemsconsulting/jgs-se-knowledge-packs/blob/main/catalog.json"
+  - "https://skills.sh/jgsystemsconsulting/jgs-se-knowledge-packs"
+testedPlatforms:
+  - Claude Code
+prerequisites:
+  - "Claude Code or another host that reads the Agent Skills SKILL.md format."
+  - "Node.js with npx for the skills.sh CLI installer (or Python 3.9+ for the repo's install.py)."
+  - "Review of the per-pack licence in NOTICE before redistribution; pack content carries each source's own licence."
+safetyNotes:
+  - "Packs are static reference documents (SKILL.md); the catalogue ships no executable code."
+  - "Installing runs the skills.sh CLI, which writes pack files locally; review content before installing, as with any skill."
+privacyNotes:
+  - "No telemetry, no network calls, no credentials. Packs are static markdown; installation stores files locally under the skills directory."
+tags:
+  - systems-engineering
+  - knowledge-packs
+  - reference
+  - documentation
+  - coding-agents
+  - claude-code
+  - skills
+  - architecture
+keywords:
+  - JGS SE Knowledge Packs
+  - systems engineering skills
+  - SEBoK Claude Code
+  - NASA systems engineering handbook skill
+  - NIST cybersecurity framework skill
+  - requirements EARS patterns
+  - MIL-STD knowledge pack
+  - agent skills catalogue
+  - knowledge packs for coding agents
+  - licence-vetted reference packs
+readingTime: 6
+difficultyScore: 70
+hasTroubleshooting: false
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# JGS SE Knowledge Packs
+
+`jgsystemsconsulting/jgs-se-knowledge-packs` is a curated catalogue of 74
+systems-engineering reference packs written as standard Agent Skills
+(`SKILL.md`). Each pack turns an open body of knowledge - a public-domain
+handbook, an open-licensed specification, or a regulator's guidance - into an
+on-demand reference a coding agent can load mid-task and cite.
+
+Use this listing when a coding agent needs vetted systems-engineering domain
+grounding: requirements elicitation and EARS patterns, architecture trade-offs,
+test strategy, safety assurance, data engineering, or operations practice.
+
+## Knowledge Freshness
+
+Pack content is reconstructed from specific source editions, recorded per pack
+in `catalog.json` and `NOTICE` at v1.24.1. Upstream standards bodies revise
+their documents; check the source edition listed for a pack before relying on
+chapter-level detail, and consult the repo CHANGELOG for catalogue updates.
+
+## Retrieval Sources
+
+This listing is grounded in:
+
+- The upstream repository README and `catalog.json` (74 pack entries).
+- The per-pack `PACK.yaml` provenance records and `NOTICE` attributions.
+- The skills.sh listing for the catalogue.
+
+## Core Workflow
+
+List the available packs:
+
+```text
+npx skills add jgsystemsconsulting/jgs-se-knowledge-packs -l
+```
+
+Install one pack or the whole catalogue:
+
+```text
+npx skills add jgsystemsconsulting/jgs-se-knowledge-packs --skill sebok
+npx skills add jgsystemsconsulting/jgs-se-knowledge-packs --all
+```
+
+Restart the agent, then invoke a pack by slug (`/sebok systems of systems`) or
+route an open question through the `/se <question>` orchestrator, which picks
+one to four packs and answers with pack and chapter citations.
+
+## Capability Scope
+
+The catalogue spans systems-engineering domains from public sources:
+
+| Domain | Example packs |
+| --- | --- |
+| Requirements and SE bodies of knowledge | `sebok`, `requirements-writing`, `mit-ocw-se` (planned) |
+| NASA and DoD practice | `nasa-se-handbook`, `dau-se-guidebook`, `dodaf`, `mil-std-881f` |
+| Safety and assurance | `mil-std-882`, `nasa-system-safety`, `nhtsa-vehicle`, `nrc-nuclear` |
+| Security engineering | `nist-ssdf`, `nist-csf`, `nist-sse`, `nist-800-171` |
+| Cost, schedule, and test | `gao-cost`, `gao-schedule`, `gao-tra`, `nasa-ceh` |
+| Regulated domains | `eu-ai-act`, `fda-med-device`, `easa-rules`, `jsp-936` |
+
+Signposts (citation-only entries, zero reproduced content) map paywalled
+landscapes such as ISO/IEC/IEEE standards, ECSS, and automotive functional
+safety to their open paths.
+
+## Production Rules
+
+- Treat pack chapters as reconstructed reference notes; verify exact standard
+  wording against the upstream source before contractual or safety use.
+- Keep per-pack attribution intact when redistributing; pack content carries
+  each source's own licence, independent of the repo's MIT tooling licence.
+- Prefer the `/se` orchestrator for broad questions; it cites the packs it
+  used instead of answering from general model memory.
+
+## Use Cases
+
+- Draft requirements sections against EARS patterns and SEBoK quality
+  guidance.
+- Compare NASA, DoD, and FAA practice on risk acceptance, V&V, or review
+  gates while writing process documents.
+- Ground safety-assurance or cybersecurity arguments in MIL-STD-882E, NIST
+  SSDF/CSF, or sector regulators rather than recollection.
+
+## Source Review
+
+Verified on **2026-10-29**:
+
+- The repository README and `catalog.json` describe 74 live packs plus
+  signposts, at version 1.24.1, built only from public-domain and
+  open-licensed sources under an enforced eligibility rule.
+- The skills.sh listing exposes the catalogue to the `npx skills` CLI, and the
+  README documents install commands and per-agent targets.
+- `docs/LICENSING.md` and `NOTICE` record why each pack is redistributable and
+  which licence each source carries.
+
+## Duplicate Review
+
+Checked current `content/skills/`, open pull requests, and repository-wide
+content for `jgs-se-knowledge-packs`, JG Systems Consulting, and
+systems-engineering reference packs. No existing entry, exact source URL
+duplicate, target file, or open duplicate PR was found; other catalogues on
+the same source host cover different domains (Anthropic examples, Dart,
+Flutter, Google Cloud, MCP app building).
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. The catalogue
+is maintained by JG Systems Consulting Ltd; tooling is MIT licensed and pack
+content carries each source's own licence as described in the upstream NOTICE.
