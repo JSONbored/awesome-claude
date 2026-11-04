@@ -1,0 +1,132 @@
+---
+title: LurkAPI MCP Server
+slug: lurkapi-mcp-server
+category: mcp
+description: >-
+  LurkAPI's hosted MCP server gives Claude live public data from social platforms:
+  profiles, posts, comments and video transcripts from TikTok, Instagram, YouTube,
+  Reddit, X, LinkedIn and more, plus the Meta, Google, LinkedIn and TikTok ad libraries.
+cardDescription: >-
+  Let Claude read public TikTok, Instagram, YouTube, Reddit and ad library data through one hosted HTTP MCP endpoint.
+seoTitle: LurkAPI MCP Server for Claude
+seoDescription: >-
+  Configure the LurkAPI MCP server: a streamable HTTP endpoint with OAuth sign-in or an
+  x-api-key header, one read-only tool per endpoint for social media posts, profiles,
+  comments, transcripts and ad libraries.
+author: LurkAPI
+authorProfileUrl: "https://lurkapi.com"
+submittedBy: mesmerlord
+submittedByUrl: "https://github.com/mesmerlord"
+dateAdded: "2026-11-04"
+brandName: LurkAPI
+brandDomain: lurkapi.com
+repoUrl: "https://github.com/mesmerlord/lurkapi-claude-plugin"
+documentationUrl: "https://lurkapi.com/docs#claude"
+websiteUrl: "https://lurkapi.com"
+pricingModel: freemium
+disclosure: >-
+  LurkAPI is a commercial pay-per-call API with free credits (100 at signup with no card,
+  and a daily top-up to 25). The MCP server is run by LurkAPI, and this entry was submitted
+  by its founder.
+retrievalSources:
+  - "https://lurkapi.com/docs"
+  - "https://lurkapi.com/llms.txt"
+  - "https://lurkapi.com/pricing"
+  - "https://api.lurkapi.com/.well-known/oauth-protected-resource"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add --transport http lurkapi https://api.lurkapi.com/mcp"
+usageSnippet: >-
+  Add the endpoint as an HTTP MCP server, run /mcp in Claude Code and sign in through the
+  browser, then ask Claude "What ads is Allbirds running on Facebook right now?" or
+  "Summarize the last five videos on this YouTube channel".
+copySnippet: |-
+  {
+    "mcpServers": {
+      "lurkapi": {
+        "type": "http",
+        "url": "https://api.lurkapi.com/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "lurkapi": {
+        "type": "http",
+        "url": "https://api.lurkapi.com/mcp",
+        "headers": {
+          "x-api-key": "YOUR_API_KEY"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A LurkAPI account (Google or an emailed code at lurkapi.com/login). OAuth sign-in in the browser needs no key; clients without OAuth send an API key from the dashboard in the x-api-key header."
+safetyNotes:
+  - "Remote hosted server: nothing is installed or executed locally."
+  - "All tools are reads of public pages. The server never logs in to anyone's social accounts and can't post, like, follow or message."
+  - "Most tool calls spend 1 credit of the account's balance; web page tools and speech-to-text cost more and take max_credits, which stops a call before it spends more than allowed. Failed calls on bad arguments, rate limits or server errors are free."
+privacyNotes:
+  - "Tool arguments (handles, URLs, keywords, brand names) are sent to the LurkAPI API (third-party service)."
+  - "LurkAPI keeps a call log with each call's parameters and its response for 14 days, visible to the account in its dashboard."
+  - "Results can contain public personal data from social platforms (names, handles, posts, comments); handle them under the privacy rules that apply to you."
+  - "Store an API key in the client config or a secret manager, not in repository files."
+tags:
+  - social-media
+  - scraping
+  - ad-library
+  - transcripts
+  - mcp
+keywords:
+  - LurkAPI MCP server
+  - social media MCP server
+  - Facebook Ad Library MCP
+  - TikTok data MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+LurkAPI is a social media data API. Its hosted MCP endpoint at
+`https://api.lurkapi.com/mcp` (streamable HTTP) exposes one read-only tool per endpoint,
+named `<platform>_<endpoint>`, for example:
+
+- **facebook_search_ads** and **facebook_company_ads**: ads from Meta's Ad Library by keyword or advertiser, with copy, media, landing page and run dates.
+- **google_company_ads**, **linkedin_search_ads**, **tiktok_ad_library_search**: Google Ads Transparency Center, LinkedIn Ad Library and TikTok's EU ad library.
+- **tiktok_profile**, **instagram_user_posts**, **youtube_channel_videos**, **twitter_user_tweets**: profiles and recent posts.
+- **youtube_transcript**, **tiktok_transcript**, **instagram_media_transcript**: what's said in a video.
+- **reddit_search** and **reddit_post_comments**: Reddit threads with their comments.
+- **account_credit_balance**: the account's balance (free).
+
+`https://api.lurkapi.com/mcp?platforms=facebook,google` lists only those platforms' tools,
+and `?compact` gives two tools (`find_endpoints`, `call_endpoint`) for clients that cap tool
+counts. Results leave out empty fields and keep one URL per image or video to save tokens.
+
+## Installation
+
+```bash
+claude mcp add --transport http lurkapi https://api.lurkapi.com/mcp
+```
+
+Then run `/mcp`, pick lurkapi and sign in through the browser. New accounts get 100 free
+credits with no card. In Claude (web or desktop), add a custom connector with the same URL
+and click Connect.
+
+## Source Verification Notes
+
+- The docs at **https://lurkapi.com/docs#claude** document the MCP endpoint, OAuth sign-in and the x-api-key header.
+- **https://lurkapi.com/llms.txt** lists the MCP server, its `platforms` and `compact` options, and every tool with its price.
+- **https://api.lurkapi.com/.well-known/oauth-protected-resource** publishes the OAuth metadata (authorization server https://lurkapi.com).
+- The Claude Code plugin with the same server and research skills is MIT at https://github.com/mesmerlord/lurkapi-claude-plugin.
+
+## Duplicate Check
+
+No existing HeyClaude MCP entry covers LurkAPI.
+
+## Editorial Disclosure
+
+Submitted by LurkAPI's founder. LurkAPI is a commercial service with free credits.
