@@ -1,0 +1,91 @@
+---
+title: ContextStream
+slug: contextstream
+category: mcp
+description: >-
+  Shared project context MCP for Cursor, Claude Code, Codex, and Grok so coding
+  agents keep decisions, docs, and project state aligned across tools.
+cardDescription: Shared project context MCP for Cursor, Claude Code, Codex, and Grok.
+seoTitle: ContextStream MCP for Claude and coding agents
+seoDescription: >-
+  Connect Claude Code, Cursor, Codex, and Grok to ContextStream's hosted MCP for
+  shared project context across AI coding tools.
+author: ContextStream
+authorProfileUrl: "https://github.com/contextstream"
+submittedBy: escott-
+submittedByUrl: "https://github.com/escott-"
+dateAdded: "2026-09-11"
+brandName: ContextStream
+brandDomain: contextstream.io
+websiteUrl: "https://contextstream.io"
+repoUrl: "https://github.com/contextstream/mcp-server"
+documentationUrl: "https://contextstream.io"
+installable: true
+installCommand: "claude mcp add --transport http contextstream https://mcp.contextstream.io/mcp"
+usageSnippet: >-
+  Point your MCP client at https://mcp.contextstream.io/mcp, then ask Claude to
+  load shared project context, decisions, and docs for the active workspace.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "contextstream": {
+        "url": "https://mcp.contextstream.io/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "contextstream": {
+        "url": "https://mcp.contextstream.io/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - A ContextStream account at https://contextstream.io.
+  - An MCP client such as Claude Code, Cursor, Codex, or another HTTP MCP client.
+  - Network access to https://mcp.contextstream.io/mcp.
+safetyNotes:
+  - The hosted MCP can read and write project context you authorize for the signed-in workspace.
+  - Review tool calls that update decisions, docs, or shared project state before applying them in production repos.
+privacyNotes:
+  - Project names, docs, decisions, and related workspace content can appear in the MCP client and model context.
+  - Auth tokens and account credentials should stay out of committed config, screenshots, and shared transcripts.
+sourceUrls:
+  - "https://contextstream.io"
+  - "https://github.com/contextstream/mcp-server"
+  - "https://mcp.contextstream.io/mcp"
+tags:
+  - project-context
+  - coding-agents
+  - developer-tools
+  - remote-mcp
+  - cursor
+  - claude-code
+keywords:
+  - ContextStream MCP
+  - shared project context
+  - Claude Code MCP
+  - Cursor MCP
+  - Codex MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+ContextStream provides shared project context for Cursor, Claude Code, Codex, and Grok through a hosted MCP endpoint. Intelligence isn’t the bottleneck. Context is.
+
+## Install
+
+Hosted MCP URL: `https://mcp.contextstream.io/mcp`
+
+OSS server: https://github.com/contextstream/mcp-server
+
+## Disclosure
+
+I work on ContextStream. Editorial listing; no paid placement.
