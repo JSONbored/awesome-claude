@@ -1,0 +1,154 @@
+---
+title: Mnemoverse Memory MCP Server
+slug: mnemoverse-memory-mcp-server
+category: mcp
+description: >-
+  Hosted memory server for AI agents over MCP; tell it a recalled memory helped
+  or misled, and it re-ranks what comes back next, with one key shared across
+  Claude Code, Cursor, VS Code, and ChatGPT.
+cardDescription: Hosted memory for Claude over MCP, re-ranked by whether a recalled memory helped or misled.
+seoTitle: Mnemoverse Memory MCP Server for Claude
+seoDescription: >-
+  Connect Claude to Mnemoverse Memory: a hosted MCP memory server with one key
+  across Claude Code, Cursor, VS Code, and ChatGPT, where reported outcomes
+  re-rank later recall.
+author: mnemoverse
+authorProfileUrl: "https://github.com/mnemoverse"
+submittedBy: OlyaTi
+submittedByUrl: "https://github.com/OlyaTi"
+dateAdded: "2026-09-17"
+brandName: Mnemoverse
+brandDomain: mnemoverse.com
+websiteUrl: "https://mnemoverse.com"
+repoUrl: "https://github.com/mnemoverse/mcp-memory-server"
+documentationUrl: "https://mnemoverse.com/docs/api/mcp-server"
+packageUrl: "https://www.npmjs.com/package/@mnemoverse/mcp-memory-server"
+installable: true
+installCommand: >-
+  claude mcp add mnemoverse -s user -e MNEMOVERSE_API_KEY=mk_live_YOUR_KEY -e
+  MNEMOVERSE_API_URL=https://core.mnemoverse.com/api/v1 -- npx -y
+  @mnemoverse/mcp-memory-server@0.10.1
+usageSnippet: >-
+  Start a new Claude session after adding the server and ask about something
+  stored earlier; when a recalled memory helped or misled, say so and later
+  recall is ranked accordingly.
+copySnippet: |-
+  {
+    "mnemoverse": {
+      "command": "npx",
+      "args": ["-y", "@mnemoverse/mcp-memory-server@0.10.1"],
+      "env": {
+        "MNEMOVERSE_API_KEY": "mk_live_YOUR_KEY",
+        "MNEMOVERSE_API_URL": "https://core.mnemoverse.com/api/v1"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "mnemoverse": {
+        "command": "npx",
+        "args": ["-y", "@mnemoverse/mcp-memory-server@0.10.1"],
+        "env": {
+          "MNEMOVERSE_API_KEY": "mk_live_YOUR_KEY",
+          "MNEMOVERSE_API_URL": "https://core.mnemoverse.com/api/v1"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 2 minutes
+difficulty: beginner
+retrievalSources:
+  - "https://github.com/mnemoverse/mcp-memory-server/blob/main/README.md"
+  - "https://mnemoverse.com/docs/api/mcp-server"
+  - "https://mnemoverse.com/docs/api/remote-mcp-server"
+  - "https://registry.modelcontextprotocol.io/v0.1/servers/io.github.mnemoverse%2Fmcp-memory-server/versions/latest"
+prerequisites:
+  - A Mnemoverse API key (starts with mk_live_); free tier at console.mnemoverse.com.
+  - Node.js with npx on PATH, since the stdio server runs from npm.
+  - Network access to core.mnemoverse.com over HTTPS.
+  - Or the hosted endpoint https://mcp.mnemoverse.com/mcp with OAuth sign-in and no key to paste.
+safetyNotes:
+  - Write tools store memories in your hosted Mnemoverse account, so review what an agent is allowed to save.
+  - Feedback calls change how the same account ranks later recall.
+  - The install command runs npx with @0.10.1, which fetches the published package at each session start.
+privacyNotes:
+  - Memory text and the queries used to recall it are sent to the hosted Mnemoverse API and stored there.
+  - The API key is a bearer credential; keep it in user-scope config rather than a committed project file.
+  - Recalled memories enter Claude's context and therefore reach the configured model provider.
+tags:
+  - memory
+  - mcp
+  - claude-code
+  - cursor
+  - hosted
+keywords:
+  - mnemoverse memory mcp server
+  - hosted memory mcp for claude
+  - cross tool agent memory
+  - feedback ranked recall mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Mnemoverse Memory is a hosted memory server for AI agents, reached over MCP. What an agent writes in one client
+is readable in the next, so a decision made in Claude Code is available in Cursor, VS Code, or ChatGPT under the
+same key. Recall is ranked from reported outcomes as well as similarity: tell it that a recalled memory helped or
+misled, and what comes back next changes. The MCP server and the Python SDK are MIT licensed; the engine behind
+them is a hosted service with Free, Pro, Team, and Enterprise tiers.
+
+## Features
+
+- One API key shared across Claude Code, Cursor, VS Code, and ChatGPT
+- Recall re-ranked from reported outcomes, not similarity alone
+- Local stdio server from npm (`@mnemoverse/mcp-memory-server`), MIT licensed
+- Hosted endpoint at https://mcp.mnemoverse.com/mcp with OAuth sign-in and no key to paste
+- Listed in the official MCP Registry as `io.github.mnemoverse/mcp-memory-server`
+- Packaged `.mcpb` bundle published with each release (v0.10.1, 2026-09-16)
+
+## Use Cases
+
+- Carry decisions and preferences from one AI tool into the next
+- Recall project context at the start of a session instead of restating it
+- Mark a recalled memory as helpful or misleading so later recall reflects it
+
+## Installation
+
+### Claude Code
+
+1. Get an API key at https://console.mnemoverse.com
+2. Run: claude mcp add mnemoverse -s user -e MNEMOVERSE_API_KEY=mk_live_YOUR_KEY -e MNEMOVERSE_API_URL=https://core.mnemoverse.com/api/v1 -- npx -y @mnemoverse/mcp-memory-server@0.10.1
+3. Verify installation: claude mcp list
+4. Open a new session and ask about something stored earlier
+
+### Cursor
+
+1. Add the configuration below to `~/.cursor/mcp.json`, merging it with any servers already there
+2. Replace `mk_live_YOUR_KEY` with your own key
+3. Restart Cursor
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "mnemoverse": {
+      "command": "npx",
+      "args": ["-y", "@mnemoverse/mcp-memory-server@0.10.1"],
+      "env": {
+        "MNEMOVERSE_API_KEY": "mk_live_YOUR_KEY",
+        "MNEMOVERSE_API_URL": "https://core.mnemoverse.com/api/v1"
+      }
+    }
+  }
+}
+```
+
+## Security
+
+- The API key is a bearer credential: user-scope config keeps it out of a repository
+- Without a key the server starts and lists its tools, and every tool call is refused
+- The hosted endpoint uses OAuth sign-in instead of a pasted key
+- Stored memories live in the hosted service, so treat the account as the boundary
