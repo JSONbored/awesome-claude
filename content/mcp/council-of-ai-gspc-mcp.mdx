@@ -1,0 +1,136 @@
+---
+title: Council of AI GSPC MCP for Claude
+slug: council-of-ai-gspc-mcp
+category: mcp
+description: >-
+  Live GSPC board, Ed25519-signed measurement cards, and a public Merkle
+  root at councilof.ai. Measurement, not certification. Verification is free.
+cardDescription: "Read the live GSPC board and verify signed cards. Measurement, not certification."
+seoTitle: "Council of AI GSPC MCP for Claude — signed measurement, not certification"
+seoDescription: "Connect Claude to councilof.ai/mcp: live GSPC board totals, per-axis rows, signed-card verify (VALID / INVALID / UNCHECKABLE), and a public Merkle root."
+author: CSOAI LTD
+authorProfileUrl: "https://councilof.ai"
+submittedBy: CSOAI-ORG
+submittedByUrl: "https://github.com/CSOAI-ORG"
+dateAdded: "2026-09-07"
+documentationUrl: "https://councilof.ai/mcp"
+websiteUrl: "https://councilof.ai"
+repoUrl: "https://github.com/CSOAI-ORG/councilof-ai"
+retrievalSources:
+  - "https://councilof.ai/mcp"
+  - "https://github.com/CSOAI-ORG/councilof-ai"
+  - "https://www.npmjs.com/package/csoai-gspc-mcp"
+installable: true
+installCommand: "claude mcp add --transport http gspc https://councilof.ai/mcp"
+usageSnippet: >-
+  Ask Claude for live GSPC board totals, one axis row, or to verify a signed
+  measurement card. Verdicts are three-state: VALID, INVALID, or UNCHECKABLE.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "gspc": {
+        "type": "http",
+        "url": "https://councilof.ai/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "gspc": {
+        "type": "http",
+        "url": "https://councilof.ai/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 2 minutes
+difficulty: beginner
+prerequisites:
+  - "An MCP client such as Claude Code or Claude Desktop."
+  - "Network access to https://councilof.ai/mcp (no API key for the free tools)."
+  - "Optional: npx and the csoai-gspc-mcp package if you prefer stdio instead of HTTP."
+safetyNotes:
+  - "Free tools are read-only: board totals, axis rows, card list, root, verify."
+  - "Paid capabilities return an x402 payment challenge when payment is required. Inspect the advertised tool and challenge before paying USDC on Base. A 402 is not settlement."
+  - "Nothing here certifies a system, sells a rank, or remediates."
+privacyNotes:
+  - "Verification sends the card bytes or URL you supply to councilof.ai. Do not paste secrets inside a card body."
+  - "No API key is required for the free readers."
+tags:
+  - gspc
+  - measurement
+  - attestation
+  - x402
+  - eu-ai-act
+keywords:
+  - gspc mcp
+  - council of ai mcp
+  - signed measurement card
+  - ed25519 verify
+  - measurement not certification
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+**Council of AI GSPC** is the remote MCP door at [https://councilof.ai/mcp](https://councilof.ai/mcp).
+It reads the living GSPC board, lists signed measurement cards, and verifies a card under the published Ed25519 rule. **Measurement, not certification** — empty cells stay empty; UNMEASURED is a first-class answer.
+
+The remote HTTP client discovers the current catalogue through MCP tools/list. The pinned stdio package below carries its own versioned catalogue; it is not identical to every future remote release. Free readers require no API key. Paid capabilities are opt-in x402 (USDC on Base); HTTP 402 is a payment challenge, not a sale.
+
+## Key capabilities
+
+| Tool | Cost | What it does |
+| --- | --- | --- |
+| `board_totals` | free | Live slot count vs measured count, never summed |
+| `get_axis` | free | One axis row: n, interval, MEASURED or UNMEASURED |
+| `verify_card` | free | Three-state verdict: VALID / INVALID / UNCHECKABLE |
+| `list_cards` | free | Signed-card index vs store count, disagreement shown |
+| `get_root` | free | Public Merkle root |
+| `get_card` | free | Fetch one published card |
+| `verify_inclusion` | free | Check a digest against the public-root Merkle tree |
+| `x402_trust` | free | Read the public catalogue-measurement snapshot; a challenge is not delivery |
+| Paid x402 tools | USDC on Base | Scoped evidence work, as advertised by the client catalogue |
+
+## Installation
+
+### Claude Code (remote HTTP)
+
+```bash
+claude mcp add --transport http gspc https://councilof.ai/mcp
+```
+
+### Claude Desktop / any stdio client
+
+```json
+{
+  "mcpServers": {
+    "gspc": {
+      "command": "npx",
+      "args": ["-y", "csoai-gspc-mcp@0.2.2"]
+    }
+  }
+}
+```
+
+The npm package is pinned to `csoai-gspc-mcp@0.2.2`. It exposes eight free tools and four paid tools in that published version and reads the live public sources. Use remote HTTP discovery for the current server catalogue.
+
+## Requirements
+
+- Network access to `https://councilof.ai`.
+- No API key for the free tools.
+- A funded Base USDC wallet only if you call a paid tool.
+
+## Security
+
+- Verification is free and loginless. Paid tools are opt-in x402; a 402 body is not settlement.
+- Do not treat a GSPC score, a VALID card, or a 402 receipt as certification or a compliance badge.
+- Source of truth: [https://councilof.ai/signed/HOW-TO-VERIFY.md](https://councilof.ai/signed/HOW-TO-VERIFY.md).
+
+## Source Verification Notes
+
+- Remote MCP: `https://councilof.ai/mcp` (live).
+- Official MCP Registry: [`io.github.CSOAI-ORG/gspc`](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.CSOAI-ORG%2Fgspc/versions/latest). Registry publication is separate from invoking or verifying a tool.
+- GitHub: [CSOAI-ORG/councilof-ai](https://github.com/CSOAI-ORG/councilof-ai).
+- npm: [csoai-gspc-mcp](https://www.npmjs.com/package/csoai-gspc-mcp).
