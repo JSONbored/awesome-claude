@@ -1,0 +1,114 @@
+---
+title: REA MCP Server
+slug: rea-mcp-server
+category: mcp
+description: >-
+  Local MCP server and CLI for agent-assisted analysis of shipped binaries and
+  JavaScript/Electron apps, returning source-linked evidence and explicit unknowns.
+cardDescription: >-
+  Inspect shipped artifacts with local REA tools; deep native analysis requires
+  separately installed Hopper, Ghidra, or IDA.
+author: morluto
+authorProfileUrl: "https://github.com/morluto"
+submittedBy: morluto
+submittedByUrl: "https://github.com/morluto"
+dateAdded: "2026-10-10"
+repoUrl: "https://github.com/morluto/rea"
+documentationUrl: "https://github.com/morluto/rea/blob/main/docs/installation.md"
+installable: true
+installCommand: "npx -y rea-agents@6.1.0 mcp"
+usageSnippet: >-
+  Connect the stdio MCP server, provide a local shipped artifact and a concrete
+  question, then inspect the returned Evidence, limitations, and unknowns.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "rea": {
+        "command": "npx",
+        "args": ["-y", "rea-agents@6.1.0", "mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "rea": {
+        "command": "npx",
+        "args": ["-y", "rea-agents@6.1.0", "mcp"]
+      }
+    }
+  }
+difficulty: advanced
+prerequisites:
+  - "REA 6.1.0 supports Node.js ^22.19.0, ^24.11.0, or >=26.0.0; npm/npx and initial package-download network access are required."
+  - "An MCP client supporting local stdio servers."
+  - "Your own Hopper, Ghidra, or IDA installation for deep native analysis; host and provider coverage differ."
+safetyNotes:
+  - "REA is not a sandbox. Selected tools can run commands, launch or instrument processes, capture network activity, or modify analysis annotations. Review each operation's authority and lifecycle effects."
+  - "REA setup can write client configuration and skill files; inspect its dry-run plan before applying changes. Native engines and their prerequisites are installed separately."
+privacyNotes:
+  - "REA inspects caller-selected local files and, when requested, runtime/network evidence. Results can contain paths, captured output, URLs, digests, and analysis metadata."
+  - "The connected agent may send tool results to its model service. Review that client's data policy and selected capture/output scope before sharing private artifacts or evidence."
+sourceUrls:
+  - "https://github.com/morluto/rea"
+  - "https://github.com/morluto/rea/blob/main/docs/installation.md"
+  - "https://github.com/morluto/rea/tree/main/.agents/skills/reverse-engineer-anything"
+  - "https://github.com/morluto/rea/blob/main/LICENSE"
+tags:
+  - reverse-engineering
+  - binary-analysis
+  - electron
+  - evidence
+  - mcp
+---
+
+## What It Does
+
+REA exposes local reverse-engineering workflows through a stdio MCP server and
+CLI. It helps agents inspect shipped binaries and JavaScript/Electron packages
+while preserving artifact identity, source locations, observations, inferences,
+and explicit unknowns. Use the available evidence to answer a concrete question
+rather than treating a model's explanation as proof of runtime behavior.
+
+Deep native analysis uses separately installed Hopper, Ghidra, or IDA. Provider
+and host coverage differ. Static JavaScript analysis does not require those
+native engines. Setup and selected runtime/annotation operations can have effects;
+this server is not entirely read-only.
+
+## Configure and Use
+
+The configuration above launches the pinned published package over stdio. It
+requires Node.js/npm and a client that permits a local child process. Follow the
+upstream installation guide for client-specific configuration, native provider
+prerequisites, and REA doctor/setup workflows. A saved config alone does not prove
+that the client connected.
+
+For an extracted Electron application, ask the connected agent to call
+`analyze_javascript_application` with its absolute path and identify the modules
+and IPC handlers implementing a particular feature. Inspect returned source
+locations, artifact identity, limitations, and unknowns before drawing conclusions.
+
+The optional [reverse-engineer-anything skill](https://github.com/morluto/rea/tree/main/.agents/skills/reverse-engineer-anything)
+provides routing and evidence-handling instructions, plus five local reference
+guides. Installing those instructions does not install REA, configure MCP, or
+provide native decompilers. It excludes ordinary complete-source architecture
+analysis and can use the CLI when MCP is unavailable.
+
+## Verification Scope
+
+The published rea-agents@6.1.0 stdio server was connected to an MCP SDK client and
+`analyze_javascript_application` successfully analyzed a local Electron fixture.
+The same package's CLI returned artifact identity, module/import information,
+IPC observations, and limitations. These checks establish the JavaScript workflow
+and stdio transport, not a new Claude-host or native-provider verification.
+
+The companion skill was discoverable with skills@1.7.1. An isolated Cursor-targeted
+installation copied SKILL.md and all five reference guides. That checks installation,
+not automatic activation or a Cursor host task. Capabilities in newer repository-main
+instructions should be checked against the installed server's actual catalog.
+
+## License and Affiliation
+
+REA is MIT-licensed. Hopper, Ghidra, and IDA retain their own licenses; Ghidra
+supplies a free native-analysis option. This submission comes from the REA project.
+No hosted package, paid placement, or affiliate link is requested.
