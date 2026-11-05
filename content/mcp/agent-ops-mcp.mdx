@@ -1,0 +1,78 @@
+---
+title: Agent-Ops MCP Server
+slug: agent-ops-mcp
+category: mcp
+description: >-
+  An MCP server for agent operations: run agent tasks, inspect them and trace their execution from an MCP client.
+cardDescription: >-
+  MCP server for running, inspecting and tracing agent tasks.
+seoTitle: Agent-Ops MCP Server for Claude
+seoDescription: >-
+  Agent-Ops MCP is an open-source MCP server to run, inspect and trace agent tasks, with a source repository and MIT license.
+author: renvt89
+authorProfileUrl: "https://github.com/renvt89"
+submittedBy: renvt89
+submittedByUrl: "https://github.com/renvt89"
+dateAdded: "2026-11-05"
+submittedAt: "2026-11-05"
+documentationUrl: "https://github.com/renvt89/agent-ops-mcp"
+websiteUrl: "https://github.com/renvt89/agent-ops-mcp"
+retrievalSources:
+  - "https://github.com/renvt89/agent-ops-mcp"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "npm install agent-ops-mcp"
+usageSnippet: >-
+  Start the server with node agent-ops-mcp --port 8000, then point your MCP client at it. See the repository README.
+copySnippet: |-
+  node agent-ops-mcp --port 8000
+configSnippet: |-
+  {
+    "mcpServers": {
+      "agent-ops": {
+        "url": "http://localhost:8000",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "Node.js and npm."
+  - "An MCP client that supports HTTP transport."
+safetyNotes:
+  - "Runs a local server process on the port you choose (8000 in the example); bind it to localhost only."
+  - "Review which agent tasks the server is allowed to run before connecting it to a client."
+privacyNotes:
+  - "Task inputs and traces pass through the local server and your MCP client context."
+  - "The author's README describes no telemetry; check the source before use."
+tags:
+  - mcp
+  - agents
+  - observability
+keywords:
+  - Agent-Ops MCP
+  - agent task tracing MCP server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+**Agent-Ops MCP** is an MCP server for agent operations. It lets you run agent tasks, inspect them and trace their execution.
+
+## Installation
+
+```bash
+npm install agent-ops-mcp
+node agent-ops-mcp --port 8000
+```
+
+## Source Verification Notes
+
+- Source repository: https://github.com/renvt89/agent-ops-mcp (MIT license).
+- Install and run commands are taken from the repository README.
+
+## Editorial Disclosure
+
+Submitted by the author of the project.
