@@ -1,0 +1,160 @@
+---
+title: SkyAccess MCP Server
+slug: skyaccess-mcp-server
+category: mcp
+description: >-
+  Search 5,000+ live empty leg flights, get charter price estimates and booking links. No account or API key.
+cardDescription: >-
+  Hosted remote MCP server for private jet empty leg search, charter price estimates and booking links.
+seoTitle: SkyAccess MCP Server for Claude
+seoDescription: >-
+  Connect Claude to the SkyAccess remote MCP server to search 5,000+ live empty leg flights, get charter price estimates and booking links. No account or API key.
+author: SkyAccess
+authorProfileUrl: "https://github.com/sky-access"
+dateAdded: "2026-10-04"
+submittedBy: skyaccess
+submittedByUrl: "https://github.com/skyaccess"
+brandName: SkyAccess
+brandDomain: skyaccess.com
+websiteUrl: "https://skyaccess.com"
+repoUrl: "https://github.com/sky-access/skyaccess-mcp"
+documentationUrl: "https://github.com/sky-access/skyaccess-mcp#readme"
+installable: true
+installCommand: "claude mcp add --transport http skyaccess https://mcp.skyaccess.com/mcp"
+usageSnippet: "claude mcp add --transport http skyaccess https://mcp.skyaccess.com/mcp"
+copySnippet: |-
+  {
+    "mcpServers": {
+      "skyaccess": {
+        "type": "http",
+        "url": "https://mcp.skyaccess.com/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "skyaccess": {
+        "type": "http",
+        "url": "https://mcp.skyaccess.com/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 2 minutes
+difficulty: beginner
+prerequisites:
+  - "Claude Code, Claude (claude.ai or Claude Desktop custom connectors), or another MCP client that supports remote Streamable HTTP servers."
+  - "No account, sign-up, API key or OAuth is required."
+safetyNotes:
+  - "Hosted remote server: nothing is installed or executed on your machine."
+  - "search_empty_legs, get_flight, booking_handoff and get_charter_estimate are read-only and set readOnlyHint: true."
+  - "request_booking is the only write tool. It sends a charter enquiry to SkyAccess and a SkyAccess specialist follows up by email. It takes no payment and creates no booking."
+  - "booking_handoff returns a booking page link; it creates, holds or changes nothing until the traveler completes the booking on the page."
+  - "Rate limits per client IP: 30 tool calls per 60 seconds and 10 charter enquiries per hour."
+privacyNotes:
+  - "The read-only tools need no personal data. Search parameters such as route, dates and passenger count are sent to SkyAccess to return results."
+  - "request_booking sends the traveler's name, email and trip details (route, date, passengers and any notes) to SkyAccess so a specialist can follow up by email."
+  - "No credentials are used or stored. Privacy policy: https://skyaccess.com/privacy#connector"
+disclosure: "SkyAccess is a commercial private jet empty leg marketplace. The MCP server is officially maintained by SkyAccess and is free to use."
+retrievalSources:
+  - "https://github.com/sky-access/skyaccess-mcp"
+  - "https://registry.modelcontextprotocol.io/v0/servers?search=com.skyaccess/skyaccess"
+sourceUrls:
+  - "https://github.com/sky-access/skyaccess-mcp"
+  - "https://registry.modelcontextprotocol.io/v0/servers?search=com.skyaccess/skyaccess"
+tags:
+  - travel
+  - flights
+  - private-jet
+  - charter
+  - mcp
+  - remote
+keywords:
+  - SkyAccess
+  - SkyAccess MCP server
+  - empty leg flights MCP
+  - private jet MCP server
+  - charter price estimate
+  - travel MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+SkyAccess is the world's largest empty leg marketplace by listing volume. Its hosted MCP server lets Claude and other MCP clients search 5,000+ live empty leg flights from 900+ FAA Part 135 (and international equivalent) certified charter operators, often 25 to 75% below a comparable full charter. It also returns indicative charter price estimates and a booking link the traveler opens to review and book.
+
+The server is free and anonymous: no account, sign-up, API key or OAuth. Nothing is installed locally. It is published in the official MCP Registry as `com.skyaccess/skyaccess`, and the source repository is MIT licensed.
+
+## Features
+
+- Search empty leg flights by origin, destination, date range, passenger count and an optional maximum price
+- Whole-aircraft prices in USD; taxes and fees are shown at checkout
+- Indicative charter price ranges per aircraft category, with flight time
+- Booking links that create no booking or hold until the traveler completes them
+- Tools: `search_empty_legs`, `get_flight`, `booking_handoff`, `get_charter_estimate`, `request_booking`
+
+## Installation
+
+Claude Code:
+
+```bash
+claude mcp add --transport http skyaccess https://mcp.skyaccess.com/mcp
+```
+
+Claude Code plugin (the same server, plus a skill that tells Claude when to use each tool):
+
+```bash
+claude plugin marketplace add sky-access/skyaccess-mcp
+claude plugin install skyaccess@skyaccess
+```
+
+Claude (claude.ai and Claude Desktop): Settings, Connectors, Add custom connector, then paste `https://mcp.skyaccess.com/mcp` and leave authentication empty.
+
+## Configuration
+
+Project `.mcp.json` for Claude Code:
+
+```json
+{
+  "mcpServers": {
+    "skyaccess": {
+      "type": "http",
+      "url": "https://mcp.skyaccess.com/mcp"
+    }
+  }
+}
+```
+
+Cursor (`~/.cursor/mcp.json`):
+
+```json
+{ "mcpServers": { "skyaccess": { "url": "https://mcp.skyaccess.com/mcp" } } }
+```
+
+Connection details: Streamable HTTP, stateless (no `Mcp-Session-Id`). Prices and estimates are in USD. Coverage is global, with most inventory in the United States.
+
+## Verification
+
+Ask Claude: "Find me a private jet from Los Angeles to Las Vegas this week for 4 people." Claude should call `search_empty_legs` and return matching flights with route, departure time, aircraft, price and a booking link. Inventory changes all the time, so results differ from run to run.
+
+To check the connection without Claude, list the tools:
+
+```bash
+curl -sS https://mcp.skyaccess.com/mcp \
+  -H 'Content-Type: application/json' \
+  -H 'Accept: application/json, text/event-stream' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+```
+
+## Source Verification Notes
+
+Verified on 2026-10-04:
+
+- `initialize` and `tools/list` against `https://mcp.skyaccess.com/mcp` return the five tools above, with no authentication.
+- The official MCP Registry lists `com.skyaccess/skyaccess`.
+- Source and documentation: https://github.com/sky-access/skyaccess-mcp
+
+## Duplicate Check
+
+No existing `content/mcp/` entry documents SkyAccess or `com.skyaccess/skyaccess`.
