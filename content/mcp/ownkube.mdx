@@ -1,0 +1,164 @@
+---
+title: Ownkube MCP Server
+slug: ownkube
+category: mcp
+description: >-
+  Lets a coding agent deploy and run apps on Ownkube: web services, workers, scheduled jobs, managed
+  Postgres and Valkey, each app on its own HTTPS hostname, through a hosted MCP server with OAuth
+  sign-in.
+cardDescription: "Hosting built for your AI agents"
+seoTitle: "Ownkube MCP Server for Claude: Deploy Apps, Postgres and Valkey"
+seoDescription: "Connect Claude Code to Ownkube's hosted MCP server to deploy apps, workers, scheduled jobs, managed Postgres and Valkey, read logs and metrics, and manage domains, with OAuth browser sign-in."
+author: Ownkube
+authorProfileUrl: "https://github.com/ownkube"
+submittedBy: pwnchief
+submittedByUrl: "https://github.com/pwnchief"
+dateAdded: "2026-10-10"
+submittedAt: "2026-10-10"
+documentationUrl: "https://ownkube.io/agents"
+websiteUrl: "https://ownkube.io"
+brandName: Ownkube
+brandDomain: ownkube.io
+retrievalSources:
+  - "https://ownkube.io/agents"
+  - "https://ownkube.io/agents/claude-code"
+  - "https://ownkube.io/prompt.md"
+  - "https://ownkube.io/pricing"
+  - "https://registry.modelcontextprotocol.io/v0/servers?search=io.ownkube/ownkube"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add --transport http ownkube https://app.ownkube.io/api/mcp"
+usageSnippet: |-
+  Connect the server, sign in to Ownkube in the browser when prompted, and approve the organization on the consent screen. Then ask your agent:
+
+  "Fetch https://ownkube.io/prompt.md and follow it to deploy this repo on Ownkube."
+
+  Or work with it directly:
+  - "Deploy this repo to Ownkube with a managed Postgres database."
+  - "Add a Valkey cache to my app and set REDIS_URL."
+  - "Show the build logs for my last deploy and fix the error."
+  - "What is my wallet balance and what is each app costing?"
+copySnippet: |-
+  {
+    "mcpServers": {
+      "ownkube": {
+        "url": "https://app.ownkube.io/api/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "ownkube": {
+        "url": "https://app.ownkube.io/api/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "An Ownkube account (sign in at https://app.ownkube.io) with a funded wallet; top-ups start at $5."
+  - "A GitHub account connected to Ownkube for deploying repositories."
+  - "An MCP client with remote HTTP transport, such as Claude Code. Clients without it can use the mcp-remote bridge."
+safetyNotes:
+  - "Remote server: nothing runs on your machine. Clients that need the mcp-remote bridge (Claude Desktop, Zed, Codex) run it through npx."
+  - "Tools can create, update, redeploy and delete apps, workers, jobs, databases and caches in the organization you approve. Review destructive tool calls before approving them."
+  - "Running resources draw down your prepaid Ownkube wallet, so deploys and new databases cost money. Billing tools can also start a wallet top-up."
+  - "Live database and cache credentials, password resets and point-in-time recovery are left out of MCP and stay in the okctl CLI."
+privacyNotes:
+  - "Tool calls send their arguments to the Ownkube API at app.ownkube.io: repo and app names, environment variables the agent sets, domains and deploy settings."
+  - "Your prompts and local files are not sent to Ownkube unless the agent puts them in a tool argument."
+  - "Tool results such as build logs, runtime logs and metrics go back to your agent and then to whichever model provider it uses."
+  - "Sign-in is OAuth 2.1 in the browser. Your MCP client stores the access token, scoped to the organization approved on the consent screen."
+tags:
+  - cloud
+  - deployment
+  - hosting
+  - postgres
+  - valkey
+  - paas
+  - remote-mcp
+  - oauth
+keywords:
+  - ownkube mcp server
+  - deploy app from claude code
+  - hosted mcp server deployment
+  - managed postgres mcp
+  - paas mcp server claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Ownkube is a cloud for personal software. Its hosted MCP server at `https://app.ownkube.io/api/mcp`
+connects Claude to an Ownkube account so the agent can deploy a repository, attach managed Postgres
+or a Valkey cache, and give each app its own HTTPS hostname. Sign-in is OAuth 2.1 with dynamic
+client registration, so there is no API key to paste into a config file. The server is listed in the
+official MCP Registry as `io.ownkube/ownkube`.
+
+## Key capabilities
+
+- **Deploys**: web services, background workers and scheduled jobs from a GitHub repository.
+- **Data services**: managed Postgres databases and Valkey caches, wired into the app's environment.
+- **Configuration**: environment variables, custom domains and alerts.
+- **Operations**: build logs, runtime logs, metrics, and rollback to the last healthy revision.
+- **Marketplace**: list, check and deploy ready-made apps such as n8n, Metabase and Umami.
+- **Billing**: read the wallet balance, current usage and projected monthly cost, and start a top-up.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add --transport http ownkube https://app.ownkube.io/api/mcp
+```
+
+The first tool call opens a browser to sign in and approve the organization.
+
+### Cursor
+
+```json
+{
+  "mcpServers": {
+    "ownkube": {
+      "url": "https://app.ownkube.io/api/mcp"
+    }
+  }
+}
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "ownkube": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://app.ownkube.io/api/mcp"]
+    }
+  }
+}
+```
+
+## Requirements
+
+- An Ownkube account with a funded prepaid wallet (top-ups from $5, metered per minute, unused credit never expires).
+- A connected GitHub account for repository deploys.
+- An MCP client with remote HTTP support, or the `mcp-remote` bridge.
+
+## Security
+
+- Access is scoped to the organization approved on the OAuth consent screen.
+- Destructive and billable actions run against real resources; review tool calls before approving them.
+- Sensitive operations (live credentials, password resets, point-in-time recovery) are not exposed over MCP.
+
+## Source Verification Notes
+
+Verified on **2026-10-10**:
+
+- `ownkube.io/agents` and `ownkube.io/agents/claude-code` document the endpoint, the
+  `claude mcp add --transport http` command and the per-client config snippets above.
+- `ownkube.io/prompt.md` is the agent runbook referenced in the usage snippet.
+- `ownkube.io/pricing` documents the prepaid wallet and $5 minimum top-up.
+- The official MCP Registry lists the server as `io.ownkube/ownkube`.
