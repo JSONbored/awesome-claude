@@ -1,0 +1,82 @@
+---
+title: Court Rules
+slug: court-rules
+category: mcp
+description: "Remote MCP server for U.S. federal court rules, local rules, judge standing orders, court holidays, and filing deadline checks, with every rule cited back to the court's own source document."
+cardDescription: Look up judge-level U.S. court filing rules, standing orders, court holidays, and filing deadlines from Claude.
+seoTitle: Court Rules MCP Server for Claude
+seoDescription: >-
+  Connect Claude to Court Rules for U.S. federal court rules, local rules, judge
+  standing orders, court holiday calendars, and filing deadline checks, each
+  cited back to the source document.
+author: foklepoint
+authorProfileUrl: "https://github.com/foklepoint"
+submittedBy: foklepoint
+submittedByUrl: "https://github.com/foklepoint"
+dateAdded: "2026-10-01"
+brandName: Court Rules
+brandDomain: courtrules.app
+websiteUrl: "https://www.courtrules.app"
+repoUrl: "https://github.com/foklepoint/court-rules-mcp"
+documentationUrl: "https://docs.courtrules.app/guides/mcp-court-rules"
+installable: true
+installCommand: "claude mcp add --transport http court-rules https://mcp.courtrules.app/mcp"
+usageSnippet: "Run /mcp in Claude Code, select court-rules, then choose Authenticate. Clients without sign-in can send an API key from the console as an Authorization: Bearer header."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "court-rules": {
+        "url": "https://mcp.courtrules.app/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "court-rules": {
+        "url": "https://mcp.courtrules.app/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 2 minutes
+difficulty: beginner
+prerequisites:
+  - A Claude client that supports remote MCP servers (Claude Code, Claude Desktop, claude.ai, or Cursor).
+  - A Court Rules account for the one-time browser sign-in, or a free API key from the console.
+safetyNotes:
+  - All nine tools are read-only; the server never files, edits, or sends anything.
+  - Results are machine-extracted from court documents and human-verified before publishing.
+privacyNotes:
+  - OAuth sign-in stores a session with Court Rules; API-key clients send the key as an Authorization header.
+  - Queries and the court or judge identifiers you select are sent to mcp.courtrules.app.
+---
+
+# Court Rules
+
+Court Rules is a remote MCP server for U.S. court filing rules. It answers what page limits, formatting rules, standing orders, and deadlines apply in front of a named judge, and when a court is closed, from the court's own published documents.
+
+Every rule carries a citation back to the page and section of the order it came from. Coverage includes 1,000+ federal judges with extracted filing rules, 692 state and local courts with resources, holiday calendars through 2027, and 1,504 privacy enforcement actions across 16 jurisdictions.
+
+## Tools
+
+All nine tools are read-only:
+
+- `list_courts` and `search_judges` find the court and judge.
+- Rule tools return local rules, standing orders, page limits, and formatting requirements with citations.
+- Holiday and deadline tools return court closure calendars and computed filing deadlines.
+
+## Setup
+
+Add the hosted server:
+
+```bash
+claude mcp add --transport http court-rules https://mcp.courtrules.app/mcp
+```
+
+Run `/mcp` in Claude Code, select `court-rules`, and choose Authenticate. Scripts and backends can skip sign-in by sending an API key from https://console.courtrules.app as an `Authorization: Bearer` header.
+
+## Sources
+
+- Website: https://www.courtrules.app
+- MCP server repo: https://github.com/foklepoint/court-rules-mcp
+- Documentation: https://docs.courtrules.app/guides/mcp-court-rules
