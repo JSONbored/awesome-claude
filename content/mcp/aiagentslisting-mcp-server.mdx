@@ -1,0 +1,181 @@
+---
+title: AI Agents Listing MCP Server for Claude
+slug: aiagentslisting-mcp-server
+category: mcp
+description: >-
+  Remote MCP server for finding AI agents, MCP servers and agent skills: search
+  the AI Agents Listing directory, browse by category and pricing, see what is
+  trending, find alternatives and compare listings side by side.
+cardDescription: >-
+  Connect Claude to AI Agents Listing to search, compare and discover AI
+  agents, MCP servers and skills.
+seoTitle: AI Agents Listing MCP Server for Claude
+seoDescription: >-
+  Use the AI Agents Listing remote MCP server with Claude to search a directory
+  of AI agents, MCP servers and skills, find alternatives, see trending
+  listings and compare tools via https://aiagentslisting.com/api/mcp.
+author: AI Agents Listing
+authorProfileUrl: "https://github.com/nyyhao"
+submittedBy: nyyhao
+submittedByUrl: "https://github.com/nyyhao"
+dateAdded: "2026-10-26"
+submittedAt: "2026-10-26"
+repoUrl: "https://github.com/nyyhao/aiagentslisting-mcp"
+documentationUrl: "https://aiagentslisting.com/mcp"
+websiteUrl: "https://aiagentslisting.com"
+installable: true
+installCommand: >-
+  claude mcp add --transport http aiagentslisting https://aiagentslisting.com/api/mcp
+usageSnippet: >-
+  Add https://aiagentslisting.com/api/mcp as a remote HTTP connector; no
+  account or API key is needed for the read tools. Ask Claude to find an MCP
+  server or agent for a task, then to compare the best matches.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "aiagentslisting": {
+        "type": "http",
+        "url": "https://aiagentslisting.com/api/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "aiagentslisting": {
+        "type": "http",
+        "url": "https://aiagentslisting.com/api/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 2 minutes
+difficulty: beginner
+prerequisites:
+  - "Claude Code with HTTP MCP transport, or a Claude plan with custom connectors."
+  - "Internet access to reach https://aiagentslisting.com/api/mcp."
+  - "No account or API key for the eight read tools."
+safetyNotes:
+  - "Makes outbound HTTPS requests to aiagentslisting.com."
+  - "The eight read tools are read-only and anonymous."
+  - "submit_listing and submit_review write to the directory and require signing in over OAuth 2.1 with a consent screen; every submitted listing is reviewed before it is published."
+privacyNotes:
+  - "Search queries and listing slugs you send are processed by AI Agents Listing."
+  - "The read tools need no credentials; do not paste secrets into tool arguments."
+tags:
+  - directory
+  - discovery
+  - mcp
+  - agents
+  - remote-mcp
+keywords:
+  - ai agents directory mcp
+  - mcp server directory
+  - find mcp servers
+  - agent skills directory
+  - compare ai agents
+readingTime: 3
+difficultyScore: 15
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+AI Agents Listing MCP is a remote Model Context Protocol server for the [AI Agents Listing](https://aiagentslisting.com) directory of AI agents, MCP servers and agent skills. It lets an assistant search the directory, browse by category and pricing, read what is trending, find alternatives to a tool and compare listings side by side.
+
+The stdio bridge source is MIT-licensed at [nyyhao/aiagentslisting-mcp](https://github.com/nyyhao/aiagentslisting-mcp). Docs are at [aiagentslisting.com/mcp](https://aiagentslisting.com/mcp). I maintain the server.
+
+## Features
+
+- Search listings by keyword, type, category and pricing model.
+- Read one listing in full, including its links and capability details.
+- Discover listings by category and see trending and newly launched ones.
+- Find alternatives to a given tool and compare several listings side by side.
+- Rankings use engagement only. Paid listings are flagged `featured` and are never ranked higher.
+
+Read tools: `search_listings`, `get_listing`, `discover`, `trending`, `new_launches`, `find_alternatives`, `compare`, `list_categories`.
+
+Write tools (OAuth 2.1 sign-in required): `submit_listing`, `submit_review`.
+
+## Use Cases
+
+- Find an MCP server for a specific job and check how it compares with the alternatives.
+- See which agents and skills are trending in a category.
+- Look for an alternative to a tool you already use.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add --transport http aiagentslisting https://aiagentslisting.com/api/mcp
+claude mcp list
+```
+
+### Claude (Connectors)
+
+1. Open **Settings → Connectors** and add a custom connector.
+2. Enter the URL `https://aiagentslisting.com/api/mcp`.
+3. No authentication is needed for the read tools.
+
+### Stdio clients
+
+```bash
+npx -y github:nyyhao/aiagentslisting-mcp
+```
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "aiagentslisting": {
+      "type": "http",
+      "url": "https://aiagentslisting.com/api/mcp"
+    }
+  }
+}
+```
+
+## Examples
+
+### Find a server
+
+```text
+Find MCP servers for working with Postgres and compare the top three.
+```
+
+### Trending
+
+```text
+What agent skills are trending this week?
+```
+
+### Alternatives
+
+```text
+Suggest alternatives to this MCP server and tell me how they differ.
+```
+
+## Security
+
+- The eight read tools are anonymous and read-only.
+- `submit_listing` and `submit_review` need an OAuth 2.1 sign-in with a consent screen.
+- Tokens are never forwarded to third parties.
+
+## Troubleshooting
+
+### Rate limited
+
+Wait a moment and call again; anonymous calls are rate limited per IP.
+
+### A write tool returns 401
+
+Sign in again when your client prompts for authorization. The read tools work without it.
+
+## Duplicate Check
+
+No existing AI Agents Listing entry was found in `content/mcp/`. It differs from SaaSCity-style launch tools and generic registries because it searches and compares AI agents, MCP servers and skills in one directory.
