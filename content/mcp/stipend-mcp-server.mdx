@@ -1,0 +1,148 @@
+---
+title: stipend MCP Server for Claude
+slug: stipend-mcp-server
+category: mcp
+description: >-
+  Local stdio MCP server that gives Claude a non-custodial USDC wallet on Base,
+  where per-transaction, per-day and per-counterparty spending limits and a
+  destination allowlist are enforced in code between the decision and the
+  signature rather than in a prompt.
+cardDescription: >-
+  Give Claude its own non-custodial USDC wallet on Base, with spending caps and
+  a destination allowlist enforced in the signing path instead of a system
+  prompt.
+seoTitle: stipend MCP Server for Claude
+seoDescription: >-
+  Install stipend as a local stdio MCP server so Claude can hold and spend USDC
+  on Base through seven tools, with per-transaction, per-day and
+  per-counterparty limits and a destination allowlist enforced in code before
+  signing.
+author: stipend.sh
+authorProfileUrl: "https://github.com/stipend-sh"
+submittedBy: Graphiker-Australia
+submittedByUrl: "https://github.com/Graphiker-Australia"
+dateAdded: "2026-08-12"
+brandName: stipend
+brandDomain: stipend.sh
+repoUrl: "https://github.com/stipend-sh/stipend"
+documentationUrl: "https://stipend.sh/skill.md"
+websiteUrl: "https://stipend.sh"
+installable: true
+installCommand: >-
+  pip install eth-account && curl -sL stipend.sh/install | sh
+usageSnippet: >-
+  Install the package, run `stipend wallet create`, then add the server with
+  `claude mcp add stipend -- stipend mcp` and ask Claude for its own address,
+  its balance, or whether a payment would be allowed before it offers to pay.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "stipend": {
+        "command": "stipend",
+        "args": ["mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "stipend": {
+        "command": "stipend",
+        "args": ["mcp"]
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "Python 3.8 or newer on PATH; the wallet is Python because the signing library is."
+  - "An MCP client that can launch a local stdio server, such as Claude Code or Claude Desktop."
+  - "USDC on Base to spend, and a little native currency for gas on payments that are not gasless."
+safetyNotes:
+  - "The code has not been independently audited. It holds a signing key, so treat the balance as a working float rather than savings."
+  - "`stipend_pay` moves real funds on Base mainnet. Every payment passes the same policy gate - per-transaction, per-day and per-counterparty caps plus an optional destination allowlist - but a payment inside those limits goes through without further confirmation."
+  - "The first payment to any address never paid before requires confirmation whatever the size; an allowlist, once enabled, is absolute and cannot be overridden by a confirmation or an approval."
+  - "x402 auto-pay signs an EIP-3009 authorisation in response to an HTTP 402 from a server the agent visited. It is subject to the same limits, but it is the one path where money can move without a separate instruction."
+  - "No tool reads, exports or derives the private key, and no tool raises a limit."
+  - "x402 interoperability is verified against the project's own endpoint rather than third-party merchants."
+privacyNotes:
+  - "The private key is generated on the user's machine and never transmitted; nobody can recover it, including the maintainers."
+  - "The server speaks JSON-RPC over stdin and stdout. Nothing listens on a port and nothing is exposed to a network."
+  - "Anonymous install counting is on by default: a locally generated random id, the version, the chain name, payment counts and coarse spend buckets. Addresses, keys, counterparties, URLs, transaction hashes and exact amounts are never sent. Print the payload with `stipend telemetry show` or turn it off with `stipend telemetry off`."
+sourceUrls:
+  - "https://github.com/stipend-sh/stipend"
+  - "https://github.com/stipend-sh/stipend/blob/main/README.md"
+  - "https://github.com/stipend-sh/stipend/blob/main/stipend/policy.py"
+  - "https://github.com/stipend-sh/stipend/blob/main/stipend/mcp.py"
+  - "https://stipend.sh/skill.md"
+tags:
+  - mcp
+  - payments
+  - wallet
+  - local-first
+  - x402
+keywords:
+  - stipend MCP
+  - agent wallet
+  - USDC on Base
+  - spending limits
+  - x402
+  - non-custodial
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+stipend is a non-custodial USDC wallet on Base that runs as a local stdio MCP
+server, so an agent can hold and spend money through the tool interface it
+already has. It exposes seven tools: `stipend_address`, `stipend_balance`,
+`stipend_check`, `stipend_pay`, `stipend_earnings`, `stipend_report` and
+`stipend_recover`.
+
+The reason to use it rather than a hosted wallet API is where the spending
+limits live. Per-transaction, per-day and per-counterparty caps and a
+destination allowlist are checks in `stipend/policy.py` that a transaction
+passes on its way to being signed - not a line in a system prompt sitting in
+the same context window as whatever is arguing with the model. `stipend_check`
+answers "would this payment be allowed?" without sending anything, so an agent
+can decide before it offers to pay.
+
+It is deliberately not hosted: a hosted MCP server would put the signing key on
+someone else's machine, which is the thing the project exists to avoid.
+
+## Source Review
+
+- https://github.com/stipend-sh/stipend
+- https://github.com/stipend-sh/stipend/blob/main/README.md
+- https://github.com/stipend-sh/stipend/blob/main/stipend/policy.py
+- https://github.com/stipend-sh/stipend/blob/main/stipend/mcp.py
+- https://stipend.sh/skill.md
+
+These sources were reviewed on **2026-08-12**. Prefer the repository README and
+`stipend.sh/skill.md` for current install paths.
+
+## Features
+
+- Seven MCP tools over stdio: read the wallet's address so it can be paid, read
+  balances and spend-so-far, pre-check a payment, pay, read incoming payments
+  off the network, report earned against spent with runway in days, and list
+  what is outstanding.
+- Spending limits enforced in the signing path: per-transaction, per-day,
+  per-counterparty, plus an absolute destination allowlist.
+- One-time approvals bound to a recipient, an amount, an expiry and a single
+  use - so authorising one payment does not widen the limits for every future
+  one.
+- New-destination confirmation: the first payment to an address never paid
+  before needs confirming whatever the size.
+- Buyer-side x402 auto-pay using EIP-3009 `transferWithAuthorization`, with the
+  EIP-712 domain read from the token contract at runtime.
+- `python -m stipend selftest` runs 219 checks with no network, no funds and no
+  wallet touched.
+
+## Notes
+
+Apache-2.0, Python, and listed in the official MCP registry as
+`io.github.Graphiker-Australia/stipend`. It has **not** been independently
+audited; the project says so in its own README under "Honest limits", and it is
+worth repeating here.
