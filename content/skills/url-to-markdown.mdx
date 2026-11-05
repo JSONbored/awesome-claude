@@ -1,0 +1,46 @@
+---
+title: ReplyNodes URL to Markdown
+slug: url-to-markdown
+category: skills
+description: Fetch a public webpage as clean Markdown for agent context through the ReplyNodes Markdown API.
+cardDescription: Retrieve readable Markdown from a public webpage for use in agent context.
+author: ReplyNodes
+authorProfileUrl: "https://github.com/replynodes"
+repoUrl: "https://github.com/replynodes/replynodes-agent-skills"
+documentationUrl: "https://replynodes.com/markdown-api/"
+websiteUrl: "https://replynodes.com/markdown-api/"
+sourceUrls:
+  - "https://github.com/replynodes/replynodes-agent-skills/tree/main/skills/url-to-markdown"
+  - "https://replynodes.com/markdown-api/"
+installable: false
+verificationStatus: draft
+verifiedAt: "2026-10-09"
+usageSnippet: >-
+  Request a public webpage through the ReplyNodes Markdown API to return clean
+  Markdown that an agent can use as context.
+copySnippet: |-
+  curl -sS https://md.replynodes.com/example.com
+prerequisites:
+  - "A public webpage URL to retrieve."
+safetyNotes:
+  - "Use this skill only with public webpages; do not send credentials, cookies, or private data."
+privacyNotes:
+  - "The requested public webpage is sent to the ReplyNodes Markdown API for conversion; avoid including private URLs or sensitive data."
+tags:
+  - url-to-markdown
+  - markdown
+  - web-content
+  - agent-context
+---
+
+## Overview
+
+ReplyNodes URL to Markdown returns a public webpage as clean Markdown for agent context.
+
+## Usage
+
+```bash
+curl -sS https://md.replynodes.com/example.com
+```
+
+Replace `example.com` with the public webpage host and path you want to retrieve. Read the [Markdown API documentation](https://replynodes.com/markdown-api/) for the request format and see the [canonical skill source](https://github.com/replynodes/replynodes-agent-skills/tree/main/skills/url-to-markdown).
