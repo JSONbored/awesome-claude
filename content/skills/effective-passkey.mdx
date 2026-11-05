@@ -1,0 +1,83 @@
+---
+title: EffectivePasskey
+slug: effective-passkey
+category: skills
+description: >-
+  Audits Microsoft Entra ID passkey (FIDO2) policy offline from read-only
+  exports. Computes each user's effective policy after overlapping passkey
+  profiles and Conditional Access, flags admin and migration gaps, explains
+  every finding, and simulates fixes before you change the tenant.
+cardDescription: "Offline Entra ID passkey policy auditor and fix simulator."
+author: xsignon-secure
+submittedBy: xsignon-secure
+submittedByUrl: "https://github.com/xsignon-secure"
+dateAdded: "2026-10-23"
+repoUrl: "https://github.com/xsignon-secure/EffectivePasskey"
+documentationUrl: "https://github.com/xsignon-secure/EffectivePasskey#readme"
+downloadUrl: "https://github.com/xsignon-secure/EffectivePasskey/releases/download/v0.3.0/effective-passkey-skill.zip"
+installable: true
+installCommand: "pip install effective-passkey"
+usageSnippet: >-
+  Install the CLI, unzip the skill into your Claude skills folder, then ask
+  Claude to analyze a folder of Entra exports, for example: "Analyze my Entra
+  passkey export in ./export and explain who is blocked when SMS is retired."
+copySnippet: |-
+  pip install effective-passkey
+  effective-passkey validate ./export
+  effective-passkey analyze ./export -o ./report
+  effective-passkey explain ./export alice@contoso.com
+skillType: general
+skillLevel: advanced
+verificationStatus: validated
+verifiedAt: "2026-10-23"
+retrievalSources:
+  - "https://github.com/xsignon-secure/EffectivePasskey"
+  - "https://raw.githubusercontent.com/xsignon-secure/EffectivePasskey/main/skills/effective-passkey/SKILL.md"
+  - "https://pypi.org/project/effective-passkey/"
+  - "https://learn.microsoft.com/en-us/entra/identity/authentication/how-to-enable-passkey-fido2"
+testedPlatforms:
+  - Claude
+  - Claude Code
+prerequisites:
+  - "Python 3.10 or newer."
+  - "Read-only exports of an Entra tenant (the bundled PowerShell collector can produce them), or the bundled demo tenants."
+safetyNotes:
+  - "Runs a local Python CLI; review before installing. It only reads local JSON export files and writes reports to a folder you choose."
+  - "It never writes to a Microsoft Entra tenant. The optional PowerShell collector makes read-only Microsoft Graph GET requests with the read scopes you grant."
+privacyNotes:
+  - "Reads tenant export files (users, groups, roles, policies, optional sign-in logs) from local disk; reports stay on your machine."
+  - "No telemetry, no accounts, and no calls to any third-party endpoint. The collector talks only to Microsoft Graph using your own sign-in."
+tags:
+  - entra
+  - passkeys
+  - fido2
+  - conditional-access
+  - identity
+  - security
+  - audit
+---
+
+# EffectivePasskey
+
+EffectivePasskey is a free, MIT-licensed skill and CLI for Microsoft Entra ID
+admins rolling out passkeys. Entra passkey profiles combine as a union while
+Conditional Access combines as an intersection, so the policy a user actually
+gets is hard to see in the portal. EffectivePasskey computes it per user from
+read-only exports and explains the result.
+
+## What it checks
+
+- Each user's effective passkey policy after overlapping profiles and
+  Conditional Access authentication strengths.
+- Admins whose passkey rules are weakened by a broader profile.
+- Who will be blocked when SMS and voice sign-in are retired.
+- Temporary Access Pass bootstrap paths, tamperable groups, and admin attack
+  paths.
+- A remediation simulator that previews the effect of a fix before you apply
+  it in the tenant.
+
+## Retrieval Sources
+
+- Source and docs: https://github.com/xsignon-secure/EffectivePasskey
+- Skill file: https://github.com/xsignon-secure/EffectivePasskey/tree/main/skills/effective-passkey
+- Package: https://pypi.org/project/effective-passkey/
