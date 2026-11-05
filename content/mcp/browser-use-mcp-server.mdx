@@ -1,0 +1,162 @@
+---
+title: Browser Use MCP Server
+slug: browser-use-mcp-server
+category: mcp
+description: >-
+  Hosted MCP server from Browser Use that lets Claude and other MCP clients run
+  browser agent tasks in Browser Use Cloud browsers, poll their status, and send
+  follow-up tasks.
+cardDescription: >-
+  Run Browser Use browser agent tasks in hosted cloud browsers from Claude,
+  Cursor, Windsurf, and other MCP clients.
+seoTitle: Browser Use MCP Server for Claude
+seoDescription: >-
+  Connect the hosted Browser Use MCP server to Claude Code, Claude Desktop,
+  Cursor, or Windsurf to run browser agent tasks in cloud browsers, check
+  session output, send follow-ups, and use saved browser profiles.
+author: Browser Use
+authorProfileUrl: "https://github.com/browser-use"
+submittedBy: gregpr07
+submittedByUrl: "https://github.com/gregpr07"
+dateAdded: "2026-10-20"
+brandName: Browser Use
+brandDomain: browser-use.com
+repoUrl: "https://github.com/browser-use/browser-use"
+documentationUrl: "https://docs.browser-use.com/cloud/guides/mcp-server"
+websiteUrl: "https://browser-use.com"
+disclosure: "Browser Use is a commercial cloud browser service built around the open-source browser-use library. The MCP server is officially maintained by Browser Use, and this entry was submitted by a Browser Use maintainer."
+installable: true
+installCommand: 'claude mcp add -t http -H "Authorization: Bearer YOUR_API_KEY" browser-use https://api.browser-use.com/v3/mcp'
+usageSnippet: "Add the hosted `https://api.browser-use.com/v3/mcp` endpoint with an `Authorization: Bearer YOUR_API_KEY` header, then ask Claude to run a browser task on approved sites and poll the session for results."
+copySnippet: |-
+  claude mcp add -t http \
+    -H "Authorization: Bearer YOUR_API_KEY" \
+    browser-use https://api.browser-use.com/v3/mcp
+configSnippet: |-
+  {
+    "mcpServers": {
+      "browser-use": {
+        "url": "https://api.browser-use.com/v3/mcp",
+        "headers": {
+          "Authorization": "Bearer YOUR_API_KEY"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - Browser Use Cloud account and API key from https://cloud.browser-use.com/settings?tab=api-keys.
+  - MCP client with streamable HTTP support, or Node.js for the `mcp-remote` bridge in Claude Desktop.
+  - Clear target websites and automation boundaries for each browser task.
+safetyNotes:
+  - Browser Use MCP runs autonomous browser agents that can navigate, click, type, submit forms, and extract data on the sites you give it.
+  - Tasks run with saved browser profiles can act inside logged-in accounts; require human approval before login, purchase, messaging, account-change, or destructive actions.
+  - Sessions bill browser and agent usage to your Browser Use account; stop sessions you no longer need with `stop_session`.
+privacyNotes:
+  - Task prompts, page content, extracted data, agent messages, and browser profile state are processed by Browser Use and the selected model provider.
+  - Browser profiles can retain cookies and login state across sessions.
+  - Keep the Browser Use API key out of committed config files, logs, screenshots, and shared prompts.
+sourceUrls:
+  - "https://docs.browser-use.com/cloud/guides/mcp-server"
+  - "https://docs.browser-use.com/cloud/quickstart"
+  - "https://github.com/browser-use/browser-use"
+  - "https://registry.modelcontextprotocol.io/v0/servers?search=browser-use"
+tags:
+  - browser
+  - automation
+  - cloud
+  - browser-use
+  - scraping
+keywords:
+  - Browser Use MCP
+  - Browser Use MCP Server
+  - browser-use MCP
+  - cloud browser MCP
+  - browser agent MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Browser Use MCP Server is the hosted MCP endpoint for Browser Use Cloud. It lets
+Claude and other MCP clients start browser agent sessions in managed cloud
+browsers, poll their status and output, send follow-up tasks, and read the
+agent's step-by-step messages.
+
+The server is listed in the official MCP registry as
+`com.browser-use/browser-use` with the streamable HTTP remote
+`https://api.browser-use.com/v3/mcp`. It runs Browser Use API V3 sessions.
+
+## Source Review
+
+- https://docs.browser-use.com/cloud/guides/mcp-server
+- https://docs.browser-use.com/cloud/quickstart
+- https://github.com/browser-use/browser-use
+- https://registry.modelcontextprotocol.io/v0/servers?search=browser-use
+
+These sources were reviewed on **2026-10-20**. Prefer the live docs for current
+tools, models, and client-specific setup.
+
+## Features
+
+- Hosted streamable HTTP endpoint, no local install for clients with remote MCP
+  support.
+- Tools: `run_session`, `get_session`, `send_task`, `stop_session`,
+  `get_session_messages`, `list_sessions`, and `list_browser_profiles`.
+- `run_session` options for model, structured output schema, keep-alive,
+  browser profile, workspace, and proxy country.
+- Session status includes step count, cost breakdown, and a live view URL.
+
+## Installation
+
+Claude Code:
+
+```bash
+claude mcp add -t http -H "Authorization: Bearer YOUR_API_KEY" browser-use https://api.browser-use.com/v3/mcp
+```
+
+Cursor (`.cursor/mcp.json`):
+
+```json
+{
+  "mcpServers": {
+    "browser-use": {
+      "url": "https://api.browser-use.com/v3/mcp",
+      "headers": {
+        "Authorization": "Bearer YOUR_API_KEY"
+      }
+    }
+  }
+}
+```
+
+Claude Desktop uses the `mcp-remote` bridge; see the Browser Use docs for the
+exact `claude_desktop_config.json` block.
+
+## Use Cases
+
+- Ask Claude to complete a multi-step web task in a cloud browser and return
+  the result.
+- Extract structured data from websites using an output schema.
+- Run tasks inside a saved browser profile for sites that need a login.
+- Watch a running task through the live view URL and send follow-up
+  instructions.
+
+## Safety and Privacy
+
+Browser agents act on real websites and accounts. Keep tasks scoped to approved
+sites, review actions before purchases, messages, or account changes, and stop
+sessions you no longer need.
+
+Treat task prompts, extracted page content, browser profiles, and the API key as
+sensitive. Review which profiles a task can use before automating logged-in
+workflows.
+
+## Duplicate Check
+
+No Browser Use MCP entry or `api.browser-use.com/v3/mcp` source URL was found in
+`content/mcp`. The existing `content/tools/browser-use.mdx` and
+`content/tools/browser-harness.mdx` entries cover the open-source library and
+Browser Harness, not the hosted MCP server.
