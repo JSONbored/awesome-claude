@@ -1,0 +1,110 @@
+---
+title: Dario Paint
+slug: dario-paint
+category: tools
+description: >-
+  Local visual editor for Claude Code skills. Opens a SKILL.md as a notebook
+  page and lets you paint over paragraphs, list items and headings with
+  stamps: Claude rewrites the painted part as a plain brief or as the
+  principle behind it, and other stamps erase, promote or demote. Edits
+  copies, never the original skill.
+cardDescription: >-
+  Paint over a SKILL.md with Mario Paint-style stamps and Claude rewrites
+  that part more plainly or as the principle behind it.
+seoTitle: Dario Paint - Visual Editor for Claude Code Skills
+seoDescription: >-
+  Dario Paint is an MIT-licensed local editor for Claude Code SKILL.md files
+  that rewrites, erases, promotes and demotes skill sections with stamps.
+author: Alex Newman
+authorProfileUrl: "https://github.com/thedotmack"
+dateAdded: "2026-10-17"
+submittedBy: thedotmack
+submittedByUrl: "https://github.com/thedotmack"
+submittedAt: "2026-10-17"
+websiteUrl: "https://github.com/Claude-Mem/dario-paint"
+documentationUrl: "https://github.com/Claude-Mem/dario-paint#readme"
+repoUrl: "https://github.com/Claude-Mem/dario-paint"
+pricingModel: open-source
+disclosure: claimed
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Linux, Windows
+sourceUrls:
+  - "https://github.com/Claude-Mem/dario-paint"
+  - "https://raw.githubusercontent.com/Claude-Mem/dario-paint/main/README.md"
+installCommand: "git clone https://github.com/Claude-Mem/dario-paint && cd dario-paint && bun install && bun start"
+usageSnippet: >-
+  Start the local server, open http://127.0.0.1:4848, pick a skill from the
+  shelf, choose a stamp and paint over the part of the skill you want changed.
+copySnippet: |-
+  git clone https://github.com/Claude-Mem/dario-paint
+  cd dario-paint
+  bun install
+  bun start
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "Bun installed."
+  - "Claude Code installed and logged in (needed for the Human and Einstein rewrite stamps)."
+safetyNotes:
+  - "Runs a local web server on 127.0.0.1 and writes only to copies under .scratch/notebooks/ in the project folder; installed skills are never modified."
+  - "The Human and Einstein stamps run `claude -p` with the user's Claude Code login, which uses the user's Claude Code quota."
+privacyNotes:
+  - "Reads SKILL.md files from ~/.claude/skills, ~/.claude/plugins/cache and any folders listed in EXTRA_SKILL_FOLDERS."
+  - "Text painted with the Human or Einstein stamp is sent to Claude through Claude Code; the other stamps run locally."
+  - "The handwriting font is loaded from Google Fonts."
+tags:
+  - claude-code
+  - skills
+  - skill-editor
+  - prompt-engineering
+  - open-source
+keywords:
+  - Claude Code skill editor
+  - SKILL.md editor
+  - Agent Skills editor
+  - rewrite Claude skills
+---
+
+## Overview
+
+Dario Paint is a local editor for Claude Code skills. It opens a `SKILL.md`
+as large handwriting in a composition notebook, and you edit it by painting
+over whole paragraphs, list items and headings with rubber stamps modeled on
+Mario Paint.
+
+The idea behind it is that skills work better when they read like a brief
+from someone who trusts the reader (the goal, the boundaries, what good looks
+like and why) than like a checklist of CRITICAL and ALWAYS rules. The stamps
+push a skill in that direction.
+
+## Core Capabilities
+
+- Human stamp: Claude rewrites the painted part the way a person would brief a colleague, plainer and shorter, without granular steps.
+- Einstein stamp: Claude rewrites the painted part as the principle underneath it, with the reason.
+- Eraser removes the painted part; More and Less promote or demote headings and move other items up or down within their section or list.
+- Pencil for direct edits, and editable front matter (name and description) with a length counter.
+- Undo and save; saving refuses a skill without a name or description.
+- `bun test` round-trips every skill on the machine byte-for-byte through the editor.
+
+## Install
+
+```bash
+git clone https://github.com/Claude-Mem/dario-paint
+cd dario-paint
+bun install
+bun start
+```
+
+Then open http://127.0.0.1:4848 and pick a skill. Extra skill folders can be
+added through `EXTRA_SKILL_FOLDERS` in a `.env` file.
+
+## Safety and Privacy
+
+Opening a skill copies it into `.scratch/notebooks/`; every edit and save
+happens on that copy, so the original skill is untouched until you copy the
+result back yourself. Only the Human and Einstein stamps leave the machine,
+through the user's own `claude -p` session.
+
+## Disclosure
+
+Submitted by the author. No paid placement or affiliate link.
