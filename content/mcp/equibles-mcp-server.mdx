@@ -1,0 +1,162 @@
+---
+title: Equibles MCP Server
+slug: equibles-mcp-server
+category: mcp
+description: >-
+  Hosted MCP server that lets Claude query source-linked US company data: SEC
+  filings, as-reported fundamentals, earnings-call transcripts, 13F holdings,
+  and insider trades.
+cardDescription: Connect Claude to SEC filings, fundamentals, transcripts, and 13F data.
+seoTitle: Equibles MCP Server for Claude
+seoDescription: >-
+  Connect Claude to the hosted Equibles MCP server to search SEC filings and
+  retrieve as-reported fundamentals, earnings-call transcripts, 13F holdings,
+  insider trades, and FRED macro series.
+author: Equibles
+authorProfileUrl: "https://equibles.com/"
+submittedBy: daniel3303
+submittedByUrl: "https://github.com/daniel3303"
+dateAdded: "2026-10-08"
+brandName: Equibles
+brandDomain: equibles.com
+repoUrl: "https://github.com/daniel3303/Equibles"
+documentationUrl: "https://equibles.com/mcp"
+installable: true
+installCommand: "claude mcp add --transport http equibles https://mcp.equibles.com/mcp"
+usageSnippet: "Run `claude mcp add --transport http equibles https://mcp.equibles.com/mcp`, sign in with Equibles when prompted, then ask Claude for a company's as-reported figures with links to the source filings."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "equibles": {
+        "type": "http",
+        "url": "https://mcp.equibles.com/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "equibles": {
+        "type": "http",
+        "url": "https://mcp.equibles.com/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 2 minutes
+difficulty: beginner
+prerequisites:
+  - A free Equibles account (OAuth sign-in) or an Equibles API key.
+  - Claude Code, Claude Desktop, or another client that supports remote Streamable HTTP MCP servers.
+  - Awareness of the plan's daily request limit (the free tier allows 100 requests per day).
+safetyNotes:
+  - Remote server; it runs no local commands and writes no local files. Market-data tools are read-only; portfolio and watchlist tools create, edit, and delete only the signed-in user's own Equibles portfolio data, and the delete tools carry the MCP destructive annotation.
+  - Financial data and model summaries are research input, not investment, tax, or legal advice; check figures against the linked source filings.
+  - Requests count against the Equibles account quota and can be rate limited.
+privacyNotes:
+  - Tool calls send tickers, filing filters, date ranges, and search text to Equibles servers at mcp.equibles.com.
+  - OAuth tokens or API keys are held by the MCP client; never commit API keys to shared configuration files.
+  - Queried tickers and searches can reveal research interests, and portfolio tools store the positions you add in your Equibles account, so avoid sending client details in prompts.
+disclosure: >-
+  Hosted service by Equibles with a free tier and paid plans; tools require an
+  Equibles account or API key. Submitted by the Equibles maintainer.
+sourceUrls:
+  - "https://equibles.com/mcp"
+  - "https://equibles.com/pricing"
+  - "https://equibles.com/docs/api"
+  - "https://github.com/daniel3303/Equibles"
+  - "https://glama.ai/mcp/connectors/io.github.daniel3303/equibles"
+tags:
+  - finance
+  - sec-filings
+  - stocks
+  - earnings-calls
+  - financial-data
+keywords:
+  - Equibles MCP
+  - SEC filings MCP
+  - earnings call transcripts MCP
+  - 13F holdings Claude
+  - financial data MCP server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Equibles MCP Server is a hosted remote MCP server at
+`https://mcp.equibles.com/mcp` (Streamable HTTP). It connects Claude and other
+MCP clients to US company research data with links back to the source
+documents: SEC filing search and filing text, fundamentals as reported in
+10-K and 10-Q filings, earnings-call transcripts, 13F institutional holdings,
+insider and congressional trades, and FRED macro series.
+
+Clients sign in with OAuth, or send an Equibles API key as a Bearer token. The
+open-source core of the service lives at `daniel3303/Equibles` and can be
+self-hosted; the hosted server adds further datasets on top.
+
+## Source Review
+
+- https://equibles.com/mcp
+- https://equibles.com/pricing
+- https://equibles.com/docs/api
+- https://github.com/daniel3303/Equibles
+- https://glama.ai/mcp/connectors/io.github.daniel3303/equibles
+
+These sources were reviewed on **2026-10-08**. Prefer the live docs and pricing
+pages for current tool names, plan limits, and setup steps.
+
+## Features
+
+- Search SEC filings (10-K, 10-Q, 8-K, 20-F, 6-K) and read filing text.
+- Retrieve income statement, balance sheet, and cash flow figures as reported in filings.
+- Read earnings-call transcripts.
+- Query 13F institutional holdings and quarter-over-quarter changes.
+- Look up insider and congressional trades.
+- Retrieve FRED economic indicators.
+- Connect over Streamable HTTP with OAuth or an API key.
+
+## Installation
+
+For Claude Code:
+
+```bash
+claude mcp add --transport http equibles https://mcp.equibles.com/mcp
+```
+
+For clients configured with JSON:
+
+```json
+{
+  "mcpServers": {
+    "equibles": {
+      "type": "http",
+      "url": "https://mcp.equibles.com/mcp"
+    }
+  }
+}
+```
+
+Sign in with Equibles when the client opens the OAuth flow, or send
+`Authorization: Bearer <API key>` from clients that use keys.
+
+## Use Cases
+
+- Pull a company's last four quarters of revenue as reported in its 10-Q filings, with links to each filing.
+- Find which institutions added to a position in the latest 13F quarter.
+- Summarize what management said about guidance on the most recent earnings call.
+- Check recent insider purchases before reading a 10-K section.
+
+## Safety and Privacy
+
+Equibles is a research data source. Treat model-generated conclusions as draft
+research and verify figures against the linked filings before using them in
+investment, reporting, or compliance work. Tool calls send tickers, filters,
+and search text to Equibles, and portfolio tools store the positions you add in
+your Equibles account, so keep client details out of prompts, and keep API keys
+out of shared configuration.
+
+## Duplicate Check
+
+Existing entries cover other financial-data MCP servers, including Financial
+Datasets, Daloopa, Drillr, and Alpaca, but no Equibles entry or matching source
+URL was found in `content/mcp`.
