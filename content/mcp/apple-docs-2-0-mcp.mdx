@@ -1,0 +1,196 @@
+---
+title: Apple Docs 2.0 MCP
+slug: apple-docs-2-0-mcp
+category: mcp
+description: >-
+  MCP server for Apple's developer documentation, Human Interface Guidelines,
+  App Store Connect Help, sample code and 1,700 WWDC sessions (2014–2026) with
+  transcripts and code, with search that returns developer.apple.com's own
+  results and an offline index of 336,629 documentation pages.
+cardDescription: >-
+  Let Claude read Apple's own docs before writing Swift: doc search, full API
+  pages with OS availability, an offline index of 336,629 pages, and WWDC code.
+seoTitle: Apple Docs 2.0 MCP for Claude
+seoDescription: >-
+  Connect Apple Docs 2.0 MCP to Claude Code, Claude Desktop, Cursor and other
+  MCP clients to search Apple developer documentation, read API pages with full
+  signatures and OS availability, and find WWDC session code.
+author: mishafyi
+authorProfileUrl: "https://github.com/mishafyi"
+submittedBy: mishafyi
+submittedByUrl: "https://github.com/mishafyi"
+dateAdded: "2026-10-12"
+brandName: Apple Docs 2.0 MCP
+brandDomain: github.com
+repoUrl: "https://github.com/mishafyi/Apple-Docs-2.0-MCP"
+documentationUrl: "https://github.com/mishafyi/Apple-Docs-2.0-MCP/blob/main/README.md"
+packageUrl: "https://registry.npmjs.org/apple-docs-2.0-mcp/latest"
+installable: true
+installCommand: "claude mcp add apple-docs -- npx -y apple-docs-2.0-mcp"
+usageSnippet: "Add the server to your MCP client, then ask Claude to look up an Apple API, read its documentation page, check the Human Interface Guidelines, or find WWDC session code that uses it."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "apple-docs": {
+        "command": "npx",
+        "args": ["-y", "apple-docs-2.0-mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "apple-docs": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "apple-docs-2.0-mcp"
+        ],
+        "type": "stdio"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - Node.js 22.22.2 or later 22.x, 24.15 or later 24.x, or 26 and later, with npx available.
+  - An MCP client that supports stdio servers, such as Claude Code, Claude Desktop, Cursor, VS Code, Zed, or Cline.
+  - Network access to developer.apple.com for search and documentation pages; the WWDC data and the offline page index ship with the package.
+safetyNotes:
+  - This is a third-party MCP server, not an official Apple project.
+  - The tools only read. They fetch public pages from developer.apple.com and read the WWDC data and page index bundled with the package. They write no files and run no other programs.
+  - "`npx -y apple-docs-2.0-mcp` runs the latest npm release; pin a version (for example `apple-docs-2.0-mcp@2.0.5`) when a setup must be reproducible."
+  - Check beta, deprecated or compatibility-sensitive APIs against the live Apple page before shipping platform code.
+privacyNotes:
+  - Search queries go to Apple's developer search service and page requests to developer.apple.com; the server needs no API key or account and sends no telemetry.
+  - Prompts and tool calls can reveal framework choices, platform targets and feature plans to the MCP client, the model provider and their logs.
+  - Keep proprietary code, unreleased product names and private bundle identifiers out of documentation queries when a public lookup is enough.
+sourceUrls:
+  - "https://github.com/mishafyi/Apple-Docs-2.0-MCP"
+  - "https://github.com/mishafyi/Apple-Docs-2.0-MCP/blob/main/README.md"
+  - "https://github.com/mishafyi/Apple-Docs-2.0-MCP/blob/main/package.json"
+  - "https://github.com/mishafyi/Apple-Docs-2.0-MCP/blob/main/LICENSE"
+  - "https://github.com/mishafyi/Apple-Docs-2.0-MCP/blob/main/server.json"
+  - "https://github.com/mishafyi/Apple-Docs-2.0-MCP/blob/main/src/index.ts"
+  - "https://github.com/mishafyi/Apple-Docs-2.0-MCP/blob/main/src/tools/search-api.ts"
+  - "https://github.com/mishafyi/Apple-Docs-2.0-MCP/blob/main/src/tools/doc-fetcher.ts"
+  - "https://github.com/mishafyi/Apple-Docs-2.0-MCP/blob/main/src/tools/search-docs-map.ts"
+  - "https://github.com/mishafyi/Apple-Docs-2.0-MCP/blob/main/src/tools/wwdc/wwdc-handlers.ts"
+  - "https://github.com/mishafyi/Apple-Docs-2.0-MCP/blob/main/src/utils/http-client.ts"
+  - "https://github.com/mishafyi/Apple-Docs-2.0-MCP/blob/main/data/wwdc/index.json"
+  - "https://registry.npmjs.org/apple-docs-2.0-mcp/latest"
+tags:
+  - apple
+  - documentation
+  - ios
+  - swift
+  - wwdc
+keywords:
+  - Apple Docs 2.0 MCP
+  - Apple Developer Documentation MCP
+  - SwiftUI MCP
+  - WWDC MCP
+  - Human Interface Guidelines MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Apple Docs 2.0 MCP is a third-party MCP server that lets Claude answer from
+Apple's own developer documentation instead of memory. Its search returns the
+results developer.apple.com shows: API reference, articles, sample code, the
+Human Interface Guidelines, App Store Connect Help and WWDC videos. Pages come
+through whole, with every member's full signature, what a type inherits from
+and conforms to, related APIs and the OS versions that support it.
+
+Use it before writing or fixing Swift or any code that calls an Apple framework,
+for Human Interface Guidelines questions, and to find WWDC session code for an
+API. An offline index of 336,629 pages finds a page by its name or part of one,
+and 1,700 WWDC sessions (2014–2026) ship with the package, 1,416 with
+transcripts and 715 with code.
+
+## Source Review
+
+- https://github.com/mishafyi/Apple-Docs-2.0-MCP
+- https://github.com/mishafyi/Apple-Docs-2.0-MCP/blob/main/README.md
+- https://github.com/mishafyi/Apple-Docs-2.0-MCP/blob/main/package.json
+- https://github.com/mishafyi/Apple-Docs-2.0-MCP/blob/main/LICENSE
+- https://github.com/mishafyi/Apple-Docs-2.0-MCP/blob/main/server.json
+- https://github.com/mishafyi/Apple-Docs-2.0-MCP/blob/main/src/index.ts
+- https://github.com/mishafyi/Apple-Docs-2.0-MCP/blob/main/src/tools/search-api.ts
+- https://github.com/mishafyi/Apple-Docs-2.0-MCP/blob/main/src/tools/doc-fetcher.ts
+- https://github.com/mishafyi/Apple-Docs-2.0-MCP/blob/main/src/tools/search-docs-map.ts
+- https://github.com/mishafyi/Apple-Docs-2.0-MCP/blob/main/src/tools/wwdc/wwdc-handlers.ts
+- https://github.com/mishafyi/Apple-Docs-2.0-MCP/blob/main/src/utils/http-client.ts
+- https://github.com/mishafyi/Apple-Docs-2.0-MCP/blob/main/data/wwdc/index.json
+- https://registry.npmjs.org/apple-docs-2.0-mcp/latest
+
+These sources were reviewed on **2026-10-12**. Prefer the live repository,
+README, package metadata, license, MCP Registry metadata, server entrypoint,
+search client, documentation fetcher, page index search, WWDC handlers, WWDC
+data and npm registry metadata for current installation and tool behavior.
+
+## Features
+
+- Search Apple developer documentation with developer.apple.com's own results.
+- Read whole documentation pages with full signatures, inheritance, conformances, related APIs and OS availability.
+- Find any of 336,629 pages by name or part of one in an offline index: symbols, articles, sample code, Info.plist and entitlement keys, web-service endpoints, Human Interface Guidelines and App Store Connect Help pages.
+- Read the Human Interface Guidelines, tutorials, App Store Connect Help and App Store Connect API endpoints.
+- Search framework symbols, related and similar APIs, platform compatibility, sample code, documentation updates and technology overviews.
+- Browse and search 1,700 WWDC sessions (2014–2026) offline, with transcripts and timestamped code.
+- Run as a stdio MCP server through `npx`, with no API key or account.
+
+## Installation
+
+Add the server to Claude Code:
+
+```bash
+claude mcp add apple-docs -- npx -y apple-docs-2.0-mcp
+```
+
+For JSON-based MCP clients such as Claude Desktop, use:
+
+```json
+{
+  "mcpServers": {
+    "apple-docs": {
+      "command": "npx",
+      "args": ["-y", "apple-docs-2.0-mcp"]
+    }
+  }
+}
+```
+
+Restart the MCP client after adding the server.
+
+## Use Cases
+
+- Ask Claude to look up an API in Apple's docs before it writes SwiftUI or UIKit code.
+- Open a page directly from a type, method or Info.plist key seen in code or an error message.
+- Check which OS versions support an API before using it.
+- Read the Human Interface Guidelines page for a component before designing it.
+- Find WWDC session code that uses an API, then read the session.
+- Look up App Store Connect Help or an App Store Connect API endpoint.
+
+## Safety and Privacy
+
+The server only reads public Apple documentation and its bundled data, but
+prompts can still carry private development context. Keep proprietary code,
+unreleased app plans, internal project names and private bundle identifiers out
+of documentation queries unless that disclosure is approved.
+
+Documentation changes, and beta or deprecated APIs need extra care. Verify
+compatibility-sensitive guidance against the live Apple documentation before
+shipping platform code.
+
+## Duplicate Check
+
+`content/mcp` has Apple Docs MCP Server (`kimsungwhee/apple-docs-mcp`), which
+this server is built from. This entry is a separate server with its own
+repository and npm package (`apple-docs-2.0-mcp`): its search returns results
+again, where the listed server's search comes back empty since Apple's search
+page changed (kimsungwhee/apple-docs-mcp#51), and it adds the offline page
+index, complete pages, App Store Connect Help and WWDC26. Cupertino MCP Server
+is a different project. No `mishafyi/Apple-Docs-2.0-MCP` entry or matching
+source URL was found in `content/mcp`.
