@@ -1,0 +1,130 @@
+---
+title: YYLO
+slug: yylo
+category: tools
+description: >-
+  Open-source command-line orchestrator for coding agents with typed task,
+  validation, merge, and release-readiness boundaries, dedicated
+  branch/worktree task isolation, and receipt-backed repository changes.
+cardDescription: >-
+  Command-line orchestrator for coding agents with typed task, merge, and
+  release-readiness boundaries.
+seoTitle: YYLO - Command-Line Orchestrator for Coding Agents
+seoDescription: >-
+  YYLO is a free, MIT-licensed command-line orchestrator for coding agents
+  with typed task lifecycles, dedicated worktrees, risk-based merge review,
+  and receipt-backed evidence.
+author: yylo-dev
+authorProfileUrl: "https://github.com/yylo-dev"
+dateAdded: "2026-09-05"
+submittedBy: InsightFactoryAPP
+submittedByUrl: "https://github.com/InsightFactoryAPP"
+submittedAt: "2026-09-05"
+websiteUrl: "https://github.com/yylo-dev/yylo"
+documentationUrl: "https://github.com/yylo-dev/yylo#readme"
+repoUrl: "https://github.com/yylo-dev/yylo"
+pricingModel: open-source
+disclosure: claimed
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+sourceUrls:
+  - "https://github.com/yylo-dev/yylo"
+  - "https://raw.githubusercontent.com/yylo-dev/yylo/main/README.md"
+  - "https://www.npmjs.com/package/@yylo/cli"
+installable: true
+installCommand: "npm install --global '@yylo/cli@latest'"
+usageSnippet: >-
+  Install the CLI, run yy init in a Git repository, use yy task start to open
+  a dedicated branch/worktree for implementation, and let the merge queue
+  apply risk-based review before changes land in the target.
+copySnippet: |-
+  npm install --global '@yylo/cli@latest'
+  yy --version
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - "Node.js 20.10 or newer, npm, and Git."
+  - "A coding-agent CLI for subagent execution; the README quick start uses pi, and Codex is also supported."
+safetyNotes:
+  - "YYLO executes coding-agent sessions and their shell commands inside task worktrees; review agent and command permissions before unattended runs."
+  - "task start creates a dedicated branch and worktree and freezes the protected target SHA; the merge queue composes approved changes into the target repository, so scope repository permissions narrowly."
+  - "Release-readiness reports are read-only and do not authorize tags, pushes, npm or PyPI publication, deployment, production mutation, or worktree cleanup."
+privacyNotes:
+  - "Task state, receipts, and manifests are stored as files inside the repository workspace (.juno_task/) and can include command output and session data; review them before publishing a repository publicly."
+  - "Coding-agent sessions may send prompts and tool output to model providers under the provider's own privacy terms."
+tags:
+  - cli
+  - coding-agent
+  - agent-orchestration
+  - worktrees
+  - developer-tools
+  - open-source
+  - npm
+keywords:
+  - YYLO
+  - command-line orchestrator
+  - coding agent orchestration
+  - git worktree agent tasks
+  - typed task workflow CLI
+  - receipt-backed agent runs
+---
+
+## Overview
+
+YYLO is a command-line orchestrator for coding agents, repeatable workflows,
+and receipt-backed repository changes. It targets developers who want a quick
+agent loop and project operators who need typed task, validation, merge, and
+release-readiness boundaries.
+
+Commands `yylo` and `yy` are equivalent. `yy init` initializes a task
+workspace (`.juno_task/`), `yy task start` freezes the protected target SHA
+and creates a dedicated branch/worktree for implementation, and the merge
+queue owns risk-based review and moved-target composition before changes
+land. Companion commands `yy ledger` and `yy benchmark` delegate to the
+separately installed YYLO Ledger and YYLO Benchmark CLIs.
+
+## Install
+
+    npm install --global '@yylo/cli@latest'
+    yy --version
+
+The README quick start initializes a demo task and emits a watch receipt:
+
+    mkdir yylo-demo
+    cd yylo-demo
+    git init
+    yy init --task "Document the onboarding path" --subagent pi
+    yy watch exec pwd
+
+A successful run prints the installed YYLO version, initializes
+`.juno_task/`, then emits a watch receipt with "state":"COMPLETED",
+"exit_code":0, and nonzero log_bytes. This canary does not contact a model
+provider.
+
+## Core Capabilities
+
+- Typed task lifecycle with `task start`, `run`, `status`, `checkpoint`,
+  `preflight`, and `finish`; implementation belongs in the returned
+  task worktree.
+- Merge queue with risk-based review: low risk has no semantic reviewer,
+  normal risk at most one, and high risk two sequential reviewers on one
+  frozen candidate, with bounded repair and delta-review rounds.
+- Receipt-backed evidence: workflow runs retain rendered command identity,
+  stdout/stderr, responses, session IDs, declared receipt hashes, attempts,
+  and terminal manifests.
+- Subagent support includes Pi and Codex; model aliases cover provider
+  models such as anthropic/claude-sonnet and openai-codex families.
+- Read-only release readiness after target CAS and member reconciliation,
+  with no authority to tag, push, publish, deploy, or clean up worktrees.
+
+## Safety and Privacy
+
+YYLO runs coding agents and their commands inside task worktrees, so review
+agent permissions before unattended use. Task state and receipts live as
+files in the repository workspace and can contain command output; check them
+before sharing a repository publicly.
+
+## Disclosure
+
+Submitted by the YYLO team. Free, MIT-licensed open source. No paid placement
+or affiliate link.
