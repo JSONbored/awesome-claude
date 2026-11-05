@@ -1,0 +1,193 @@
+---
+title: X Research Skill
+slug: x-research
+category: skills
+description: >-
+  Agentic X/Twitter research skill that searches posts, follows threads,
+  builds watchlists, and synthesizes findings using the X API with a
+  TypeScript CLI.
+cardDescription: >-
+  Search X/Twitter, follow threads, build watchlists, and synthesize
+  research findings with an agentic TypeScript CLI.
+seoTitle: X Research Skill for Claude Code, Codex, and AI Agents
+seoDescription: >-
+  Install the X Research skill to search X/Twitter posts, follow threads,
+  build watchlists, and synthesize findings using the X API and a TypeScript
+  CLI agent.
+author: rohunvora
+authorProfileUrl: "https://github.com/rohunvora"
+submittedBy: Jess-yaozu
+submittedByUrl: "https://github.com/Jess-yaozu"
+dateAdded: "2026-08-18"
+submittedAt: "2026-08-18"
+repoUrl: "https://github.com/rohunvora/x-research-skill"
+documentationUrl: "https://github.com/rohunvora/x-research-skill#readme"
+websiteUrl: "https://github.com/rohunvora/x-research-skill"
+downloadUrl: "https://github.com/rohunvora/x-research-skill/archive/refs/heads/main.zip"
+installable: true
+installCommand: "git clone https://github.com/rohunvora/x-research-skill.git && cd x-research-skill && npm install"
+usageSnippet: >-
+  Set the X_API_BEARER_TOKEN environment variable, then ask the agent to
+  search X for a topic, follow a thread, build a watchlist, or synthesize
+  findings from collected posts.
+copySnippet: |-
+  git clone https://github.com/rohunvora/x-research-skill.git
+  cd x-research-skill
+  npm install
+  # Set your X API Bearer Token
+  $env:X_API_BEARER_TOKEN = "your-token-here"
+skillType: general
+skillLevel: intermediate
+verificationStatus: community-submitted
+retrievalSources:
+  - "https://github.com/rohunvora/x-research-skill"
+  - "https://raw.githubusercontent.com/rohunvora/x-research-skill/main/SKILL.md"
+  - "https://raw.githubusercontent.com/rohunvora/x-research-skill/main/x-search.ts"
+  - "https://raw.githubusercontent.com/rohunvora/x-research-skill/main/references/x-api.md"
+  - "https://raw.githubusercontent.com/rohunvora/x-research-skill/main/package.json"
+testedPlatforms:
+  - Claude Code
+  - Codex
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - "An X/Twitter Developer account with an API Bearer Token (paid tier required for search endpoints)."
+  - "Node.js and npm installed for running the TypeScript CLI."
+  - "The X_API_BEARER_TOKEN environment variable set before invoking search commands."
+  - "Familiarity with X API rate limits and per-request billing costs."
+safetyNotes:
+  - "The X API requires a paid Bearer Token; search endpoints are billed per request. Monitor usage to avoid unexpected charges."
+  - "The CLI executes network requests to the X API v2 endpoints; review x-search.ts before running in automated or CI environments."
+  - "Agent sessions may log HTTP headers or API responses that contain post content, user handles, and metadata. Review logs before sharing."
+  - "Watchlist and thread-following features issue repeated API calls; set appropriate rate limits and budgets before long-running sessions."
+  - "Do not commit the Bearer Token to source control or paste it into shared prompts. Load it from an environment variable or secret manager."
+privacyNotes:
+  - "The X_API_BEARER_TOKEN is read from an environment variable and is not printed to stdout by the CLI, but agent session logs may capture it if the agent inspects the environment."
+  - "Search results contain user handles, post text, engagement metrics, and profile metadata from X/Twitter users who may not have consented to AI analysis."
+  - "Watchlist data persists collected user profiles and posts locally; review local storage policies before building large watchlists."
+  - "Synthesized research outputs may paraphrase or quote X/Twitter content; attribute original authors and respect X's Terms of Service regarding data redistribution."
+tags:
+  - x
+  - twitter
+  - research
+  - social-media
+  - api
+keywords:
+  - "X Research skill"
+  - "Twitter research agent"
+  - "X API search"
+  - "social media research"
+  - "thread following"
+  - "watchlist"
+---
+
+## Overview
+
+The X Research skill enables AI agents to perform structured research on
+X/Twitter. It wraps the X API v2 search endpoints in a TypeScript CLI
+(`x-search.ts`) that the agent invokes to find posts, follow conversation
+threads, build user watchlists, and synthesize findings into a research
+summary.
+
+## What It Does
+
+- **Post Search**: Search recent X/Twitter posts by keyword, hashtag, or
+  user handle using the X API v2 recent search endpoint.
+- **Thread Following**: Given a starting post, recursively fetch replies
+  and quote posts to reconstruct conversation threads.
+- **Watchlists**: Track specific X/Twitter users over time, collecting
+  their recent posts for ongoing monitoring.
+- **Synthesis**: The agent reads collected posts and produces a structured
+  research summary with key themes, sentiment, and notable contributors.
+
+## How It Works
+
+The skill consists of:
+
+1. `SKILL.md` — Instructions that tell the agent when and how to use the
+   X research tools, including safety and privacy guidance.
+2. `x-search.ts` — A TypeScript CLI that wraps X API v2 endpoints for
+   searching posts, fetching threads, and managing watchlists.
+3. `references/x-api.md` — Reference documentation for the X API v2
+   endpoints used by the skill, including parameter formats and rate
+   limits.
+4. `lib/` — Shared utility modules for HTTP requests, pagination, and
+   response parsing.
+
+## Installation
+
+```bash
+git clone https://github.com/rohunvora/x-research-skill.git
+cd x-research-skill
+npm install
+```
+
+Set your X API Bearer Token:
+
+```bash
+# Linux/macOS
+export X_API_BEARER_TOKEN="your-token-here"
+
+# Windows PowerShell
+$env:X_API_BEARER_TOKEN = "your-token-here"
+```
+
+## Usage Examples
+
+### Example 1: Search for a topic
+
+```
+Search X for discussions about "AI agents" from the last 7 days. Summarize
+the top themes and most engaged posts.
+```
+
+The agent will call `x-search.ts` with the search query, collect results,
+and produce a summary with themes, sentiment, and notable posts.
+
+### Example 2: Follow a thread
+
+```
+Follow this X thread: https://x.com/user/status/1234567890
+Reconstruct the full conversation and identify key arguments.
+```
+
+The agent will fetch the original post, find replies and quotes, and
+reconstruct the thread structure.
+
+### Example 3: Build a watchlist
+
+```
+Build a watchlist of these 5 AI researchers on X and collect their posts
+from the past week: @user1, @user2, @user3, @user4, @user5
+```
+
+The agent will fetch recent posts for each user and compile them into a
+structured watchlist report.
+
+## Safety and Privacy
+
+- The X API Bearer Token is a paid credential. Search endpoints are
+  billed per request. Set a budget before running long sessions.
+- The token is loaded from the `X_API_BEARER_TOKEN` environment variable
+  and is not echoed by the CLI. However, agent session logs may capture
+  it if the agent inspects the environment.
+- Collected posts contain user handles, text, and metadata. Do not
+  redistribute raw API responses without reviewing X's Developer
+  Agreement and Terms of Service.
+- Watchlist data is stored locally. Review local retention policies
+  before building large datasets.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: Use as a reusable Agent Skill for X/Twitter
+  research workflows.
+- **Codex/OpenAI workflows**: Use as `SKILL.md`-style instructions with
+  the TypeScript CLI.
+
+### Manual Adaptation
+
+- **Cursor, Windsurf, Gemini, and Generic AGENTS files**: Adapt the
+  trigger, workflow, safety notes, and output contract into repository
+  rules for social media research work.
