@@ -1,0 +1,195 @@
+---
+title: GeiserX Goal Loop and Parallel Agent Skills
+slug: geiserx-goal-loop-parallel-agent-skills
+category: skills
+description: >-
+  Skills for Claude Code and Codex. Durable goal loops drive a repository
+  toward a goal, and parallel skills split a review, an investigation, a
+  research question or a change across independent agents.
+cardDescription: >-
+  Goal loops plus parallel review, investigation, research and implementation
+  skills for Claude Code and Codex.
+seoTitle: GeiserX Goal Loop and Parallel Agent Skills for Claude Code
+seoDescription: >-
+  Skill pack for Claude Code and Codex with a durable goal loop, a refine loop,
+  a docs audit loop, and parallel skills for PR review, code review,
+  investigation, research and implementation.
+author: GeiserX
+authorProfileUrl: "https://github.com/GeiserX"
+submittedBy: GeiserX
+submittedByUrl: "https://github.com/GeiserX"
+dateAdded: "2026-10-10"
+submittedAt: "2026-10-10"
+repoUrl: "https://github.com/GeiserX/agent-skills"
+documentationUrl: "https://geiserx.github.io/agent-skills/"
+downloadUrl: "https://github.com/GeiserX/agent-skills/archive/refs/heads/main.zip"
+installable: false
+installCommand: >-
+  git clone https://github.com/GeiserX/agent-skills.git && cd agent-skills &&
+  mkdir -p ~/.claude/skills && ln -s "$PWD/skills/sergio-loop"
+  ~/.claude/skills/sergio-loop
+usageSnippet: >-
+  Link a skill folder from skills/ into ~/.claude/skills (for Codex, from
+  codex/skills/ into ~/.agents/skills/), open a fresh session, then call it by
+  name: /sergio-loop <goal>, /review-pr 42 or /investigate <failure> in Claude
+  Code, $<name> in Codex.
+copySnippet: |-
+  /sergio-loop <goal>          # durable goal loop: plan, implement, verify, fresh review, one slice at a time
+  /refine-loop <intent>        # one small behavior-preserving improvement per round, ranked by ROI
+  /docs-loop [--apply [--open-prs]] REPO_PATH ...   # audit docs against the default branch; never merges
+  /investigate <failure>       # reproduce, test competing hypotheses, name a root cause only on evidence
+  /review-pr <number>          # review the PR head, check every finding, fix the valid ones, never merge
+  /review-code                 # audit a repository in bounded waves, findings ranked by severity
+  /research <question>         # answer from code, history and primary sources, with confidence per claim
+  /implement <change>          # smallest complete change, parallel writers on separate files, then verify
+  /kb-research <question>      # answer from your team's own record through one adapter file
+  /kb-review <number>          # review a PR the way your reviewers do; posts nothing without approval
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-10-10"
+retrievalSources:
+  - "https://github.com/GeiserX/agent-skills"
+  - "https://github.com/GeiserX/agent-skills/tree/main/skills"
+  - "https://geiserx.github.io/agent-skills/getting-started/"
+  - "https://geiserx.github.io/agent-skills/usage/"
+  - "https://raw.githubusercontent.com/GeiserX/agent-skills/main/skills/sergio-loop/SKILL.md"
+  - "https://raw.githubusercontent.com/GeiserX/agent-skills/main/skills/review-pr/SKILL.md"
+  - "https://raw.githubusercontent.com/GeiserX/agent-skills/main/skills/investigate/SKILL.md"
+testedPlatforms:
+  - Claude
+  - Codex
+prerequisites:
+  - "Claude Code or Codex, and git to clone the repository."
+  - "A Git repository to work in; the loops keep their goals and evidence in its docs/ folder."
+  - "python3 for the optional SessionStart and Stop hooks (Claude Code only)."
+  - "For kb-research and kb-review, a filled-in adapter in references/knowledge-base.md describing your knowledge sources."
+safetyNotes:
+  - "The loop skills, implement, review-pr, review-code and investigate (when a fix is asked for) edit code and run the repository's own checks and tests; review their changes before keeping them."
+  - "/docs-loop --apply --open-prs commits, pushes branches and opens one pull request per repository; --apply alone only stages documentation edits, and the default dry run only reads."
+  - "No skill merges, publishes or deploys on the strength of a stored goal; those need authorization in the current session."
+  - "The optional Stop hook keeps an active /sergio-loop session going for up to eight consecutive Stop events, only for the bound repository and session, and is inert everywhere else."
+  - "The parallel skills start several agents at once, so a task uses more model quota than a single agent would."
+  - "The documented installer moves any existing skill or hook of the same name into a timestamped backup folder before linking."
+  - "If ~/.config/neutral-driver/accounts exists, the SessionStart hook adds the Stop-hook entry to any settings.json there that lacks it; it never edits or removes existing entries and does nothing when that folder is absent."
+privacyNotes:
+  - "Goal loops write goals, evidence and deferred questions to docs/ in the target repository and resumable state to .omc/sergio-loop/ or .refine-loop/."
+  - "The SessionStart and Stop hooks keep session-bound loop state under ~/.claude, outside the repository."
+  - "kb-research and kb-review read the knowledge sources you configure (chat archives, transcripts, tickets, wiki pages); what they read goes to your model provider as part of the session."
+  - "kb-review posts nothing unless you approve the exact text."
+  - "The skills and hooks send no telemetry and make no network calls of their own beyond the agent's tools and the sources you configure."
+tags:
+  - skills
+  - claude-code
+  - codex
+  - code-review
+  - goal-loop
+  - research
+  - debugging
+  - documentation
+keywords:
+  - Claude Code goal loop skill
+  - parallel code review skill
+  - Codex skills pack
+  - PR review agent skill
+  - root cause investigation skill
+  - documentation audit skill
+readingTime: 4
+difficultyScore: 60
+hasTroubleshooting: false
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+# GeiserX Goal Loop and Parallel Agent Skills
+
+A set of skills for Claude Code and Codex in the shared `SKILL.md` format.
+`skills/` holds the Claude Code copies and `codex/skills/` the Codex ones. The
+durable loops drive one repository toward a goal. The parallel skills split a
+review, an investigation, a research question or a change across independent
+agents, then check what they found before acting on it.
+
+## Knowledge Freshness
+
+The skills change with the repository. This entry was verified on
+**2026-10-10** against the default branch; prefer the live `SKILL.md` files and
+the documentation over this summary when they differ.
+
+## Retrieval Sources
+
+The skill manifests and the getting started and usage guides were read from the
+public `GeiserX/agent-skills` repository on **2026-10-10**. The repository
+ships a validator that checks every skill package and checks each loop against
+the shared loop contract.
+
+- https://github.com/GeiserX/agent-skills/tree/main/skills
+- https://geiserx.github.io/agent-skills/getting-started/
+- https://geiserx.github.io/agent-skills/usage/
+
+## Core Workflow
+
+1. Clone the repository and link the skills you want into `~/.claude/skills`
+   (Codex: from `codex/skills/` into `~/.agents/skills/`).
+2. Optionally install the SessionStart and Stop hooks from `runtime/` and add
+   them to `~/.claude/settings.json`, so `/sergio-loop` continues in the same
+   session.
+3. Open a fresh session in the target Git repository.
+4. Run `/sergio-loop <goal>` for a goal you want driven to completion, or call a
+   parallel skill for a single task: `/review-pr 42`, `/investigate <failure>`,
+   `/research <question>`, `/implement <change>`.
+5. Resume an unfinished loop with `/sergio-loop`, or reopen a finished one with
+   `/sergio-loop --continue`.
+
+## Capability Scope
+
+- `/sergio-loop` runs a goal loop in one repository, one small slice at a time:
+  inspect and plan, implement, verify, then a fresh review. Goals and evidence
+  live in `docs/GOAL.md` and `docs/AUTOPILOT-WORKLOG.md`, human-only decisions
+  in `docs/DEFERRED-QUESTIONS.md`, and resumable state in `.omc/sergio-loop/`.
+  Defaults are `max_iterations=50`, `no_progress_limit=3` and `failure_limit=3`.
+- `/refine-loop` makes small improvements that keep behavior the same, ranked
+  by `ROI = Impact x Confidence / Effort`, one per round, each checked by a
+  fresh read-only reviewer.
+- `/docs-loop` audits documentation against the default branch as a dry run,
+  with staged edits (`--apply`), or with one pull request per repository
+  (`--apply --open-prs`). It never merges.
+- `investigate` reproduces a failure and names a root cause only when the
+  evidence holds. It edits code only when the request asks for a fix, and then
+  adds a test that fails for the root cause first.
+- `review-pr` reviews the exact head of a pull request, checks every finding
+  against the code, fixes the valid ones within the PR's intent and has a
+  separate reviewer check the fixes. It stops after three rounds and never
+  merges.
+- `review-code` audits a repository in bounded waves and publishes every
+  verified finding ranked by severity.
+- `research` answers from the code, its history and primary sources, with a
+  claim, a source and a confidence level for each finding.
+- `implement` makes the smallest complete change, gives each parallel writer
+  its own files, then integrates and verifies the result.
+- `kb-research` and `kb-review` answer and review from your team's own record
+  (chat archives, call transcripts, tickets, wiki pages) through one adapter
+  file, `references/knowledge-base.md`.
+
+The parallel skills scale their panel to the task: alone on a trivial task,
+2-3 agents on a modest one, 4-7 on a normal one and 8-12 or more on a broad or
+risky one. Agents never spawn other agents.
+
+## Production Rules
+
+- A stored goal or an earlier approval is context, not permission. Merging,
+  publishing, deploying, production changes and history rewrites need
+  authorization in the current session.
+- Review every change a loop or `implement` makes before keeping it; each
+  accepted change must pass the repository's own checks.
+- Use `/docs-loop` without `--apply` first; it only reads.
+- `kb-review` posts nothing unless you approve the exact text.
+- The Stop hook only continues the bound repository and session, for up to
+  eight consecutive Stop events, and lets context, auth and rate-limit failures
+  stop normally.
+
+## License and Disclosure
+
+GPL-3.0-or-later. I am the author of this repository; the listing has no
+compensated promotion or referral tracking.
