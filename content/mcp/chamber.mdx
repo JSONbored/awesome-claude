@@ -1,0 +1,168 @@
+---
+title: Chamber
+slug: chamber
+category: mcp
+description: >-
+  Local-first MCP server for cited question answering over your own markdown
+  notes, plus drift detection when a cited source changes underneath a
+  conclusion already drawn from it. Every claim in an answer comes back judged
+  against its own citations, and a scheduled re-check exits non-zero when a
+  pinned passage no longer says what it said.
+cardDescription: Cited answers from your own notes, and an alarm when a cited source changes underneath a conclusion.
+seoTitle: Chamber MCP Server for Cited Notes Q&A and Source Drift Detection
+seoDescription: >-
+  Install the Chamber MCP server to query a local markdown corpus with per-claim
+  citation verdicts, and to detect when a cited passage changes after a
+  conclusion was drawn from it. Local-first, SQLite, zero runtime dependencies.
+author: abm9111
+submittedBy: abm9111
+submittedByUrl: "https://github.com/abm9111"
+dateAdded: "2026-08-17"
+documentationUrl: "https://github.com/abm9111/chamber/blob/main/README.md"
+repoUrl: "https://github.com/abm9111/chamber"
+installable: true
+installCommand: "claude mcp add -s user chamber -- npx -y @bu7umaid/chamber mcp"
+usageSnippet: "Use Chamber when an answer must cite passages from your own notes, and when you need to know later that a cited source changed."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "chamber": {
+        "command": "npx",
+        "args": ["-y", "@bu7umaid/chamber", "mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "chamber": {
+        "command": "npx",
+        "args": ["-y", "@bu7umaid/chamber", "mcp"]
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Node.js 23.6 or newer, which is the floor the package declares in engines.
+  - A corpus to answer from - run `npx -y @bu7umaid/chamber init`, add an ingest root to the config, then `npx -y @bu7umaid/chamber ingest`. An empty corpus answers nothing.
+  - An OpenAI-compatible endpoint configured as model.base for chamber_ask, including a local one. chamber_verify and chamber_corpus need no model at all.
+  - Optional - a Python interpreter with onnxruntime for the local embedder, named through CHAMBER_PYTHON. Without it, semantic retrieval degrades to hashed vectors and Chamber says so.
+safetyNotes:
+  - With no model configured, chamber_ask answers from a built-in stub rather than contacting anything. Since 0.1.4 the reply is labelled as stub output above the answer, so it cannot be mistaken for a real one - set model.mode to openai in the config to get actual answers.
+  - The optional skill sandbox confines only on Linux, where it uses bubblewrap, and refuses to run anywhere else rather than pretending to isolate.
+  - docs/KNOWN_LIMITATIONS.md lists 19 known limitations, including the unflattering ones - a citation can be genuine and still be wrong, checkpoints are manual and unsigned, and the paraphrase leg over citation debt is weak with the measurement to prove it.
+privacyNotes:
+  - Ingest has no default exclude list. Pointed at a folder of exported chat logs it will index all of them and answer from them, so set excludes before the first ingest and check `chamber corpus` afterwards.
+  - Everything stays on disk in a local SQLite database. A loopback model.base needs no API key; anything else reads CHAMBER_API_KEY from the environment and never from the config file.
+sourceUrls:
+  - "https://github.com/abm9111/chamber"
+  - "https://www.npmjs.com/package/@bu7umaid/chamber"
+  - "https://github.com/abm9111/chamber/blob/main/docs/KNOWN_LIMITATIONS.md"
+tags:
+  - notes
+  - citations
+  - local-first
+  - sqlite
+  - drift-detection
+keywords:
+  - Chamber MCP server
+  - cited notes Q&A MCP
+  - source drift detection
+  - local-first RAG MCP
+  - obsidian notes citations MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Chamber indexes a folder of markdown into a local SQLite database and exposes
+three tools over MCP: `chamber_ask`, `chamber_verify`, and `chamber_corpus`.
+
+The model is only ever shown numbered passages, never a document id and never a
+hash, so the identifiers that reach the citation gate are read out of the index
+rather than written by the model. Each claim in an answer comes back marked
+against its own citations, and the passages a claim cites are hashed at the
+moment it is made.
+
+That hash is what the second half is for. `chamber_verify` re-reads the pinned
+passages and reports the ones that no longer match - a source edited after a
+conclusion was drawn from it. It needs no model to do this, which is why the
+drift half of Chamber runs offline and deterministically.
+
+Zero runtime dependencies: `node:sqlite` and files on disk.
+
+## Installation
+
+For Claude Code:
+
+```sh
+claude mcp add -s user chamber -- npx -y @bu7umaid/chamber mcp
+```
+
+For a JSON MCP configuration:
+
+```json
+{
+  "mcpServers": {
+    "chamber": {
+      "command": "npx",
+      "args": ["-y", "@bu7umaid/chamber", "mcp"]
+    }
+  }
+}
+```
+
+The server starts before any corpus exists, so it can be added first. To give
+it something to answer from:
+
+```sh
+npx -y @bu7umaid/chamber init      # writes ~/.config/chamber/config.json
+# add an ingest root and a model.base to that file
+npx -y @bu7umaid/chamber ingest    # index every configured root
+```
+
+If your MCP host spawns with a minimal PATH and cannot resolve `npx`, the
+README documents naming the interpreter absolutely instead.
+
+## Use Cases
+
+- Ask a question of your own notes and get back which claims are actually
+  supported by a passage you can open, and which are not.
+- Run `chamber_verify` on a schedule and find out that a policy note changed
+  under a decision that cited it.
+- Gate CI on documentation drift - the repository ships a composite GitHub
+  Action that fails the build when a pinned citation stops matching.
+- Check what is actually indexed with `chamber_corpus` before trusting an
+  answer that says the corpus does not contain something.
+
+## Safety and Privacy
+
+The two things worth knowing before installing are both about honesty rather
+than about attack surface.
+
+First, with no model configured `chamber_ask` returns canned text from a
+built-in stub. Before 0.1.4 that arrived unlabelled and read like a real
+answer; it is now printed under a stub disclosure. Configure `model.mode` to
+get real ones.
+
+Second, ingest has no default exclude list. Point it at the wrong directory and
+it will index everything there and answer from it. Set excludes first.
+
+The optional skill sandbox uses bubblewrap and therefore confines on Linux
+only; on macOS it refuses to run rather than claiming an isolation it does not
+have. `docs/KNOWN_LIMITATIONS.md` documents 19 limitations with what each one
+costs and what would fix it.
+
+## Duplicate Check
+
+No existing entry references Chamber - checked across `content/` for the name
+and for the `@bu7umaid/chamber` package. This is the first submission for this
+project since PR #5778, which was closed for missing frontmatter.
+
+## References
+
+- Repository - https://github.com/abm9111/chamber
+- npm package - https://www.npmjs.com/package/@bu7umaid/chamber
+- Known limitations - https://github.com/abm9111/chamber/blob/main/docs/KNOWN_LIMITATIONS.md
