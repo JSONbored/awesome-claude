@@ -1,0 +1,174 @@
+---
+title: SaaSCity MCP Server for Claude
+slug: saascity-mcp-server
+category: mcp
+description: >-
+  Remote MCP server for planning a product launch: audit a homepage before
+  launch, pick launch directories from 1,600+ by Ahrefs DR, link type and
+  price, and list the product on SaaSCity.
+cardDescription: >-
+  Connect Claude to SaaSCity to audit a homepage, choose launch directories by
+  DR and link type, and draft a SaaSCity listing.
+seoTitle: SaaSCity MCP Server for Claude
+seoDescription: >-
+  Use the io.saascity/saascity remote MCP server with Claude to audit a
+  homepage before launch, find launch directories by DR, link type and price,
+  and draft a SaaSCity listing via https://saascity.io/api/mcp.
+author: SaaSCity
+authorProfileUrl: "https://github.com/nyyhao"
+submittedBy: nyyhao
+submittedByUrl: "https://github.com/nyyhao"
+dateAdded: "2026-10-24"
+submittedAt: "2026-10-24"
+repoUrl: "https://github.com/nyyhao/saascity-mcp"
+documentationUrl: "https://saascity.io/mcp"
+websiteUrl: "https://saascity.io"
+installable: true
+installCommand: >-
+  claude mcp add --transport http saascity https://saascity.io/api/mcp
+usageSnippet: >-
+  Add https://saascity.io/api/mcp as a remote HTTP connector; no account or API
+  key is required. Ask Claude to audit your homepage, then to pick launch
+  directories that fit your product.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "saascity": {
+        "type": "http",
+        "url": "https://saascity.io/api/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "saascity": {
+        "type": "http",
+        "url": "https://saascity.io/api/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 2 minutes
+difficulty: beginner
+prerequisites:
+  - "Claude Code with HTTP MCP transport, or a Claude plan with custom connectors."
+  - "Internet access to reach https://saascity.io/api/mcp."
+  - "No account or API key required."
+safetyNotes:
+  - "Makes outbound HTTPS requests to saascity.io."
+  - "check_launch_readiness and check_badge fetch the public URL you pass, from SaaSCity servers."
+  - "submit_project is the only write tool: it creates an inert draft and returns a claim URL. Nothing is published or charged until a person signs in and submits the form, and every listing is reviewed."
+  - "Tools are rate limited per IP."
+privacyNotes:
+  - "URLs, search queries and product details you send are processed by SaaSCity."
+  - "No credentials are needed; do not paste secrets into tool arguments."
+tags:
+  - launch
+  - marketing
+  - seo
+  - directories
+  - remote-mcp
+keywords:
+  - saascity mcp
+  - launch directories mcp
+  - product launch mcp
+  - backlink directories
+  - io.saascity/saascity
+readingTime: 3
+difficultyScore: 15
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+SaaSCity MCP (`io.saascity/saascity`) is a keyless remote Model Context Protocol server for launching a SaaS or AI product. It audits a homepage before launch, recommends launch directories from a dataset of 1,600+ with Ahrefs DR, link type and price, and can draft a listing on [SaaSCity](https://saascity.io).
+
+The stdio bridge source is MIT-licensed at [nyyhao/saascity-mcp](https://github.com/nyyhao/saascity-mcp). Docs are at [saascity.io/mcp](https://saascity.io/mcp). The server is published in the official MCP Registry.
+
+## Features
+
+- Audit a homepage for launch blockers: HTTPS, noindex, title and meta description, og:image, favicon, canonical, viewport, JSON-LD, robots.txt, sitemap and response time, with a 0-100 score and a fix per problem.
+- Find and recommend launch directories filtered by DR, dofollow or nofollow link, price and category.
+- Look up one directory's details.
+- Search SaaSCity listings, find alternatives and read the leaderboard.
+- Draft a SaaSCity listing and check its submission status or badge.
+
+Tools: `check_launch_readiness`, `recommend_launch_directories`, `find_launch_directories`, `get_launch_directory`, `search_listings`, `get_listing`, `find_alternatives`, `get_leaderboard`, `get_launch_weeks`, `get_offers`, `submit_project`, `get_submission_status`, `check_badge`.
+
+## Use Cases
+
+- Check a landing page for SEO and sharing problems before a launch.
+- Build a shortlist of free dofollow directories above a DR threshold.
+- Plan which launch week to list a product on SaaSCity.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add --transport http saascity https://saascity.io/api/mcp
+claude mcp list
+```
+
+### Claude (Connectors)
+
+1. Open **Settings → Connectors** and add a custom connector.
+2. Enter the URL `https://saascity.io/api/mcp`.
+3. No authentication is needed.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "saascity": {
+      "type": "http",
+      "url": "https://saascity.io/api/mcp"
+    }
+  }
+}
+```
+
+## Examples
+
+### Pre-launch audit
+
+```text
+Audit https://example.com before I launch it and list the fixes by priority.
+```
+
+### Directory shortlist
+
+```text
+Find free dofollow launch directories with DR above 50 for an AI writing tool.
+```
+
+### Draft a listing
+
+```text
+Draft a SaaSCity listing for my product and give me the claim link.
+```
+
+## Security
+
+- All tools except `submit_project` are read-only.
+- `submit_project` creates a draft only; a person must sign in and submit it.
+- URL-fetching tools only read the public page you name.
+
+## Troubleshooting
+
+### Rate limited
+
+Wait for the retry time in the error message, then call again.
+
+### Audit fails to fetch the page
+
+Make sure the URL is public and does not block non-browser requests.
+
+## Duplicate Check
+
+No existing SaaSCity entry was found in `content/mcp/`. It differs from generic SEO MCP servers because it pairs a pre-launch audit with a dataset of launch directories and a listing flow.
