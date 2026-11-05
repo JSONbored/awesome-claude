@@ -1,0 +1,98 @@
+---
+title: Hyperconsciousness MCP Server
+slug: hyperconsciousness
+category: mcp
+description: >-
+  Developer-alpha Rust knowledge store with encrypted, signed, append-only
+  records and an MCP interface for scoped, expiring access by agents.
+cardDescription: >-
+  Developer-alpha encrypted knowledge store with MCP search and capture
+  controlled by scoped, expiring grants.
+author: Louis
+submittedBy: louis030195
+submittedByUrl: https://github.com/louis030195
+dateAdded: "2026-09-26"
+repoUrl: https://github.com/louis030195/hyperconsciousness
+documentationUrl: https://github.com/louis030195/hyperconsciousness/blob/main/README.md
+license: MIT
+installable: true
+installCommand: |-
+  git clone https://github.com/louis030195/hyperconsciousness.git
+  cd hyperconsciousness
+  cargo build --release --locked
+usageSnippet: '/absolute/path/to/hc mcp --as <grant-id> --dir /absolute/path/to/hc-demo'
+copySnippet: |-
+  {
+    "mcpServers": {
+      "hc": {
+        "command": "/absolute/path/to/hc",
+        "args": ["mcp", "--as", "<grant-id>", "--dir", "/absolute/path/to/hc-demo"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "hc": {
+        "command": "/absolute/path/to/hc",
+        "args": ["mcp", "--as", "<grant-id>", "--dir", "/absolute/path/to/hc-demo"]
+      }
+    }
+  }
+difficulty: intermediate
+prerequisites:
+  - Rust via rustup; the repository pins Rust 1.88.0.
+  - Native build dependencies listed in the README for your operating system.
+  - A compiled hc binary, an explicitly selected store, and a scoped grant.
+  - An MCP client supporting local stdio servers; replace all configuration placeholders.
+tags:
+  - memory
+  - encrypted-storage
+  - rust
+  - local-first
+  - mcp
+safetyNotes:
+  - Developer alpha; commands and APIs may change. No independent security audit is claimed.
+  - The server runs with its process identity. Grants limit returned data but do not sandbox other processes with access to the owner's account, files or keys.
+  - Start with a read-only grant. Capture requires write permission; credential operations require a separate USE grant and a signed device request.
+  - Source installation compiles code and dependencies. Review the repository and its constraints before use.
+privacyNotes:
+  - Stored records are encrypted and append-only. The selected local store retains captured knowledge; use a separate directory for synthetic tests.
+  - Plaintext returned by a grant can be visible to the MCP client and hosted model provider. Encrypted storage does not keep model inputs local.
+  - Device sync and remote storage are separately configured capabilities. Review their metadata exposure and recovery limits before enabling them.
+---
+
+## Content
+
+Hyperconsciousness (`hc`) stores knowledge for humans and agents independently of a particular model or harness. Its MCP server exposes search, recent records, individual records, capture and access-request tools over stdio. Grant scope can restrict record kinds, tags, sensitivity and expiry. A tool appearing in the tool list does not authorize its use.
+
+Disclosure: submitted by Louis, the project maintainer. The public Rust engine is MIT licensed and remains a developer alpha.
+
+## Use Cases
+
+- Let an agent retrieve project decisions from notes tagged for that project.
+- Give a temporary assistant a read-only view that expires after a chosen period.
+- Capture new knowledge only when a separate write-capable grant is appropriate.
+
+## Installation
+
+Build from the public repository with the frontmatter install command. The current alpha uses source installation; the npm registry package is not its source. On Windows, the compiled executable is `target\release\hc.exe`; on macOS/Linux it is `target/release/hc`.
+
+For an isolated first check, choose a new directory and use the compiled binary's absolute path in place of `hc` if it is not on your PATH:
+
+```sh
+HC_STORE="$PWD/hc-demo"
+hc start --dir "$HC_STORE"
+hc write "A synthetic project decision" --tags demo --sensitivity normal --dir "$HC_STORE"
+HC_DEVICE="$(hc id --dir "$HC_STORE" | cut -d: -f2)"
+hc grant "$HC_DEVICE" --kinds note --tags demo --sensitivity normal --days 1 --dir "$HC_STORE"
+hc grants --dir "$HC_STORE"
+```
+
+Copy the displayed grant ID into the configuration above. Both paths must be absolute. This example grants one day of read-only access to normal notes tagged `demo`; it does not grant capture or credential access. Ask the client to search for the synthetic project decision.
+
+## Limits and verification
+
+A release source build at revision `3c246fbc33035ec85c3621647c69cf9d5aa6582e` was smoke-tested on macOS with a new synthetic store: MCP initialization, tool discovery and grant-scoped search returned the test note. This was a direct stdio protocol test, not a Claude Desktop/Code integration test or a full security audit. Current setup instructions were checked against public revision `d2152ce2154affccc47f35a34876b066740d52ad`.
+
+`hc read` is a local display command, not a full integrity check. Use the documented recovery verification workflow when assessing backups. Read the [constraints](https://github.com/louis030195/hyperconsciousness/blob/main/docs/CONSTRAINTS.md) and [mission](https://github.com/louis030195/hyperconsciousness/blob/main/MISSION.md) before using important data. The private Companion, phone clients and private agent orchestration are separate from this public repository.
