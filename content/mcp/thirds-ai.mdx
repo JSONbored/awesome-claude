@@ -1,0 +1,83 @@
+---
+title: thirds.ai
+slug: thirds-ai
+category: mcp
+description: >-
+  Create branded images and PDFs for your campaigns and clients. Automate each
+  new version through our API or your AI tools. MCP: https://thirds.ai/mcp
+cardDescription: Turn one design into branded PDFs and images via MCP.
+seoTitle: thirds.ai MCP Server for Claude
+seoDescription: >-
+  Connect Claude to thirds.ai over Streamable HTTP to make branded PDFs and
+  images from saved designs. Free plan includes 50 credits a month.
+author: Thirds AI
+authorProfileUrl: "https://github.com/thirdsai"
+dateAdded: "2026-10-01"
+brandName: thirds.ai
+brandDomain: thirds.ai
+websiteUrl: "https://thirds.ai/"
+repoUrl: "https://github.com/thirdsai"
+documentationUrl: "https://thirds.ai/docs/mcp"
+installable: true
+installCommand: >-
+  Add remote MCP server URL https://thirds.ai/mcp (Streamable HTTP). Clients
+  with MCP sign-in need only that URL; others use Bearer API key.
+usageSnippet: >-
+  Add remote MCP server URL https://thirds.ai/mcp (Streamable HTTP). Clients
+  with MCP sign-in need only that URL; others use Bearer API key.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "thirds": {
+        "url": "https://thirds.ai/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "thirds": {
+        "url": "https://thirds.ai/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - Free thirds.ai account (50 credits a month; no card required to start).
+  - MCP client with Streamable HTTP / remote server support.
+  - For non–sign-in clients: a thirds.ai API key sent as Authorization Bearer.
+safetyNotes:
+  - Uses your thirds.ai account and credits.
+  - 1 credit makes 1 PDF or image.
+  - A file that fails costs nothing.
+  - Free plan: 50 credits a month.
+  - Agent can list and use templates and brand kits you own.
+privacyNotes:
+  - Keep API keys and signed download URLs private — never paste into prompts or public configs.
+  - Uploaded, saved, and generated content stays in your account; see https://thirds.ai privacy policy.
+tags:
+  - mcp
+  - pdf
+  - images
+  - templates
+  - brand
+  - api
+  - automation
+keywords:
+  - thirds.ai mcp
+  - branded pdf mcp
+  - image automation mcp
+  - streamable http mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+thirds.ai turns one design into many branded PDFs and images. Connect your AI
+agent to `https://thirds.ai/mcp` (Streamable HTTP). Clients that support MCP
+sign-in need only that URL; other clients send a Bearer API key.
+
+Docs: [thirds.ai/docs/mcp](https://thirds.ai/docs/mcp).
