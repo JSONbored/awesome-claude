@@ -1,0 +1,127 @@
+---
+title: ArtiGram MCP Server for Claude
+slug: artigram-mcp-server
+category: mcp
+description: >-
+  Hosted ArtiGram MCP server that posts Claude artifacts (HTML, React, SVG, Markdown, Mermaid) to the ArtiGram community and publishes new versions to the same post.
+cardDescription: >-
+  Post Claude artifacts to ArtiGram from chat and update them later while keeping the link, votes and comments.
+seoTitle: ArtiGram MCP Server for Claude
+seoDescription: >-
+  Connect Claude to ArtiGram over streamable HTTP to publish artifacts to a community feed and push new versions with post_artifact and update_artifact.
+author: ArtiGram
+authorProfileUrl: "https://artigram.cafeboon.com"
+submittedBy: SebastiaanBoon
+submittedByUrl: "https://github.com/SebastiaanBoon"
+dateAdded: "2026-10-13"
+submittedAt: "2026-10-13"
+documentationUrl: "https://artigram.cafeboon.com/connect"
+websiteUrl: "https://artigram.cafeboon.com"
+retrievalSources:
+  - "https://artigram.cafeboon.com/connect"
+  - "https://artigram.cafeboon.com/mcp"
+installable: true
+installCommand: >-
+  claude mcp add --transport http artigram https://artigram.cafeboon.com/mcp --header "Authorization: Bearer YOUR_ARTIGRAM_KEY"
+usageSnippet: >-
+  Create an API key in ArtiGram settings, add the connector, then ask Claude to post the current artifact on ArtiGram in a community such as tools or dataviz.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "artigram": {
+        "url": "https://artigram.cafeboon.com/mcp",
+        "type": "http",
+        "headers": {
+          "Authorization": "Bearer YOUR_ARTIGRAM_KEY"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "artigram": {
+        "url": "https://artigram.cafeboon.com/mcp",
+        "type": "http",
+        "headers": {
+          "Authorization": "Bearer YOUR_ARTIGRAM_KEY"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "ArtiGram account with an API key created in Settings."
+  - "Claude with custom connector support, Claude Code, or another MCP client with streamable HTTP support."
+safetyNotes:
+  - "post_artifact and update_artifact publish content publicly on ArtiGram under your account."
+  - "The API key grants posting access until it is revoked in ArtiGram settings."
+privacyNotes:
+  - "Artifact source code, titles and descriptions you post are sent to ArtiGram and shown publicly."
+  - "The personal connector URL embeds your key; keep it and the Bearer token out of shared chats and source control."
+tags:
+  - artifacts
+  - publishing
+  - community
+  - remote-mcp
+keywords:
+  - artigram mcp
+  - post claude artifacts
+  - share claude artifacts
+  - artigram connector
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+[ArtiGram](https://artigram.cafeboon.com) is a Reddit-style community for sharing artifacts made with Claude, ChatGPT and other AI assistants. Posted HTML pages, React components, SVG, Markdown and Mermaid diagrams run as-is in an isolated sandbox, and artifacts that use Claude's storage API keep working.
+
+The hosted MCP server at `https://artigram.cafeboon.com/mcp` lets Claude publish an artifact with one request and later push a new version to the same post.
+
+## Features
+
+- `post_artifact`: publish an artifact to a community and get its public link.
+- `update_artifact`: publish a new version of one of your posts; the link, votes and comments stay.
+- `list_communities`: list the communities you can post in (read-only).
+- Streamable HTTP transport; `initialize` and `tools/list` work without auth, posting needs an API key.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Sign in to ArtiGram and create a key in Settings to get your personal connector URL.
+2. In Claude, open Settings, then Connectors, and add a custom connector named ArtiGram with that URL.
+3. In a chat with an artifact, ask Claude to post it on ArtiGram.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http artigram https://artigram.cafeboon.com/mcp --header "Authorization: Bearer YOUR_ARTIGRAM_KEY"
+```
+
+## Examples
+
+```text
+Post this artifact on ArtiGram in a/dataviz with a short description.
+```
+
+```text
+Publish this new version to my ArtiGram post and add the note "Week 42".
+```
+
+## Source Verification Notes
+
+Verified on **2026-10-13**:
+
+- A `tools/list` request to `https://artigram.cafeboon.com/mcp` returns `post_artifact`, `update_artifact` and `list_communities`.
+- Setup instructions are published at https://artigram.cafeboon.com/connect.
+
+## Duplicate Check
+
+No existing `content/mcp/` entry covers ArtiGram.
+
+## Editorial Disclosure
+
+Submitted by the maintainer of ArtiGram.
