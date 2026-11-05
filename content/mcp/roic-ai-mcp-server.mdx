@@ -1,0 +1,220 @@
+---
+title: ROIC.ai Financial Data MCP Server
+slug: roic-ai-mcp-server
+category: mcp
+description: >-
+  Financial statements, ratios and earnings call transcripts for 60,000+ public
+  companies as MCP tools for Claude, ChatGPT and Cursor, through a hosted
+  Streamable HTTP endpoint or a self-hosted MIT Node.js server.
+cardDescription: >-
+  Connect Claude to ROIC.ai financial statements, ratios, valuation multiples,
+  and earnings call transcripts.
+seoTitle: ROIC.ai Financial Data MCP Server for Claude
+seoDescription: >-
+  Use the ROIC.ai MCP Server with Claude to retrieve income statements, balance
+  sheets, cash flows, financial ratios, valuation multiples, earnings call
+  transcripts, and historical stock prices for public companies.
+author: ROIC.ai
+authorProfileUrl: "https://github.com/roicai"
+submittedBy: infovlad
+submittedByUrl: "https://github.com/infovlad"
+dateAdded: "2026-10-14"
+brandName: ROIC.ai
+brandDomain: roic.ai
+repoUrl: "https://github.com/roicai/agents-plugin"
+documentationUrl: "https://www.roic.ai/api/mcp"
+installable: true
+installCommand: "claude mcp add --transport http roicai https://mcp.roic.ai/mcp"
+usageSnippet: "Add the hosted endpoint https://mcp.roic.ai/mcp, sign in with OAuth when the client prompts, and ask Claude for statements, ratios, valuation multiples, or an earnings call transcript for a ticker."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "roicai": {
+        "type": "http",
+        "url": "https://mcp.roic.ai/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "roicai": {
+        "type": "http",
+        "url": "https://mcp.roic.ai/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - A ROIC.ai account for OAuth sign-in to the hosted endpoint.
+  - An MCP client that supports remote Streamable HTTP servers with OAuth, such as Claude Code, Claude, Cursor, VS Code, or ChatGPT.
+  - For the self-hosted server, Node.js 18 or newer, a clone of `roicai/agents-plugin`, and a ROIC.ai API key in `ROIC_API_KEY`.
+  - Understanding of ROIC.ai plan limits; the free tier allows 5 requests per minute and 2 years of history.
+safetyNotes:
+  - All 25 tools are read-only; the server does not place trades, write to accounts, or modify local files.
+  - The server sends tickers, identifiers (CIK, CUSIP, ISIN), periods, and date filters to the ROIC.ai API at `https://api.roic.ai/v2`.
+  - Stock prices are end-of-day and historical, not intraday. Results can be rate limited or limited in history depth depending on the plan.
+  - Treat tool output and model summaries as research input, not investment, trading, tax, or legal advice.
+privacyNotes:
+  - The hosted endpoint uses OAuth, so the MCP client stores an access token; revoke it from the client if the device is shared.
+  - The self-hosted server reads `ROIC_API_KEY` from the environment. Keep the key out of committed configs, logs, screenshots, and prompts.
+  - Queried tickers and date ranges can reveal watchlists, research targets, or client assignments to ROIC.ai, the MCP client, and the model provider.
+  - Avoid putting private portfolio holdings or material non-public information into prompts or tool arguments.
+disclosure: >-
+  Uses the ROIC.ai API, which requires an account. A free tier is available
+  (5 requests per minute, 2 years of history); paid plans raise rate limits and
+  history depth. Submitted by a member of the ROIC.ai team.
+sourceUrls:
+  - "https://github.com/roicai/agents-plugin"
+  - "https://github.com/roicai/agents-plugin/blob/main/README.md"
+  - "https://github.com/roicai/agents-plugin/blob/main/server.js"
+  - "https://github.com/roicai/agents-plugin/blob/main/package.json"
+  - "https://github.com/roicai/agents-plugin/blob/main/LICENSE"
+  - "https://www.roic.ai/api/mcp"
+  - "https://www.roic.ai/api"
+tags:
+  - finance
+  - market-data
+  - stocks
+  - financial-statements
+  - earnings-calls
+keywords:
+  - ROIC.ai MCP
+  - financial data MCP server
+  - financial statements MCP
+  - earnings call transcripts MCP
+  - stock fundamentals Claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+ROIC.ai MCP Server connects Claude and other MCP clients to the ROIC.ai
+financial data API. It exposes 25 read-only tools for financial statements,
+financial ratios, valuation multiples, earnings call transcripts, historical
+stock prices, company profiles, and ticker discovery across public companies on
+70+ exchanges.
+
+There are two ways to run it:
+
+- **Hosted:** a Streamable HTTP endpoint at `https://mcp.roic.ai/mcp` with OAuth
+  sign-in, so there is no API key to configure in the client.
+- **Self-hosted:** the MIT-licensed Node.js server in `roicai/agents-plugin`,
+  which authenticates to the ROIC.ai REST API with `ROIC_API_KEY`.
+
+## Source Review
+
+- https://github.com/roicai/agents-plugin
+- https://github.com/roicai/agents-plugin/blob/main/README.md
+- https://github.com/roicai/agents-plugin/blob/main/server.js
+- https://github.com/roicai/agents-plugin/blob/main/package.json
+- https://github.com/roicai/agents-plugin/blob/main/LICENSE
+- https://www.roic.ai/api/mcp
+- https://www.roic.ai/api
+
+These sources were reviewed on **2026-10-14**. Prefer the live repository and
+ROIC.ai docs for current tool names, coverage, and plan limits.
+
+## Features
+
+- Income statements, balance sheets, and cash flow statements, annual or quarterly.
+- Profitability ratios (ROE, ROA, ROIC, margins), credit ratios (debt/EBITDA,
+  debt/equity, interest coverage), liquidity ratios, and working capital ratios.
+- Valuation multiples (P/E, P/B, P/S, EV/EBITDA), enterprise value, and per-share data.
+- Earnings call transcripts by year and quarter, plus the latest call.
+- End-of-day and historical OHLCV stock prices with date ranges.
+- Company profiles and company news.
+- Ticker search and resolution by symbol, name, CIK, CUSIP, or ISIN.
+- Lists of exchanges, sectors, industries, and countries with ticker counts.
+
+## Tools
+
+- `search_tickers`, `list_tickers`, `search_ticker_by_identifier`
+- `list_exchanges`, `list_sectors`, `list_industries`, `list_countries`
+- `get_company_profile`, `get_company_news`
+- `get_latest_earnings_call`, `list_earnings_calls`, `get_earnings_call_transcript`
+- `get_stock_prices`, `get_latest_stock_price`
+- `get_income_statement`, `get_balance_sheet`, `get_cash_flow`
+- `get_profitability_ratios`, `get_credit_ratios`, `get_liquidity_ratios`,
+  `get_working_capital_ratios`, `get_yield_analysis`
+- `get_enterprise_value`, `get_valuation_multiples`, `get_per_share_data`
+
+## Installation
+
+### Hosted endpoint (Claude Code)
+
+```bash
+claude mcp add --transport http roicai https://mcp.roic.ai/mcp
+```
+
+The client opens an OAuth sign-in on first use.
+
+### Hosted endpoint (generic MCP client)
+
+```json
+{
+  "mcpServers": {
+    "roicai": {
+      "type": "http",
+      "url": "https://mcp.roic.ai/mcp"
+    }
+  }
+}
+```
+
+### Self-hosted server
+
+Get an API key from `https://www.roic.ai/dashboard`, then run the open-source
+server from a clone of the repository:
+
+```bash
+git clone https://github.com/roicai/agents-plugin.git
+cd agents-plugin
+npm install
+ROIC_API_KEY=your_key npm start
+```
+
+For MCP clients that launch stdio servers:
+
+```json
+{
+  "mcpServers": {
+    "roicai": {
+      "command": "node",
+      "args": ["PATH_TO_AGENTS_PLUGIN/server.js"],
+      "env": {
+        "ROIC_API_KEY": "YOUR_API_KEY"
+      }
+    }
+  }
+}
+```
+
+`ROIC_API_BASE` overrides the API base URL (default `https://api.roic.ai/v2`).
+
+## Use Cases
+
+- Compare margins and ROE for two companies over the last several years.
+- Check a company's P/E, EV/EBITDA, and P/S against its own history.
+- Ask what management said about a topic in the latest earnings call.
+- Pull daily historical prices for a ticker and date range.
+- Resolve a CUSIP or ISIN to a ticker before querying statements.
+
+## Safety and Privacy
+
+All tools are read-only and only call the ROIC.ai API. Prices are end-of-day,
+not intraday, and plan limits apply (the free tier allows 5 requests per minute
+and 2 years of history). Treat model-generated analysis as draft research and
+verify figures before using them in decisions or client material.
+
+Keep `ROIC_API_KEY` out of repositories and shared logs. Ticker queries can
+reveal research interests, so avoid sending private holdings or material
+non-public information in prompts.
+
+## Duplicate Check
+
+Existing entries cover other financial-data MCP servers, but no ROIC.ai entry,
+`roicai/agents-plugin` repository, or `mcp.roic.ai` source URL was found in
+`content/mcp`.
