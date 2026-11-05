@@ -1,0 +1,149 @@
+---
+title: RunAPI MCP Server
+slug: runapi-mcp-server
+category: mcp
+description: >-
+  MCP server that connects Claude and other compatible agents to RunAPI's
+  catalog of image, video, music, audio, and language model workflows.
+cardDescription: Discover RunAPI models, inspect inputs and pricing, and create authenticated media tasks from an MCP client.
+seoTitle: RunAPI MCP Server for Claude and Coding Agents
+seoDescription: >-
+  Configure RunAPI as a local or remote MCP server for model discovery,
+  prompt search, pricing checks, media task creation, and account workflows.
+author: RunAPI
+authorProfileUrl: "https://github.com/runapi-ai"
+submittedBy: runapi-builder
+submittedByUrl: "https://github.com/runapi-builder"
+dateAdded: "2026-09-16"
+brandName: RunAPI
+brandDomain: runapi.ai
+websiteUrl: "https://runapi.ai"
+repoUrl: "https://github.com/runapi-ai/mcp"
+documentationUrl: "https://runapi.ai/mcp"
+packageUrl: "https://www.npmjs.com/package/@runapi.ai/mcp"
+installable: true
+installCommand: "claude mcp add runapi -s user -- npx -y @runapi.ai/mcp"
+usageSnippet: "Use the discovery tools without signing in, then use login or RUNAPI_API_KEY before creating tasks or checking account data."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "runapi": {
+        "command": "npx",
+        "args": ["-y", "@runapi.ai/mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "runapi": {
+        "url": "https://mcp.runapi.ai/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - An MCP client that supports local stdio or remote Streamable HTTP servers.
+  - Node.js and npm for local installation, or a client that supports remote MCP for the hosted endpoint.
+  - A RunAPI account or API key for authenticated task and balance operations.
+  - Review the selected model, input constraints, current pricing, and task scope before submitting work.
+safetyNotes:
+  - Discovery, model information, prompt search, and pricing tools do not require authentication; task creation and balance checks use the RunAPI account.
+  - Creating a task can start paid image, video, audio, music, or other model work and may take time to finish; confirm model, parameters, and expected cost first.
+  - Use an idempotency key for each logical task and reuse it only when retrying the same request after an uncertain connection result.
+  - The hosted endpoint and local package send authenticated requests to RunAPI; protect the MCP client configuration and review remote-server authorization before enabling it.
+privacyNotes:
+  - Prompts, model parameters, task results, and account requests may be sent to RunAPI and retained according to the service's current policies.
+  - API keys and the local RunAPI config file are credentials; keep them out of prompts, logs, screenshots, issues, and source control.
+  - Output URLs and generated media may be accessible to anyone with the URL or to the configured storage provider; handle them according to the content's sensitivity.
+sourceUrls:
+  - "https://github.com/runapi-ai/mcp"
+  - "https://github.com/runapi-ai/mcp/blob/main/README.md"
+  - "https://github.com/runapi-ai/mcp/blob/main/server.json"
+  - "https://runapi.ai/mcp"
+  - "https://runapi.ai/docs"
+  - "https://runapi.ai/pricing"
+  - "https://github.com/runapi-ai/mcp/blob/main/LICENSE"
+tags:
+  - runapi
+  - model-catalog
+  - image-generation
+  - video-generation
+  - music-generation
+keywords:
+  - RunAPI MCP
+  - RunAPI model discovery
+  - RunAPI image generation
+  - RunAPI video generation
+  - RunAPI media tasks
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+RunAPI MCP Server connects Claude and other MCP-compatible clients to RunAPI's
+model catalog. Discovery tools can list models and actions, inspect input
+constraints, search prompt examples, and check current runtime pricing. After
+authentication, the server can create media tasks, poll task status, and check
+account balance.
+
+The package supports local stdio MCP clients through npm and a hosted
+Streamable HTTP endpoint at `https://mcp.runapi.ai/mcp`. The local package can
+also open the RunAPI login flow and save shared credentials for later calls.
+
+## Installation
+
+For a local Claude Code installation:
+
+```sh
+claude mcp add runapi -s user -- npx -y @runapi.ai/mcp
+```
+
+For other local MCP clients, use the JSON configuration below:
+
+```json
+{
+  "mcpServers": {
+    "runapi": {
+      "command": "npx",
+      "args": ["-y", "@runapi.ai/mcp"]
+    }
+  }
+}
+```
+
+Remote-capable clients can connect to:
+
+```text
+https://mcp.runapi.ai/mcp
+```
+
+Use OAuth where the client supports it, or provide a RunAPI API key through the
+client's secret configuration. For headless local hosts, set `RUNAPI_API_KEY`
+before starting the MCP client.
+
+## Use Cases
+
+- Find compatible image, video, audio, music, or language models from the live catalog.
+- Inspect required fields, constraints, and current pricing before creating a task.
+- Search reusable prompt examples and adapt them to a selected model.
+- Submit an asynchronous task and poll it later with its task ID.
+- Check account balance and spending metrics from an authenticated client.
+
+## Source Review
+
+The following public sources were reviewed on **2026-09-16**:
+
+- https://github.com/runapi-ai/mcp
+- https://github.com/runapi-ai/mcp/blob/main/README.md
+- https://github.com/runapi-ai/mcp/blob/main/server.json
+- https://runapi.ai/mcp
+- https://runapi.ai/docs
+- https://runapi.ai/pricing
+- https://github.com/runapi-ai/mcp/blob/main/LICENSE
+
+These sources document the npm package, local stdio setup, hosted MCP endpoint,
+available discovery and task tools, authentication options, idempotent task
+creation, pricing flow, and Apache-2.0 license.
