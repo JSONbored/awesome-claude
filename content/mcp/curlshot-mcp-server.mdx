@@ -1,0 +1,121 @@
+---
+title: CurlShot MCP Server
+slug: curlshot-mcp-server
+category: mcp
+description: >-
+  CurlShot provides a hosted MCP server for website screenshots. Agents render a public
+  web page in a real browser and get it back as an image, a PDF, or a scrolling video.
+cardDescription: >-
+  Let Claude take website screenshots, PDFs and scrolling videos through CurlShot's hosted HTTP MCP endpoint.
+seoTitle: CurlShot MCP Server for Claude
+seoDescription: >-
+  Configure the CurlShot MCP server: streamable HTTP endpoint, Bearer API key auth, and the
+  take_screenshot and list_devices tools for website screenshots, PDFs and videos.
+author: CurlShot
+authorProfileUrl: "https://curlshot.com"
+submittedBy: SergiuPogor
+submittedByUrl: "https://github.com/SergiuPogor"
+dateAdded: "2026-10-16"
+brandName: CurlShot
+brandDomain: curlshot.com
+documentationUrl: "https://curlshot.com/docs/guides/ai-agents"
+websiteUrl: "https://curlshot.com"
+pricingModel: freemium
+disclosure: >-
+  CurlShot is a commercial screenshot API with a free plan (100 screenshots a month, no card).
+  The MCP server is officially maintained by CurlShot, and this entry was submitted by the CurlShot team.
+retrievalSources:
+  - "https://curlshot.com/docs/guides/ai-agents"
+  - "https://curlshot.com/llms.txt"
+  - "https://curlshot.com/pricing"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: 'claude mcp add --transport http curlshot https://curlshot.com/api/mcp --header "Authorization: Bearer YOUR_ACCESS_KEY"'
+usageSnippet: >-
+  Add the CurlShot endpoint as an HTTP MCP server with a Bearer API key from a free CurlShot
+  account, then ask Claude to "take a full-page screenshot of https://example.com as an iPhone".
+copySnippet: |-
+  {
+    "mcpServers": {
+      "curlshot": {
+        "type": "http",
+        "url": "https://curlshot.com/api/mcp",
+        "headers": {
+          "Authorization": "Bearer YOUR_ACCESS_KEY"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "curlshot": {
+        "type": "http",
+        "url": "https://curlshot.com/api/mcp",
+        "headers": {
+          "Authorization": "Bearer YOUR_ACCESS_KEY"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "CurlShot account and API access key (free plan available at curlshot.com/register)."
+safetyNotes:
+  - "Remote hosted server: nothing is installed or executed locally."
+  - "take_screenshot makes CurlShot load the requested public URL in a headless browser on CurlShot servers. Private and local network addresses are refused."
+  - "Each successful render uses one screenshot of the account quota; failed renders and cache hits are free."
+privacyNotes:
+  - "The page URL and capture options are sent to the CurlShot API (third-party service)."
+  - "Rendered results can be cached by CurlShot when the cache option is enabled."
+  - "Store the Bearer access key in a secret manager or client config, not in repository files."
+tags:
+  - screenshot
+  - browser
+  - pdf
+  - web-capture
+  - mcp
+keywords:
+  - CurlShot MCP server
+  - website screenshot MCP
+  - screenshot API MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+CurlShot is a website screenshot API. Its hosted MCP endpoint at
+`https://curlshot.com/api/mcp` (streamable HTTP) exposes two tools:
+
+- **take_screenshot**: render a public web page and return it as an image (JPEG, PNG,
+  WebP), a PDF, or a video of the page scrolling from top to bottom (MP4, WebM, GIF).
+  Options include `full_page`, `viewport_device`, `viewport_width`/`viewport_height`,
+  `dark_mode`, `selector` (one element), `block_ads`, `block_cookie_banners`,
+  `wait_until`, `delay` and `cache`. Results over 6 MB come back as a download link.
+- **list_devices**: list the phone, tablet and desktop presets accepted by
+  `viewport_device`. Needs no access key.
+
+## Installation
+
+```bash
+claude mcp add --transport http curlshot https://curlshot.com/api/mcp \
+  --header "Authorization: Bearer YOUR_ACCESS_KEY"
+```
+
+Get an access key from a free CurlShot account at https://curlshot.com/register
+(100 screenshots a month, no card).
+
+## Source Verification Notes
+
+- The agent guide at **https://curlshot.com/docs/guides/ai-agents** documents the MCP endpoint and Bearer authentication.
+- **https://curlshot.com/llms.txt** lists the MCP server and the `take_screenshot` and `list_devices` tools.
+
+## Duplicate Check
+
+No existing HeyClaude MCP entry covers CurlShot.
+
+## Editorial Disclosure
+
+Submitted by the CurlShot team. CurlShot is a commercial service with a free plan.
