@@ -1,0 +1,59 @@
+---
+title: HostDeFi Token Safety MCP
+slug: hostdefi
+category: mcp
+description: >-
+  Hosted MCP endpoint for the HostDeFi token-safety scanner: grades any token
+  A+–F from on-chain checks (mint/freeze authority, liquidity depth, holder
+  concentration, contract flags) across Solana and 7 EVM chains.
+cardDescription: Grade any token's on-chain safety A+–F via a hosted MCP endpoint — no install, no key.
+seoTitle: HostDeFi Token Safety MCP Server
+seoDescription: >-
+  Connect Claude to HostDeFi's hosted MCP endpoint to grade tokens A+–F from
+  on-chain checks across Solana and Ethereum, Base, Arbitrum, Optimism,
+  Polygon, BNB Chain, Avalanche and Monad.
+author: verixiaapps
+authorProfileUrl: "https://github.com/verixiaapps"
+submittedBy: verixiaapps
+submittedByUrl: "https://github.com/verixiaapps"
+dateAdded: "2026-09-15"
+brandName: HostDeFi
+brandDomain: hostdefi.com
+websiteUrl: "https://hostdefi.com"
+documentationUrl: "https://hostdefi.com/docs/api/"
+installable: true
+installCommand: "claude mcp add --transport http hostdefi https://hostdefi.com/api/v1/mcp"
+usageSnippet: "Add the hosted remote server https://hostdefi.com/api/v1/mcp — no local install or API key needed."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "hostdefi": {
+        "type": "url",
+        "url": "https://hostdefi.com/api/v1/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "hostdefi": {
+        "type": "url",
+        "url": "https://hostdefi.com/api/v1/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 2 minutes
+difficulty: beginner
+prerequisites:
+  - A Claude client that supports remote (URL) MCP servers.
+  - Nothing else — the endpoint is hosted and keyless.
+safetyNotes:
+  - "Read-only data service: it returns token grades and market data and performs no writes, trades, or wallet actions."
+privacyNotes:
+  - "Queries include token addresses only; no credentials or local files are sent. Fair-use rate limit of 100 checks/day per IP."
+tags:
+  - token-safety
+  - defi
+  - solana
+  - evm
+---
