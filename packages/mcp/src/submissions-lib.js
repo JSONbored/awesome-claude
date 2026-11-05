@@ -839,6 +839,91 @@ function normalizeSubmissionUrlForMatch(value) {
   return url.toString();
 }
 
+const COMMON_SOURCE_HOSTS = new Set([
+  "bitbucket.org",
+  "github.com",
+  "gitlab.com",
+  "marketplace.visualstudio.com",
+  "npmjs.com",
+  "pypi.org",
+  "raw.githubusercontent.com",
+]);
+
+const TITLE_STOP_WORDS = new Set([
+  "and",
+  "for",
+  "mcp",
+  "server",
+  "the",
+  "tool",
+  "with",
+]);
+
+function normalizeComparableSubmissionTitle(value) {
+  return normalizeLower(value).replace(/\s+/g, " ");
+}
+
+function submissionTitleWords(value) {
+  return new Set(
+    normalizeComparableSubmissionTitle(value)
+      .split(/[^a-z0-9]+/i)
+      .map((word) => word.trim())
+      .filter((word) => word.length > 2 && !TITLE_STOP_WORDS.has(word)),
+  );
+}
+
+function isSimilarSubmissionTitle(submittedTitle, entryTitle) {
+  const submitted = normalizeComparableSubmissionTitle(submittedTitle);
+  const existing = normalizeComparableSubmissionTitle(entryTitle);
+  if (!submitted || !existing || submitted === existing) return false;
+  const submittedWords = submissionTitleWords(submitted);
+  const existingWords = submissionTitleWords(existing);
+  if (!submittedWords.size || !existingWords.size) return false;
+  const shared = [...submittedWords].filter((word) => existingWords.has(word));
+  return (
+    shared.length >= 2 &&
+    shared.length / Math.min(submittedWords.size, existingWords.size) >= 0.6
+  );
+}
+
+function githubRepositoryKey(value) {
+  let url;
+  try {
+    url = new URL(value);
+  } catch {
+    return "";
+  }
+  if (!["http:", "https:", "git:", "ssh:"].includes(url.protocol)) {
+    return "";
+  }
+  if (url.hostname.toLowerCase().replace(/^www\./, "") !== "github.com") {
+    return "";
+  }
+  const [owner, repoValue] = url.pathname.split("/").filter(Boolean);
+  const repo = repoValue?.replace(/\.git$/i, "") || "";
+  if (!owner || !repo || RESERVED_OWNERS.has(owner.toLowerCase())) return "";
+  if (!/^[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?$/.test(owner)) return "";
+  if (!/^[A-Za-z0-9._-]+$/.test(repo)) return "";
+  return `${owner}/${repo}`.toLowerCase();
+}
+
+function submissionSourceProfile(urls) {
+  const hosts = new Set();
+  const githubRepos = new Set();
+  for (const value of urls) {
+    const url = new URL(value);
+    const host = url.hostname.toLowerCase().replace(/^www\./, "");
+    if (host && !COMMON_SOURCE_HOSTS.has(host)) hosts.add(host);
+    const repo = githubRepositoryKey(value);
+    if (repo) githubRepos.add(repo);
+  }
+  return { hosts, githubRepos };
+}
+
+function setsIntersect(left, right) {
+  return [...left].some((value) => right.has(value));
+}
+
 // Every external-publisher URL field the indexed entry may carry. Includes
 // `downloadUrl`, `websiteUrl`, `githubUrl`, and `trustSignals.sourceUrls` —
 // each is a real entry field today and a duplicate that lives only on one of
@@ -860,6 +945,8 @@ function collectEntrySourceUrls(entry) {
     entry.repoUrl,
     entry.githubUrl,
     entry.sourceUrl,
+    entry.packageUrl,
+    entry.repositoryUrl,
     entry.websiteUrl,
     entry.downloadUrl,
     entry.url,
@@ -920,21 +1007,34 @@ export function searchDuplicateEntries(entries = [], args = {}) {
   const title = normalizeLower(args.title || args.name);
   const brandDomain = normalizeDomain(args.brandDomain);
   const candidateUrls = collectSubmissionCandidateUrls(args);
+  const candidateProfile = submissionSourceProfile(candidateUrls);
 
   const matches = [];
   for (const entry of entries) {
     const reasons = [];
     if (category && normalizeLower(entry.category) !== category) continue;
     if (slug && normalizeLower(entry.slug) === slug) reasons.push("slug");
-    if (title && normalizeLower(entry.title) === title) reasons.push("title");
+    if (title && normalizeLower(entry.title) === title) {
+      reasons.push("title");
+    } else if (title && isSimilarSubmissionTitle(title, entry.title)) {
+      reasons.push("similar_title");
+    }
     if (brandDomain && normalizeDomain(entry.brandDomain) === brandDomain) {
       reasons.push("brand_domain");
     }
+    const entryUrls = collectEntrySourceUrls(entry);
     if (
       candidateUrls.size > 0 &&
-      findOverlappingSourceUrl(collectEntrySourceUrls(entry), candidateUrls)
+      findOverlappingSourceUrl(entryUrls, candidateUrls)
     ) {
       reasons.push("source_url");
+    }
+    const entryProfile = submissionSourceProfile(entryUrls);
+    if (setsIntersect(candidateProfile.githubRepos, entryProfile.githubRepos)) {
+      reasons.push("same_repo");
+    }
+    if (setsIntersect(candidateProfile.hosts, entryProfile.hosts)) {
+      reasons.push("same_host");
     }
 
     if (!reasons.length) continue;

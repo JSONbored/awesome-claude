@@ -22,6 +22,54 @@ function entry(overrides: RegistryEntry = {}): RegistryEntry {
 }
 
 describe("searchDuplicateEntries source-URL matching", () => {
+  it("flags fuzzy similar-title matches like the web preflight", () => {
+    const result = searchDuplicateEntries(
+      [entry({ title: "Browser Automation MCP" })],
+      { title: "Browser Automation Server" },
+    );
+    expect(result.count).toBe(1);
+    expect(
+      (result.matches as Array<{ reasons: string[] }>)[0].reasons,
+    ).toContain("similar_title");
+  });
+
+  it("flags URLs that point to the same GitHub repository", () => {
+    const result = searchDuplicateEntries(
+      [
+        entry({
+          documentationUrl: "",
+          repoUrl: "",
+          githubUrl: "https://github.com/example/browser-automation",
+        }),
+      ],
+      {
+        githubUrl:
+          "https://github.com/example/browser-automation/tree/main/packages/mcp",
+      },
+    );
+    expect(result.count).toBe(1);
+    expect(
+      (result.matches as Array<{ reasons: string[] }>)[0].reasons,
+    ).toContain("same_repo");
+  });
+
+  it("flags different URLs on the same non-generic source host", () => {
+    const result = searchDuplicateEntries(
+      [
+        entry({
+          documentationUrl: "",
+          repoUrl: "",
+          docsUrl: "https://docs.vendor.example.com/install",
+        }),
+      ],
+      { docsUrl: "https://docs.vendor.example.com/guide" },
+    );
+    expect(result.count).toBe(1);
+    expect(
+      (result.matches as Array<{ reasons: string[] }>)[0].reasons,
+    ).toContain("same_host");
+  });
+
   it("matches a trailing-slash variant against an indexed entry's repoUrl", () => {
     const result = searchDuplicateEntries([entry()], {
       sourceUrl: "https://github.com/domdomegg/airtable-mcp-server/",
@@ -101,6 +149,40 @@ describe("searchDuplicateEntries source-URL matching", () => {
       { sourceUrl: "https://www.airtable-mcp.example" },
     );
     expect(result.count).toBe(1);
+  });
+
+  it("matches when the entry's matching URL lives only on packageUrl", () => {
+    const result = searchDuplicateEntries(
+      [
+        entry({
+          documentationUrl: "",
+          repoUrl: "",
+          packageUrl: "https://www.npmjs.com/package/browser-automation-mcp",
+        }),
+      ],
+      { sourceUrl: "https://www.npmjs.com/package/browser-automation-mcp/" },
+    );
+    expect(result.count).toBe(1);
+    expect(
+      (result.matches as Array<{ reasons: string[] }>)[0].reasons,
+    ).toContain("source_url");
+  });
+
+  it("matches when the entry's matching URL lives only on repositoryUrl", () => {
+    const result = searchDuplicateEntries(
+      [
+        entry({
+          documentationUrl: "",
+          repoUrl: "",
+          repositoryUrl: "https://github.com/example/browser-automation-mcp",
+        }),
+      ],
+      { sourceUrl: "https://github.com/example/browser-automation-mcp/" },
+    );
+    expect(result.count).toBe(1);
+    expect(
+      (result.matches as Array<{ reasons: string[] }>)[0].reasons,
+    ).toContain("source_url");
   });
 
   it("matches when the entry's matching URL lives only in trustSignals.sourceUrls", () => {
