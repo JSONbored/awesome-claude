@@ -1,0 +1,57 @@
+---
+title: meok-ori
+slug: meok-ori
+category: tools
+description: Local-first harness CLI that wraps Claude, Codex, and Hermes behind a four-tier model cascade, an enforced constitutional gate, a deterministic output screen, and an HMAC receipt chain.
+cardDescription: Local-first agent harness CLI with a constitutional gate and receipt chain.
+seoTitle: meok-ori local-first agent harness CLI for Claude, Codex, and Hermes
+seoDescription: meok-ori wraps Claude, Codex, and Hermes with a local-first four-tier model cascade, a 22-article constitutional gate that exits non-zero on violation, a deterministic keyword screen, and an append-only HMAC receipt chain. Python stdlib only.
+author: CSOAI
+dateAdded: "2026-10-08"
+websiteUrl: "https://github.com/CSOAI-ORG/meok-ori"
+documentationUrl: "https://github.com/CSOAI-ORG/meok-ori"
+repoUrl: "https://github.com/CSOAI-ORG/meok-ori"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Linux
+privacyNotes:
+  - Runs entirely on your machine and calls whichever backend you enable (OpenRouter, a local Ollama or Parallax endpoint, or a deterministic offline stub); no telemetry is sent by the harness itself.
+  - Appends each prompt, reply digest, cost estimate, and gate verdict to a local HMAC receipt chain, so past runs stay auditable on disk.
+tags:
+  - agent-harness
+  - cli
+  - governance
+  - audit
+keywords:
+  - agent harness
+  - cli harness
+  - constitutional gate
+  - model routing
+  - receipt chain
+---
+
+## Editorial notes
+
+meok-ori is a zero-dependency Python harness for running other agent CLIs. The
+`meok harness claude|codex|hermes` command wraps a coding agent with the harness
+environment, and `meok run` gives you one completion through a local-first
+four-tier cascade (T1 Edge up to T4 Strategic, cheapest tier that qualifies
+first) with an offline stub fallback so the whole thing works with no network
+and no API key.
+
+Every run is audited against a 22-article constitution and exits non-zero when
+an article fails: unknown models are refused by default, a cost budget is
+checked before the call, and the receipt chain is re-verified after the run. A
+deterministic keyword screen (13 rules, plus a PII regex and a length check)
+optionally reviews outputs before you see them. Receipts are an append-only
+HMAC chain under a local key — integrity against edits, not third-party
+signatures — and `meok receipts --verify` re-checks the chain.
+
+Reach for it when you want a small, auditable wrapper around the agent CLIs you
+already use. It is model-agnostic, stdlib-only, and deliberately not a
+framework: no plugins, no daemon, no dependencies.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.
