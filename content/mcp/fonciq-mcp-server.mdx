@@ -1,0 +1,61 @@
+---
+title: Fonciq MCP Server for Claude
+slug: fonciq-mcp-server
+safetyNotes:
+  - Uses a remote MCP endpoint; review OAuth consent and which Fonciq organisation is connected before allowing registry document fetches.
+privacyNotes:
+  - Lot identifiers, addresses, and land-registry document contents may pass through the assistant when tools are invoked. Auth is via Fonciq OAuth.
+category: mcp
+description: "Québec land-registry workflow for professionals via remote MCP"
+cardDescription: "Québec land-registry workflow for professionals via remote MCP"
+seoTitle: Fonciq MCP Server for Claude
+seoDescription: >-
+  Connect Claude to Fonciq for Québec land-registry workflows. Independent
+  service; details on fonciq.ca.
+author: Fonciq
+authorProfileUrl: "https://fonciq.ca"
+documentationUrl: "https://mcp.fonciq.ca"
+installable: true
+copySnippet: |-
+  {
+    "fonciq": {
+      "url": "https://mcp.fonciq.ca/v1/",
+      "transport": "http"
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "fonciq": {
+        "url": "https://mcp.fonciq.ca/v1/",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 2 minutes
+difficulty: beginner
+prerequisites:
+  - Fonciq account
+  - HTTP / Streamable HTTP MCP client support
+  - Internet access to https://mcp.fonciq.ca/v1/
+tags:
+  - real-estate
+  - land-registry
+  - quebec
+  - canada
+  - remote-mcp
+keywords:
+  - fonciq mcp
+  - quebec land registry mcp
+  - registre foncier mcp
+disclosure: Commercial remote MCP service (Fonciq). Independent, not government-affiliated.
+---
+
+**FR —** Fonciq est un connecteur MCP distant pour le workflow foncier québécois (lots, documents du Registre foncier, surveillance, zones inondables), destiné aux professionnels. Service indépendant, non affilié au gouvernement du Québec ni au Registre foncier.
+
+**EN —** Fonciq is a remote MCP connector for Québec land-registry workflows (lots, Registre foncier documents, watches, flood zones) for professionals. Independent, not affiliated with the Government of Québec or the Registre foncier.
+
+- MCP: https://mcp.fonciq.ca
+- API: https://api.fonciq.ca
+- Site: https://fonciq.ca
+- Repo: https://github.com/fonciq-dev/fonciq-mcp
