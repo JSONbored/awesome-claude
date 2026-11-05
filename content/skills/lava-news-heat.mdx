@@ -1,0 +1,68 @@
+---
+title: Lava News Heat
+slug: lava-news-heat
+category: skills
+description: "Lava (熔岩) is a read-only news-flow heat monitor for A-share stocks and concept sectors, exposed via a remote MCP. Ask how hot a stock or concept is in news flow, who mentions it, and get key points. 熔岩：查询股票与概念板块的消息面热度。"
+cardDescription: "Query news-flow heat of stocks and concepts via MCP. 熔岩消息面热度查询。"
+author: Lava
+authorProfileUrl: "https://github.com/dustinliang666-blip"
+dateAdded: "2026-10-29"
+documentationUrl: "https://lava.ai-dolphin.com/subscribe/docs"
+usageSnippet: "Is CATL hot in news flow over the last 7 days? (calls get_stock_news_heat)"
+copySnippet: |-
+  ---
+  name: lava-news-heat
+  description: Query news-flow heat for stocks and concept sectors (Lava). Use when the user asks whether a stock/concept is hot in news flow, who mentions it, and key points.
+  ---
+
+  # Lava - News Heat Monitor (熔岩 · 消息面热度监测)
+
+  Data source: Lava remote MCP https://lava.ai-dolphin.com/subscribe/v1/mcp (Streamable HTTP, header Authorization: Bearer <API Key>). All tools are read-only. Each tool call counts as 1 request (get_account does not).
+
+  ## Setup
+  1. Get an API Key (lvk_...) at https://lava.ai-dolphin.com/lava#/ai-data-service
+  2. Add a custom MCP connector (Streamable HTTP) with URL https://lava.ai-dolphin.com/subscribe/v1/mcp and header Authorization = Bearer lvk_YOUR_KEY
+  3. Ask e.g. "Is CATL hot in news flow this week?"
+
+  ## Workflow
+  1. Stock heat: get_stock_news_heat(stock_name or ts_code, days=7) - read data.heat.mentions, data.heat.agencies, summarize list[].summary.
+  2. Related concepts: get_stock_concept_heat(stock_name, days=30) - top 5 concepts with mentions.
+  3. Concept ranking: get_concept_stock_heat(concept, days=7).
+  4. Tracking: search_news_flow(keyword, since); get_market_hot_stocks / get_market_hot_concepts(window=24h); get_weighted_hot_stocks(days=3); get_first_mention_stocks(hours=24); get_news_stock_hits; get_stock_heat_windows; get_accelerating_hot_stocks; get_stock_heat_panel; get_agency_coverage.
+  5. Optional credibility: get_agency_pit / get_agency_history on agency_id.
+  6. On 402 / INSUFFICIENT_BALANCE tell the user to top up; report other errors as-is, do not retry repeatedly.
+
+  ## Output
+  Lead with conclusion: heat high/medium/low + mentions + agencies + time window; 3-5 concise bullets; plain language; cite agency_id; note data is from Lava.
+
+  Docs: https://lava.ai-dolphin.com/subscribe/docs
+  Full original skill: https://lava.ai-dolphin.com/subscribe/v1/skill
+skillType: general
+skillLevel: foundational
+verificationStatus: draft
+safetyNotes:
+  - "Read-only tools; no local commands or file writes. Requires a user-supplied Lava API key sent as a Bearer header to lava.ai-dolphin.com; review before installing."
+retrievalSources:
+  - "https://lava.ai-dolphin.com/subscribe/v1/skill"
+  - "https://lava.ai-dolphin.com/subscribe/docs"
+testedPlatforms:
+  - Claude
+privacyNotes:
+  - "Queries (stock/concept names) are sent to the Lava service and each call is billed per request. The API key is stored in the user's own MCP connector config. No other personal data is collected."
+tags:
+  - mcp
+  - stocks
+  - news
+  - market-data
+  - finance
+keywords:
+  - ai-skill
+  - news-heat
+repoUrl: "https://github.com/dustinliang666-blip/lava-mcp"
+---
+
+Lava News Heat queries the news-flow heat of A-share stocks and concept sectors through a read-only remote MCP.
+
+Landing: https://lava.ai-dolphin.com/subscribe
+Skill: https://lava.ai-dolphin.com/subscribe/v1/skill
+Public contact: dustinliang666@gmail.com
