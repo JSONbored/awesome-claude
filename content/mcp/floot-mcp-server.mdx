@@ -1,0 +1,184 @@
+---
+title: Floot MCP Server for Claude
+slug: floot-mcp-server
+category: mcp
+description: >-
+  Floot hosted MCP server that lets Claude build, run and publish full-stack web apps, with a managed Postgres database, user sign-in, file storage, email, scheduled jobs and hosting provisioned from chat.
+cardDescription: >-
+  Connect Claude to Floot to build and publish full-stack apps from chat, with database, login and hosting included.
+seoTitle: Floot MCP Server for Claude
+seoDescription: >-
+  Use the Floot MCP server with Claude to create projects, add a database and sign-in, preview changes and publish full-stack apps via https://mcp.floot.com/mcp.
+author: Floot
+authorProfileUrl: "https://floot.com"
+submittedBy: yyjhao
+submittedByUrl: "https://github.com/yyjhao"
+dateAdded: "2026-11-05"
+submittedAt: "2026-11-05"
+repoUrl: "https://floot.com"
+documentationUrl: "https://floot.com/docs/integrations/other-mcp-clients"
+websiteUrl: "https://floot.com"
+installable: true
+installCommand: >-
+  claude mcp add --transport http floot https://mcp.floot.com/mcp
+usageSnippet: >-
+  Add https://mcp.floot.com/mcp as a custom connector (or add Floot from Claude's connector directory), complete the Floot OAuth sign-in in your browser, then ask Claude to build an app with Floot.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "floot": {
+        "url": "https://mcp.floot.com/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "floot": {
+        "url": "https://mcp.floot.com/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 2 minutes
+difficulty: beginner
+prerequisites:
+  - "A Floot account (free plan available; sign in with an emailed code, Google, GitHub or Microsoft)."
+  - "Claude with connectors, Claude Code, or another MCP client that supports remote servers over Streamable HTTP with OAuth."
+  - "A plain description of the app you want before asking Claude to create a project."
+safetyNotes:
+  - "Remote server; nothing is installed or run on your machine."
+  - "Tools write to your Floot account: they create and edit project files, run SQL against the project's own database, and publish apps to public URLs."
+  - "execute_sql and publish_app change live state; review what Claude proposes before approving them."
+  - "Projects keep a checkpoint history, so file changes can be reverted."
+privacyNotes:
+  - "Project code, files, SQL and any app data Claude sends in tool calls are stored in your Floot account."
+  - "Sign-in is OAuth 2.1 with PKCE on floot.com; your Floot credentials are never shared with the client and no API key goes in client config."
+  - "Published apps are publicly reachable unless published as internal (sign-in required); data users submit is stored in the app's database."
+  - "Privacy policy: https://floot.com/privacy"
+tags:
+  - deployment
+  - hosting
+  - full-stack
+  - database
+  - remote-mcp
+  - oauth
+keywords:
+  - floot mcp
+  - build app from claude
+  - deploy full-stack app from claude
+  - mcp.floot.com
+  - claude app builder with database
+readingTime: 4
+difficultyScore: 25
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+## Overview
+
+Floot is an app platform exposed through the Model Context Protocol. Claude writes the code into a Floot project; Floot runs it and supplies the backend pieces: a managed Postgres database, user sign-in (email and password, Google, Microsoft), file storage, sending and receiving email, push notifications, scheduled and background jobs, Stripe payments, and hosting. A live preview updates as Claude edits, and a project can be published to a floot.app address or a custom domain. Projects can also be built into iOS and Android apps.
+
+Documentation: [floot.com/docs/integrations/other-mcp-clients](https://floot.com/docs/integrations/other-mcp-clients). Endpoint: `https://mcp.floot.com/mcp` (Streamable HTTP, OAuth).
+
+## Features
+
+- create_project, read_file, write_file, edit_file and apply_patch for building the app.
+- provision_resource to add a database, sign-in, storage, email and other services without separate accounts or API keys.
+- query_database and execute_sql against the project's own Postgres database.
+- typecheck, run_tests, get_logs and screenshot_preview for checking the app while it is built.
+- publish_app and get_publish_status to put the app live, and create_checkpoint for restore points.
+
+## Use Cases
+
+- Build a client portal where customers sign in and see their own records.
+- Add a database, login and hosting to an app Claude has already written.
+- Build an internal tool for a team, published so only invited people can open it.
+- Add scheduled reminders or email notifications to an existing Floot app.
+- Fix a bug in a published app by reading its logs and republishing.
+
+## Installation
+
+### Claude (Connectors)
+
+1. Add Floot from Claude's connector directory, or open **Settings → Connectors → Add custom connector**.
+2. For a custom connector, name it Floot and set the URL to `https://mcp.floot.com/mcp`.
+3. Complete the Floot sign-in in the browser window that opens.
+4. Mention Floot in your first message so Claude uses its tools.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http floot https://mcp.floot.com/mcp
+claude mcp list
+```
+
+### Other MCP clients
+
+Add a remote server with the configuration below. Choose Streamable HTTP if the client asks for a transport, and leave any bearer-token, API-key or header fields empty.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "floot": {
+      "url": "https://mcp.floot.com/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+OAuth handles authentication; no API key is used.
+
+## Examples
+
+### New app
+
+```text
+Use Floot to build a booking app for my coaching practice: clients sign in, pick a free slot and get an email confirmation. Then publish it.
+```
+
+### Add a backend
+
+```text
+Use Floot to add a database and user login to this app, and keep each user's notes private to them.
+```
+
+### Fix a live app
+
+```text
+Check the Floot logs for my invoicing app, find why the export fails, fix it and republish.
+```
+
+## Security
+
+- Review database changes and publishing before approving them.
+- Apps that store personal data should use sign-in and keep each user's records private; ask Claude to check this before publishing.
+- Use internal publishing for tools that only your team should open.
+
+## Troubleshooting
+
+### Nothing loads at the server URL in a browser
+
+That is expected: `https://mcp.floot.com/mcp` answers MCP requests, not web pages. Add it in your client's MCP settings.
+
+### Client asks for a token or API key
+
+Leave it empty. Floot signs you in with OAuth in the browser.
+
+### Connection fails during sign-in
+
+Floot accepts only PKCE with `S256`; a client that offers only `plain`, or no PKCE, cannot connect.
+
+### Tools don't appear in the chat
+
+Some clients need the server's tools enabled per chat. Enable Floot and mention it in your message.
+
+## Duplicate Check
+
+No existing Floot or `mcp.floot.com` entry was found in `content/mcp/`. This differs from AppDeploy, Vercel or Netlify entries because Floot provides the app's backend services (database, sign-in, storage, email, jobs) as well as hosting.
