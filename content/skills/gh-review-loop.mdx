@@ -1,0 +1,159 @@
+---
+title: gh-review-loop
+slug: gh-review-loop
+category: skills
+description: >-
+  Clears AI reviewer feedback on a GitHub PR without leaving your coding agent.
+  Waits for the configured reviewer (Codex, CodeRabbit, Copilot, or any
+  compatible bot), reads real review-thread state via GraphQL so resolved,
+  outdated, and already-answered threads are skipped, then fixes what is
+  actionable in severity order. Findings are clustered by kind, so a pattern
+  flagged at two sites gets swept across the PR's changed files in one cycle
+  instead of dripping back over three reviews. Every fix is checked against
+  your repository's own tests and linters before the push, and re-review
+  requests are hard-capped at the write itself, so the loop cannot spam the PR.
+cardDescription: >-
+  Fixes AI reviewer findings on your PR, including the sibling instances the
+  bot missed. Verifies against your tests, hard capped at 3 rounds.
+seoTitle: gh-review-loop Skill for Claude Code and Codex
+seoDescription: >-
+  Claude Code and Codex plugin that fixes AI reviewer findings on GitHub PRs,
+  sweeps sibling instances the bot missed, verifies against your own tests, and
+  hard-caps re-review requests at 3.
+author: Oren Ashkenazy
+authorProfileUrl: "https://github.com/OrenAshkenazy"
+submittedBy: OrenAshkenazy
+submittedByUrl: "https://github.com/OrenAshkenazy"
+dateAdded: "2026-08-28"
+submittedAt: "2026-08-28"
+repoUrl: "https://github.com/OrenAshkenazy/gh-review-loop"
+documentationUrl: "https://github.com/OrenAshkenazy/gh-review-loop#readme"
+downloadUrl: "https://github.com/OrenAshkenazy/gh-review-loop/archive/refs/tags/v0.4.1.zip"
+installable: true
+installCommand: "/plugin marketplace add OrenAshkenazy/gh-review-loop"
+usageSnippet: >-
+  Install the plugin in Claude Code or Codex, open a PR that an AI reviewer bot
+  watches, then ask your agent to "Run the AI reviewer loop". The skill waits
+  for the review, fixes actionable threads, runs your repo's checks, pushes,
+  and requests re-review up to 3 times.
+copySnippet: |-
+  # Claude Code
+  /plugin marketplace add OrenAshkenazy/gh-review-loop
+  /plugin install gh-review-loop@gh-review-loop
+
+  # Codex
+  codex plugin marketplace add OrenAshkenazy/gh-review-loop
+  codex plugin add gh-review-loop@gh-review-loop
+
+  # Then, from a repo with an open PR:
+  # > Run the AI reviewer loop
+skillType: general
+skillLevel: advanced
+verificationStatus: validated
+verifiedAt: "2026-09-17"
+retrievalSources:
+  - "https://github.com/OrenAshkenazy/gh-review-loop"
+  - "https://raw.githubusercontent.com/OrenAshkenazy/gh-review-loop/main/README.md"
+  - "https://raw.githubusercontent.com/OrenAshkenazy/gh-review-loop/main/PRIVACY.md"
+  - "https://raw.githubusercontent.com/OrenAshkenazy/gh-review-loop/main/.claude-plugin/marketplace.json"
+  - "https://raw.githubusercontent.com/OrenAshkenazy/gh-review-loop/main/plugins/gh-review-loop/skills/gh-review-loop/SKILL.md"
+  - "https://raw.githubusercontent.com/OrenAshkenazy/gh-review-loop/main/LICENSE"
+testedPlatforms:
+  - Claude Code
+  - Codex
+prerequisites:
+  - "Claude Code or Codex with plugin support."
+  - "The GitHub `gh` CLI, authenticated to an account that can push to the PR branch and comment on the PR."
+  - "Python 3 on PATH (the scripts are stdlib-only)."
+  - "An open pull request that an AI reviewer bot (Codex, CodeRabbit, Copilot, Qodo, Sourcery, or similar) reviews."
+safetyNotes:
+  - "Writes to GitHub through your `gh` credentials: pushes fix commits to the PR branch, posts and edits a sticky receipt comment, resolves outdated or already-answered review threads, and posts re-review requests. It never merges, approves, or submits reviews."
+  - "Edits local repository files to address reviewer findings and runs your repository's own test and lint commands (a detected or user-confirmed verification profile) before every push; a failing required check stops the cycle."
+  - "Re-review requests are hard-capped (default 3 per run) at the write itself, so the loop cannot spam the PR; only the agent's own requests count toward the cap."
+  - "Unresolved threads are never resolved without an explicit user request; resolving stale threads can be previewed with `--dry-run`."
+privacyNotes:
+  - "Reads PR metadata, review threads, diff hunks, file paths, and local repository files through the GitHub API and your local checkout; this data stays on your machine and GitHub unless the optional judge eval is enabled."
+  - "Optional OpenAI judge eval is off by default; when explicitly enabled, it sends review comment text, paths, line numbers, severity labels, diff hunks, and limited surrounding code to the OpenAI API using your own `OPENAI_API_KEY`, which is never stored."
+  - "Keeps local state under `~/.config/gh-review-loop/` (preferences, sticky-receipt IDs, and an append-only `runs.jsonl` of per-run counts by repo and PR number) with no identity fields; nothing is transmitted to the plugin author."
+  - "No telemetry, analytics, or crash reporting. Full policy: https://github.com/OrenAshkenazy/gh-review-loop/blob/main/PRIVACY.md"
+tags:
+  - code-review
+  - github
+  - pull-requests
+  - codex
+  - coderabbit
+  - claude-code
+  - automation
+keywords:
+  - gh-review-loop
+  - AI code review loop
+  - fix Codex review comments
+  - CodeRabbit findings sweep
+  - GitHub PR review automation
+  - Claude Code plugin
+  - Codex plugin
+---
+
+# gh-review-loop
+
+Fixes the AI reviewer findings on your PR, including the sibling instances the bot missed. Runs your tests before it pushes. Hard capped at 3 rounds.
+
+## The problem
+
+Bot reviewers expand. They flag 2 of 6 instances of the same bug; you fix those, push, and the next review flags 3 more in files the bot hadn't reached. You end up spending more time on the rounds than on the bugs.
+
+## What it does
+
+- **Sweeps the class, not the instance.** When a pattern is flagged at 2+ sites, it tokenizes those lines, intersects them, and reports every other line in your changed files matching the shared shape, before touching anything. It never reads outside your diff.
+- **Won't push red.** A verification profile is auto-detected from your `pyproject.toml` / `package.json` / `Cargo.toml` / `go.mod`; a failing required check stops the cycle before the push.
+- **A brake, not a timeout.** The cap is a hard count of 3 re-review requests, enforced at the write itself. Only the agent's own pings count; a human asking the bot to look again doesn't burn a round.
+
+Works with Codex, Gemini Code Assist (enterprise), or any reviewer bot you configure (CodeRabbit, Copilot, Qodo, Sourcery). There is no assumed default: on an unconfigured PR the loop asks which bot to use.
+
+## Install
+
+Claude Code:
+
+```text
+/plugin marketplace add OrenAshkenazy/gh-review-loop
+/plugin install gh-review-loop@gh-review-loop
+```
+
+Codex:
+
+```bash
+codex plugin marketplace add OrenAshkenazy/gh-review-loop
+codex plugin add gh-review-loop@gh-review-loop
+```
+
+Then, from a repo with an open PR:
+
+> Run the AI reviewer loop
+
+## Verify it yourself
+
+The sweep is reproducible without installing anything:
+
+```bash
+git clone https://github.com/OrenAshkenazy/gh-review-loop && cd gh-review-loop
+python3 evals/replay/replay.py
+```
+
+This replays two real captured bot reviews. One produces a sweep; the other correctly produces none. The same reviewer gave different output on identical code, which is why clustering keys off code shape rather than finding text.
+
+## Safety and privacy
+
+- Writes to GitHub only through your own `gh` login: fix commits on the PR branch, one sticky receipt comment, stale-thread resolution, and capped re-review requests. It never merges, approves, or submits reviews.
+- Runs your repository's own checks before every push; a failing required check stops the cycle.
+- Local state lives under `~/.config/gh-review-loop/` and contains counts and comment IDs, not source or identity. No telemetry.
+- The optional OpenAI judge eval is off by default and only runs with your own API key when you turn it on.
+
+Full policy: https://github.com/OrenAshkenazy/gh-review-loop/blob/main/PRIVACY.md
+
+## Honest scope
+
+You probably don't need this if you pay for CodeRabbit Pro or Copilot, since both ship a batch-fix for their own comments. This is for when you don't control which bot reviews your repo and want a bound on how many rounds it takes.
+
+Stdlib Python + `gh` CLI. No server, no account. MIT.
+
+- Repo: https://github.com/OrenAshkenazy/gh-review-loop
