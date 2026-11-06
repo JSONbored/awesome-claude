@@ -1,0 +1,135 @@
+---
+title: hushhook - Claude Code Hook
+slug: hushhook
+category: hooks
+description: "Local PreToolUse and PostToolUse hooks that mask secrets in tool output, block reads of sensitive files, stop big dumps and catch risky commands before they reach the conversation."
+cardDescription: >-
+  Keep secrets and big dumps out of the conversation. Runs locally with no
+  dependencies.
+seoTitle: hushhook - Claude Code Hook
+seoDescription: >-
+  A Claude Code hook set that masks secrets in tool output, blocks reads of
+  files like .env and private keys, stops big dumps and catches risky commands,
+  all on your own machine.
+author: monarchsofchaos004-gif
+submittedBy: monarchsofchaos004-gif
+submittedByUrl: "https://github.com/monarchsofchaos004-gif"
+dateAdded: "2026-11-06"
+documentationUrl: "https://github.com/monarchsofchaos004-gif/hushhook#readme"
+repoUrl: "https://github.com/monarchsofchaos004-gif/hushhook"
+installable: true
+installCommand: >-
+  pipx install git+https://github.com/monarchsofchaos004-gif/hushhook &&
+  hushhook install
+usageSnippet: "hushhook blocked reading .env (rule dotenv): this file usually holds secrets. Ask the user for the specific value you need."
+copySnippet: |-
+  {
+    "hooks": {
+      "PreToolUse": [
+        {
+          "matcher": "Read|Bash",
+          "hooks": [
+            { "type": "command", "command": "python3 -m hushhook.hook pre", "timeout": 10 }
+          ]
+        }
+      ],
+      "PostToolUse": [
+        {
+          "matcher": "*",
+          "hooks": [
+            { "type": "command", "command": "python3 -m hushhook.hook post", "timeout": 10 }
+          ]
+        }
+      ]
+    }
+  }
+configSnippet: |-
+  {
+    "max_read_lines": 300,
+    "disabled": [],
+    "extra_rule_dirs": []
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  # hushhook's hook entry point. "hushhook install" writes this same call into settings.json.
+  exec python3 -m hushhook.hook "$1"
+trigger: PreToolUse
+prerequisites:
+  - "Claude Code with hooks enabled."
+  - "Python 3.9 or newer. hushhook uses only the standard library."
+safetyNotes:
+  - "Fails open: if a hook hits an unexpected error it exits quietly, so it never stops your session."
+  - "Reduces exposure rather than guaranteeing it. Secrets in formats no rule knows, or printed by a script in a new shape, can still get through."
+  - "hushhook does not approve tool calls for you outside bypass mode, so your permission rules keep working as before."
+privacyNotes:
+  - "Runs entirely on your machine and makes no network calls."
+  - "Logs only the time, tool, rule id and count to a local file. Secret values are never written down."
+tags:
+  - "security"
+  - "secrets"
+  - "privacy"
+  - "redaction"
+  - "pretooluse"
+keywords:
+  - "claude code secret masking hook"
+  - "block env file claude code"
+  - "keep secrets out of agent context"
+  - "reduce claude code token usage hook"
+---
+
+## Features
+
+- Masks secrets in tool output before they enter the conversation, with rules for 42 token and key formats.
+- Blocks reads of sensitive files such as `.env`, private keys, cloud credentials and `terraform.tfstate`.
+- Stops big dumps, such as a whole log file, and points the agent at a smaller view instead.
+- Catches risky commands, such as piping a download straight into a shell.
+- `hushhook map` and `hushhook peek` give the agent a file outline or a single function instead of the whole file.
+
+## How it works
+
+`PreToolUse` checks `Read` and `Bash` calls against plain-text rule files and returns a clear reason when it blocks one, so the agent can adjust and carry on by itself. `PostToolUse` scans tool output for known secret formats and replaces them with a tag such as `[hushhook:github-classic-token]`.
+
+## Use cases
+
+- Working in a repository with real `.env` files and credentials nearby.
+- Letting an agent read logs without filling the conversation.
+- Adding a rule for an internal token format your team uses.
+
+## Installation
+
+As a Claude Code plugin:
+
+```text
+/plugin marketplace add monarchsofchaos004-gif/hushhook
+/plugin install hushhook@hushhook
+```
+
+As a command line tool:
+
+```bash
+pipx install git+https://github.com/monarchsofchaos004-gif/hushhook
+hushhook install
+```
+
+`hushhook install` backs up `settings.json` first, and `hushhook uninstall` removes only what it added.
+
+## Requirements
+
+- Python 3.9 or newer, with no other dependencies.
+- Tested on Linux and macOS in CI.
+
+## Hook configuration
+
+Settings live in `~/.config/hushhook/config.json`. Use `disabled` to turn off a rule by id, `extra_rule_dirs` to load your own rule files, and `max_read_lines` to change the size limit.
+
+## Limitations
+
+- Only known formats are masked. A secret with no matching rule gets through.
+- A script that reads a file itself and prints it in a new shape is not caught by the file rules.
+- Command rules also match text inside quotes, so a commit message that mentions a blocked command can be stopped.
+
+## Source and references
+
+- [hushhook on GitHub](https://github.com/monarchsofchaos004-gif/hushhook)
+- [Rule format and how to add a rule](https://github.com/monarchsofchaos004-gif/hushhook/blob/main/CONTRIBUTING.md)
