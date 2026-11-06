@@ -1,0 +1,131 @@
+---
+title: Multi-LLM Plan and Code Review Skill
+slug: multi-llm
+category: skills
+description: Run plan and code reviews across multiple coding CLIs, consolidate findings, and generate or implement tasks from a Claude Code skill.
+cardDescription: Review plans and code through multiple coding CLIs from Claude Code, Codex, or OpenCode.
+seoTitle: Multi-LLM Plan and Code Review Skill for Claude Code
+seoDescription: Install the MIT-licensed multi-llm plugin and skill for parallel plan reviews, task generation, implementation, and code reviews across coding CLIs.
+author: beastlabai
+authorProfileUrl: "https://github.com/beastlabai"
+submittedBy: beastlabai
+submittedByUrl: "https://github.com/beastlabai"
+dateAdded: "2026-10-30"
+submittedAt: "2026-10-30"
+repoUrl: "https://github.com/beastlabai/multi-llm-plugin"
+documentationUrl: "https://github.com/beastlabai/multi-llm-plugin/blob/master/docs/hosts.md"
+downloadUrl: "https://github.com/beastlabai/multi-llm-plugin/archive/refs/heads/master.zip"
+installable: true
+installCommand: "/plugin marketplace add beastlabai/multi-llm-plugin"
+usageSnippet: "After installing multi-llm@beastlabai, invoke /multi-llm:multi-llm --review-plan plans/my-feature.md from Claude Code."
+copySnippet: |-
+  /plugin marketplace add beastlabai/multi-llm-plugin
+  /plugin install multi-llm@beastlabai
+  /reload-plugins
+  /reload-skills
+  /multi-llm:multi-llm --init
+  /multi-llm:multi-llm --review-plan plans/my-feature.md
+skillType: general
+skillLevel: advanced
+verificationStatus: draft
+verifiedAt: "2026-10-30"
+retrievalSources:
+  - "https://github.com/beastlabai/multi-llm-plugin"
+  - "https://github.com/beastlabai/multi-llm-plugin/blob/master/README.md"
+  - "https://github.com/beastlabai/multi-llm-plugin/blob/master/skills/multi-llm/SKILL.md"
+  - "https://github.com/beastlabai/multi-llm-plugin/blob/master/docs/hosts.md"
+  - "https://github.com/beastlabai/multi-llm-plugin/blob/master/docs/providers.md"
+  - "https://github.com/beastlabai/multi-llm-plugin/blob/master/LICENSE"
+testedPlatforms:
+  - Claude Code
+prerequisites:
+  - "Claude Code, Git, uv, and at least one installed and authenticated provider CLI."
+  - "A Git repository and a Markdown plan for plan modes; commit-review modes can use a Git revision range."
+  - "Provider accounts or API credentials; the plugin is free, but configured providers can charge for usage."
+safetyNotes:
+  - "Runs local provider CLIs and can execute code through the selected coding tools."
+  - "Implementation and apply/fix modes can change repository files; review the selected mode, provider permissions, and resulting diff."
+  - "Run --init once per repository and review .multi-llm/providers.yaml before invoking the configured model panel."
+privacyNotes:
+  - "Plans, source context, prompts, and review findings can be sent to the configured model providers."
+  - "Plans and reports are stored beside the plan in the repository and may contain private code or project details."
+  - "Keep provider credentials and private reports out of public commits and submissions."
+tags:
+  - claude-code
+  - codex
+  - opencode
+  - code-review
+  - planning
+  - multi-agent
+keywords:
+  - multi-llm
+  - parallel code review
+  - multi-model plan review
+  - Claude Code skill
+readingTime: 3
+hasPrerequisites: true
+hasTroubleshooting: true
+---
+
+# Multi-LLM Plan and Code Review Skill
+
+Multi-LLM is an MIT-licensed plugin and `SKILL.md` workflow maintained by
+beastlabai. From Claude Code, it runs a plan or code review through multiple
+configured coding CLIs and consolidates their findings. It also supports task
+generation, implementation, and commit review. Native Codex and OpenCode
+installation routes are documented upstream; this entry's invocation examples
+use the Claude Code plugin.
+
+## Installation
+
+Install the marketplace and plugin using the commands above, reload plugins
+and skills, then run `--init` once in the project. Review the generated
+`.multi-llm/providers.yaml`: a default run invokes the configured model panel,
+so select the providers and models you intend to use before starting a review.
+The plugin does not install or authenticate the provider CLIs for you.
+
+## Usage
+
+For an existing Markdown implementation plan, invoke:
+
+```text
+/multi-llm:multi-llm --review-plan plans/my-feature.md
+```
+
+The inputs are a plan or commit range, a selected workflow mode, and provider
+configuration. Outputs include structured review reports and workflow state.
+Implementation and apply/fix modes additionally produce code or plan edits
+through the host workflow. Inspect those diffs before committing.
+
+## Safety and Privacy
+
+Provider CLIs execute locally and use their configured permissions and
+credentials. Review-only modes still invoke model providers; write-capable
+modes can edit repository files. Source context and review artifacts can be
+sensitive. Choose providers appropriate for that data, account for their
+usage costs, and keep local credentials and private reports out of public
+repositories.
+
+## Troubleshooting
+
+If invocation fails, confirm `uv`, Git, and the selected provider CLIs are
+available and authenticated, then inspect the project provider configuration.
+Use the upstream host-specific installation and troubleshooting documentation
+for Codex and OpenCode rather than copying the Claude Code slash command.
+
+## Verification and Provenance
+
+Submitted by the project maintainer with AI assistance. The human maintainer
+has confirmed dogfooding with Claude Code on this project and private internal
+products; no public customer examples or installation counts are claimed.
+The October 30 review checks source metadata, installation documentation,
+canonical links, and this directory entry's schema. It does not claim a fresh
+end-to-end provider run or independent security certification. Directory
+verification remains draft pending maintainer review.
+
+## Sources
+
+- [Source and installation](https://github.com/beastlabai/multi-llm-plugin)
+- [Claude Code skill](https://github.com/beastlabai/multi-llm-plugin/blob/master/skills/multi-llm/SKILL.md)
+- [Host installation and troubleshooting](https://github.com/beastlabai/multi-llm-plugin/blob/master/docs/hosts.md)
+- [Provider configuration](https://github.com/beastlabai/multi-llm-plugin/blob/master/docs/providers.md)
