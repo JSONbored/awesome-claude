@@ -1,0 +1,94 @@
+---
+title: Datacircle MCP Server
+slug: datacircle-mcp-server
+category: mcp
+description: >-
+  Datacircle's hosted MCP server lists every GTM API on its sheet and searches every plan
+  by API, provider or price. It is open, with no key.
+cardDescription: >-
+  Find the best GTM APIs from Claude: list every API and search every plan, no key.
+seoTitle: Datacircle MCP Server for Claude
+seoDescription: >-
+  Configure the Datacircle MCP server: streamable HTTP endpoint with no key and two
+  read-only tools, list_apis and search_plans.
+author: Datacircle
+authorProfileUrl: "https://datacircle.dev"
+submittedBy: waynehamadi
+submittedByUrl: "https://github.com/waynehamadi"
+dateAdded: "2026-11-07"
+submittedAt: "2026-11-07"
+documentationUrl: "https://datacircle.dev/SKILL.md"
+websiteUrl: "https://datacircle.dev"
+retrievalSources:
+  - "https://datacircle.dev/SKILL.md"
+  - "https://api.datacircle.dev/v1/openapi.json"
+  - "https://datacircle.dev"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add --transport http datacircle https://api.datacircle.dev/mcp"
+usageSnippet: >-
+  Add the Datacircle URL as an HTTP MCP server. It needs no key or sign-in.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "datacircle": {
+        "url": "https://api.datacircle.dev/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "datacircle": {
+        "url": "https://api.datacircle.dev/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 2 minutes
+difficulty: beginner
+prerequisites:
+  - "An MCP client that supports streamable HTTP."
+safetyNotes:
+  - "Both tools are read-only. Nothing is written, installed or run on your machine."
+privacyNotes:
+  - "Your queries (an API name, a provider, a price range) reach Datacircle's server. No account is linked to them."
+tags:
+  - datacircle
+  - api
+  - gtm
+  - mcp
+keywords:
+  - Datacircle MCP server
+  - best GTM APIs MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Datacircle's hosted MCP server answers one question: which GTM API is best. It has two
+read-only tools: **list_apis** gives every API on the sheet with its plan and provider
+counts, and **search_plans** finds plans by API, provider or price.
+
+## Installation
+
+```bash
+claude mcp add --transport http datacircle https://api.datacircle.dev/mcp
+```
+
+## Source Verification Notes
+
+Verified on **2026-11-07**:
+
+- `tools/list` at **https://api.datacircle.dev/mcp** returns `list_apis` and `search_plans`.
+- The same data is open over REST at **https://api.datacircle.dev/v1** (spec: **https://api.datacircle.dev/v1/openapi.json**).
+
+## Duplicate Check
+
+No existing HeyClaude MCP entry covers Datacircle.
+
+## Editorial Disclosure
+
+Submitted by Datacircle, the maker of the server. The server is open and free to use.
