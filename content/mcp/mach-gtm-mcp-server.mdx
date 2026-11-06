@@ -1,0 +1,146 @@
+---
+title: Mach GTM MCP Server for Claude
+slug: mach-gtm-mcp-server
+category: mcp
+description: >-
+  Free, open-source MCP server with five outbound sales helpers for B2B teams:
+  build an ICP, draft cold emails and LinkedIn messages from signals you
+  provide, get a prospect research checklist, score leads 0-100, and lay out
+  multi-touch sequences. It works only from what you give it; it looks nothing
+  up and sends nothing.
+cardDescription: >-
+  Five template-based MCP tools for outbound sales: ICP definition, message
+  drafting from signals you provide, a research checklist, lead scoring and
+  multi-touch sequence layout.
+seoTitle: Mach GTM MCP Server for Claude
+seoDescription: >-
+  Run five template-based outbound sales helpers from Claude: build an ICP,
+  draft cold emails and LinkedIn messages from signals you provide, get a
+  research checklist, score leads 0-100 and lay out multi-touch sequences.
+author: Vaibhav Verma
+authorProfileUrl: "https://github.com/verma6uc"
+submittedBy: verma6uc
+submittedByUrl: "https://github.com/verma6uc"
+dateAdded: "2026-11-02"
+brandName: Mach GTM
+brandDomain: machgtm.com
+repoUrl: "https://github.com/verma6uc/mach-gtm-mcp"
+documentationUrl: "https://github.com/verma6uc/mach-gtm-mcp#readme"
+websiteUrl: "https://machgtm.com"
+installable: true
+installCommand: npx -y github:verma6uc/mach-gtm-mcp
+usageSnippet: >-
+  Add the server to your MCP client, then ask Claude to call `build_icp` to
+  define your ideal customer profile, `research_prospect` for a research
+  checklist, `score_lead` to rank fit (0-100), `draft_outreach` to draft a cold
+  email or LinkedIn message from a buying signal you provide, and
+  `build_sequence` to lay out a multi-touch cadence.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "mach-gtm": {
+        "command": "npx",
+        "args": ["-y", "github:verma6uc/mach-gtm-mcp"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "mach-gtm": {
+        "command": "npx",
+        "args": ["-y", "github:verma6uc/mach-gtm-mcp"]
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "Node.js 18+ installed (for npx)."
+  - "Claude Code or another MCP client that supports stdio MCP servers."
+safetyNotes:
+  - "The server only shapes what you give it. It does not send messages or contact anyone."
+  - "Read every drafted message and check each fact in it is true before you use it."
+privacyNotes:
+  - "The server runs locally over stdio and does not make network requests. What you provide is not sent to Mach or any third party by this server."
+disclosure: >-
+  MIT-licensed open-source MCP server from the team behind Mach (machgtm.com).
+  It does not connect to a Mach account.
+sourceUrls:
+  - "https://github.com/verma6uc/mach-gtm-mcp"
+  - "https://github.com/verma6uc/mach-gtm-mcp#readme"
+  - "https://machgtm.com"
+tags:
+  - mcp
+  - sales
+  - outbound
+  - b2b
+  - gtm
+  - lead-scoring
+  - email-outreach
+  - linkedin
+keywords:
+  - Mach GTM MCP
+  - B2B outbound sales
+  - ICP builder
+  - lead scoring
+  - cold email drafting
+  - LinkedIn outreach
+  - sales sequences
+  - prospect research checklist
+robotsIndex: true
+robotsFollow: true
+---
+## Content
+Mach GTM MCP is a small, open-source Model Context Protocol server that brings
+five outbound sales helpers into Claude and other MCP clients. The tools shape
+what you give them into an ideal customer profile, a drafted message, a
+research checklist, a lead score or a multi-touch sequence. They do not search
+the web or look anything up, so every fact in the output is one you supplied.
+## Source Review
+- https://github.com/verma6uc/mach-gtm-mcp
+- https://github.com/verma6uc/mach-gtm-mcp#readme
+- https://machgtm.com
+These sources were reviewed on **2026-11-06**. See the repository README for
+current install steps and tool documentation.
+## Features
+- **`build_icp`** — Turn a company description and best customers into a
+  structured ideal customer profile.
+- **`research_prospect`** — Get a research checklist and the questions to answer
+  before you reach out.
+- **`score_lead`** — Score a lead 0-100 against your ICP with a simple, readable
+  formula and reasons for and against.
+- **`draft_outreach`** — Draft a cold email or LinkedIn message from a buying
+  signal and a proof point you provide.
+- **`build_sequence`** — Lay out a multi-touch cadence with timing for each step.
+- MIT-licensed; runs from GitHub with a single `npx` command.
+## Installation
+Add the server to your Claude Code MCP configuration:
+```json
+{
+  "mcpServers": {
+    "mach-gtm": {
+      "command": "npx",
+      "args": ["-y", "github:verma6uc/mach-gtm-mcp"]
+    }
+  }
+}
+```
+Or start it directly:
+```bash
+npx -y github:verma6uc/mach-gtm-mcp
+```
+## Configuration
+No environment variables or accounts are required.
+## Use Cases
+- Turn a company description and best customers into an ICP draft.
+- Draft a first message from a buying signal you have already found.
+- Score a handful of leads against your ICP before a sales call.
+- Lay out a five-touch outbound sequence for a product launch.
+## Safety and Privacy
+The server runs locally and does not send messages or make network requests.
+Read every draft and check each fact in it before you use it.
+## Duplicate Check
+No `mach-gtm`, `Mach GTM`, `machgtm`, `verma6uc/mach-gtm-mcp`, or matching
+Mach GTM source URL entry was found in `content/mcp` or the repository content
+before this submission.
