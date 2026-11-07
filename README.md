@@ -184,6 +184,7 @@ packages use checksums and package trust metadata after review.
 | Packages      | [Registry package](packages/registry), [read-only MCP server](packages/mcp), [Raycast extension](integrations/raycast)                                                                                    |
 | Operations    | [Submission gate ops](docs/submission-queue-ops.md), [package trust model](docs/package-security-policy.md), [API security contract](docs/api-security-contract.md), [deployment](apps/web/DEPLOYMENT.md) |
 | Public policy | [Legal/disclaimer](https://heyclau.de/legal), [claim/update](https://heyclau.de/claim), [advertise](https://heyclau.de/advertise)                                                                         |
+| [CrakSEO/skills](https://github.com/CrakSEO/skills) | Connect Claude/Cursor/Codex to CrakSEO remote MCP servers for keyword research, SERP, backlinks, rank tracking, site audit, local SEO, AI visibility, Search Console and URL indexing | Claude Code, Cursor, Codex | MIT |
 
 ### Local Validation
 
