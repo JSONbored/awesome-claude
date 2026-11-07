@@ -1,0 +1,143 @@
+---
+title: BananaCrystal MCP Server
+slug: bananacrystal-mcp-server
+category: mcp
+description: >-
+  Hosted agent payment MCP server for live FX rates, currency swaps and stablecoin payments in 140+ local currencies, settled on Hedera.
+cardDescription: Agent Payment MCP for live FX rates, currency swaps and payments in 140+ local currencies.
+seoTitle: BananaCrystal MCP Server for Claude
+seoDescription: >-
+  Connect Claude to the hosted BananaCrystal MCP server over streamable HTTP for FX rates, stablecoin swaps and payments, with OAuth 2.0 or an API key.
+author: BananaCrystal
+authorProfileUrl: "https://github.com/BananaCrystal"
+submittedBy: IanLaFlair
+submittedByUrl: "https://github.com/IanLaFlair"
+dateAdded: "2026-11-07"
+brandName: BananaCrystal
+brandDomain: bananacrystal.com
+websiteUrl: "https://agents.bananacrystal.com"
+repoUrl: "https://github.com/BananaCrystal/mcp-server-bananacrystal"
+documentationUrl: "https://agents.bananacrystal.com/docs/mcp"
+installable: true
+installCommand: "claude mcp add --transport http bananacrystal https://agentic.bananacrystal.com/mcp"
+usageSnippet: >-
+  Add the hosted endpoint, sign in with OAuth 2.0 or pass an x-api-key header, then ask the agent for a balance, an exchange rate or a swap fee estimate before trying a transfer.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "bananacrystal": {
+        "type": "http",
+        "url": "https://agentic.bananacrystal.com/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "bananacrystal": {
+        "type": "http",
+        "url": "https://agentic.bananacrystal.com/mcp",
+        "headers": {
+          "x-api-key": "<your-api-key>"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - An MCP client that supports streamable HTTP remote servers.
+  - A BananaCrystal account. Sign in with OAuth 2.0, or create an API key (sandbox keys are free).
+  - An ID check before adding money or cashing out to a bank account.
+safetyNotes:
+  - Tools can move real funds with a production key, including transfers, swaps and withdrawals to a bank account.
+  - Transfers, swaps and withdrawals ask for an email code by default, and each key has its own limits.
+  - Use a sandbox key to try the tools without real balances.
+privacyNotes:
+  - Tool calls, amounts and recipients are sent to BananaCrystal's hosted server.
+  - Treat the API key or OAuth token as a secret and keep it out of prompts, logs and source control.
+  - The ID check used for adding money and cashing out shares identity data with BananaCrystal.
+sourceUrls:
+  - "https://github.com/BananaCrystal/mcp-server-bananacrystal"
+  - "https://github.com/BananaCrystal/mcp-server-bananacrystal/blob/main/README.md"
+  - "https://github.com/BananaCrystal/mcp-server-bananacrystal/blob/main/server.json"
+  - "https://github.com/BananaCrystal/mcp-server-bananacrystal/blob/main/LICENSE"
+  - "https://agents.bananacrystal.com/docs/mcp"
+tags:
+  - mcp
+  - fx-rates
+  - currency-exchange
+  - exchange-rates
+  - payments
+  - on-ramp
+  - off-ramp
+  - stablecoin
+  - crypto-payments
+  - agent-wallet
+  - hedera
+keywords:
+  - BananaCrystal MCP
+  - agent payments MCP
+  - FX rates MCP
+  - stablecoin payments MCP
+  - com.bananacrystal/mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+BananaCrystal gives AI agents a wallet and access to 140+ local currencies.
+Agents can get live FX rates and estimate swap fees, swap between
+local-currency stablecoins (for example USD to NGN or GHS), send stablecoin
+payments to a wallet or BananaCrystal username, add money and cash out to a
+bank account after an ID check, and check balances, limits and history.
+Payments settle on Hedera.
+
+The server is hosted. There is nothing to install or run locally. The GitHub
+repository holds the client configuration files and docs. It is listed in the
+official MCP Registry as `com.bananacrystal/mcp`.
+
+## Installation
+
+Claude Code, using OAuth 2.0 sign-in:
+
+```bash
+claude mcp add --transport http bananacrystal https://agentic.bananacrystal.com/mcp
+```
+
+With an API key instead, send it in the `x-api-key` header:
+
+```json
+{
+  "mcpServers": {
+    "bananacrystal": {
+      "type": "http",
+      "url": "https://agentic.bananacrystal.com/mcp",
+      "headers": {
+        "x-api-key": "<your-api-key>"
+      }
+    }
+  }
+}
+```
+
+OAuth clients can also send `Authorization: Bearer <token>`.
+
+## Guardrails
+
+- Transfers, swaps and withdrawals ask for an email code by default.
+- Each key has its own limits.
+- Sandbox keys are free and use test balances.
+
+## Source Verification Notes
+
+Verified on **2026-11-07**:
+
+- The repository README documents the endpoint, auth options and client configs.
+- The repository license is MIT and covers the configuration files.
+- Docs are at https://agents.bananacrystal.com/docs/mcp.
+
+## Duplicate Check
+
+No existing BananaCrystal entry in `content/mcp`.
