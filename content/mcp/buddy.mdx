@@ -1,0 +1,140 @@
+---
+title: Buddy MCP Server for Claude
+slug: buddy
+category: mcp
+description: >-
+  Remote MCP server for Buddy. Run and watch CI/CD pipelines, deploy to environments, create
+  sandboxes, publish packages, manage domains and routing, and read run logs from Claude.
+cardDescription: "Run CI/CD pipelines, sandboxes, deployments and domains in Buddy from your agent. OAuth or token auth."
+seoTitle: "Buddy MCP Server for Claude: CI/CD Pipelines, Sandboxes & Deployments via MCP"
+seoDescription: "Connect Claude to Buddy with the official remote MCP server: run and watch CI/CD pipelines, deploy to environments, create sandboxes, publish packages, manage domains, and read run logs. OAuth, token, or bdy CLI auth."
+author: Buddy
+authorProfileUrl: "https://buddy.works"
+submittedBy: czuli
+submittedByUrl: "https://github.com/czuli"
+dateAdded: "2026-11-09"
+documentationUrl: "https://buddy.works/docs/ai-agents/mcp"
+websiteUrl: "https://buddy.works"
+retrievalSources:
+  - "https://buddy.works/docs/ai-agents/mcp"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add --transport http buddy https://mcp.buddy.works/mcp"
+usageSnippet: |-
+  # Expose only pipelines and repositories
+  claude mcp add --transport http buddy "https://mcp.buddy.works/mcp?tools=pipelines,source"
+
+  # Then ask the agent:
+  # "Run the deploy pipeline in shop-api on main, wait for it, and show logs of any failed action."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "buddy": { "url": "https://mcp.buddy.works/mcp" }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "buddy": {
+        "url": "https://mcp.buddy.works/mcp",
+        "headers": { "Authorization": "Bearer <YOUR_TOKEN>" }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A Buddy account and workspace (US, EU, or Asia region)."
+  - "For headless use: a Buddy personal access token. For the CLI proxy: `npm install -g bdy` and `bdy login`."
+  - "An MCP client such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "Tools act on your real Buddy workspace and can change or delete projects, pipelines, sandboxes and domains."
+  - "Some deletions cannot be undone."
+  - "The agent can do only what the signed-in account or token is allowed to do."
+  - "Start with a narrowly scoped token and use `?tools=` to expose only the categories the agent needs."
+privacyNotes:
+  - "Tool calls and their arguments go to Buddy's hosted MCP server (mcp.buddy.works, or the EU/Asia endpoint) and the Buddy API."
+  - "Responses can include pipeline logs, repository metadata and workspace data."
+  - "Auth uses OAuth or a personal access token you provide; `bdy mcp` reuses your local `bdy login` session."
+disclosure: "Buddy is a commercial CI/CD and cloud platform. The MCP server is officially maintained by Buddy."
+tags:
+  - ci-cd
+  - devops
+  - deployment
+  - pipelines
+  - sandboxes
+  - remote-mcp
+  - oauth
+keywords:
+  - buddy mcp server
+  - buddy mcp claude
+  - ci cd mcp claude code
+  - pipelines mcp
+  - deployment mcp server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Buddy MCP Server** is the official remote Model Context Protocol server from
+[Buddy](https://buddy.works). It lets Claude run and watch CI/CD pipelines, deploy to
+environments, create sandboxes, publish packages, manage domains and routing, and read run
+logs. Buddy hosts the server, so OAuth and token setups need no local install.
+
+## Endpoints
+
+| Region | Endpoint |
+|---|---|
+| US | `https://mcp.buddy.works/mcp` |
+| Europe | `https://mcp.eu.buddy.works/mcp` |
+| Asia | `https://mcp.asia.buddy.works/mcp` |
+
+## Tool categories
+
+Tools are grouped into 12 categories: `user`, `workspaces`, `projects`, `members`,
+`pipelines`, `source`, `targets`, `sandboxes`, `packages`, `domains`, `distros`, `suites`.
+Pass `?tools=pipelines,source` (or `--tools` with `bdy mcp`) to expose only what the agent
+needs.
+
+## Installation
+
+### Claude Code (OAuth)
+
+```bash
+claude mcp add --transport http buddy https://mcp.buddy.works/mcp
+```
+
+The client opens a browser login and scope approval on first use.
+
+### Personal access token
+
+Send the token as a `Bearer` header, for CI and agents without a browser:
+
+```json
+{
+  "mcpServers": {
+    "buddy": {
+      "url": "https://mcp.buddy.works/mcp",
+      "headers": { "Authorization": "Bearer <YOUR_TOKEN>" }
+    }
+  }
+}
+```
+
+### Buddy CLI proxy
+
+```bash
+npm install -g bdy
+bdy login
+claude mcp add buddy -- bdy mcp --tools pipelines,source
+```
+
+## Source Verification Notes
+
+Verified on **2026-11-09**:
+
+- Buddy's MCP documentation at `buddy.works/docs/ai-agents/mcp` lists the US, EU and Asia
+  endpoints, the OAuth, Bearer token and `bdy mcp` auth methods, the 12 tool categories for
+  `?tools=`, and the client config examples used above.
+- Claude Code's MCP documentation describes the `--transport http` installation pattern.
