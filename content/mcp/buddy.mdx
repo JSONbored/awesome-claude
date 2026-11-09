@@ -6,7 +6,7 @@ description: >-
   Remote MCP server for Buddy. Run and watch CI/CD pipelines, deploy to environments, create
   sandboxes, publish packages, manage domains and routing, and read run logs from Claude.
 cardDescription: "Run CI/CD pipelines, sandboxes, deployments and domains in Buddy from your agent. OAuth or token auth."
-seoTitle: "Buddy MCP Server for Claude — CI/CD Pipelines, Sandboxes & Deployments via MCP"
+seoTitle: "Buddy MCP Server for Claude: CI/CD Pipelines, Sandboxes & Deployments via MCP"
 seoDescription: "Connect Claude to Buddy with the official remote MCP server: run and watch CI/CD pipelines, deploy to environments, create sandboxes, publish packages, manage domains, and read run logs. OAuth, token, or bdy CLI auth."
 author: Buddy
 authorProfileUrl: "https://buddy.works"
@@ -78,7 +78,7 @@ robotsFollow: true
 The **Buddy MCP Server** is the official remote Model Context Protocol server from
 [Buddy](https://buddy.works). It lets Claude run and watch CI/CD pipelines, deploy to
 environments, create sandboxes, publish packages, manage domains and routing, and read run
-logs. The server is hosted by Buddy, so there is nothing to install locally.
+logs. Buddy hosts the server, so OAuth and token setups need no local install.
 
 ## Endpoints
 
@@ -127,12 +127,6 @@ npm install -g bdy
 bdy login
 claude mcp add buddy -- bdy mcp --tools pipelines,source
 ```
-
-## Security
-
-- Use a narrowly scoped token and limit tool categories with `?tools=`.
-- Review destructive actions (deleting projects, pipelines, sandboxes, domains) before
-  confirming them.
 
 ## Source Verification Notes
 
