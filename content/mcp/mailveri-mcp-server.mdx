@@ -1,0 +1,171 @@
+---
+title: MailVeri MCP Server for Claude
+slug: mailveri-mcp-server
+category: mcp
+description: >-
+  Official MailVeri MCP server that lets Claude and other MCP clients verify
+  single emails and bulk lists (invalid, disposable, catch-all, and role
+  detection), check credit balance, and manage batch jobs over stdio or SSE.
+cardDescription: >-
+  Verify emails and manage MailVeri batch jobs from Claude, Cursor, and other
+  MCP clients.
+seoTitle: MailVeri MCP Server for Claude
+seoDescription: >-
+  Use the official MailVeri MCP server with Claude, Cursor, Claude Desktop,
+  Codex, Windsurf, and other MCP clients to verify emails, queue bulk lists,
+  and check remaining credits.
+author: MailVeri
+authorProfileUrl: "https://mailveri.com"
+submittedBy: mailveri
+submittedByUrl: "https://github.com/mailveri"
+dateAdded: "2026-11-08"
+websiteUrl: "https://mailveri.com"
+documentationUrl: "https://mailveri.com/docs/mcp/"
+repoUrl: "https://github.com/mailveri/mailveri-mcp"
+retrievalSources:
+  - "https://raw.githubusercontent.com/mailveri/mailveri-mcp/main/README.md"
+  - "https://mailveri.com/docs/mcp/"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add mailveri -e MAILVERI_API_KEY=YOUR_MAILVERI_API_KEY -- uvx --from git+https://github.com/mailveri/mailveri-mcp.git@01f1bbd0aa1a454b65d6900937dd42d2876a05d9 mailveri-mcp"
+usageSnippet: >-
+  Ask Claude to verify whether a specific email is deliverable, check how many
+  MailVeri credits remain, or queue a list of at least two addresses as a
+  batch job.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "mailveri": {
+        "command": "uvx",
+        "args": [
+          "--from",
+          "git+https://github.com/mailveri/mailveri-mcp.git@01f1bbd0aa1a454b65d6900937dd42d2876a05d9",
+          "mailveri-mcp"
+        ],
+        "env": {
+          "MAILVERI_API_KEY": "YOUR_MAILVERI_API_KEY"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "mailveri": {
+        "command": "uvx",
+        "args": [
+          "--from",
+          "git+https://github.com/mailveri/mailveri-mcp.git@01f1bbd0aa1a454b65d6900937dd42d2876a05d9",
+          "mailveri-mcp"
+        ],
+        "env": {
+          "MAILVERI_API_KEY": "YOUR_MAILVERI_API_KEY"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - A MailVeri account and API key from https://app.mailveri.com/api-keys/
+  - uv and git installed so uvx can clone the pinned GitHub revision
+  - An MCP-capable client such as Claude Code, Claude Desktop, Cursor, Codex, or Windsurf
+safetyNotes:
+  - MailVeri MCP is launched with uvx from the pinned git URL git+https://github.com/mailveri/mailveri-mcp.git@01f1bbd0aa1a454b65d6900937dd42d2876a05d9. It is not a HeyClaude-hosted package. Review that commit before running it.
+  - The server calls the MailVeri API over the network. Single-email verification is rate-limited to 1 request per second. Batch jobs run server-side.
+  - The mailveri_delete_batch tool cancels or deletes a verification batch. Confirm the batch id before calling it.
+  - Do not paste a real MAILVERI_API_KEY into prompts, issue comments, screenshots, public configs, or committed files. Use an environment variable or your client's secret handling.
+  - The default transport is stdio. SSE mode (--transport sse) has no built-in authentication. Do not bind it to 0.0.0.0 or a public interface without an authenticating reverse proxy.
+privacyNotes:
+  - Email addresses you ask the assistant to verify are sent to the MailVeri API (default https://api.mailveri.com).
+  - Tool results can include verification status, batch progress, download links, and remaining credit counts.
+  - MCP client transcripts, terminal logs, debug output, and AI provider logs may retain those email addresses and results outside MailVeri's access controls.
+  - Use sample or consented addresses for demos, screenshots, and troubleshooting.
+tags:
+  - mailveri
+  - mcp
+  - email
+  - email-verification
+  - deliverability
+keywords:
+  - MailVeri MCP
+  - MailVeri MCP Server
+  - mailveri-mcp
+  - email verification MCP
+  - verify email in Claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+MailVeri MCP Server is MailVeri's official Model Context Protocol server. It lets
+Claude and other MCP-capable clients verify email deliverability, check remaining
+credits, and manage bulk verification batches. The server is written in Python,
+licensed under MIT, and runs locally with `uvx` from the pinned revision
+https://github.com/mailveri/mailveri-mcp/tree/01f1bbd0aa1a454b65d6900937dd42d2876a05d9. It is not published on PyPI
+or npm.
+
+## Features
+
+The server exposes these tools:
+
+- `mailveri_verify_email` - verify one email (returns statuses such as VALID, INVALID, DISPOSABLE, ROLE_ACCOUNT, CATCH_ALL, and FULL_INBOX)
+- `mailveri_get_balance` - remaining verification credits
+- `mailveri_verify_batch` - queue a list of emails (minimum 2) for background verification
+- `mailveri_get_batch_status` - progress, status, and download links for a batch
+- `mailveri_download_batch_result` - download link for completed results (ZIP or filtered CSV)
+- `mailveri_delete_batch` - cancel or delete a batch
+
+Default transport is stdio. SSE transport is available for local multi-client setups:
+
+```bash
+export MAILVERI_API_KEY="YOUR_MAILVERI_API_KEY"
+mailveri-mcp --transport sse --host 127.0.0.1 --port 8000
+```
+
+## Installation
+
+Requires [uv](https://docs.astral.sh/uv/) and git. Then add the server with a MailVeri API key from https://app.mailveri.com/api-keys/:
+
+```bash
+claude mcp add mailveri -e MAILVERI_API_KEY=YOUR_MAILVERI_API_KEY -- uvx --from git+https://github.com/mailveri/mailveri-mcp.git@01f1bbd0aa1a454b65d6900937dd42d2876a05d9 mailveri-mcp
+```
+
+### Claude Desktop, Cursor, Codex, and other stdio clients
+
+```json
+{
+  "mcpServers": {
+    "mailveri": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/mailveri/mailveri-mcp.git@01f1bbd0aa1a454b65d6900937dd42d2876a05d9",
+        "mailveri-mcp"
+      ],
+      "env": {
+        "MAILVERI_API_KEY": "YOUR_MAILVERI_API_KEY"
+      }
+    }
+  }
+}
+```
+
+Optional environment variable: `MAILVERI_BASE_URL` (default `https://api.mailveri.com`).
+
+## Source Review
+
+These sources were reviewed on **2026-11-08**:
+
+- https://github.com/mailveri/mailveri-mcp/tree/01f1bbd0aa1a454b65d6900937dd42d2876a05d9
+- https://raw.githubusercontent.com/mailveri/mailveri-mcp/main/README.md
+- https://mailveri.com/docs/mcp/
+- https://mailveri.com/blog/mailveri-mcp-email-verification-ai-agents
+
+## Editorial Disclosure
+
+This is MailVeri's official MCP server, submitted by the MailVeri GitHub account.
+It is not a paid, sponsored, or affiliate listing. MailVeri is a commercial email
+verification API with a free credit allotment; use the live docs and dashboard for
+current pricing and credit rules.
