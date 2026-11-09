@@ -1,0 +1,131 @@
+---
+title: AdMakeAI MCP Server
+slug: admakeai-mcp-server
+category: mcp
+description: >-
+  AdMakeAI's hosted MCP server lets Claude design ad images and UGC-style video ads for a
+  brand, write ad copy, look up the ads any brand runs in the Meta Ad Library, read Meta ad
+  performance and prepare Meta campaign drafts.
+cardDescription: >-
+  Let Claude design ad creative, research competitors' Meta ads and draft Meta campaigns through one hosted HTTP MCP endpoint.
+seoTitle: AdMakeAI MCP Server for Claude
+seoDescription: >-
+  Configure the AdMakeAI MCP server: a streamable HTTP endpoint with OAuth sign-in or an
+  API key, with tools for ad image and UGC video generation, ad copy, Meta Ad Library
+  research, Meta ad reporting and Meta campaign drafts.
+author: AdMakeAI
+authorProfileUrl: "https://admakeai.com"
+submittedBy: mesmerlord
+submittedByUrl: "https://github.com/mesmerlord"
+dateAdded: "2026-11-09"
+brandName: AdMakeAI
+brandDomain: admakeai.com
+repoUrl: "https://github.com/mesmerlord/admakeai-mcp"
+documentationUrl: "https://admakeai.com/agents"
+websiteUrl: "https://admakeai.com"
+pricingModel: freemium
+disclosure: >-
+  AdMakeAI is a commercial service with monthly plans and free credits (30 at signup with no
+  card). The MCP server is run by AdMakeAI, and this entry was submitted by its founder.
+retrievalSources:
+  - "https://admakeai.com/agents"
+  - "https://admakeai.com/api/docs"
+  - "https://admakeai.com/pricing"
+  - "https://admakeai.com/.well-known/oauth-protected-resource/api/mcp"
+  - "https://github.com/mesmerlord/admakeai-mcp/blob/main/llms-install.md"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add --transport http admakeai https://admakeai.com/api/mcp"
+usageSnippet: >-
+  Add the endpoint as an HTTP MCP server, run /mcp in Claude Code and sign in through the
+  browser, then ask Claude "What ads is Huel running on Facebook right now?" or "Design three
+  4:5 ads for my brand from this product photo".
+copySnippet: |-
+  {
+    "mcpServers": {
+      "admakeai": {
+        "type": "http",
+        "url": "https://admakeai.com/api/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "admakeai": {
+        "type": "http",
+        "url": "https://admakeai.com/api/mcp",
+        "headers": {
+          "x-api-key": "YOUR_API_KEY"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "An AdMakeAI account (free signup at admakeai.com/register). OAuth sign-in in the browser needs no key; clients without OAuth send an API key from admakeai.com/dashboard/integrations/api in the x-api-key header."
+  - "Video ads and the Facebook tools need a paid AdMakeAI plan; the Facebook tools also need a Meta ad account connected in AdMakeAI."
+safetyNotes:
+  - "Remote hosted server: nothing is installed or executed locally."
+  - "Design tools spend credits from the account (a standard image ad costs 2 credits); reads, listings, research and analytics are free."
+  - "Three tools create ads or draft campaigns in the user's real Meta ad account; their descriptions start with [DANGER: live action] and tell the model to confirm first. There are no delete tools, and pausing or launching ads stays in Meta Ads Manager."
+  - "OAuth scopes (read, write, publish) are chosen on the consent screen, and tools outside the granted scopes are hidden from tools/list."
+privacyNotes:
+  - "Briefs, reference images, ad copy and project or campaign IDs are sent to AdMakeAI (third-party service), which stores the ads and drafts in the user's account."
+  - "AdMakeAI reaches Meta only for the ad accounts the user has connected."
+  - "Store an API key in the client config or a secret manager, not in repository files."
+tags:
+  - advertising
+  - ad-creative
+  - meta-ads
+  - marketing
+  - mcp
+keywords:
+  - AdMakeAI MCP server
+  - ad creative MCP server
+  - Meta Ad Library MCP
+  - Facebook ads MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+AdMakeAI makes ad creative for small businesses that advertise on Facebook, Instagram and
+TikTok. Its hosted MCP endpoint at `https://admakeai.com/api/mcp` (streamable HTTP) exposes
+60 tools, for example:
+
+- **adResearch__listProjects** and **project__createFirst**: the brands (projects) every design belongs to, and setting up a new account's first brand from its website.
+- **adGeneration__create** and **adGeneration__generateImage**: a finished ad image built from the brand brief, or an image from a verbatim prompt; poll **adGeneration__getById** until it completes.
+- **adSet__generateBatch**: many variations from one brief, for creative testing.
+- **adCopyGeneration__generate**: headlines, primary text and CTAs for an ad.
+- **videoGeneration__start**: a UGC-style video ad.
+- **adResearch__searchCompanies** and **adResearch__getCompanyAds**: the ads any brand is running now, from the Meta Ad Library.
+- **zernioAnalytics__accountOverview**: spend and results for a connected Meta ad account, with the previous period for comparison.
+- **facebookCampaignDraft__pushDraftCampaign**: Meta draft campaigns, ad sets and ads (a live action that asks first).
+
+## Installation
+
+```bash
+claude mcp add --transport http admakeai https://admakeai.com/api/mcp
+```
+
+Then run `/mcp`, pick admakeai and sign in through the browser. New accounts get 30 free
+credits with no card. In Claude (web or desktop), add a custom connector with the same URL
+and click Connect.
+
+## Source Verification Notes
+
+- **https://admakeai.com/agents** documents the MCP endpoint, OAuth sign-in and the REST API.
+- **https://admakeai.com/.well-known/oauth-protected-resource/api/mcp** publishes the OAuth metadata (authorization server https://admakeai.com, scopes `mcp:read`, `mcp:write`, `mcp:publish`).
+- An unauthenticated `initialize` to the endpoint answers 401 with a `WWW-Authenticate` challenge that points at that metadata.
+- **https://github.com/mesmerlord/admakeai-mcp** has the setup, scopes and full tool list, and the server is in the official MCP Registry as `com.admakeai/admakeai`.
+
+## Duplicate Check
+
+No existing HeyClaude MCP entry covers AdMakeAI.
+
+## Editorial Disclosure
+
+Submitted by AdMakeAI's founder. AdMakeAI is a commercial service with free credits.
