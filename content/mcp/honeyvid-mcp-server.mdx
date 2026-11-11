@@ -1,0 +1,134 @@
+---
+title: HoneyVid MCP Server for Claude
+slug: honeyvid-mcp-server
+category: mcp
+description: >-
+  Official remote MCP server for HoneyVid: ask Claude to put a person, pet or
+  character into a trending AI video template, or generate videos and images
+  with Playground models, with a credit quote before every run.
+cardDescription: "Official HoneyVid MCP: make AI videos and images from Claude with OAuth sign-in and per-run credit quotes."
+seoTitle: "HoneyVid MCP Server for Claude - AI Video and Image Generation"
+seoDescription: "Connect Claude to HoneyVid's official remote MCP server to make AI videos from trending templates or Playground models like Kling, Veo and Seedance, with OAuth sign-in and credit quotes."
+author: HoneyVid
+authorProfileUrl: "https://github.com/HoneyVid"
+submittedBy: alexgusevski
+submittedByUrl: "https://github.com/alexgusevski"
+dateAdded: "2026-11-11"
+brandName: HoneyVid
+brandDomain: honeyvid.ai
+repoUrl: "https://github.com/HoneyVid/cli"
+documentationUrl: "https://honeyvid.ai/mcp"
+websiteUrl: "https://honeyvid.ai"
+packageUrl: "https://www.npmjs.com/package/honeyvid"
+installable: true
+installCommand: "claude mcp add --transport http honeyvid https://honeyvid.ai/mcp"
+usageSnippet: >-
+  Run /mcp, choose honeyvid and finish the OAuth sign-in in your browser, then ask
+  Claude for a video, for example to put a photo of your dog into a trending dance
+  template or to generate a 5-second clip with a Playground model.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "honeyvid": {
+        "type": "http",
+        "url": "https://honeyvid.ai/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "honeyvid": {
+        "type": "http",
+        "url": "https://honeyvid.ai/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A HoneyVid account with credits (sign in during the OAuth flow)."
+  - "An MCP client with remote HTTP and OAuth support, such as Claude, Claude Code, Codex, Cursor or ChatGPT developer mode."
+  - "Optional: `npx honeyvid skills install --agent claude` to add the HoneyVid agent skills."
+safetyNotes:
+  - "Creating a video or image spends HoneyVid account credits. Quote first and set a max-credit cap; the server rejects a job priced above the cap."
+  - "Uploaded reference photos and source videos are sent to HoneyVid for generation."
+  - "No API key is used; access is granted through OAuth and can be removed by disconnecting the client."
+privacyNotes:
+  - "Photos of people, pets or characters, prompts, uploaded clips and generated media are processed by HoneyVid and its model providers."
+  - "Only upload photos you have the right to use."
+disclosure: "HoneyVid is a commercial, credit-based AI video app by Beundra AB. This listing covers HoneyVid's official hosted MCP endpoint and is submitted by the maker."
+sourceUrls:
+  - "https://honeyvid.ai/mcp"
+  - "https://honeyvid.ai/llms.txt"
+  - "https://github.com/HoneyVid/cli"
+  - "https://github.com/HoneyVid/skills"
+  - "https://registry.modelcontextprotocol.io/v0/servers?search=honeyvid"
+tags:
+  - video
+  - image-generation
+  - ai-video
+  - oauth
+  - remote
+keywords:
+  - honeyvid mcp
+  - ai video mcp server
+  - claude video generation
+  - kling veo seedance mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+HoneyVid MCP is HoneyVid's official remote Model Context Protocol server at
+`https://honeyvid.ai/mcp` (Streamable HTTP). It signs in with OAuth 2.1 (PKCE,
+dynamic client registration), so no API key is pasted into config. It is listed
+in the official MCP Registry as `ai.honeyvid/honeyvid`.
+
+HoneyVid puts anyone in a viral AI video: pick a trending video, add one photo
+of a person, pet or character and get your own version. The Playground adds
+video models such as Kling, Veo and Seedance and several image models.
+
+## Features
+
+- Browse trending video templates and create your own version from one photo.
+- Generate videos and images with Playground models; model availability and
+  settings come from the live account.
+- Quote the credit price before creating; jobs accept a max-credit cap.
+- Wait for a job and get the finished MP4 or image back.
+- Companion MIT CLI (`npx honeyvid`) and agent skills for the same workflows.
+
+## Installation
+
+### Claude
+
+Customize → Connectors → Add custom connector, name it HoneyVid and paste
+`https://honeyvid.ai/mcp`, then click Connect and approve.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http honeyvid https://honeyvid.ai/mcp
+npx honeyvid skills install --agent claude
+```
+
+Then run `/mcp`, choose `honeyvid` and finish the sign-in in your browser.
+
+## Source Review
+
+- https://honeyvid.ai/mcp
+- https://honeyvid.ai/llms.txt
+- https://github.com/HoneyVid/cli
+- https://github.com/HoneyVid/skills
+
+These sources were reviewed on **2026-11-11**.
+
+## Duplicate Check
+
+No HoneyVid entry or `honeyvid.ai` source URL was found in `content/`.
+
+## Disclosure
+
+Submitted by the maker (Beundra AB). HoneyVid is paid and credit-based; every
+price is shown before a video is created. No affiliate link is used.
