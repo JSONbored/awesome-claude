@@ -1,0 +1,130 @@
+---
+title: ApplyKoala MCP Server for Claude
+slug: applykoala-mcp-server
+category: mcp
+description: >-
+  Hosted ApplyKoala MCP server that lets Claude keep a job search in one tracker: save job postings word for word, research companies with sources, judge fit by quoting your own resume, keep recruiters and interview stories, and record every application, over streamable HTTP with OAuth.
+cardDescription: >-
+  Connect Claude to ApplyKoala, a job search tracker: jobs, company research, fit, recruiters, interview stories and applications.
+seoTitle: ApplyKoala MCP Server for Claude
+seoDescription: >-
+  Use the ApplyKoala MCP server with Claude, Claude Code, Codex, ChatGPT or Cursor to save jobs, research companies, track applications and prepare interviews from your own records.
+author: ApplyKoala
+authorProfileUrl: "https://applykoala.com/about"
+submittedBy: shangxiang0907
+submittedByUrl: "https://github.com/shangxiang0907"
+dateAdded: "2026-11-17"
+repoUrl: "https://github.com/shangxiang0907/applykoala-mcp"
+documentationUrl: "https://applykoala.com/mcp"
+websiteUrl: "https://applykoala.com"
+installable: true
+installCommand: >-
+  claude mcp add --scope user --transport http applykoala https://applykoala.com/mcp
+usageSnippet: >-
+  Add https://applykoala.com/mcp as a custom connector, sign in to ApplyKoala and press Allow, then say "Set me up in ApplyKoala using my resume."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "applykoala": {
+        "url": "https://applykoala.com/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "applykoala": {
+        "url": "https://applykoala.com/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "An ApplyKoala account with sync on (US$3.99 a month or US$29 a year, 7-day free trial); the tracker itself is free without an account."
+  - "Claude (web, desktop or mobile) with custom connectors, Claude Code, Codex, ChatGPT or Cursor."
+safetyNotes:
+  - "Tools can create and update jobs, companies, contacts, stories, resumes, profile details and application records in your ApplyKoala account."
+  - "Nothing can be deleted for good: earlier versions are kept for 30 days and can be restored."
+  - "Fit quotes are checked against your saved profile, resume and stories; quotes that are not really there are rejected."
+  - "ApplyKoala never submits job applications itself. Submitting is done by you or by your AI client's own browser tools."
+privacyNotes:
+  - "Your job search records (resume, jobs, applications, contacts, stories) are stored encrypted on ApplyKoala's servers when sync is on; without sync they stay in your browser."
+  - "Your AI client sends ApplyKoala only what a tool call needs; ApplyKoala does not read your chats."
+  - "Disconnect any time in ApplyKoala settings or in your AI client; OAuth tokens are revoked on disconnect."
+tags:
+  - jobs
+  - career
+  - productivity
+  - remote-mcp
+keywords:
+  - applykoala mcp
+  - job search mcp
+  - job application tracker mcp
+  - claude job search
+  - ai job applications
+readingTime: 3
+difficultyScore: 15
+hasTroubleshooting: false
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+## Overview
+
+ApplyKoala is a job search tracker with a hosted Model Context Protocol server. Connected to Claude, your AI keeps the whole search in one place between conversations: the jobs you want, the companies, your resumes, the people you talk to and every application. You can see and change all of it on your own board at [applykoala.com](https://applykoala.com).
+
+Setup guides are at [applykoala.com/mcp](https://applykoala.com/mcp); the server is at `https://applykoala.com/mcp` (streamable HTTP, OAuth sign-in).
+
+## Features
+
+- Save job postings word for word, with how you fit, quoting your own resume.
+- Research companies: what they do, size, funding, ratings, visa sponsorship and news, each with a source and the date it was checked.
+- Record applications and their status, including updates read from your job emails.
+- Keep recruiters and other contacts, with the main points of each conversation.
+- Build a bank of interview stories, run mock interviews and debrief real ones.
+- Job alerts for new postings on companies' own careers pages.
+
+## Use Cases
+
+- "Find backend jobs in Singapore that fit my resume and save the good ones."
+- "Look into these three companies. Do they sponsor work visas?"
+- "Save the recruiter in this screenshot and what we talked about."
+- "Which applications have had no answer for two weeks?"
+- "Give me a mock interview for that job, with the salary round."
+
+## Installation
+
+### Claude (Connectors)
+
+1. Open **Settings → Connectors → Add custom connector**.
+2. Paste `https://applykoala.com/mcp`.
+3. Sign in to ApplyKoala and press **Allow**.
+
+### Claude Code
+
+```bash
+claude mcp add --scope user --transport http applykoala https://applykoala.com/mcp
+```
+
+Then type `/mcp`, choose applykoala and sign in.
+
+### Other MCP clients
+
+Codex: `codex mcp add applykoala --url https://applykoala.com/mcp`, then `codex mcp login applykoala`. Cursor and other clients: use the JSON configuration below.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "applykoala": {
+      "url": "https://applykoala.com/mcp",
+      "type": "http"
+    }
+  }
+}
+```
