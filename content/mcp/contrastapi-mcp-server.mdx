@@ -6,10 +6,10 @@ safetyNotes:
 privacyNotes:
   - Queried domains, IPs, dependencies, vulnerabilities, and indicators can reveal investigation targets and may enter model context.
 category: mcp
-description: "49 remote MCP security tools for CVE/KEV/CWE/EPSS lookup, composite CVSS+EPSS+KEV+PoC risk scoring, CVSS v3.x vector parsing, domain/IP/IOC enrichment, dependency and web intelligence checks, MITRE ATLAS AI/ML attacks, and MITRE D3FEND defenses. Anonymous tier available; Pro tier uses an API key."
-cardDescription: "49 remote security tools for CVE risk scoring, MITRE ATLAS/D3FEND, domain audit, IP threat intel, IOC enrichment, web intelligence, and dependency scanning."
+description: "Remote MCP security data server: CVE, KEV, CWE and EPSS lookups, a CVE risk score from CVSS, EPSS, KEV and public exploits, CVSS v3 vector parsing, package advisories, domain, DNS, TLS, e-mail and IP checks, MITRE D3FEND defenses, and watchlists for CVEs, packages, domains and IPs. Free tier without a key; Pro tier uses an API key."
+cardDescription: "Remote security tools for CVE risk scoring, package advisories, domain, DNS, TLS and IP checks, MITRE D3FEND defenses, and CVE monitoring."
 seoTitle: ContrastAPI MCP Server for Claude Security Research
-seoDescription: "Use ContrastAPI with Claude for 49 MCP security tools covering CVE risk scoring, MITRE ATLAS/D3FEND, domain audit, IOC enrichment, and web intelligence."
+seoDescription: "Use ContrastAPI with Claude for CVE risk scoring, package advisories, domain, DNS, TLS and IP checks, MITRE D3FEND defenses and CVE monitoring."
 author: UPinar
 authorProfileUrl: https://github.com/UPinar
 dateAdded: "2026-04-20"
@@ -47,13 +47,13 @@ tags:
   - cwe
   - osint
   - threat-intelligence
-  - ip-reputation
-  - domain-audit
-  - dependency-scanner
-  - mitre-atlas
+  - ip-lookup
+  - dns
+  - package-advisories
+  - monitoring
   - d3fend
   - risk-scoring
-  - web-intelligence
+  - email-security
 keywords:
   - contrastapi mcp
   - claude security mcp
@@ -62,16 +62,16 @@ keywords:
   - cwe lookup
   - cve risk score
   - cvss vector parser
-  - mitre atlas
+  - cve monitoring
   - d3fend
   - threat intelligence
-  - dependency scanner
-  - web intelligence
+  - package advisories
+  - email security check
 ---
 
 ## Overview
 
-49 security intelligence tools over remote MCP: CVE/KEV/CWE/EPSS lookup with composite risk score (CVSS+EPSS+KEV+PoC fusion) and CVSS v3.x vector parser, domain audit, IP threat reports, IOC enrichment, dependency scanning, web intelligence (robots.txt parser, redirect-chain walker, email validation, brand-asset scraper, SEO audit), MITRE ATLAS AI/ML attack knowledge, and MITRE D3FEND defensive techniques. Anonymous tier; Pro tier with API key. Streamable-HTTP transport.
+Security data over remote MCP: CVE, KEV, CWE and EPSS lookups, a CVE risk score from CVSS, EPSS, KEV and public exploits, CVSS v3 vector parsing, public exploit data, package advisories for nine ecosystems (OSV.dev), DNS, TLS, e-mail (SPF, DMARC, DKIM, MTA-STS), WHOIS/RDAP and IP checks, subdomains from Certificate Transparency, MITRE D3FEND defenses, and watchlists that report changes to CVEs, packages, domains and IPs. Free tier without a key; Pro tier with an API key. Streamable-HTTP transport.
 
 ## Usage
 
@@ -80,10 +80,10 @@ claude mcp list
 
 ## Auth Requirements
 
-None required for the anonymous tier (rate-limited per IP). Optional X-API-Key header for Pro tier with higher limits. See https://api.contrastcyber.com/pricing
+None required for the free tier (hourly credits per IP address). An optional API key (Authorization: Bearer or X-API-Key header) gives more credits and the watchlist tools. See https://api.contrastcyber.com/pricing
 
 ## Verification
 
 1. `claude mcp list` shows contrastapi as connected
 2. Ask Claude: "Look up CVE-2021-44228 with EPSS and KEV data"
-3. Response includes verdict.completeness=full with real CVSS + EPSS percentile (~94%) + KEV listing date
+3. The answer includes the CVSS score, the EPSS score and the KEV listing date
