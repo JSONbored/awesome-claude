@@ -1,0 +1,61 @@
+---
+title: CheapCarRent Search
+slug: cheapcarent-search
+category: mcp
+description: Official hosted MCP server for car rental search at 15,000 pickup points in 46 countries, 19 languages. Streamable HTTP, no account or API key, read-only.
+cardDescription: Read-only car rental search MCP. No API key.
+author: aleksandrjefimov4-crypto
+authorProfileUrl: "https://github.com/aleksandrjefimov4-crypto"
+dateAdded: 2026-11-18
+submittedBy: aleksandrjefimov4-crypto
+submittedByUrl: https://github.com/aleksandrjefimov4-crypto
+repoUrl: https://github.com/aleksandrjefimov4-crypto/cheapcarent-mcp
+documentationUrl: "https://cheapcarent.com/developers"
+brandName: CheapCarRent
+brandDomain: cheapcarent.com
+installable: true
+installCommand: "claude mcp add cheapcarent-search --transport http https://cheapcarent.com/mcp"
+usageSnippet: |-
+  claude mcp add cheapcarent-search --transport http https://cheapcarent.com/mcp
+configSnippet: |-
+  {
+    "mcpServers": {
+      "cheapcarent-search": {
+        "type": "http",
+        "url": "https://cheapcarent.com/mcp"
+      }
+    }
+  }
+seoTitle: CheapCarRent Search - MCP Servers for Claude
+seoDescription: Official hosted Streamable HTTP MCP server for car rental search. No account or API key. Read-only tools list_locations and search_cars.
+tags:
+  - travel
+  - car-rental
+  - search
+  - remote
+  - http
+safetyNotes:
+  - Connects over the network to cheapcarent.com. The listed tools are read-only search tools; they do not book or pay.
+privacyNotes:
+  - Search queries such as pickup location and dates are sent to CheapCarRent. No account or API key is required.
+---
+
+## Overview
+
+Official CheapCarRent MCP server for car rental search. It covers 15,000 pickup points in 46 countries and 19 languages. Transport is Streamable HTTP. No account or API key is required. Tools are read-only: `list_locations` and `search_cars`.
+
+Source: https://github.com/aleksandrjefimov4-crypto/cheapcarent-mcp (MIT). Docs: https://cheapcarent.com/developers. Official MCP Registry name: `com.cheapcarent/search`.
+
+## Usage
+
+```bash
+claude mcp add cheapcarent-search --transport http https://cheapcarent.com/mcp
+```
+
+## Auth Requirements
+
+No authentication. The server is read-only.
+
+## Verification
+
+The hosted endpoint is `https://cheapcarent.com/mcp` (Streamable HTTP, POST). Documentation is at https://cheapcarent.com/developers.
