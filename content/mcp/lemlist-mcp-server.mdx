@@ -1,0 +1,128 @@
+---
+title: lemlist MCP Server for Claude
+slug: lemlist-mcp-server
+category: mcp
+description: >-
+  Run multichannel sales outreach in lemlist from Claude: campaigns and their stats, email and
+  LinkedIn sequences, leads, the lemlist B2B people database, and sending-domain deliverability,
+  through the official hosted lemlist MCP server.
+cardDescription: "Official lemlist MCP: outreach campaigns, sequences, leads and stats from Claude."
+seoTitle: "lemlist MCP Server for Claude — Outreach Campaigns, Leads & Deliverability"
+seoDescription: "Connect Claude to lemlist with the official hosted MCP server: create email and LinkedIn campaigns, add and search leads, read campaign stats and check domain deliverability, via OAuth 2.1 or API key."
+author: lemlist
+authorProfileUrl: "https://github.com/l3mpire"
+submittedBy: micktaiwan
+submittedByUrl: "https://github.com/micktaiwan"
+dateAdded: "2026-11-19"
+repoUrl: "https://github.com/l3mpire/lemlist-plugin"
+documentationUrl: "https://help.lemlist.com/en/articles/13728466-set-up-the-lemlist-mcp-server-in-your-llm-client-oauth-or-api-key"
+websiteUrl: "https://www.lemlist.com"
+retrievalSources:
+  - "https://help.lemlist.com/en/articles/13728466-set-up-the-lemlist-mcp-server-in-your-llm-client-oauth-or-api-key"
+  - "https://github.com/l3mpire/lemlist-plugin"
+  - "https://registry.modelcontextprotocol.io/v0.1/servers?search=lemlist"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add --transport http lemlist https://app.lemlist.com/mcp"
+usageSnippet: >-
+  Ask Claude to list your lemlist campaigns and their reply rates, draft and create a new email
+  and LinkedIn campaign, add leads to it, or check the deliverability of a sending domain.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "lemlist": {
+        "type": "http",
+        "url": "https://app.lemlist.com/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "lemlist": {
+        "type": "http",
+        "url": "https://app.lemlist.com/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A lemlist account (the free trial works). Sign in with OAuth when your client opens the lemlist consent screen, or use an API key as described in the setup guide."
+  - "An MCP client that supports remote Streamable HTTP servers, such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "The server has write tools: it can create campaigns, add leads, and launch a campaign, which sends real emails and LinkedIn messages. Review each write before approving it."
+  - "People database searches and enrichment use your lemlist team's credits."
+  - "Access is limited to the lemlist team you pick on the OAuth consent screen and to that account's permissions."
+privacyNotes:
+  - "Campaign, lead and contact data from your lemlist team is returned into Claude's context."
+  - "The server is hosted by lemlist at app.lemlist.com; with OAuth no API key is stored in your MCP configuration."
+tags:
+  - lemlist
+  - sales
+  - outreach
+  - cold-email
+  - linkedin
+  - prospecting
+keywords:
+  - lemlist mcp server
+  - lemlist claude
+  - cold email mcp
+  - sales outreach mcp
+  - linkedin prospecting mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **lemlist MCP Server** is the official remote Model Context Protocol server from lemlist,
+the multichannel sales outreach platform. It is hosted by lemlist at `https://app.lemlist.com/mcp`
+(Streamable HTTP); there is nothing to build or run locally. It is published in the official MCP
+Registry as `io.github.l3mpire/lemlist`.
+
+## Key capabilities
+
+- **Campaigns**: list campaigns (`get_campaigns`), read their stats (`get_campaigns_stats`), create a
+  campaign with an email and LinkedIn sequence (`create_campaign_with_sequence`), and launch it
+  (`launch_campaign`).
+- **Leads**: add leads to a campaign (`add_leads_to_campaign`) and search the lemlist B2B people
+  database (`lemleads_search`).
+- **Deliverability**: check the health of a sending domain (`check_domain_health`).
+
+The [lemlist plugin repository](https://github.com/l3mpire/lemlist-plugin) also ships four workflow
+skills built on these tools: finding leads, launching a campaign, reporting on campaign stats, and a
+deliverability check.
+
+## Installation
+
+### Claude Code (OAuth)
+
+```bash
+claude mcp add --transport http lemlist https://app.lemlist.com/mcp
+```
+
+Run `/mcp` in Claude Code to sign in. The lemlist consent screen lets you pick the team to connect.
+
+### Claude Code plugin (server and skills)
+
+```bash
+/plugin marketplace add l3mpire/lemlist-plugin
+/plugin install lemlist@lemlist
+```
+
+### Claude Desktop and other clients
+
+Add a remote MCP server with the URL `https://app.lemlist.com/mcp`. To use an API key instead of
+OAuth, follow the [setup guide](https://help.lemlist.com/en/articles/13728466-set-up-the-lemlist-mcp-server-in-your-llm-client-oauth-or-api-key).
+
+## Source Verification Notes
+
+Verified on **2026-11-19**:
+
+- The setup guide on help.lemlist.com documents the hosted endpoint and both sign-in methods
+  (OAuth or API key).
+- `https://registry.modelcontextprotocol.io/v0.1/servers?search=lemlist` returns
+  `io.github.l3mpire/lemlist`.
+- The README of `l3mpire/lemlist-plugin` documents OAuth 2.1 with dynamic client registration and
+  PKCE, the install commands and the four skills.
