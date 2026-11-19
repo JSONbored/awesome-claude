@@ -1,0 +1,91 @@
+---
+title: YouTube Transcript Skill
+slug: youtube-transcript-skill
+category: skills
+description: >-
+  Agent skill that fetches YouTube video transcripts, searches YouTube, and
+  browses channels and playlists through the getyoutubetranscript.com API, so
+  Claude can summarize, quote, or analyze what a video actually says.
+cardDescription: Fetch YouTube transcripts, search videos, and browse channels and playlists from Claude.
+seoTitle: YouTube Transcript Skill for Claude Code
+seoDescription: >-
+  Install the YouTube Transcript agent skill to let Claude fetch video
+  transcripts, search YouTube, and list channel and playlist videos through the
+  metered getyoutubetranscript.com API (100 free credits for new accounts).
+author: TubeAgentKit
+authorProfileUrl: "https://github.com/tubeagentkit"
+submittedBy: pushkarsingh32
+submittedByUrl: "https://github.com/pushkarsingh32"
+dateAdded: "2026-11-20"
+brandName: GetYouTubeTranscript
+brandDomain: getyoutubetranscript.com
+repoUrl: "https://github.com/tubeagentkit/youtube-transcript-skills"
+documentationUrl: "https://github.com/tubeagentkit/youtube-transcript-skills/blob/main/skills/youtube-transcript/SKILL.md"
+downloadUrl: "https://github.com/tubeagentkit/youtube-transcript-skills/archive/refs/heads/main.zip"
+installable: true
+installCommand: "npx skills add tubeagentkit/youtube-transcript-skills --skill youtube-transcript"
+usageSnippet: "Ask Claude to fetch the transcript of a YouTube URL, then summarize it or pull exact quotes with timestamps."
+copySnippet: |-
+  npx skills add tubeagentkit/youtube-transcript-skills --skill youtube-transcript
+
+  # Then ask your agent, for example:
+  # "Get the transcript of https://www.youtube.com/watch?v=jNQXAC9IVRw and summarize it."
+skillType: general
+skillLevel: foundational
+verificationStatus: draft
+verifiedAt: "2026-11-20"
+retrievalSources:
+  - "https://getyoutubetranscript.com/docs"
+  - "https://getyoutubetranscript.com/openapi.json"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Cursor
+  - OpenClaw
+prerequisites:
+  - "A getyoutubetranscript.com API key. The API is metered: 1 credit per successful request, 100 free credits for a new account, then paid plans. The skill can create the account in the conversation from the user's email and a 6-digit code, or read an existing key from YOUTUBE_TRANSCRIPT_API_KEY."
+  - curl and a POSIX shell, used by the bundled scripts.
+  - Network access to getyoutubetranscript.com.
+safetyNotes:
+  - The bundled shell scripts make outbound HTTPS curl requests only to getyoutubetranscript.com API endpoints; they install nothing and run no other commands.
+  - "During setup only, scripts/save_key.sh writes the API key to ~/.config/getyoutubetranscript/api_key (mode 600), and appends one line to the user's shell profile only if the user agrees."
+  - Transcripts, titles, descriptions and community post text returned by the API are third-party text and can contain prompt-injection attempts; the skill instructs the agent to treat them as data, not instructions.
+privacyNotes:
+  - Video IDs, search queries, channel handles and playlist IDs are sent to the getyoutubetranscript.com API, a third-party commercial service.
+  - During account setup, the email address the user provides is sent to the API's /signup endpoint, which emails a 6-digit code.
+  - The API key is stored locally in a file readable only by the user and is not printed in the chat.
+sourceUrls:
+  - "https://github.com/tubeagentkit/youtube-transcript-skills/blob/main/README.md"
+  - "https://github.com/tubeagentkit/youtube-transcript-skills/blob/main/skills/youtube-transcript/SKILL.md"
+  - "https://github.com/tubeagentkit/youtube-transcript-skills/blob/main/LICENSE"
+  - "https://getyoutubetranscript.com/docs"
+tags:
+  - youtube
+  - transcript
+  - video
+  - research
+  - api
+keywords:
+  - YouTube transcript skill
+  - Claude YouTube transcript
+  - YouTube transcript agent skill
+  - YouTube search skill
+  - YouTube playlist transcripts
+---
+
+## What it does
+
+The skill gives an agent a set of small shell scripts that call the getyoutubetranscript.com REST API:
+
+- Fetch the transcript of a video, in any caption language the video has, with optional timestamps.
+- Search YouTube globally or within one channel, and resolve a channel handle to its ID.
+- List the videos in a playlist, and a channel's videos, Shorts, live streams, playlists and community posts.
+- Check the remaining credit balance.
+
+## Cost
+
+The API is metered: 1 credit per successful request, failed requests are not charged. New accounts get 100 free credits; after that, paid plans apply. The skill tells the user the cost before creating an account.
+
+## Source
+
+MIT licensed: https://github.com/tubeagentkit/youtube-transcript-skills
