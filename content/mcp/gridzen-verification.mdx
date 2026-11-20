@@ -1,0 +1,79 @@
+---
+title: GridZen Verification
+slug: gridzen-verification
+category: mcp
+description: >-
+  Read-only MCP tools for planning identity-verification coverage and
+  exercising sandbox decision results. Not live identity verification.
+cardDescription: >-
+  Connect an MCP client to GridZen's public Streamable HTTP endpoint to plan
+  identity-verification coverage and inspect sandbox decision results.
+seoTitle: GridZen Verification MCP Server
+seoDescription: >-
+  Configure GridZen Verification with the official remote Streamable HTTP
+  endpoint or the MIT Python kit. The tools are read-only research and sandbox
+  helpers, not live identity verification.
+author: GridZen
+authorProfileUrl: "https://gridzen.ai/developers/"
+submittedBy: immurray
+submittedByUrl: "https://github.com/immurray"
+dateAdded: "2026-11-20"
+brandName: GridZen
+brandDomain: gridzen.ai
+repoUrl: "https://github.com/immurray/gridzen-developer-kit"
+documentationUrl: "https://gridzen.ai/developers/"
+websiteUrl: "https://gridzen.ai/developers/"
+installable: true
+installCommand: "claude mcp add --transport http gridzen-verification https://gridzen.ai/developers/mcp"
+usageSnippet: >-
+  Add the public Streamable HTTP endpoint in an MCP client, then call
+  get_coverage, plan_verification, and the sandbox decision tools. Treat the
+  output as research and sandbox data, not as a live verification decision.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "gridzen-verification": {
+        "url": "https://gridzen.ai/developers/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "gridzen-verification": {
+        "url": "https://gridzen.ai/developers/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: beginner
+prerequisites:
+  - "An MCP client that supports Streamable HTTP, or Python 3 plus the MIT package gridzen-developer-kit."
+  - "No API key is required for the public remote endpoint."
+  - "Do not send production identity documents or live customer data."
+safetyNotes:
+  - "The remote endpoint is a public Streamable HTTP MCP server. Review the official docs before connecting a client."
+  - "The five tools are for coverage planning and sandbox decision results. They are not live identity verification and must not be used as a production approval decision."
+  - "The packaged kit is MIT-licensed source on GitHub and PyPI; review the repository before installing it locally."
+privacyNotes:
+  - "Tool arguments and results are sent to the public remote endpoint and will also appear in the MCP client context."
+  - "Do not submit real personal data, identity documents, or production case files."
+  - "No account signup is required for the public endpoint."
+tags:
+  - mcp
+  - identity-verification
+  - sandbox
+  - python
+---
+
+GridZen Verification is a read-only MCP server for planning identity-verification coverage and exercising sandbox decision results. It is not a live identity-verification service.
+
+Official docs: [https://gridzen.ai/developers/](https://gridzen.ai/developers/).
+
+Remote endpoint: `https://gridzen.ai/developers/mcp` (Streamable HTTP). Official registry name: `ai.gridzen/verification`. Kit: [immurray/gridzen-developer-kit](https://github.com/immurray/gridzen-developer-kit), also on PyPI as `gridzen-developer-kit`.
+
+Tools: `get_coverage`, `plan_verification`, `create_sandbox_verification`, `get_sandbox_verification`, `explain_result`.
+
+This entry is submitted by the project maintainer.
