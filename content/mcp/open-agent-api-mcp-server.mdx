@@ -1,0 +1,77 @@
+---
+title: Open Agent API MCP Server
+slug: open-agent-api-mcp-server
+category: mcp
+description: >-
+  Connect Claude Code to a self-hosted Open Agent API gateway over stdio to
+  inspect published agents and, with an authorized caller key, manage their runs.
+cardDescription: >-
+  Inspect published agents and run status through a local MCP bridge. Start with
+  a read-only gateway key.
+author: Open Agent API
+authorProfileUrl: "https://github.com/jiangxingfan1-coder"
+submittedBy: jiangxingfan1-coder
+submittedByUrl: "https://github.com/jiangxingfan1-coder"
+dateAdded: "2026-11-22"
+repoUrl: "https://github.com/jiangxingfan1-coder/Open-Agent-API"
+documentationUrl: "https://github.com/jiangxingfan1-coder/Open-Agent-API/blob/main/docs/quickstart.md"
+websiteUrl: "https://openagentapi.pages.dev/"
+installable: true
+installCommand: >-
+  claude mcp add --scope local --transport stdio open-agent-api -- oaa mcp
+  --url http://127.0.0.1:8787 --token-file /absolute/path/to/oaa-reader.key
+usageSnippet: >-
+  Run claude mcp list from the same project to check the local handshake
+  without sending a chat prompt.
+copySnippet: |-
+  {
+    "command": "oaa",
+    "args": ["mcp", "--url", "http://127.0.0.1:8787", "--token-file", "/absolute/path/to/oaa-reader.key"]
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "open-agent-api": {
+        "command": "oaa",
+        "args": ["mcp", "--url", "http://127.0.0.1:8787", "--token-file", "/absolute/path/to/oaa-reader.key"]
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - The Open Agent API CLI on PATH and a running gateway at the configured URL.
+  - A dedicated key file with the read scope and access only to the desired agents.
+  - Claude Code with local stdio MCP support.
+safetyNotes:
+  - Start with the read scope; broader permissions can submit or cancel work, upload data, or publish agents. Do not give the client an admin key.
+  - Tasks run with the published agent's tool permissions. Review those permissions and keep operator approvals at the gateway.
+privacyNotes:
+  - >-
+    The bridge reads the configured key file and forwards MCP tool arguments to
+    the configured gateway. It does not need the key value in MCP configuration.
+  - >-
+    Task input and output may be retained by the gateway and visible to the MCP
+    client. Use a local gateway for the offline sample and review retention before
+    sending private data or enabling remote model providers.
+tags:
+  - mcp
+  - coding-agents
+  - self-hosted
+---
+
+## Overview
+
+Open Agent API gives existing apps and SDK clients a callable API for agents you already run. The `oaa mcp` bridge is a local stdio process and does not turn the project's public website into a remote MCP endpoint.
+
+## Setup
+
+1. Install Open Agent API from its [source or a tagged release](https://github.com/jiangxingfan1-coder/Open-Agent-API/blob/main/docs/install.md). Run `oaa quickstart` to create a loopback gateway and publish the offline `agent/sample`.
+2. Have the gateway operator issue a scoped key using [the gateway's key endpoint](https://github.com/jiangxingfan1-coder/Open-Agent-API/blob/main/docs/deploy-public.md#7-distribute-caller-keys). For a first trial, use `{"name":"claude-reader","agents":["agent/sample"],"scopes":["read"]}` and save only the resulting caller key in a private file outside the project.
+3. Replace the example path in the install command and run it in the project that should use the bridge. This uses Claude Code's local scope. Check the connection with `claude mcp list`.
+
+## What To Expect
+
+`oaa_list_agents` can discover the offline sample with a reader key. `oaa_invoke` needs the separate `invoke` scope. Starting the bridge does not authorize execution or approval. The project also publishes its own [v0.0.64 MCPB bundle and checksums](https://github.com/jiangxingfan1-coder/Open-Agent-API/releases/tag/mcp-open-agent-api-v0.0.64); this entry does not request a HeyClaude download mirror.
+
+The registration was tested with Claude Code 2.1.330 and Open Agent API v0.0.64 on macOS arm64. The configured bridge connected; a missing key file did not. These connection checks sent no chat prompt and created no additional gateway runs.
