@@ -1,0 +1,192 @@
+---
+title: JustFill PDF Forms MCP Server
+slug: justfill-mcp
+category: mcp
+description: >-
+  Hosted Streamable HTTP and MIT-licensed local stdio MCP server for detecting,
+  visually previewing, and filling existing AcroForm, flat, or scanned PDF
+  forms without rebuilding layouts, then saving reviewed layouts as reusable
+  templates.
+cardDescription: >-
+  Detect, visually preview, and fill existing AcroForm, flat, or scanned PDF
+  forms and save reusable templates via MCP.
+seoTitle: JustFill PDF Forms MCP Server for Claude
+seoDescription: >-
+  Connect Claude to JustFill's Streamable HTTP MCP server or MIT Python client
+  to detect, preview, and fill existing PDF forms without rebuilding layouts.
+author: JustFill
+authorProfileUrl: "https://github.com/mrmaciej1"
+submittedBy: mrmaciej1
+submittedByUrl: "https://github.com/mrmaciej1"
+dateAdded: "2026-11-21"
+brandName: JustFill
+brandDomain: justfill.app
+repoUrl: "https://github.com/mrmaciej1/justfill-mcp"
+documentationUrl: "https://justfill.app/mcp"
+websiteUrl: "https://justfill.app"
+retrievalSources:
+  - "https://github.com/mrmaciej1/justfill-mcp"
+  - "https://justfill.app/mcp"
+  - "https://justfill.app/.well-known/mcp.json"
+  - "https://pypi.org/project/justfill-mcp/"
+  - "https://glama.ai/mcp/servers/mrmaciej1/justfill-mcp"
+installable: true
+installCommand: "claude mcp add --transport http justfill https://justfill.app/api/mcp"
+usageSnippet: >-
+  Ask Claude to open a blank PDF form, render a visual preview of detected
+  fields, preview fictional or approved values in place, generate the filled
+  PDF, and save the reviewed layout as a reusable template.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "justfill": {
+        "url": "https://justfill.app/api/mcp",
+        "type": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "justfill": {
+        "url": "https://justfill.app/api/mcp",
+        "type": "http"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "An MCP client supporting remote Streamable HTTP with OAuth 2.1 (Claude Code, Claude Desktop, Cursor) or uv/Python 3.10+ for the local MIT stdio client (`uvx justfill-mcp`)."
+  - "A JustFill account at justfill.app (free tier includes previewing fields and testing watermarked output; paid passes and plans remove watermarks)."
+  - "A blank or authorized AcroForm, flat, or scanned PDF form to inspect and fill."
+safetyNotes:
+  - "ML field detection on unfamiliar flat or scanned PDFs is probabilistic; use `render_preview` and `render_filled_preview` to verify box placement and overflow warnings before exporting or saving a template."
+  - "Saved templates and native AcroForm fields resolve deterministically once reviewed."
+  - "JustFill prepares filled PDFs from supplied values; it does not electronically submit government or tax filings and is not designed for HIPAA/PHI clinical records."
+  - "The MIT-licensed local stdio client (`justfill-mcp`) writes output PDFs to the destination path specified in `fill_pdf`; review tool parameters before approving writes."
+privacyNotes:
+  - "Uploaded PDFs, scanned form images, and field values are sent to JustFill's hosted API (`justfill.app`) for field detection, preview rendering, and PDF filling under https://justfill.app/privacy."
+  - "Do not send HIPAA/PHI medical records or secrets unrelated to the form; test unfamiliar workflows first with blank sample forms and fictional values."
+  - "Hosted connections use OAuth 2.1 (PKCE + Dynamic Client Registration) or revocable `JUSTFILL_API_KEY` tokens; access can be revoked anytime in Account -> API Keys."
+  - "Your MCP client's local conversation history may retain field values and generated links outside JustFill's retention controls."
+tags:
+  - mcp
+  - pdf
+  - forms
+  - document-automation
+  - streamable-http
+  - oauth
+  - templates
+keywords:
+  - justfill mcp
+  - pdf form filling mcp
+  - fillable pdf mcp server
+  - scanned pdf form automation
+  - claude pdf form filler
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+**JustFill** ([justfill.app](https://justfill.app)) provides an official MCP
+server for completing **existing** PDF forms without recreating or reflowing
+their layout. Instead of converting a PDF to HTML or Word, it resolves form
+fields in priority order:
+
+1. **Saved template (confidence 1.0)** — exact geometry from a previously reviewed layout.
+2. **Native AcroForm (confidence 1.0)** — embedded PDF form fields read and filled natively.
+3. **Vision ML detection (calibrated 0.0–0.95)** — detects text lines, checkboxes, and character comb boxes on flat PDFs and scans (`jpg`/`png`/`tiff`).
+
+The workflow is designed for visual verification: agents inspect labeled field
+boxes (`render_preview`), refine detections (`add_field`, `update_field`,
+`prune_fields`), preview populated values (`render_filled_preview`), fill the
+original document (`fill_pdf`), and lock the layout (`save_template`) so
+subsequent fills are deterministic.
+
+Published in the Official MCP Registry as
+**`io.github.mrmaciej1/justfill-pdf-forms`** with both a hosted Streamable HTTP
+endpoint and an MIT-licensed Python package (`justfill-mcp` on PyPI).
+
+## Key Tools
+
+- `open_pdf(path, min_confidence=0.0, max_pages=10, force_detect=False)` — opens an AcroForm, flat PDF, or scanned image using template -> AcroForm -> ML resolution.
+- `render_preview(page_index)` — renders a page image with color-coded labeled field boxes.
+- `render_filled_preview(values, page_index)` — previews values drawn in place without consuming a fill.
+- `list_fields(page_index?)` — lists detected or native fields with geometry and confidence scores.
+- `add_field` / `update_field` / `remove_field` / `prune_fields` — adjust or batch-clean detected fields before filling.
+- `fill_pdf(values, output_path, flatten=True)` — fills the original PDF layout and returns overflow warnings.
+- `save_template(name)` / `list_templates()` — store and reuse reviewed layouts deterministically.
+
+## Installation
+
+### Hosted Streamable HTTP (OAuth 2.1 — no local install)
+
+Add the remote server in Claude Code:
+
+```bash
+claude mcp add --transport http justfill https://justfill.app/api/mcp
+```
+
+In Claude Desktop or claude.ai, add `https://justfill.app/api/mcp` as a custom
+remote MCP connector and approve the OAuth 2.1 prompt.
+
+JSON config for Streamable HTTP MCP clients:
+
+```json
+{
+  "mcpServers": {
+    "justfill": {
+      "url": "https://justfill.app/api/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+### Local MIT stdio client (`uvx`)
+
+For clients that run local stdio MCP servers, use the published PyPI package:
+
+```json
+{
+  "mcpServers": {
+    "justfill": {
+      "command": "uvx",
+      "args": ["justfill-mcp"]
+    }
+  }
+}
+```
+
+Authenticate once with `justfill-mcp login` or pass `JUSTFILL_API_KEY` in the
+server `env` block.
+
+## Example Flow
+
+```text
+Use JustFill to open https://justfill.app/examples/chatgpt/project-intake.pdf.
+List its fields and show a preview before filling anything.
+```
+
+Once the fields look accurate, ask Claude to render a filled preview with your
+data, verify there are no overflow warnings, generate the final PDF, and save
+the layout as a template for future reuse.
+
+## Source Verification Notes
+
+Verified on **2026-11-21**:
+
+- Hosted Streamable HTTP endpoint `https://justfill.app/api/mcp` returns HTTP 401 with `WWW-Authenticate` pointing to `https://justfill.app/.well-known/oauth-protected-resource/api/mcp`, and OAuth 2.1 PKCE + DCR metadata is served at `https://justfill.app/.well-known/oauth-authorization-server`.
+- Public discovery manifests `https://justfill.app/.well-known/mcp.json` and `https://justfill.app/.well-known/glama.json` return HTTP 200.
+- Documentation page `https://justfill.app/mcp` and MIT repository `https://github.com/mrmaciej1/justfill-mcp` return HTTP 200.
+- Official MCP Registry lists `io.github.mrmaciej1/justfill-pdf-forms`, PyPI serves `justfill-mcp` (`v0.4.10`), and Glama lists `mrmaciej1/justfill-mcp` (`A` quality rating, maintainer-claimed).
+
+## Duplicate Check
+
+Searched `content/mcp/` and repository issues/PRs for `justfill` — no existing entry or open submission found.
+
+## Editorial Disclosure
+
+Submitted by **mrmaciej1**, the creator and maintainer of JustFill (`justfill.app`) and `mrmaciej1/justfill-mcp`.
