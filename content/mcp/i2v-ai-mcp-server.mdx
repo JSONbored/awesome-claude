@@ -1,0 +1,185 @@
+---
+title: i2v.ai MCP Server for Claude
+slug: i2v-ai-mcp-server
+category: mcp
+description: >-
+  Connect Claude to i2v.ai's official image and video generation API: 12 image models
+  and 16 video models behind one endpoint, with a USD quote before every paid task and
+  an optional per-task spending cap so an agent can price a job before it runs.
+cardDescription: >-
+  Official i2v.ai MCP for image and video generation, with a USD quote before each paid task.
+seoTitle: "i2v.ai MCP Server for Claude — Image and Video Generation"
+seoDescription: >-
+  Connect Claude to the official i2v.ai MCP server for text-to-image, text-to-video and
+  image-to-video generation across 28 models. Every paid task returns a USD quote first and
+  accepts a maxCostUsd ceiling. Hosted endpoint with OAuth 2.1, or a local stdio server via npm.
+author: i2v.ai
+authorProfileUrl: "https://github.com/i2v-ai"
+submittedBy: someone1128
+submittedByUrl: "https://github.com/someone1128"
+dateAdded: "2026-11-22"
+brandName: i2v.ai
+brandDomain: i2v.ai
+websiteUrl: "https://i2v.ai"
+repoUrl: "https://github.com/i2v-ai/i2v-mcp"
+documentationUrl: "https://i2v.ai/docs/mcp"
+pricingModel: usage-based
+disclosure: editorial
+installable: true
+installCommand: 'claude mcp add --transport http "i2v" https://i2v.ai/api/mcp'
+usageSnippet: >-
+  Ask Claude to list the available i2v.ai models, quote the USD cost of a five-second
+  image-to-video task, then submit it with a maxCostUsd ceiling and check its status.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "i2v": {
+        "type": "http",
+        "url": "https://i2v.ai/api/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "i2v-local": {
+        "command": "npx",
+        "args": ["-y", "@i2v-ai/cli", "mcp"],
+        "env": {
+          "I2V_API_KEY": "${I2V_API_KEY}"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+difficultyScore: 15
+readingTime: 4
+retrievalSources:
+  - "https://raw.githubusercontent.com/i2v-ai/i2v-mcp/main/README.md"
+  - "https://i2v.ai/docs/mcp"
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://github.com/i2v-ai/i2v-mcp"
+prerequisites:
+  - An i2v.ai account, plus either the OAuth authorization prompt or an API key created at https://i2v.ai/me?section=api-keys.
+  - A positive USD balance for generation tasks; listing models, reading parameters and quoting prices are free.
+  - A remote MCP client with Streamable HTTP support for the hosted endpoint, or Node.js 20 or newer with npx for the local stdio server.
+safetyNotes:
+  - >-
+    create_task and prepare_generation spend real money from the account's USD balance.
+    They are the only operations in this server that do.
+  - >-
+    Send maxCostUsd with every task. The server rejects a task whose quote exceeds the
+    ceiling before any balance is frozen, which is the guard against a surprising model price.
+  - >-
+    create_upload_url and complete_upload write files into the account's private object
+    storage, which consumes storage quota even if no task is ever submitted.
+  - >-
+    Grant mcp:read alone when the assistant only needs the catalogue and prices; mcp:write
+    covers uploads and task submission and implies mcp:read.
+privacyNotes:
+  - >-
+    Prompts, task parameters, uploaded reference media and generated results are stored on
+    the submitting account and served through signed URLs.
+  - >-
+    The hosted endpoint logs request metadata but not OAuth tokens or API keys. Access
+    tokens last one hour; refresh tokens last 30 days and rotate on each refresh.
+tags:
+  - video
+  - image
+  - media
+  - generation
+  - mcp
+  - oauth
+keywords:
+  - i2v.ai MCP Server
+  - i2v.ai Claude MCP
+  - Claude image generation MCP
+  - Claude video generation MCP
+  - i2v.ai API key
+  - maxCostUsd
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+i2v.ai runs one API for both image and video generation: 12 image models and 16 video models behind the same request shape, covering text-to-image, text-to-video and image-to-video. The official MCP server exposes that API to Claude so a conversation can list what is available, get the parameters for one model, quote the price of a specific job in USD, then submit and poll the task.
+
+The distinguishing behaviour is that pricing comes first. `estimate_cost` returns the USD price for a concrete task, and `create_task` accepts a `maxCostUsd` ceiling that the server enforces before any balance is frozen. A generation run that would cost more than the ceiling is rejected up front instead of being charged.
+
+## Features
+
+- `list_models` enumerates the currently available image and video models with their capabilities.
+- `get_model_params` returns the accepted parameters, defaults, and constraints for one model.
+- `estimate_cost` quotes a concrete task in USD without spending anything.
+- `create_task` submits a generation task and honours a caller-set `maxCostUsd` ceiling.
+- `get_task` polls status and returns the resulting asset URLs once a task finishes.
+- `list_prices`, `get_account` and `get_usage` report the catalogue, balance and consumption.
+- `create_upload_url` and `complete_upload` stage your own reference media for image-to-video.
+- `search_docs` reads the i2v.ai documentation from inside the session.
+
+## Use Cases
+
+- Price a video concept before committing to it: quote three models, pick one, then submit with a ceiling.
+- Generate a product still and animate it through an image-to-video model in the same conversation.
+- Batch several short clips while holding each task to a fixed USD maximum.
+- Let an agent decide to decline a job when the quote exceeds the budget it was given.
+
+## Installation
+
+### Claude Code (hosted endpoint)
+
+```bash
+claude mcp add --transport http "i2v" https://i2v.ai/api/mcp
+```
+
+Claude Code performs the OAuth 2.1 authorization-code flow with PKCE and dynamic client registration on first use. The requested scopes are `mcp:read` for reads and quotes, and `mcp:write` for uploads and task submission.
+
+### Claude Desktop (hosted endpoint)
+
+Add the HTTP server to your MCP configuration:
+
+```json
+{
+  "mcpServers": {
+    "i2v": {
+      "type": "http",
+      "url": "https://i2v.ai/api/mcp"
+    }
+  }
+}
+```
+
+### Local stdio server
+
+The same tools also run locally over stdio, which is useful when the client cannot do remote OAuth or when you would rather authenticate with an API key:
+
+```bash
+claude mcp add i2v-local -- npx -y @i2v-ai/cli mcp
+```
+
+Set `I2V_API_KEY` in the environment that starts the server. Without a valid key the server answers the MCP `initialize` request with an `unauthorized` error, which is the expected behaviour rather than a crash.
+
+## Requirements
+
+- An i2v.ai account. Keys are created at https://i2v.ai/me?section=api-keys.
+- A positive USD balance for generation. Reads, model metadata and quotes are free.
+- A client with Streamable HTTP support for the hosted endpoint, or Node.js 20+ for the stdio package.
+
+## Security
+
+- Generation spends balance. Send `maxCostUsd` with every `create_task` call and treat the quote as advisory until the task is submitted.
+- Consent to the smallest scope you need: an agent that only explores the catalogue needs just `mcp:read`.
+- Prefer the API key route with a per-key USD limit and, optionally, an IP allowlist when the client cannot manage OAuth tokens.
+- Uploaded files land in private object storage and are served through signed URLs.
+
+## Source Verification Notes
+
+Verified on **2026-11-22**:
+
+- Official repository `i2v-ai/i2v-mcp` (MIT) documents the hosted endpoint at `https://i2v.ai/api/mcp`, the stdio command `npx -y @i2v-ai/cli mcp`, the OAuth 2.1 scopes, and the `maxCostUsd` ceiling.
+- `https://i2v.ai/docs/mcp` (HTTP 200) covers installation for Claude Code, Claude Desktop, Cursor and Codex.
+- An unauthenticated `POST` to the endpoint returns `401` with a `WWW-Authenticate` header pointing at the OAuth resource metadata, so the URL is reachable without an account.
+- The same server is published in the official MCP registry as `io.github.i2v-ai/mcp` version 1.1.1, with a `streamable-http` remote at `https://i2v.ai/api/mcp`.
+- Claude Code's MCP documentation at `code.claude.com/docs/en/mcp` describes the `claude mcp add --transport http` form used above.
