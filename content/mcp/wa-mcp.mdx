@@ -1,0 +1,67 @@
+---
+title: WA MCP
+slug: wa-mcp
+category: mcp
+description: Search messages and voice note transcripts from a linked WhatsApp account through a local bridge.
+cardDescription: Find a message or a transcribed voice note in WhatsApp history from Claude.
+seoTitle: WA MCP for WhatsApp message and transcript search
+seoDescription: Connect Claude to a local WhatsApp bridge to search synced chat history and transcribed voice notes. Message sending is off by default.
+author: tsahospital-beep
+authorProfileUrl: https://github.com/tsahospital-beep
+submittedBy: tsahospital-beep
+submittedByUrl: https://github.com/tsahospital-beep
+dateAdded: "2026-11-23"
+repoUrl: https://github.com/tsahospital-beep/wa-mcp
+documentationUrl: https://github.com/tsahospital-beep/wa-mcp/blob/main/docs/getting-started.md
+installable: true
+installCommand: pipx install wa-mcp-server
+usageSnippet: Ask Claude to run bridge_status, then search for a phrase from a synced chat.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "wa-mcp": {
+        "command": "wa-mcp",
+        "args": ["--config", "CONFIG_FILE"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "wa-mcp": {
+        "command": "wa-mcp",
+        "args": ["--config", "CONFIG_FILE"]
+      }
+    }
+  }
+prerequisites:
+  - A WhatsApp account on a phone that can link a device.
+  - Go 1.26 or newer for the native bridge, plus pipx and Python 3.11 or newer for this client configuration.
+safetyNotes:
+  - The bridge connects to WhatsApp as a linked device. Sending is off by default. Enabling it allows tools to send messages or files from the account.
+privacyNotes:
+  - The bridge stores synced chats locally. Search results expose matching messages and transcripts to the connected MCP client.
+  - Transcription runs locally by default. Selecting a remote transcription endpoint sends audio to that endpoint.
+sourceUrls:
+  - https://github.com/tsahospital-beep/wa-mcp
+  - https://github.com/tsahospital-beep/wa-mcp/blob/main/docs/guides/transcription.md
+  - https://github.com/tsahospital-beep/wa-mcp/blob/main/docs/security.md
+tags:
+  - whatsapp
+  - messaging
+  - transcription
+---
+
+## Setup
+
+Install the PyPI package using the install command above. Add the SDK extras for the encrypted store and file extraction.
+
+```sh
+pipx inject --force wa-mcp-server 'wa-mcp-sdk[encryption,files]'
+```
+
+Build and start the Go bridge, then scan its QR code under **Linked devices** on your phone. Keep the bridge running while messages sync. Replace `CONFIG_FILE` in the Claude Desktop configuration with the absolute path to the bridge's `config.json`, then restart the client. [Bridge setup](https://github.com/tsahospital-beep/wa-mcp/blob/main/docs/getting-started.md)
+
+## Verification
+
+Run `bridge_status` to check that the bridge is logged in and the message store is available. Search for a phrase from a synced message. To search speech from voice notes, configure a transcription backend and transcribe the clips first. [Voice transcription](https://github.com/tsahospital-beep/wa-mcp/blob/main/docs/guides/transcription.md)
