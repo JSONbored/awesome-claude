@@ -1,0 +1,171 @@
+---
+title: Levea MCP Server
+slug: levea-mcp-server
+category: mcp
+description: "Open-source Model Context Protocol server (stdio npm package and OAuth 2.1 Streamable HTTP endpoint) connecting Claude to the Levea AI video editor with 37 tools, 189+ canonical NLE actions, 280+ animated caption templates, 9:16 active-speaker reframe, silence removal, B-roll, motion graphics, audio ducking, and cloud MP4 export."
+cardDescription: Connect Claude to Levea for natural-language and deterministic NLE video editing, captions, reframe, and MP4 export.
+seoTitle: Levea MCP Server for Claude
+seoDescription: >-
+  Configure Levea MCP Server with Claude Code or Claude Desktop via stdio or
+  Streamable HTTP to edit videos, add 280+ animated captions, reframe 9:16
+  active speakers, remove silences, inspect rendered GPU preview frames, and
+  export cloud MP4s.
+author: brajendrak00068
+authorProfileUrl: "https://github.com/brajendrak00068"
+submittedBy: brajendrak00068
+submittedByUrl: "https://github.com/brajendrak00068"
+dateAdded: "2026-11-26"
+brandName: Levea
+brandDomain: github.com/brajendrak00068/agentic-ai-video-production
+websiteUrl: "https://github.com/brajendrak00068/agentic-ai-video-production"
+repoUrl: "https://github.com/brajendrak00068/agentic-ai-video-production"
+documentationUrl: "https://github.com/brajendrak00068/agentic-ai-video-production/blob/main/mcp-server/README.md"
+installable: true
+installCommand: "npx -y levea-mcp-server"
+usageSnippet: "Configure the stdio server with LEVEA_API_KEY or connect via Streamable HTTP OAuth 2.1, then ask Claude to inspect a project, preview frames, or run video edits."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "levea": {
+        "command": "npx",
+        "args": ["-y", "levea-mcp-server"],
+        "env": {
+          "LEVEA_API_URL": "https://api.livecore.ai",
+          "LEVEA_API_KEY": "<your-levea-api-key>"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "levea": {
+        "command": "npx",
+        "args": ["-y", "levea-mcp-server"],
+        "env": {
+          "LEVEA_API_URL": "https://api.livecore.ai",
+          "LEVEA_API_KEY": "<your-levea-api-key>"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 3 minutes
+difficulty: beginner
+prerequisites:
+  - Node.js 18 or newer when running the local stdio package via npx.
+  - Claude Code or Claude Desktop with Model Context Protocol support.
+  - A Levea API key for stdio mode or OAuth 2.1 authorization when connecting to the hosted Streamable HTTP endpoint.
+  - Approved source media URLs or uploaded project assets before running mutating timeline or export actions.
+safetyNotes:
+  - Mutating tools such as autonomous_edit, execute_action, execute_batch, update_layer, delete_layer, and trim_layer modify cloud video project timelines and can trigger asynchronous cloud MP4 render jobs.
+  - Use requirePlanApproval or Mode B read tools (list_layers, query_transcript, render_preview) before executing destructive timeline edits or final exports.
+  - Cloud rendering and generative media actions (voiceover, music, B-roll, SFX) consume account compute quotas on the configured Levea backend.
+privacyNotes:
+  - Prompts, source media URLs, transcripts, brand kit settings, and timeline parameters are transmitted over HTTPS to the configured LEVEA_API_URL (default https://api.livecore.ai) to perform cloud video editing and rendering.
+  - The stdio client does not read arbitrary local files; local media must be explicitly uploaded through signed URLs returned by asset_upload_url.
+  - Set LEVEA_TELEMETRY=off in the MCP server environment if you want to disable anonymous tool-invocation telemetry pings.
+  - Keep LEVEA_API_KEY out of committed configuration files, public repositories, and shared logs.
+sourceUrls:
+  - "https://github.com/brajendrak00068/agentic-ai-video-production"
+  - "https://github.com/brajendrak00068/agentic-ai-video-production/blob/main/mcp-server/README.md"
+  - "https://github.com/brajendrak00068/agentic-ai-video-production/blob/main/mcp-server/package.json"
+  - "https://github.com/brajendrak00068/agentic-ai-video-production/blob/main/mcp-server/server.json"
+  - "https://github.com/brajendrak00068/agentic-ai-video-production/blob/main/mcp-server/src/server.ts"
+  - "https://github.com/brajendrak00068/agentic-ai-video-production/blob/main/mcp-server/src/client.ts"
+  - "https://github.com/brajendrak00068/agentic-ai-video-production/blob/main/LICENSE"
+tags:
+  - video-editing
+  - video
+  - captions
+  - media
+  - content-creation
+keywords:
+  - Levea MCP Server
+  - levea-mcp-server
+  - AI video editor MCP
+  - Claude video editing MCP
+  - animated captions MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Levea MCP Server (`levea-mcp-server`) is an open-source Model Context Protocol
+adapter that connects Claude Code, Claude Desktop, and other MCP clients to the
+Levea cloud video editing engine. It supports both high-level goal delegation
+(`autonomous_edit`) and direct deterministic NLE tool control (`search_tools`,
+`get_action_schema`, `execute_action`, `execute_batch`, `render_preview`,
+`search_skills`, `load_skill`) across 37 MCP tools and 189+ canonical video
+editing actions.
+
+## Source Review
+
+- https://github.com/brajendrak00068/agentic-ai-video-production
+- https://github.com/brajendrak00068/agentic-ai-video-production/blob/main/mcp-server/README.md
+- https://github.com/brajendrak00068/agentic-ai-video-production/blob/main/mcp-server/package.json
+- https://github.com/brajendrak00068/agentic-ai-video-production/blob/main/mcp-server/server.json
+- https://github.com/brajendrak00068/agentic-ai-video-production/blob/main/mcp-server/src/server.ts
+- https://github.com/brajendrak00068/agentic-ai-video-production/blob/main/mcp-server/src/client.ts
+- https://github.com/brajendrak00068/agentic-ai-video-production/blob/main/LICENSE
+
+These sources were reviewed on **2026-11-26**.
+
+## Features
+
+- 37 annotated MCP tools covering both autonomous goal delegation and direct deterministic timeline editing.
+- Mode A goal delegation (`autonomous_edit`, `autonomous_edit_streaming`, `queue_edit`) with optional `requirePlanApproval` before mutating a project.
+- Mode B direct canonical control (`search_tools`, `get_action_schema`, `execute_action`, `execute_batch`, `render_preview`) unlocking 189+ NLE actions and 13 read/measurement tools.
+- 280+ word-by-word animated caption templates (`list_caption_templates`, `apply_caption_template`), 9:16 active-speaker reframing, silence removal, B-roll, motion graphics, audio cleanup, and auto-ducking.
+- Real GPU-composited JPEG frame inspection via `render_preview` so Claude can visually verify titles, captions, and layout before exporting MP4.
+- Supports both local stdio (`npx -y levea-mcp-server`) and hosted Streamable HTTP with OAuth 2.1 + PKCE (`https://api.livecore.ai/api/v1/misc/mcp`).
+- MIT license.
+
+## Installation
+
+Add the stdio server in Claude Code or Claude Desktop:
+
+```json
+{
+  "mcpServers": {
+    "levea": {
+      "command": "npx",
+      "args": ["-y", "levea-mcp-server"],
+      "env": {
+        "LEVEA_API_URL": "https://api.livecore.ai",
+        "LEVEA_API_KEY": "<your-levea-api-key>"
+      }
+    }
+  }
+}
+```
+
+Or connect via Streamable HTTP in Claude Code:
+
+```sh
+claude mcp add --transport http levea https://api.livecore.ai/api/v1/misc/mcp
+```
+
+## Use Cases
+
+- Turn long-form podcasts, interviews, or demos into vertical 9:16 Shorts, Reels, and TikTok clips with active-speaker reframing and animated captions.
+- Inspect project timelines and transcripts with `list_layers` and `query_transcript`, apply surgical cuts or color grades with `execute_batch`, and verify rendered frames with `render_preview`.
+- Maintain reusable brand kits (`create_brand_kit`, `list_brand_kits`) and custom caption templates across recurring video series.
+
+## Safety and Privacy
+
+Levea MCP Server delegates video processing and rendering to the configured
+`LEVEA_API_URL` cloud service. Mutating calls alter remote project timelines and
+can start asynchronous MP4 export jobs that consume account render quota. Use
+`requirePlanApproval: true` or read-only inspection tools (`list_layers`,
+`render_preview`) before committing destructive edits.
+
+Prompts, media URLs, transcripts, and brand assets passed to tool calls are sent
+over HTTPS to the remote API. The local stdio package does not scan local disks
+or execute shell commands. Keep `LEVEA_API_KEY` stored in environment variables
+and set `LEVEA_TELEMETRY=off` if you wish to disable anonymous usage pings.
+
+## Duplicate Check
+
+No `levea-mcp-server` or `brajendrak00068/agentic-ai-video-production` entry
+exists in `content/mcp`, `content/skills`, `content/agents`, or `content/tools`.
