@@ -1,14 +1,15 @@
 ---
-title: Taplio MCP Server for Claude
+title: Taplio for LinkedIn MCP Server for Claude
 slug: taplio-mcp-server
 category: mcp
 description: >-
-  Draft, schedule, publish and analyze LinkedIn posts from Claude, search inspiration, find posts
+  Search Taplio's lead database for prospects, draft, schedule, publish and analyze LinkedIn posts
+  from Claude, search inspiration, find posts
   and comments worth engaging with, draft comments and replies, like posts and send connection
   requests, through the official hosted Taplio MCP server.
-cardDescription: "Official Taplio MCP: write, schedule, publish and analyze LinkedIn posts from Claude."
-seoTitle: "Taplio MCP Server for Claude: LinkedIn Posts, Analytics and Engagement"
-seoDescription: "Connect Claude to LinkedIn with Taplio's official hosted MCP server: draft, schedule and publish posts, read analytics and engage with posts, via OAuth 2.1."
+cardDescription: "Official Taplio for LinkedIn MCP: find leads, write, schedule, publish and analyze LinkedIn posts from Claude."
+seoTitle: "Taplio for LinkedIn MCP Server for Claude: Leads, Posts, Analytics and Engagement"
+seoDescription: "Connect Claude to LinkedIn with Taplio's official hosted MCP server: find leads, draft, schedule and publish posts, read analytics and engage with posts, via OAuth 2.1."
 author: Taplio
 authorProfileUrl: "https://github.com/TaplioOfficial"
 submittedBy: porenes
@@ -80,14 +81,14 @@ robotsFollow: true
 
 ## Overview
 
-The **Taplio MCP Server** is the official remote Model Context Protocol server from Taplio, the
+The **Taplio for LinkedIn MCP Server** is the official remote Model Context Protocol server from Taplio, the
 LinkedIn growth tool. It is hosted by Taplio at `https://mcp.taplio.com/` (Streamable HTTP, OAuth 2.1
 with PKCE and dynamic client registration); there is nothing to build or run locally. It is
 published in the official MCP Registry as `io.github.TaplioOfficial/taplio-linkedin-mcp`.
 
 ## Key capabilities
 
-The server exposes 37 tools, all scoped to the authenticated user's own Taplio and LinkedIn account:
+The server exposes 38 tools, all scoped to the authenticated user's own Taplio and LinkedIn account:
 
 - **Account and analytics**: identity and content preferences (`get_me`), your posts (`list_posts`,
   `get_post`), account analytics (`get_analytics_overview`) and per-post analytics
@@ -100,7 +101,9 @@ The server exposes 37 tools, all scoped to the authenticated user's own Taplio a
 - **Engage**: find posts worth commenting on (`find_posts_to_comment`) and comments that deserve a
   reply (`find_comments_to_reply`), draft comments and replies, queue them
   (`commit_comment_draft`), and queue likes (`like_post`).
-- **Network**: queue connection requests (`send_connection_request`) and follow their status.
+- **Network**: search Taplio's lead database for prospects by role, seniority, department, industry,
+  country and company (`search_leads`, Pro plan), queue connection requests (`send_connection_request`)
+  and follow their status.
 
 The [tool reference](https://github.com/TaplioOfficial/taplio-linkedin-mcp/blob/main/docs/tools.md)
 classifies every tool as read, write or sensitive write, and lists rate limits and plan
@@ -154,7 +157,7 @@ for VS Code, Cursor, Windsurf and others.
 Verified on **2026-11-25**:
 
 - The README of `TaplioOfficial/taplio-linkedin-mcp` documents the hosted endpoint, the OAuth
-  sign-in, per-client setup and the 37 tools.
+  sign-in, per-client setup and the 38 tools.
 - `docs/tools.md` in the same repository classifies each tool and lists plans and limits.
 - `https://registry.modelcontextprotocol.io/v0.1/servers?search=taplio` returns
   `io.github.TaplioOfficial/taplio-linkedin-mcp` with the `https://mcp.taplio.com/` Streamable
