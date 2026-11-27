@@ -1,0 +1,135 @@
+---
+title: NHTSA Vehicle Recalls & VIN Decoder MCP
+slug: nhtsa-vehicle-recalls-vin-mcp
+category: mcp
+description: >-
+  Free, keyless hosted Streamable HTTP MCP server backed by official US NHTSA
+  datasets: decode 17-character VINs via vPIC, look up open vehicle safety
+  recalls (including Park-It and Park-Outside alerts), consumer safety
+  complaints, and 5-Star NCAP crash ratings.
+cardDescription: >-
+  Decode 17-character VINs, check open NHTSA recalls, consumer complaints, and
+  5-Star NCAP crash ratings via keyless Streamable HTTP MCP.
+seoTitle: NHTSA Vehicle Recalls & VIN Decoder MCP Server for Claude
+seoDescription: >-
+  Connect Claude to the hosted NHTSA Vehicle Recalls & VIN Decoder MCP server
+  for vPIC VIN decoding, open safety recalls, consumer complaints, and 5-Star
+  NCAP ratings with no API key.
+author: theluckystrike
+authorProfileUrl: "https://github.com/theluckystrike"
+submittedBy: theluckystrike
+submittedByUrl: "https://github.com/theluckystrike"
+dateAdded: "2026-11-27"
+brandName: McpStamp
+brandDomain: mcpstamp.com
+websiteUrl: "https://www.mcpstamp.com/free-servers/nhtsa-vehicle-recalls-vin-mcp/"
+repoUrl: "https://github.com/theluckystrike/nhtsa-vehicle-recalls-vin-mcp"
+documentationUrl: "https://www.mcpstamp.com/free-servers/nhtsa-vehicle-recalls-vin-mcp/"
+installable: true
+installCommand: "claude mcp add --transport http nhtsa-recalls https://nhtsa-vehicle-recalls-vin-mcp.lipmichal.workers.dev/mcp"
+usageSnippet: >-
+  Ask Claude to decode a 17-character VIN, check open NHTSA safety recalls and
+  Park-It/Park-Outside notices, review consumer complaints, or compare 5-Star
+  NCAP crash ratings for a vehicle.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "nhtsa-recalls": {
+        "type": "http",
+        "url": "https://nhtsa-vehicle-recalls-vin-mcp.lipmichal.workers.dev/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "nhtsa-recalls": {
+        "type": "http",
+        "url": "https://nhtsa-vehicle-recalls-vin-mcp.lipmichal.workers.dev/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 2 minutes
+difficulty: beginner
+prerequisites:
+  - An MCP client with remote Streamable HTTP support (Claude Code, Claude Desktop, Cursor, or similar).
+  - No account, OAuth sign-in, or API key is required.
+safetyNotes:
+  - Read-only remote MCP server; no tools mutate state or require credentials.
+  - Queries are proxied to official US NHTSA public APIs (vPIC, Recalls, Complaints, and NCAP Safety Ratings).
+  - Verify critical vehicle safety or recall remedies directly on nhtsa.gov or with an authorized dealer before taking action.
+privacyNotes:
+  - Tool arguments (such as VINs, vehicle make/model/year queries) are sent over HTTPS to the hosted Cloudflare Worker endpoint and upstream NHTSA public APIs.
+  - Do not include personal owner names, addresses, or unrelated sensitive information in tool queries.
+sourceUrls:
+  - "https://github.com/theluckystrike/nhtsa-vehicle-recalls-vin-mcp"
+  - "https://github.com/theluckystrike/nhtsa-vehicle-recalls-vin-mcp/blob/main/README.md"
+  - "https://www.mcpstamp.com/free-servers/nhtsa-vehicle-recalls-vin-mcp/"
+tags:
+  - mcp
+  - nhtsa
+  - automotive
+  - vehicle-recalls
+  - vin-decoder
+  - public-data
+keywords:
+  - NHTSA MCP server
+  - VIN decoder MCP
+  - vehicle recalls MCP
+  - NCAP safety ratings
+  - nhtsa-vehicle-recalls-vin-mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+NHTSA Vehicle Recalls & VIN Decoder MCP is a free, keyless hosted Streamable
+HTTP Model Context Protocol server backed by official US National Highway
+Traffic Safety Administration (NHTSA) public datasets. It lets Claude decode
+17-character VINs through vPIC, check open safety recalls (highlighting
+Park-It and Park-Outside warnings), inspect consumer safety complaints, and
+retrieve 5-Star NCAP crash-test ratings without installing anything locally.
+
+## Installation
+
+Add the hosted Streamable HTTP endpoint directly in Claude Code:
+
+```sh
+claude mcp add --transport http nhtsa-recalls https://nhtsa-vehicle-recalls-vin-mcp.lipmichal.workers.dev/mcp
+```
+
+Or add the server configuration to your MCP client JSON:
+
+```json
+{
+  "mcpServers": {
+    "nhtsa-recalls": {
+      "type": "http",
+      "url": "https://nhtsa-vehicle-recalls-vin-mcp.lipmichal.workers.dev/mcp"
+    }
+  }
+}
+```
+
+## Use Cases
+
+- Decode a 17-character VIN into make, model, model year, trim, body class, and plant details.
+- Check whether a used car or fleet vehicle has open NHTSA safety recalls or urgent Park-Outside notices.
+- Summarize NHTSA consumer safety complaints by component for a specific make, model, and year.
+- Compare 5-Star NCAP overall, frontal, side, and rollover crash-test ratings before buying a vehicle.
+
+## Safety and Privacy
+
+All tools are read-only and query public US NHTSA datasets over HTTPS. No
+credentials, accounts, or local code execution are required. Avoid sending
+personal identifying information alongside VIN or vehicle queries, and confirm
+recall completion status with NHTSA or an authorized dealer.
+
+## Source Review
+
+The following primary sources were reviewed on **2026-11-27**:
+
+- https://github.com/theluckystrike/nhtsa-vehicle-recalls-vin-mcp
+- https://github.com/theluckystrike/nhtsa-vehicle-recalls-vin-mcp/blob/main/README.md
+- https://www.mcpstamp.com/free-servers/nhtsa-vehicle-recalls-vin-mcp/
