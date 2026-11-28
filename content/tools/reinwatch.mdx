@@ -1,0 +1,55 @@
+---
+title: reinwatch
+slug: reinwatch
+category: tools
+description: Claude Code plugin that shows per-agent token counts for subagents, teammates and workflow agents, warns about runaway or stuck agents, and lets you stop a single agent.
+cardDescription: Per-agent token counts and runaway warnings for Claude Code subagents.
+seoTitle: reinwatch subagent token monitor for Claude Code
+seoDescription: reinwatch tracks per-agent token use and active time for Claude Code subagents, teammates and workflow agents, warns on runaway runs, and can stop a single agent.
+author: sofumel
+authorProfileUrl: "https://github.com/sofumel"
+dateAdded: "2026-11-12"
+websiteUrl: "https://github.com/sofumel/reinwatch"
+documentationUrl: "https://github.com/sofumel/reinwatch#readme"
+repoUrl: "https://github.com/sofumel/reinwatch"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+installable: true
+installCommand: "/plugin install reinwatch --marketplace sofumel/reinwatch"
+usageSnippet: "Install inside Claude Code with the install command, then use /reinwatch:status to review per-agent counts and 30-day totals."
+prerequisites:
+  - "Claude Code 2.1.300 or later, with plugin support enabled."
+safetyNotes:
+  - Hooks run automatically on Claude Code agent lifecycle events; review the hook configuration in the repository before installing in sensitive workspaces.
+  - The stop action interrupts a running subagent, teammate or workflow agent. It is only ever invoked by the user; reinwatch never stops an agent automatically.
+  - Warnings are threshold-based and configurable (long runs, token totals, repeated tool calls, failure streaks, agent bursts), so notification volume depends on the thresholds you set.
+privacyNotes:
+  - reinwatch makes no network, shell or model calls; monitoring happens locally through Claude Code hooks.
+  - The only data persisted is per-day aggregate counts (tokens and active time), retained for 30 days. No prompts, outputs or transcripts are stored.
+tags:
+  - claude-code
+  - subagents
+  - token-usage
+  - monitoring
+  - hooks
+keywords:
+  - claude code subagent monitoring
+  - claude code token usage per agent
+  - stop claude code subagent
+  - claude code workflow agents
+  - runaway agent warnings
+---
+
+## Editorial notes
+
+reinwatch is useful when Claude Code delegates work to subagents, teammates or workflow agents and you need to see what each agent is doing. For every agent it shows new-token counts (cache reads excluded) and active time, adds turn summaries, and keeps 30-day totals available through `/reinwatch:status`.
+
+Its warning layer covers the common failure shapes of delegated runs: an agent running longer than 30 minutes, passing 1M new tokens, repeating the same tool call, failing repeatedly, or many agents spawning in a short burst. When a run does go wrong, a single agent can be stopped without ending the rest of the session, including an agent working inside a workflow.
+
+The fit for HeyClaude is strongest for developers who run multi-agent Claude Code sessions and want local, per-agent cost and behavior visibility without sending session data to an external service.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.
