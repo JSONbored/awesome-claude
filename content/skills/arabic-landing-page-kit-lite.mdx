@@ -1,0 +1,134 @@
+---
+title: Arabic Landing Page Kit Lite
+slug: arabic-landing-page-kit-lite
+category: skills
+description: Generate an editable Arabic RTL service page from a JSON brief with a local Python tool and contact-preview form.
+cardDescription: "Build one Arabic RTL service-page design locally, with editable files and an inquiry preview that sends nothing."
+seoTitle: Arabic Landing Page Kit Lite RTL Service Page Skill
+seoDescription: "Free MIT Arabic RTL starter with a JSON brief, Python standard-library generator, editable static files and a local inquiry preview."
+author: medenh
+authorProfileUrl: "https://github.com/medenh"
+submittedBy: medenh
+submittedByUrl: "https://github.com/medenh"
+dateAdded: "2026-11-28"
+repoUrl: "https://github.com/medenh/arabic-landing-page-kit-lite"
+documentationUrl: "https://github.com/medenh/arabic-landing-page-kit-lite#readme"
+sourceUrl: "https://github.com/medenh/arabic-landing-page-kit-lite/blob/e56e5837eba3359561b42dbcac926c1adeb5b91e/skills/arabic-landing-page-kit-lite/SKILL.md"
+downloadUrl: "https://github.com/medenh/arabic-landing-page-kit-lite/archive/refs/heads/main.zip"
+installable: true
+installCommand: "git clone https://github.com/medenh/arabic-landing-page-kit-lite.git"
+usageSnippet: "After copying the complete skill folder into .claude/skills/arabic-landing-page-kit-lite/, invoke /arabic-landing-page-kit-lite with the supplied business facts and a new output directory."
+copySnippet: |-
+  Use Arabic Landing Page Kit Lite to create one Arabic RTL service page from the supplied business brief.
+  Use only supplied identity, services and offer facts; do not invent reviews, credentials, prices or results.
+  For fictional content, retain demo: true. Keep the local contact-preview disclosure.
+  Return the complete generated directory and explain which checks were run and which interactions remain untested.
+skillType: general
+skillLevel: foundational
+verificationStatus: draft
+verifiedAt: "2026-11-28"
+testedPlatforms:
+  - Codex
+retrievalSources:
+  - "https://github.com/medenh/arabic-landing-page-kit-lite/blob/e56e5837eba3359561b42dbcac926c1adeb5b91e/skills/arabic-landing-page-kit-lite/SKILL.md"
+  - "https://github.com/medenh/arabic-landing-page-kit-lite/blob/e56e5837eba3359561b42dbcac926c1adeb5b91e/skills/arabic-landing-page-kit-lite/references/brief-contract.md"
+  - "https://github.com/medenh/arabic-landing-page-kit-lite/blob/e56e5837eba3359561b42dbcac926c1adeb5b91e/skills/arabic-landing-page-kit-lite/scripts/build_page.py"
+  - "https://github.com/medenh/arabic-landing-page-kit-lite/blob/e56e5837eba3359561b42dbcac926c1adeb5b91e/VALIDATION.json"
+prerequisites:
+  - "Python 3.9 or later, its standard library, and a modern browser. The local generator needs no package, API key or AI subscription."
+  - "For assistant use, a suitable assistant and the complete skill folder. Claude Code's documented project destination is .claude/skills/arabic-landing-page-kit-lite/."
+  - "A business JSON brief following references/brief-contract.md and a new, non-existing output directory."
+safetyNotes:
+  - "The bundled Python generator reads a brief and writes a new local directory containing HTML, CSS and JavaScript; it refuses an existing output directory. Inspect the source before execution."
+  - "The form validates and previews an inquiry locally, with copy and text-download controls. It sends nothing and has no backend, CRM or received-lead confirmation."
+  - "Keep fictional demo labels and do not invent customer proof. Publishing, adding analytics, connecting a backend or contacting anyone requires a separate relevant request."
+privacyNotes:
+  - "The generator processes the local JSON brief. The generated site defines no external assets, analytics or report backend; browser copy and download use local device features."
+  - "An assistant can read any business facts or files you supply. Redact private data; its configured host and providers determine handling of those inputs."
+disclosure: "Author submission by medenh. The free MIT Lite starter works independently; its repository links to an optional paid companion under a separate license. No paid placement or affiliate link is requested."
+tags:
+  - arabic
+  - rtl
+  - landing-page
+  - static-site
+  - python
+---
+
+## Overview
+
+Arabic Landing Page Kit Lite is a free MIT-licensed starter for service
+businesses. It ships one Arabic RTL design, a JSON brief contract, a Python
+standard-library generator, a fictional example and editable static files.
+The documentation is primarily English with Arabic, Spanish and Chinese
+translations. Those guides do not turn the generated Arabic page into four
+page languages.
+
+## Install and Invoke
+
+Clone the repository or download its source ZIP. Read SKILL.md, the brief
+contract and the bundled Python script before execution. For assistant use,
+copy the entire `skills/arabic-landing-page-kit-lite/` folder to your project's
+`.claude/skills/arabic-landing-page-kit-lite/` directory and invoke
+`/arabic-landing-page-kit-lite`. The documented Codex destination is
+`.agents/skills/arabic-landing-page-kit-lite/`, invoked with
+`$arabic-landing-page-kit-lite`.
+
+These are documented paths, not verified automatic-discovery claims. You can
+also use the local generator without an AI assistant. From the repository root:
+
+```sh
+python3 skills/arabic-landing-page-kit-lite/scripts/build_page.py --brief skills/arabic-landing-page-kit-lite/examples/brief.json --output work/my-page
+```
+
+The output path must not exist. Open `work/my-page/index.html` locally, keeping
+the generated HTML, CSS and JavaScript together. For another page, edit a copy
+of the example brief and choose a different new output directory.
+
+## Core Workflow
+
+1. Read the brief contract and use supplied business identity, services,
+   audience and offer facts. Keep `demo: true` for fictional content.
+2. Run the generator with skill-relative script paths and project-relative
+   brief/output paths. The result contains a hero, one to six services, one to
+   four process steps and a contact-preview form.
+3. Keep Arabic `lang` and RTL direction, logical spacing and isolated Latin
+   text. Review line breaks and narrow screens. The CSS illustration is
+   decorative, not a photograph of completed client work.
+4. Inspect the generated files and test navigation, required fields, summary
+   dialog, copy and local text download where browser tools are available.
+5. Return the complete editable directory. Explain that the contact flow is a
+   local preview and report untested behavior. The kit supplies no hosting,
+   live lead collection or guaranteed business result.
+
+## Verification and Limits
+
+The source's
+[validation record](https://github.com/medenh/arabic-landing-page-kit-lite/blob/e56e5837eba3359561b42dbcac926c1adeb5b91e/VALIDATION.json)
+reports thirteen generator regressions, frontmatter and JavaScript syntax
+checks, 1280px/390px browser layout checks, invalid-input handling, local
+summary/copy and downloaded-text checks. Those checks establish specific
+script/browser behavior.
+
+In a separate exercise on 2026-11-28, an actual Codex agent manually read
+SKILL.md and the complete brief contract, authored a fresh fictional home-office
+service brief, and invoked the real generator through its tools. Generation
+exited successfully. Narrow static checks covered supplied-field rendering,
+Arabic/RTL markup, escaping, demo/local-contact labels and refusal to overwrite
+an existing output directory. `testedPlatforms: Codex` refers only to that
+explicitly loaded agent execution, not installed-skill discovery or a standalone
+Codex CLI test. The fresh exercise did not repeat browser interaction checks.
+
+`verificationStatus: draft` reflects this limited scope. No Claude Code,
+Claude.ai or API runtime, automatic discovery, independent human certification
+or production result is claimed. `verifiedAt` is the source-inspection date for
+this draft entry.
+
+## Disclosure
+
+I maintain the free MIT Lite repository. It works without buying its optional
+paid companion, which uses a separate commercial license and is linked from
+the repository documentation. This entry requests only the reusable free
+source-backed starter, not a paid placement or product sale. It includes no
+purchase or affiliate link. The entry and PR draft were prepared with Codex AI
+assistance. This is an independent project, not an endorsement by OpenAI,
+Anthropic or HeyClaude.
