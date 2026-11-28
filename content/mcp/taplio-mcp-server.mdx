@@ -1,0 +1,166 @@
+---
+title: Taplio for LinkedIn MCP Server for Claude
+slug: taplio-mcp-server
+category: mcp
+description: >-
+  Search Taplio's lead database for prospects, draft, schedule, publish and analyze LinkedIn posts
+  from Claude, search inspiration, find posts
+  and comments worth engaging with, draft comments and replies, like posts and send connection
+  requests, through the official hosted Taplio MCP server.
+cardDescription: "Official Taplio for LinkedIn MCP: find leads, write, schedule, publish and analyze LinkedIn posts from Claude."
+seoTitle: "Taplio for LinkedIn MCP Server for Claude: Leads, Posts, Analytics and Engagement"
+seoDescription: "Connect Claude to LinkedIn with Taplio's official hosted MCP server: find leads, draft, schedule and publish posts, read analytics and engage with posts, via OAuth 2.1."
+author: Taplio
+authorProfileUrl: "https://github.com/TaplioOfficial"
+submittedBy: porenes
+submittedByUrl: "https://github.com/porenes"
+dateAdded: "2026-11-25"
+repoUrl: "https://github.com/TaplioOfficial/taplio-linkedin-mcp"
+documentationUrl: "https://github.com/TaplioOfficial/taplio-linkedin-mcp#readme"
+websiteUrl: "https://taplio.com"
+retrievalSources:
+  - "https://github.com/TaplioOfficial/taplio-linkedin-mcp"
+  - "https://github.com/TaplioOfficial/taplio-linkedin-mcp/blob/main/docs/tools.md"
+  - "https://github.com/TaplioOfficial/taplio-linkedin-plugin"
+  - "https://registry.modelcontextprotocol.io/v0.1/servers?search=taplio"
+  - "https://code.claude.com/docs/en/mcp"
+installable: true
+installCommand: "claude mcp add --transport http taplio https://mcp.taplio.com/"
+usageSnippet: >-
+  Ask Claude to draft a LinkedIn post and schedule it for Tuesday 9am, show your last 10 posts and
+  which one got the most impressions, or find posts worth commenting on and draft a comment for you
+  to approve.
+copySnippet: |-
+  {
+    "mcpServers": {
+      "taplio": {
+        "type": "http",
+        "url": "https://mcp.taplio.com/"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "taplio": {
+        "type": "http",
+        "url": "https://mcp.taplio.com/"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "A Taplio account with LinkedIn connected (a 7-day free trial is available). Sign in to Taplio when your client opens the OAuth consent screen."
+  - "Scheduling, engagement and connection tools depend on the Taplio plan; the tool reference lists the plan each tool needs."
+  - "An MCP client that supports remote Streamable HTTP servers, such as Claude Code or Claude Desktop."
+safetyNotes:
+  - "Some tools act on LinkedIn under your name: publishing a post (immediate, cannot be undone), scheduling a post, posting a comment or reply, liking, and sending a connection request. Review each one before approving it."
+  - "delete_draft deletes a draft permanently."
+  - "Read tools carry readOnlyHint and the tools that act on LinkedIn carry openWorldHint, so clients that support tool annotations ask for confirmation before running them."
+  - "Access is limited to the single Taplio account you approve on the OAuth screen, and can be revoked from Taplio at any time."
+privacyNotes:
+  - "Your Taplio profile settings, posts, drafts, analytics, comments and connection requests are returned into Claude's context."
+  - "The server is hosted by Taplio at mcp.taplio.com; with OAuth no API key or LinkedIn credential is stored in your MCP configuration."
+tags:
+  - taplio
+  - linkedin
+  - social-media
+  - content
+  - analytics
+  - engagement
+keywords:
+  - taplio mcp server
+  - taplio claude
+  - linkedin mcp server
+  - linkedin post scheduling mcp
+  - linkedin analytics mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+The **Taplio for LinkedIn MCP Server** is the official remote Model Context Protocol server from Taplio, the
+LinkedIn growth tool. It is hosted by Taplio at `https://mcp.taplio.com/` (Streamable HTTP, OAuth 2.1
+with PKCE and dynamic client registration); there is nothing to build or run locally. It is
+published in the official MCP Registry as `io.github.TaplioOfficial/taplio-linkedin-mcp`.
+
+## Key capabilities
+
+The server exposes 38 tools, all scoped to the authenticated user's own Taplio and LinkedIn account:
+
+- **Account and analytics**: identity and content preferences (`get_me`), your posts (`list_posts`,
+  `get_post`), account analytics (`get_analytics_overview`) and per-post analytics
+  (`get_post_analytics`).
+- **Drafts and media**: create, edit and delete drafts, and upload or attach images, videos, GIFs
+  and PDFs.
+- **Schedule and publish**: schedule a draft (`schedule_draft`), move it back to drafts
+  (`unschedule`) or publish it now (`publish_draft`).
+- **Inspiration**: search other creators' LinkedIn posts (`search_inspiration`).
+- **Engage**: find posts worth commenting on (`find_posts_to_comment`) and comments that deserve a
+  reply (`find_comments_to_reply`), draft comments and replies, queue them
+  (`commit_comment_draft`), and queue likes (`like_post`).
+- **Network**: search Taplio's lead database for prospects by role, seniority, department, industry,
+  country and company (`search_leads`, Pro plan), queue connection requests (`send_connection_request`)
+  and follow their status.
+
+The [tool reference](https://github.com/TaplioOfficial/taplio-linkedin-mcp/blob/main/docs/tools.md)
+classifies every tool as read, write or sensitive write, and lists rate limits and plan
+requirements.
+
+## Installation
+
+### Claude Code
+
+```bash
+claude mcp add --transport http taplio https://mcp.taplio.com/
+```
+
+Run `/mcp` in Claude Code and authorize `taplio` in the browser when prompted.
+
+### Claude Desktop and claude.ai
+
+Install the Taplio connector from Customize > Connectors (search "Taplio"), or add a custom
+connector with the URL `https://mcp.taplio.com/`, then approve the Taplio sign-in.
+
+### Claude Code plugin (skills)
+
+The [Taplio plugin](https://github.com/TaplioOfficial/taplio-linkedin-plugin) adds LinkedIn
+workflow skills that run on this server. It contains skills only, so connect the server first:
+
+```bash
+/plugin marketplace add TaplioOfficial/taplio-linkedin-plugin
+/plugin install taplio@taplio
+```
+
+### Other clients
+
+Any client that supports remote MCP servers over HTTP can use:
+
+```json
+{
+  "mcpServers": {
+    "taplio": {
+      "type": "http",
+      "url": "https://mcp.taplio.com/"
+    }
+  }
+}
+```
+
+The [README](https://github.com/TaplioOfficial/taplio-linkedin-mcp#readme) has per-client setup
+for VS Code, Cursor, Windsurf and others.
+
+## Source Verification Notes
+
+Verified on **2026-11-25**:
+
+- The README of `TaplioOfficial/taplio-linkedin-mcp` documents the hosted endpoint, the OAuth
+  sign-in, per-client setup and the 38 tools.
+- `docs/tools.md` in the same repository classifies each tool and lists plans and limits.
+- `https://registry.modelcontextprotocol.io/v0.1/servers?search=taplio` returns
+  `io.github.TaplioOfficial/taplio-linkedin-mcp` with the `https://mcp.taplio.com/` Streamable
+  HTTP remote.
+- The README of `TaplioOfficial/taplio-linkedin-plugin` documents the Claude Code plugin install
+  commands.
