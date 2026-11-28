@@ -5,7 +5,10 @@ import {
   storableResponse,
   withEdgeCache,
 } from "@/lib/edge-cache";
-import { applyEdgeCacheHeaders, HTML_CACHE_CONTROL } from "@/lib/security-headers-lib";
+import {
+  applyEdgeCacheHeaders,
+  HTML_CACHE_CONTROL,
+} from "@/lib/security-headers-lib";
 
 const URL_ = "https://heyclau.de/agents";
 
@@ -34,7 +37,10 @@ function memoryCache() {
 /** A request's waitUntil, collecting what it was handed. */
 function context() {
   const pending: Promise<unknown>[] = [];
-  return { pending, waitUntil: (promise: Promise<unknown>) => pending.push(promise) };
+  return {
+    pending,
+    waitUntil: (promise: Promise<unknown>) => pending.push(promise),
+  };
 }
 
 describe("what the edge cache stores", () => {
@@ -47,10 +53,18 @@ describe("what the edge cache stores", () => {
     expect(headers.get("cache-control")).toBe(HTML_CACHE_CONTROL);
     expect(storableResponse(new Response("x", { headers }))).toBe(true);
     expect(
-      storableResponse(page({ "cache-control": "public, max-age=300, stale-while-revalidate=3600" })),
+      storableResponse(
+        page({
+          "cache-control": "public, max-age=300, stale-while-revalidate=3600",
+        }),
+      ),
     ).toBe(true);
     // s-maxage governs the edge even when max-age says otherwise.
-    expect(storableResponse(page({ "cache-control": "public, max-age=0, s-maxage=60" }))).toBe(true);
+    expect(
+      storableResponse(
+        page({ "cache-control": "public, max-age=0, s-maxage=60" }),
+      ),
+    ).toBe(true);
   });
 
   it("never stores what is personal, unbounded or not a success", () => {
@@ -65,32 +79,51 @@ describe("what the edge cache stores", () => {
       { "cache-control": HTML_CACHE_CONTROL, "set-cookie": "session=abc" },
       { "cache-control": HTML_CACHE_CONTROL, vary: "*" },
     ])
-      expect(storableResponse(page(headers)), JSON.stringify(headers)).toBe(false);
-    expect(storableResponse(page({ "cache-control": HTML_CACHE_CONTROL }, 404))).toBe(false);
+      expect(storableResponse(page(headers)), JSON.stringify(headers)).toBe(
+        false,
+      );
+    expect(
+      storableResponse(page({ "cache-control": HTML_CACHE_CONTROL }, 404)),
+    ).toBe(false);
   });
 
   it("answers only a GET with no credential and no cookie", () => {
     expect(edgeCacheableRequest(new Request(URL_))).toBe(true);
-    expect(edgeCacheableRequest(new Request(URL_, { method: "POST" }))).toBe(false);
-    expect(edgeCacheableRequest(new Request(URL_, { method: "HEAD" }))).toBe(false);
+    expect(edgeCacheableRequest(new Request(URL_, { method: "POST" }))).toBe(
+      false,
+    );
+    expect(edgeCacheableRequest(new Request(URL_, { method: "HEAD" }))).toBe(
+      false,
+    );
     expect(
-      edgeCacheableRequest(new Request(URL_, { headers: { authorization: "Bearer t" } })),
+      edgeCacheableRequest(
+        new Request(URL_, { headers: { authorization: "Bearer t" } }),
+      ),
     ).toBe(false);
-    expect(edgeCacheableRequest(new Request(URL_, { headers: { cookie: "a=b" } }))).toBe(false);
+    expect(
+      edgeCacheableRequest(new Request(URL_, { headers: { cookie: "a=b" } })),
+    ).toBe(false);
   });
 });
 
 describe("withEdgeCache", () => {
   it("renders once, then answers from the cache", async () => {
     const cache = memoryCache();
-    const render = vi.fn(async () => page({ "cache-control": HTML_CACHE_CONTROL }));
+    const render = vi.fn(async () =>
+      page({ "cache-control": HTML_CACHE_CONTROL }),
+    );
     const first = context();
     const one = await withEdgeCache(new Request(URL_), first, render, cache);
     await Promise.all(first.pending);
     expect(await one.text()).toBe("<html>page</html>");
     expect(cache.put).toHaveBeenCalledTimes(1);
 
-    const two = await withEdgeCache(new Request(URL_), context(), render, cache);
+    const two = await withEdgeCache(
+      new Request(URL_),
+      context(),
+      render,
+      cache,
+    );
     expect(await two.text()).toBe("<html>page</html>");
     expect(render).toHaveBeenCalledTimes(1);
   });
@@ -105,7 +138,10 @@ describe("withEdgeCache", () => {
         new Request(URL_, { headers: { cookie: "a=b" } }),
         async () => page({ "cache-control": HTML_CACHE_CONTROL }),
       ],
-      [new Request(URL_, { method: "POST" }), async () => page({ "cache-control": HTML_CACHE_CONTROL })],
+      [
+        new Request(URL_, { method: "POST" }),
+        async () => page({ "cache-control": HTML_CACHE_CONTROL }),
+      ],
     ] as const;
     for (const [request, body] of renders) {
       const render = vi.fn(body);
@@ -118,8 +154,12 @@ describe("withEdgeCache", () => {
   });
 
   it("is a plain render with no cache, and stores nothing without a waitUntil", async () => {
-    const render = vi.fn(async () => page({ "cache-control": HTML_CACHE_CONTROL }));
-    expect((await withEdgeCache(new Request(URL_), context(), render, null)).status).toBe(200);
+    const render = vi.fn(async () =>
+      page({ "cache-control": HTML_CACHE_CONTROL }),
+    );
+    expect(
+      (await withEdgeCache(new Request(URL_), context(), render, null)).status,
+    ).toBe(200);
     const cache = memoryCache();
     await withEdgeCache(new Request(URL_), {}, render, cache);
     await withEdgeCache(new Request(URL_), null, render, cache);
@@ -128,7 +168,9 @@ describe("withEdgeCache", () => {
   });
 
   it("treats a failing cache as a miss, never as an error", async () => {
-    const render = vi.fn(async () => page({ "cache-control": HTML_CACHE_CONTROL }));
+    const render = vi.fn(async () =>
+      page({ "cache-control": HTML_CACHE_CONTROL }),
+    );
     const broken = {
       match: vi.fn(async () => {
         throw new Error("cache unavailable");
@@ -138,7 +180,12 @@ describe("withEdgeCache", () => {
       }),
     };
     const ctx = context();
-    const response = await withEdgeCache(new Request(URL_), ctx, render, broken);
+    const response = await withEdgeCache(
+      new Request(URL_),
+      ctx,
+      render,
+      broken,
+    );
     await expect(Promise.all(ctx.pending)).resolves.toBeDefined();
     expect(response.status).toBe(200);
     expect(render).toHaveBeenCalledTimes(1);
@@ -147,8 +194,12 @@ describe("withEdgeCache", () => {
   it("renders when the platform has no cache and none is given", async () => {
     vi.stubGlobal("caches", undefined);
     try {
-      const render = vi.fn(async () => page({ "cache-control": HTML_CACHE_CONTROL }));
-      expect((await withEdgeCache(new Request(URL_), context(), render)).status).toBe(200);
+      const render = vi.fn(async () =>
+        page({ "cache-control": HTML_CACHE_CONTROL }),
+      );
+      expect(
+        (await withEdgeCache(new Request(URL_), context(), render)).status,
+      ).toBe(200);
       expect(render).toHaveBeenCalledTimes(1);
     } finally {
       vi.unstubAllGlobals();
@@ -160,10 +211,8 @@ describe("withEdgeCache", () => {
     vi.stubGlobal("caches", { default: cache });
     try {
       const ctx = context();
-      await withEdgeCache(
-        new Request(URL_),
-        ctx,
-        async () => page({ "cache-control": HTML_CACHE_CONTROL }),
+      await withEdgeCache(new Request(URL_), ctx, async () =>
+        page({ "cache-control": HTML_CACHE_CONTROL }),
       );
       await Promise.all(ctx.pending);
       expect(cache.stored.has(URL_)).toBe(true);
