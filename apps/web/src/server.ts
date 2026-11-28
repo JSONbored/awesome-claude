@@ -3,6 +3,7 @@ import "./lib/error-capture";
 import { logAiSignals } from "./lib/ai-signals.server";
 import { runWithCloudflareRuntime } from "./lib/cloudflare-env.server";
 import { consumeLastCapturedError } from "./lib/error-capture";
+import { withEdgeCache } from "./lib/edge-cache";
 import { renderErrorPage } from "./lib/error-page";
 import { applyEdgeCacheHeaders, applySecurityHeaders } from "./lib/security-headers";
 
@@ -55,21 +56,25 @@ export default {
     // Best-effort AI-citation signal tap (crawler hits + AI-referral landings). Synchronous,
     // never throws, no-ops without the AI_SIGNALS Analytics Engine binding.
     logAiSignals(request, env);
-    return runWithCloudflareRuntime(request, env, ctx, async () => {
-      try {
-        const handler = await getServerEntry();
-        const response = await handler.fetch(request, env, ctx);
-        return withSecurityHeaders(await normalizeCatastrophicSsrResponse(response), request);
-      } catch (error) {
-        console.error(error);
-        return withSecurityHeaders(
-          new Response(renderErrorPage(), {
-            status: 500,
-            headers: { "content-type": "text/html; charset=utf-8" },
-          }),
-          request,
-        );
-      }
-    });
+    // What the edge cache policy marks shareable is served from the colo's cache
+    // without rendering again (lib/edge-cache.ts).
+    return withEdgeCache(request, ctx, () =>
+      runWithCloudflareRuntime(request, env, ctx, async () => {
+        try {
+          const handler = await getServerEntry();
+          const response = await handler.fetch(request, env, ctx);
+          return withSecurityHeaders(await normalizeCatastrophicSsrResponse(response), request);
+        } catch (error) {
+          console.error(error);
+          return withSecurityHeaders(
+            new Response(renderErrorPage(), {
+              status: 500,
+              headers: { "content-type": "text/html; charset=utf-8" },
+            }),
+            request,
+          );
+        }
+      }),
+    );
   },
 };
